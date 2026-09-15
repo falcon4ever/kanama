@@ -4,7 +4,6 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
-import net.multigesture.kanama.binding.runtime.*
 
 /**
  * SPIR-V intermediate representation as part of an `RDShaderFile` (used by `RenderingDevice`).

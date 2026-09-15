@@ -4,7 +4,6 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
-import net.multigesture.kanama.binding.runtime.*
 
 /**
  * Merges several 2D nodes into a single draw operation.

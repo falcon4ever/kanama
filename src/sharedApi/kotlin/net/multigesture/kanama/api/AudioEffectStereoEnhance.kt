@@ -4,7 +4,6 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
-import net.multigesture.kanama.binding.runtime.*
 
 /**
  * Adds a stereo manipulation audio effect to an audio bus. Controls gain of the side channels, and

@@ -124,6 +124,23 @@ def match_closer(src: str, start: int) -> int:
 DESKTOP = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
 IOS = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"
 IOS_SOURCE_ROOT = ROOT / "src/iosMain"
+# The GENERATED common declaration of the seam (scripts/generate_api_wrapper.py --write-tree).
+EXPECT = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt"
+
+# Referenced helpers that CANNOT be `expect` members: their signatures name a hand-shaped
+# per-platform wrapper class (`GodotCallable`, `Material`), which a common declaration cannot see
+# until those classes become expect/actual themselves (task 117). They stay plain members on both
+# platforms, and the shared api tree -- platform-compiled source, not common code -- calls them
+# exactly as before. Keep in sync with PLATFORM_ONLY_SIGNATURE_TYPES in
+# scripts/generate_api_wrapper.py, which computes this set from the same desktop signatures.
+EXPECT_EXCEPTIONS = {
+    "ptrcallNoArgsRetCallable",
+    "ptrcallWithIntArgRetCallable",
+    "ptrcallWithRIDArgRetCallable",
+    "ptrcallWithRIDIntArgsRetCallable",
+    "ptrcallWithStringIntArgsRetCallable",
+    "ptrcallWithTypedMaterialListArg",
+}
 # The sources that call the seam: the generated wrapper tree (compiled per platform) and the
 # common fragment beside it (the value types reach the engine through BuiltinCalls, not
 # ObjectCalls, but scanning both means a future common caller is covered by this gate too).
@@ -137,6 +154,7 @@ SHARED_TREES = (ROOT / "src/sharedApi/kotlin", ROOT / "src/commonMain/kotlin")
 MEMBER_RE = re.compile(
     r"^(?P<indent>[ ]*)"
     r"(?P<vis>private |internal |public )?"
+    r"(?P<actual>actual )?"
     r"(?P<mods>(?:inline |operator |infix |suspend )*)"
     r"fun\s+(?:<[^>]*>\s*)?"
     r"(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*\(",
@@ -148,8 +166,10 @@ MEMBER_RE = re.compile(
 # helpers are), so the receiver, dot and name may be separated by whitespace.
 EXTENSION_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s*)?ObjectCalls\s*\.\s*(?P<name>[A-Za-z0-9_]+)\s*\(")
 
-# What the shared tree calls through the seam.
-REFERENCE_RE = re.compile(r"\bObjectCalls\.([A-Za-z0-9_]+)")
+# What the shared sources call through the seam. The opening parenthesis is required: since task
+# 104 step 3 parcel C' the common fragment is scanned too, and its KDoc names the backends' files
+# (`.../binding/runtime/ObjectCalls.kt`), which the bare form read as a helper called `kt`.
+REFERENCE_RE = re.compile(r"\bObjectCalls\.([A-Za-z0-9_]+)\s*\(")
 
 Signature = tuple[str, ...]
 
@@ -210,13 +230,15 @@ def parameter_names(src: str, open_paren: int) -> Signature:
 def parse_members(path: Path) -> dict[str, list[Signature]]:
     """Public/internal member functions of `object ObjectCalls` -> parameter-name tuples.
 
+    Reads the `expect object` in the common fragment as well as the two `actual object`s.
+
     One name maps to several tuples only when the object overloads it; desktop has four
     type-differentiated overload pairs (`path: String` / `path: NodePath`) that share their
     parameter names, so the tuples collapse. A private member cannot be called from the shared
     tree, so it is not part of the contract.
     """
     src = strip_comments(path.read_text(encoding="utf-8"))
-    obj = re.search(r"^(?:actual )?object\s+ObjectCalls\s*\{", src, re.MULTILINE)
+    obj = re.search(r"^(?:actual |expect )?object\s+ObjectCalls\s*\{", src, re.MULTILINE)
     if not obj:
         raise SystemExit(f"{path}: no top-level `object ObjectCalls` declaration")
     body_open = src.index("{", obj.start())
@@ -258,6 +280,50 @@ def referenced_helpers(trees: tuple[Path, ...]) -> list[str]:
 
 def render(signature: Signature) -> str:
     return f"({', '.join(signature)})"
+
+
+def check_expect_members(referenced: list[str], desktop: dict[str, list[Signature]]) -> int:
+    """The generated `expect object ObjectCalls` declares exactly the referenced helpers, minus the
+    documented exceptions.
+
+    The compiler already proves that both backends implement every `expect` member -- that is what
+    parcel C' bought. What it cannot notice is a helper the tree CALLS that never made it into the
+    `expect` object: the shared api tree is platform-compiled source, so such a call resolves
+    against the platform member and the seam silently stops being the contract. This is that check.
+    """
+    if not EXPECT.exists():
+        print(f"[objectcalls_parity] FAIL missing {EXPECT.relative_to(ROOT)}", file=sys.stderr)
+        return 1
+    declared = set(parse_members(EXPECT))
+    want = {name for name in referenced if name in desktop} - EXPECT_EXCEPTIONS
+    missing = sorted(want - declared)
+    extra = sorted(declared - want)
+    stale_exceptions = sorted(EXPECT_EXCEPTIONS & declared)
+    unused_exceptions = sorted(EXPECT_EXCEPTIONS - set(referenced))
+    if missing or extra or stale_exceptions or unused_exceptions:
+        print(
+            "[objectcalls_parity] FAIL the generated expect object does not match the referenced set",
+            file=sys.stderr,
+        )
+        for name in missing:
+            print(f"    missing-from-expect  {name}", file=sys.stderr)
+        for name in extra:
+            print(f"    not-referenced       {name}", file=sys.stderr)
+        for name in stale_exceptions:
+            print(f"    exception-declared   {name} (listed as an exception but IS an expect member)", file=sys.stderr)
+        for name in unused_exceptions:
+            print(f"    exception-unused     {name} (listed as an exception but the tree never calls it)", file=sys.stderr)
+        print(
+            "    re-adopt: python3 scripts/generate_api_wrapper.py --write-tree "
+            "(then ./gradlew ktfmtFormat)",
+            file=sys.stderr,
+        )
+        return 1
+    print(
+        f"[objectcalls_parity] PASS expect object declares {len(declared)} referenced helper(s); "
+        f"{len(EXPECT_EXCEPTIONS)} documented exception(s) stay platform-only"
+    )
+    return 0
 
 
 def main() -> int:
@@ -317,7 +383,8 @@ def main() -> int:
             "[objectcalls_parity] every referenced helper is a member on both platforms, "
             "same parameter names"
         )
-        return 0
+        # And the generated common declaration lists exactly those helpers.
+        return check_expect_members(referenced, desktop)
 
     print()
     print(f"[objectcalls_parity] FAIL: {deltas} referenced signature(s) are not in parity")

@@ -11,6 +11,7 @@ import tempfile
 from pathlib import Path
 
 
+from check_objectcalls_parity import strip_comments
 from generate_api_wrapper import (
     DESKTOP_COMPANION_SUFFIX,
     DESKTOP_HANDSHAPED,
@@ -591,12 +592,16 @@ def check_shared_tree_pointer() -> int:
     `net.multigesture.kanama.binding.runtime.RawSegment`, which each platform aliases. A hand edit
     or a generator regression that puts the JDK name back fails here, next to the edit, instead of
     in the iOS compile.
+
+    Comments are stripped first: the `expect` files' KDoc names the JVM type on purpose when it
+    explains the `actual typealias`, and prose is not what this gate is about (the Android remap
+    audit strips comments for the same reason since task 104 step 3 parcel D).
     """
     offenders = sorted(
         path
         for root in SHARED_SOURCE_ROOTS
         for path in root.rglob("*.kt")
-        if "java.lang.foreign" in path.read_text(encoding="utf-8")
+        if "java.lang.foreign" in strip_comments(path.read_text(encoding="utf-8"))
     )
     if offenders:
         roots = ", ".join(_rel(root) for root in SHARED_SOURCE_ROOTS)

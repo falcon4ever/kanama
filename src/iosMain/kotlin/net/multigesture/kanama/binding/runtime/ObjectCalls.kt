@@ -116,7 +116,7 @@ import net.multigesture.kanama.types.Vector4
  *   [GodotReal]/[GodotRealVar] so a precision switch stays centralized. Color components are always
  *   float32 (never real_t) and stay raw FloatVar.
  */
-object ObjectCalls {
+actual object ObjectCalls {
   // The ptrcall type tags (PT_*) are declared ONCE, in the GENERATED MEMBERS region at the end of
   // this object: the generator owns the whole table (it must match the KANAMA_IOS_PT_* enum in
   // kanama_ios_shim.c) and the hand-written helpers below read the very same constants. Before
@@ -166,15 +166,15 @@ object ObjectCalls {
   private const val VT_DICTIONARY = 27
   private const val VT_ARRAY = 28
 
-  fun constructObject(className: String): MemorySegment =
+  actual fun constructObject(className: String): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_construct_object(className))
 
-  fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment =
+  actual fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_get_method_bind(className, methodName, hash))
 
   // Resolve a Godot engine singleton (Input, Engine, …). Mirrors desktop ObjectCalls;
   // used by the bespoke Input glue (and generated singleton wrappers, longer term).
-  fun getSingleton(name: String): MemorySegment =
+  actual fun getSingleton(name: String): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_get_singleton(name))
 
   // Destroy an engine Object immediately (GDExtension object_destroy). Mirrors desktop
@@ -186,11 +186,11 @@ object ObjectCalls {
   }
 
   // ---- no-arg ----
-  fun ptrcallNoArgs(methodBind: MemorySegment, instance: MemorySegment) {
+  actual fun ptrcallNoArgs(methodBind: MemorySegment, instance: MemorySegment) {
     kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_VOID, null)
   }
 
-  fun ptrcallNoArgsRetBool(methodBind: MemorySegment, instance: MemorySegment): Boolean =
+  actual fun ptrcallNoArgsRetBool(methodBind: MemorySegment, instance: MemorySegment): Boolean =
     memScoped {
       val ret = alloc<ByteVar>()
       kanama_ios_godot_ptrcall(
@@ -207,19 +207,20 @@ object ObjectCalls {
 
   // All Godot scalar ints are 8 bytes (int64) at ptrcall (PtrToArg<int32_t> =
   // convert<int32_t,int64_t>), so int returns read 8 bytes then narrow.
-  fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int = memScoped {
-    val ret = alloc<LongVar>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_INT64,
-      ret.ptr,
-    )
-    ret.value.toInt()
-  }
+  actual fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int =
+    memScoped {
+      val ret = alloc<LongVar>()
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_INT64,
+        ret.ptr,
+      )
+      ret.value.toInt()
+    }
 
   // RefCounted lifetime binds for the issue #81 save guard below. reference()/unreference() share
   // the bool() no-arg hash; get_reference_count() is int().
@@ -243,7 +244,7 @@ object ObjectCalls {
   // holder:
   // when the call consumed the sole reference the ref is kept (the resource becomes wrapper-owned,
   // close() frees it); for an already-owned resource it is a balanced no-op.
-  fun ptrcallWithObjectStringLongArgsRetLong(
+  actual fun ptrcallWithObjectStringLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -285,21 +286,22 @@ object ObjectCalls {
     }
   }
 
-  fun ptrcallNoArgsRetLong(methodBind: MemorySegment, instance: MemorySegment): Long = memScoped {
-    val ret = alloc<LongVar>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_INT64,
-      ret.ptr,
-    )
-    ret.value
-  }
+  actual fun ptrcallNoArgsRetLong(methodBind: MemorySegment, instance: MemorySegment): Long =
+    memScoped {
+      val ret = alloc<LongVar>()
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_INT64,
+        ret.ptr,
+      )
+      ret.value
+    }
 
-  fun ptrcallNoArgsRetDouble(methodBind: MemorySegment, instance: MemorySegment): Double =
+  actual fun ptrcallNoArgsRetDouble(methodBind: MemorySegment, instance: MemorySegment): Double =
     memScoped {
       val ret = alloc<DoubleVar>()
       kanama_ios_godot_ptrcall(
@@ -314,23 +316,25 @@ object ObjectCalls {
       ret.value
     }
 
-  fun ptrcallNoArgsRetObject(methodBind: MemorySegment, instance: MemorySegment): MemorySegment =
-    memScoped {
-      val ret = alloc<LongVar>()
-      ret.value = 0
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_OBJECT,
-        ret.ptr,
-      )
-      MemorySegment.ofAddress(ret.value)
-    }
+  actual fun ptrcallNoArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      null,
+      null,
+      0,
+      PT_OBJECT,
+      ret.ptr,
+    )
+    MemorySegment.ofAddress(ret.value)
+  }
 
-  fun ptrcallNoArgsRetVector2(methodBind: MemorySegment, instance: MemorySegment): Vector2 =
+  actual fun ptrcallNoArgsRetVector2(methodBind: MemorySegment, instance: MemorySegment): Vector2 =
     memScoped {
       val ret = allocArray<GodotRealVar>(2)
       kanama_ios_godot_ptrcall(
@@ -345,7 +349,7 @@ object ObjectCalls {
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
     }
 
-  fun ptrcallNoArgsRetVector3(methodBind: MemorySegment, instance: MemorySegment): Vector3 =
+  actual fun ptrcallNoArgsRetVector3(methodBind: MemorySegment, instance: MemorySegment): Vector3 =
     memScoped {
       val ret = allocArray<GodotRealVar>(3)
       kanama_ios_godot_ptrcall(
@@ -362,62 +366,84 @@ object ObjectCalls {
 
   // Vector2i (2x int32, 8 bytes total): components are int32 NOT widened — struct
   // uses PtrToArgDirect/PtrToArgByReference, not PtrToArgConvert.
-  fun ptrcallNoArgsRetVector2i(methodBind: MemorySegment, instance: MemorySegment): Vector2i =
-    memScoped {
-      val ret = allocArray<IntVar>(2)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_VECTOR2I,
-        ret,
-      )
-      Vector2i(ret[0], ret[1])
-    }
+  actual fun ptrcallNoArgsRetVector2i(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): Vector2i = memScoped {
+    val ret = allocArray<IntVar>(2)
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      null,
+      null,
+      0,
+      PT_VECTOR2I,
+      ret,
+    )
+    Vector2i(ret[0], ret[1])
+  }
 
   // Vector3i (3x int32, 12 bytes total): components are int32 NOT widened.
-  fun ptrcallNoArgsRetVector3i(methodBind: MemorySegment, instance: MemorySegment): Vector3i =
-    memScoped {
-      val ret = allocArray<IntVar>(3)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_VECTOR3I,
-        ret,
-      )
-      Vector3i(ret[0], ret[1], ret[2])
-    }
+  actual fun ptrcallNoArgsRetVector3i(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): Vector3i = memScoped {
+    val ret = allocArray<IntVar>(3)
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      null,
+      null,
+      0,
+      PT_VECTOR3I,
+      ret,
+    )
+    Vector3i(ret[0], ret[1], ret[2])
+  }
 
   // Color (4x float32, 16 bytes): components are always float32 (not real_t, not double).
   // No widening: PtrToArgDirect<Color> lays 4×float32 raw.
-  fun ptrcallNoArgsRetColor(methodBind: MemorySegment, instance: MemorySegment): Color = memScoped {
-    val ret = allocArray<FloatVar>(4)
-    kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
-  }
+  actual fun ptrcallNoArgsRetColor(methodBind: MemorySegment, instance: MemorySegment): Color =
+    memScoped {
+      val ret = allocArray<FloatVar>(4)
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_COLOR,
+        ret,
+      )
+      Color(ret[0], ret[1], ret[2], ret[3])
+    }
 
   // Rect2 (4x float32, 16 bytes): position.x, position.y, size.x, size.y.
   // Components are real_t = float32 on single-precision iOS (same convention as Vector2).
-  fun ptrcallNoArgsRetRect2(methodBind: MemorySegment, instance: MemorySegment): Rect2 = memScoped {
-    val ret = allocArray<GodotRealVar>(4)
-    kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
-  }
+  actual fun ptrcallNoArgsRetRect2(methodBind: MemorySegment, instance: MemorySegment): Rect2 =
+    memScoped {
+      val ret = allocArray<GodotRealVar>(4)
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_RECT2,
+        ret,
+      )
+      Rect2(
+        Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
+        Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
+      )
+    }
 
   // String return: a Godot String can't ride the fixed ret_out of the generic
   // dispatch, so it routes through the dedicated C helper. Two-call protocol —
   // measure the UTF-8 byte length (NULL buffer), then allocate and fill. Safe to
   // call twice because the wired methods are pure getters. string_to_utf8_chars
   // writes no null terminator, so decode exactly `len` bytes.
-  fun ptrcallNoArgsRetString(methodBind: MemorySegment, instance: MemorySegment): String =
+  actual fun ptrcallNoArgsRetString(methodBind: MemorySegment, instance: MemorySegment): String =
     memScoped {
       val len =
         kanama_ios_godot_ptrcall_no_args_ret_string(
@@ -443,28 +469,30 @@ object ObjectCalls {
   // StringName return: GDExtension has no StringName->utf8, so the dedicated C helper
   // converts the returned StringName to a String (String(from: StringName) ctor) and
   // UTF-8 encodes it. Same two-call length protocol as ptrcallNoArgsRetString.
-  fun ptrcallNoArgsRetStringName(methodBind: MemorySegment, instance: MemorySegment): String =
-    memScoped {
-      val len =
-        kanama_ios_godot_ptrcall_no_args_ret_string_name(
-          methodBind.address(),
-          instance.address(),
-          null,
-          0L,
-        )
-      if (len <= 0L) {
-        ""
-      } else {
-        val buf = allocArray<ByteVar>(len)
-        kanama_ios_godot_ptrcall_no_args_ret_string_name(
-          methodBind.address(),
-          instance.address(),
-          buf,
-          len,
-        )
-        buf.readBytes(len.toInt()).decodeToString()
-      }
+  actual fun ptrcallNoArgsRetStringName(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): String = memScoped {
+    val len =
+      kanama_ios_godot_ptrcall_no_args_ret_string_name(
+        methodBind.address(),
+        instance.address(),
+        null,
+        0L,
+      )
+    if (len <= 0L) {
+      ""
+    } else {
+      val buf = allocArray<ByteVar>(len)
+      kanama_ios_godot_ptrcall_no_args_ret_string_name(
+        methodBind.address(),
+        instance.address(),
+        buf,
+        len,
+      )
+      buf.readBytes(len.toInt()).decodeToString()
     }
+  }
 
   // task 100 (parcel 1) — String / StringName / NodePath return on any audited arg shape. The
   // generated helpers lay out their arg cells exactly as for kanama_ios_godot_ptrcall and hand
@@ -1268,34 +1296,36 @@ object ObjectCalls {
   // NodePath return: GDExtension has no NodePath->utf8, so the dedicated C helper converts
   // the returned NodePath to a String (String(from: NodePath) ctor) and UTF-8 encodes it,
   // then we wrap it back into a NodePath. Same two-call length protocol as the String helper.
-  fun ptrcallNoArgsRetNodePath(methodBind: MemorySegment, instance: MemorySegment): NodePath =
-    memScoped {
-      val len =
-        kanama_ios_godot_ptrcall_no_args_ret_node_path(
-          methodBind.address(),
-          instance.address(),
-          null,
-          0L,
-        )
-      if (len <= 0L) {
-        NodePath("")
-      } else {
-        val buf = allocArray<ByteVar>(len)
-        kanama_ios_godot_ptrcall_no_args_ret_node_path(
-          methodBind.address(),
-          instance.address(),
-          buf,
-          len,
-        )
-        NodePath(buf.readBytes(len.toInt()).decodeToString())
-      }
+  actual fun ptrcallNoArgsRetNodePath(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): NodePath = memScoped {
+    val len =
+      kanama_ios_godot_ptrcall_no_args_ret_node_path(
+        methodBind.address(),
+        instance.address(),
+        null,
+        0L,
+      )
+    if (len <= 0L) {
+      NodePath("")
+    } else {
+      val buf = allocArray<ByteVar>(len)
+      kanama_ios_godot_ptrcall_no_args_ret_node_path(
+        methodBind.address(),
+        instance.address(),
+        buf,
+        len,
+      )
+      NodePath(buf.readBytes(len.toInt()).decodeToString())
     }
+  }
 
   // PackedInt32Array return: the C helper reads the array's element count (size builtin)
   // and copies int32 elements out via operator_index_const. Two-call length protocol like
   // the String/NodePath helpers — measure the count first, allocate, then fill. The count
   // is an element count, not a byte size.
-  fun ptrcallNoArgsRetPackedInt32List(
+  actual fun ptrcallNoArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Int> = memScoped {
@@ -1323,7 +1353,7 @@ object ObjectCalls {
   // PackedStringArray return: VARIABLE-LENGTH elements. The C helper serializes the strings
   // into a length-prefixed blob [count:int32][len0:int32][utf8_0][len1:int32][utf8_1]...; we
   // measure the total byte size, allocate, fill, then decode (all little-endian on arm64).
-  fun ptrcallNoArgsRetPackedStringList(
+  actual fun ptrcallNoArgsRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<String> = memScoped {
@@ -1365,7 +1395,7 @@ object ObjectCalls {
 
   // PackedFloat32Array return: float32 element variant of ptrcallNoArgsRetPackedInt32List
   // (same size + operator_index_const + two-call length protocol; 16-byte storage C-side).
-  fun ptrcallNoArgsRetPackedFloat32List(
+  actual fun ptrcallNoArgsRetPackedFloat32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Float> = memScoped {
@@ -1392,7 +1422,7 @@ object ObjectCalls {
 
   // PackedFloat32Array arg (build-from-list): copy the List into a flat float buffer; the C
   // helper builds the array (constructor + push_back) and ptrcalls the single-arg void method.
-  fun ptrcallWithPackedFloat32ListArg(
+  actual fun ptrcallWithPackedFloat32ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Float>,
@@ -1614,8 +1644,10 @@ object ObjectCalls {
     ByteArray(0)
   }
 
-  fun ptrcallNoArgsRetByteArray(methodBind: MemorySegment, instance: MemorySegment): ByteArray =
-    ptrcallNoArgsRetByteArray(methodBind, instance, -1L)
+  actual fun ptrcallNoArgsRetByteArray(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): ByteArray = ptrcallNoArgsRetByteArray(methodBind, instance, -1L)
 
   // iOS-ONLY overload. The two-argument helper above is the shape the shared wrapper tree calls and
   // the one desktop declares, so it is the one that matches an `expect` member (task 104 step 3);
@@ -1632,7 +1664,7 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(null, null, 0)
     }
 
-  fun ptrcallWithByteArrayArgRetLong(
+  actual fun ptrcallWithByteArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -1798,7 +1830,7 @@ object ObjectCalls {
   }
 
   // Array[StringName] -> List<String> (group / animation-library name lists). Phase 2.7g.
-  fun ptrcallNoArgsRetStringNameList(
+  actual fun ptrcallNoArgsRetStringNameList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<String> =
@@ -1807,7 +1839,7 @@ object ObjectCalls {
     }
 
   // Array[NodePath] -> List<NodePath>. Phase 2.7g.
-  fun ptrcallNoArgsRetNodePathList(
+  actual fun ptrcallNoArgsRetNodePathList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<NodePath> =
@@ -1817,7 +1849,10 @@ object ObjectCalls {
 
   // Array[int] -> List<Long> (e.g. get_orphan_node_ids). Each record is an 8-byte int64 LE. Phase
   // 2.7g.
-  fun ptrcallNoArgsRetLongList(methodBind: MemorySegment, instance: MemorySegment): List<Long> =
+  actual fun ptrcallNoArgsRetLongList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): List<Long> =
     retTypedArrayBlob(methodBind, instance, PT_INT64) { b, o, _ ->
       var v = 0L
       for (k in 7 downTo 0) v = (v shl 8) or (b[o + k].toLong() and 0xFF)
@@ -1877,7 +1912,7 @@ object ObjectCalls {
     }
   }
 
-  fun ptrcallNoArgsRetArray(methodBind: MemorySegment, instance: MemorySegment): List<Any?> =
+  actual fun ptrcallNoArgsRetArray(methodBind: MemorySegment, instance: MemorySegment): List<Any?> =
     retVariantArrayBlob(methodBind, instance) {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(null, null, 0)
     }
@@ -1898,7 +1933,7 @@ object ObjectCalls {
   // PackedVector2Array arg via the generic dispatch: pack the List into a flat float buffer
   // (2 per Vector2), hand a {count,data} descriptor to the dispatch under PT_PACKED_VECTOR2_ARRAY;
   // the C side builds the Godot array (constructor + push_back) and destroys it after the call.
-  fun ptrcallWithPackedVector2ListArg(
+  actual fun ptrcallWithPackedVector2ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -1929,7 +1964,7 @@ object ObjectCalls {
   }
 
   // PackedColorArray arg via the generic dispatch (4 floats per Color element).
-  fun ptrcallWithPackedColorListArg(
+  actual fun ptrcallWithPackedColorListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Color>,
@@ -2239,13 +2274,22 @@ object ObjectCalls {
   // against
   // the parameter's class. Typing the Array with any one class here made every other caller of the
   // same shape hand the engine an Array[WrongClass] that it refuses (parcel-8 device gate finding).
-  fun MemScope.packTypedObjectArrayDesc(
-    values: List<GodotObject>
-  ): CPointer<KanamaIosTypedArrayArgDesc> =
+  // `List<*>`, matching desktop's `BuiltinTypes.initArrayOfObjects`: the generated helpers that
+  // take an Array[Object subclass] argument are `actual` members of an `expect object` since task
+  // 104 step 3 parcel C', so their parameter types must be desktop's. The elements are wrapper
+  // instances by construction (the generated wrapper passes `List<Element>`); a non-wrapper element
+  // is a generator bug, and the cast says so at the seam instead of silently pushing a null handle.
+  fun MemScope.packTypedObjectArrayDesc(values: List<*>): CPointer<KanamaIosTypedArrayArgDesc> =
     packTypedArrayDesc(
       VT_NIL_TYPE,
       null,
-      values.map { Pair(PT_OBJECT, int64Bytes(it.segment.address())) },
+      values.map { value ->
+        val element =
+          checkNotNull(value as? GodotObject) {
+            "typed object array element is not a GodotObject wrapper: $value"
+          }
+        Pair(PT_OBJECT, int64Bytes(element.segment.address()))
+      },
     )
 
   // task 100 (parcel 10) — typed arrays whose ELEMENTS are containers or packed arrays. A
@@ -2320,7 +2364,7 @@ object ObjectCalls {
   // CanvasItem.draw_polyline / draw_multiline: (PackedVector2Array, Color, float, bool) -> void.
   // Built through the generic dispatch (packed args + Color/double/bool POD cells). Can't be
   // self-tested (no _draw context); rides on the device-proven 2.7c-6a packed-arg building.
-  fun ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(
+  actual fun ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector2>,
@@ -2358,7 +2402,7 @@ object ObjectCalls {
 
   // CanvasItem.draw_polyline_colors / draw_multiline_colors:
   // (PackedVector2Array, PackedColorArray, float, bool) -> void.
-  fun ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(
+  actual fun ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector2>,
@@ -2397,7 +2441,7 @@ object ObjectCalls {
   // CanvasItem.draw_polygon / draw_primitive:
   // (PackedVector2Array, PackedColorArray, PackedVector2Array, Texture2D) -> void.
   // The Object (Texture2D) arg arrives as a MemorySegment handle (NULL/address 0 for null).
-  fun ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(
+  actual fun ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector2>,
@@ -2434,7 +2478,7 @@ object ObjectCalls {
 
   // CanvasItem.draw_colored_polygon:
   // (PackedVector2Array, Color, PackedVector2Array, Texture2D) -> void.
-  fun ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(
+  actual fun ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector2>,
@@ -2470,7 +2514,7 @@ object ObjectCalls {
   }
 
   // PackedVector2Array return: each element is 2 float32; the C helper fills count*2 floats.
-  fun ptrcallNoArgsRetPackedVector2List(
+  actual fun ptrcallNoArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Vector2> = memScoped {
@@ -2498,7 +2542,7 @@ object ObjectCalls {
   }
 
   // PackedColorArray return: each element is 4 float32 (RGBA); the C helper fills count*4 floats.
-  fun ptrcallNoArgsRetPackedColorList(
+  actual fun ptrcallNoArgsRetPackedColorList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Color> = memScoped {
@@ -2577,7 +2621,8 @@ object ObjectCalls {
   // Inline handle capacity of retTypedObjectList (longer lists drain from the C pending slot).
   internal const val TYPED_OBJECT_LIST_INLINE_CAP = 64
 
-  fun <T> ptrcallNoArgsRetTypedObjectList(
+  // `<T : Any>` is desktop's bound, which an `actual` must repeat (task 104 step 3 parcel C').
+  actual fun <T : Any> ptrcallNoArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     wrapper: (MemorySegment) -> T?,
@@ -2633,28 +2678,31 @@ object ObjectCalls {
     }
 
   // ---- single arg, void return ----
-  fun ptrcallWithBoolArg(methodBind: MemorySegment, instance: MemorySegment, value: Boolean) =
-    memScoped {
-      val cell = alloc<ByteVar>()
-      cell.value = if (value) 1 else 0
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_BOOL
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = cell.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithBoolArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Boolean,
+  ) = memScoped {
+    val cell = alloc<ByteVar>()
+    cell.value = if (value) 1 else 0
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_BOOL
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = cell.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
   // Scalar int args are 8 bytes (int64) at ptrcall — widen the Kotlin Int.
-  fun ptrcallWithIntArg(methodBind: MemorySegment, instance: MemorySegment, value: Int) =
+  actual fun ptrcallWithIntArg(methodBind: MemorySegment, instance: MemorySegment, value: Int) =
     memScoped {
       val cell = alloc<LongVar>()
       cell.value = value.toLong()
@@ -2674,7 +2722,7 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithLongArg(methodBind: MemorySegment, instance: MemorySegment, value: Long) =
+  actual fun ptrcallWithLongArg(methodBind: MemorySegment, instance: MemorySegment, value: Long) =
     memScoped {
       val cell = alloc<LongVar>()
       cell.value = value
@@ -2695,25 +2743,28 @@ object ObjectCalls {
     }
 
   // Godot scalar `float` args are 8-byte double at ptrcall — this helper covers both.
-  fun ptrcallWithDoubleArg(methodBind: MemorySegment, instance: MemorySegment, value: Double) =
-    memScoped {
-      val cell = alloc<DoubleVar>()
-      cell.value = value
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_FLOAT64
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = cell.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithDoubleArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Double,
+  ) = memScoped {
+    val cell = alloc<DoubleVar>()
+    cell.value = value
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = cell.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
   // (double, bool, bool, bool) -> Object. Hosts SceneTree.create_timer (SceneTree is a hand-written
   // collision class, so this shape isn't emitted by the generator; registered in
@@ -2758,93 +2809,105 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVector2Arg(methodBind: MemorySegment, instance: MemorySegment, value: Vector2) =
-    memScoped {
-      val cell = allocArray<GodotRealVar>(2)
-      cell[0] = GodotReal.toC(value.x)
-      cell[1] = GodotReal.toC(value.y)
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_VECTOR2
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = cell.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithVector2Arg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Vector2,
+  ) = memScoped {
+    val cell = allocArray<GodotRealVar>(2)
+    cell[0] = GodotReal.toC(value.x)
+    cell[1] = GodotReal.toC(value.y)
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_VECTOR2
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = cell.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithVector3Arg(methodBind: MemorySegment, instance: MemorySegment, value: Vector3) =
-    memScoped {
-      val cell = allocArray<GodotRealVar>(3)
-      cell[0] = GodotReal.toC(value.x)
-      cell[1] = GodotReal.toC(value.y)
-      cell[2] = GodotReal.toC(value.z)
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_VECTOR3
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = cell.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithVector3Arg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Vector3,
+  ) = memScoped {
+    val cell = allocArray<GodotRealVar>(3)
+    cell[0] = GodotReal.toC(value.x)
+    cell[1] = GodotReal.toC(value.y)
+    cell[2] = GodotReal.toC(value.z)
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_VECTOR3
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = cell.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithVector2iArg(methodBind: MemorySegment, instance: MemorySegment, value: Vector2i) =
-    memScoped {
-      val cell = allocArray<IntVar>(2)
-      cell[0] = value.x
-      cell[1] = value.y
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_VECTOR2I
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = cell.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithVector2iArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Vector2i,
+  ) = memScoped {
+    val cell = allocArray<IntVar>(2)
+    cell[0] = value.x
+    cell[1] = value.y
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_VECTOR2I
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = cell.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithVector3iArg(methodBind: MemorySegment, instance: MemorySegment, value: Vector3i) =
-    memScoped {
-      val cell = allocArray<IntVar>(3)
-      cell[0] = value.x
-      cell[1] = value.y
-      cell[2] = value.z
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_VECTOR3I
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = cell.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithVector3iArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Vector3i,
+  ) = memScoped {
+    val cell = allocArray<IntVar>(3)
+    cell[0] = value.x
+    cell[1] = value.y
+    cell[2] = value.z
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_VECTOR3I
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = cell.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithColorArg(methodBind: MemorySegment, instance: MemorySegment, color: Color) =
+  actual fun ptrcallWithColorArg(methodBind: MemorySegment, instance: MemorySegment, color: Color) =
     memScoped {
       val cell = allocArray<FloatVar>(4)
       cell[0] = color.r
@@ -2867,7 +2930,7 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithRect2Arg(methodBind: MemorySegment, instance: MemorySegment, value: Rect2) =
+  actual fun ptrcallWithRect2Arg(methodBind: MemorySegment, instance: MemorySegment, value: Rect2) =
     memScoped {
       val cell = allocArray<GodotRealVar>(4)
       cell[0] = GodotReal.toC(value.position.x)
@@ -2892,7 +2955,7 @@ object ObjectCalls {
 
   // Hand-written: used by the bespoke Input glue (IosGodotApi.kt) for is_action_just_pressed
   // and by the ObjectCalls self-test. Not in IOS_EMIT_CLASSES, so excluded from generation.
-  fun ptrcallWithStringNameAndBoolArgRetBool(
+  actual fun ptrcallWithStringNameAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -2919,7 +2982,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithObjectArgs(
+  actual fun ptrcallWithObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArgs: List<MemorySegment>,
@@ -3005,14 +3068,17 @@ object ObjectCalls {
 
   // PhysicsRayQueryParameters3D.set_exclude(Array[RID]): pass the RID ids as a flat int64 buffer;
   // the C side builds the Godot Array of RID variants and ptrcalls the setter.
-  fun ptrcallWithRIDListArg(methodBind: MemorySegment, instance: MemorySegment, values: List<RID>) =
-    memScoped {
-      val n = values.size
-      val arr = allocArray<LongVar>(if (n > 0) n else 1)
-      for (i in 0 until n) arr[i] = values[i].value
-      kanama_ios_godot_ptrcall_with_rid_array_arg(methodBind.address(), instance.address(), arr, n)
-      Unit
-    }
+  actual fun ptrcallWithRIDListArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    values: List<RID>,
+  ) = memScoped {
+    val n = values.size
+    val arr = allocArray<LongVar>(if (n > 0) n else 1)
+    for (i in 0 until n) arr[i] = values[i].value
+    kanama_ios_godot_ptrcall_with_rid_array_arg(methodBind.address(), instance.address(), arr, n)
+    Unit
+  }
 
   // ResourceLoader.load_threaded_get_status(path, progress): the C side supplies the progress
   // out-Array and reads back element 0. Returns status (-1 on error) to progress [0,1].
@@ -3310,11 +3376,11 @@ object ObjectCalls {
    * generator can select it as a dispatch helper via `METHOD_CALL_SHAPE_OVERRIDES`, mirroring
    * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate.
    */
-  fun callWithVariantArgs(
+  actual fun callWithVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     args: List<Any?>,
-    owned: Boolean = false,
+    owned: Boolean,
   ): Any? = memScoped {
     val (tags, ptrs, n) = encodeVariantArgs(args)
     val outInt = alloc<LongVar>()
@@ -3356,7 +3422,7 @@ object ObjectCalls {
    * factories). A named helper so the generator can route to it through
    * `METHOD_CALL_SHAPE_OVERRIDES`, mirroring [ptrcallWithStringNameArgRetVariantScalarOwned].
    */
-  fun callWithVariantArgsOwned(
+  actual fun callWithVariantArgsOwned(
     methodBind: MemorySegment,
     instance: MemorySegment,
     args: List<Any?>,
@@ -3367,10 +3433,12 @@ object ObjectCalls {
   // complex Variant types surface null, matching desktop ptrcall*RetVariantScalar). Calling the
   // method's OWN bind with Variant-encoded args is a real method invocation — Godot performs the
   // arg type coercion (e.g. String -> StringName) the call path needs. Phase 2.7e.
-  fun ptrcallNoArgsRetVariantScalar(methodBind: MemorySegment, instance: MemorySegment): Any? =
-    callWithVariantArgs(methodBind, instance, emptyList())
+  actual fun ptrcallNoArgsRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): Any? = callWithVariantArgs(methodBind, instance, emptyList())
 
-  fun ptrcallWithStringNameArgRetVariantScalar(
+  actual fun ptrcallWithStringNameArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -3382,7 +3450,7 @@ object ObjectCalls {
   // RefCounted results before the Variant destroy; those come back as the owning
   // RefCounted wrapper (close() releases — task-31 return-ownership). Non-RefCounted
   // results stay a borrowed raw handle, matching the other dynamic object returns.
-  fun ptrcallWithStringNameArgRetVariantScalarOwned(
+  actual fun ptrcallWithStringNameArgRetVariantScalarOwned(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -3407,13 +3475,13 @@ object ObjectCalls {
   // String for a STRING-typed Variant return, so these route through callWithVariantArgs with the
   // method's own bind (Variant-encoded args + STRING return decode). No new C/header — same path
   // as 2.7e. A null/non-String return (shouldn't happen for these typed methods) coerces to "".
-  fun ptrcallWithVector2ArgRetString(
+  actual fun ptrcallWithVector2ArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
   ): String = callWithVariantArgs(methodBind, instance, listOf(value)) as? String ?: ""
 
-  fun ptrcallWithStringArgRetString(
+  actual fun ptrcallWithStringArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -3446,19 +3514,19 @@ object ObjectCalls {
   // (ptrcallWithObjectArgRetStringName — find_animation(Animation) — is deferred: Animation isn't
   // an
   // emitted iOS wrapper yet, so the Object-arg gate blocks it; wire it when Animation lands.)
-  fun ptrcallWithStringNameArgRetStringName(
+  actual fun ptrcallWithStringNameArgRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
   ): String = callWithVariantArgs(methodBind, instance, listOf(name)) as? String ?: ""
 
-  fun ptrcallWithLongArgRetNodePath(
+  actual fun ptrcallWithLongArgRetNodePath(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
   ): NodePath = NodePath(callWithVariantArgs(methodBind, instance, listOf(value)) as? String ?: "")
 
-  fun ptrcallWithObjectAndBoolArgRetNodePath(
+  actual fun ptrcallWithObjectAndBoolArgRetNodePath(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -3540,31 +3608,49 @@ object ObjectCalls {
   private const val PT_VARIANT = 38
   private const val PT_TYPED_ARRAY_BLOB = 39
 
-  fun ptrcallNoArgsRetAABB(methodBind: MemorySegment, instance: MemorySegment): AABB = memScoped {
-    val ret = allocArray<GodotRealVar>(6)
-    kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_AABB, ret)
-    AABB(
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
-      Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
-    )
-  }
+  actual fun ptrcallNoArgsRetAABB(methodBind: MemorySegment, instance: MemorySegment): AABB =
+    memScoped {
+      val ret = allocArray<GodotRealVar>(6)
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_AABB,
+        ret,
+      )
+      AABB(
+        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
+        Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      )
+    }
 
-  fun ptrcallNoArgsRetArrayList(
+  actual fun ptrcallNoArgsRetArrayList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<List<Any?>> = memScoped { ptrcallRetArrayList(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetBasis(methodBind: MemorySegment, instance: MemorySegment): Basis = memScoped {
-    val ret = allocArray<GodotRealVar>(9)
-    kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_BASIS, ret)
-    Basis(
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-      Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-      Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
-    )
-  }
+  actual fun ptrcallNoArgsRetBasis(methodBind: MemorySegment, instance: MemorySegment): Basis =
+    memScoped {
+      val ret = allocArray<GodotRealVar>(9)
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_BASIS,
+        ret,
+      )
+      Basis(
+        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
+        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
+        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+      )
+    }
 
-  fun ptrcallNoArgsRetByteArrayList(
+  actual fun ptrcallNoArgsRetByteArrayList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<ByteArray> = memScoped {
@@ -3576,97 +3662,48 @@ object ObjectCalls {
       ptrcallRetCallable(methodBind, instance, null, null, 0)
     }
 
-  fun ptrcallNoArgsRetDictionary(
+  actual fun ptrcallNoArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): Map<String, Any?> = memScoped { ptrcallRetDictionary(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetDictionaryList(
+  actual fun ptrcallNoArgsRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Map<String, Any?>> = memScoped {
     ptrcallRetDictionaryList(methodBind, instance, null, null, 0)
   }
 
-  fun ptrcallNoArgsRetPackedFloat64List(
+  actual fun ptrcallNoArgsRetPackedFloat64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Double> = memScoped { ptrcallRetPackedFloat64List(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetPackedInt64List(
+  actual fun ptrcallNoArgsRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Long> = memScoped { ptrcallRetPackedInt64List(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetPackedStringListList(
+  actual fun ptrcallNoArgsRetPackedStringListList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<List<String>> = memScoped {
     ptrcallRetTypedPackedStringListList(methodBind, instance, null, null, 0)
   }
 
-  fun ptrcallNoArgsRetPackedVector2ListList(
+  actual fun ptrcallNoArgsRetPackedVector2ListList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<List<Vector2>> = memScoped {
     ptrcallRetTypedPackedVector2ListList(methodBind, instance, null, null, 0)
   }
 
-  fun ptrcallNoArgsRetPackedVector3List(
+  actual fun ptrcallNoArgsRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Vector3> = memScoped { ptrcallRetPackedVector3List(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetPlane(methodBind: MemorySegment, instance: MemorySegment): Plane = memScoped {
-    val ret = allocArray<GodotRealVar>(4)
-    kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_PLANE, ret)
-    Plane(
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
-      GodotReal.fromC(ret[3]),
-    )
-  }
-
-  fun ptrcallNoArgsRetProjection(methodBind: MemorySegment, instance: MemorySegment): Projection =
-    memScoped {
-      val ret = allocArray<GodotRealVar>(16)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_PROJECTION,
-        ret,
-      )
-      Projection(
-        Vector4(
-          GodotReal.fromC(ret[0]),
-          GodotReal.fromC(ret[1]),
-          GodotReal.fromC(ret[2]),
-          GodotReal.fromC(ret[3]),
-        ),
-        Vector4(
-          GodotReal.fromC(ret[4]),
-          GodotReal.fromC(ret[5]),
-          GodotReal.fromC(ret[6]),
-          GodotReal.fromC(ret[7]),
-        ),
-        Vector4(
-          GodotReal.fromC(ret[8]),
-          GodotReal.fromC(ret[9]),
-          GodotReal.fromC(ret[10]),
-          GodotReal.fromC(ret[11]),
-        ),
-        Vector4(
-          GodotReal.fromC(ret[12]),
-          GodotReal.fromC(ret[13]),
-          GodotReal.fromC(ret[14]),
-          GodotReal.fromC(ret[15]),
-        ),
-      )
-    }
-
-  fun ptrcallNoArgsRetQuaternion(methodBind: MemorySegment, instance: MemorySegment): Quaternion =
+  actual fun ptrcallNoArgsRetPlane(methodBind: MemorySegment, instance: MemorySegment): Plane =
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
       kanama_ios_godot_ptrcall(
@@ -3675,43 +3712,106 @@ object ObjectCalls {
         null,
         null,
         0,
-        PT_QUATERNION,
+        PT_PLANE,
         ret,
       )
-      Quaternion(
-        GodotReal.fromC(ret[0]),
-        GodotReal.fromC(ret[1]),
-        GodotReal.fromC(ret[2]),
+      Plane(
+        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
         GodotReal.fromC(ret[3]),
       )
     }
 
-  fun ptrcallNoArgsRetRID(methodBind: MemorySegment, instance: MemorySegment): RID = memScoped {
-    val ret = alloc<LongVar>()
-    ret.value = 0
+  actual fun ptrcallNoArgsRetProjection(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): Projection = memScoped {
+    val ret = allocArray<GodotRealVar>(16)
     kanama_ios_godot_ptrcall(
       methodBind.address(),
       instance.address(),
       null,
       null,
       0,
-      PT_RID,
-      ret.ptr,
+      PT_PROJECTION,
+      ret,
     )
-    RID(ret.value)
+    Projection(
+      Vector4(
+        GodotReal.fromC(ret[0]),
+        GodotReal.fromC(ret[1]),
+        GodotReal.fromC(ret[2]),
+        GodotReal.fromC(ret[3]),
+      ),
+      Vector4(
+        GodotReal.fromC(ret[4]),
+        GodotReal.fromC(ret[5]),
+        GodotReal.fromC(ret[6]),
+        GodotReal.fromC(ret[7]),
+      ),
+      Vector4(
+        GodotReal.fromC(ret[8]),
+        GodotReal.fromC(ret[9]),
+        GodotReal.fromC(ret[10]),
+        GodotReal.fromC(ret[11]),
+      ),
+      Vector4(
+        GodotReal.fromC(ret[12]),
+        GodotReal.fromC(ret[13]),
+        GodotReal.fromC(ret[14]),
+        GodotReal.fromC(ret[15]),
+      ),
+    )
   }
 
-  fun ptrcallNoArgsRetRIDList(methodBind: MemorySegment, instance: MemorySegment): List<RID> =
+  actual fun ptrcallNoArgsRetQuaternion(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): Quaternion = memScoped {
+    val ret = allocArray<GodotRealVar>(4)
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      null,
+      null,
+      0,
+      PT_QUATERNION,
+      ret,
+    )
+    Quaternion(
+      GodotReal.fromC(ret[0]),
+      GodotReal.fromC(ret[1]),
+      GodotReal.fromC(ret[2]),
+      GodotReal.fromC(ret[3]),
+    )
+  }
+
+  actual fun ptrcallNoArgsRetRID(methodBind: MemorySegment, instance: MemorySegment): RID =
     memScoped {
-      ptrcallRetTypedRIDList(methodBind, instance, null, null, 0)
+      val ret = alloc<LongVar>()
+      ret.value = 0
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_RID,
+        ret.ptr,
+      )
+      RID(ret.value)
     }
 
-  fun ptrcallNoArgsRetRect2List(methodBind: MemorySegment, instance: MemorySegment): List<Rect2> =
-    memScoped {
-      ptrcallRetTypedRect2List(methodBind, instance, null, null, 0)
-    }
+  actual fun ptrcallNoArgsRetRIDList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): List<RID> = memScoped { ptrcallRetTypedRIDList(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetRect2i(methodBind: MemorySegment, instance: MemorySegment): Rect2i =
+  actual fun ptrcallNoArgsRetRect2List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): List<Rect2> = memScoped { ptrcallRetTypedRect2List(methodBind, instance, null, null, 0) }
+
+  actual fun ptrcallNoArgsRetRect2i(methodBind: MemorySegment, instance: MemorySegment): Rect2i =
     memScoped {
       val ret = allocArray<IntVar>(4)
       kanama_ios_godot_ptrcall(
@@ -3726,84 +3826,89 @@ object ObjectCalls {
       Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
     }
 
-  fun ptrcallNoArgsRetTransform2D(methodBind: MemorySegment, instance: MemorySegment): Transform2D =
-    memScoped {
-      val ret = allocArray<GodotRealVar>(6)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_TRANSFORM2D,
-        ret,
-      )
-      Transform2D(
-        Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-        Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-        Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
-      )
-    }
-
-  fun ptrcallNoArgsRetTransform3D(methodBind: MemorySegment, instance: MemorySegment): Transform3D =
-    memScoped {
-      val ret = allocArray<GodotRealVar>(12)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_TRANSFORM3D,
-        ret,
-      )
-      Transform3D(
-        Basis(
-          Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-          Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-          Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
-        ),
-        Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
-      )
-    }
-
-  fun ptrcallNoArgsRetTransform3DList(
+  actual fun ptrcallNoArgsRetTransform2D(
     methodBind: MemorySegment,
     instance: MemorySegment,
-  ): List<Transform3D> = memScoped {
-    ptrcallRetTypedTransform3DList(methodBind, instance, null, null, 0)
-  }
-
-  fun ptrcallNoArgsRetTypedStringList(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-  ): List<String> = memScoped { ptrcallRetTypedStringList(methodBind, instance, null, null, 0) }
-
-  fun ptrcallNoArgsRetUInt32(methodBind: MemorySegment, instance: MemorySegment): Long = memScoped {
-    val ret = alloc<LongVar>()
+  ): Transform2D = memScoped {
+    val ret = allocArray<GodotRealVar>(6)
     kanama_ios_godot_ptrcall(
       methodBind.address(),
       instance.address(),
       null,
       null,
       0,
-      PT_INT64,
-      ret.ptr,
+      PT_TRANSFORM2D,
+      ret,
     )
-    ret.value
+    Transform2D(
+      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
+      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
+      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+    )
   }
 
-  fun ptrcallNoArgsRetVector2iList(
+  actual fun ptrcallNoArgsRetTransform3D(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): Transform3D = memScoped {
+    val ret = allocArray<GodotRealVar>(12)
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      null,
+      null,
+      0,
+      PT_TRANSFORM3D,
+      ret,
+    )
+    Transform3D(
+      Basis(
+        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
+        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
+        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+      ),
+      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+    )
+  }
+
+  actual fun ptrcallNoArgsRetTransform3DList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): List<Transform3D> = memScoped {
+    ptrcallRetTypedTransform3DList(methodBind, instance, null, null, 0)
+  }
+
+  actual fun ptrcallNoArgsRetTypedStringList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): List<String> = memScoped { ptrcallRetTypedStringList(methodBind, instance, null, null, 0) }
+
+  actual fun ptrcallNoArgsRetUInt32(methodBind: MemorySegment, instance: MemorySegment): Long =
+    memScoped {
+      val ret = alloc<LongVar>()
+      kanama_ios_godot_ptrcall(
+        methodBind.address(),
+        instance.address(),
+        null,
+        null,
+        0,
+        PT_INT64,
+        ret.ptr,
+      )
+      ret.value
+    }
+
+  actual fun ptrcallNoArgsRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Vector2i> = memScoped { ptrcallRetTypedVector2iList(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetVector3iList(
+  actual fun ptrcallNoArgsRetVector3iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): List<Vector3i> = memScoped { ptrcallRetTypedVector3iList(methodBind, instance, null, null, 0) }
 
-  fun ptrcallNoArgsRetVector4(methodBind: MemorySegment, instance: MemorySegment): Vector4 =
+  actual fun ptrcallNoArgsRetVector4(methodBind: MemorySegment, instance: MemorySegment): Vector4 =
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
       kanama_ios_godot_ptrcall(
@@ -3823,7 +3928,7 @@ object ObjectCalls {
       )
     }
 
-  fun ptrcallWithAABBArg(methodBind: MemorySegment, instance: MemorySegment, value: AABB) =
+  actual fun ptrcallWithAABBArg(methodBind: MemorySegment, instance: MemorySegment, value: AABB) =
     memScoped {
       val c0 = allocArray<GodotRealVar>(6)
       c0[0] = GodotReal.toC(value.position.x)
@@ -3848,7 +3953,7 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithAABBArgRetVector3iList(
+  actual fun ptrcallWithAABBArgRetVector3iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: AABB,
@@ -3867,7 +3972,7 @@ object ObjectCalls {
     ptrcallRetTypedVector3iList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithAABBRIDArgsRetPackedInt64List(
+  actual fun ptrcallWithAABBRIDArgsRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     aabb: AABB,
@@ -3891,26 +3996,29 @@ object ObjectCalls {
     ptrcallRetPackedInt64List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithArrayArg(methodBind: MemorySegment, instance: MemorySegment, values: List<Any?>) =
-    memScoped {
-      val c0 = packArrayBlob(values)
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_ARRAY
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithArrayArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    values: List<Any?>,
+  ) = memScoped {
+    val c0 = packArrayBlob(values)
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_ARRAY
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithArrayArgRetLong(
+  actual fun ptrcallWithArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Any?>,
@@ -3933,7 +4041,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithArrayListArg(
+  actual fun ptrcallWithArrayListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<List<Any?>>,
@@ -3982,7 +4090,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(
+  actual fun ptrcallWithArrayObjectTwoBoolArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     inputs: List<Any?>,
@@ -4010,7 +4118,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithArrayTransform3DArgs(
+  actual fun ptrcallWithArrayTransform3DArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Any?>,
@@ -4048,7 +4156,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithBasisArg(methodBind: MemorySegment, instance: MemorySegment, value: Basis) =
+  actual fun ptrcallWithBasisArg(methodBind: MemorySegment, instance: MemorySegment, value: Basis) =
     memScoped {
       val c0 = allocArray<GodotRealVar>(9)
       c0[0] = GodotReal.toC(value.x.x)
@@ -4076,7 +4184,7 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithBasisArgRetInt(
+  actual fun ptrcallWithBasisArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Basis,
@@ -4127,7 +4235,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithBoolAndDoubleArgs(
+  actual fun ptrcallWithBoolAndDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -4155,7 +4263,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithBoolAndIntArgs(
+  actual fun ptrcallWithBoolAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -4183,7 +4291,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithBoolAndIntArgsRetBool(
+  actual fun ptrcallWithBoolAndIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -4212,7 +4320,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithBoolAndIntArgsRetLong(
+  actual fun ptrcallWithBoolAndIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -4269,7 +4377,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithBoolAndPackedStringArrayArgs(
+  actual fun ptrcallWithBoolAndPackedStringArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     enabled: Boolean,
@@ -4296,7 +4404,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithBoolArgRetArray(
+  actual fun ptrcallWithBoolArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4310,7 +4418,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithBoolArgRetBool(
+  actual fun ptrcallWithBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4334,7 +4442,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithBoolArgRetDictionary(
+  actual fun ptrcallWithBoolArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -4348,7 +4456,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithBoolArgRetInt(
+  actual fun ptrcallWithBoolArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4372,7 +4480,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithBoolArgRetLong(
+  actual fun ptrcallWithBoolArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4396,7 +4504,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithBoolArgRetObject(
+  actual fun ptrcallWithBoolArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -4421,7 +4529,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithBoolArgRetPackedInt32List(
+  actual fun ptrcallWithBoolArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4435,7 +4543,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithBoolArgRetRID(
+  actual fun ptrcallWithBoolArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4460,7 +4568,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithBoolArgRetString(
+  actual fun ptrcallWithBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4474,7 +4582,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithBoolArgRetVariantScalar(
+  actual fun ptrcallWithBoolArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Boolean,
@@ -4488,7 +4596,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithBoolObjectArgsRetObject(
+  actual fun ptrcallWithBoolObjectArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     enabled: Boolean,
@@ -4518,7 +4626,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithBoolTwoDoubleArgs(
+  actual fun ptrcallWithBoolTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     enabled: Boolean,
@@ -4551,7 +4659,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithByteArrayAndBoolArgRetInt(
+  actual fun ptrcallWithByteArrayAndBoolArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     bytes: ByteArray,
@@ -4579,7 +4687,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithByteArrayAndDictionaryArgRetObject(
+  actual fun ptrcallWithByteArrayAndDictionaryArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     bytes: ByteArray,
@@ -4635,7 +4743,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithByteArrayAndLongArgRetLong(
+  actual fun ptrcallWithByteArrayAndLongArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -4663,7 +4771,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithByteArrayAndRIDArgRetRID(
+  actual fun ptrcallWithByteArrayAndRIDArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     bytes: ByteArray,
@@ -4692,7 +4800,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithByteArrayArg(
+  actual fun ptrcallWithByteArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -4714,7 +4822,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithByteArrayArgRetArray(
+  actual fun ptrcallWithByteArrayArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -4727,7 +4835,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithByteArrayArgRetByteArray(
+  actual fun ptrcallWithByteArrayArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -4740,7 +4848,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithByteArrayArgRetObject(
+  actual fun ptrcallWithByteArrayArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -4764,7 +4872,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithByteArrayArgRetString(
+  actual fun ptrcallWithByteArrayArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     bytes: ByteArray,
@@ -4815,7 +4923,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithByteArrayListArg(
+  actual fun ptrcallWithByteArrayListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<ByteArray>,
@@ -4837,7 +4945,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithByteArrayTwoStringArgs(
+  actual fun ptrcallWithByteArrayTwoStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     bytes: ByteArray,
@@ -4865,7 +4973,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithCallableArg(
+  actual fun ptrcallWithCallableArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -4890,7 +4998,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithCallableArgRetBool(
+  actual fun ptrcallWithCallableArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -4916,7 +5024,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithCallableArgRetObject(
+  actual fun ptrcallWithCallableArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -4943,7 +5051,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithCallableBoolStringArgsRetLong(
+  actual fun ptrcallWithCallableBoolStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -4977,7 +5085,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithCallableIntArgs(
+  actual fun ptrcallWithCallableIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -5007,7 +5115,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithCallableLongArgsRetLong(
+  actual fun ptrcallWithCallableLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -5038,7 +5146,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithCallableStringNameListArgs(
+  actual fun ptrcallWithCallableStringNameListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -5067,7 +5175,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithCallableStringNameListObjectArgs(
+  actual fun ptrcallWithCallableStringNameListObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -5101,7 +5209,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithCallableStringNameTwoStringStringNameListArgs(
+  actual fun ptrcallWithCallableStringNameTwoStringStringNameListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -5139,7 +5247,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithCallableTwoIntBoolStringArgsRetLong(
+  actual fun ptrcallWithCallableTwoIntBoolStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -5183,7 +5291,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithDictionaryAndBoolArgRetString(
+  actual fun ptrcallWithDictionaryAndBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -5201,7 +5309,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithDictionaryArg(
+  actual fun ptrcallWithDictionaryArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -5223,7 +5331,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithDictionaryArgRetArray(
+  actual fun ptrcallWithDictionaryArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -5236,7 +5344,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithDictionaryArgRetLong(
+  actual fun ptrcallWithDictionaryArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -5259,7 +5367,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithDictionaryArgRetObject(
+  actual fun ptrcallWithDictionaryArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -5283,7 +5391,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithDictionaryArgRetString(
+  actual fun ptrcallWithDictionaryArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -5296,7 +5404,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithDictionaryArgRetVariantScalar(
+  actual fun ptrcallWithDictionaryArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -5309,7 +5417,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithDictionaryDictionaryListArgsRetDictionary(
+  actual fun ptrcallWithDictionaryDictionaryListArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     dictionary: Map<String, Any?>,
@@ -5404,7 +5512,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithDictionaryListArg(
+  actual fun ptrcallWithDictionaryListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Map<String, Any?>>,
@@ -5426,7 +5534,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithDictionaryListIntArgsRetRID(
+  actual fun ptrcallWithDictionaryListIntArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Map<String, Any?>>,
@@ -5455,7 +5563,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithDoubleAndBoolArgRetTransform2D(
+  actual fun ptrcallWithDoubleAndBoolArgRetTransform2D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -5488,7 +5596,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithDoubleAndBoolArgRetVector2(
+  actual fun ptrcallWithDoubleAndBoolArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -5517,7 +5625,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithDoubleAndBoolArgRetVector3(
+  actual fun ptrcallWithDoubleAndBoolArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -5546,7 +5654,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithDoubleAndBoolArgs(
+  actual fun ptrcallWithDoubleAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -5574,7 +5682,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithDoubleAndColorArg(
+  actual fun ptrcallWithDoubleAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -5605,7 +5713,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithDoubleAndIntArgs(
+  actual fun ptrcallWithDoubleAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -5652,7 +5760,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithDoubleAndIntArgsRetPackedVector2List(
+  actual fun ptrcallWithDoubleAndIntArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -5704,7 +5812,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(
+  actual fun ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -5759,7 +5867,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithDoubleArgRetColor(
+  actual fun ptrcallWithDoubleArgRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -5783,7 +5891,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithDoubleArgRetInt(
+  actual fun ptrcallWithDoubleArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -5807,7 +5915,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithDoubleArgRetObject(
+  actual fun ptrcallWithDoubleArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -5832,7 +5940,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithDoubleArgRetVector2(
+  actual fun ptrcallWithDoubleArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -5856,7 +5964,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithDoubleArgRetVector3(
+  actual fun ptrcallWithDoubleArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -5919,7 +6027,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithFiveIntArgs(
+  actual fun ptrcallWithFiveIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -6006,7 +6114,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithFiveVector3ArgsRetVariantScalar(
+  actual fun ptrcallWithFiveVector3ArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -6050,7 +6158,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 5)
   }
 
-  fun ptrcallWithFloatArgRetFloat(
+  actual fun ptrcallWithFloatArgRetFloat(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -6074,7 +6182,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithFloatArgRetStringName(
+  actual fun ptrcallWithFloatArgRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -6088,7 +6196,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING_NAME)
   }
 
-  fun ptrcallWithFourDoubleArgs(
+  actual fun ptrcallWithFourDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -6126,7 +6234,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithFourIntAndBoolArgs(
+  actual fun ptrcallWithFourIntAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -6169,7 +6277,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithFourIntArgs(
+  actual fun ptrcallWithFourIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -6207,7 +6315,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithFourIntArgsRetDictionary(
+  actual fun ptrcallWithFourIntArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -6236,7 +6344,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithFourIntArgsRetLong(
+  actual fun ptrcallWithFourIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -6275,7 +6383,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithFourLongLongLongLongLongLongArgsRetRID(
+  actual fun ptrcallWithFourLongLongLongLongLongLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstLong: Long,
@@ -6345,7 +6453,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(
+  actual fun ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -6406,7 +6514,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithFourStringNameAndFloatArgRetVector2(
+  actual fun ptrcallWithFourStringNameAndFloatArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     negativeX: String,
@@ -6442,7 +6550,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(
+  actual fun ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -6478,7 +6586,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 7)
   }
 
-  fun ptrcallWithFourVector2ArgsRetBool(
+  actual fun ptrcallWithFourVector2ArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -6521,7 +6629,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithFourVector2ArgsRetPackedVector2List(
+  actual fun ptrcallWithFourVector2ArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -6554,7 +6662,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithFourVector2ArgsRetVariantScalar(
+  actual fun ptrcallWithFourVector2ArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -6587,7 +6695,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithFourVector3ArgsRetPackedVector3List(
+  actual fun ptrcallWithFourVector3ArgsRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -6624,7 +6732,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithFourVector3ArgsRetVector3(
+  actual fun ptrcallWithFourVector3ArgsRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -6671,7 +6779,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithIntAndArrayArg(
+  actual fun ptrcallWithIntAndArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -6698,7 +6806,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndArrayArgRetLong(
+  actual fun ptrcallWithIntAndArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -6726,7 +6834,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntAndBoolArgRetNodePath(
+  actual fun ptrcallWithIntAndBoolArgRetNodePath(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -6745,7 +6853,7 @@ object ObjectCalls {
     NodePath(ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_NODE_PATH))
   }
 
-  fun ptrcallWithIntAndBoolArgRetRect2(
+  actual fun ptrcallWithIntAndBoolArgRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -6777,7 +6885,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntAndBoolArgs(
+  actual fun ptrcallWithIntAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -6805,7 +6913,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndBoolArgsRetBool(
+  actual fun ptrcallWithIntAndBoolArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -6892,7 +7000,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntAndColorArg(
+  actual fun ptrcallWithIntAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -6923,7 +7031,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndDictionaryArg(
+  actual fun ptrcallWithIntAndDictionaryArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -6950,7 +7058,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndDictionaryArgRetBool(
+  actual fun ptrcallWithIntAndDictionaryArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -6978,7 +7086,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntAndDoubleArg(
+  actual fun ptrcallWithIntAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7006,7 +7114,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndDoubleArgRetDouble(
+  actual fun ptrcallWithIntAndDoubleArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7035,7 +7143,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntAndDoubleArgRetInt(
+  actual fun ptrcallWithIntAndDoubleArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7064,7 +7172,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntAndDoubleArgRetPackedVector2List(
+  actual fun ptrcallWithIntAndDoubleArgRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7083,7 +7191,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithIntAndDoubleArgRetPackedVector3List(
+  actual fun ptrcallWithIntAndDoubleArgRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7102,7 +7210,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithIntAndDoubleArgRetVector2(
+  actual fun ptrcallWithIntAndDoubleArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7131,7 +7239,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithIntAndDoubleArgRetVector3(
+  actual fun ptrcallWithIntAndDoubleArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7160,7 +7268,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithIntAndLongArgs(
+  actual fun ptrcallWithIntAndLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -7188,7 +7296,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndLongArgsRetBool(
+  actual fun ptrcallWithIntAndLongArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -7217,7 +7325,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntAndLongArgsRetDouble(
+  actual fun ptrcallWithIntAndLongArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -7246,7 +7354,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntAndLongArgsRetLong(
+  actual fun ptrcallWithIntAndLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -7275,7 +7383,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntAndLongArgsRetRID(
+  actual fun ptrcallWithIntAndLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -7305,7 +7413,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithIntAndNodePathArg(
+  actual fun ptrcallWithIntAndNodePathArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7331,7 +7439,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndObjectArg(
+  actual fun ptrcallWithIntAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7388,7 +7496,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntAndPackedFloat32ListArgs(
+  actual fun ptrcallWithIntAndPackedFloat32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -7442,7 +7550,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndPackedStringListArg(
+  actual fun ptrcallWithIntAndPackedStringListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -7469,7 +7577,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndPackedVector2ListArgs(
+  actual fun ptrcallWithIntAndPackedVector2ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -7527,7 +7635,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndQuaternionArg(
+  actual fun ptrcallWithIntAndQuaternionArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7558,7 +7666,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndRIDArg(
+  actual fun ptrcallWithIntAndRIDArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7586,7 +7694,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndRect2Arg(
+  actual fun ptrcallWithIntAndRect2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -7617,7 +7725,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndRect2iArg(
+  actual fun ptrcallWithIntAndRect2iArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7648,7 +7756,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndStringArg(
+  actual fun ptrcallWithIntAndStringArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -7674,7 +7782,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndStringArgRetBool(
+  actual fun ptrcallWithIntAndStringArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -7701,7 +7809,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntAndStringArgRetInt(
+  actual fun ptrcallWithIntAndStringArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -7728,7 +7836,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntAndStringArgRetLong(
+  actual fun ptrcallWithIntAndStringArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -7755,7 +7863,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntAndStringNameArg(
+  actual fun ptrcallWithIntAndStringNameArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7781,7 +7889,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndStringNameArgRetBool(
+  actual fun ptrcallWithIntAndStringNameArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7808,7 +7916,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntAndStringNameArgRetVariantScalar(
+  actual fun ptrcallWithIntAndStringNameArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7825,7 +7933,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithIntAndThreeBoolArgsRetObject(
+  actual fun ptrcallWithIntAndThreeBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7865,7 +7973,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithIntAndThreeDoubleArgs(
+  actual fun ptrcallWithIntAndThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7903,7 +8011,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndTransform2DArg(
+  actual fun ptrcallWithIntAndTransform2DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7936,7 +8044,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndTransform3DArg(
+  actual fun ptrcallWithIntAndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -7975,7 +8083,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndTwoDoubleArgsRetInt(
+  actual fun ptrcallWithIntAndTwoDoubleArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -8009,7 +8117,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntAndTwoVariantArgs(
+  actual fun ptrcallWithIntAndTwoVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -8040,7 +8148,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndUInt32Args(
+  actual fun ptrcallWithIntAndUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -8068,7 +8176,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndVariantArg(
+  actual fun ptrcallWithIntAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -8095,7 +8203,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndVariantArgRetRect2(
+  actual fun ptrcallWithIntAndVariantArgRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -8126,7 +8234,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntAndVector2Arg(
+  actual fun ptrcallWithIntAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8155,7 +8263,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndVector2iArg(
+  actual fun ptrcallWithIntAndVector2iArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8184,7 +8292,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndVector2iArgRetBool(
+  actual fun ptrcallWithIntAndVector2iArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8214,7 +8322,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntAndVector2iArgRetInt(
+  actual fun ptrcallWithIntAndVector2iArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8244,7 +8352,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntAndVector2iListArgsRetObject(
+  actual fun ptrcallWithIntAndVector2iListArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8273,7 +8381,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithIntAndVector3Arg(
+  actual fun ptrcallWithIntAndVector3Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -8303,7 +8411,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntArgRetArray(
+  actual fun ptrcallWithIntArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8331,7 +8439,7 @@ object ObjectCalls {
     ptrcallRetArrayList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetBasis(
+  actual fun ptrcallWithIntArgRetBasis(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8359,7 +8467,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntArgRetBool(
+  actual fun ptrcallWithIntArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8383,7 +8491,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntArgRetByteArray(
+  actual fun ptrcallWithIntArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8411,7 +8519,7 @@ object ObjectCalls {
     ptrcallRetCallable(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetColor(
+  actual fun ptrcallWithIntArgRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8435,7 +8543,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithIntArgRetDictionary(
+  actual fun ptrcallWithIntArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -8449,7 +8557,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetDouble(
+  actual fun ptrcallWithIntArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8473,28 +8581,31 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntArgRetInt(methodBind: MemorySegment, instance: MemorySegment, value: Int): Int =
-    memScoped {
-      val ret = alloc<LongVar>()
-      val c0 = alloc<LongVar>()
-      c0.value = value.toLong()
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_INT64
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_INT64,
-        ret.ptr,
-      )
-      ret.value.toInt()
-    }
+  actual fun ptrcallWithIntArgRetInt(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Int,
+  ): Int = memScoped {
+    val ret = alloc<LongVar>()
+    val c0 = alloc<LongVar>()
+    c0.value = value.toLong()
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_INT64,
+      ret.ptr,
+    )
+    ret.value.toInt()
+  }
 
-  fun ptrcallWithIntArgRetLong(
+  actual fun ptrcallWithIntArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8518,7 +8629,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntArgRetNodePath(
+  actual fun ptrcallWithIntArgRetNodePath(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8532,7 +8643,7 @@ object ObjectCalls {
     NodePath(ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_NODE_PATH))
   }
 
-  fun ptrcallWithIntArgRetObject(
+  actual fun ptrcallWithIntArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8557,7 +8668,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithIntArgRetPackedFloat32List(
+  actual fun ptrcallWithIntArgRetPackedFloat32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8571,7 +8682,7 @@ object ObjectCalls {
     ptrcallRetPackedFloat32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetPackedInt32List(
+  actual fun ptrcallWithIntArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8585,7 +8696,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetPackedStringList(
+  actual fun ptrcallWithIntArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8599,7 +8710,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetPackedVector2List(
+  actual fun ptrcallWithIntArgRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8640,7 +8751,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntArgRetQuaternion(
+  actual fun ptrcallWithIntArgRetQuaternion(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8669,29 +8780,32 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntArgRetRID(methodBind: MemorySegment, instance: MemorySegment, value: Int): RID =
-    memScoped {
-      val ret = alloc<LongVar>()
-      ret.value = 0
-      val c0 = alloc<LongVar>()
-      c0.value = value.toLong()
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_INT64
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_RID,
-        ret.ptr,
-      )
-      RID(ret.value)
-    }
+  actual fun ptrcallWithIntArgRetRID(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Int,
+  ): RID = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<LongVar>()
+    c0.value = value.toLong()
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_RID,
+      ret.ptr,
+    )
+    RID(ret.value)
+  }
 
-  fun ptrcallWithIntArgRetRect2(
+  actual fun ptrcallWithIntArgRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8718,7 +8832,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntArgRetRect2i(
+  actual fun ptrcallWithIntArgRetRect2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8742,7 +8856,7 @@ object ObjectCalls {
     Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
   }
 
-  fun ptrcallWithIntArgRetString(
+  actual fun ptrcallWithIntArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8756,7 +8870,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithIntArgRetStringName(
+  actual fun ptrcallWithIntArgRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8770,7 +8884,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING_NAME)
   }
 
-  fun ptrcallWithIntArgRetStringNameList(
+  actual fun ptrcallWithIntArgRetStringNameList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8784,7 +8898,7 @@ object ObjectCalls {
     ptrcallRetTypedStringNameList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetTransform2D(
+  actual fun ptrcallWithIntArgRetTransform2D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8812,7 +8926,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntArgRetTransform3D(
+  actual fun ptrcallWithIntArgRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8843,7 +8957,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntArgRetUInt32(
+  actual fun ptrcallWithIntArgRetUInt32(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8867,7 +8981,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntArgRetVariantScalar(
+  actual fun ptrcallWithIntArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8881,7 +8995,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetVector2(
+  actual fun ptrcallWithIntArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8905,7 +9019,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithIntArgRetVector2i(
+  actual fun ptrcallWithIntArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8929,7 +9043,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithIntArgRetVector2iList(
+  actual fun ptrcallWithIntArgRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8943,7 +9057,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetVector3(
+  actual fun ptrcallWithIntArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8967,7 +9081,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithIntArgRetVector3i(
+  actual fun ptrcallWithIntArgRetVector3i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -8991,7 +9105,7 @@ object ObjectCalls {
     Vector3i(ret[0], ret[1], ret[2])
   }
 
-  fun ptrcallWithIntArgRetVector3iList(
+  actual fun ptrcallWithIntArgRetVector3iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -9005,7 +9119,7 @@ object ObjectCalls {
     ptrcallRetTypedVector3iList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntBoolIntArgs(
+  actual fun ptrcallWithIntBoolIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -9038,7 +9152,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntBoolIntBoolArgs(
+  actual fun ptrcallWithIntBoolIntBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -9076,7 +9190,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(
+  actual fun ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     slot: Int,
@@ -9150,7 +9264,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntBoolNodePathIntArgs(
+  actual fun ptrcallWithIntBoolNodePathIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -9186,7 +9300,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntBoolTwoIntArgs(
+  actual fun ptrcallWithIntBoolTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -9224,7 +9338,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntByteArrayIntArgs(
+  actual fun ptrcallWithIntByteArrayIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -9256,7 +9370,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntByteArrayIntArgsRetLong(
+  actual fun ptrcallWithIntByteArrayIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -9289,7 +9403,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntCallableArgs(
+  actual fun ptrcallWithIntCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -9319,7 +9433,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntColorArgsRetLong(
+  actual fun ptrcallWithIntColorArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -9351,7 +9465,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntColorBoolArgs(
+  actual fun ptrcallWithIntColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -9387,7 +9501,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntDoubleBoolArgsRetDouble(
+  actual fun ptrcallWithIntDoubleBoolArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9421,7 +9535,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntDoubleBoolArgsRetQuaternion(
+  actual fun ptrcallWithIntDoubleBoolArgsRetQuaternion(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9460,7 +9574,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntDoubleBoolArgsRetVariantScalar(
+  actual fun ptrcallWithIntDoubleBoolArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9484,7 +9598,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithIntDoubleBoolArgsRetVector3(
+  actual fun ptrcallWithIntDoubleBoolArgsRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9518,7 +9632,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithIntDoubleLongTwoBoolArgsRetInt(
+  actual fun ptrcallWithIntDoubleLongTwoBoolArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9562,7 +9676,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(
+  actual fun ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9606,7 +9720,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntDoubleQuaternionArgsRetInt(
+  actual fun ptrcallWithIntDoubleQuaternionArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9643,7 +9757,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntDoubleStringNameArgsRetInt(
+  actual fun ptrcallWithIntDoubleStringNameArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9675,7 +9789,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(
+  actual fun ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -9734,7 +9848,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntDoubleVariantDoubleArgsRetInt(
+  actual fun ptrcallWithIntDoubleVariantDoubleArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9772,7 +9886,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntDoubleVector3ArgsRetInt(
+  actual fun ptrcallWithIntDoubleVector3ArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -9808,7 +9922,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntLongBoolStringArgs(
+  actual fun ptrcallWithIntLongBoolStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -9844,7 +9958,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntLongIntStringArgs(
+  actual fun ptrcallWithIntLongIntStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -9880,7 +9994,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntObjectAndIntArgs(
+  actual fun ptrcallWithIntObjectAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -9913,7 +10027,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntObjectBoolArgs(
+  actual fun ptrcallWithIntObjectBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -9946,7 +10060,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntObjectDoubleArgs(
+  actual fun ptrcallWithIntObjectDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -9979,7 +10093,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntObjectIntBoolTwoStringArgs(
+  actual fun ptrcallWithIntObjectIntBoolTwoStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     column: Int,
@@ -10023,7 +10137,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntObjectStringNameArgs(
+  actual fun ptrcallWithIntObjectStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -10054,7 +10168,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntObjectStringNameArrayArgsRetLong(
+  actual fun ptrcallWithIntObjectStringNameArrayArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     peerId: Int,
@@ -10090,7 +10204,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(
+  actual fun ptrcallWithIntPackedFloat32ListAndIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     frameCount: Int,
@@ -10123,7 +10237,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntRect2Rect2Args(
+  actual fun ptrcallWithIntRect2Rect2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -10162,7 +10276,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntStringAndIntArgsRetLong(
+  actual fun ptrcallWithIntStringAndIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -10194,7 +10308,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntStringNameAndVariantArg(
+  actual fun ptrcallWithIntStringNameAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -10224,7 +10338,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntStringObjectArgsRetLong(
+  actual fun ptrcallWithIntStringObjectArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -10256,7 +10370,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithIntStringVariantArgsRetDictionary(
+  actual fun ptrcallWithIntStringVariantArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -10277,7 +10391,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithIntThreeDoubleBoolArgs(
+  actual fun ptrcallWithIntThreeDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -10320,7 +10434,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntTransform2DDoubleBoolArgs(
+  actual fun ptrcallWithIntTransform2DDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -10363,7 +10477,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntTransform3DDoubleBoolArgs(
+  actual fun ptrcallWithIntTransform3DDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -10412,7 +10526,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntTwoBoolTwoIntArgs(
+  actual fun ptrcallWithIntTwoBoolTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -10455,7 +10569,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(
+  actual fun ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -10501,7 +10615,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntTwoLongArgs(
+  actual fun ptrcallWithIntTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -10534,7 +10648,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iAndBoolArgRetBool(
+  actual fun ptrcallWithIntVector2iAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -10569,7 +10683,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntVector2iAndBoolArgRetInt(
+  actual fun ptrcallWithIntVector2iAndBoolArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -10604,7 +10718,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntVector2iAndBoolArgRetObject(
+  actual fun ptrcallWithIntVector2iAndBoolArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     layer: Int,
@@ -10640,7 +10754,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithIntVector2iAndBoolArgRetVector2i(
+  actual fun ptrcallWithIntVector2iAndBoolArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -10675,7 +10789,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithIntVector2iAndIntArg(
+  actual fun ptrcallWithIntVector2iAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -10709,7 +10823,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iAndIntArgsRetVector2iList(
+  actual fun ptrcallWithIntVector2iAndIntArgsRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -10734,7 +10848,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithIntVector2iAndObjectArg(
+  actual fun ptrcallWithIntVector2iAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     layer: Int,
@@ -10768,7 +10882,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iArgsRetArray(
+  actual fun ptrcallWithIntVector2iArgsRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -10788,7 +10902,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithIntVector2iArgsRetPackedInt32List(
+  actual fun ptrcallWithIntVector2iArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -10808,7 +10922,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithIntVector2iIntArgsRetArray(
+  actual fun ptrcallWithIntVector2iIntArgsRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -10833,7 +10947,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithIntVector2iIntArgsRetBool(
+  actual fun ptrcallWithIntVector2iIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -10868,7 +10982,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntVector2iIntArgsRetInt(
+  actual fun ptrcallWithIntVector2iIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -10903,7 +11017,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithIntVector2iIntArgsRetObject(
+  actual fun ptrcallWithIntVector2iIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -10939,7 +11053,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithIntVector2iIntArgsRetPackedInt32List(
+  actual fun ptrcallWithIntVector2iIntArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -10964,7 +11078,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithIntVector2iIntArgsRetRect2(
+  actual fun ptrcallWithIntVector2iIntArgsRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11002,7 +11116,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithIntVector2iIntArgsRetVector2(
+  actual fun ptrcallWithIntVector2iIntArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11037,7 +11151,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithIntVector2iIntObjectArgs(
+  actual fun ptrcallWithIntVector2iIntObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11076,7 +11190,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iIntPackedInt32ListArgs(
+  actual fun ptrcallWithIntVector2iIntPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11114,7 +11228,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iIntRect2Args(
+  actual fun ptrcallWithIntVector2iIntRect2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11156,7 +11270,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iIntVector2Args(
+  actual fun ptrcallWithIntVector2iIntVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11196,7 +11310,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iIntVector2iArgs(
+  actual fun ptrcallWithIntVector2iIntVector2iArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11236,7 +11350,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iIntVector2iIntArgs(
+  actual fun ptrcallWithIntVector2iIntVector2iIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11281,7 +11395,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iListTwoIntAndBoolArgs(
+  actual fun ptrcallWithIntVector2iListTwoIntAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -11323,7 +11437,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iTwoIntArgs(
+  actual fun ptrcallWithIntVector2iTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11362,7 +11476,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector2iTwoIntVector2iIntArgs(
+  actual fun ptrcallWithIntVector2iTwoIntVector2iIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -11412,7 +11526,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntVector3ArgsRetDouble(
+  actual fun ptrcallWithIntVector3ArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Int,
@@ -11443,7 +11557,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndBoolArgRetString(
+  actual fun ptrcallWithLongAndBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longValue: Long,
@@ -11462,7 +11576,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithLongAndBoolArgs(
+  actual fun ptrcallWithLongAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -11490,7 +11604,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndByteArrayArg(
+  actual fun ptrcallWithLongAndByteArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     mode: Long,
@@ -11517,7 +11631,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndByteArrayArgRetLong(
+  actual fun ptrcallWithLongAndByteArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     mode: Long,
@@ -11545,7 +11659,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndColorArg(
+  actual fun ptrcallWithLongAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -11576,7 +11690,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndDoubleArg(
+  actual fun ptrcallWithLongAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -11604,7 +11718,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndFourIntArgs(
+  actual fun ptrcallWithLongAndFourIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -11647,7 +11761,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndFourIntArgsRetBool(
+  actual fun ptrcallWithLongAndFourIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -11691,7 +11805,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithLongAndFourIntArgsRetLong(
+  actual fun ptrcallWithLongAndFourIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11735,7 +11849,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndIntArgs(
+  actual fun ptrcallWithLongAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11763,7 +11877,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndIntArgsRetBool(
+  actual fun ptrcallWithLongAndIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11792,7 +11906,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithLongAndIntArgsRetInt(
+  actual fun ptrcallWithLongAndIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11821,7 +11935,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithLongAndIntArgsRetLong(
+  actual fun ptrcallWithLongAndIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11850,7 +11964,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndIntArgsRetObject(
+  actual fun ptrcallWithLongAndIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11880,7 +11994,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithLongAndIntArgsRetUInt32(
+  actual fun ptrcallWithLongAndIntArgsRetUInt32(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11909,7 +12023,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndIntArgsRetVector2(
+  actual fun ptrcallWithLongAndIntArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -11938,7 +12052,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithLongAndNodePathArg(
+  actual fun ptrcallWithLongAndNodePathArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -11964,7 +12078,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndObjectArg(
+  actual fun ptrcallWithLongAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -11992,7 +12106,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndRIDArg(
+  actual fun ptrcallWithLongAndRIDArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -12020,7 +12134,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndStringArg(
+  actual fun ptrcallWithLongAndStringArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12046,7 +12160,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndStringArgRetPackedStringList(
+  actual fun ptrcallWithLongAndStringArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12063,7 +12177,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithLongAndThreeStringNameArgs(
+  actual fun ptrcallWithLongAndThreeStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12095,7 +12209,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndThreeUInt32Args(
+  actual fun ptrcallWithLongAndThreeUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -12133,7 +12247,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndTransform3DArg(
+  actual fun ptrcallWithLongAndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12172,7 +12286,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndTwoByteArrayArgsRetByteArray(
+  actual fun ptrcallWithLongAndTwoByteArrayArgsRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     mode: Long,
@@ -12194,7 +12308,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithLongAndTwoByteArrayArgsRetLong(
+  actual fun ptrcallWithLongAndTwoByteArrayArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     mode: Long,
@@ -12226,7 +12340,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndTwoIntArgs(
+  actual fun ptrcallWithLongAndTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -12259,7 +12373,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndTwoIntArgsRetUInt32(
+  actual fun ptrcallWithLongAndTwoIntArgsRetUInt32(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -12293,7 +12407,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndTwoObjectArgs(
+  actual fun ptrcallWithLongAndTwoObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longValue: Long,
@@ -12355,7 +12469,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndTwoStringNameAndVariantArg(
+  actual fun ptrcallWithLongAndTwoStringNameAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12388,7 +12502,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndTwoStringNameArgs(
+  actual fun ptrcallWithLongAndTwoStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12417,7 +12531,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndTwoStringNameArgsRetBool(
+  actual fun ptrcallWithLongAndTwoStringNameArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12447,7 +12561,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(
+  actual fun ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12467,7 +12581,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithLongAndUInt32ArgRetBool(
+  actual fun ptrcallWithLongAndUInt32ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -12496,7 +12610,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithLongAndUInt32ArgRetLong(
+  actual fun ptrcallWithLongAndUInt32ArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -12525,7 +12639,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongAndVector2Arg(
+  actual fun ptrcallWithLongAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12554,7 +12668,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongAndVector3Arg(
+  actual fun ptrcallWithLongAndVector3Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12584,7 +12698,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongArgRetBool(
+  actual fun ptrcallWithLongArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12608,7 +12722,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithLongArgRetByteArray(
+  actual fun ptrcallWithLongArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12622,7 +12736,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithLongArgRetDictionary(
+  actual fun ptrcallWithLongArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -12636,7 +12750,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithLongArgRetDictionaryList(
+  actual fun ptrcallWithLongArgRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12650,7 +12764,7 @@ object ObjectCalls {
     ptrcallRetDictionaryList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithLongArgRetDouble(
+  actual fun ptrcallWithLongArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12674,7 +12788,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongArgRetInt(
+  actual fun ptrcallWithLongArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12698,7 +12812,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithLongArgRetLong(
+  actual fun ptrcallWithLongArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12722,7 +12836,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongArgRetObject(
+  actual fun ptrcallWithLongArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12761,7 +12875,7 @@ object ObjectCalls {
     ptrcallRetPackedColorList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithLongArgRetPackedInt32List(
+  actual fun ptrcallWithLongArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12775,7 +12889,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithLongArgRetPackedInt64List(
+  actual fun ptrcallWithLongArgRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12789,7 +12903,7 @@ object ObjectCalls {
     ptrcallRetPackedInt64List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithLongArgRetPackedStringList(
+  actual fun ptrcallWithLongArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12803,7 +12917,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithLongArgRetRID(
+  actual fun ptrcallWithLongArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12828,7 +12942,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithLongArgRetString(
+  actual fun ptrcallWithLongArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12842,7 +12956,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithLongArgRetTransform3D(
+  actual fun ptrcallWithLongArgRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12873,7 +12987,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithLongArgRetUInt32(
+  actual fun ptrcallWithLongArgRetUInt32(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12897,7 +13011,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongArgRetVector2(
+  actual fun ptrcallWithLongArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12921,7 +13035,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithLongArgRetVector3(
+  actual fun ptrcallWithLongArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -12985,7 +13099,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(
+  actual fun ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     primitive: Long,
@@ -13033,7 +13147,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongArrayStringArgsRetVector3iList(
+  actual fun ptrcallWithLongArrayStringArgsRetVector3iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     parserType: Long,
@@ -13054,7 +13168,7 @@ object ObjectCalls {
     ptrcallRetTypedVector3iList(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(
+  actual fun ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -13102,7 +13216,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongBoolIntArgs(
+  actual fun ptrcallWithLongBoolIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -13135,7 +13249,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongBoolRIDThreeUInt32Args(
+  actual fun ptrcallWithLongBoolRIDThreeUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longValue: Long,
@@ -13183,7 +13297,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongBoolTwoUInt32Args(
+  actual fun ptrcallWithLongBoolTwoUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -13221,7 +13335,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongByteArrayObjectArgsRetByteArray(
+  actual fun ptrcallWithLongByteArrayObjectArgsRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     mode: Long,
@@ -13244,7 +13358,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithLongByteArrayUInt32Args(
+  actual fun ptrcallWithLongByteArrayUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -13276,7 +13390,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongCallableArgs(
+  actual fun ptrcallWithLongCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -13306,7 +13420,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongCallableArgsRetObject(
+  actual fun ptrcallWithLongCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -13338,7 +13452,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithLongDoubleTwoBoolArgs(
+  actual fun ptrcallWithLongDoubleTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -13376,7 +13490,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongIntStringNameArgs(
+  actual fun ptrcallWithLongIntStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -13407,7 +13521,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongIntVector2Args(
+  actual fun ptrcallWithLongIntVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -13441,7 +13555,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongObjectVector2IntArgs(
+  actual fun ptrcallWithLongObjectVector2IntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -13480,7 +13594,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongRIDAndUInt32Args(
+  actual fun ptrcallWithLongRIDAndUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -13513,7 +13627,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongRIDLongArgsRetLong(
+  actual fun ptrcallWithLongRIDLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -13547,7 +13661,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongRect2Args(
+  actual fun ptrcallWithLongRect2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     list: Long,
@@ -13578,7 +13692,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongStringArrayArgsRetBool(
+  actual fun ptrcallWithLongStringArrayArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     result: Long,
@@ -13609,7 +13723,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(
+  actual fun ptrcallWithLongStringPackedStringListByteArrayArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     method: Long,
@@ -13644,7 +13758,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongStringPackedStringListStringArgsRetLong(
+  actual fun ptrcallWithLongStringPackedStringListStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     method: Long,
@@ -13678,7 +13792,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongStringVariantLongStringIntArgs(
+  actual fun ptrcallWithLongStringVariantLongStringIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstLong: Long,
@@ -13721,7 +13835,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongThreeIntBoolObjectListArgsRetLong(
+  actual fun ptrcallWithLongThreeIntBoolObjectListArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     type: Long,
@@ -13729,7 +13843,7 @@ object ObjectCalls {
     height: Int,
     depth: Int,
     useMipmaps: Boolean,
-    images: List<GodotObject>,
+    images: List<*>,
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     val c0 = alloc<LongVar>()
@@ -13769,7 +13883,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithLongThreeIntBoolObjectListArgsRetRID(
+  actual fun ptrcallWithLongThreeIntBoolObjectListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     type: Long,
@@ -13777,7 +13891,7 @@ object ObjectCalls {
     height: Int,
     depth: Int,
     useMipmaps: Boolean,
-    images: List<GodotObject>,
+    images: List<*>,
   ): RID = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0
@@ -13818,7 +13932,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithLongTwoByteArrayObjectArgsRetBool(
+  actual fun ptrcallWithLongTwoByteArrayObjectArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     mode: Long,
@@ -13855,7 +13969,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithLongTwoDoubleAndBoolArgs(
+  actual fun ptrcallWithLongTwoDoubleAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -13893,7 +14007,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongTwoStringColorObjectVariantIntArgs(
+  actual fun ptrcallWithLongTwoStringColorObjectVariantIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longValue: Long,
@@ -13944,7 +14058,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongUInt32RIDThreeUInt32Args(
+  actual fun ptrcallWithLongUInt32RIDThreeUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     longArg: Long,
@@ -13992,7 +14106,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongVector2AndDoubleArgs(
+  actual fun ptrcallWithLongVector2AndDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -14026,7 +14140,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithLongVector3AndDoubleArgs(
+  actual fun ptrcallWithLongVector3AndDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -14061,7 +14175,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithNodePathAndBoolArgs(
+  actual fun ptrcallWithNodePathAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14087,7 +14201,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithNodePathAndIntArg(
+  actual fun ptrcallWithNodePathAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14113,7 +14227,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithNodePathAndLongArg(
+  actual fun ptrcallWithNodePathAndLongArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14139,7 +14253,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithNodePathAndLongArgRetInt(
+  actual fun ptrcallWithNodePathAndLongArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14166,7 +14280,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithNodePathAndPackedFloat32ListArgs(
+  actual fun ptrcallWithNodePathAndPackedFloat32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14191,25 +14305,28 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithNodePathArg(methodBind: MemorySegment, instance: MemorySegment, path: NodePath) =
-    memScoped {
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_NODE_PATH
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithNodePathArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    path: NodePath,
+  ) = memScoped {
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_NODE_PATH
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithNodePathArgRetBool(
+  actual fun ptrcallWithNodePathArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14231,7 +14348,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithNodePathArgRetInt(
+  actual fun ptrcallWithNodePathArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14253,7 +14370,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithNodePathArgRetLong(
+  actual fun ptrcallWithNodePathArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14298,7 +14415,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithNodePathListArg(
+  actual fun ptrcallWithNodePathListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<NodePath>,
@@ -14320,7 +14437,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithNodePathRect2TwoIntArgs(
+  actual fun ptrcallWithNodePathRect2TwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14359,7 +14476,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithNodePathStringNameArgs(
+  actual fun ptrcallWithNodePathStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -14383,7 +14500,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndBoolArg(
+  actual fun ptrcallWithObjectAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14411,7 +14528,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndBoolArgRetBool(
+  actual fun ptrcallWithObjectAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14459,7 +14576,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithObjectAndBoolArgRetInt(
+  actual fun ptrcallWithObjectAndBoolArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14488,7 +14605,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithObjectAndBoolArgRetObject(
+  actual fun ptrcallWithObjectAndBoolArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14518,7 +14635,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectAndByteArrayArgRetByteArray(
+  actual fun ptrcallWithObjectAndByteArrayArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14536,7 +14653,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithObjectAndDictionaryArg(
+  actual fun ptrcallWithObjectAndDictionaryArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14563,7 +14680,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndDoubleArg(
+  actual fun ptrcallWithObjectAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14591,7 +14708,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndIntArg(
+  actual fun ptrcallWithObjectAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14619,7 +14736,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndIntArgRetDictionaryList(
+  actual fun ptrcallWithObjectAndIntArgRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14638,7 +14755,7 @@ object ObjectCalls {
     ptrcallRetDictionaryList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithObjectAndIntArgRetInt(
+  actual fun ptrcallWithObjectAndIntArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14696,7 +14813,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectAndIntArgRetObject(
+  actual fun ptrcallWithObjectAndIntArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14726,7 +14843,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectAndIntArgRetVector2List(
+  actual fun ptrcallWithObjectAndIntArgRetVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14745,7 +14862,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithObjectAndIntArgRetVector3List(
+  actual fun ptrcallWithObjectAndIntArgRetVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14823,7 +14940,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectAndPackedStringListArgsRetObject(
+  actual fun ptrcallWithObjectAndPackedStringListArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14852,7 +14969,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectAndRect2Arg(
+  actual fun ptrcallWithObjectAndRect2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14883,7 +15000,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndRect2iArg(
+  actual fun ptrcallWithObjectAndRect2iArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14914,7 +15031,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndStringArg(
+  actual fun ptrcallWithObjectAndStringArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14940,7 +15057,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndStringArgRetByteArray(
+  actual fun ptrcallWithObjectAndStringArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14957,7 +15074,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithObjectAndStringArgRetLong(
+  actual fun ptrcallWithObjectAndStringArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14984,7 +15101,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectAndStringNameArg(
+  actual fun ptrcallWithObjectAndStringNameArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15010,7 +15127,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(
+  actual fun ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15042,7 +15159,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithObjectAndTransform3DArg(
+  actual fun ptrcallWithObjectAndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15081,7 +15198,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndTwoBoolArgs(
+  actual fun ptrcallWithObjectAndTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15114,7 +15231,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectAndTwoIntArgsRetRect2(
+  actual fun ptrcallWithObjectAndTwoIntArgsRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15151,7 +15268,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithObjectAndVariantArgRetLong(
+  actual fun ptrcallWithObjectAndVariantArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15179,7 +15296,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectAndVector2iArg(
+  actual fun ptrcallWithObjectAndVector2iArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15208,7 +15325,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectArgRetBool(
+  actual fun ptrcallWithObjectArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15232,7 +15349,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithObjectArgRetByteArray(
+  actual fun ptrcallWithObjectArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15246,7 +15363,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithObjectArgRetDictionary(
+  actual fun ptrcallWithObjectArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15260,7 +15377,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithObjectArgRetInt(
+  actual fun ptrcallWithObjectArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15284,7 +15401,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithObjectArgRetLong(
+  actual fun ptrcallWithObjectArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15308,7 +15425,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectArgRetObject(
+  actual fun ptrcallWithObjectArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15333,7 +15450,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectArgRetPackedFloat32List(
+  actual fun ptrcallWithObjectArgRetPackedFloat32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15347,7 +15464,7 @@ object ObjectCalls {
     ptrcallRetPackedFloat32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithObjectArgRetPackedStringList(
+  actual fun ptrcallWithObjectArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15361,7 +15478,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithObjectArgRetRID(
+  actual fun ptrcallWithObjectArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15386,7 +15503,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithObjectArgRetStringName(
+  actual fun ptrcallWithObjectArgRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15400,7 +15517,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING_NAME)
   }
 
-  fun ptrcallWithObjectArgRetTransform2D(
+  actual fun ptrcallWithObjectArgRetTransform2D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15428,7 +15545,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithObjectArgRetUInt32(
+  actual fun ptrcallWithObjectArgRetUInt32(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15697,7 +15814,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectCallableArgs(
+  actual fun ptrcallWithObjectCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15727,7 +15844,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectCallablePackedInt32ListStringArgs(
+  actual fun ptrcallWithObjectCallablePackedInt32ListStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15764,7 +15881,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectCallableStringArgs(
+  actual fun ptrcallWithObjectCallableStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15797,7 +15914,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectColorLongBoolArgs(
+  actual fun ptrcallWithObjectColorLongBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15838,7 +15955,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectColorTwoBoolArgs(
+  actual fun ptrcallWithObjectColorTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15879,7 +15996,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectDoubleColorArgs(
+  actual fun ptrcallWithObjectDoubleColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15915,7 +16032,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectDoubleIntStringNameArgs(
+  actual fun ptrcallWithObjectDoubleIntStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     obj: MemorySegment,
@@ -15951,7 +16068,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectDoubleTwoBoolArgsRetObject(
+  actual fun ptrcallWithObjectDoubleTwoBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -15991,7 +16108,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectIntBoolArgs(
+  actual fun ptrcallWithObjectIntBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16099,7 +16216,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectIntTwoBoolArgs(
+  actual fun ptrcallWithObjectIntTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16137,10 +16254,10 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectListArg(
+  actual fun ptrcallWithObjectListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
   ) = memScoped {
     val c0 = packTypedObjectArrayDesc(values)
     val types = allocArray<IntVar>(1)
@@ -16159,10 +16276,10 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectListArgRetLong(
+  actual fun ptrcallWithObjectListArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     val c0 = packTypedObjectArrayDesc(values)
@@ -16182,10 +16299,10 @@ object ObjectCalls {
     ret.value
   }
 
-  fun <T> ptrcallWithObjectListIntArgsRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithObjectListIntArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
     size: Int,
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
@@ -16202,10 +16319,10 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 2)
     }
 
-  fun ptrcallWithObjectListLongArgsRetRID(
+  actual fun ptrcallWithObjectListLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
     type: Long,
   ): RID = memScoped {
     val ret = alloc<LongVar>()
@@ -16231,10 +16348,10 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithObjectListObjectCallableArgsRetObject(
+  actual fun ptrcallWithObjectListObjectCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
     objectArg: MemorySegment,
     callableObject: MemorySegment,
     callableMethod: String,
@@ -16267,10 +16384,10 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectListRIDUInt32ArgsRetRID(
+  actual fun ptrcallWithObjectListRIDUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
     rid: RID,
     set: Long,
   ): RID = memScoped {
@@ -16301,10 +16418,10 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithObjectListTransform3DListBoolArgsRetObject(
+  actual fun ptrcallWithObjectListTransform3DListBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
     transforms: List<Transform3D>,
     flag: Boolean,
   ): MemorySegment = memScoped {
@@ -16334,10 +16451,10 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectListUInt32ArgsRetLong(
+  actual fun ptrcallWithObjectListUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
     count: Long,
   ): Long = memScoped {
     val ret = alloc<LongVar>()
@@ -16362,7 +16479,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectLongAndVector2Arg(
+  actual fun ptrcallWithObjectLongAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16396,7 +16513,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectLongBoolDoubleArgs(
+  actual fun ptrcallWithObjectLongBoolDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16434,7 +16551,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(
+  actual fun ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16485,7 +16602,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectNodePathObjectIntArgsRetObject(
+  actual fun ptrcallWithObjectNodePathObjectIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -16523,7 +16640,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectObjectIntBoolArgs(
+  actual fun ptrcallWithObjectObjectIntBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObjectArg: MemorySegment,
@@ -16561,7 +16678,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectObjectIntTwoBoolArgs(
+  actual fun ptrcallWithObjectObjectIntTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObjectArg: MemorySegment,
@@ -16604,7 +16721,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectRIDArgsRetRID(
+  actual fun ptrcallWithObjectRIDArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16671,7 +16788,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(
+  actual fun ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16721,7 +16838,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithObjectRect2BoolColorBoolArgs(
+  actual fun ptrcallWithObjectRect2BoolColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16807,7 +16924,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectStringAndIntArgs(
+  actual fun ptrcallWithObjectStringAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16838,7 +16955,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectStringAndObjectArgsRetLong(
+  actual fun ptrcallWithObjectStringAndObjectArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObjectArg: MemorySegment,
@@ -16870,7 +16987,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectStringAndPackedStringListArgs(
+  actual fun ptrcallWithObjectStringAndPackedStringListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16900,7 +17017,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectStringArgRetObject(
+  actual fun ptrcallWithObjectStringArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16928,7 +17045,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectStringArgsRetRID(
+  actual fun ptrcallWithObjectStringArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16956,7 +17073,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithObjectStringBoolArgs(
+  actual fun ptrcallWithObjectStringBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16987,7 +17104,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectStringCallableArgsRetInt(
+  actual fun ptrcallWithObjectStringCallableArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17021,7 +17138,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithObjectStringIntLongArgs(
+  actual fun ptrcallWithObjectStringIntLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17057,7 +17174,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectStringNameAndBoolArgRetBool(
+  actual fun ptrcallWithObjectStringNameAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17089,7 +17206,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithObjectStringNameAndVariantArg(
+  actual fun ptrcallWithObjectStringNameAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17119,7 +17236,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectStringNameAndVariantArgRetLong(
+  actual fun ptrcallWithObjectStringNameAndVariantArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17150,7 +17267,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectStringNameArgRetVariantScalar(
+  actual fun ptrcallWithObjectStringNameArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17167,7 +17284,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithObjectStringObjectArgsRetObject(
+  actual fun ptrcallWithObjectStringObjectArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -17200,7 +17317,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(
+  actual fun ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17247,7 +17364,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectThreeStringArgsRetObject(
+  actual fun ptrcallWithObjectThreeStringArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17281,7 +17398,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithObjectTwoDoubleArgs(
+  actual fun ptrcallWithObjectTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17314,7 +17431,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(
+  actual fun ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     image: MemorySegment,
@@ -17393,7 +17510,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectTwoIntArgsRetLong(
+  actual fun ptrcallWithObjectTwoIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17427,7 +17544,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectTwoIntBoolArgs(
+  actual fun ptrcallWithObjectTwoIntBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17465,7 +17582,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectTwoRect2AndColorArgs(
+  actual fun ptrcallWithObjectTwoRect2AndColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17512,7 +17629,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(
+  actual fun ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17574,7 +17691,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectTwoRect2ColorTwoBoolArgs(
+  actual fun ptrcallWithObjectTwoRect2ColorTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17631,7 +17748,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2AndColorArgs(
+  actual fun ptrcallWithObjectVector2AndColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17668,7 +17785,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2IntStringNameArgs(
+  actual fun ptrcallWithObjectVector2IntStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     obj: MemorySegment,
@@ -17705,7 +17822,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2StringIntColorDoubleArgs(
+  actual fun ptrcallWithObjectVector2StringIntColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17755,7 +17872,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(
+  actual fun ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17830,7 +17947,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(
+  actual fun ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17920,7 +18037,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(
+  actual fun ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -18005,7 +18122,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(
+  actual fun ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -18085,7 +18202,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(
+  actual fun ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -18140,7 +18257,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectVector2iAndDoubleArg(
+  actual fun ptrcallWithObjectVector2iAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -18174,7 +18291,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(
+  actual fun ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     data: ByteArray,
@@ -18210,7 +18327,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithPackedFloat32ListAndBoolArgRetDouble(
+  actual fun ptrcallWithPackedFloat32ListAndBoolArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Float>,
@@ -18238,7 +18355,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(
+  actual fun ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     floats: List<Float>,
@@ -18264,7 +18381,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedFloat32ListArgRetBool(
+  actual fun ptrcallWithPackedFloat32ListArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Float>,
@@ -18287,7 +18404,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithPackedFloat32ListArgRetLong(
+  actual fun ptrcallWithPackedFloat32ListArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Float>,
@@ -18310,7 +18427,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithPackedFloat64ListArg(
+  actual fun ptrcallWithPackedFloat64ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Double>,
@@ -18332,7 +18449,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedInt32ListArg(
+  actual fun ptrcallWithPackedInt32ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Int>,
@@ -18354,7 +18471,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedInt64ListArg(
+  actual fun ptrcallWithPackedInt64ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Long>,
@@ -18376,7 +18493,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedStringListArg(
+  actual fun ptrcallWithPackedStringListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<String>,
@@ -18398,7 +18515,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedStringListArgRetDictionary(
+  actual fun ptrcallWithPackedStringListArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<String>,
@@ -18411,7 +18528,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithPackedStringListArgRetInt(
+  actual fun ptrcallWithPackedStringListArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<String>,
@@ -18434,7 +18551,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithPackedStringListListArg(
+  actual fun ptrcallWithPackedStringListListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<List<String>>,
@@ -18456,7 +18573,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector2ListAndBoolArg(
+  actual fun ptrcallWithPackedVector2ListAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18483,7 +18600,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector2ListAndDoubleArgRetPackedVector2List(
+  actual fun ptrcallWithPackedVector2ListAndDoubleArgRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18501,7 +18618,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithPackedVector2ListAndIntArgs(
+  actual fun ptrcallWithPackedVector2ListAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18528,7 +18645,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector2ListAndPackedInt32ListArgs(
+  actual fun ptrcallWithPackedVector2ListAndPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector2>,
@@ -18554,7 +18671,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector2ListArgRetBool(
+  actual fun ptrcallWithPackedVector2ListArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18577,7 +18694,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithPackedVector2ListArgRetDictionary(
+  actual fun ptrcallWithPackedVector2ListArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18590,7 +18707,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithPackedVector2ListArgRetPackedInt32List(
+  actual fun ptrcallWithPackedVector2ListArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18603,7 +18720,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithPackedVector2ListArgRetPackedVector2List(
+  actual fun ptrcallWithPackedVector2ListArgRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18616,7 +18733,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithPackedVector2ListArgRetPackedVector2ListList(
+  actual fun ptrcallWithPackedVector2ListArgRetPackedVector2ListList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18629,7 +18746,7 @@ object ObjectCalls {
     ptrcallRetTypedPackedVector2ListList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList(
+  actual fun ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18652,7 +18769,7 @@ object ObjectCalls {
     ptrcallRetTypedPackedVector2ListList(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithPackedVector2ListDoubleAndTwoLongArgsRetPackedVector2ListList(
+  actual fun ptrcallWithPackedVector2ListDoubleAndTwoLongArgsRetPackedVector2ListList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2>,
@@ -18680,7 +18797,7 @@ object ObjectCalls {
     ptrcallRetTypedPackedVector2ListList(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithPackedVector2ListListArg(
+  actual fun ptrcallWithPackedVector2ListListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<List<Vector2>>,
@@ -18702,7 +18819,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector3ListAndDoubleArgRetPackedVector3List(
+  actual fun ptrcallWithPackedVector3ListAndDoubleArgRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector3>,
@@ -18720,7 +18837,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithPackedVector3ListAndPackedInt32ListArgs(
+  actual fun ptrcallWithPackedVector3ListAndPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector3>,
@@ -18746,7 +18863,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List(
+  actual fun ptrcallWithPackedVector3ListAndPlaneArgRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector3>,
@@ -18767,7 +18884,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithPackedVector3ListAndTransform3DArg(
+  actual fun ptrcallWithPackedVector3ListAndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector3>,
@@ -18805,7 +18922,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector3ListArg(
+  actual fun ptrcallWithPackedVector3ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector3>,
@@ -18827,7 +18944,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector3ListArgRetBool(
+  actual fun ptrcallWithPackedVector3ListArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector3>,
@@ -18850,7 +18967,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithPackedVector3ListArgRetPackedInt32List(
+  actual fun ptrcallWithPackedVector3ListArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector3>,
@@ -18863,7 +18980,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithPackedVector3ListObjectBoolColorArgs(
+  actual fun ptrcallWithPackedVector3ListObjectBoolColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector3>,
@@ -18903,7 +19020,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(
+  actual fun ptrcallWithPackedVector3ListObjectPackedInt32ListTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     points: List<Vector3>,
@@ -18986,7 +19103,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(
+  actual fun ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector3>,
@@ -19023,7 +19140,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPlaneArg(methodBind: MemorySegment, instance: MemorySegment, value: Plane) =
+  actual fun ptrcallWithPlaneArg(methodBind: MemorySegment, instance: MemorySegment, value: Plane) =
     memScoped {
       val c0 = allocArray<GodotRealVar>(4)
       c0[0] = GodotReal.toC(value.normal.x)
@@ -19046,7 +19163,7 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithPlaneListAndRIDArgsRetPackedInt64List(
+  actual fun ptrcallWithPlaneListAndRIDArgsRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Plane>,
@@ -19064,7 +19181,7 @@ object ObjectCalls {
     ptrcallRetPackedInt64List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithPlaneListArgRetPackedVector3List(
+  actual fun ptrcallWithPlaneListArgRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Plane>,
@@ -19077,7 +19194,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithQuaternionArg(
+  actual fun ptrcallWithQuaternionArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Quaternion,
@@ -19103,7 +19220,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndAABBArg(
+  actual fun ptrcallWithRIDAndAABBArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19136,7 +19253,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndArrayArg(
+  actual fun ptrcallWithRIDAndArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19163,7 +19280,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndBasisArg(
+  actual fun ptrcallWithRIDAndBasisArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19199,7 +19316,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndBoolArg(
+  actual fun ptrcallWithRIDAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19227,7 +19344,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndBoolArgRetLong(
+  actual fun ptrcallWithRIDAndBoolArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19256,7 +19373,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndBoolArgRetRID(
+  actual fun ptrcallWithRIDAndBoolArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19286,7 +19403,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndByteArrayArg(
+  actual fun ptrcallWithRIDAndByteArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19313,7 +19430,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndColorArg(
+  actual fun ptrcallWithRIDAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19344,7 +19461,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndDictionaryArg(
+  actual fun ptrcallWithRIDAndDictionaryArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19371,7 +19488,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndDoubleArg(
+  actual fun ptrcallWithRIDAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19399,7 +19516,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndDoubleArgRetLong(
+  actual fun ptrcallWithRIDAndDoubleArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19428,7 +19545,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndIntArg(
+  actual fun ptrcallWithRIDAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19456,7 +19573,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndIntArgRetArray(
+  actual fun ptrcallWithRIDAndIntArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19475,7 +19592,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndIntArgRetArrayList(
+  actual fun ptrcallWithRIDAndIntArgRetArrayList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19494,7 +19611,7 @@ object ObjectCalls {
     ptrcallRetArrayList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndIntArgRetBool(
+  actual fun ptrcallWithRIDAndIntArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19523,7 +19640,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndIntArgRetColor(
+  actual fun ptrcallWithRIDAndIntArgRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19552,7 +19669,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithRIDAndIntArgRetDictionary(
+  actual fun ptrcallWithRIDAndIntArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19571,7 +19688,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndIntArgRetInt(
+  actual fun ptrcallWithRIDAndIntArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19600,7 +19717,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDAndIntArgRetLong(
+  actual fun ptrcallWithRIDAndIntArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19629,7 +19746,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndIntArgRetObject(
+  actual fun ptrcallWithRIDAndIntArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19659,7 +19776,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDAndIntArgRetRID(
+  actual fun ptrcallWithRIDAndIntArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19689,7 +19806,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndIntArgRetString(
+  actual fun ptrcallWithRIDAndIntArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19708,7 +19825,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithRIDAndIntArgRetTransform2D(
+  actual fun ptrcallWithRIDAndIntArgRetTransform2D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19741,7 +19858,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDAndIntArgRetTransform3D(
+  actual fun ptrcallWithRIDAndIntArgRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19777,7 +19894,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDAndIntArgRetVariantScalar(
+  actual fun ptrcallWithRIDAndIntArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19796,7 +19913,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndIntArgRetVector2(
+  actual fun ptrcallWithRIDAndIntArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19825,7 +19942,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDAndIntArgRetVector3(
+  actual fun ptrcallWithRIDAndIntArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19854,7 +19971,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithRIDAndLongArg(
+  actual fun ptrcallWithRIDAndLongArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19882,7 +19999,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndLongArgRetBool(
+  actual fun ptrcallWithRIDAndLongArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19911,7 +20028,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndLongArgRetByteArray(
+  actual fun ptrcallWithRIDAndLongArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19930,7 +20047,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetDictionary(
+  actual fun ptrcallWithRIDAndLongArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19949,7 +20066,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetDouble(
+  actual fun ptrcallWithRIDAndLongArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -19978,7 +20095,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndLongArgRetInt(
+  actual fun ptrcallWithRIDAndLongArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20007,7 +20124,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDAndLongArgRetLong(
+  actual fun ptrcallWithRIDAndLongArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20036,7 +20153,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndLongArgRetPackedColorList(
+  actual fun ptrcallWithRIDAndLongArgRetPackedColorList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20055,7 +20172,7 @@ object ObjectCalls {
     ptrcallRetPackedColorList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetPackedFloat32List(
+  actual fun ptrcallWithRIDAndLongArgRetPackedFloat32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20074,7 +20191,7 @@ object ObjectCalls {
     ptrcallRetPackedFloat32List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetPackedInt32List(
+  actual fun ptrcallWithRIDAndLongArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20093,7 +20210,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetPackedVector2List(
+  actual fun ptrcallWithRIDAndLongArgRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20112,7 +20229,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetPackedVector3List(
+  actual fun ptrcallWithRIDAndLongArgRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20131,7 +20248,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetRID(
+  actual fun ptrcallWithRIDAndLongArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20161,7 +20278,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndLongArgRetString(
+  actual fun ptrcallWithRIDAndLongArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20180,7 +20297,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithRIDAndLongArgRetVariantScalar(
+  actual fun ptrcallWithRIDAndLongArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20199,7 +20316,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndLongArgRetVector2(
+  actual fun ptrcallWithRIDAndLongArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20228,7 +20345,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDAndLongArgRetVector2i(
+  actual fun ptrcallWithRIDAndLongArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20257,7 +20374,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithRIDAndLongArgRetVector2iList(
+  actual fun ptrcallWithRIDAndLongArgRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20276,7 +20393,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndObjectArg(
+  actual fun ptrcallWithRIDAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20304,11 +20421,11 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndObjectListArgs(
+  actual fun ptrcallWithRIDAndObjectListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
-    values: List<GodotObject>,
+    values: List<*>,
   ) = memScoped {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
@@ -20331,11 +20448,11 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndObjectListArgsRetLong(
+  actual fun ptrcallWithRIDAndObjectListArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
-    values: List<GodotObject>,
+    values: List<*>,
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     val c0 = alloc<LongVar>()
@@ -20359,7 +20476,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndPackedColorListArgs(
+  actual fun ptrcallWithRIDAndPackedColorListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20386,7 +20503,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndPackedFloat32ListArg(
+  actual fun ptrcallWithRIDAndPackedFloat32ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20413,7 +20530,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndPackedFloat32ListArgRetDouble(
+  actual fun ptrcallWithRIDAndPackedFloat32ListArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20441,7 +20558,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndPackedVector2ListArg(
+  actual fun ptrcallWithRIDAndPackedVector2ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20468,7 +20585,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndPackedVector3ListArg(
+  actual fun ptrcallWithRIDAndPackedVector3ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20495,7 +20612,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndRIDListArgs(
+  actual fun ptrcallWithRIDAndRIDListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20522,7 +20639,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndRect2Arg(
+  actual fun ptrcallWithRIDAndRect2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20553,7 +20670,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndStringArg(
+  actual fun ptrcallWithRIDAndStringArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20579,7 +20696,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndStringArgRetBool(
+  actual fun ptrcallWithRIDAndStringArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20606,7 +20723,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndStringArgRetInt(
+  actual fun ptrcallWithRIDAndStringArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20633,7 +20750,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDAndStringNameArgRetVariantScalar(
+  actual fun ptrcallWithRIDAndStringNameArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20650,7 +20767,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndThreeBoolArgs(
+  actual fun ptrcallWithRIDAndThreeBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20688,7 +20805,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndThreeDoubleArgs(
+  actual fun ptrcallWithRIDAndThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20726,7 +20843,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndThreeIntArgs(
+  actual fun ptrcallWithRIDAndThreeIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20764,7 +20881,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndThreeLongArgsRetLong(
+  actual fun ptrcallWithRIDAndThreeLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20803,7 +20920,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndTransform2DArg(
+  actual fun ptrcallWithRIDAndTransform2DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20836,7 +20953,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTransform3DArg(
+  actual fun ptrcallWithRIDAndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20875,7 +20992,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTransform3DListArgs(
+  actual fun ptrcallWithRIDAndTransform3DListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20902,7 +21019,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTwoDoubleArgs(
+  actual fun ptrcallWithRIDAndTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20935,7 +21052,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTwoIntArgs(
+  actual fun ptrcallWithRIDAndTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20968,7 +21085,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTwoIntArgsRetInt(
+  actual fun ptrcallWithRIDAndTwoIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21002,7 +21119,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDAndTwoLongArgs(
+  actual fun ptrcallWithRIDAndTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21035,7 +21152,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTwoLongArgsRetDictionary(
+  actual fun ptrcallWithRIDAndTwoLongArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21059,7 +21176,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithRIDAndTwoLongArgsRetInt(
+  actual fun ptrcallWithRIDAndTwoLongArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21093,7 +21210,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDAndTwoLongArgsRetLong(
+  actual fun ptrcallWithRIDAndTwoLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21127,7 +21244,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(
+  actual fun ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21151,7 +21268,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(
+  actual fun ptrcallWithRIDAndTwoLongArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21175,7 +21292,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithRIDAndTwoLongArgsRetRID(
+  actual fun ptrcallWithRIDAndTwoLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21210,7 +21327,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndTwoLongArgsRetVector2(
+  actual fun ptrcallWithRIDAndTwoLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21244,7 +21361,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDAndTwoObjectArgsRetBool(
+  actual fun ptrcallWithRIDAndTwoObjectArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21278,7 +21395,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndTwoPackedFloat32ListArgs(
+  actual fun ptrcallWithRIDAndTwoPackedFloat32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21309,7 +21426,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(
+  actual fun ptrcallWithRIDAndTwoUInt32ArgsRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21333,7 +21450,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithRIDAndTwoUInt32ArgsRetLong(
+  actual fun ptrcallWithRIDAndTwoUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21367,7 +21484,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndTwoUInt32ArgsRetRID(
+  actual fun ptrcallWithRIDAndTwoUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21402,7 +21519,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndTwoVector2Args(
+  actual fun ptrcallWithRIDAndTwoVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21437,7 +21554,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndTwoVector3Args(
+  actual fun ptrcallWithRIDAndTwoVector3Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21474,7 +21591,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndUInt32Arg(
+  actual fun ptrcallWithRIDAndUInt32Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21502,7 +21619,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndUInt32ArgRetBool(
+  actual fun ptrcallWithRIDAndUInt32ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21531,7 +21648,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndUInt32ArgRetByteArray(
+  actual fun ptrcallWithRIDAndUInt32ArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21550,7 +21667,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndUInt32ArgRetLong(
+  actual fun ptrcallWithRIDAndUInt32ArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21579,7 +21696,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndUInt32ArgRetRID(
+  actual fun ptrcallWithRIDAndUInt32ArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21609,7 +21726,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndUInt32ArgRetString(
+  actual fun ptrcallWithRIDAndUInt32ArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21628,7 +21745,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithRIDAndUInt32ArgRetTransform3D(
+  actual fun ptrcallWithRIDAndUInt32ArgRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21664,7 +21781,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDAndVariantArg(
+  actual fun ptrcallWithRIDAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21691,7 +21808,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndVariantArgRetBool(
+  actual fun ptrcallWithRIDAndVariantArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21719,7 +21836,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndVariantArgRetInt(
+  actual fun ptrcallWithRIDAndVariantArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21747,7 +21864,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDAndVariantArgRetLong(
+  actual fun ptrcallWithRIDAndVariantArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21775,7 +21892,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndVariantArgRetRect2(
+  actual fun ptrcallWithRIDAndVariantArgRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21806,7 +21923,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDAndVariantArgRetVector2i(
+  actual fun ptrcallWithRIDAndVariantArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21834,7 +21951,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithRIDAndVector2Arg(
+  actual fun ptrcallWithRIDAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21863,7 +21980,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndVector2ArgRetBool(
+  actual fun ptrcallWithRIDAndVector2ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21893,7 +22010,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndVector2ArgRetRID(
+  actual fun ptrcallWithRIDAndVector2ArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21924,7 +22041,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndVector2ArgRetVector2(
+  actual fun ptrcallWithRIDAndVector2ArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21954,7 +22071,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDAndVector2iArg(
+  actual fun ptrcallWithRIDAndVector2iArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -21983,7 +22100,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndVector2iArgRetLong(
+  actual fun ptrcallWithRIDAndVector2iArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22013,7 +22130,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDAndVector2iArgRetPackedInt32List(
+  actual fun ptrcallWithRIDAndVector2iArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22033,7 +22150,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDAndVector3Arg(
+  actual fun ptrcallWithRIDAndVector3Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22063,7 +22180,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDAndVector3ArgRetBool(
+  actual fun ptrcallWithRIDAndVector3ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22094,7 +22211,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDAndVector3ArgRetRID(
+  actual fun ptrcallWithRIDAndVector3ArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22126,7 +22243,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDAndVector3ArgRetVector3(
+  actual fun ptrcallWithRIDAndVector3ArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22157,7 +22274,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithRIDArg(methodBind: MemorySegment, instance: MemorySegment, value: RID) =
+  actual fun ptrcallWithRIDArg(methodBind: MemorySegment, instance: MemorySegment, value: RID) =
     memScoped {
       val c0 = alloc<LongVar>()
       c0.value = value.value
@@ -22177,7 +22294,7 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithRIDArgRetAABB(
+  actual fun ptrcallWithRIDArgRetAABB(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22196,7 +22313,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDArgRetArray(
+  actual fun ptrcallWithRIDArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22210,7 +22327,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetBool(
+  actual fun ptrcallWithRIDArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22234,7 +22351,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDArgRetByteArray(
+  actual fun ptrcallWithRIDArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22262,7 +22379,7 @@ object ObjectCalls {
     ptrcallRetCallable(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetDictionary(
+  actual fun ptrcallWithRIDArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22276,7 +22393,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetDictionaryList(
+  actual fun ptrcallWithRIDArgRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22290,7 +22407,7 @@ object ObjectCalls {
     ptrcallRetDictionaryList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetDouble(
+  actual fun ptrcallWithRIDArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22314,28 +22431,31 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDArgRetInt(methodBind: MemorySegment, instance: MemorySegment, value: RID): Int =
-    memScoped {
-      val ret = alloc<LongVar>()
-      val c0 = alloc<LongVar>()
-      c0.value = value.value
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_RID
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_INT64,
-        ret.ptr,
-      )
-      ret.value.toInt()
-    }
+  actual fun ptrcallWithRIDArgRetInt(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: RID,
+  ): Int = memScoped {
+    val ret = alloc<LongVar>()
+    val c0 = alloc<LongVar>()
+    c0.value = value.value
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_RID
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_INT64,
+      ret.ptr,
+    )
+    ret.value.toInt()
+  }
 
-  fun ptrcallWithRIDArgRetLong(
+  actual fun ptrcallWithRIDArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22359,7 +22479,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDArgRetObject(
+  actual fun ptrcallWithRIDArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22384,7 +22504,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDArgRetPackedColorList(
+  actual fun ptrcallWithRIDArgRetPackedColorList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22398,7 +22518,7 @@ object ObjectCalls {
     ptrcallRetPackedColorList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetPackedFloat32List(
+  actual fun ptrcallWithRIDArgRetPackedFloat32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22412,7 +22532,7 @@ object ObjectCalls {
     ptrcallRetPackedFloat32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetPackedInt32List(
+  actual fun ptrcallWithRIDArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22426,7 +22546,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetPackedStringList(
+  actual fun ptrcallWithRIDArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22440,7 +22560,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetPackedVector2List(
+  actual fun ptrcallWithRIDArgRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22454,7 +22574,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetPackedVector3List(
+  actual fun ptrcallWithRIDArgRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22468,29 +22588,32 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetRID(methodBind: MemorySegment, instance: MemorySegment, value: RID): RID =
-    memScoped {
-      val ret = alloc<LongVar>()
-      ret.value = 0
-      val c0 = alloc<LongVar>()
-      c0.value = value.value
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_RID
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_RID,
-        ret.ptr,
-      )
-      RID(ret.value)
-    }
+  actual fun ptrcallWithRIDArgRetRID(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: RID,
+  ): RID = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<LongVar>()
+    c0.value = value.value
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_RID
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_RID,
+      ret.ptr,
+    )
+    RID(ret.value)
+  }
 
-  fun ptrcallWithRIDArgRetRIDList(
+  actual fun ptrcallWithRIDArgRetRIDList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22504,7 +22627,7 @@ object ObjectCalls {
     ptrcallRetTypedRIDList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetRect2(
+  actual fun ptrcallWithRIDArgRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22531,7 +22654,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDArgRetString(
+  actual fun ptrcallWithRIDArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22545,7 +22668,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithRIDArgRetTransform2D(
+  actual fun ptrcallWithRIDArgRetTransform2D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22573,7 +22696,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDArgRetTransform3D(
+  actual fun ptrcallWithRIDArgRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22604,7 +22727,7 @@ object ObjectCalls {
     )
   }
 
-  fun <T> ptrcallWithRIDArgRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithRIDArgRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22620,7 +22743,7 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 1)
     }
 
-  fun ptrcallWithRIDArgRetUInt32(
+  actual fun ptrcallWithRIDArgRetUInt32(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22644,7 +22767,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDArgRetVariantScalar(
+  actual fun ptrcallWithRIDArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22658,7 +22781,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetVector2(
+  actual fun ptrcallWithRIDArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22682,7 +22805,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDArgRetVector2i(
+  actual fun ptrcallWithRIDArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22706,7 +22829,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithRIDArgRetVector2iList(
+  actual fun ptrcallWithRIDArgRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22720,7 +22843,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetVector3(
+  actual fun ptrcallWithRIDArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
@@ -22744,7 +22867,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithRIDArgRetVector3i(
+  actual fun ptrcallWithRIDArgRetVector3i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22768,7 +22891,7 @@ object ObjectCalls {
     Vector3i(ret[0], ret[1], ret[2])
   }
 
-  fun ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs(
+  actual fun ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22844,7 +22967,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolDoubleArgs(
+  actual fun ptrcallWithRIDBoolDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22877,7 +23000,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolDoubleDoubleDoubleDoubleDoubleDoubleDoubleDoubleArgs(
+  actual fun ptrcallWithRIDBoolDoubleDoubleDoubleDoubleDoubleDoubleDoubleDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -22945,7 +23068,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolDoubleTwoColorDoubleDoubleDoubleDoubleDoubleBoolThreeDoubleArgs(
+  actual fun ptrcallWithRIDBoolDoubleTwoColorDoubleDoubleDoubleDoubleDoubleBoolThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23039,7 +23162,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolFourDoubleArgs(
+  actual fun ptrcallWithRIDBoolFourDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23087,7 +23210,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolIntDoubleLongBoolDoubleBoolThreeDoubleArgs(
+  actual fun ptrcallWithRIDBoolIntDoubleLongBoolDoubleBoolThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23160,7 +23283,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolIntThreeDoubleArgs(
+  actual fun ptrcallWithRIDBoolIntThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23208,7 +23331,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(
+  actual fun ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23290,7 +23413,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolRect2Args(
+  actual fun ptrcallWithRIDBoolRect2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23326,7 +23449,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolRect2TwoCallableArgs(
+  actual fun ptrcallWithRIDBoolRect2TwoCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23376,7 +23499,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolThreeDoubleArgs(
+  actual fun ptrcallWithRIDBoolThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23419,7 +23542,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolThreeDoubleBoolRIDArgs(
+  actual fun ptrcallWithRIDBoolThreeDoubleBoolRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23472,7 +23595,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolTwoDoubleArgs(
+  actual fun ptrcallWithRIDBoolTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23510,7 +23633,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolTwoDoubleBoolThreeDoubleArgs(
+  actual fun ptrcallWithRIDBoolTwoDoubleBoolThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23568,7 +23691,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDBoolVector2iArgsRetObject(
+  actual fun ptrcallWithRIDBoolVector2iArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23604,7 +23727,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDCallableArgs(
+  actual fun ptrcallWithRIDCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23634,7 +23757,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDCallableTwoUInt32ArgsRetLong(
+  actual fun ptrcallWithRIDCallableTwoUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23675,7 +23798,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDCallableVariantArgs(
+  actual fun ptrcallWithRIDCallableVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23709,7 +23832,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDColorDoubleArgs(
+  actual fun ptrcallWithRIDColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23745,7 +23868,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDColorFourUInt32ArgsRetLong(
+  actual fun ptrcallWithRIDColorFourUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23797,7 +23920,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDColorLongTwoDoubleLongArgs(
+  actual fun ptrcallWithRIDColorLongTwoDoubleLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23848,7 +23971,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDDoubleAndLongArgs(
+  actual fun ptrcallWithRIDDoubleAndLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23881,7 +24004,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDDoubleAndLongArgsRetDouble(
+  actual fun ptrcallWithRIDDoubleAndLongArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23915,7 +24038,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDDoubleBoolArgs(
+  actual fun ptrcallWithRIDDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23948,7 +24071,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDDoubleBoolVector2iArgsRetObject(
+  actual fun ptrcallWithRIDDoubleBoolVector2iArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23989,7 +24112,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(
+  actual fun ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24018,7 +24141,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithRIDDoubleVector2TwoDoubleArgs(
+  actual fun ptrcallWithRIDDoubleVector2TwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24062,7 +24185,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDFourDoubleArgs(
+  actual fun ptrcallWithRIDFourDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24105,7 +24228,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDFourDoubleLongArgs(
+  actual fun ptrcallWithRIDFourDoubleLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24153,7 +24276,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndBoolArgs(
+  actual fun ptrcallWithRIDIntAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24186,7 +24309,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndColorArgs(
+  actual fun ptrcallWithRIDIntAndColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24222,7 +24345,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndObjectArg(
+  actual fun ptrcallWithRIDIntAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24255,7 +24378,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndRIDArgs(
+  actual fun ptrcallWithRIDIntAndRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24288,7 +24411,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndStringArgs(
+  actual fun ptrcallWithRIDIntAndStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24319,7 +24442,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndTransform2DArg(
+  actual fun ptrcallWithRIDIntAndTransform2DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24357,7 +24480,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndTransform3DArg(
+  actual fun ptrcallWithRIDIntAndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24401,7 +24524,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndVariantArgs(
+  actual fun ptrcallWithRIDIntAndVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24433,7 +24556,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntAndVector3Arg(
+  actual fun ptrcallWithRIDIntAndVector3Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24487,7 +24610,7 @@ object ObjectCalls {
     ptrcallRetCallable(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRIDIntBoolDoubleVector2Args(
+  actual fun ptrcallWithRIDIntBoolDoubleVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24531,7 +24654,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntCallableArgs(
+  actual fun ptrcallWithRIDIntCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24566,7 +24689,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntDoubleArgs(
+  actual fun ptrcallWithRIDIntDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24599,7 +24722,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntIntAndByteArrayArgs(
+  actual fun ptrcallWithRIDIntIntAndByteArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24636,7 +24759,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntLongArgs(
+  actual fun ptrcallWithRIDIntLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24669,7 +24792,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntLongThreeBoolArgs(
+  actual fun ptrcallWithRIDIntLongThreeBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24717,7 +24840,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDListLongUInt32ArgsRetRID(
+  actual fun ptrcallWithRIDListLongUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     ridValues: List<RID>,
@@ -24751,11 +24874,11 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(
+  actual fun ptrcallWithRIDListObjectListLongUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     ridValues: List<RID>,
-    objectValues: List<GodotObject>,
+    objectValues: List<*>,
     format: Long,
     count: Long,
   ): RID = memScoped {
@@ -24789,11 +24912,11 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDListObjectListUInt32ArgsRetRID(
+  actual fun ptrcallWithRIDListObjectListUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     ridValues: List<RID>,
-    objectValues: List<GodotObject>,
+    objectValues: List<*>,
     count: Long,
   ): RID = memScoped {
     val ret = alloc<LongVar>()
@@ -24822,7 +24945,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDListRect2iRIDColorRIDListIntArgs(
+  actual fun ptrcallWithRIDListRect2iRIDColorRIDListIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRids: List<RID>,
@@ -24874,7 +24997,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongAndBoolArgs(
+  actual fun ptrcallWithRIDLongAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24907,7 +25030,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongAndDoubleArgs(
+  actual fun ptrcallWithRIDLongAndDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24940,7 +25063,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongAndRIDArgs(
+  actual fun ptrcallWithRIDLongAndRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -24973,7 +25096,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongAndVariantArgs(
+  actual fun ptrcallWithRIDLongAndVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25005,7 +25128,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongCallableArgs(
+  actual fun ptrcallWithRIDLongCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25040,7 +25163,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongDoubleBoolDoubleBoolArgs(
+  actual fun ptrcallWithRIDLongDoubleBoolDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25088,7 +25211,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongIntArgsRetRID(
+  actual fun ptrcallWithRIDLongIntArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25123,7 +25246,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(
+  actual fun ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     framebuffer: RID,
@@ -25179,7 +25302,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDLongRIDListLongDictionaryArgs(
+  actual fun ptrcallWithRIDLongRIDListLongDictionaryArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25220,7 +25343,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongTwoArrayDictionaryLongArgs(
+  actual fun ptrcallWithRIDLongTwoArrayDictionaryLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25265,7 +25388,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongTwoDoubleArgs(
+  actual fun ptrcallWithRIDLongTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25303,7 +25426,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(
+  actual fun ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25341,7 +25464,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDLongVector2LongColorArgs(
+  actual fun ptrcallWithRIDLongVector2LongColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25388,7 +25511,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongVector2iAndVector2Args(
+  actual fun ptrcallWithRIDLongVector2iAndVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25428,7 +25551,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongVector2iArgs(
+  actual fun ptrcallWithRIDLongVector2iArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25462,7 +25585,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDLongVector2iArgsRetVector2(
+  actual fun ptrcallWithRIDLongVector2iArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25497,7 +25620,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDObjectIntArgs(
+  actual fun ptrcallWithRIDObjectIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25530,11 +25653,11 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDObjectListArgsRetRID(
+  actual fun ptrcallWithRIDObjectListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
-    values: List<GodotObject>,
+    values: List<*>,
   ): RID = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0
@@ -25559,11 +25682,11 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDObjectListObjectArgsRetBool(
+  actual fun ptrcallWithRIDObjectListObjectArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
-    values: List<GodotObject>,
+    values: List<*>,
     objectArg: MemorySegment,
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
@@ -25592,11 +25715,11 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDObjectListObjectCallableArgsRetObject(
+  actual fun ptrcallWithRIDObjectListObjectCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
-    values: List<GodotObject>,
+    values: List<*>,
     objectArg: MemorySegment,
     callableObject: MemorySegment,
     callableMethod: String,
@@ -25633,11 +25756,11 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDObjectListTwoObjectArgs(
+  actual fun ptrcallWithRIDObjectListTwoObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
-    values: List<GodotObject>,
+    values: List<*>,
     firstObject: MemorySegment,
     secondObject: MemorySegment,
   ) = memScoped {
@@ -25670,11 +25793,11 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(
+  actual fun ptrcallWithRIDObjectListTwoObjectCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
-    values: List<GodotObject>,
+    values: List<*>,
     firstObjectArg: MemorySegment,
     secondObjectArg: MemorySegment,
     callableObject: MemorySegment,
@@ -25716,7 +25839,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(
+  actual fun ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25776,7 +25899,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(
+  actual fun ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25809,7 +25932,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 5)
   }
 
-  fun ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs(
+  actual fun ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25866,7 +25989,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject(
+  actual fun ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25907,7 +26030,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDPackedVector2ListAndBoolArg(
+  actual fun ptrcallWithRIDPackedVector2ListAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25939,7 +26062,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(
+  actual fun ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -25980,7 +26103,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(
+  actual fun ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26020,7 +26143,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs(
+  actual fun ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26059,7 +26182,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDPackedVector3ListPackedInt32ListArgs(
+  actual fun ptrcallWithRIDPackedVector3ListPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26090,7 +26213,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID(
+  actual fun ptrcallWithRIDRIDListPackedInt64ListObjectArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26128,7 +26251,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun <T> ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26154,7 +26277,7 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 3)
     }
 
-  fun ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(
+  actual fun ptrcallWithRIDRIDTransform3DRIDTransform3DArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -26219,7 +26342,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2BoolColorBoolArgs(
+  actual fun ptrcallWithRIDRect2BoolColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26268,7 +26391,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2ColorBoolArgs(
+  actual fun ptrcallWithRIDRect2ColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26312,7 +26435,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2IntArgs(
+  actual fun ptrcallWithRIDRect2IntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26348,7 +26471,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2RIDBoolColorBoolArgs(
+  actual fun ptrcallWithRIDRect2RIDBoolColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26402,7 +26525,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2RIDRect2ColorArgs(
+  actual fun ptrcallWithRIDRect2RIDRect2ColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26454,7 +26577,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2RIDRect2ColorIntTwoDoubleArgs(
+  actual fun ptrcallWithRIDRect2RIDRect2ColorIntTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26521,7 +26644,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2RIDRect2ColorTwoBoolArgs(
+  actual fun ptrcallWithRIDRect2RIDRect2ColorTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26583,7 +26706,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs(
+  actual fun ptrcallWithRIDRect2Rect2iBoolUInt32BoolVector2FourDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26663,7 +26786,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDStringAndBoolArgs(
+  actual fun ptrcallWithRIDStringAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26694,7 +26817,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDStringNameAndIntArgRetRID(
+  actual fun ptrcallWithRIDStringNameAndIntArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26727,7 +26850,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDStringNameAndVariantArgs(
+  actual fun ptrcallWithRIDStringNameAndVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26757,7 +26880,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDStringNameRIDIntArgs(
+  actual fun ptrcallWithRIDStringNameRIDIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26793,7 +26916,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(
+  actual fun ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26840,7 +26963,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDStringRIDVariantIntArgsRetInt(
+  actual fun ptrcallWithRIDStringRIDVariantIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -26881,7 +27004,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(
+  actual fun ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26936,7 +27059,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(
+  actual fun ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27001,7 +27124,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRIDThreeBoolAndColorArgs(
+  actual fun ptrcallWithRIDThreeBoolAndColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27047,7 +27170,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(
+  actual fun ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27060,7 +27183,7 @@ object ObjectCalls {
     fourthObject: MemorySegment,
     flags: Long,
     count: Long,
-    values: List<GodotObject>,
+    values: List<*>,
   ): RID = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0
@@ -27121,7 +27244,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDThreeVector2TwoRIDArgs(
+  actual fun ptrcallWithRIDThreeVector2TwoRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27172,7 +27295,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs(
+  actual fun ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27244,7 +27367,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTransform3DVector3TwoColorUInt32Args(
+  actual fun ptrcallWithRIDTransform3DVector3TwoColorUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27311,7 +27434,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoCallableArgs(
+  actual fun ptrcallWithRIDTwoCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27348,7 +27471,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoLongAndVector2Args(
+  actual fun ptrcallWithRIDTwoLongAndVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27387,7 +27510,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoLongArgsRetBool(
+  actual fun ptrcallWithRIDTwoLongArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27421,7 +27544,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDTwoLongArgsRetDouble(
+  actual fun ptrcallWithRIDTwoLongArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27455,7 +27578,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDTwoLongBoolArgs(
+  actual fun ptrcallWithRIDTwoLongBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27493,7 +27616,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoLongDoubleArgs(
+  actual fun ptrcallWithRIDTwoLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27531,7 +27654,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoRect2ColorTwoBoolArgs(
+  actual fun ptrcallWithRIDTwoRect2ColorTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27588,7 +27711,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs(
+  actual fun ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27667,7 +27790,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(
+  actual fun ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27705,7 +27828,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDTwoVector2BoolUInt32ArgsRetPackedVector2List(
+  actual fun ptrcallWithRIDTwoVector2BoolUInt32ArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27741,7 +27864,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 5)
   }
 
-  fun ptrcallWithRIDTwoVector2ColorDoubleBoolArgs(
+  actual fun ptrcallWithRIDTwoVector2ColorDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27794,7 +27917,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoVector2TwoRIDArgs(
+  actual fun ptrcallWithRIDTwoVector2TwoRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27839,7 +27962,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDTwoVector3BoolArgsRetVector3(
+  actual fun ptrcallWithRIDTwoVector3BoolArgsRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27882,7 +28005,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List(
+  actual fun ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27920,7 +28043,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 5)
   }
 
-  fun ptrcallWithRIDUInt32BoolArgsRetVector2(
+  actual fun ptrcallWithRIDUInt32BoolArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27954,7 +28077,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDUInt32BoolArgsRetVector3(
+  actual fun ptrcallWithRIDUInt32BoolArgsRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -27988,7 +28111,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithRIDUInt32ByteArrayArgsRetLong(
+  actual fun ptrcallWithRIDUInt32ByteArrayArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28021,7 +28144,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDUInt32CallableArgsRetLong(
+  actual fun ptrcallWithRIDUInt32CallableArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28057,7 +28180,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(
+  actual fun ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     framebuffer: RID,
@@ -28122,12 +28245,12 @@ object ObjectCalls {
     ptrcallRetPackedInt64List(methodBind, instance, types, ptrs, 11)
   }
 
-  fun ptrcallWithRIDUInt32ObjectListArgsRetRID(
+  actual fun ptrcallWithRIDUInt32ObjectListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
     set: Long,
-    values: List<GodotObject>,
+    values: List<*>,
   ): RID = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0
@@ -28156,7 +28279,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(
+  actual fun ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28200,7 +28323,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(
+  actual fun ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28249,7 +28372,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithRIDVector2ColorBoolArgs(
+  actual fun ptrcallWithRIDVector2ColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28291,7 +28414,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2ColorDoubleArgs(
+  actual fun ptrcallWithRIDVector2ColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28333,7 +28456,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2DoubleColorBoolArgs(
+  actual fun ptrcallWithRIDVector2DoubleColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28380,7 +28503,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2IntArgs(
+  actual fun ptrcallWithRIDVector2IntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28414,7 +28537,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2IntColorDoubleArgs(
+  actual fun ptrcallWithRIDVector2IntColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28461,7 +28584,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2IntTwoColorDoubleArgs(
+  actual fun ptrcallWithRIDVector2IntTwoColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28904,7 +29027,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDVector2TwoColorDoubleArgs(
+  actual fun ptrcallWithRIDVector2TwoColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28954,7 +29077,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2TwoDoubleColorBoolArgs(
+  actual fun ptrcallWithRIDVector2TwoDoubleColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29006,7 +29129,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2TwoIntColorDoubleArgs(
+  actual fun ptrcallWithRIDVector2TwoIntColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29111,7 +29234,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDVector2TwoRIDArgs(
+  actual fun ptrcallWithRIDVector2TwoRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29150,7 +29273,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2iLongArgs(
+  actual fun ptrcallWithRIDVector2iLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29184,7 +29307,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2iLongArgsRetLong(
+  actual fun ptrcallWithRIDVector2iLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29219,7 +29342,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithRIDVector2iLongArgsRetObject(
+  actual fun ptrcallWithRIDVector2iLongArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29255,7 +29378,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRIDVector2iLongArgsRetPackedInt32List(
+  actual fun ptrcallWithRIDVector2iLongArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29280,7 +29403,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithRIDVector2iLongArgsRetRID(
+  actual fun ptrcallWithRIDVector2iLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29316,7 +29439,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithRIDVector2iLongArgsRetRect2(
+  actual fun ptrcallWithRIDVector2iLongArgsRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29354,7 +29477,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithRIDVector2iLongArgsRetVector2(
+  actual fun ptrcallWithRIDVector2iLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29389,7 +29512,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithRIDVector2iLongObjectArgs(
+  actual fun ptrcallWithRIDVector2iLongObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29428,7 +29551,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2iLongPackedInt32ListArgs(
+  actual fun ptrcallWithRIDVector2iLongPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29466,7 +29589,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2iLongRect2Args(
+  actual fun ptrcallWithRIDVector2iLongRect2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29508,7 +29631,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2iLongVector2Args(
+  actual fun ptrcallWithRIDVector2iLongVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29548,7 +29671,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2iTwoLongArgs(
+  actual fun ptrcallWithRIDVector2iTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29587,7 +29710,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRect2ArgRetDictionaryList(
+  actual fun ptrcallWithRect2ArgRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Rect2,
@@ -29604,7 +29727,7 @@ object ObjectCalls {
     ptrcallRetDictionaryList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRect2ArgRetInt(
+  actual fun ptrcallWithRect2ArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Rect2,
@@ -29631,7 +29754,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithRect2ColorBoolDoubleBoolArgs(
+  actual fun ptrcallWithRect2ColorBoolDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rect: Rect2,
@@ -29680,7 +29803,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRect2iAndBoolArg(
+  actual fun ptrcallWithRect2iAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Rect2i,
@@ -29745,7 +29868,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRect2iAndDoubleArg(
+  actual fun ptrcallWithRect2iAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Rect2i,
@@ -29776,7 +29899,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(
+  actual fun ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Rect2i,
@@ -29798,30 +29921,33 @@ object ObjectCalls {
     ptrcallRetTypedPackedVector2ListList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithRect2iArg(methodBind: MemorySegment, instance: MemorySegment, value: Rect2i) =
-    memScoped {
-      val c0 = allocArray<IntVar>(4)
-      c0[0] = value.position.x
-      c0[1] = value.position.y
-      c0[2] = value.size.x
-      c0[3] = value.size.y
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_RECT2I
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithRect2iArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Rect2i,
+  ) = memScoped {
+    val c0 = allocArray<IntVar>(4)
+    c0[0] = value.position.x
+    c0[1] = value.position.y
+    c0[2] = value.size.x
+    c0[3] = value.size.y
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_RECT2I
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithRect2iArgRetDictionaryList(
+  actual fun ptrcallWithRect2iArgRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Rect2i,
@@ -29838,7 +29964,7 @@ object ObjectCalls {
     ptrcallRetDictionaryList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRect2iArgRetObject(
+  actual fun ptrcallWithRect2iArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Rect2i,
@@ -29866,7 +29992,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithRect2iObjectColorIntObjectArgs(
+  actual fun ptrcallWithRect2iObjectColorIntObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rectValue: Rect2i,
@@ -29915,12 +30041,12 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRect2iTwoObjectListColorIntObjectArgs(
+  actual fun ptrcallWithRect2iTwoObjectListColorIntObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rectValue: Rect2i,
-    firstValues: List<GodotObject>,
-    secondValues: List<GodotObject>,
+    firstValues: List<*>,
+    secondValues: List<*>,
     color: Color,
     intValue: Int,
     objectArg: MemorySegment,
@@ -29967,7 +30093,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndArrayArg(
+  actual fun ptrcallWithStringAndArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -29992,7 +30118,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndBoolArg(
+  actual fun ptrcallWithStringAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30018,7 +30144,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndBoolArgRetBool(
+  actual fun ptrcallWithStringAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30045,7 +30171,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringAndBoolArgRetByteArray(
+  actual fun ptrcallWithStringAndBoolArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30062,7 +30188,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringAndBoolArgRetDictionary(
+  actual fun ptrcallWithStringAndBoolArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -30079,7 +30205,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringAndBoolArgRetInt(
+  actual fun ptrcallWithStringAndBoolArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30106,7 +30232,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringAndBoolArgRetLong(
+  actual fun ptrcallWithStringAndBoolArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30133,7 +30259,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndBoolArgRetObject(
+  actual fun ptrcallWithStringAndBoolArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30161,7 +30287,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringAndBoolArgRetString(
+  actual fun ptrcallWithStringAndBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30178,7 +30304,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun <T> ptrcallWithStringAndBoolArgRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithStringAndBoolArgRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30197,7 +30323,7 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 2)
     }
 
-  fun ptrcallWithStringAndBoolArgRetVariantScalar(
+  actual fun ptrcallWithStringAndBoolArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30240,7 +30366,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndColorArg(
+  actual fun ptrcallWithStringAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30269,7 +30395,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndDictionaryArgRetObject(
+  actual fun ptrcallWithStringAndDictionaryArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30323,7 +30449,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndFiveIntArgsRetLong(
+  actual fun ptrcallWithStringAndFiveIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30370,7 +30496,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndIntArg(
+  actual fun ptrcallWithStringAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30396,7 +30522,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndIntArgRetBool(
+  actual fun ptrcallWithStringAndIntArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30423,7 +30549,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringAndIntArgRetInt(
+  actual fun ptrcallWithStringAndIntArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30450,7 +30576,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringAndIntArgRetLong(
+  actual fun ptrcallWithStringAndIntArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30477,7 +30603,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndIntArgRetObject(
+  actual fun ptrcallWithStringAndIntArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30505,7 +30631,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringAndIntArgRetString(
+  actual fun ptrcallWithStringAndIntArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30522,7 +30648,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithStringAndIntArgRetVariantScalar(
+  actual fun ptrcallWithStringAndIntArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30539,7 +30665,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringAndIntArgRetVector2i(
+  actual fun ptrcallWithStringAndIntArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30566,7 +30692,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithStringAndLongArgRetInt(
+  actual fun ptrcallWithStringAndLongArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30593,7 +30719,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringAndLongArgRetLong(
+  actual fun ptrcallWithStringAndLongArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30620,7 +30746,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndLongArgRetPackedStringList(
+  actual fun ptrcallWithStringAndLongArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30637,7 +30763,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringAndLongArgRetString(
+  actual fun ptrcallWithStringAndLongArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30654,7 +30780,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithStringAndObjectArg(
+  actual fun ptrcallWithStringAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30680,7 +30806,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndObjectArgRetBool(
+  actual fun ptrcallWithStringAndObjectArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30707,7 +30833,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringAndObjectArgRetLong(
+  actual fun ptrcallWithStringAndObjectArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30734,7 +30860,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndObjectArgRetObject(
+  actual fun ptrcallWithStringAndObjectArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30762,11 +30888,11 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringAndObjectListArgs(
+  actual fun ptrcallWithStringAndObjectListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
-    values: List<GodotObject>,
+    values: List<*>,
   ) = memScoped {
     val c1 = packTypedObjectArrayDesc(values)
     val types = allocArray<IntVar>(2)
@@ -30787,7 +30913,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndPackedStringListArgRetLong(
+  actual fun ptrcallWithStringAndPackedStringListArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30813,7 +30939,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringAndRIDArgRetRID(
+  actual fun ptrcallWithStringAndRIDArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30841,7 +30967,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithStringAndThreeIntArgsRetObject(
+  actual fun ptrcallWithStringAndThreeIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30879,7 +31005,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringAndTransform3DArg(
+  actual fun ptrcallWithStringAndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30949,7 +31075,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringAndTwoIntArgsRetObject(
+  actual fun ptrcallWithStringAndTwoIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -30982,7 +31108,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringAndTwoObjectArgs(
+  actual fun ptrcallWithStringAndTwoObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31013,7 +31139,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndTwoVariantArgsRetDictionary(
+  actual fun ptrcallWithStringAndTwoVariantArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31033,7 +31159,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithStringAndVariantArg(
+  actual fun ptrcallWithStringAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31058,7 +31184,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndVariantArgRetDictionary(
+  actual fun ptrcallWithStringAndVariantArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31074,7 +31200,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringAndVariantArgRetInt(
+  actual fun ptrcallWithStringAndVariantArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31100,25 +31226,28 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringArg(methodBind: MemorySegment, instance: MemorySegment, value: String) =
-    memScoped {
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_STRING
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithStringArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: String,
+  ) = memScoped {
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_STRING
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithStringArgRetBool(
+  actual fun ptrcallWithStringArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31140,7 +31269,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringArgRetByteArray(
+  actual fun ptrcallWithStringArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31152,7 +31281,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithStringArgRetColor(
+  actual fun ptrcallWithStringArgRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31174,7 +31303,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithStringArgRetDictionary(
+  actual fun ptrcallWithStringArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31186,7 +31315,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithStringArgRetInt(
+  actual fun ptrcallWithStringArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31208,7 +31337,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringArgRetLong(
+  actual fun ptrcallWithStringArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31230,7 +31359,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringArgRetObject(
+  actual fun ptrcallWithStringArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31253,7 +31382,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringArgRetPackedStringList(
+  actual fun ptrcallWithStringArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31265,7 +31394,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithStringArgRetVariantScalar(
+  actual fun ptrcallWithStringArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31277,7 +31406,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithStringBoolArrayArgs(
+  actual fun ptrcallWithStringBoolArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31339,7 +31468,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringBoolObjectArgs(
+  actual fun ptrcallWithStringBoolObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31370,7 +31499,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringBoolStringArgsRetObject(
+  actual fun ptrcallWithStringBoolStringArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31401,7 +31530,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringByteArrayAndBoolArgRetLong(
+  actual fun ptrcallWithStringByteArrayAndBoolArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31432,7 +31561,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringByteArrayBoolArgs(
+  actual fun ptrcallWithStringByteArrayBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: String,
@@ -31462,7 +31591,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringCallableArgs(
+  actual fun ptrcallWithStringCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31490,7 +31619,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringCallableArgsRetObject(
+  actual fun ptrcallWithStringCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31520,7 +31649,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringCallableObjectArgs(
+  actual fun ptrcallWithStringCallableObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31553,7 +31682,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringColorThreeBoolArgs(
+  actual fun ptrcallWithStringColorThreeBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31597,7 +31726,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringDictionaryStringVariantArgsRetLong(
+  actual fun ptrcallWithStringDictionaryStringVariantArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: String,
@@ -31630,7 +31759,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringFourDoubleArgs(
+  actual fun ptrcallWithStringFourDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31671,7 +31800,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntAndBoolArgs(
+  actual fun ptrcallWithStringIntAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31702,7 +31831,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntAndIntArgs(
+  actual fun ptrcallWithStringIntAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31733,7 +31862,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntAndLongArgs(
+  actual fun ptrcallWithStringIntAndLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31764,7 +31893,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntAndObjectArgs(
+  actual fun ptrcallWithStringIntAndObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31795,7 +31924,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntAndStringArgs(
+  actual fun ptrcallWithStringIntAndStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31824,7 +31953,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntAndVariantArg(
+  actual fun ptrcallWithStringIntAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31871,7 +32000,7 @@ object ObjectCalls {
     ptrcallRetCallable(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringIntByteArrayArgs(
+  actual fun ptrcallWithStringIntByteArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31901,7 +32030,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntCallableArgs(
+  actual fun ptrcallWithStringIntCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -31934,7 +32063,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntObjectArgsRetLong(
+  actual fun ptrcallWithStringIntObjectArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31966,7 +32095,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringIntStringArgsRetLong(
+  actual fun ptrcallWithStringIntStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -31996,7 +32125,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringIntStringBoolArgsRetLong(
+  actual fun ptrcallWithStringIntStringBoolArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -32031,7 +32160,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringLongBoolArgs(
+  actual fun ptrcallWithStringLongBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -32176,7 +32305,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithStringLongObjectTwoBoolArgs(
+  actual fun ptrcallWithStringLongObjectTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -32217,7 +32346,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringLongStringArgs(
+  actual fun ptrcallWithStringLongStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -32246,7 +32375,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndBoolArg(
+  actual fun ptrcallWithStringNameAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32272,7 +32401,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndBoolArgRetDictionaryList(
+  actual fun ptrcallWithStringNameAndBoolArgRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32289,7 +32418,7 @@ object ObjectCalls {
     ptrcallRetDictionaryList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringNameAndBoolArgRetDouble(
+  actual fun ptrcallWithStringNameAndBoolArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32316,7 +32445,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringNameAndBoolArgRetPackedStringList(
+  actual fun ptrcallWithStringNameAndBoolArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32333,7 +32462,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringNameAndBoolArgRetString(
+  actual fun ptrcallWithStringNameAndBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32350,7 +32479,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithStringNameAndCallableArgs(
+  actual fun ptrcallWithStringNameAndCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32378,7 +32507,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndColorArg(
+  actual fun ptrcallWithStringNameAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32407,7 +32536,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndDoubleArg(
+  actual fun ptrcallWithStringNameAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32433,7 +32562,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndIntArg(
+  actual fun ptrcallWithStringNameAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32459,7 +32588,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndIntArgRetDouble(
+  actual fun ptrcallWithStringNameAndIntArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32486,7 +32615,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringNameAndIntArgRetInt(
+  actual fun ptrcallWithStringNameAndIntArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32513,7 +32642,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringNameAndIntArgRetObject(
+  actual fun ptrcallWithStringNameAndIntArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32541,7 +32670,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringNameAndLongArg(
+  actual fun ptrcallWithStringNameAndLongArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32567,7 +32696,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndObjectArg(
+  actual fun ptrcallWithStringNameAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32593,7 +32722,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndObjectArgRetBool(
+  actual fun ptrcallWithStringNameAndObjectArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32620,7 +32749,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringNameAndObjectArgRetLong(
+  actual fun ptrcallWithStringNameAndObjectArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32647,7 +32776,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringNameAndStringArgRetVariantScalar(
+  actual fun ptrcallWithStringNameAndStringArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32698,7 +32827,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndTwoBoolArgsRetBool(
+  actual fun ptrcallWithStringNameAndTwoBoolArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32730,7 +32859,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringNameAndVariantArg(
+  actual fun ptrcallWithStringNameAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32755,7 +32884,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameAndVector2Arg(
+  actual fun ptrcallWithStringNameAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32782,25 +32911,28 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameArg(methodBind: MemorySegment, instance: MemorySegment, name: String) =
-    memScoped {
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_STRING_NAME
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithStringNameArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+  ) = memScoped {
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_STRING_NAME
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithStringNameArgRetBool(
+  actual fun ptrcallWithStringNameArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32822,7 +32954,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringNameArgRetColor(
+  actual fun ptrcallWithStringNameArgRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32844,7 +32976,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithStringNameArgRetDictionaryList(
+  actual fun ptrcallWithStringNameArgRetDictionaryList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32856,7 +32988,7 @@ object ObjectCalls {
     ptrcallRetDictionaryList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithStringNameArgRetDouble(
+  actual fun ptrcallWithStringNameArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32878,7 +33010,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringNameArgRetInt(
+  actual fun ptrcallWithStringNameArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32900,7 +33032,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringNameArgRetLong(
+  actual fun ptrcallWithStringNameArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32922,7 +33054,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringNameArgRetObject(
+  actual fun ptrcallWithStringNameArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32945,7 +33077,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithStringNameArgRetPackedStringList(
+  actual fun ptrcallWithStringNameArgRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32957,7 +33089,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithStringNameArgRetString(
+  actual fun ptrcallWithStringNameArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32969,7 +33101,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithStringNameArgRetStringNameList(
+  actual fun ptrcallWithStringNameArgRetStringNameList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32981,7 +33113,7 @@ object ObjectCalls {
     ptrcallRetTypedStringNameList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun <T> ptrcallWithStringNameArgRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithStringNameArgRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -32995,7 +33127,7 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 1)
     }
 
-  fun ptrcallWithStringNameArgRetVector2(
+  actual fun ptrcallWithStringNameArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33017,7 +33149,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithStringNameArrayArgs(
+  actual fun ptrcallWithStringNameArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33072,7 +33204,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameBoolArrayArgs(
+  actual fun ptrcallWithStringNameBoolArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33102,7 +33234,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameCallableArrayLongArgs(
+  actual fun ptrcallWithStringNameCallableArrayLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33139,7 +33271,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameDoubleBoolArgs(
+  actual fun ptrcallWithStringNameDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33206,7 +33338,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameDoubleTwoLongArgs(
+  actual fun ptrcallWithStringNameDoubleTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33288,7 +33420,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameIntAndStringNameArgs(
+  actual fun ptrcallWithStringNameIntAndStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -33317,7 +33449,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameIntObjectDoubleArgs(
+  actual fun ptrcallWithStringNameIntObjectDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33353,7 +33485,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameIntStringNameIntArgs(
+  actual fun ptrcallWithStringNameIntStringNameIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -33387,7 +33519,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameIntStringNameIntArgsRetBool(
+  actual fun ptrcallWithStringNameIntStringNameIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -33422,7 +33554,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(
+  actual fun ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -33462,7 +33594,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringNameIntStringNameIntDoubleArgs(
+  actual fun ptrcallWithStringNameIntStringNameIntDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -33501,7 +33633,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameListArg(
+  actual fun ptrcallWithStringNameListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<String>,
@@ -33523,7 +33655,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameLongVariantArgs(
+  actual fun ptrcallWithStringNameLongVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33553,7 +33685,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameObjectAndBoolArgRetBool(
+  actual fun ptrcallWithStringNameObjectAndBoolArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33585,7 +33717,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringNameObjectAndVector2Arg(
+  actual fun ptrcallWithStringNameObjectAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33617,7 +33749,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameObjectDoubleIntArgs(
+  actual fun ptrcallWithStringNameObjectDoubleIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33653,7 +33785,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(
+  actual fun ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33715,7 +33847,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringNameObjectIntArgs(
+  actual fun ptrcallWithStringNameObjectIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33746,7 +33878,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNamePackedStringListAndStringNameArgs(
+  actual fun ptrcallWithStringNamePackedStringListAndStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33825,7 +33957,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameTransform3DTwoVector3LongArgs(
+  actual fun ptrcallWithStringNameTransform3DTwoVector3LongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33881,7 +34013,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(
+  actual fun ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33932,7 +34064,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameVariantBoolArgs(
+  actual fun ptrcallWithStringNameVariantBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33962,7 +34094,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameVariantStringNameBoolArgs(
+  actual fun ptrcallWithStringNameVariantStringNameBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstName: String,
@@ -33995,7 +34127,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringObjectBoolArgsRetInt(
+  actual fun ptrcallWithStringObjectBoolArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34027,7 +34159,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringObjectBoolColorArgs(
+  actual fun ptrcallWithStringObjectBoolColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34066,7 +34198,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringObjectBoolStringArgs(
+  actual fun ptrcallWithStringObjectBoolStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34100,7 +34232,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringObjectIntArgs(
+  actual fun ptrcallWithStringObjectIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34131,7 +34263,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringObjectIntRect2ColorIntColorArgs(
+  actual fun ptrcallWithStringObjectIntRect2ColorIntColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34191,7 +34323,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringObjectIntRect2StringArgsRetBool(
+  actual fun ptrcallWithStringObjectIntRect2StringArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34234,7 +34366,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringObjectIntStringVariantArgsRetBool(
+  actual fun ptrcallWithStringObjectIntStringVariantArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34273,7 +34405,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithStringObjectStringNameVariantArgs(
+  actual fun ptrcallWithStringObjectStringNameVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34306,7 +34438,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(
+  actual fun ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -34364,7 +34496,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringObjectUInt32StringArgsRetLong(
+  actual fun ptrcallWithStringObjectUInt32StringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstText: String,
@@ -34399,7 +34531,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringPackedStringListAndIntArgs(
+  actual fun ptrcallWithStringPackedStringListAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -34429,7 +34561,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringPackedStringListAndObjectArgs(
+  actual fun ptrcallWithStringPackedStringListAndObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34459,7 +34591,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringPackedStringListAndStringArgs(
+  actual fun ptrcallWithStringPackedStringListAndStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34487,7 +34619,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt(
+  actual fun ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: String,
@@ -34527,7 +34659,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringPackedStringListBoolArgsRetDictionary(
+  actual fun ptrcallWithStringPackedStringListBoolArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34548,7 +34680,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithStringPackedStringListBoolArgsRetInt(
+  actual fun ptrcallWithStringPackedStringListBoolArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34579,7 +34711,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(
+  actual fun ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34614,7 +34746,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringPackedStringListLongStringArgsRetLong(
+  actual fun ptrcallWithStringPackedStringListLongStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34648,7 +34780,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringRect2LongThreeIntArgs(
+  actual fun ptrcallWithStringRect2LongThreeIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34697,7 +34829,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringStringNameFourDoubleArgs(
+  actual fun ptrcallWithStringStringNameFourDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34741,7 +34873,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringStringStringStringStringLongArgs(
+  actual fun ptrcallWithStringStringStringStringStringLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -34779,7 +34911,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringThreeIntLongArgs(
+  actual fun ptrcallWithStringThreeIntLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34857,7 +34989,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringTwoCallableArgs(
+  actual fun ptrcallWithStringTwoCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -34892,7 +35024,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringTwoDoubleDictionaryArgsRetObject(
+  actual fun ptrcallWithStringTwoDoubleDictionaryArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34929,7 +35061,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun <T> ptrcallWithStringTwoIntArgsRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithStringTwoIntArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34953,7 +35085,7 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 3)
     }
 
-  fun ptrcallWithStringTwoIntBoolArgsRetString(
+  actual fun ptrcallWithStringTwoIntBoolArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -34980,7 +35112,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 4, PT_STRING)
   }
 
-  fun ptrcallWithStringTwoIntTwoBoolArgs(
+  actual fun ptrcallWithStringTwoIntTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -35021,7 +35153,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringTwoLongArgs(
+  actual fun ptrcallWithStringTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -35052,7 +35184,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringTwoLongArgsRetDictionary(
+  actual fun ptrcallWithStringTwoLongArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -35074,7 +35206,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithStringTwoLongArgsRetLong(
+  actual fun ptrcallWithStringTwoLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -35106,7 +35238,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithStringUInt32TwoIntArgsRetVector2i(
+  actual fun ptrcallWithStringUInt32TwoIntArgsRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -35143,7 +35275,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithStringVariantAndIntArg(
+  actual fun ptrcallWithStringVariantAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -35173,7 +35305,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeCallableArgs(
+  actual fun ptrcallWithThreeCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstCallableObject: MemorySegment,
@@ -35245,7 +35377,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeDoubleArgsRetDouble(
+  actual fun ptrcallWithThreeDoubleArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -35279,7 +35411,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithThreeDoubleBoolArgsRetDouble(
+  actual fun ptrcallWithThreeDoubleBoolArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -35318,7 +35450,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithThreeIntAndVector2Arg(
+  actual fun ptrcallWithThreeIntAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35357,7 +35489,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeIntArgs(
+  actual fun ptrcallWithThreeIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35390,7 +35522,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeIntArgsRetInt(
+  actual fun ptrcallWithThreeIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35424,7 +35556,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithThreeIntArgsRetObject(
+  actual fun ptrcallWithThreeIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35459,7 +35591,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithThreeIntArgsRetVector2(
+  actual fun ptrcallWithThreeIntArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35493,7 +35625,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithThreeIntArgsRetVector2i(
+  actual fun ptrcallWithThreeIntArgsRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35527,7 +35659,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun <T> ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35568,7 +35700,7 @@ object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(types, ptrs, 6)
     }
 
-  fun <T> ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -35638,7 +35770,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithThreeLongFourIntLongArgsRetRID(
+  actual fun ptrcallWithThreeLongFourIntLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstLong: Long,
@@ -35698,7 +35830,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithThreeLongFourUInt32ArgsRetLong(
+  actual fun ptrcallWithThreeLongFourUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstLong: Long,
@@ -35752,7 +35884,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithThreeObjectCallableArgs(
+  actual fun ptrcallWithThreeObjectCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -35792,12 +35924,12 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeObjectListUInt32ArgsRetRID(
+  actual fun ptrcallWithThreeObjectListUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    firstValues: List<GodotObject>,
-    secondValues: List<GodotObject>,
-    thirdValues: List<GodotObject>,
+    firstValues: List<*>,
+    secondValues: List<*>,
+    thirdValues: List<*>,
     count: Long,
   ): RID = memScoped {
     val ret = alloc<LongVar>()
@@ -35829,7 +35961,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithThreeRIDArgs(
+  actual fun ptrcallWithThreeRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -35862,7 +35994,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeStringAndIntArgRetInt(
+  actual fun ptrcallWithThreeStringAndIntArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -35895,7 +36027,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithThreeStringArgs(
+  actual fun ptrcallWithThreeStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -35922,7 +36054,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(
+  actual fun ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -35976,7 +36108,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithThreeStringCallableArgsRetLong(
+  actual fun ptrcallWithThreeStringCallableArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -36043,7 +36175,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeStringNameArgs(
+  actual fun ptrcallWithThreeStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -36070,7 +36202,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeStringNameObjectArgsRetRID(
+  actual fun ptrcallWithThreeStringNameObjectArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstName: String,
@@ -36146,7 +36278,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeStringTwoLongArgsRetDictionary(
+  actual fun ptrcallWithThreeStringTwoLongArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -36174,7 +36306,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 5)
   }
 
-  fun ptrcallWithThreeVector2AndIntArg(
+  actual fun ptrcallWithThreeVector2AndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -36215,7 +36347,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeVector2ArgsRetVector2(
+  actual fun ptrcallWithThreeVector2ArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -36252,7 +36384,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithThreeVector2DoubleArgsRetDouble(
+  actual fun ptrcallWithThreeVector2DoubleArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -36294,7 +36426,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithThreeVector2iArgs(
+  actual fun ptrcallWithThreeVector2iArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2i,
@@ -36374,7 +36506,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeVector3AndIntArg(
+  actual fun ptrcallWithThreeVector3AndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -36418,7 +36550,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeVector3ArgsRetVector3(
+  actual fun ptrcallWithThreeVector3ArgsRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -36458,7 +36590,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithThreeVector3DoubleArgsRetPackedVector3List(
+  actual fun ptrcallWithThreeVector3DoubleArgsRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -36493,7 +36625,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithTransform2DArg(
+  actual fun ptrcallWithTransform2DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Transform2D,
@@ -36521,7 +36653,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTransform2DObjectTransform2DArgsRetBool(
+  actual fun ptrcallWithTransform2DObjectTransform2DArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Transform2D,
@@ -36565,7 +36697,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(
+  actual fun ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Transform2D,
@@ -36599,7 +36731,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTransform2DVector2ArgsRetObject(
+  actual fun ptrcallWithTransform2DVector2ArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transform: Transform2D,
@@ -36635,7 +36767,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool(
+  actual fun ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform2D,
@@ -36685,7 +36817,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(
+  actual fun ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstTransform: Transform2D,
@@ -36741,7 +36873,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(
+  actual fun ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstTransform: Transform2D,
@@ -36787,7 +36919,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 5)
   }
 
-  fun ptrcallWithTransform2DVector2TwoColorUInt32Args(
+  actual fun ptrcallWithTransform2DVector2TwoColorUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform2D,
@@ -36842,7 +36974,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(
+  actual fun ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transform: Transform3D,
@@ -36949,7 +37081,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTransform3DAndLongArgsRetTransform3D(
+  actual fun ptrcallWithTransform3DAndLongArgsRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -36996,7 +37128,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithTransform3DArg(
+  actual fun ptrcallWithTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Transform3D,
@@ -37030,7 +37162,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTransform3DListArg(
+  actual fun ptrcallWithTransform3DListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Transform3D>,
@@ -37052,7 +37184,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTransform3DPackedVector2ListPackedInt32ListArgs(
+  actual fun ptrcallWithTransform3DPackedVector2ListPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transform: Transform3D,
@@ -37202,7 +37334,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTransform3DVector3TwoColorUInt32Args(
+  actual fun ptrcallWithTransform3DVector3TwoColorUInt32Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -37288,7 +37420,7 @@ object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoBoolArgs(
+  actual fun ptrcallWithTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Boolean,
@@ -37346,7 +37478,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoBoolArgsRetString(
+  actual fun ptrcallWithTwoBoolArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Boolean,
@@ -37365,7 +37497,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithTwoBoolArgsRetVector2iList(
+  actual fun ptrcallWithTwoBoolArgsRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Boolean,
@@ -37384,7 +37516,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoByteArrayArgsRetBool(
+  actual fun ptrcallWithTwoByteArrayArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: ByteArray,
@@ -37411,7 +37543,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoCallableArgs(
+  actual fun ptrcallWithTwoCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstCallableObject: MemorySegment,
@@ -37443,7 +37575,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoColorArgs(
+  actual fun ptrcallWithTwoColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Color,
@@ -37477,7 +37609,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoDoubleAndIntArgs(
+  actual fun ptrcallWithTwoDoubleAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -37510,7 +37642,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoDoubleAndLongArgsRetVector2(
+  actual fun ptrcallWithTwoDoubleAndLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstDouble: Double,
@@ -37544,7 +37676,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithTwoDoubleArgs(
+  actual fun ptrcallWithTwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -37572,7 +37704,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoDoubleArgsRetDouble(
+  actual fun ptrcallWithTwoDoubleArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -37601,7 +37733,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoDoubleArrayArgs(
+  actual fun ptrcallWithTwoDoubleArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -37633,7 +37765,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoDoubleIntLongArgsRetPlaneList(
+  actual fun ptrcallWithTwoDoubleIntLongArgsRetPlaneList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -37662,7 +37794,7 @@ object ObjectCalls {
     ptrcallRetTypedPlaneList(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(
+  actual fun ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -37696,7 +37828,7 @@ object ObjectCalls {
     ptrcallRetTypedPlaneList(methodBind, instance, types, ptrs, 5)
   }
 
-  fun ptrcallWithTwoIntAndBoolArgs(
+  actual fun ptrcallWithTwoIntAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37761,7 +37893,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndColorArg(
+  actual fun ptrcallWithTwoIntAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37797,7 +37929,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndDoubleArgs(
+  actual fun ptrcallWithTwoIntAndDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37830,7 +37962,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndLongArgs(
+  actual fun ptrcallWithTwoIntAndLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37863,7 +37995,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndNodePathArg(
+  actual fun ptrcallWithTwoIntAndNodePathArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37894,7 +38026,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndObjectArg(
+  actual fun ptrcallWithTwoIntAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37927,7 +38059,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndPackedVector2ListArg(
+  actual fun ptrcallWithTwoIntAndPackedVector2ListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37959,7 +38091,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndQuaternionArg(
+  actual fun ptrcallWithTwoIntAndQuaternionArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -37995,7 +38127,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndStringArgs(
+  actual fun ptrcallWithTwoIntAndStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38026,7 +38158,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndStringNameArg(
+  actual fun ptrcallWithTwoIntAndStringNameArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38057,7 +38189,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndThreeBoolArgsRetObject(
+  actual fun ptrcallWithTwoIntAndThreeBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38102,7 +38234,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoIntAndVariantArg(
+  actual fun ptrcallWithTwoIntAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38134,7 +38266,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndVector2iArg(
+  actual fun ptrcallWithTwoIntAndVector2iArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38168,7 +38300,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndVector3Arg(
+  actual fun ptrcallWithTwoIntAndVector3Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38203,7 +38335,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntArgs(
+  actual fun ptrcallWithTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38231,7 +38363,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntArgsRetArray(
+  actual fun ptrcallWithTwoIntArgsRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38250,7 +38382,7 @@ object ObjectCalls {
     ptrcallRetArray(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoIntArgsRetBool(
+  actual fun ptrcallWithTwoIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38279,7 +38411,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoIntArgsRetColor(
+  actual fun ptrcallWithTwoIntArgsRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38308,7 +38440,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithTwoIntArgsRetDouble(
+  actual fun ptrcallWithTwoIntArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38337,7 +38469,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoIntArgsRetInt(
+  actual fun ptrcallWithTwoIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38366,7 +38498,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoIntArgsRetLong(
+  actual fun ptrcallWithTwoIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38395,7 +38527,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoIntArgsRetNodePath(
+  actual fun ptrcallWithTwoIntArgsRetNodePath(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38414,7 +38546,7 @@ object ObjectCalls {
     NodePath(ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_NODE_PATH))
   }
 
-  fun ptrcallWithTwoIntArgsRetObject(
+  actual fun ptrcallWithTwoIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38444,7 +38576,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoIntArgsRetPackedInt32List(
+  actual fun ptrcallWithTwoIntArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38463,7 +38595,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoIntArgsRetPackedVector2List(
+  actual fun ptrcallWithTwoIntArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38482,7 +38614,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoIntArgsRetQuaternion(
+  actual fun ptrcallWithTwoIntArgsRetQuaternion(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38516,7 +38648,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithTwoIntArgsRetRect2i(
+  actual fun ptrcallWithTwoIntArgsRetRect2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38545,7 +38677,7 @@ object ObjectCalls {
     Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
   }
 
-  fun ptrcallWithTwoIntArgsRetString(
+  actual fun ptrcallWithTwoIntArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38564,7 +38696,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithTwoIntArgsRetStringName(
+  actual fun ptrcallWithTwoIntArgsRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38583,7 +38715,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING_NAME)
   }
 
-  fun ptrcallWithTwoIntArgsRetVariantScalar(
+  actual fun ptrcallWithTwoIntArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38602,7 +38734,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoIntArgsRetVector2(
+  actual fun ptrcallWithTwoIntArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38631,7 +38763,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithTwoIntArgsRetVector2i(
+  actual fun ptrcallWithTwoIntArgsRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38660,7 +38792,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithTwoIntArgsRetVector2iList(
+  actual fun ptrcallWithTwoIntArgsRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38679,7 +38811,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoIntArgsRetVector3(
+  actual fun ptrcallWithTwoIntArgsRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38834,7 +38966,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoIntColorLongTwoBoolArgs(
+  actual fun ptrcallWithTwoIntColorLongTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -38885,7 +39017,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntDoubleArgsRetRID(
+  actual fun ptrcallWithTwoIntDoubleArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38920,7 +39052,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoIntLongColorBoolArgs(
+  actual fun ptrcallWithTwoIntLongColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -38966,7 +39098,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntLongColorBoolArgsRetRID(
+  actual fun ptrcallWithTwoIntLongColorBoolArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39014,7 +39146,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoIntStringArgsRetInt(
+  actual fun ptrcallWithTwoIntStringArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39046,7 +39178,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(
+  actual fun ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39109,7 +39241,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntTwoBoolArgsRetInt(
+  actual fun ptrcallWithTwoIntTwoBoolArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39148,7 +39280,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(
+  actual fun ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39198,7 +39330,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoIntTwoStringAndIntArgsRetInt(
+  actual fun ptrcallWithTwoIntTwoStringAndIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -39238,7 +39370,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoIntTwoStringArgsRetDictionary(
+  actual fun ptrcallWithTwoIntTwoStringArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstInt: Int,
@@ -39263,7 +39395,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithTwoIntVector2DoubleArgs(
+  actual fun ptrcallWithTwoIntVector2DoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39302,7 +39434,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList(
+  actual fun ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39332,7 +39464,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithTwoIntVector2iArgRetVector2(
+  actual fun ptrcallWithTwoIntVector2iArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39367,7 +39499,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithTwoIntVector2iVector2Args(
+  actual fun ptrcallWithTwoIntVector2iVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39407,7 +39539,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoLongAndBoolArgs(
+  actual fun ptrcallWithTwoLongAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39440,7 +39572,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoLongAndBoolArgsRetBool(
+  actual fun ptrcallWithTwoLongAndBoolArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39474,7 +39606,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(
+  actual fun ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39498,7 +39630,7 @@ object ObjectCalls {
     ptrcallRetPackedInt64List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(
+  actual fun ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39522,7 +39654,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoLongAndBoolArgsRetPackedVector3List(
+  actual fun ptrcallWithTwoLongAndBoolArgsRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39546,7 +39678,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoLongAndIntArgs(
+  actual fun ptrcallWithTwoLongAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39579,7 +39711,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoLongArgs(
+  actual fun ptrcallWithTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39607,7 +39739,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoLongArgsRetBool(
+  actual fun ptrcallWithTwoLongArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39636,7 +39768,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoLongArgsRetDouble(
+  actual fun ptrcallWithTwoLongArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39694,7 +39826,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoLongArgsRetLong(
+  actual fun ptrcallWithTwoLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39723,7 +39855,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoLongArgsRetQuaternion(
+  actual fun ptrcallWithTwoLongArgsRetQuaternion(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39757,7 +39889,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithTwoLongArgsRetRID(
+  actual fun ptrcallWithTwoLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39787,7 +39919,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoLongArgsRetVector2(
+  actual fun ptrcallWithTwoLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39816,7 +39948,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithTwoLongArgsRetVector3(
+  actual fun ptrcallWithTwoLongArgsRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39845,7 +39977,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithTwoLongStringArgs(
+  actual fun ptrcallWithTwoLongStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -39876,7 +40008,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(
+  actual fun ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstMode: Long,
@@ -39921,7 +40053,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs(
+  actual fun ptrcallWithTwoLongUInt32RIDListPackedInt64ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     drawList: Long,
@@ -39962,7 +40094,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoObjectArgs(
+  actual fun ptrcallWithTwoObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: MemorySegment,
@@ -39990,7 +40122,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoObjectArgsRetLong(
+  actual fun ptrcallWithTwoObjectArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: MemorySegment,
@@ -40019,7 +40151,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoObjectArgsRetObject(
+  actual fun ptrcallWithTwoObjectArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -40049,7 +40181,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoObjectByteArrayListArgsRetRID(
+  actual fun ptrcallWithTwoObjectByteArrayListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -40083,7 +40215,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoObjectCallableArgs(
+  actual fun ptrcallWithTwoObjectCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -40118,7 +40250,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoObjectIntArgsRetInt(
+  actual fun ptrcallWithTwoObjectIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObjectArg: MemorySegment,
@@ -40152,11 +40284,11 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoObjectListUInt32ArgsRetLong(
+  actual fun ptrcallWithTwoObjectListUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    firstValues: List<GodotObject>,
-    secondValues: List<GodotObject>,
+    firstValues: List<*>,
+    secondValues: List<*>,
     count: Long,
   ): Long = memScoped {
     val ret = alloc<LongVar>()
@@ -40226,7 +40358,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoObjectStringNameVariantArgs(
+  actual fun ptrcallWithTwoObjectStringNameVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -40261,7 +40393,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoObjectTransform2DColorArgs(
+  actual fun ptrcallWithTwoObjectTransform2DColorArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -40307,7 +40439,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoObjectTransform3DObjectArgs(
+  actual fun ptrcallWithTwoObjectTransform3DObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObject: MemorySegment,
@@ -40356,7 +40488,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoObjectUInt32ArgsRetLong(
+  actual fun ptrcallWithTwoObjectUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: MemorySegment,
@@ -40390,7 +40522,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoPackedFloat32ListArgs(
+  actual fun ptrcallWithTwoPackedFloat32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: List<Float>,
@@ -40416,7 +40548,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList(
+  actual fun ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: List<Vector2>,
@@ -40433,7 +40565,7 @@ object ObjectCalls {
     ptrcallRetTypedPackedVector2ListList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoRIDAndTransform2DArg(
+  actual fun ptrcallWithTwoRIDAndTransform2DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40471,7 +40603,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDAndVector2Arg(
+  actual fun ptrcallWithTwoRIDAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40505,7 +40637,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDArgs(
+  actual fun ptrcallWithTwoRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -40533,7 +40665,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDArgsRetInt(
+  actual fun ptrcallWithTwoRIDArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -40562,7 +40694,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoRIDArgsRetLong(
+  actual fun ptrcallWithTwoRIDArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -40591,7 +40723,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoRIDArgsRetRID(
+  actual fun ptrcallWithTwoRIDArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -40621,7 +40753,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoRIDBoolArgs(
+  actual fun ptrcallWithTwoRIDBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -40654,7 +40786,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDDoubleIntBoolArgsRetRID(
+  actual fun ptrcallWithTwoRIDDoubleIntBoolArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40699,7 +40831,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoRIDIntRIDIntArgs(
+  actual fun ptrcallWithTwoRIDIntRIDIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40742,7 +40874,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDLongVector2LongColorDoubleArgs(
+  actual fun ptrcallWithTwoRIDLongVector2LongColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40799,7 +40931,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDRect2IntArgs(
+  actual fun ptrcallWithTwoRIDRect2IntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -40840,7 +40972,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDThreeUInt32ArgsRetLong(
+  actual fun ptrcallWithTwoRIDThreeUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40884,7 +41016,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(
+  actual fun ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40954,7 +41086,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoRIDTransform2DBoolArgs(
+  actual fun ptrcallWithTwoRIDTransform2DBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -40997,7 +41129,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDTransform2DColorRIDArgs(
+  actual fun ptrcallWithTwoRIDTransform2DColorRIDArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -41048,7 +41180,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDTransform3DBoolArgs(
+  actual fun ptrcallWithTwoRIDTransform3DBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -41097,7 +41229,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDTwoIntArgs(
+  actual fun ptrcallWithTwoRIDTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: RID,
@@ -41135,7 +41267,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs(
+  actual fun ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -41197,7 +41329,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs(
+  actual fun ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -41254,7 +41386,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs(
+  actual fun ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -41316,7 +41448,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoRIDVector3RIDVector3Args(
+  actual fun ptrcallWithTwoRIDVector3RIDVector3Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstRid: RID,
@@ -41363,7 +41495,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringAndBoolArgs(
+  actual fun ptrcallWithTwoStringAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41392,7 +41524,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringAndIntArgs(
+  actual fun ptrcallWithTwoStringAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41421,7 +41553,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringAndLongArgRetPackedInt32List(
+  actual fun ptrcallWithTwoStringAndLongArgRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41441,7 +41573,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoStringAndTwoBoolArgs(
+  actual fun ptrcallWithTwoStringAndTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41475,7 +41607,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringAndVariantArg(
+  actual fun ptrcallWithTwoStringAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41503,7 +41635,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringAndVariantArgRetVariantScalar(
+  actual fun ptrcallWithTwoStringAndVariantArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41522,7 +41654,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoStringArgs(
+  actual fun ptrcallWithTwoStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41571,7 +41703,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoStringArgsRetDictionary(
+  actual fun ptrcallWithTwoStringArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41586,7 +41718,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoStringArgsRetInt(
+  actual fun ptrcallWithTwoStringArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41611,7 +41743,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoStringArgsRetLong(
+  actual fun ptrcallWithTwoStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41636,7 +41768,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoStringArgsRetPackedInt32List(
+  actual fun ptrcallWithTwoStringArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41651,7 +41783,7 @@ object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoStringArgsRetString(
+  actual fun ptrcallWithTwoStringArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41666,7 +41798,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithTwoStringBoolArgsRetLong(
+  actual fun ptrcallWithTwoStringBoolArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41696,7 +41828,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoStringBoolTwoIntArgsRetString(
+  actual fun ptrcallWithTwoStringBoolTwoIntArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -41726,7 +41858,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 5, PT_STRING)
   }
 
-  fun ptrcallWithTwoStringCallableStringArgs(
+  actual fun ptrcallWithTwoStringCallableStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -41760,7 +41892,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringColorBoolArgs(
+  actual fun ptrcallWithTwoStringColorBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41797,7 +41929,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringIntTwoDoubleLongBoolArgs(
+  actual fun ptrcallWithTwoStringIntTwoDoubleLongBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41846,7 +41978,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringNameAndBoolArgs(
+  actual fun ptrcallWithTwoStringNameAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41875,7 +42007,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringNameAndBoolArgsRetBool(
+  actual fun ptrcallWithTwoStringNameAndBoolArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41905,7 +42037,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoStringNameAndBoolArgsRetInt(
+  actual fun ptrcallWithTwoStringNameAndBoolArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41935,7 +42067,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList(
+  actual fun ptrcallWithTwoStringNameAndBoolArgsRetPackedStringList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41955,7 +42087,7 @@ object ObjectCalls {
     ptrcallRetPackedStringList(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoStringNameAndBoolArgsRetStringName(
+  actual fun ptrcallWithTwoStringNameAndBoolArgsRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -41975,7 +42107,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 3, PT_STRING_NAME)
   }
 
-  fun ptrcallWithTwoStringNameAndColorArg(
+  actual fun ptrcallWithTwoStringNameAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42036,7 +42168,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringNameAndIntArg(
+  actual fun ptrcallWithTwoStringNameAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42065,7 +42197,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringNameAndObjectArg(
+  actual fun ptrcallWithTwoStringNameAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstName: String,
@@ -42094,7 +42226,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringNameArgs(
+  actual fun ptrcallWithTwoStringNameArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42118,7 +42250,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringNameArgsRetBool(
+  actual fun ptrcallWithTwoStringNameArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42143,7 +42275,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoStringNameArgsRetColor(
+  actual fun ptrcallWithTwoStringNameArgsRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42168,7 +42300,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithTwoStringNameArgsRetDictionary(
+  actual fun ptrcallWithTwoStringNameArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42183,7 +42315,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoStringNameArgsRetDouble(
+  actual fun ptrcallWithTwoStringNameArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42208,7 +42340,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoStringNameArgsRetInt(
+  actual fun ptrcallWithTwoStringNameArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42233,7 +42365,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoStringNameArgsRetLong(
+  actual fun ptrcallWithTwoStringNameArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42258,7 +42390,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoStringNameArgsRetObject(
+  actual fun ptrcallWithTwoStringNameArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42284,7 +42416,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoStringNameArgsRetRID(
+  actual fun ptrcallWithTwoStringNameArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42310,7 +42442,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoStringNameArgsRetStringName(
+  actual fun ptrcallWithTwoStringNameArgsRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42325,7 +42457,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING_NAME)
   }
 
-  fun ptrcallWithTwoStringNameArgsRetVariantScalar(
+  actual fun ptrcallWithTwoStringNameArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42340,7 +42472,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoStringNameFourUInt32ArgsRetRID(
+  actual fun ptrcallWithTwoStringNameFourUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42386,7 +42518,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(
+  actual fun ptrcallWithTwoStringNameFourUInt32ObjectArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstName: String,
@@ -42437,7 +42569,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoStringNameIntStringNameArgsRetStringName(
+  actual fun ptrcallWithTwoStringNameIntStringNameArgsRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42460,7 +42592,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 4, PT_STRING_NAME)
   }
 
-  fun ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(
+  actual fun ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42527,7 +42659,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(
+  actual fun ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstName: String,
@@ -42568,7 +42700,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithTwoStringNameUInt32ArgRetVector2i(
+  actual fun ptrcallWithTwoStringNameUInt32ArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42633,7 +42765,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoStringPackedStringListCallableArgsRetLong(
+  actual fun ptrcallWithTwoStringPackedStringListCallableArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -42747,7 +42879,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(
+  actual fun ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -42800,7 +42932,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(
+  actual fun ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstString: String,
@@ -42863,7 +42995,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithTwoStringTwoObjectArgs(
+  actual fun ptrcallWithTwoStringTwoObjectArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42897,7 +43029,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoUInt32AndDoubleArg(
+  actual fun ptrcallWithTwoUInt32AndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -42930,7 +43062,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoVariantArgsRetDictionary(
+  actual fun ptrcallWithTwoVariantArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstValue: Any?,
@@ -42947,7 +43079,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoVector2Args(
+  actual fun ptrcallWithTwoVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -42977,7 +43109,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoVector2ArgsRetPackedVector2List(
+  actual fun ptrcallWithTwoVector2ArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -42998,7 +43130,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoVector2ColorDoubleBoolArgs(
+  actual fun ptrcallWithTwoVector2ColorDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -43046,7 +43178,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoVector2ColorTwoDoubleTwoBoolArgs(
+  actual fun ptrcallWithTwoVector2ColorTwoDoubleTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -43104,7 +43236,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoVector2DoubleArgsRetBool(
+  actual fun ptrcallWithTwoVector2DoubleArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -43140,7 +43272,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoVector2UInt32RIDListArgsRetObject(
+  actual fun ptrcallWithTwoVector2UInt32RIDListArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     from: Vector2,
@@ -43181,7 +43313,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(
+  actual fun ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2i,
@@ -43207,7 +43339,7 @@ object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(
+  actual fun ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2i,
@@ -43233,7 +43365,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoVector2iAndObjectArgRetVector2i(
+  actual fun ptrcallWithTwoVector2iAndObjectArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2i,
@@ -43269,7 +43401,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithTwoVector2iArgs(
+  actual fun ptrcallWithTwoVector2iArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2i,
@@ -43299,7 +43431,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoVector2iArgsRetVector2iList(
+  actual fun ptrcallWithTwoVector2iArgsRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2i,
@@ -43320,7 +43452,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(
+  actual fun ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2i,
@@ -43410,7 +43542,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoVector3Args(
+  actual fun ptrcallWithTwoVector3Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -43442,7 +43574,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoVector3ArgsRetDictionary(
+  actual fun ptrcallWithTwoVector3ArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -43465,7 +43597,7 @@ object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithTwoVector3ArgsRetVector2(
+  actual fun ptrcallWithTwoVector3ArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -43498,7 +43630,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List(
+  actual fun ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     from: Vector3,
@@ -43525,7 +43657,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoVector3RIDArgsRetPackedInt64List(
+  actual fun ptrcallWithTwoVector3RIDArgsRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     from: Vector3,
@@ -43553,7 +43685,7 @@ object ObjectCalls {
     ptrcallRetPackedInt64List(methodBind, instance, types, ptrs, 3)
   }
 
-  fun ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List(
+  actual fun ptrcallWithTwoVector3TwoDoubleArgsRetPackedVector3List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -43586,7 +43718,7 @@ object ObjectCalls {
     ptrcallRetPackedVector3List(methodBind, instance, types, ptrs, 4)
   }
 
-  fun ptrcallWithTwoVector3UInt32RIDListArgsRetObject(
+  actual fun ptrcallWithTwoVector3UInt32RIDListArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     from: Vector3,
@@ -43629,7 +43761,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTwoVector3iArgs(
+  actual fun ptrcallWithTwoVector3iArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3i,
@@ -43661,7 +43793,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTypedIntListArg(
+  actual fun ptrcallWithTypedIntListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Long>,
@@ -43686,7 +43818,7 @@ object ObjectCalls {
   fun ptrcallWithTypedMaterialListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<GodotObject>,
+    values: List<*>,
   ) = memScoped {
     val c0 = packTypedObjectArrayDesc(values)
     val types = allocArray<IntVar>(1)
@@ -43705,7 +43837,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTypedStringListArg(
+  actual fun ptrcallWithTypedStringListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<String>,
@@ -43727,7 +43859,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32AndBoolArgRetRID(
+  actual fun ptrcallWithUInt32AndBoolArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Long,
@@ -43757,7 +43889,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithUInt32AndBoolArgs(
+  actual fun ptrcallWithUInt32AndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Long,
@@ -43785,7 +43917,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32AndDoubleArg(
+  actual fun ptrcallWithUInt32AndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Long,
@@ -43813,7 +43945,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32AndIntArg(
+  actual fun ptrcallWithUInt32AndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -43841,7 +43973,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32AndIntArgRetInt(
+  actual fun ptrcallWithUInt32AndIntArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -43870,7 +44002,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithUInt32AndIntArgRetObject(
+  actual fun ptrcallWithUInt32AndIntArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -43900,7 +44032,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithUInt32AndLongArgRetRID(
+  actual fun ptrcallWithUInt32AndLongArgRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -43930,7 +44062,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithUInt32AndObjectArg(
+  actual fun ptrcallWithUInt32AndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Long,
@@ -43958,7 +44090,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32AndTransform2DArg(
+  actual fun ptrcallWithUInt32AndTransform2DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Long,
@@ -43991,7 +44123,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32AndTransform3DArg(
+  actual fun ptrcallWithUInt32AndTransform3DArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intArg: Long,
@@ -44030,7 +44162,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32AndVector2Args(
+  actual fun ptrcallWithUInt32AndVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44059,7 +44191,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithUInt32Arg(methodBind: MemorySegment, instance: MemorySegment, value: Long) =
+  actual fun ptrcallWithUInt32Arg(methodBind: MemorySegment, instance: MemorySegment, value: Long) =
     memScoped {
       val c0 = alloc<LongVar>()
       c0.value = value
@@ -44079,7 +44211,7 @@ object ObjectCalls {
       Unit
     }
 
-  fun ptrcallWithUInt32ArgRetBool(
+  actual fun ptrcallWithUInt32ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44103,7 +44235,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithUInt32ArgRetDouble(
+  actual fun ptrcallWithUInt32ArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44127,7 +44259,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithUInt32ArgRetInt(
+  actual fun ptrcallWithUInt32ArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44151,7 +44283,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithUInt32ArgRetLong(
+  actual fun ptrcallWithUInt32ArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44175,7 +44307,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithUInt32ArgRetObject(
+  actual fun ptrcallWithUInt32ArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44200,7 +44332,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithUInt32ArgRetPackedInt64List(
+  actual fun ptrcallWithUInt32ArgRetPackedInt64List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44214,7 +44346,7 @@ object ObjectCalls {
     ptrcallRetPackedInt64List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithUInt32ArgRetProjection(
+  actual fun ptrcallWithUInt32ArgRetProjection(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44263,7 +44395,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithUInt32ArgRetString(
+  actual fun ptrcallWithUInt32ArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44277,7 +44409,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithUInt32ArgRetTransform2D(
+  actual fun ptrcallWithUInt32ArgRetTransform2D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44305,7 +44437,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithUInt32ArgRetTransform3D(
+  actual fun ptrcallWithUInt32ArgRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44336,7 +44468,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithUInt32ArgRetVector2(
+  actual fun ptrcallWithUInt32ArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44360,7 +44492,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithUInt32ArgRetVector3(
+  actual fun ptrcallWithUInt32ArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44384,7 +44516,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithUInt32ByteArrayLongArgsRetRID(
+  actual fun ptrcallWithUInt32ByteArrayLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     size: Long,
@@ -44418,7 +44550,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithUInt32LongByteArrayArgsRetRID(
+  actual fun ptrcallWithUInt32LongByteArrayArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     size: Long,
@@ -44452,7 +44584,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(
+  actual fun ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     size: Long,
@@ -44496,7 +44628,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID(
+  actual fun ptrcallWithUInt32LongRIDListPackedInt64ListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     count: Long,
@@ -44534,7 +44666,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(
+  actual fun ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     size: Long,
@@ -44573,7 +44705,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithUInt32ThreeDoubleArgsRetProjection(
+  actual fun ptrcallWithUInt32ThreeDoubleArgsRetProjection(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44637,7 +44769,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithUInt32Transform3DArgsRetTransform3D(
+  actual fun ptrcallWithUInt32Transform3DArgsRetTransform3D(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -44684,7 +44816,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithVariantAndBoolArg(
+  actual fun ptrcallWithVariantAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44711,7 +44843,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVariantAndBoolArgRetLong(
+  actual fun ptrcallWithVariantAndBoolArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44739,7 +44871,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVariantAndBoolArgRetString(
+  actual fun ptrcallWithVariantAndBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44757,7 +44889,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
   }
 
-  fun ptrcallWithVariantAndBoolArgRetVariantScalar(
+  actual fun ptrcallWithVariantAndBoolArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44775,7 +44907,7 @@ object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithVariantAndObjectArg(
+  actual fun ptrcallWithVariantAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44802,26 +44934,29 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVariantArg(methodBind: MemorySegment, instance: MemorySegment, value: Any?) =
-    memScoped {
-      val c0 = packVariantDesc(value)
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_VARIANT
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithVariantArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Any?,
+  ) = memScoped {
+    val c0 = packVariantDesc(value)
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
-  fun ptrcallWithVariantArgRetBool(
+  actual fun ptrcallWithVariantArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44844,7 +44979,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVariantArgRetInt(
+  actual fun ptrcallWithVariantArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44867,7 +45002,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithVariantArgRetLong(
+  actual fun ptrcallWithVariantArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44890,7 +45025,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVariantArgRetObject(
+  actual fun ptrcallWithVariantArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44914,7 +45049,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVariantArgRetRect2(
+  actual fun ptrcallWithVariantArgRetRect2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44940,7 +45075,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithVariantArgRetString(
+  actual fun ptrcallWithVariantArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -44953,7 +45088,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(
+  actual fun ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     key: Any?,
@@ -45034,7 +45169,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVariantLongStringArgs(
+  actual fun ptrcallWithVariantLongStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -45064,7 +45199,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVariantStringTwoBoolArgsRetString(
+  actual fun ptrcallWithVariantStringTwoBoolArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -45090,7 +45225,7 @@ object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 4, PT_STRING)
   }
 
-  fun ptrcallWithVariantVector2LongDoubleArgsRetBool(
+  actual fun ptrcallWithVariantVector2LongDoubleArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -45129,7 +45264,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVariantVector2LongIntDoubleArgsRetBool(
+  actual fun ptrcallWithVariantVector2LongIntDoubleArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Any?,
@@ -45173,7 +45308,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVector2AndBoolArg(
+  actual fun ptrcallWithVector2AndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45202,7 +45337,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2AndBoolArgRetInt(
+  actual fun ptrcallWithVector2AndBoolArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45232,7 +45367,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithVector2AndBoolArgRetLong(
+  actual fun ptrcallWithVector2AndBoolArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45262,7 +45397,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector2AndDoubleArgRetDictionary(
+  actual fun ptrcallWithVector2AndDoubleArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45312,7 +45447,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithVector2AndIntArg(
+  actual fun ptrcallWithVector2AndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45341,7 +45476,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2ArgRetBool(
+  actual fun ptrcallWithVector2ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45366,7 +45501,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVector2ArgRetDouble(
+  actual fun ptrcallWithVector2ArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45391,7 +45526,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector2ArgRetInt(
+  actual fun ptrcallWithVector2ArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45416,7 +45551,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithVector2ArgRetLong(
+  actual fun ptrcallWithVector2ArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45441,7 +45576,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector2ArgRetObject(
+  actual fun ptrcallWithVector2ArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45467,7 +45602,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVector2ArgRetVector2(
+  actual fun ptrcallWithVector2ArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45492,7 +45627,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithVector2ArgRetVector2i(
+  actual fun ptrcallWithVector2ArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45542,7 +45677,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithVector2BoolFloatBoolArgsRetObject(
+  actual fun ptrcallWithVector2BoolFloatBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45583,7 +45718,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVector2DoubleColorBoolDoubleBoolArgs(
+  actual fun ptrcallWithVector2DoubleColorBoolDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     position: Vector2,
@@ -45635,7 +45770,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2DoubleVector2Args(
+  actual fun ptrcallWithVector2DoubleVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector2,
@@ -45670,7 +45805,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2FourDoubleIntColorDoubleBoolArgs(
+  actual fun ptrcallWithVector2FourDoubleIntColorDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45737,7 +45872,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2PackedVector2ListArgsRetBool(
+  actual fun ptrcallWithVector2PackedVector2ListArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45766,7 +45901,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVector2PackedVector2ListArgsRetRID(
+  actual fun ptrcallWithVector2PackedVector2ListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -45796,7 +45931,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithVector2Rect2ArgsRetBool(
+  actual fun ptrcallWithVector2Rect2ArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     point: Vector2,
@@ -45829,7 +45964,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVector2ThreeDoubleIntColorDoubleBoolArgs(
+  actual fun ptrcallWithVector2ThreeDoubleIntColorDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45891,7 +46026,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs(
+  actual fun ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     position: Vector2,
@@ -45948,7 +46083,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(
+  actual fun ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45993,7 +46128,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithVector2iAndBoolArg(
+  actual fun ptrcallWithVector2iAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46054,7 +46189,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iAndDoubleArg(
+  actual fun ptrcallWithVector2iAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46083,7 +46218,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iAndIntArg(
+  actual fun ptrcallWithVector2iAndIntArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46112,7 +46247,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iAndIntArgRetBool(
+  actual fun ptrcallWithVector2iAndIntArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46142,7 +46277,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVector2iAndIntArgRetDouble(
+  actual fun ptrcallWithVector2iAndIntArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46172,7 +46307,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector2iAndIntArgRetInt(
+  actual fun ptrcallWithVector2iAndIntArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46202,7 +46337,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithVector2iAndIntArgRetObject(
+  actual fun ptrcallWithVector2iAndIntArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     coords: Vector2i,
@@ -46233,7 +46368,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVector2iAndIntArgRetRect2i(
+  actual fun ptrcallWithVector2iAndIntArgRetRect2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46263,7 +46398,7 @@ object ObjectCalls {
     Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
   }
 
-  fun ptrcallWithVector2iAndLongArg(
+  actual fun ptrcallWithVector2iAndLongArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46292,7 +46427,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iAndLongArgRetVector2i(
+  actual fun ptrcallWithVector2iAndLongArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46322,7 +46457,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithVector2iAndObjectArg(
+  actual fun ptrcallWithVector2iAndObjectArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     coords: Vector2i,
@@ -46351,7 +46486,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iAndTwoBoolArgsRetVector2i(
+  actual fun ptrcallWithVector2iAndTwoBoolArgsRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46386,7 +46521,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithVector2iAndTwoIntArgs(
+  actual fun ptrcallWithVector2iAndTwoIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46420,7 +46555,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iArgRetBool(
+  actual fun ptrcallWithVector2iArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46445,7 +46580,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVector2iArgRetColor(
+  actual fun ptrcallWithVector2iArgRetColor(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46470,7 +46605,7 @@ object ObjectCalls {
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
-  fun ptrcallWithVector2iArgRetDouble(
+  actual fun ptrcallWithVector2iArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46495,7 +46630,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector2iArgRetInt(
+  actual fun ptrcallWithVector2iArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46520,7 +46655,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithVector2iArgRetLong(
+  actual fun ptrcallWithVector2iArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46545,7 +46680,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector2iArgRetObject(
+  actual fun ptrcallWithVector2iArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     coords: Vector2i,
@@ -46571,7 +46706,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVector2iArgRetVector2(
+  actual fun ptrcallWithVector2iArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46596,7 +46731,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithVector2iArgRetVector2i(
+  actual fun ptrcallWithVector2iArgRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46621,7 +46756,7 @@ object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithVector2iArgRetVector2iList(
+  actual fun ptrcallWithVector2iArgRetVector2iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46636,7 +46771,7 @@ object ObjectCalls {
     ptrcallRetTypedVector2iList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithVector2iIntDoubleArgs(
+  actual fun ptrcallWithVector2iIntDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2i,
@@ -46670,7 +46805,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iIntVector2iIntArgs(
+  actual fun ptrcallWithVector2iIntVector2iIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstVector: Vector2i,
@@ -46710,7 +46845,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iListArgRetObject(
+  actual fun ptrcallWithVector2iListArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2i>,
@@ -46734,7 +46869,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVector2iListTwoIntAndBoolArgs(
+  actual fun ptrcallWithVector2iListTwoIntAndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Vector2i>,
@@ -46771,7 +46906,7 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector2iLongLongArgsRetRID(
+  actual fun ptrcallWithVector2iLongLongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     size: Vector2i,
@@ -46807,7 +46942,7 @@ object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithVector3AndBoolArgRetLong(
+  actual fun ptrcallWithVector3AndBoolArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -46894,7 +47029,7 @@ object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithVector3ArgRetDouble(
+  actual fun ptrcallWithVector3ArgRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -46920,7 +47055,7 @@ object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector3ArgRetPlaneList(
+  actual fun ptrcallWithVector3ArgRetPlaneList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -46962,7 +47097,7 @@ object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithVector3ArgRetVector3(
+  actual fun ptrcallWithVector3ArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -46988,7 +47123,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithVector3ArgRetVector3i(
+  actual fun ptrcallWithVector3ArgRetVector3i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -47061,7 +47196,7 @@ object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithVector3iAndIntArgRetVector3iList(
+  actual fun ptrcallWithVector3iAndIntArgRetVector3iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3i,
@@ -47082,7 +47217,7 @@ object ObjectCalls {
     ptrcallRetTypedVector3iList(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithVector3iArgRetBasis(
+  actual fun ptrcallWithVector3iArgRetBasis(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3i,
@@ -47112,7 +47247,7 @@ object ObjectCalls {
     )
   }
 
-  fun ptrcallWithVector3iArgRetInt(
+  actual fun ptrcallWithVector3iArgRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3i,
@@ -47138,7 +47273,7 @@ object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithVector3iArgRetVector3(
+  actual fun ptrcallWithVector3iArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3i,
@@ -47164,7 +47299,7 @@ object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithVector3iArgRetVector3i(
+  actual fun ptrcallWithVector3iArgRetVector3i(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3i,
@@ -47190,7 +47325,7 @@ object ObjectCalls {
     Vector3i(ret[0], ret[1], ret[2])
   }
 
-  fun ptrcallWithVector3iArgRetVector3iList(
+  actual fun ptrcallWithVector3iArgRetVector3iList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3i,
@@ -47206,7 +47341,7 @@ object ObjectCalls {
     ptrcallRetTypedVector3iList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithVector3iIntIntArgs(
+  actual fun ptrcallWithVector3iIntIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vectorArg: Vector3i,
@@ -47241,28 +47376,31 @@ object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector4Arg(methodBind: MemorySegment, instance: MemorySegment, value: Vector4) =
-    memScoped {
-      val c0 = allocArray<GodotRealVar>(4)
-      c0[0] = GodotReal.toC(value.x)
-      c0[1] = GodotReal.toC(value.y)
-      c0[2] = GodotReal.toC(value.z)
-      c0[3] = GodotReal.toC(value.w)
-      val types = allocArray<IntVar>(1)
-      types[0] = PT_VECTOR4
-      val ptrs = allocArray<COpaquePointerVar>(1)
-      ptrs[0] = c0.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
-      Unit
-    }
+  actual fun ptrcallWithVector4Arg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Vector4,
+  ) = memScoped {
+    val c0 = allocArray<GodotRealVar>(4)
+    c0[0] = GodotReal.toC(value.x)
+    c0[1] = GodotReal.toC(value.y)
+    c0[2] = GodotReal.toC(value.z)
+    c0[3] = GodotReal.toC(value.w)
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_VECTOR4
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      1,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
 
   // ===== END GENERATED MEMBERS =====
 }
