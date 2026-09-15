@@ -67,9 +67,6 @@ subprojects {
 
   extensions.configure<PublishingExtension> { addKanamaPackageRepository() }
 
-// The two iOS targets are compiled into a static lib and shipped as an xcframework; their klibs
-// are not a Maven artifact anyone resolves, and publishing them would compile Kotlin/Native on
-// every `publishToMavenLocal`. `:ios-runtime` disabled all of its publish tasks for this reason.
   pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
     extensions.configure<JavaPluginExtension> { withSourcesJar() }
 
@@ -79,11 +76,21 @@ subprojects {
   }
 }
 
-// Root project is the one Kanama runtime module: a Kotlin Multiplatform module whose targets
-// are the desktop/Android JVM and the two iOS Kotlin/Native slices (task 104 step 3). The
-// shared generated wrapper tree under src/commonMain/kotlin is its commonMain, so the Kotlin
-// compiler — not a Python contract gate — proves every platform implements every wrapper call.
+// Root project is the one Kanama runtime module: a Kotlin Multiplatform module whose targets are
+// the desktop/Android JVM and the two iOS Kotlin/Native slices (task 104 step 3).
 // `:ios-runtime` was this module's second half until step 3 and no longer exists.
+//
+// Two shared source directories, and the difference matters:
+//   src/commonMain/kotlin  the KMP COMMON fragment -- the value types, GodotHandle, the generated
+//                          real_t and the `expect` seams (RawSegment/NULL_SEGMENT, BuiltinCalls,
+//                          ObjectCalls). The compiler proves every backend implements these.
+//   src/sharedApi/kotlin   the generated wrapper tree: ONE set of sources compiled per platform
+//                          (a srcDir of jvmMain and iosMain, copied for Android), NOT common code
+//                          -- its classes extend the hand-shaped per-platform wrappers, which a
+//                          common source file may not name (task 117). That the tree's calls exist
+//                          on both backends follows from the ObjectCalls seam above plus
+//                          scripts/check_objectcalls_parity.py, which holds the generated `expect`
+//                          list to the set of helpers the tree actually calls.
 apply(plugin = "org.jetbrains.kotlin.multiplatform")
 
 apply(plugin = "com.google.devtools.ksp")
@@ -280,32 +287,34 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     }
     // iosMain is the intermediate source set the two iOS targets share (the hand-written
     // Kotlin/Native runtime: ObjectCalls, BuiltinCalls, the java.* shims, the per-platform
-    // wrappers). The KMP metadata compilations are disabled below, so it is spelled out here
-    // rather than left to the default hierarchy template.
+    // wrappers). Spelled out rather than left to the default hierarchy template, which is also
+    // what lets its metadata compilation be disabled by name below.
     val iosMain by creating {
       dependsOn(commonMain)
       kotlin.srcDir("src/sharedApi/kotlin")
     }
-    val iosArm64Main by getting {
-      dependsOn(iosMain)
-      iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
-    }
-    val iosSimulatorArm64Main by getting {
-      dependsOn(iosMain)
-      iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
+    // Both iOS targets refine iosMain and compile the consumer project's scripts, identically.
+    for (name in listOf("iosArm64Main", "iosSimulatorArm64Main")) {
+      named(name) {
+        dependsOn(iosMain)
+        iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
+      }
     }
   }
 }
 
-// The KMP *metadata* compilations compile commonMain on its own, and the shared wrapper tree is
-// not self-contained: `class Sprite2D(handle: GodotHandle) : Node2D(handle)` resolves Node2D in
-// commonMain but its base Node in each platform's hand-shaped runtime (77 desktop / 54 iOS api
-// files). Every platform compilation (commonMain + that platform's sources) therefore type-checks
-// — which is what the expect/actual contract is checked against — while a commonMain-only
-// compile cannot. Nothing consumes Kanama as a KMP library (iOS ships an xcframework, desktop a
-// jar), so those compilations are disabled; `:ios-runtime` disabled its own for the same reason.
-// The publication keeps its metadata variant so `net.multigesture.kanama:kanama` still resolves
-// to the JVM variant through Gradle metadata.
+// `compileIosMainKotlinMetadata` is the ONLY metadata compilation disabled here.
+// `compileCommonMainKotlinMetadata` stays on and is a gate: it compiles src/commonMain/kotlin on
+// its own, which is the proof that the fragment is common code and not merely shared source.
+//
+// iosMain's cannot compile, for the reason the deleted `ios-runtime/build.gradle.kts` recorded:
+// it is an intermediate source set shared by the two iOS targets, so it is compiled to Kotlin
+// *metadata* — and that compilation rejects the `@JvmName`/`@JvmStatic` annotations the generated
+// wrappers carry ("Declaration annotated with '@OptionalExpectation' can only be used in common
+// module sources"), because src/sharedApi/kotlin is a srcDir of iosMain and is not common. Every
+// platform compilation (commonMain + that platform's sources) type-checks, the static link and the
+// xcframework lanes are green, and nothing consumes Kanama as a KMP library — iOS ships an
+// xcframework, desktop a jar — so nothing needs iosMain metadata.
 tasks.matching { it.name == "compileIosMainKotlinMetadata" }.configureEach { enabled = false }
 
 // iOS supports single precision only: the generated common Real.kt is shared, so the guard sits
@@ -2306,5 +2315,3 @@ tasks.register<Zip>("packageMobileAddonAndroid") {
   from(mobileAddonAndroidExtrasDir.map { it.file("README.md") })
   from(layout.projectDirectory.file("LICENSE"))
 }
-
-// TEMP DEBUG
