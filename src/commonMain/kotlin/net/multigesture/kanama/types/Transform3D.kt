@@ -1,6 +1,10 @@
 package net.multigesture.kanama.types
 
+import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
+import net.multigesture.kanama.binding.runtime.PT_TRANSFORM3D
+import net.multigesture.kanama.binding.runtime.PT_VECTOR3
+import net.multigesture.kanama.binding.runtime.VT_TRANSFORM3D
 
 private const val LOOKING_AT_HASH = 90889270L
 private const val INTERPOLATE_WITH_HASH = 1786453358L
@@ -97,10 +101,7 @@ data class Transform3D(
         interpolateWithBind,
         toGodotRealArray(),
         12,
-        listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_TRANSFORM3D, to.toGodotRealArray()),
-          BuiltinCalls.BArg.Real(weight),
-        ),
+        listOf(BArg.Floats(PT_TRANSFORM3D, to.toGodotRealArray()), BArg.Real(weight)),
       )
     )
 
@@ -127,9 +128,9 @@ data class Transform3D(
         toGodotRealArray(),
         12,
         listOf(
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(target)),
-          BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(up)),
-          BuiltinCalls.BArg.Bool(useModelFront),
+          BArg.Floats(PT_VECTOR3, vector3Array(target)),
+          BArg.Floats(PT_VECTOR3, vector3Array(up)),
+          BArg.Bool(useModelFront),
         ),
       )
     )
@@ -165,7 +166,7 @@ data class Transform3D(
         methodPtr,
         toGodotRealArray(),
         12,
-        listOf(BuiltinCalls.BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(vector))),
+        listOf(BArg.Floats(PT_VECTOR3, vector3Array(vector))),
       )
     )
 
@@ -201,41 +202,25 @@ data class Transform3D(
     // orthonormalized are all no-arg -> Self; scaled_local and translated are both (Vector3) ->
     // Self.
     private val inverseBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_TRANSFORM3D, "inverse", NO_ARG_SELF_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "inverse", NO_ARG_SELF_HASH)
     }
     private val affineInverseBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_TRANSFORM3D, "affine_inverse", NO_ARG_SELF_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "affine_inverse", NO_ARG_SELF_HASH)
     }
     private val orthonormalizedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(
-        BuiltinCalls.VT_TRANSFORM3D,
-        "orthonormalized",
-        NO_ARG_SELF_HASH,
-      )
+      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "orthonormalized", NO_ARG_SELF_HASH)
     }
     private val lookingAtBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_TRANSFORM3D, "looking_at", LOOKING_AT_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "looking_at", LOOKING_AT_HASH)
     }
     private val interpolateWithBind by lazy {
-      BuiltinCalls.getBuiltinMethod(
-        BuiltinCalls.VT_TRANSFORM3D,
-        "interpolate_with",
-        INTERPOLATE_WITH_HASH,
-      )
+      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "interpolate_with", INTERPOLATE_WITH_HASH)
     }
     private val scaledLocalBind by lazy {
-      BuiltinCalls.getBuiltinMethod(
-        BuiltinCalls.VT_TRANSFORM3D,
-        "scaled_local",
-        VECTOR3_ARG_SELF_HASH,
-      )
+      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "scaled_local", VECTOR3_ARG_SELF_HASH)
     }
     private val translatedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(
-        BuiltinCalls.VT_TRANSFORM3D,
-        "translated",
-        VECTOR3_ARG_SELF_HASH,
-      )
+      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "translated", VECTOR3_ARG_SELF_HASH)
     }
 
     private fun vector3Array(v: Vector3): GodotRealArray =

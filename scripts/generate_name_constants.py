@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_API = ROOT / "extension_api.json"
-DEFAULT_OUTPUT_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+DEFAULT_OUTPUT_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 
 KOTLIN_KEYWORDS = {
     "as",

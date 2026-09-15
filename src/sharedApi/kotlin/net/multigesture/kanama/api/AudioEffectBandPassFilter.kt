@@ -1,0 +1,25 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * Adds a band-pass filter to an audio bus.
+ *
+ * Generated from Godot docs: AudioEffectBandPassFilter
+ */
+class AudioEffectBandPassFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
+    // No conservative instance methods emitted yet.
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): AudioEffectBandPassFilter? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): AudioEffectBandPassFilter? =
+            if (handle.address() == 0L) null else AudioEffectBandPassFilter(GodotHandle(handle))
+
+        // No MethodBinds emitted yet.
+    }
+}

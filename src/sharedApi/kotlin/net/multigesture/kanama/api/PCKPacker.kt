@@ -1,0 +1,107 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * Creates packages that can be loaded into a running project.
+ *
+ * Generated from Godot docs: PCKPacker
+ */
+class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * Creates a new PCK file at the file path `pck_path`. The `.pck` file extension isn't added
+     * automatically, so it should be part of `pck_path` (even though it's not required).
+     *
+     * Generated from Godot docs: PCKPacker.pck_start
+     */
+    fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, segment, pckPath, alignment, key, encryptDirectory)
+    }
+
+    /**
+     * Adds the `source_path` file to the current PCK package at the `target_path` internal path. The
+     * `res://` prefix for `target_path` is optional and stripped internally. File content is
+     * immediately written to the PCK.
+     *
+     * Generated from Godot docs: PCKPacker.add_file
+     */
+    fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, segment, targetPath, sourcePath, encrypt)
+    }
+
+    /**
+     * Adds the `data` to the current PCK package at the `target_path` internal path. The `res://`
+     * prefix for `target_path` is optional and stripped internally. File content is immediately
+     * written to the PCK.
+     *
+     * Generated from Godot docs: PCKPacker.add_file_from_buffer
+     */
+    fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, segment, targetPath, data, encrypt)
+    }
+
+    /**
+     * Registers a file removal of the `target_path` internal path to the PCK. This is mainly used for
+     * patches. If the file at this path has been loaded from a previous PCK, it will be removed. The
+     * `res://` prefix for `target_path` is optional and stripped internally.
+     *
+     * Generated from Godot docs: PCKPacker.add_file_removal
+     */
+    fun addFileRemoval(targetPath: String): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, segment, targetPath)
+    }
+
+    /**
+     * Writes the file directory and closes the PCK. If `verbose` is `true`, a list of files added will
+     * be printed to the console for easier debugging. Note: `PCKPacker` will automatically flush when
+     * it's freed, which happens when it goes out of scope or when it gets assigned with `null`. In C#
+     * the reference must be disposed after use, either with the `using` statement or by calling the
+     * `Dispose` method directly.
+     *
+     * Generated from Godot docs: PCKPacker.flush
+     */
+    fun flush(verbose: Boolean = false): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, segment, verbose)
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): PCKPacker? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): PCKPacker? =
+            if (handle.address() == 0L) null else PCKPacker(GodotHandle(handle))
+
+        private const val PCK_START_HASH = 508410629L
+        private val pckStartBind by lazy {
+            ObjectCalls.getMethodBind("PCKPacker", "pck_start", PCK_START_HASH)
+        }
+
+        private const val ADD_FILE_HASH = 2215643711L
+        private val addFileBind by lazy {
+            ObjectCalls.getMethodBind("PCKPacker", "add_file", ADD_FILE_HASH)
+        }
+
+        private const val ADD_FILE_FROM_BUFFER_HASH = 1131482346L
+        private val addFileFromBufferBind by lazy {
+            ObjectCalls.getMethodBind("PCKPacker", "add_file_from_buffer", ADD_FILE_FROM_BUFFER_HASH)
+        }
+
+        private const val ADD_FILE_REMOVAL_HASH = 166001499L
+        private val addFileRemovalBind by lazy {
+            ObjectCalls.getMethodBind("PCKPacker", "add_file_removal", ADD_FILE_REMOVAL_HASH)
+        }
+
+        private const val FLUSH_HASH = 1633102583L
+        private val flushBind by lazy {
+            ObjectCalls.getMethodBind("PCKPacker", "flush", FLUSH_HASH)
+        }
+    }
+}

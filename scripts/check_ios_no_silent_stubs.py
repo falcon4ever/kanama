@@ -8,8 +8,8 @@ This check fails unless every such site is annotated with a KANAMA-IOS-STUB or
 KANAMA-IOS-HANDWRITTEN marker within the 2 lines above it — so you cannot add a new silent
 stub without recording it (and it shows up in scripts/ios_handwritten_report.py).
 
-Scans the iOS wrapper sources: ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api/*.kt plus
-the shared tree src/commonMain/kotlin/net/multigesture/kanama/api/*.kt (task 103).
+Scans the iOS wrapper sources: src/iosMain/kotlin/net/multigesture/kanama/api/*.kt plus
+the shared tree src/sharedApi/kotlin/net/multigesture/kanama/api/*.kt (task 103).
 Run: python3 scripts/check_ios_no_silent_stubs.py   (exit 1 on un-annotated stub)
 """
 
@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from wrapper_model import wrapper_source_files  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-API_DIR = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api"
+API_DIR = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"
 MARKER = "KANAMA-IOS-"
 
 DEFAULT = r"(?:null|false|true|0|0L|0\.0|0\.0f|\"\"|emptyList\(\)|emptyMap\(\)|emptySet\(\))"

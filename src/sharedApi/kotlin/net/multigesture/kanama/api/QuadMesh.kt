@@ -1,0 +1,25 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * Class representing a square mesh facing the camera.
+ *
+ * Generated from Godot docs: QuadMesh
+ */
+class QuadMesh(handle: GodotHandle) : PlaneMesh(handle) {
+    // No conservative instance methods emitted yet.
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): QuadMesh? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): QuadMesh? =
+            if (handle.address() == 0L) null else QuadMesh(GodotHandle(handle))
+
+        // No MethodBinds emitted yet.
+    }
+}

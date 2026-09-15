@@ -18,7 +18,7 @@ from wrapper_model import SHARED_API_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
-API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 
 MISSING_WRAPPER_RE = re.compile(
     r"(?:object|typed object-array) (?:return|argument) wrapper is missing for ([A-Za-z_]\w*)",

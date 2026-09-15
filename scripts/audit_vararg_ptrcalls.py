@@ -20,7 +20,7 @@ from wrapper_model import wrapper_source_files
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
-API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 
 BIND_RE = re.compile(
     r"(?:private\s+)?val\s+([A-Za-z_][A-Za-z0-9_]*)\s+by\s+lazy\s*\{\s*"

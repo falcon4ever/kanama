@@ -199,7 +199,7 @@ def validate_kotlin_hashes(
     builtin_constructors: dict[str, set[int]],
 ) -> list[str]:
     errors: list[str] = []
-    for path in sorted((root / "src/main/kotlin").rglob("*.kt")):
+    for path in sorted((root / "src/jvmMain/kotlin").rglob("*.kt")):
         content = path.read_text(encoding="utf-8")
         constants = constants_for(content)
 
@@ -293,9 +293,9 @@ def validate_kotlin_hashes(
 
 
 def validate_variant_types(root: Path, header_path: Path) -> list[str]:
-    paths = sorted((root / "src/main/kotlin").rglob("VariantType.kt"))
+    paths = sorted((root / "src/jvmMain/kotlin").rglob("VariantType.kt"))
     if not paths:
-        return [f"{root / 'src/main/kotlin'}: missing VariantType.kt"]
+        return [f"{root / 'src/jvmMain/kotlin'}: missing VariantType.kt"]
     path = paths[0]
     header = header_path.read_text(encoding="utf-8") if header_path.exists() else ""
     expected = variant_type_ids(header)
@@ -322,7 +322,7 @@ def validate_lookups(root: Path, header_path: Path) -> list[str]:
     if not header:
         return [f"{header_path}: missing GDExtension header"]
 
-    for path in sorted((root / "src/main/kotlin").rglob("*.kt")):
+    for path in sorted((root / "src/jvmMain/kotlin").rglob("*.kt")):
         content = path.read_text(encoding="utf-8")
         for symbol in GODOT_LOOKUP_RE.findall(content):
             if symbol not in header:
@@ -337,7 +337,7 @@ def validate_builtin_sizes(root: Path, api: dict) -> list[str]:
         errors.append("extension_api.json: missing float_64 Variant size")
         return errors
 
-    for path in sorted((root / "src/main/kotlin").rglob("*.kt")):
+    for path in sorted((root / "src/jvmMain/kotlin").rglob("*.kt")):
         content = path.read_text(encoding="utf-8")
         constants = constants_for(content)
         if "VARIANT_SIZE" in constants and constants["VARIANT_SIZE"] != expected_variant_size:

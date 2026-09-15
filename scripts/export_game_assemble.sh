@@ -84,7 +84,7 @@ if [[ ! -d "$export_target" ]]; then
   exit 2
 fi
 if [[ ! -f "$kanama_jar" ]]; then
-  echo "[export_game_assemble] kanama.jar not found: $kanama_jar (run ./gradlew jar)" >&2
+  echo "[export_game_assemble] kanama.jar not found: $kanama_jar (run ./gradlew jvmJar)" >&2
   exit 2
 fi
 if [[ ! -f "$scripts_jar" ]]; then

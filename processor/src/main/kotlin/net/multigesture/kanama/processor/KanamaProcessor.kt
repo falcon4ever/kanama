@@ -2497,16 +2497,16 @@ internal enum class TypeMapping(
       BOOL -> "$s.get(JAVA_BYTE, 0) != 0.toByte()"
       STRING -> "GodotStrings.readString($s)"
       VECTOR2 ->
-        "net.multigesture.kanama.types.Vector2(net.multigesture.kanama.types.GodotReal.readIndex($s, 0), net.multigesture.kanama.types.GodotReal.readIndex($s, 1))"
+        "net.multigesture.kanama.types.Vector2(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1))"
       VECTOR2I -> "net.multigesture.kanama.types.Vector2i($s.get(JAVA_INT, 0), $s.get(JAVA_INT, 4))"
       VECTOR3 ->
-        "net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex($s, 0), net.multigesture.kanama.types.GodotReal.readIndex($s, 1), net.multigesture.kanama.types.GodotReal.readIndex($s, 2))"
+        "net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2))"
       VECTOR3I ->
         "net.multigesture.kanama.types.Vector3i($s.get(JAVA_INT, 0), $s.get(JAVA_INT, 4), $s.get(JAVA_INT, 8))"
       QUATERNION ->
-        "net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotReal.readIndex($s, 0), net.multigesture.kanama.types.GodotReal.readIndex($s, 1), net.multigesture.kanama.types.GodotReal.readIndex($s, 2), net.multigesture.kanama.types.GodotReal.readIndex($s, 3))"
+        "net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 3))"
       BASIS ->
-        "net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex($s, 0), net.multigesture.kanama.types.GodotReal.readIndex($s, 3), net.multigesture.kanama.types.GodotReal.readIndex($s, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex($s, 1), net.multigesture.kanama.types.GodotReal.readIndex($s, 4), net.multigesture.kanama.types.GodotReal.readIndex($s, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex($s, 2), net.multigesture.kanama.types.GodotReal.readIndex($s, 5), net.multigesture.kanama.types.GodotReal.readIndex($s, 8)))"
+        "net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 3), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 4), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 5), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 8)))"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($s))"
       OBJECT -> "net.multigesture.kanama.api.GodotObject($s.get(ADDRESS, 0))"
       in VARIANT_ONLY_RETURN_SHAPES -> kotlinLiteralZero
@@ -2519,16 +2519,16 @@ internal enum class TypeMapping(
       BOOL -> "$s.set(JAVA_BYTE, 0, if ($v) 1.toByte() else 0.toByte())"
       STRING -> "GodotStrings.initString($s, $v)"
       VECTOR2 ->
-        "{ net.multigesture.kanama.types.GodotReal.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 1, $v.y) }"
+        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y) }"
       VECTOR2I -> "{ $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y) }"
       VECTOR3 ->
-        "{ net.multigesture.kanama.types.GodotReal.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 2, $v.z) }"
+        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z) }"
       VECTOR3I ->
         "{ $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y); $s.set(JAVA_INT, 8, $v.z) }"
       QUATERNION ->
-        "{ net.multigesture.kanama.types.GodotReal.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 2, $v.z); net.multigesture.kanama.types.GodotReal.writeIndex($s, 3, $v.w) }"
+        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.w) }"
       BASIS ->
-        "{ net.multigesture.kanama.types.GodotReal.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotReal.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotReal.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotReal.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotReal.writeIndex($s, 8, $v.z.z) }"
+        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString($s, $v.path)"
       OBJECT -> "$s.set(ADDRESS, 0, $v.handle)"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
@@ -2545,17 +2545,17 @@ internal enum class TypeMapping(
       BOOL -> "$ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_BYTE, 0) != 0.toByte()"
       STRING -> "GodotStrings.readString($ptr)"
       VECTOR2 ->
-        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Vector2(net.multigesture.kanama.types.GodotReal.readIndex(p, 0), net.multigesture.kanama.types.GodotReal.readIndex(p, 1)) }"
+        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Vector2(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1)) }"
       VECTOR2I ->
         "net.multigesture.kanama.types.Vector2i($ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 0), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 4))"
       VECTOR3 ->
-        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(p, 0), net.multigesture.kanama.types.GodotReal.readIndex(p, 1), net.multigesture.kanama.types.GodotReal.readIndex(p, 2)) }"
+        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 2)) }"
       VECTOR3I ->
         "net.multigesture.kanama.types.Vector3i($ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 0), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 4), $ptr.reinterpret($ptrcallSizeBytesExpr).get(JAVA_INT, 8))"
       QUATERNION ->
-        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotReal.readIndex(p, 0), net.multigesture.kanama.types.GodotReal.readIndex(p, 1), net.multigesture.kanama.types.GodotReal.readIndex(p, 2), net.multigesture.kanama.types.GodotReal.readIndex(p, 3)) }"
+        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 3)) }"
       BASIS ->
-        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(p, 0), net.multigesture.kanama.types.GodotReal.readIndex(p, 3), net.multigesture.kanama.types.GodotReal.readIndex(p, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(p, 1), net.multigesture.kanama.types.GodotReal.readIndex(p, 4), net.multigesture.kanama.types.GodotReal.readIndex(p, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(p, 2), net.multigesture.kanama.types.GodotReal.readIndex(p, 5), net.multigesture.kanama.types.GodotReal.readIndex(p, 8))) }"
+        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 3), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 4), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 5), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 8))) }"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($ptr))"
       OBJECT ->
         "net.multigesture.kanama.api.GodotObject($ptr.reinterpret($ptrcallSizeBytesExpr).get(ADDRESS, 0))"
@@ -2573,17 +2573,17 @@ internal enum class TypeMapping(
         "rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_BYTE, 0, if ($v) 1.toByte() else 0.toByte())"
       STRING -> "GodotStrings.initString(rRet, $v)"
       VECTOR2 ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotReal.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 1, $v.y) }"
+        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y) }"
       VECTOR2I ->
         "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y) }"
       VECTOR3 ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotReal.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 2, $v.z) }"
+        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z) }"
       VECTOR3I ->
         "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 8, $v.z) }"
       QUATERNION ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotReal.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 2, $v.z); net.multigesture.kanama.types.GodotReal.writeIndex(p, 3, $v.w) }"
+        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.w) }"
       BASIS ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotReal.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotReal.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotReal.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotReal.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotReal.writeIndex(p, 8, $v.z.z) }"
+        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
       OBJECT -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, $v.handle)"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
@@ -4117,11 +4117,11 @@ internal class ScriptCodeEmitter(
       TypeMapping.NODE_PATH ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantNodePath($variantPtr, a) }"
       TypeMapping.VECTOR2 ->
-        "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 2L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); VariantConverters.variantToType(VariantType.VECTOR2).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector2(net.multigesture.kanama.types.GodotReal.readIndex(d, 0), net.multigesture.kanama.types.GodotReal.readIndex(d, 1)) }"
+        "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 2L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); VariantConverters.variantToType(VariantType.VECTOR2).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector2(net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 1)) }"
       TypeMapping.VECTOR2I ->
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(8L, 4L); VariantConverters.variantToType(VariantType.VECTOR2I).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector2i(d.get(JAVA_INT, 0), d.get(JAVA_INT, 4)) }"
       TypeMapping.VECTOR3 ->
-        "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); VariantConverters.variantToType(VariantType.VECTOR3).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotReal.readIndex(d, 0), net.multigesture.kanama.types.GodotReal.readIndex(d, 1), net.multigesture.kanama.types.GodotReal.readIndex(d, 2)) }"
+        "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); VariantConverters.variantToType(VariantType.VECTOR3).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 2)) }"
       TypeMapping.VECTOR3I ->
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(12L, 4L); VariantConverters.variantToType(VariantType.VECTOR3I).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3i(d.get(JAVA_INT, 0), d.get(JAVA_INT, 4), d.get(JAVA_INT, 8)) }"
       TypeMapping.QUATERNION ->
@@ -4387,11 +4387,11 @@ internal class ScriptCodeEmitter(
       TypeMapping.NODE_PATH ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       TypeMapping.VECTOR2 ->
-        "Arena.ofConfined().use { a -> val s = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 2L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); net.multigesture.kanama.types.GodotReal.writeIndex(s, 0, $valueExpr.x); net.multigesture.kanama.types.GodotReal.writeIndex(s, 1, $valueExpr.y); VariantConverters.variantFromType(VariantType.VECTOR2).invoke(ret, s) }"
+        "Arena.ofConfined().use { a -> val s = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 2L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 0, $valueExpr.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 1, $valueExpr.y); VariantConverters.variantFromType(VariantType.VECTOR2).invoke(ret, s) }"
       TypeMapping.VECTOR2I ->
         "Arena.ofConfined().use { a -> val s = a.allocate(8L, 4L); s.set(JAVA_INT, 0, $valueExpr.x); s.set(JAVA_INT, 4, $valueExpr.y); VariantConverters.variantFromType(VariantType.VECTOR2I).invoke(ret, s) }"
       TypeMapping.VECTOR3 ->
-        "Arena.ofConfined().use { a -> val s = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); net.multigesture.kanama.types.GodotReal.writeIndex(s, 0, $valueExpr.x); net.multigesture.kanama.types.GodotReal.writeIndex(s, 1, $valueExpr.y); net.multigesture.kanama.types.GodotReal.writeIndex(s, 2, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3).invoke(ret, s) }"
+        "Arena.ofConfined().use { a -> val s = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 0, $valueExpr.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 1, $valueExpr.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 2, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3).invoke(ret, s) }"
       TypeMapping.VECTOR3I ->
         "Arena.ofConfined().use { a -> val s = a.allocate(12L, 4L); s.set(JAVA_INT, 0, $valueExpr.x); s.set(JAVA_INT, 4, $valueExpr.y); s.set(JAVA_INT, 8, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3I).invoke(ret, s) }"
       TypeMapping.QUATERNION ->

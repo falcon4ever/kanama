@@ -2,7 +2,7 @@
 """Fail loud if any backend binds a deprecated GDExtension interface function, or if the
 desktop/Android (JVM) and iOS backends bind *different* variants of the same function family.
 
-Background: the JVM backend (`src/main`) and the iOS Kotlin/Native shim
+Background: the JVM backend (`src/jvmMain`) and the iOS Kotlin/Native shim
 (`ios/bootstrap/kanama_ios_shim.c`) each choose which GDExtension entry points to bind. They
 silently diverged once — desktop on the 4.7-deprecated `classdb_construct_object2`, iOS on
 `classdb_construct_object3` — which caused issue #91 (task 61/62). This gate makes that class of

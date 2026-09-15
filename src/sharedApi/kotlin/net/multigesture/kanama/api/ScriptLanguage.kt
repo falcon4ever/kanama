@@ -1,0 +1,29 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * Generated from Godot docs: ScriptLanguage
+ */
+open class ScriptLanguage(handle: GodotHandle) : GodotObject(handle) {
+    // No conservative instance methods emitted yet.
+
+    companion object {
+        const val SCRIPT_NAME_CASING_AUTO: Long = 0L
+        const val SCRIPT_NAME_CASING_PASCAL_CASE: Long = 1L
+        const val SCRIPT_NAME_CASING_SNAKE_CASE: Long = 2L
+        const val SCRIPT_NAME_CASING_KEBAB_CASE: Long = 3L
+        const val SCRIPT_NAME_CASING_CAMEL_CASE: Long = 4L
+
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): ScriptLanguage? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): ScriptLanguage? =
+            if (handle.address() == 0L) null else ScriptLanguage(GodotHandle(handle))
+
+        // No MethodBinds emitted yet.
+    }
+}

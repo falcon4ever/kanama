@@ -1,8 +1,10 @@
 # Shared Wrapper Tree: Design Check
 
-Kanama ships two committed generated wrapper trees for the native backends:
+Kanama shipped two committed generated wrapper trees for the native backends:
 desktop/Android under `src/main/kotlin/net/multigesture/kanama/api` and iOS under
-`ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api`. The task-21 design
+`ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api` (today: one tree under
+`src/sharedApi/kotlin/net/multigesture/kanama/api`, and neither of those modules exists any more
+— see the 2026-09-15 section at the end). The task-21 design
 ("commonMain unification") proposed one shared tree with an `expect/actual
 ObjectCalls` seam; the drift gate landed, the physical move did not. Task 103
 re-opened the move. This page records what the code said when the move was
@@ -73,8 +75,9 @@ to answer.
    under `src/commonMain/kotlin/net/multigesture/kanama/types` (public surface =
    the union of the two it replaced, `Vector4i` included), reaching the engine
    only through the `BuiltinCalls` facade, which exists once per platform under
-   one fully-qualified name and is kept identical by
-   `scripts/check_builtin_calls_contract.py`. Only `Real.kt` stays per platform.
+   one fully-qualified name. **Task 104 step 3 parcel C' made it an `expect object`**, so the
+   compiler keeps the two identical and the Python contract gate is deleted. `Real.kt` is now a
+   generated common file plus a JVM-only `GodotRealSegment` for its Panama accessors.
 
 ## Two mechanisms, and what each costs
 
@@ -168,3 +171,41 @@ Mechanism (b) landed; (a) stays the long-term target and is filed separately.
 - Not done, by decision: the audit of the missing iOS helper shapes (its own task; each
   family that lands moves its members back into the shared file on the next regen), and
   the KMP `expect/actual` move, which still needs everything listed under (a) above.
+
+## What was done (2026-09-15, task 104 step 3 parcels C+D)
+
+Mechanism (a) landed for the SEAMS; the tree itself stays mechanism (b), and the reason is
+measured rather than assumed.
+
+- **One module.** Root `kanama` is one `kotlin("multiplatform")` module with `jvm()`,
+  `iosArm64()` and `iosSimulatorArm64()`; `:ios-runtime` is deleted and its cinterop, static
+  lib, per-target script dirs and per-target KSP moved to the root. `src/main/kotlin` →
+  `src/jvmMain/kotlin`, `src/test` → `src/jvmTest`, `ios-runtime/src/iosMain/kotlin` →
+  `src/iosMain/kotlin`.
+- **The seams are `expect`/`actual` and the compiler is the contract**:
+  `expect sealed interface RawSegment { fun address(): Long }` + `expect val NULL_SEGMENT`,
+  `expect object BuiltinCalls`, and a GENERATED `expect object ObjectCalls` carrying 1,352 of
+  the 1,359 ptrcall helpers the tree calls. Both backends' objects are `actual object`s with
+  `actual` on each matching member. `scripts/check_builtin_calls_contract.py` is deleted;
+  `scripts/check_objectcalls_parity.py` stays and gained the one check the compiler cannot make
+  — that the generated `expect` list still equals the set of helpers the tree calls.
+- **The generated tree is NOT `commonMain`, and that is the finding.** K2 resolves a source file
+  in the common fragment against common code ONLY, inside every platform compilation and not
+  just the metadata one (isolated repro: a `commonMain` class extending a `jvmMain` class fails
+  `compileKotlinJvm` with `Unresolved reference`). The tree is not self-contained: its 979
+  classes extend and call the hand-shaped per-platform wrappers — `GodotObject`, `Node`,
+  `Node3D`, `RefCounted`, `Resource`, `Material`, `Image`, `Font`, … 29 classes, 2,695 desktop
+  vs 2,572 iOS members, 2,498 same-named — plus their internal `checkOpen()` /
+  `requireOpenHandle()`. Measured attempt: 93,637 errors on `compileKotlinJvm`, 93,616 on
+  `compileKotlinIosArm64`. So the tree moved to `src/sharedApi/kotlin` and stays ONE set of
+  sources compiled per platform (and copied for Android), while `src/commonMain/kotlin` became
+  the real common fragment: the value types, `GodotHandle`, the `expect` files and the generated
+  `Real.kt`. **Making those 29 classes `expect`/`actual` is filed as task 117**; it is what the
+  design's blocker 1 actually costs.
+- Seven referenced `ObjectCalls` helpers cannot be `expect` members and are the parity gate's
+  documented exceptions: six name a hand-shaped platform class in their signature
+  (`GodotCallable`, `Material`) and one carries a default argument, which no lane can express
+  (an `actual` may not restate a default, and the Android copy has no common fragment at all).
+- The Android remap learned decision D's two rules: skip `*.expect.kt`, strip a leading `actual`
+  modifier; its audit now strips block comments as well as line comments and matches declaration
+  keywords by regex instead of the two fragments `expect class` / `actual class`.

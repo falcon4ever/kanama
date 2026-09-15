@@ -1,0 +1,55 @@
+package net.multigesture.kanama.api
+
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+
+/**
+ * Helper class to implement a DTLS server.
+ *
+ * Generated from Godot docs: DTLSServer
+ */
+class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
+    /**
+     * Setup the DTLS server to use the given `server_options`. See `TLSOptions.server`.
+     *
+     * Generated from Godot docs: DTLSServer.setup
+     */
+    fun setup(serverOptions: TLSOptions?): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+    }
+
+    /**
+     * Try to initiate the DTLS handshake with the given `udp_peer` which must be already connected
+     * (see `PacketPeerUDP.connect_to_host`). Note: You must check that the state of the return
+     * PacketPeerUDP is `PacketPeerDTLS.STATUS_HANDSHAKING`, as it is normal that 50% of the new
+     * connections will be invalid due to cookie exchange.
+     *
+     * Generated from Godot docs: DTLSServer.take_connection
+     */
+    fun takeConnection(udpPeer: PacketPeerUDP?): PacketPeerDTLS? {
+        checkOpen()
+        return PacketPeerDTLS.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, segment, udpPeer?.requireOpenHandle() ?: NULL_SEGMENT))
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): DTLSServer? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): DTLSServer? =
+            if (handle.address() == 0L) null else DTLSServer(GodotHandle(handle))
+
+        private const val SETUP_HASH = 1262296096L
+        private val setupBind by lazy {
+            ObjectCalls.getMethodBind("DTLSServer", "setup", SETUP_HASH)
+        }
+
+        private const val TAKE_CONNECTION_HASH = 3946580474L
+        private val takeConnectionBind by lazy {
+            ObjectCalls.getMethodBind("DTLSServer", "take_connection", TAKE_CONNECTION_HASH)
+        }
+    }
+}

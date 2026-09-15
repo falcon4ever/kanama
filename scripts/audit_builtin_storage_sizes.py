@@ -19,10 +19,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
 RUNTIME_FILES = [
-    ROOT / "src/main/kotlin/binding/runtime/BuiltinTypes.kt",
-    ROOT / "src/main/kotlin/binding/runtime/ObjectCalls.kt",
+    ROOT / "src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt",
+    ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt",
 ]
-BUILTIN_TYPES = ROOT / "src/main/kotlin/binding/runtime/BuiltinTypes.kt"
+BUILTIN_TYPES = ROOT / "src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt"
 # iOS GDExtension shim: hand-written C marshalling. Packed*Array ptrcall storage there is
 # a raw stack slot, not a sized Kotlin allocation — so it needs its own size guardrail.
 IOS_SHIM = ROOT / "ios/bootstrap/kanama_ios_shim.c"
@@ -203,7 +203,7 @@ def audit_builtin_types_specifics() -> list[str]:
         if "allocatePackedArray(arena)" in body:
             line = content.count("\n", 0, start) + 1
             errors.append(
-                f"src/main/kotlin/binding/runtime/BuiltinTypes.kt:{line}: "
+                f"src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt:{line}: "
                 f"VariantType.{variant_type} storage is 8 bytes, not PACKED_ARRAY_SIZE"
             )
     return errors

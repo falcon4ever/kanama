@@ -7,6 +7,41 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — Kanama is one Kotlin Multiplatform module (task 104, step 3 parcels C+D)
+
+- **Contributors' commands change; game code does not.** No wrapper member, signature or runtime
+  type changed, and the published surface is unchanged too: the module still publishes exactly one
+  Maven module, `net.multigesture.kanama:kanama`, carrying the JVM variant (the KMP root
+  publication, which would advertise iOS variants Kanama does not publish, is disabled). Verified
+  against a demo and a bare consumer project. The desktop jar is still `build/libs/kanama.jar`.
+- The root project is one `kotlin("multiplatform")` module with targets `jvm()`, `iosArm64()` and
+  `iosSimulatorArm64()`. **`:ios-runtime` no longer exists** — its cinterop, static library,
+  per-target user-script dirs and per-target KSP moved to the root build.
+- Task names: `compileKotlin` → `compileKotlinJvm`, `test` → `jvmTest`, `jar` → `jvmJar`,
+  `kspKotlin` → `kspKotlinJvm`, and every `:ios-runtime:X` → `X` (`linkDebugStaticIosArm64`,
+  `cinteropKanama_iosIosArm64`, …). `publishKanamaToMavenLocal`, `installAddonJar`,
+  `syncExampleAddonJar`, the `packageX` lane, the xcframework tasks and `ktfmtCheck`/`ktfmtFormat`
+  keep their names.
+- Source layout: `src/main/kotlin` → `src/jvmMain/kotlin`, `src/test` → `src/jvmTest`,
+  `ios-runtime/src/iosMain/kotlin` → `src/iosMain/kotlin`, and the shared generated wrapper tree →
+  `src/sharedApi/kotlin`. `src/commonMain/kotlin` is now the module's KMP **common fragment**: the
+  19 value types, `GodotHandle`, the generated `Real.kt` and the `expect` seams.
+- **The compiler is the cross-platform contract.** `RawSegment`/`NULL_SEGMENT`, `BuiltinCalls` and
+  a generated `ObjectCalls` (1,352 of the 1,359 ptrcall helpers the tree calls, seven documented
+  exceptions) are `expect` declarations in the common fragment with one `actual` per backend, so a
+  helper missing from either backend — or spelling a parameter, type or type-parameter bound
+  differently — is now a build error. `scripts/check_builtin_calls_contract.py` is deleted (the
+  compiler replaced it); `scripts/check_objectcalls_parity.py` stays for the one thing the compiler
+  cannot see, that the generated `expect` list still matches the helpers the tree calls.
+- The api tree is shared SOURCE compiled per platform, not common code: its classes extend the
+  hand-shaped per-platform wrappers (`Node`, `GodotObject`, …), which a common source file may not
+  name. Making those 29 classes `expect`/`actual` is **task 117**.
+- `BuiltinCalls.call`/`callScalar`/`callBool`/`callInt` no longer default `args` to an empty list
+  (an `actual` cannot carry a default, and the Android source copy has no common fragment); pass
+  `emptyList()` explicitly. Internal API — game code does not call these.
+- The Android PanamaPort remap skips `*.expect.kt` and strips a leading `actual ` modifier; its
+  audit now ignores comments and matches declaration keywords instead of two text fragments.
+
 ### Fixed — Android smokes exported without the desktop runtime and never installed the build template (task 116)
 
 - `scripts/android_smoke.sh` and `scripts/android_export_minified.sh` installed the Android AAR but not

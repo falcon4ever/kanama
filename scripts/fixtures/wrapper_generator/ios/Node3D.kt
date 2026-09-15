@@ -4,7 +4,6 @@ import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Quaternion

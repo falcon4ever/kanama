@@ -2,7 +2,7 @@
 """Gate: every `ObjectCalls` helper the shared wrapper tree calls is a MEMBER of
 `object ObjectCalls` on desktop and on iOS, with the same parameter names in the same order.
 
-`src/commonMain/kotlin` is compiled by the root JVM module, by `:ios-runtime` and (through the
+`src/sharedApi/kotlin` is compiled by the root module's JVM and iOS targets and (through the
 Android remap) by the Android plugin, and it reaches the engine through exactly one seam:
 `net.multigesture.kanama.binding.runtime.ObjectCalls`. Task 104 step 3 turns that object into an
 `expect object` with one `actual` per platform, and an `expect` member can only be actualized by a
@@ -40,17 +40,26 @@ import re
 import sys
 from pathlib import Path
 
-# The Kotlin source utilities are the ones the sibling BuiltinCalls gate already proved on these
-# same two runtime files (ktfmt-formatted, one top-level object): comment stripping that leaves
-# string literals alone, and brace/paren matching.
-from check_builtin_calls_contract import match_closer, strip_comments
+# The generator is the layer below: it owns the Kotlin-source utilities, the ONE scanner that says
+# which helpers the shared sources call, and the `expect` object this gate checks (task 119 findings
+# 12 and 17 -- one function and one list, not two of each). `check_wrapper_generator.py` imports it
+# the same way, so the direction stays cycle-free.
+from generate_api_wrapper import (
+    match_closer,
+    referenced_objectcalls_helpers,
+    render_objectcalls_expect,
+    strip_comments,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
-DESKTOP = ROOT / "src/main/kotlin/binding/runtime/ObjectCalls.kt"
-IOS = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"
-IOS_SOURCE_ROOT = ROOT / "ios-runtime/src"
-SHARED_TREE = ROOT / "src/commonMain/kotlin"
+
+DESKTOP = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
+IOS = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"
+IOS_SOURCE_ROOT = ROOT / "src/iosMain"
+# The GENERATED common declaration of the seam (scripts/generate_api_wrapper.py --write-tree).
+EXPECT = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt"
+
 
 # A member function of `object ObjectCalls`. Both files are ktfmt-formatted (`ktfmtCheck` is a
 # local_ci stage), so an object member starts at exactly two spaces; anything deeper is a local
@@ -60,6 +69,7 @@ SHARED_TREE = ROOT / "src/commonMain/kotlin"
 MEMBER_RE = re.compile(
     r"^(?P<indent>[ ]*)"
     r"(?P<vis>private |internal |public )?"
+    r"(?P<actual>actual )?"
     r"(?P<mods>(?:inline |operator |infix |suspend )*)"
     r"fun\s+(?:<[^>]*>\s*)?"
     r"(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*\(",
@@ -70,9 +80,6 @@ MEMBER_RE = re.compile(
 # `fun ObjectCalls.<name>(` across lines when the helper name is long (three of the task-100
 # helpers are), so the receiver, dot and name may be separated by whitespace.
 EXTENSION_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s*)?ObjectCalls\s*\.\s*(?P<name>[A-Za-z0-9_]+)\s*\(")
-
-# What the shared tree calls through the seam.
-REFERENCE_RE = re.compile(r"\bObjectCalls\.([A-Za-z0-9_]+)")
 
 Signature = tuple[str, ...]
 
@@ -133,13 +140,15 @@ def parameter_names(src: str, open_paren: int) -> Signature:
 def parse_members(path: Path) -> dict[str, list[Signature]]:
     """Public/internal member functions of `object ObjectCalls` -> parameter-name tuples.
 
+    Reads the `expect object` in the common fragment as well as the two `actual object`s.
+
     One name maps to several tuples only when the object overloads it; desktop has four
     type-differentiated overload pairs (`path: String` / `path: NodePath`) that share their
     parameter names, so the tuples collapse. A private member cannot be called from the shared
     tree, so it is not part of the contract.
     """
     src = strip_comments(path.read_text(encoding="utf-8"))
-    obj = re.search(r"^(?:actual )?object\s+ObjectCalls\s*\{", src, re.MULTILINE)
+    obj = re.search(r"^(?:actual |expect )?object\s+ObjectCalls\s*\{", src, re.MULTILINE)
     if not obj:
         raise SystemExit(f"{path}: no top-level `object ObjectCalls` declaration")
     body_open = src.index("{", obj.start())
@@ -168,18 +177,52 @@ def parse_extensions(root: Path) -> dict[str, Path]:
     return extensions
 
 
-def referenced_helpers(tree: Path) -> list[str]:
-    """Distinct `ObjectCalls.<name>` the shared wrapper tree calls, sorted."""
-    names: set[str] = set()
-    for path in sorted(tree.rglob("*.kt")):
-        # Code only: a KDoc or line comment mentioning `ObjectCalls.foo` is prose, not a call
-        # (task 119 finding 5 — the sibling parsers already strip comments).
-        names.update(REFERENCE_RE.findall(strip_comments(path.read_text(encoding="utf-8"))))
-    return sorted(names)
-
-
 def render(signature: Signature) -> str:
     return f"({', '.join(signature)})"
+
+
+def check_expect_members(referenced: list[str], desktop: dict[str, list[Signature]]) -> int:
+    """The generated `expect object ObjectCalls` declares exactly the referenced helpers, minus the
+    documented exceptions.
+
+    The compiler already proves that both backends implement every `expect` member -- that is what
+    parcel C' bought. What it cannot notice is a helper the tree CALLS that never made it into the
+    `expect` object: the shared api tree is platform-compiled source, so such a call resolves
+    against the platform member and the seam silently stops being the contract. This is that check.
+    """
+    if not EXPECT.exists():
+        print(f"[objectcalls_parity] FAIL missing {EXPECT.relative_to(ROOT)}", file=sys.stderr)
+        return 1
+    declared = set(parse_members(EXPECT))
+    # The exceptions are the generator's own: `render_objectcalls_expect()` returns the helpers it
+    # excluded (a signature naming a hand-shaped platform class, or a default argument), computed
+    # from the desktop signatures it renders from. Reading them here instead of mirroring the list
+    # means the two can never disagree (task 119 finding 17).
+    _, excluded, _ = render_objectcalls_expect()
+    exceptions = set(excluded)
+    want = {name for name in referenced if name in desktop} - exceptions
+    missing = sorted(want - declared)
+    extra = sorted(declared - want)
+    if missing or extra:
+        print(
+            "[objectcalls_parity] FAIL the generated expect object does not match the referenced set",
+            file=sys.stderr,
+        )
+        for name in missing:
+            print(f"    missing-from-expect  {name}", file=sys.stderr)
+        for name in extra:
+            print(f"    not-referenced       {name}", file=sys.stderr)
+        print(
+            "    re-adopt: python3 scripts/generate_api_wrapper.py --write-tree "
+            "(then ./gradlew ktfmtFormat)",
+            file=sys.stderr,
+        )
+        return 1
+    print(
+        f"[objectcalls_parity] PASS expect object declares {len(declared)} referenced helper(s); "
+        f"{len(exceptions)} platform-only exception(s): {', '.join(sorted(exceptions))}"
+    )
+    return 0
 
 
 def main() -> int:
@@ -190,7 +233,7 @@ def main() -> int:
     desktop = parse_members(DESKTOP)
     ios = parse_members(IOS)
     ios_extensions = parse_extensions(IOS_SOURCE_ROOT)
-    referenced = referenced_helpers(SHARED_TREE)
+    referenced = sorted(referenced_objectcalls_helpers())
 
     missing_desktop: list[str] = []
     missing_ios: list[str] = []
@@ -239,7 +282,8 @@ def main() -> int:
             "[objectcalls_parity] every referenced helper is a member on both platforms, "
             "same parameter names"
         )
-        return 0
+        # And the generated common declaration lists exactly those helpers.
+        return check_expect_members(referenced, desktop)
 
     print()
     print(f"[objectcalls_parity] FAIL: {deltas} referenced signature(s) are not in parity")

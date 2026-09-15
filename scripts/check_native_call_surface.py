@@ -10,7 +10,7 @@ Kanama prewarms every shape during JNI bootstrap, before any Godot->JVM lifecycl
 exists, so an upcall only ever executes adapters that already exist (task 83). This script
 keeps that true as code changes: it extracts every downcall shape reachable from the
 desktop/Android backend sources and asserts each one is declared in
-`src/main/kotlin/ffi/NativeCallSurface.kt`.
+`src/jvmMain/kotlin/ffi/NativeCallSurface.kt`.
 
 It also enforces the funnel that makes the shapes findable in the first place: outside
 `GodotFFI.kt`, nothing may call `linker.downcallHandle` / `linker.upcallStub` directly.
@@ -32,13 +32,14 @@ ROOT = Path(__file__).resolve().parent.parent
 # Backend sources that can link a native adapter. `processor/` emits Kotlin as string
 # literals, so it is scanned through the string-literal reconstruction below.
 SCAN_ROOTS = (
-    Path("src/main/kotlin"),
+    Path("src/jvmMain/kotlin"),
     Path("src/commonMain/kotlin"),
+    Path("src/sharedApi/kotlin"),
     Path("processor/src/main/kotlin"),
 )
 
-REGISTRY_FILE = Path("src/main/kotlin/ffi/NativeCallSurface.kt")
-FUNNEL_FILE = Path("src/main/kotlin/ffi/GodotFFI.kt")
+REGISTRY_FILE = Path("src/jvmMain/kotlin/ffi/NativeCallSurface.kt")
+FUNNEL_FILE = Path("src/jvmMain/kotlin/ffi/GodotFFI.kt")
 
 # Call sites that link a downcall adapter, and which positional argument carries the
 # descriptor.

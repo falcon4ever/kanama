@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
-ENGINE_WRAPPER = ROOT / "src/main/kotlin/net/multigesture/kanama/api/Engine.kt"
+ENGINE_WRAPPER = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api/Engine.kt"
 
 
 def load_api() -> tuple[dict[str, dict[str, object]], list[dict[str, object]]]:

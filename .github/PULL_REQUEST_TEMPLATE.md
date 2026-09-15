@@ -9,7 +9,7 @@ Closes #
 
 - [ ] Ran `scripts/local_ci.sh <godot>` to green — the full gate, not just the in-editor smoke (see `AGENTS.md` → Validation).
 - [ ] Up to date with the latest `main` (branch protection also enforces this at merge time).
-- [ ] If this touches ABI / memory-ownership code (`src/main/kotlin/binding/`, `processor/`, retain/release, marshalling), I've called it out below so it gets a careful review.
+- [ ] If this touches ABI / memory-ownership code (`src/jvmMain/kotlin/binding/`, `processor/`, retain/release, marshalling), I've called it out below so it gets a careful review.
 - [ ] Updated docs / CHANGELOG if behavior changed, and bumped any paired constants I touched (see `AGENTS.md` → synchronized invariants).
 
 ## Testing

@@ -41,7 +41,7 @@ ios/bootstrap/kanama_ios_shim.c  ── C shim ───────────
   • Guardrails: kanama_ios_check_call_error, kanama_ios_check_variant_arg     │
         │  @CName <-> extern bridge                                          │
         ▼                                                                    │
-ios-runtime (Kotlin/Native)                                                  │
+src/iosMain (Kotlin/Native)                                                  │
   • KanamaIosRuntime.kt — script registry, instance bridges, dispatch        │
   • IosCallableRegistry — lambda/bound signal callbacks                      │
   • binding/runtime/ObjectCalls.kt — the API call abstraction  <─────────────┘
@@ -54,14 +54,14 @@ Generated per-project script registry (methods/properties/signals of USER script
 
 Two distinct codegen concerns, do not confuse them:
 1. **Project-script registry** (already generated): the user's `@ScriptClass` scripts'
-   methods/properties/signals, emitted by the KSP processor + `ios-runtime/build.gradle.kts`.
+   methods/properties/signals, emitted by the KSP processor + the root `build.gradle.kts`.
 2. **Godot API wrappers** (also generated, see below): the `Node3D`/`CharacterBody3D`/…
    classes that user scripts call into.
 
 ## Why generated wrappers (the hand-written stubs we left behind)
 
 The first iOS slice hand-wrote the Godot API surface in one file,
-`ios-runtime/.../api/IosGodotApi.kt` (~1000 lines, ~30 classes), where most methods
+`src/iosMain/.../api/IosGodotApi.kt` (~1000 lines, ~30 classes), where most methods
 were **no-op stubs** that compiled and silently returned defaults. Adding one Godot
 method took ~6 manual edits across 3 files (`extension_api.json` hash lookup → C
 `g_*_bind` + binding function → `kanama_ios.h` decl → `IosGodot` wrapper → Kotlin API
@@ -126,7 +126,7 @@ The proven runtime stayed; the hand-written API was replaced with generated wrap
   conservative skip logic (`--skip-report`), and its fixture-based check harness
   (`scripts/check_wrapper_generator.py`). See `docs/contributing/wrapper-maintenance.md`.
 - The iOS emission target decides the shared tree's method set, renders the iOS-only
-  generated wrappers (`ios-runtime/.../api`) and the matching `ObjectCalls` helper
+  generated wrappers (`src/iosMain/.../api`) and the matching `ObjectCalls` helper
   bodies (generated from the CallShape set); the `expect/actual ObjectCalls` form is
   a separate task (see the Shared Wrapper Tree design check).
 - The hand-written layer is now only genuinely bespoke runtime pieces:
@@ -136,7 +136,7 @@ The proven runtime stayed; the hand-written API was replaced with generated wrap
 ## Contract: generic ptrcall dispatch (iOS ObjectCalls)
 
 Informed by a survey of the desktop `ObjectCalls.*` helper shapes
-(regenerable with `grep -rhoE "ObjectCalls\.[A-Za-z0-9_]+" src/main/.../api/ | sort -u`):
+(regenerable with `grep -rhoE "ObjectCalls\.[A-Za-z0-9_]+" src/sharedApi/.../api/ | sort -u`):
 the generated wrappers reference ~1500 distinct `ObjectCalls.*` helper shapes (1467 at
 the task-30 survey; 121 for
 the platformer's classes alone), of which only ~7% map to an existing iOS C

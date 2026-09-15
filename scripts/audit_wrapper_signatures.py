@@ -25,7 +25,7 @@ from wrapper_model import ApiMethod, load_api_method_index, wrapper_source_files
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
-API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
+API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 
 CONST_RE = re.compile(
     r"^\s*(?:private\s+)?(?:const\s+)?val\s+([A-Za-z_][A-Za-z0-9_]*)"

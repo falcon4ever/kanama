@@ -108,7 +108,7 @@ minor releases — the runbook below is identical, only smaller.
       'classdb_construct_object|script_instance_create|register_extension_class|get_godot_version'
       src ios --glob '*.kt' --glob '*.c'`) and move to the newest variant.
     - **Assert the backends have not diverged.** The desktop/Android JVM backend
-      (`src/main`) and the iOS Kotlin/Native shim (`ios/bootstrap/kanama_ios_shim.c`)
+      (`src/jvmMain`) and the iOS Kotlin/Native shim (`ios/bootstrap/kanama_ios_shim.c`)
       choose their own GDExtension entry points and *have* silently drifted before
       (desktop `construct_object2` vs iOS `construct_object3` — issue #91 / task 61).
       Confirm both bind the **same, newest** construct/register/script-instance

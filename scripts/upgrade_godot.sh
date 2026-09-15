@@ -334,7 +334,7 @@ cat <<EOF
   1. Review the API diff classification above. New classes are coverage/policy
      work (generator policy, audits, adoption) — never bulk-adopt them blindly.
   2. Run ./gradlew ktfmtFormat: when the iOS helper set changed, step 5 rewrote
-     the ios-runtime ObjectCalls.kt GENERATED MEMBERS region unformatted (that file is not ktfmt-exempt, unlike the
+     the iOS ObjectCalls.kt GENERATED MEMBERS region unformatted (that file is not ktfmt-exempt, unlike the
      api/** wrappers) and ktfmtCheck gates it.
   3. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
   4. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
