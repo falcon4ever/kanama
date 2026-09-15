@@ -290,7 +290,7 @@ check the ABI shape, not only the display name. `JAVA_FLOAT` in
 The same split runs through the value types themselves, and it is the reason
 they can be shared: a value type marshals as a `GodotRealArray` — a flat buffer
 of `real_t` components, aliased once per platform in `Real.kt` — while a scalar
-`float` argument travels as `BuiltinCalls.BArg.Real`, the 8-byte double.
+`float` argument travels as `BArg.Real`, the 8-byte double.
 
 ## The object handle and the raw pointer
 

@@ -585,12 +585,13 @@ A shared body reaches the engine only through
 `net.multigesture.kanama.binding.runtime.BuiltinCalls`, which exists once per
 platform under that one fully-qualified name: over Panama/FFM in
 `src/jvmMain/kotlin/binding/runtime/BuiltinCalls.kt` (Android gets it through the
-source remap) and over the C shim in `ios-runtime/.../binding/runtime/
-BuiltinCalls.kt`. No compiler can prove the two agree until the root is a
-multiplatform module (task 104 step 3 turns the pair into an `expect object`),
-so `scripts/check_builtin_calls_contract.py` compares their public member sets
-as a local_ci stage. Adding a member to one half without the other fails there,
-not in a platform compile far from the edit.
+source remap) and over the C shim in
+`src/iosMain/.../binding/runtime/BuiltinCalls.kt`. Since task 104 step 3 the
+declaration both implement is `expect object BuiltinCalls` in
+`src/commonMain/.../binding/runtime/BuiltinCalls.expect.kt`, so adding a member
+to one half without the other is a compile error at the edit, not a drift a
+script has to notice. The `VT_*`/`PT_*` wire numbers are common `const val`s in
+`BuiltinTags.kt` — values, which an `expect` declaration cannot carry.
 
 Which methods are engine-computed is a policy, not a preference: a method whose
 result depends on Godot's own edge-case handling — epsilons, orthonormalization,
@@ -608,7 +609,7 @@ python3 scripts/audit_value_type_wrappers.py --api extension_api.json
 The audit is report-only by default, and `--strict` is wired into local CI. It
 also checks the builtin float ABI in its new shape: Godot's ptr-ABI passes a
 Variant `float` argument as an 8-byte double whatever the engine's `real_t`
-precision, so such an argument must travel as `BuiltinCalls.BArg.Real`, never
+precision, so such an argument must travel as `BArg.Real`, never
 inside a `BArg.Floats` buffer of `real_t` components. Reviewed local scalar
 formulas are allowlisted in the script; any newly added Godot-named value helper
 that does not call the builtin should be treated as suspicious until it is either

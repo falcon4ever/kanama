@@ -292,7 +292,7 @@ backends converged.** 4.7 is the baseline — we do not carry deprecated GDExten
 callbacks once a newer variant solves the same problem. Diff
 `gdextension/gdextension_interface.h` for `@deprecated` entries, migrate every
 backend to the newest variant, and confirm the **desktop/Android JVM** backend
-(`src/main`) and the **iOS Kotlin/Native** shim (`ios/bootstrap/kanama_ios_shim.c`)
+(`src/jvmMain`) and the **iOS Kotlin/Native** shim (`ios/bootstrap/kanama_ios_shim.c`)
 bind the **same** construct/register/script-instance entry points — they pick these
 independently and have drifted silently before (`construct_object2` vs
 `construct_object3`, issue #91 / task 61). Enforced by
