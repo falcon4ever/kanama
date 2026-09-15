@@ -70,8 +70,6 @@ subprojects {
 // The two iOS targets are compiled into a static lib and shipped as an xcframework; their klibs
 // are not a Maven artifact anyone resolves, and publishing them would compile Kotlin/Native on
 // every `publishToMavenLocal`. `:ios-runtime` disabled all of its publish tasks for this reason.
-tasks.matching { it.name.startsWith("publishIos") }.configureEach { enabled = false }
-
   pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
     extensions.configure<JavaPluginExtension> { withSourcesJar() }
 
@@ -2292,15 +2290,3 @@ tasks.register<Zip>("packageMobileAddonAndroid") {
 }
 
 // TEMP DEBUG
-tasks.register("printJvmSources") {
-  doLast {
-    val kmp = project.extensions.getByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()
-    kmp.sourceSets.forEach { ss ->
-      println("SS ${ss.name}: dirs=${ss.kotlin.srcDirs}")
-      println("   files=${ss.kotlin.files.size}")
-      if (ss.name == "jvmMain") ss.kotlin.files.sortedBy { it.path }.forEach { println("      $it") }
-    }
-    val c = kmp.targets.getByName("jvm").compilations.getByName("main")
-    println("jvm main compilation allKotlinSources=${c.allKotlinSourceSets.map{it.name}}")
-  }
-}
