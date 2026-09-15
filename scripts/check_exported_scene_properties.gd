@@ -89,17 +89,20 @@ func _is_default_value(state: SceneState, node_idx: int, prop: String, value: Va
 					return _values_equal(sub.get_node_property_value(0, k), value)
 			# Not stored by the sub-scene either: fall through to its root script's default.
 			return _is_default_value(sub, 0, prop, value)
-	var script: Script = null
-	for k in state.get_node_property_count(node_idx):
-		if String(state.get_node_property_name(node_idx, k)) == "script":
-			script = state.get_node_property_value(node_idx, k) as Script
+	var inner := _resolve_in_ancestor_instance(state, node_idx)
+	if inner.size() == 2:
+		# An override node: the default is what the sub-scene's node stores, else its script default.
+		return _is_default_value(inner[0], inner[1], prop, value)
+	var script := _node_script(state, node_idx)
 	if script == null:
 		return false
 	var default_value: Variant = script.get_property_default_value(prop)
 	return _values_equal(default_value, value)
 
 ## The node's class, resolved through the instance chain: the state records "" for an instanced
-## node, so ask the sub-scene's root, recursively. "" when nothing in the chain records a type.
+## node, so ask the sub-scene's root, recursively; an OVERRIDE node (a child inside an ancestor's
+## instanced sub-scene, with no type/instance/script of its own) is resolved inside that sub-scene
+## (task 119 finding 2). "" when nothing in the chain records a type.
 func _node_type(state: SceneState, node_idx: int) -> String:
 	var type := String(state.get_node_type(node_idx))
 	if type != "":
@@ -107,10 +110,14 @@ func _node_type(state: SceneState, node_idx: int) -> String:
 	var instance := state.get_node_instance(node_idx)
 	if instance != null and instance.get_state().get_node_count() > 0:
 		return _node_type(instance.get_state(), 0)
+	var inner := _resolve_in_ancestor_instance(state, node_idx)
+	if inner.size() == 2:
+		return _node_type(inner[0], inner[1])
 	return ""
 
 ## The script attached to a node in a SceneState: its own `script` property, else (for an instanced
-## sub-scene) the sub-scene root's script, recursively. Null when the node has no script at all.
+## sub-scene) the sub-scene root's script, else (for an override node) the script of the node it
+## overrides inside the ancestor's sub-scene, recursively. Null when the node has no script at all.
 func _node_script(state: SceneState, node_idx: int) -> Script:
 	for k in state.get_node_property_count(node_idx):
 		if String(state.get_node_property_name(node_idx, k)) == "script":
@@ -118,7 +125,40 @@ func _node_script(state: SceneState, node_idx: int) -> Script:
 	var instance := state.get_node_instance(node_idx)
 	if instance != null and instance.get_state().get_node_count() > 0:
 		return _node_script(instance.get_state(), 0)
+	var inner := _resolve_in_ancestor_instance(state, node_idx)
+	if inner.size() == 2:
+		return _node_script(inner[0], inner[1])
 	return null
+
+## For an override node: walk up its path to the nearest ancestor that is an instanced sub-scene and
+## find the node at the same relative path inside that sub-scene. Returns [SceneState, idx] or [].
+func _resolve_in_ancestor_instance(state: SceneState, node_idx: int) -> Array:
+	var segments := _segments(String(state.get_node_path(node_idx)))
+	for depth in range(segments.size() - 1, 0, -1):
+		var ancestor_idx := _find_node(state, segments.slice(0, depth))
+		if ancestor_idx < 0:
+			continue
+		var instance := state.get_node_instance(ancestor_idx)
+		if instance == null:
+			continue
+		var sub := instance.get_state()
+		var inner_idx := _find_node(sub, segments.slice(depth))
+		if inner_idx >= 0:
+			return [sub, inner_idx]
+	return []
+
+func _segments(path: String) -> PackedStringArray:
+	var out := PackedStringArray()
+	for seg in path.split("/"):
+		if seg != "" and seg != ".":
+			out.append(seg)
+	return out
+
+func _find_node(state: SceneState, segments: PackedStringArray) -> int:
+	for i in state.get_node_count():
+		if _segments(String(state.get_node_path(i))) == segments:
+			return i
+	return -1
 
 func _values_equal(a: Variant, b: Variant) -> bool:
 	if typeof(a) == typeof(b):
@@ -146,6 +186,7 @@ func _compare(source: String, saved: String) -> int:
 			names[String(es.get_node_property_name(i, j))] = true
 		exported[String(es.get_node_path(i))] = names
 	var missing := 0
+	var checked := 0
 	for i in ss.get_node_count():
 		var path := String(ss.get_node_path(i))
 		var type := String(ss.get_node_type(i))
@@ -172,6 +213,7 @@ func _compare(source: String, saved: String) -> int:
 					continue
 			elif not declared.has(prop):
 				continue  # type unknown and the script does not claim it: cannot judge, skip
+			checked += 1
 			if not got.has(prop):
 				# The re-pack stores only values that differ from the default the node would have
 				# anyway: the script's declared default, or, for an instanced sub-scene, the value the
@@ -179,8 +221,8 @@ func _compare(source: String, saved: String) -> int:
 				# the Kotlin default is 250 is dropped legitimately).
 				if _is_default_value(ss, i, prop, ss.get_node_property_value(i, j)):
 					continue
-				printerr("%s FAIL %s: node '%s' (%s) lost script property '%s' in %s" % [TAG, source, path, type if type != "" else "instance", prop, saved])
+				printerr("%s FAIL %s: node '%s' (%s) lost script property '%s' in %s" % [TAG, source, path, resolved_type if resolved_type != "" else "instance", prop, saved])
 				missing += 1
 	if missing == 0:
-		print("%s ok %s (%d nodes) -> %s" % [TAG, source, ss.get_node_count(), saved.get_file()])
+		print("%s ok %s (%d nodes, %d script properties checked) -> %s" % [TAG, source, ss.get_node_count(), checked, saved.get_file()])
 	return missing

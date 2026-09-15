@@ -76,7 +76,17 @@ Requirements:
   (the pinned release in
   [Version Support → Requirements](../reference/version-support.md#requirements)).
 - Android build template installed for the project, either from the editor or
-  with `--install-android-build-template`.
+  with `--install-android-build-template` (on 4.7.2 that flag only takes effect
+  together with an export; the smoke scripts install the template by hand from
+  `android_source.zip` when it is missing).
+- **The desktop Kanama addon installed in the project** (`addons/kanama/kanama.jar`,
+  the project's `kanama-scripts.jar`, the bootstrap library): the export runs in
+  the desktop editor, which needs them to load the project's `.kt` scripts. Without
+  them the editor logs `No loader found for resource: res://….kt` and Godot's
+  export re-packs every scene with **no script properties**, silently. Install with
+  `./gradlew installAddonJar -PkanamaProjectDir=<project> -PkanamaProjectScriptsDir=<project>/kotlin-src`
+  after the AAR (so the Android `.gdextension` entries are preserved), and verify an
+  export with `scripts/check_exported_scene_properties.gd` (see the iOS guide).
 - Export preset has `gradle_build/use_gradle_build=true`.
 - Project contains `android/plugins/KanamaAndroid.gdap`.
 - Project contains the matching `KanamaAndroid.debug.aar` and
@@ -121,11 +131,16 @@ only — compiling your project's Kotlin scripts still requires this checkout's
 
 ## Export A Debug APK
 
+With the AAR **and the desktop addon** installed (see Requirements):
+
 ```sh
+rm -rf /absolute/path/to/godot_project/.godot/exported   # never reuse a conversion made without the addon
 godot --headless \
   --path /absolute/path/to/godot_project \
   --install-android-build-template \
   --export-debug Android /absolute/path/to/output.apk
+godot --headless --path /absolute/path/to/godot_project \
+  --script /path/to/kanama/scripts/check_exported_scene_properties.gd   # fails if a scene lost a script property
 ```
 
 Use a Godot binary that matches the project export preset and installed Android

@@ -172,7 +172,9 @@ def referenced_helpers(tree: Path) -> list[str]:
     """Distinct `ObjectCalls.<name>` the shared wrapper tree calls, sorted."""
     names: set[str] = set()
     for path in sorted(tree.rglob("*.kt")):
-        names.update(REFERENCE_RE.findall(path.read_text(encoding="utf-8")))
+        # Code only: a KDoc or line comment mentioning `ObjectCalls.foo` is prose, not a call
+        # (task 119 finding 5 — the sibling parsers already strip comments).
+        names.update(REFERENCE_RE.findall(strip_comments(path.read_text(encoding="utf-8"))))
     return sorted(names)
 
 
