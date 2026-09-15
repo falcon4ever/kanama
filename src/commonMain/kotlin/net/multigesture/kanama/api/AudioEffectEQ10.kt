@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +19,7 @@ class AudioEffectEQ10(handle: GodotHandle) : AudioEffectEQ(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectEQ10? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectEQ10? =
+        internal fun wrap(handle: RawSegment): AudioEffectEQ10? =
             if (handle.address() == 0L) null else AudioEffectEQ10(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

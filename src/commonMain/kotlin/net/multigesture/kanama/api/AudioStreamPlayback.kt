@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -20,7 +21,7 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSamplePlayback(playbackSample: AudioSamplePlayback?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSamplePlaybackBind, segment, listOf(playbackSample?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSamplePlaybackBind, segment, listOf(playbackSample?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -112,7 +113,7 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): AudioStreamPlayback? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamPlayback? =
+        internal fun wrap(handle: RawSegment): AudioStreamPlayback? =
             if (handle.address() == 0L) null else AudioStreamPlayback(GodotHandle(handle))
 
         private const val SET_SAMPLE_PLAYBACK_HASH = 3195455091L

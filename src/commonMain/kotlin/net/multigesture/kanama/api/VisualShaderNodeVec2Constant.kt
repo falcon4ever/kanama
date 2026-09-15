@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -32,7 +32,7 @@ class VisualShaderNodeVec2Constant(handle: GodotHandle) : VisualShaderNodeConsta
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVec2Constant? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeVec2Constant? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeVec2Constant? =
             if (handle.address() == 0L) null else VisualShaderNodeVec2Constant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 743155724L

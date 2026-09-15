@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -677,7 +678,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_primitive
      */
     fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPrimitiveBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPrimitiveBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -696,7 +697,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_polygon
      */
     fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPolygonBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPolygonBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -713,7 +714,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_colored_polygon
      */
     fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(drawColoredPolygonBind, segment, points, color, uvs, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(drawColoredPolygonBind, segment, points, color, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -801,7 +802,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_mesh
      */
     fun drawMesh(mesh: Mesh, texture: Texture2D?, transform: Transform2D, modulate: Color) {
-        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(drawMeshBind, segment, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL, transform, modulate)
+        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(drawMeshBind, segment, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT, transform, modulate)
     }
 
     /**
@@ -814,7 +815,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multimesh
      */
     fun drawMultimesh(multimesh: MultiMesh, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(drawMultimeshBind, segment, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectArgs(drawMultimeshBind, segment, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -996,7 +997,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1305,7 +1306,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): CanvasItem? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CanvasItem? =
+        internal fun wrap(handle: RawSegment): CanvasItem? =
             if (handle.address() == 0L) null else CanvasItem(GodotHandle(handle))
 
         private const val GET_CANVAS_ITEM_HASH = 2944877500L

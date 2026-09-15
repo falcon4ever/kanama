@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -32,7 +33,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: MemorySegment.NULL, hostname, clientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: NULL_SEGMENT, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -66,7 +67,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
         fun fromHandle(handle: GodotHandle): PacketPeerDTLS? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PacketPeerDTLS? =
+        internal fun wrap(handle: RawSegment): PacketPeerDTLS? =
             if (handle.address() == 0L) null else PacketPeerDTLS(GodotHandle(handle))
 
         private const val POLL_HASH = 3218959716L

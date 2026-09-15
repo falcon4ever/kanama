@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -94,7 +94,7 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GLTFSkeleton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFSkeleton? =
+        internal fun wrap(handle: RawSegment): GLTFSkeleton? =
             if (handle.address() == 0L) null else GLTFSkeleton(GodotHandle(handle))
 
         private const val GET_JOINTS_HASH = 969006518L

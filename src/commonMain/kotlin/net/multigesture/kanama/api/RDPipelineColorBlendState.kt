@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -122,7 +122,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RDPipelineColorBlendState? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDPipelineColorBlendState? =
+        internal fun wrap(handle: RawSegment): RDPipelineColorBlendState? =
             if (handle.address() == 0L) null else RDPipelineColorBlendState(GodotHandle(handle))
 
         private const val SET_ENABLE_LOGIC_OP_HASH = 2586408642L

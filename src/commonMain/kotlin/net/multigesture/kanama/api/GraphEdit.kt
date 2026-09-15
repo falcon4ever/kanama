@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -911,7 +911,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): GraphEdit? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GraphEdit? =
+        internal fun wrap(handle: RawSegment): GraphEdit? =
             if (handle.address() == 0L) null else GraphEdit(GodotHandle(handle))
 
         private const val CONNECT_NODE_HASH = 1376144231L

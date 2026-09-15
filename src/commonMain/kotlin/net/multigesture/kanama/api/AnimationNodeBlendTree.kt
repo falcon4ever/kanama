@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -27,7 +28,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      */
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
+        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
     }
 
     /**
@@ -162,7 +163,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
         fun fromHandle(handle: GodotHandle): AnimationNodeBlendTree? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeBlendTree? =
+        internal fun wrap(handle: RawSegment): AnimationNodeBlendTree? =
             if (handle.address() == 0L) null else AnimationNodeBlendTree(GodotHandle(handle))
 
         private const val ADD_NODE_HASH = 1980270704L

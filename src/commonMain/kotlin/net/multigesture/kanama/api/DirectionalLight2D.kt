@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -49,7 +49,7 @@ class DirectionalLight2D(handle: GodotHandle) : Light2D(handle) {
         fun fromHandle(handle: GodotHandle): DirectionalLight2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): DirectionalLight2D? =
+        internal fun wrap(handle: RawSegment): DirectionalLight2D? =
             if (handle.address() == 0L) null else DirectionalLight2D(GodotHandle(handle))
 
         private const val SET_MAX_DISTANCE_HASH = 373806689L

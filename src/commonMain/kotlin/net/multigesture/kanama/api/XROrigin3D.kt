@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -71,7 +71,7 @@ class XROrigin3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): XROrigin3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XROrigin3D? =
+        internal fun wrap(handle: RawSegment): XROrigin3D? =
             if (handle.address() == 0L) null else XROrigin3D(GodotHandle(handle))
 
         private const val SET_WORLD_SCALE_HASH = 373806689L

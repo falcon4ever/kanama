@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -27,7 +27,7 @@ class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorResourcePreviewGenerator? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorResourcePreviewGenerator? =
+        internal fun wrap(handle: RawSegment): EditorResourcePreviewGenerator? =
             if (handle.address() == 0L) null else EditorResourcePreviewGenerator(GodotHandle(handle))
 
         private const val REQUEST_DRAW_AND_WAIT_HASH = 145472570L

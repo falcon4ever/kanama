@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeRotationByAxis(handle: GodotHandle) : VisualShaderNode(han
         fun fromHandle(handle: GodotHandle): VisualShaderNodeRotationByAxis? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeRotationByAxis? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeRotationByAxis? =
             if (handle.address() == 0L) null else VisualShaderNodeRotationByAxis(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

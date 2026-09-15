@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -45,7 +45,7 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
         fun fromHandle(handle: GodotHandle): AnimationNodeTimeSeek? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeTimeSeek? =
+        internal fun wrap(handle: RawSegment): AnimationNodeTimeSeek? =
             if (handle.address() == 0L) null else AnimationNodeTimeSeek(GodotHandle(handle))
 
         private const val SET_EXPLICIT_ELAPSE_HASH = 2586408642L

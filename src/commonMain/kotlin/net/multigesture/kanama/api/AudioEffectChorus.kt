@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -215,7 +215,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectChorus? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectChorus? =
+        internal fun wrap(handle: RawSegment): AudioEffectChorus? =
             if (handle.address() == 0L) null else AudioEffectChorus(GodotHandle(handle))
 
         private const val SET_VOICE_COUNT_HASH = 1286410249L

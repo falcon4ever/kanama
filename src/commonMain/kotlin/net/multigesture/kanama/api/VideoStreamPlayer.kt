@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -90,7 +91,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_stream
      */
     fun setStream(stream: VideoStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -372,7 +373,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): VideoStreamPlayer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VideoStreamPlayer? =
+        internal fun wrap(handle: RawSegment): VideoStreamPlayer? =
             if (handle.address() == 0L) null else VideoStreamPlayer(GodotHandle(handle))
 
         private const val SET_STREAM_HASH = 2317102564L

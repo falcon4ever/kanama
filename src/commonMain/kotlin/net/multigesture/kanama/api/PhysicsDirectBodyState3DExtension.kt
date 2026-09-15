@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +19,7 @@ class PhysicsDirectBodyState3DExtension(handle: GodotHandle) : PhysicsDirectBody
         fun fromHandle(handle: GodotHandle): PhysicsDirectBodyState3DExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsDirectBodyState3DExtension? =
+        internal fun wrap(handle: RawSegment): PhysicsDirectBodyState3DExtension? =
             if (handle.address() == 0L) null else PhysicsDirectBodyState3DExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

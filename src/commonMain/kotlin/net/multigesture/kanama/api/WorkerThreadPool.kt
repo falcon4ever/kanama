@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: WorkerThreadPool
  */
 object WorkerThreadPool {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("WorkerThreadPool")
     }
 
@@ -139,7 +139,7 @@ object WorkerThreadPool {
     fun fromHandle(handle: GodotHandle): WorkerThreadPool? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): WorkerThreadPool? =
+    internal fun wrap(handle: RawSegment): WorkerThreadPool? =
         if (handle.address() == 0L) null else this
 
     private const val ADD_TASK_HASH = 3745067146L

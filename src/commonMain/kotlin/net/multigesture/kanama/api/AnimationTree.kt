@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -37,7 +38,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.set_tree_root
      */
     fun setTreeRoot(animationNode: AnimationRootNode?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTreeRootBind, segment, listOf(animationNode?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTreeRootBind, segment, listOf(animationNode?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -118,7 +119,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
         fun fromHandle(handle: GodotHandle): AnimationTree? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationTree? =
+        internal fun wrap(handle: RawSegment): AnimationTree? =
             if (handle.address() == 0L) null else AnimationTree(GodotHandle(handle))
 
         private const val SET_TREE_ROOT_HASH = 2581683800L

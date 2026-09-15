@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -179,7 +179,7 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): RDShaderSPIRV? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDShaderSPIRV? =
+        internal fun wrap(handle: RawSegment): RDShaderSPIRV? =
             if (handle.address() == 0L) null else RDShaderSPIRV(GodotHandle(handle))
 
         private const val SET_STAGE_BYTECODE_HASH = 3514097977L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector2
@@ -235,7 +236,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMaterial(): Material? {
@@ -264,7 +265,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         fun fromHandle(handle: GodotHandle): CSGPolygon3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CSGPolygon3D? =
+        internal fun wrap(handle: RawSegment): CSGPolygon3D? =
             if (handle.address() == 0L) null else CSGPolygon3D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Color
@@ -765,7 +766,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -948,7 +949,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_param_curve
      */
     fun setParamCurve(param: Long, curve: Curve?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -994,7 +995,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color_ramp
      */
     fun setColorRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1020,7 +1021,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_color_initial_ramp
      */
     fun setColorInitialRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1323,7 +1324,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_x
      */
     fun setScaleCurveX(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1341,7 +1342,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_y
      */
     fun setScaleCurveY(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1359,7 +1360,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.set_scale_curve_z
      */
     fun setScaleCurveZ(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveZBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveZBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1410,7 +1411,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): CPUParticles3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CPUParticles3D? =
+        internal fun wrap(handle: RawSegment): CPUParticles3D? =
             if (handle.address() == 0L) null else CPUParticles3D(GodotHandle(handle))
 
         private const val SET_EMITTING_HASH = 2586408642L

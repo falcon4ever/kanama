@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -36,7 +37,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun setProfile(profile: SkeletonProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProfileBind, segment, listOf(profile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -83,7 +84,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): BoneMap? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BoneMap? =
+        internal fun wrap(handle: RawSegment): BoneMap? =
             if (handle.address() == 0L) null else BoneMap(GodotHandle(handle))
 
         private const val GET_PROFILE_HASH = 4291782652L

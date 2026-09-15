@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -43,7 +43,7 @@ open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
         fun fromHandle(handle: GodotHandle): InputEventFromWindow? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): InputEventFromWindow? =
+        internal fun wrap(handle: RawSegment): InputEventFromWindow? =
             if (handle.address() == 0L) null else InputEventFromWindow(GodotHandle(handle))
 
         private const val SET_WINDOW_ID_HASH = 1286410249L

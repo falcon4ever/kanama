@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -103,7 +104,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.set_foldable_group
      */
     fun setFoldableGroup(buttonGroup: FoldableGroup?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFoldableGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFoldableGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -260,7 +261,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
         fun fromHandle(handle: GodotHandle): FoldableContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FoldableContainer? =
+        internal fun wrap(handle: RawSegment): FoldableContainer? =
             if (handle.address() == 0L) null else FoldableContainer(GodotHandle(handle))
 
         private const val FOLD_HASH = 3218959716L

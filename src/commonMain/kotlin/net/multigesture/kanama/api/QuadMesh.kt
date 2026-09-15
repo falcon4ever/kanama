@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class QuadMesh(handle: GodotHandle) : PlaneMesh(handle) {
         fun fromHandle(handle: GodotHandle): QuadMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): QuadMesh? =
+        internal fun wrap(handle: RawSegment): QuadMesh? =
             if (handle.address() == 0L) null else QuadMesh(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

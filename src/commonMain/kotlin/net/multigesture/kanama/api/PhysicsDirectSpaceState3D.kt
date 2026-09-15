@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -111,7 +111,7 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
         fun fromHandle(handle: GodotHandle): PhysicsDirectSpaceState3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsDirectSpaceState3D? =
+        internal fun wrap(handle: RawSegment): PhysicsDirectSpaceState3D? =
             if (handle.address() == 0L) null else PhysicsDirectSpaceState3D(GodotHandle(handle))
 
         private const val INTERSECT_POINT_HASH = 975173756L

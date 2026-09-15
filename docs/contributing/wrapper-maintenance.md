@@ -28,13 +28,37 @@ Array/Dictionary/Variant policy, and Callable blocking.
 
 Generated public APIs must keep concrete Godot object types concrete. For
 example, a Godot `Node3D` return should render as `Node3D?`, not
-`GodotObject`, `Object`, or a raw `MemorySegment`. The one handle type a public
+`GodotObject`, `Object`, or a raw pointer. The one handle type a public
 signature may name is `GodotHandle` (the opaque wrapper/script handle, task 104). Exact Godot `Object` APIs remain
 dynamic because the engine itself does not promise a more specific type.
 Ownership-sensitive namespace-style types use explicit policy before default
 generation. `Callable` stays blocked unless a helper has a bounded ownership
 shape; `DirAccess`, `FileAccess`, and `SceneTree` use dedicated handle aliases
 where factory methods return nullable object handles.
+
+**The raw engine pointer in the shared tree is `RawSegment`, never a
+`java.lang.foreign` type** (task 104 step 3). `src/commonMain` is compiled as-is by
+the root JVM module, by `:ios-runtime` and by the Android copy, and it becomes a
+real KMP `commonMain` later in task 104 — where a JDK package can neither be
+declared nor `expect`ed. So the pointer travels under one Kanama name,
+`net.multigesture.kanama.binding.runtime.RawSegment`, with the null pointer beside
+it as a top-level `NULL_SEGMENT` (a Java `static final` field cannot actualize an
+`expect` companion member). Each platform declares the pair itself — desktop/Android
+`src/main/kotlin/binding/runtime/RawSegment.kt` aliases the FFM `MemorySegment` (the
+PanamaPort remap rewrites it to `com.v7878.foreign.MemorySegment`), iOS
+`ios-runtime/.../binding/runtime/RawSegment.kt` aliases its Kotlin/Native shim — so
+`RawSegment` *is* the platform pointer type and the two spellings interoperate
+freely. The generator emits it in the only three shared-tree shapes that name the
+pointer at all: `internal fun wrap(handle: RawSegment)`, `NULL_SEGMENT` for a static
+receiver or a null object argument, and `private val singleton: RawSegment by lazy`.
+The per-platform generated files keep the JDK/shim spelling, and a genuine
+`const void*` argument still renders as `MemorySegment`: the three desktop-only
+helpers `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
+`OpenXRAPIExtension.transformFromPose(pose)` and
+`OpenXRAPIExtension.setCustomPlaySpace(space)` take a raw native pointer, not an
+object handle, and are the only public signatures left that name a
+`java.lang.foreign` type. `check_wrapper_generator.py` fails if any file under
+`src/commonMain` names one at all.
 
 Generated wrappers are held to a **single-tree drift gate**. There is one generated
 wrapper tree, `src/commonMain/kotlin/net/multigesture/kanama/api`, compiled by the
@@ -268,9 +292,10 @@ does not drop them), locked by `check_ios_policies`:
   surgical (per exact arg) so no other method silently gains a default.
 - **Non-null factory.** `NON_NULL_FROM_HANDLE_CLASSES` (currently `{Resource}`) emits
   `fromHandle(handle): Resource` (non-null) so a `@ScriptClass(attachTo = "Resource")` script's
-  `(GodotHandle) -> Resource` selfFactory type-checks. The nullable `wrap` helper stays on
-  `MemorySegment` — it is the `(MemorySegment) -> T?` callback `ObjectCalls` takes, and it is
-  `internal`, so it never appears in a public signature.
+  `(GodotHandle) -> Resource` selfFactory type-checks. The nullable `wrap` helper stays on the
+  raw pointer (`RawSegment` in the shared tree) — it is the `(MemorySegment) -> T?` callback
+  `ObjectCalls` takes, and `RawSegment` is that same type on each platform; it is `internal`, so it
+  never appears in a public signature.
 
 The broad pre-existing regen drift (a fresh regen once changed the majority of the committed
 desktop generated files — accumulated generator improvements that were never re-adopted) has been
@@ -485,7 +510,8 @@ The 19 builtin value types are ONE hand-written set under
 root JVM module, `:ios-runtime` and the Android copy task all compile those
 files, and neither platform keeps a copy. Only `Real.kt` is per platform
 (generated at build time on desktop, hand-written on iOS, written by the plugin
-build script on Android), exactly like `GodotHandle`.
+build script on Android) — as `GodotHandle` was until task 104 step 3 moved it into
+the shared tree over `RawSegment`.
 
 A shared body reaches the engine only through
 `net.multigesture.kanama.binding.runtime.BuiltinCalls`, which exists once per

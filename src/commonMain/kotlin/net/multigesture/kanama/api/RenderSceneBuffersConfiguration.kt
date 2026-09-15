@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2i
@@ -285,7 +285,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
         fun fromHandle(handle: GodotHandle): RenderSceneBuffersConfiguration? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RenderSceneBuffersConfiguration? =
+        internal fun wrap(handle: RawSegment): RenderSceneBuffersConfiguration? =
             if (handle.address() == 0L) null else RenderSceneBuffersConfiguration(GodotHandle(handle))
 
         private const val GET_RENDER_TARGET_HASH = 2944877500L

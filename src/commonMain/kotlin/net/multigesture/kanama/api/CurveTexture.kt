@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -43,7 +44,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -86,7 +87,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): CurveTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CurveTexture? =
+        internal fun wrap(handle: RawSegment): CurveTexture? =
             if (handle.address() == 0L) null else CurveTexture(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L

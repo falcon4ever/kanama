@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -105,7 +105,7 @@ class SubViewportContainer(handle: GodotHandle) : Container(handle) {
         fun fromHandle(handle: GodotHandle): SubViewportContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SubViewportContainer? =
+        internal fun wrap(handle: RawSegment): SubViewportContainer? =
             if (handle.address() == 0L) null else SubViewportContainer(GodotHandle(handle))
 
         private const val SET_STRETCH_HASH = 2586408642L

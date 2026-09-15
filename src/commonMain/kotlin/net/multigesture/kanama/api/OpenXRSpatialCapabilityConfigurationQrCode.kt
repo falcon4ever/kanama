@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +19,7 @@ class OpenXRSpatialCapabilityConfigurationQrCode(handle: GodotHandle) : OpenXRSp
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationQrCode? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationQrCode? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationQrCode? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationQrCode(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L

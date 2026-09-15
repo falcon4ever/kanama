@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class OggPacketSequencePlayback(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): OggPacketSequencePlayback? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OggPacketSequencePlayback? =
+        internal fun wrap(handle: RawSegment): OggPacketSequencePlayback? =
             if (handle.address() == 0L) null else OggPacketSequencePlayback(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -29,7 +29,7 @@ class AudioStreamPlaybackInteractive(handle: GodotHandle) : AudioStreamPlayback(
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackInteractive? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamPlaybackInteractive? =
+        internal fun wrap(handle: RawSegment): AudioStreamPlaybackInteractive? =
             if (handle.address() == 0L) null else AudioStreamPlaybackInteractive(GodotHandle(handle))
 
         private const val SWITCH_TO_CLIP_BY_NAME_HASH = 3304788590L

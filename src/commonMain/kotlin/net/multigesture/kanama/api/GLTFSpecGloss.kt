@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -48,7 +49,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
 
     fun setDiffuseImg(diffuseImg: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDiffuseImgBind, segment, listOf(diffuseImg?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDiffuseImgBind, segment, listOf(diffuseImg?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getDiffuseFactor(): Color {
@@ -88,7 +89,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
 
     fun setSpecGlossImg(specGlossImg: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSpecGlossImgBind, segment, listOf(specGlossImg?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSpecGlossImgBind, segment, listOf(specGlossImg?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -96,7 +97,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GLTFSpecGloss? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFSpecGloss? =
+        internal fun wrap(handle: RawSegment): GLTFSpecGloss? =
             if (handle.address() == 0L) null else GLTFSpecGloss(GodotHandle(handle))
 
         private const val GET_DIFFUSE_IMG_HASH = 564927088L

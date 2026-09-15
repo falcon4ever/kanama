@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -129,18 +130,18 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromNode(lightNode: Light3D): GLTFLight? {
-            return GLTFLight.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, lightNode.segment))
+            return GLTFLight.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, lightNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFLight? {
-            return GLTFLight.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
+            return GLTFLight.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFLight? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFLight? =
+        internal fun wrap(handle: RawSegment): GLTFLight? =
             if (handle.address() == 0L) null else GLTFLight(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 3907677874L

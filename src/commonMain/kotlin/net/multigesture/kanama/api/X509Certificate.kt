@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -57,7 +57,7 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): X509Certificate? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): X509Certificate? =
+        internal fun wrap(handle: RawSegment): X509Certificate? =
             if (handle.address() == 0L) null else X509Certificate(GodotHandle(handle))
 
         private const val SAVE_HASH = 166001499L

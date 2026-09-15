@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -48,7 +48,7 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorScript? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorScript? =
+        internal fun wrap(handle: RawSegment): EditorScript? =
             if (handle.address() == 0L) null else EditorScript(GodotHandle(handle))
 
         private const val ADD_ROOT_NODE_HASH = 1078189570L

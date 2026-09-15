@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector3
@@ -146,7 +147,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.set_texture
      */
     fun setTexture(type: Long, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, type, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, type, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -403,7 +404,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): Decal? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Decal? =
+        internal fun wrap(handle: RawSegment): Decal? =
             if (handle.address() == 0L) null else Decal(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

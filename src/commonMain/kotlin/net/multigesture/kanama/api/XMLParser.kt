@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -204,7 +204,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): XMLParser? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XMLParser? =
+        internal fun wrap(handle: RawSegment): XMLParser? =
             if (handle.address() == 0L) null else XMLParser(GodotHandle(handle))
 
         private const val READ_HASH = 166280745L

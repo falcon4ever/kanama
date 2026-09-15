@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -244,7 +244,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorExportPlugin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorExportPlugin? =
+        internal fun wrap(handle: RawSegment): EditorExportPlugin? =
             if (handle.address() == 0L) null else EditorExportPlugin(GodotHandle(handle))
 
         private const val ADD_SHARED_OBJECT_HASH = 3098291045L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 
@@ -50,7 +51,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -184,7 +185,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
         fun fromHandle(handle: GodotHandle): PrimitiveMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PrimitiveMesh? =
+        internal fun wrap(handle: RawSegment): PrimitiveMesh? =
             if (handle.address() == 0L) null else PrimitiveMesh(GodotHandle(handle))
 
         private const val SET_MATERIAL_HASH = 2757459619L

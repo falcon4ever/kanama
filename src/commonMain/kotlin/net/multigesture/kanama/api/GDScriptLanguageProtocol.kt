@@ -1,15 +1,15 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
  * Generated from Godot docs: GDScriptLanguageProtocol
  */
 object GDScriptLanguageProtocol {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("GDScriptLanguageProtocol")
     }
 
@@ -62,7 +62,7 @@ object GDScriptLanguageProtocol {
     fun fromHandle(handle: GodotHandle): GDScriptLanguageProtocol? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): GDScriptLanguageProtocol? =
+    internal fun wrap(handle: RawSegment): GDScriptLanguageProtocol? =
         if (handle.address() == 0L) null else this
 
     private const val GET_TEXT_DOCUMENT_HASH = 770545799L

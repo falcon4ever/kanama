@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -240,7 +240,7 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectReverb? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectReverb? =
+        internal fun wrap(handle: RawSegment): AudioEffectReverb? =
             if (handle.address() == 0L) null else AudioEffectReverb(GodotHandle(handle))
 
         private const val SET_PREDELAY_MSEC_HASH = 373806689L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -26,7 +26,7 @@ class PhysicsServer3DExtension(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): PhysicsServer3DExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsServer3DExtension? =
+        internal fun wrap(handle: RawSegment): PhysicsServer3DExtension? =
             if (handle.address() == 0L) null else PhysicsServer3DExtension(GodotHandle(handle))
 
         private const val BODY_TEST_MOTION_IS_EXCLUDING_BODY_HASH = 4155700596L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -83,7 +83,7 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         fun fromHandle(handle: GodotHandle): IKModifier3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): IKModifier3D? =
+        internal fun wrap(handle: RawSegment): IKModifier3D? =
             if (handle.address() == 0L) null else IKModifier3D(GodotHandle(handle))
 
         private const val SET_SETTING_COUNT_HASH = 1286410249L

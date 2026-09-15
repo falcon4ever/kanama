@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -29,7 +30,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create
      */
     fun textureCreate(format: RDTextureFormat?, view: RDTextureView?, data: List<ByteArray>): RID {
-        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(textureCreateBind, segment, format?.requireOpenHandle() ?: MemorySegment.NULL, view?.requireOpenHandle() ?: MemorySegment.NULL, data)
+        return ObjectCalls.ptrcallWithTwoObjectByteArrayListArgsRetRID(textureCreateBind, segment, format?.requireOpenHandle() ?: NULL_SEGMENT, view?.requireOpenHandle() ?: NULL_SEGMENT, data)
     }
 
     /**
@@ -39,7 +40,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared
      */
     fun textureCreateShared(view: RDTextureView?, withTexture: RID): RID {
-        return ObjectCalls.ptrcallWithObjectRIDArgsRetRID(textureCreateSharedBind, segment, view?.requireOpenHandle() ?: MemorySegment.NULL, withTexture)
+        return ObjectCalls.ptrcallWithObjectRIDArgsRetRID(textureCreateSharedBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture)
     }
 
     /**
@@ -54,7 +55,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_create_shared_from_slice
      */
     fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: MemorySegment.NULL, withTexture, layer, mipmap, mipmaps, sliceType)
+        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType)
     }
 
     /**
@@ -354,7 +355,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.sampler_create
      */
     fun samplerCreate(state: RDSamplerState?): RID {
-        return ObjectCalls.ptrcallWithObjectArgRetRID(samplerCreateBind, segment, state?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetRID(samplerCreateBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -432,7 +433,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_spirv_from_source
      */
     fun shaderCompileSpirvFromSource(shaderSource: RDShaderSource?, allowCache: Boolean = true): RDShaderSPIRV? {
-        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: MemorySegment.NULL, allowCache))
+        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: NULL_SEGMENT, allowCache))
     }
 
     /**
@@ -445,7 +446,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_binary_from_spirv
      */
     fun shaderCompileBinaryFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): ByteArray {
-        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(shaderCompileBinaryFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
+        return ObjectCalls.ptrcallWithObjectAndStringArgRetByteArray(shaderCompileBinaryFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
     }
 
     /**
@@ -457,7 +458,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_create_from_spirv
      */
     fun shaderCreateFromSpirv(spirvData: RDShaderSPIRV?, name: String = ""): RID {
-        return ObjectCalls.ptrcallWithObjectStringArgsRetRID(shaderCreateFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: MemorySegment.NULL, name)
+        return ObjectCalls.ptrcallWithObjectStringArgsRetRID(shaderCreateFromSpirvBind, segment, spirvData?.requireOpenHandle() ?: NULL_SEGMENT, name)
     }
 
     /**
@@ -629,7 +630,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.render_pipeline_create
      */
     fun renderPipelineCreate(shader: RID, framebufferFormat: Long, vertexFormat: Long, primitive: Long, rasterizationState: RDPipelineRasterizationState?, multisampleState: RDPipelineMultisampleState?, stencilState: RDPipelineDepthStencilState?, colorBlendState: RDPipelineColorBlendState?, dynamicStateFlags: Long = 0L, forRenderPass: Long = 0L, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
-        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive, rasterizationState?.requireOpenHandle() ?: MemorySegment.NULL, multisampleState?.requireOpenHandle() ?: MemorySegment.NULL, stencilState?.requireOpenHandle() ?: MemorySegment.NULL, colorBlendState?.requireOpenHandle() ?: MemorySegment.NULL, dynamicStateFlags, forRenderPass, specializationConstants)
+        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive, rasterizationState?.requireOpenHandle() ?: NULL_SEGMENT, multisampleState?.requireOpenHandle() ?: NULL_SEGMENT, stencilState?.requireOpenHandle() ?: NULL_SEGMENT, colorBlendState?.requireOpenHandle() ?: NULL_SEGMENT, dynamicStateFlags, forRenderPass, specializationConstants)
     }
 
     /**
@@ -2128,7 +2129,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): RenderingDevice? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RenderingDevice? =
+        internal fun wrap(handle: RawSegment): RenderingDevice? =
             if (handle.address() == 0L) null else RenderingDevice(GodotHandle(handle))
 
         private const val TEXTURE_CREATE_HASH = 3709173589L

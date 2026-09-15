@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
@@ -61,7 +61,7 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Noise? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Noise? =
+        internal fun wrap(handle: RawSegment): Noise? =
             if (handle.address() == 0L) null else Noise(GodotHandle(handle))
 
         private const val GET_NOISE_1D_HASH = 3919130443L

@@ -575,6 +575,40 @@ def check_single_tree(tree: TreeResult) -> int:
     return rc
 
 
+SHARED_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
+
+
+def check_shared_tree_pointer() -> int:
+    """No file under src/commonMain may name a `java.lang.foreign` type (task 104 step 3).
+
+    The shared tree is compiled as-is by the root JVM module, by :ios-runtime and by the Android
+    copy, and it becomes a real KMP `commonMain` in step 3's later parcels — where a JDK package
+    cannot be declared or `expect`ed at all. The raw engine pointer therefore travels under Kanama's
+    own name, `net.multigesture.kanama.binding.runtime.RawSegment`, which each platform aliases. A
+    hand edit or a generator regression that puts the JDK name back fails here, next to the edit,
+    instead of in the iOS compile.
+    """
+    offenders = sorted(
+        path
+        for path in SHARED_SOURCE_ROOT.rglob("*.kt")
+        if "java.lang.foreign" in path.read_text(encoding="utf-8")
+    )
+    if offenders:
+        print(
+            f"[wrapper_generator] FAIL {len(offenders)} files under {_rel(SHARED_SOURCE_ROOT)} name a "
+            "java.lang.foreign type; the shared tree uses RawSegment / NULL_SEGMENT",
+            file=sys.stderr,
+        )
+        for path in offenders[:40]:
+            print(f"    {_rel(path)}", file=sys.stderr)
+        return 1
+    print(
+        f"[wrapper_generator] PASS shared tree names no java.lang.foreign type "
+        f"({sum(1 for _ in SHARED_SOURCE_ROOT.rglob('*.kt'))} files under {_rel(SHARED_SOURCE_ROOT)})"
+    )
+    return 0
+
+
 def main() -> int:
     name_constants = subprocess.run(
         [sys.executable, str(ROOT / "scripts/generate_name_constants.py"), "--check"],
@@ -602,6 +636,8 @@ def main() -> int:
         if check_adopted_skips(tree, class_name, allow_virtual_skips=True) != 0:
             return 1
     if check_single_tree(tree) != 0:
+        return 1
+    if check_shared_tree_pointer() != 0:
         return 1
 
     adopted = (

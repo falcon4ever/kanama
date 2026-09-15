@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -332,7 +332,7 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RDTextureFormat? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDTextureFormat? =
+        internal fun wrap(handle: RawSegment): RDTextureFormat? =
             if (handle.address() == 0L) null else RDTextureFormat(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 565531219L

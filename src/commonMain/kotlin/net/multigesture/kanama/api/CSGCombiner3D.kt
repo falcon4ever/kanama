@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class CSGCombiner3D(handle: GodotHandle) : CSGShape3D(handle) {
         fun fromHandle(handle: GodotHandle): CSGCombiner3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CSGCombiner3D? =
+        internal fun wrap(handle: RawSegment): CSGCombiner3D? =
             if (handle.address() == 0L) null else CSGCombiner3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

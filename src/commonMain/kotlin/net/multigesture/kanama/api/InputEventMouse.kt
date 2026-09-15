@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -110,7 +110,7 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
         fun fromHandle(handle: GodotHandle): InputEventMouse? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): InputEventMouse? =
+        internal fun wrap(handle: RawSegment): InputEventMouse? =
             if (handle.address() == 0L) null else InputEventMouse(GodotHandle(handle))
 
         private const val SET_BUTTON_MASK_HASH = 3950145251L

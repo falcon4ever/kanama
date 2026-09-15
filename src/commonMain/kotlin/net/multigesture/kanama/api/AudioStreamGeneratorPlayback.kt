@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -84,7 +84,7 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
         fun fromHandle(handle: GodotHandle): AudioStreamGeneratorPlayback? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamGeneratorPlayback? =
+        internal fun wrap(handle: RawSegment): AudioStreamGeneratorPlayback? =
             if (handle.address() == 0L) null else AudioStreamGeneratorPlayback(GodotHandle(handle))
 
         private const val PUSH_FRAME_HASH = 3975407249L

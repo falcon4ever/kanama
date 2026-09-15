@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -31,7 +32,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Path3D.set_curve
      */
     fun setCurve(curve: Curve3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -73,7 +74,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): Path3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Path3D? =
+        internal fun wrap(handle: RawSegment): Path3D? =
             if (handle.address() == 0L) null else Path3D(GodotHandle(handle))
 
         private const val SET_CURVE_HASH = 408955118L

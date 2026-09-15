@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -310,7 +311,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_icon
      */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -404,7 +405,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: TabContainer.set_tab_button_icon
      */
     fun setTabButtonIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabButtonIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -595,7 +596,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         fun fromHandle(handle: GodotHandle): TabContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TabContainer? =
+        internal fun wrap(handle: RawSegment): TabContainer? =
             if (handle.address() == 0L) null else TabContainer(GodotHandle(handle))
 
         private const val GET_TAB_COUNT_HASH = 3905245786L

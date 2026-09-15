@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -43,7 +43,7 @@ class GridContainer(handle: GodotHandle) : Container(handle) {
         fun fromHandle(handle: GodotHandle): GridContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GridContainer? =
+        internal fun wrap(handle: RawSegment): GridContainer? =
             if (handle.address() == 0L) null else GridContainer(GodotHandle(handle))
 
         private const val SET_COLUMNS_HASH = 1286410249L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -59,7 +60,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun setDefaultTextureParameter(name: String, texture: Texture?, index: Int = 0) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, segment, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, index)
+        ObjectCalls.ptrcallWithStringNameObjectIntArgs(setDefaultTextureParameterBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, index)
     }
 
     /**
@@ -112,7 +113,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Shader? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Shader? =
+        internal fun wrap(handle: RawSegment): Shader? =
             if (handle.address() == 0L) null else Shader(GodotHandle(handle))
 
         private const val GET_MODE_HASH = 3392948163L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -100,7 +101,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -118,7 +119,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): FogVolume? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FogVolume? =
+        internal fun wrap(handle: RawSegment): FogVolume? =
             if (handle.address() == 0L) null else FogVolume(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

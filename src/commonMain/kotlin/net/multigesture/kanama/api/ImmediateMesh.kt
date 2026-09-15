@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Plane
@@ -22,7 +23,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun surfaceBegin(primitive: Long, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, segment, primitive, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, segment, primitive, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -124,7 +125,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
         fun fromHandle(handle: GodotHandle): ImmediateMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImmediateMesh? =
+        internal fun wrap(handle: RawSegment): ImmediateMesh? =
             if (handle.address() == 0L) null else ImmediateMesh(GodotHandle(handle))
 
         private const val SURFACE_BEGIN_HASH = 2794442543L

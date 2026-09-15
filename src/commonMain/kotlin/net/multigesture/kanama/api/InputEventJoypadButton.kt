@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -69,7 +69,7 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
         fun fromHandle(handle: GodotHandle): InputEventJoypadButton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): InputEventJoypadButton? =
+        internal fun wrap(handle: RawSegment): InputEventJoypadButton? =
             if (handle.address() == 0L) null else InputEventJoypadButton(GodotHandle(handle))
 
         private const val SET_BUTTON_INDEX_HASH = 1466368136L

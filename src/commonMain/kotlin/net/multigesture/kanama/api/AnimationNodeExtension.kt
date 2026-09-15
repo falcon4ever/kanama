@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -20,7 +21,7 @@ class AnimationNodeExtension(handle: GodotHandle) : AnimationNode(handle) {
          * Generated from Godot docs: AnimationNodeExtension.is_looping
          */
         fun isLooping(nodeInfo: List<Float>): Boolean {
-            return ObjectCalls.ptrcallWithPackedFloat32ListArgRetBool(isLoopingBind, MemorySegment.NULL, nodeInfo)
+            return ObjectCalls.ptrcallWithPackedFloat32ListArgRetBool(isLoopingBind, NULL_SEGMENT, nodeInfo)
         }
 
         /**
@@ -31,14 +32,14 @@ class AnimationNodeExtension(handle: GodotHandle) : AnimationNode(handle) {
          * Generated from Godot docs: AnimationNodeExtension.get_remaining_time
          */
         fun getRemainingTime(nodeInfo: List<Float>, breakLoop: Boolean): Double {
-            return ObjectCalls.ptrcallWithPackedFloat32ListAndBoolArgRetDouble(getRemainingTimeBind, MemorySegment.NULL, nodeInfo, breakLoop)
+            return ObjectCalls.ptrcallWithPackedFloat32ListAndBoolArgRetDouble(getRemainingTimeBind, NULL_SEGMENT, nodeInfo, breakLoop)
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeExtension? =
+        internal fun wrap(handle: RawSegment): AnimationNodeExtension? =
             if (handle.address() == 0L) null else AnimationNodeExtension(GodotHandle(handle))
 
         private const val IS_LOOPING_HASH = 2035584311L

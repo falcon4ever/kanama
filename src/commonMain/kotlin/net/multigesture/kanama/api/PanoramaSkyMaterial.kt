@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -37,7 +38,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setPanorama(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPanoramaBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -95,7 +96,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
         fun fromHandle(handle: GodotHandle): PanoramaSkyMaterial? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PanoramaSkyMaterial? =
+        internal fun wrap(handle: RawSegment): PanoramaSkyMaterial? =
             if (handle.address() == 0L) null else PanoramaSkyMaterial(GodotHandle(handle))
 
         private const val SET_PANORAMA_HASH = 4051416890L

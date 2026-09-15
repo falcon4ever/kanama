@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -56,7 +57,7 @@ class CollisionShape2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.set_shape
      */
     fun setShape(shape: Shape2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -179,7 +180,7 @@ class CollisionShape2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): CollisionShape2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CollisionShape2D? =
+        internal fun wrap(handle: RawSegment): CollisionShape2D? =
             if (handle.address() == 0L) null else CollisionShape2D(GodotHandle(handle))
 
         private const val SET_SHAPE_HASH = 771364740L

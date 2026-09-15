@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -41,7 +41,7 @@ class CenterContainer(handle: GodotHandle) : Container(handle) {
         fun fromHandle(handle: GodotHandle): CenterContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CenterContainer? =
+        internal fun wrap(handle: RawSegment): CenterContainer? =
             if (handle.address() == 0L) null else CenterContainer(GodotHandle(handle))
 
         private const val SET_USE_TOP_LEFT_HASH = 2586408642L

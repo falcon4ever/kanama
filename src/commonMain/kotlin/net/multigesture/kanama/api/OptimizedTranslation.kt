@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -21,7 +22,7 @@ class OptimizedTranslation(handle: GodotHandle) : Translation(handle) {
      */
     fun generate(from: Translation?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(generateBind, segment, from?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(generateBind, segment, from?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     companion object {
@@ -29,7 +30,7 @@ class OptimizedTranslation(handle: GodotHandle) : Translation(handle) {
         fun fromHandle(handle: GodotHandle): OptimizedTranslation? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OptimizedTranslation? =
+        internal fun wrap(handle: RawSegment): OptimizedTranslation? =
             if (handle.address() == 0L) null else OptimizedTranslation(GodotHandle(handle))
 
         private const val GENERATE_HASH = 2141509306L

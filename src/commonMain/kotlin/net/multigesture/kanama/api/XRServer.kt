@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Transform3D
  * Generated from Godot docs: XRServer
  */
 object XRServer {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("XRServer")
     }
 
@@ -185,7 +186,7 @@ object XRServer {
      */
     @JvmStatic
     fun addInterface(interfaceValue: XRInterface?) {
-        ObjectCalls.ptrcallWithObjectArgs(addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -208,7 +209,7 @@ object XRServer {
      */
     @JvmStatic
     fun removeInterface(interfaceValue: XRInterface?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -249,7 +250,7 @@ object XRServer {
      */
     @JvmStatic
     fun addTracker(tracker: XRTracker?) {
-        ObjectCalls.ptrcallWithObjectArgs(addTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -259,7 +260,7 @@ object XRServer {
      */
     @JvmStatic
     fun removeTracker(tracker: XRTracker?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeTrackerBind, singleton, listOf(tracker?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -299,7 +300,7 @@ object XRServer {
      */
     @JvmStatic
     fun setPrimaryInterface(interfaceValue: XRInterface?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     object Signals {
@@ -316,7 +317,7 @@ object XRServer {
     fun fromHandle(handle: GodotHandle): XRServer? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): XRServer? =
+    internal fun wrap(handle: RawSegment): XRServer? =
         if (handle.address() == 0L) null else this
 
     private const val GET_WORLD_SCALE_HASH = 1740695150L

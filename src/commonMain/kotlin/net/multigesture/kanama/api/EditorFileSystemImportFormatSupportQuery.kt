@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class EditorFileSystemImportFormatSupportQuery(handle: GodotHandle) : RefCounted
         fun fromHandle(handle: GodotHandle): EditorFileSystemImportFormatSupportQuery? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorFileSystemImportFormatSupportQuery? =
+        internal fun wrap(handle: RawSegment): EditorFileSystemImportFormatSupportQuery? =
             if (handle.address() == 0L) null else EditorFileSystemImportFormatSupportQuery(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

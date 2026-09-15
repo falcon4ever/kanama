@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -68,7 +68,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): AESContext? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AESContext? =
+        internal fun wrap(handle: RawSegment): AESContext? =
             if (handle.address() == 0L) null else AESContext(GodotHandle(handle))
 
         private const val START_HASH = 3122411423L

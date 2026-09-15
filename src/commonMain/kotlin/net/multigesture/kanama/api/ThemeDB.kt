@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -13,7 +14,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: ThemeDB
  */
 object ThemeDB {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("ThemeDB")
     }
 
@@ -100,7 +101,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackFont(font: Font?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackFontBind, singleton, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFallbackFontBind, singleton, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -144,7 +145,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackIcon(icon: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackIconBind, singleton, listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFallbackIconBind, singleton, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -166,7 +167,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun setFallbackStylebox(stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackStyleboxBind, singleton, listOf(stylebox?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFallbackStyleboxBind, singleton, listOf(stylebox?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -188,7 +189,7 @@ object ThemeDB {
     fun fromHandle(handle: GodotHandle): ThemeDB? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): ThemeDB? =
+    internal fun wrap(handle: RawSegment): ThemeDB? =
         if (handle.address() == 0L) null else this
 
     private const val GET_DEFAULT_THEME_HASH = 754276358L

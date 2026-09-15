@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -43,7 +44,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.resource_changed
      */
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -52,7 +53,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_shape
      */
     fun setShape(shape: Shape3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -143,7 +144,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): CollisionShape3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CollisionShape3D? =
+        internal fun wrap(handle: RawSegment): CollisionShape3D? =
             if (handle.address() == 0L) null else CollisionShape3D(GodotHandle(handle))
 
         private const val RESOURCE_CHANGED_HASH = 968641751L

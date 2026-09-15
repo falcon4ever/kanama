@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -73,7 +73,7 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
         fun fromHandle(handle: GodotHandle): RDPipelineSpecializationConstant? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDPipelineSpecializationConstant? =
+        internal fun wrap(handle: RawSegment): RDPipelineSpecializationConstant? =
             if (handle.address() == 0L) null else RDPipelineSpecializationConstant(GodotHandle(handle))
 
         private const val SET_VALUE_HASH = 1114965689L

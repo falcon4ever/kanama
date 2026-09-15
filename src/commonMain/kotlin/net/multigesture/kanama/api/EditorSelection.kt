@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -80,7 +80,7 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): EditorSelection? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorSelection? =
+        internal fun wrap(handle: RawSegment): EditorSelection? =
             if (handle.address() == 0L) null else EditorSelection(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L

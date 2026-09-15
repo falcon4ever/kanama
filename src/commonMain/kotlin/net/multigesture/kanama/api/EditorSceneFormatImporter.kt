@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -45,7 +45,7 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorSceneFormatImporter? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorSceneFormatImporter? =
+        internal fun wrap(handle: RawSegment): EditorSceneFormatImporter? =
             if (handle.address() == 0L) null else EditorSceneFormatImporter(GodotHandle(handle))
 
         private const val ADD_IMPORT_OPTION_HASH = 402577236L

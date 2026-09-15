@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -77,7 +77,7 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): PCKPacker? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PCKPacker? =
+        internal fun wrap(handle: RawSegment): PCKPacker? =
             if (handle.address() == 0L) null else PCKPacker(GodotHandle(handle))
 
         private const val PCK_START_HASH = 508410629L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -119,7 +119,7 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
         fun fromHandle(handle: GodotHandle): ColorPickerButton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ColorPickerButton? =
+        internal fun wrap(handle: RawSegment): ColorPickerButton? =
             if (handle.address() == 0L) null else ColorPickerButton(GodotHandle(handle))
 
         private const val SET_PICK_COLOR_HASH = 2920490490L

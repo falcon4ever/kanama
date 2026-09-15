@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -31,7 +31,7 @@ class CubemapArray(handle: GodotHandle) : ImageTextureLayered(handle) {
         fun fromHandle(handle: GodotHandle): CubemapArray? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CubemapArray? =
+        internal fun wrap(handle: RawSegment): CubemapArray? =
             if (handle.address() == 0L) null else CubemapArray(GodotHandle(handle))
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L

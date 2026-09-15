@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -179,7 +179,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         fun fromHandle(handle: GodotHandle): BoneConstraint3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BoneConstraint3D? =
+        internal fun wrap(handle: RawSegment): BoneConstraint3D? =
             if (handle.address() == 0L) null else BoneConstraint3D(GodotHandle(handle))
 
         private const val SET_AMOUNT_HASH = 1602489585L

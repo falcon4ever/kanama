@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -24,7 +25,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: Long = 0L, bus: String = "Master"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, segment, stream?.requireOpenHandle() ?: MemorySegment.NULL, fromOffset, volumeDb, pitchScale, playbackType, bus)
+        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, fromOffset, volumeDb, pitchScale, playbackType, bus)
     }
 
     /**
@@ -77,7 +78,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackPolyphonic? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamPlaybackPolyphonic? =
+        internal fun wrap(handle: RawSegment): AudioStreamPlaybackPolyphonic? =
             if (handle.address() == 0L) null else AudioStreamPlaybackPolyphonic(GodotHandle(handle))
 
         private const val PLAY_STREAM_HASH = 1846744803L

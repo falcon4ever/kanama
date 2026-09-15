@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -102,7 +102,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectStereoEnhance? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectStereoEnhance? =
+        internal fun wrap(handle: RawSegment): AudioEffectStereoEnhance? =
             if (handle.address() == 0L) null else AudioEffectStereoEnhance(GodotHandle(handle))
 
         private const val SET_PAN_PULLOUT_HASH = 373806689L

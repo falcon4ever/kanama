@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -53,7 +53,7 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAruco? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialCapabilityConfigurationAruco? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAruco? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAruco(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L

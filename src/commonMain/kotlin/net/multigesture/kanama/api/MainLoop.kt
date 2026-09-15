@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -35,7 +35,7 @@ open class MainLoop(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): MainLoop? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MainLoop? =
+        internal fun wrap(handle: RawSegment): MainLoop? =
             if (handle.address() == 0L) null else MainLoop(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

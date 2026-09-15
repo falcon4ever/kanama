@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -38,7 +39,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL, position)
+        ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
     }
 
     /**
@@ -48,7 +49,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun replaceNode(name: String, node: AnimationNode?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(replaceNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(replaceNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -103,7 +104,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getNodeName(node: AnimationNode?): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, segment, node?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(getNodeNameBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -153,7 +154,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun addTransition(from: String, to: String, transition: AnimationNodeStateMachineTransition?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(addTransitionBind, segment, from, to, transition?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(addTransitionBind, segment, from, to, transition?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -317,7 +318,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
         fun fromHandle(handle: GodotHandle): AnimationNodeStateMachine? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeStateMachine? =
+        internal fun wrap(handle: RawSegment): AnimationNodeStateMachine? =
             if (handle.address() == 0L) null else AnimationNodeStateMachine(GodotHandle(handle))
 
         private const val ADD_NODE_HASH = 1980270704L

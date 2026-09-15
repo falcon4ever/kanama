@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -48,7 +48,7 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): HMACContext? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): HMACContext? =
+        internal fun wrap(handle: RawSegment): HMACContext? =
             if (handle.address() == 0L) null else HMACContext(GodotHandle(handle))
 
         private const val START_HASH = 3537364598L

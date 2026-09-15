@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -22,7 +22,7 @@ open class ScriptLanguage(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): ScriptLanguage? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ScriptLanguage? =
+        internal fun wrap(handle: RawSegment): ScriptLanguage? =
             if (handle.address() == 0L) null else ScriptLanguage(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

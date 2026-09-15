@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -283,7 +283,7 @@ class MenuBar(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): MenuBar? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MenuBar? =
+        internal fun wrap(handle: RawSegment): MenuBar? =
             if (handle.address() == 0L) null else MenuBar(GodotHandle(handle))
 
         private const val SET_SWITCH_ON_HOVER_HASH = 2586408642L

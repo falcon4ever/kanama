@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2i
@@ -259,7 +260,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_pattern
      */
     fun setPattern(position: Vector2i, pattern: TileMapPattern?) {
-        ObjectCalls.ptrcallWithVector2iAndObjectArg(setPatternBind, segment, position, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithVector2iAndObjectArg(setPatternBind, segment, position, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -352,7 +353,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.map_pattern
      */
     fun mapPattern(positionInTilemap: Vector2i, coordsInPattern: Vector2i, pattern: TileMapPattern?): Vector2i {
-        return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(mapPatternBind, segment, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithTwoVector2iAndObjectArgRetVector2i(mapPatternBind, segment, positionInTilemap, coordsInPattern, pattern?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -444,7 +445,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.set_tile_set
      */
     fun setTileSet(tileSet: TileSet?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTileSetBind, segment, listOf(tileSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTileSetBind, segment, listOf(tileSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -709,7 +710,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): TileMapLayer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TileMapLayer? =
+        internal fun wrap(handle: RawSegment): TileMapLayer? =
             if (handle.address() == 0L) null else TileMapLayer(GodotHandle(handle))
 
         private const val SET_CELL_HASH = 2428518503L

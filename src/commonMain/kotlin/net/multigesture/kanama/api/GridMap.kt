@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -142,7 +143,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun setPhysicsMaterial(material: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getPhysicsMaterial(): PhysicsMaterial? {
@@ -166,7 +167,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun setMeshLibrary(meshLibrary: MeshLibrary?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshLibraryBind, segment, listOf(meshLibrary?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshLibraryBind, segment, listOf(meshLibrary?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMeshLibrary(): MeshLibrary? {
@@ -230,7 +231,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun setCenterX(enable: Boolean) {
@@ -332,7 +333,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): GridMap? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GridMap? =
+        internal fun wrap(handle: RawSegment): GridMap? =
             if (handle.address() == 0L) null else GridMap(GodotHandle(handle))
 
         private const val SET_COLLISION_LAYER_HASH = 1286410249L

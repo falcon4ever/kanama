@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -58,7 +59,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
      */
     fun matchesEvent(event: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(matchesEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -76,7 +77,7 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Shortcut? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Shortcut? =
+        internal fun wrap(handle: RawSegment): Shortcut? =
             if (handle.address() == 0L) null else Shortcut(GodotHandle(handle))
 
         private const val SET_EVENTS_HASH = 381264803L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -48,12 +49,12 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
 
     fun connectToUrl(url: String, tlsClientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(connectToUrlBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(connectToUrlBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun acceptStream(stream: StreamPeer?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun send(message: ByteArray, writeMode: Long = 1L): Long {
@@ -198,7 +199,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
         fun fromHandle(handle: GodotHandle): WebSocketPeer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): WebSocketPeer? =
+        internal fun wrap(handle: RawSegment): WebSocketPeer? =
             if (handle.address() == 0L) null else WebSocketPeer(GodotHandle(handle))
 
         private const val CONNECT_TO_URL_HASH = 1966198364L

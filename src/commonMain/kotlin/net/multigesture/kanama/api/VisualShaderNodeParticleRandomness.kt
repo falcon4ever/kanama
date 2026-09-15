@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -37,7 +37,7 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleRandomness? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleRandomness? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleRandomness? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleRandomness(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 2060089061L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -316,7 +316,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRCompositionLayer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRCompositionLayer? =
+        internal fun wrap(handle: RawSegment): OpenXRCompositionLayer? =
             if (handle.address() == 0L) null else OpenXRCompositionLayer(GodotHandle(handle))
 
         private const val SET_LAYER_VIEWPORT_HASH = 3888077664L

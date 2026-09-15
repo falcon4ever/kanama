@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -238,7 +239,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_dock_icon
      */
     fun setDockIcon(icon: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setDockIconBind, segment, listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDockIconBind, segment, listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -296,7 +297,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.set_dock_shortcut
      */
     fun setDockShortcut(shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithObjectArgs(setDockShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDockShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -378,7 +379,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         fun fromHandle(handle: GodotHandle): EditorDock? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorDock? =
+        internal fun wrap(handle: RawSegment): EditorDock? =
             if (handle.address() == 0L) null else EditorDock(GodotHandle(handle))
 
         private const val OPEN_HASH = 3218959716L

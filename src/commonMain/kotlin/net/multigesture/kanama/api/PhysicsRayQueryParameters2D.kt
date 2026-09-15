@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
@@ -218,14 +219,14 @@ class PhysicsRayQueryParameters2D(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: PhysicsRayQueryParameters2D.create
          */
         fun create(from: Vector2, to: Vector2, collisionMask: Long = 4294967295L, exclude: List<RID>): PhysicsRayQueryParameters2D? {
-            return PhysicsRayQueryParameters2D.wrap(ObjectCalls.ptrcallWithTwoVector2UInt32RIDListArgsRetObject(createBind, MemorySegment.NULL, from, to, collisionMask, exclude))
+            return PhysicsRayQueryParameters2D.wrap(ObjectCalls.ptrcallWithTwoVector2UInt32RIDListArgsRetObject(createBind, NULL_SEGMENT, from, to, collisionMask, exclude))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsRayQueryParameters2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsRayQueryParameters2D? =
+        internal fun wrap(handle: RawSegment): PhysicsRayQueryParameters2D? =
             if (handle.address() == 0L) null else PhysicsRayQueryParameters2D(GodotHandle(handle))
 
         private const val CREATE_HASH = 3196569324L

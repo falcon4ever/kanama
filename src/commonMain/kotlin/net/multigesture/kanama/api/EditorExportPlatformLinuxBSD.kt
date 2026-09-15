@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class EditorExportPlatformLinuxBSD(handle: GodotHandle) : EditorExportPlatformPC
         fun fromHandle(handle: GodotHandle): EditorExportPlatformLinuxBSD? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorExportPlatformLinuxBSD? =
+        internal fun wrap(handle: RawSegment): EditorExportPlatformLinuxBSD? =
             if (handle.address() == 0L) null else EditorExportPlatformLinuxBSD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

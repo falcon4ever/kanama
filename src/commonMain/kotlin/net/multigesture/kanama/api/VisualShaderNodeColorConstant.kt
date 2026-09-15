@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -32,7 +32,7 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
         fun fromHandle(handle: GodotHandle): VisualShaderNodeColorConstant? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeColorConstant? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeColorConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeColorConstant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 2920490490L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -311,7 +312,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun setNightSky(nightSky: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNightSkyBind, segment, listOf(nightSky?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNightSkyBind, segment, listOf(nightSky?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -330,7 +331,7 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
         fun fromHandle(handle: GodotHandle): PhysicalSkyMaterial? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicalSkyMaterial? =
+        internal fun wrap(handle: RawSegment): PhysicalSkyMaterial? =
             if (handle.address() == 0L) null else PhysicalSkyMaterial(GodotHandle(handle))
 
         private const val SET_RAYLEIGH_COEFFICIENT_HASH = 373806689L

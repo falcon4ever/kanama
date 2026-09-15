@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -56,7 +57,7 @@ class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.set_area_texture
      */
     fun setAreaTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setAreaTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAreaTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -120,7 +121,7 @@ class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
         fun fromHandle(handle: GodotHandle): AreaLight3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AreaLight3D? =
+        internal fun wrap(handle: RawSegment): AreaLight3D? =
             if (handle.address() == 0L) null else AreaLight3D(GodotHandle(handle))
 
         private const val SET_AREA_TEXTURE_HASH = 4051416890L

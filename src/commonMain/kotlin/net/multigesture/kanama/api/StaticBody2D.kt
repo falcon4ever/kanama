@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -79,7 +80,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: StaticBody2D.set_physics_material_override
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -97,7 +98,7 @@ open class StaticBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         fun fromHandle(handle: GodotHandle): StaticBody2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): StaticBody2D? =
+        internal fun wrap(handle: RawSegment): StaticBody2D? =
             if (handle.address() == 0L) null else StaticBody2D(GodotHandle(handle))
 
         private const val SET_CONSTANT_LINEAR_VELOCITY_HASH = 743155724L

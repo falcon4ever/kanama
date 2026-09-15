@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -44,7 +44,7 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
         fun fromHandle(handle: GodotHandle): AudioStreamPolyphonic? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamPolyphonic? =
+        internal fun wrap(handle: RawSegment): AudioStreamPolyphonic? =
             if (handle.address() == 0L) null else AudioStreamPolyphonic(GodotHandle(handle))
 
         private const val SET_POLYPHONY_HASH = 1286410249L

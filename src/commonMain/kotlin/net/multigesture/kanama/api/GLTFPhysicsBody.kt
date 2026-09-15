@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Quaternion
@@ -153,18 +154,18 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromNode(bodyNode: CollisionObject3D): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, bodyNode.segment))
+            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, bodyNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
+            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFPhysicsBody? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFPhysicsBody? =
+        internal fun wrap(handle: RawSegment): GLTFPhysicsBody? =
             if (handle.address() == 0L) null else GLTFPhysicsBody(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 420544174L

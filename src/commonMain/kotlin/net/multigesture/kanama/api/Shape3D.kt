@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -93,7 +93,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Shape3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Shape3D? =
+        internal fun wrap(handle: RawSegment): Shape3D? =
             if (handle.address() == 0L) null else Shape3D(GodotHandle(handle))
 
         private const val SET_CUSTOM_SOLVER_BIAS_HASH = 373806689L

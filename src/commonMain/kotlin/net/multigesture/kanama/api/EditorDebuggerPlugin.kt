@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -37,7 +37,7 @@ class EditorDebuggerPlugin(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorDebuggerPlugin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorDebuggerPlugin? =
+        internal fun wrap(handle: RawSegment): EditorDebuggerPlugin? =
             if (handle.address() == 0L) null else EditorDebuggerPlugin(GodotHandle(handle))
 
         private const val GET_SESSION_HASH = 3061968499L

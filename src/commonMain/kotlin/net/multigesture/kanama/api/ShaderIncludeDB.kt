@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -20,7 +21,7 @@ class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: ShaderIncludeDB.list_built_in_include_files
          */
         fun listBuiltInIncludeFiles(): List<String> {
-            return ObjectCalls.ptrcallNoArgsRetPackedStringList(listBuiltInIncludeFilesBind, MemorySegment.NULL)
+            return ObjectCalls.ptrcallNoArgsRetPackedStringList(listBuiltInIncludeFilesBind, NULL_SEGMENT)
         }
 
         /**
@@ -29,7 +30,7 @@ class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: ShaderIncludeDB.has_built_in_include_file
          */
         fun hasBuiltInIncludeFile(filename: String): Boolean {
-            return ObjectCalls.ptrcallWithStringArgRetBool(hasBuiltInIncludeFileBind, MemorySegment.NULL, filename)
+            return ObjectCalls.ptrcallWithStringArgRetBool(hasBuiltInIncludeFileBind, NULL_SEGMENT, filename)
         }
 
         /**
@@ -39,14 +40,14 @@ class ShaderIncludeDB(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: ShaderIncludeDB.get_built_in_include_file
          */
         fun getBuiltInIncludeFile(filename: String): String {
-            return ObjectCalls.ptrcallWithStringArgRetString(getBuiltInIncludeFileBind, MemorySegment.NULL, filename)
+            return ObjectCalls.ptrcallWithStringArgRetString(getBuiltInIncludeFileBind, NULL_SEGMENT, filename)
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ShaderIncludeDB? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ShaderIncludeDB? =
+        internal fun wrap(handle: RawSegment): ShaderIncludeDB? =
             if (handle.address() == 0L) null else ShaderIncludeDB(GodotHandle(handle))
 
         private const val LIST_BUILT_IN_INCLUDE_FILES_HASH = 2981934095L

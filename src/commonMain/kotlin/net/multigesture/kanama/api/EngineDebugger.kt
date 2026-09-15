@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: EngineDebugger
  */
 object EngineDebugger {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("EngineDebugger")
     }
 
@@ -32,7 +33,7 @@ object EngineDebugger {
      */
     @JvmStatic
     fun registerProfiler(name: String, profiler: EngineProfiler?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(registerProfilerBind, singleton, name, profiler?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(registerProfilerBind, singleton, name, profiler?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -258,7 +259,7 @@ object EngineDebugger {
     fun fromHandle(handle: GodotHandle): EngineDebugger? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): EngineDebugger? =
+    internal fun wrap(handle: RawSegment): EngineDebugger? =
         if (handle.address() == 0L) null else this
 
     private const val IS_ACTIVE_HASH = 2240911060L

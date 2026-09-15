@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -111,7 +111,7 @@ class VehicleBody3D(handle: GodotHandle) : RigidBody3D(handle) {
         fun fromHandle(handle: GodotHandle): VehicleBody3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VehicleBody3D? =
+        internal fun wrap(handle: RawSegment): VehicleBody3D? =
             if (handle.address() == 0L) null else VehicleBody3D(GodotHandle(handle))
 
         private const val SET_ENGINE_FORCE_HASH = 373806689L

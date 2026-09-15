@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -96,7 +96,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): JSONRPC? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): JSONRPC? =
+        internal fun wrap(handle: RawSegment): JSONRPC? =
             if (handle.address() == 0L) null else JSONRPC(GodotHandle(handle))
 
         private const val SET_METHOD_HASH = 2137474292L

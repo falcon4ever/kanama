@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -40,7 +40,7 @@ class SkinReference(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): SkinReference? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SkinReference? =
+        internal fun wrap(handle: RawSegment): SkinReference? =
             if (handle.address() == 0L) null else SkinReference(GodotHandle(handle))
 
         private const val GET_SKELETON_HASH = 2944877500L

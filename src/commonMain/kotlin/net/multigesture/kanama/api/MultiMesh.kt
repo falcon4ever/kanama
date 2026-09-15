@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Color
@@ -78,7 +79,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -414,7 +415,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): MultiMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MultiMesh? =
+        internal fun wrap(handle: RawSegment): MultiMesh? =
             if (handle.address() == 0L) null else MultiMesh(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L

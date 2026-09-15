@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -102,7 +103,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.set_stream
      */
     fun setStream(stream: AudioStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -438,7 +439,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): AudioStreamPlayer2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamPlayer2D? =
+        internal fun wrap(handle: RawSegment): AudioStreamPlayer2D? =
             if (handle.address() == 0L) null else AudioStreamPlayer2D(GodotHandle(handle))
 
         private const val SET_STREAM_HASH = 2210767741L

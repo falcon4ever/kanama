@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -24,7 +24,7 @@ class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpat
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPlaneAlignmentList? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentPlaneAlignmentList? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentPlaneAlignmentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(handle))
 
         private const val GET_PLANE_ALIGNMENT_HASH = 3340200270L

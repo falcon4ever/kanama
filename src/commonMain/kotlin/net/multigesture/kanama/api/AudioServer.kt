@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: AudioServer
  */
 object AudioServer {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("AudioServer")
     }
 
@@ -271,7 +272,7 @@ object AudioServer {
      */
     @JvmStatic
     fun addBusEffect(busIdx: Int, effect: AudioEffect?, atPosition: Int = -1) {
-        ObjectCalls.ptrcallWithIntObjectAndIntArgs(addBusEffectBind, singleton, busIdx, effect?.requireOpenHandle() ?: MemorySegment.NULL, atPosition)
+        ObjectCalls.ptrcallWithIntObjectAndIntArgs(addBusEffectBind, singleton, busIdx, effect?.requireOpenHandle() ?: NULL_SEGMENT, atPosition)
     }
 
     /**
@@ -619,7 +620,7 @@ object AudioServer {
      */
     @JvmStatic
     fun setBusLayout(busLayout: AudioBusLayout?) {
-        ObjectCalls.ptrcallWithObjectArgs(setBusLayoutBind, singleton, listOf(busLayout?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setBusLayoutBind, singleton, listOf(busLayout?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -653,7 +654,7 @@ object AudioServer {
      */
     @JvmStatic
     fun isStreamRegisteredAsSample(stream: AudioStream?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isStreamRegisteredAsSampleBind, singleton, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isStreamRegisteredAsSampleBind, singleton, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -666,7 +667,7 @@ object AudioServer {
      */
     @JvmStatic
     fun registerStreamAsSample(stream: AudioStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(registerStreamAsSampleBind, singleton, listOf(stream?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(registerStreamAsSampleBind, singleton, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     object Signals {
@@ -678,7 +679,7 @@ object AudioServer {
     fun fromHandle(handle: GodotHandle): AudioServer? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): AudioServer? =
+    internal fun wrap(handle: RawSegment): AudioServer? =
         if (handle.address() == 0L) null else this
 
     private const val SET_BUS_COUNT_HASH = 1286410249L

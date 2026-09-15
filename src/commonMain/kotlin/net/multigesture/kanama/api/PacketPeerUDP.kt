@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -161,7 +161,7 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
         fun fromHandle(handle: GodotHandle): PacketPeerUDP? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PacketPeerUDP? =
+        internal fun wrap(handle: RawSegment): PacketPeerUDP? =
             if (handle.address() == 0L) null else PacketPeerUDP(GodotHandle(handle))
 
         private const val BIND_HASH = 4051239242L

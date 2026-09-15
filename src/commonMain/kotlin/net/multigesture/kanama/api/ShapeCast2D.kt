@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
@@ -96,7 +97,7 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ShapeCast2D.set_shape
      */
     fun setShape(shape: Shape2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -424,7 +425,7 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): ShapeCast2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ShapeCast2D? =
+        internal fun wrap(handle: RawSegment): ShapeCast2D? =
             if (handle.address() == 0L) null else ShapeCast2D(GodotHandle(handle))
 
         private const val SET_ENABLED_HASH = 2586408642L

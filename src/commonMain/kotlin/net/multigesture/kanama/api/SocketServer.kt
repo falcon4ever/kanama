@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -56,7 +56,7 @@ open class SocketServer(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): SocketServer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SocketServer? =
+        internal fun wrap(handle: RawSegment): SocketServer? =
             if (handle.address() == 0L) null else SocketServer(GodotHandle(handle))
 
         private const val IS_CONNECTION_AVAILABLE_HASH = 36873697L

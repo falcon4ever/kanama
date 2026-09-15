@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector3
@@ -124,7 +124,7 @@ open class SpringBoneCollision3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): SpringBoneCollision3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SpringBoneCollision3D? =
+        internal fun wrap(handle: RawSegment): SpringBoneCollision3D? =
             if (handle.address() == 0L) null else SpringBoneCollision3D(GodotHandle(handle))
 
         private const val GET_SKELETON_HASH = 1488626673L

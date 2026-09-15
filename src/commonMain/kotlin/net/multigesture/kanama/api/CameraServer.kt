@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: CameraServer
  */
 object CameraServer {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("CameraServer")
     }
 
@@ -88,7 +89,7 @@ object CameraServer {
      */
     @JvmStatic
     fun addFeed(feed: CameraFeed?) {
-        ObjectCalls.ptrcallWithObjectArgs(addFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -98,7 +99,7 @@ object CameraServer {
      */
     @JvmStatic
     fun removeFeed(feed: CameraFeed?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     object Signals {
@@ -111,7 +112,7 @@ object CameraServer {
     fun fromHandle(handle: GodotHandle): CameraServer? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): CameraServer? =
+    internal fun wrap(handle: RawSegment): CameraServer? =
         if (handle.address() == 0L) null else this
 
     private const val SET_MONITORING_FEEDS_HASH = 2586408642L

@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -48,7 +49,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun createSceneTile(packedScene: PackedScene?, idOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(createSceneTileBind, segment, packedScene?.requireOpenHandle() ?: MemorySegment.NULL, idOverride)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(createSceneTileBind, segment, packedScene?.requireOpenHandle() ?: NULL_SEGMENT, idOverride)
     }
 
     /**
@@ -71,7 +72,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun setSceneTileScene(id: Int, packedScene: PackedScene?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSceneTileSceneBind, segment, id, packedScene?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSceneTileSceneBind, segment, id, packedScene?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -130,7 +131,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
         fun fromHandle(handle: GodotHandle): TileSetScenesCollectionSource? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TileSetScenesCollectionSource? =
+        internal fun wrap(handle: RawSegment): TileSetScenesCollectionSource? =
             if (handle.address() == 0L) null else TileSetScenesCollectionSource(GodotHandle(handle))
 
         private const val GET_SCENE_TILES_COUNT_HASH = 2455072627L

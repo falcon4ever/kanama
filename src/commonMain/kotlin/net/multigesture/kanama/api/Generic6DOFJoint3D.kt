@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -161,7 +161,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
         fun fromHandle(handle: GodotHandle): Generic6DOFJoint3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Generic6DOFJoint3D? =
+        internal fun wrap(handle: RawSegment): Generic6DOFJoint3D? =
             if (handle.address() == 0L) null else Generic6DOFJoint3D(GodotHandle(handle))
 
         private const val SET_PARAM_X_HASH = 2018184242L

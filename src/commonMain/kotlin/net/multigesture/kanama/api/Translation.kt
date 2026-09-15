@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -164,7 +164,7 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Translation? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Translation? =
+        internal fun wrap(handle: RawSegment): Translation? =
             if (handle.address() == 0L) null else Translation(GodotHandle(handle))
 
         private const val SET_LOCALE_HASH = 83702148L

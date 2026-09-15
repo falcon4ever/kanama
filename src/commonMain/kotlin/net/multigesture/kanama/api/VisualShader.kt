@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -24,7 +25,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
 
     fun addNode(type: Long, node: VisualShaderNode?, position: Vector2, id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongObjectVector2IntArgs(addNodeBind, segment, type, node?.requireOpenHandle() ?: MemorySegment.NULL, position, id)
+        ObjectCalls.ptrcallWithLongObjectVector2IntArgs(addNodeBind, segment, type, node?.requireOpenHandle() ?: NULL_SEGMENT, position, id)
     }
 
     fun getNode(type: Long, id: Int): VisualShaderNode? {
@@ -159,7 +160,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
         fun fromHandle(handle: GodotHandle): VisualShader? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShader? =
+        internal fun wrap(handle: RawSegment): VisualShader? =
             if (handle.address() == 0L) null else VisualShader(GodotHandle(handle))
 
         private const val SET_MODE_HASH = 3978014962L

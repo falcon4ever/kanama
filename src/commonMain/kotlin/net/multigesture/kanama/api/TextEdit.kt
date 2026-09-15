@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
@@ -2476,7 +2477,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_icon
      */
     fun setLineGutterIcon(line: Int, gutter: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setLineGutterIconBind, segment, line, gutter, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setLineGutterIconBind, segment, line, gutter, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -2556,7 +2557,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_syntax_highlighter
      */
     fun setSyntaxHighlighter(syntaxHighlighter: SyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2793,7 +2794,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): TextEdit? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextEdit? =
+        internal fun wrap(handle: RawSegment): TextEdit? =
             if (handle.address() == 0L) null else TextEdit(GodotHandle(handle))
 
         private const val HAS_IME_TEXT_HASH = 36873697L

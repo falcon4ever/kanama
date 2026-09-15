@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -87,7 +87,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): AudioStream? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStream? =
+        internal fun wrap(handle: RawSegment): AudioStream? =
             if (handle.address() == 0L) null else AudioStream(GodotHandle(handle))
 
         private const val GET_LENGTH_HASH = 1740695150L

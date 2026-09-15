@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -81,7 +81,7 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): MultiplayerSpawner? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MultiplayerSpawner? =
+        internal fun wrap(handle: RawSegment): MultiplayerSpawner? =
             if (handle.address() == 0L) null else MultiplayerSpawner(GodotHandle(handle))
 
         private const val ADD_SPAWNABLE_SCENE_HASH = 83702148L

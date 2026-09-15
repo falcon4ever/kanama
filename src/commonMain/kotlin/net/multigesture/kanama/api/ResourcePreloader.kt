@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +20,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.add_resource
      */
     fun addResource(name: String, resource: Resource?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addResourceBind, segment, name, resource?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(addResourceBind, segment, name, resource?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -72,7 +73,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): ResourcePreloader? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ResourcePreloader? =
+        internal fun wrap(handle: RawSegment): ResourcePreloader? =
             if (handle.address() == 0L) null else ResourcePreloader(GodotHandle(handle))
 
         private const val ADD_RESOURCE_HASH = 1168801743L

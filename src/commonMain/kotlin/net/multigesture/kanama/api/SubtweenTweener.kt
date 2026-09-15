@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -32,7 +32,7 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
         fun fromHandle(handle: GodotHandle): SubtweenTweener? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SubtweenTweener? =
+        internal fun wrap(handle: RawSegment): SubtweenTweener? =
             if (handle.address() == 0L) null else SubtweenTweener(GodotHandle(handle))
 
         private const val SET_DELAY_HASH = 449181780L
