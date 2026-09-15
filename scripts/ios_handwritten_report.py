@@ -19,7 +19,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCAN_DIRS = [ROOT / "ios", ROOT / "ios-runtime/src/iosMain"]
+SCAN_DIRS = [ROOT / "ios", ROOT / "src/iosMain"]
 SCAN_SUFFIXES = {".kt", ".c", ".h"}
 OUTPUT = ROOT / "docs/reference/generated/ios-backend-handwritten.md"
 MARKER_RE = re.compile(r"KANAMA-IOS-(STUB|HANDWRITTEN|SUGAR)\s*:?\s*(.*)")

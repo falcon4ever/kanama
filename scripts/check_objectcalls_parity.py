@@ -2,7 +2,7 @@
 """Gate: every `ObjectCalls` helper the shared wrapper tree calls is a MEMBER of
 `object ObjectCalls` on desktop and on iOS, with the same parameter names in the same order.
 
-`src/commonMain/kotlin` is compiled by the root JVM module, by `:ios-runtime` and (through the
+`src/sharedApi/kotlin` is compiled by the root module's JVM and iOS targets and (through the
 Android remap) by the Android plugin, and it reaches the engine through exactly one seam:
 `net.multigesture.kanama.binding.runtime.ObjectCalls`. Task 104 step 3 turns that object into an
 `expect object` with one `actual` per platform, and an `expect` member can only be actualized by a
@@ -47,10 +47,13 @@ from check_builtin_calls_contract import match_closer, strip_comments
 
 ROOT = Path(__file__).resolve().parents[1]
 
-DESKTOP = ROOT / "src/main/kotlin/binding/runtime/ObjectCalls.kt"
-IOS = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"
-IOS_SOURCE_ROOT = ROOT / "ios-runtime/src"
-SHARED_TREE = ROOT / "src/commonMain/kotlin"
+DESKTOP = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
+IOS = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt"
+IOS_SOURCE_ROOT = ROOT / "src/iosMain"
+# The sources that call the seam: the generated wrapper tree (compiled per platform) and the
+# common fragment beside it (the value types reach the engine through BuiltinCalls, not
+# ObjectCalls, but scanning both means a future common caller is covered by this gate too).
+SHARED_TREES = (ROOT / "src/sharedApi/kotlin", ROOT / "src/commonMain/kotlin")
 
 # A member function of `object ObjectCalls`. Both files are ktfmt-formatted (`ktfmtCheck` is a
 # local_ci stage), so an object member starts at exactly two spaces; anything deeper is a local
@@ -168,13 +171,14 @@ def parse_extensions(root: Path) -> dict[str, Path]:
     return extensions
 
 
-def referenced_helpers(tree: Path) -> list[str]:
-    """Distinct `ObjectCalls.<name>` the shared wrapper tree calls, sorted."""
+def referenced_helpers(trees: tuple[Path, ...]) -> list[str]:
+    """Distinct `ObjectCalls.<name>` the shared sources call, sorted."""
     names: set[str] = set()
-    for path in sorted(tree.rglob("*.kt")):
-        # Code only: a KDoc or line comment mentioning `ObjectCalls.foo` is prose, not a call
-        # (task 119 finding 5 — the sibling parsers already strip comments).
-        names.update(REFERENCE_RE.findall(strip_comments(path.read_text(encoding="utf-8"))))
+    for tree in trees:
+        for path in sorted(tree.rglob("*.kt")):
+            # Code only: a KDoc or line comment mentioning `ObjectCalls.foo` is prose, not a call
+            # (task 119 finding 5 — the sibling parsers already strip comments).
+            names.update(REFERENCE_RE.findall(strip_comments(path.read_text(encoding="utf-8"))))
     return sorted(names)
 
 
@@ -190,7 +194,7 @@ def main() -> int:
     desktop = parse_members(DESKTOP)
     ios = parse_members(IOS)
     ios_extensions = parse_extensions(IOS_SOURCE_ROOT)
-    referenced = referenced_helpers(SHARED_TREE)
+    referenced = referenced_helpers(SHARED_TREES)
 
     missing_desktop: list[str] = []
     missing_ios: list[str] = []

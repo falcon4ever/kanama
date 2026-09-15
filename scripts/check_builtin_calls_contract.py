@@ -30,8 +30,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-DESKTOP = ROOT / "src/main/kotlin/binding/runtime/BuiltinCalls.kt"
-IOS = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.kt"
+DESKTOP = ROOT / "src/jvmMain/kotlin/binding/runtime/BuiltinCalls.kt"
+IOS = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.kt"
 
 PACKAGE = "net.multigesture.kanama.binding.runtime"
 

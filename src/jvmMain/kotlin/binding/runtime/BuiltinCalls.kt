@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 import net.multigesture.kanama.ffi.GodotFFI
 import net.multigesture.kanama.types.GodotReal
 import net.multigesture.kanama.types.GodotRealArray
+import net.multigesture.kanama.types.GodotRealSegment
 
 /**
  * Desktop/Android implementation of value-type (builtin) method calls — the one facade the shared
@@ -127,7 +128,7 @@ object BuiltinCalls {
         MemorySegment.NULL
       } else {
         val buf = arena.allocate(GodotReal.SIZE_BYTES * base.size, GodotReal.ALIGN_BYTES)
-        for (i in base.indices) GodotReal.writeIndex(buf, i.toLong(), base[i])
+        for (i in base.indices) GodotRealSegment.writeIndex(buf, i.toLong(), base[i])
         buf
       }
     val argArray =
@@ -146,7 +147,7 @@ object BuiltinCalls {
       is BArg.Floats -> {
         val size = if (arg.values.isNotEmpty()) arg.values.size else 1
         val buf = arena.allocate(GodotReal.SIZE_BYTES * size, GodotReal.ALIGN_BYTES)
-        for (i in arg.values.indices) GodotReal.writeIndex(buf, i.toLong(), arg.values[i])
+        for (i in arg.values.indices) GodotRealSegment.writeIndex(buf, i.toLong(), arg.values[i])
         buf
       }
       is BArg.Bool -> {
@@ -180,7 +181,7 @@ object BuiltinCalls {
       val size = if (retCount > 0) retCount else 1
       val ret = arena.allocate(GodotReal.SIZE_BYTES * size, GodotReal.ALIGN_BYTES)
       invokeBuiltin(arena, methodPtr, base, args, ret)
-      GodotRealArray(retCount) { GodotReal.readIndex(ret, it.toLong()) }
+      GodotRealArray(retCount) { GodotRealSegment.readIndex(ret, it.toLong()) }
     }
 
   /**

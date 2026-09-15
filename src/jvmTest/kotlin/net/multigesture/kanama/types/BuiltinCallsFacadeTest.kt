@@ -247,8 +247,8 @@ private object FakeGodot {
     if (lastBaseWasNull) {
       val out = ret.reinterpret(GodotReal.SIZE_BYTES * 9)
       for (i in 0 until 9) {
-        val value = if (i < 3) GodotReal.readIndex(first, i.toLong()) else GodotReal.fromDouble(0.0)
-        GodotReal.writeIndex(out, i.toLong(), value)
+        val value = if (i < 3) GodotRealSegment.readIndex(first, i.toLong()) else GodotReal.fromDouble(0.0)
+        GodotRealSegment.writeIndex(out, i.toLong(), value)
       }
       return
     }
@@ -256,9 +256,9 @@ private object FakeGodot {
     val weight = argAt(args, 1).reinterpret(JAVA_DOUBLE.byteSize()).get(JAVA_DOUBLE, 0)
     val out = ret.reinterpret(GodotReal.SIZE_BYTES * 3)
     for (i in 0 until 3) {
-      val start = GodotReal.toC(GodotReal.readIndex(baseBuf, i.toLong())).toDouble()
-      val delta = GodotReal.toC(GodotReal.readIndex(first, i.toLong())).toDouble()
-      GodotReal.writeIndex(out, i.toLong(), GodotReal.fromDouble(start + delta * weight))
+      val start = GodotReal.toC(GodotRealSegment.readIndex(baseBuf, i.toLong())).toDouble()
+      val delta = GodotReal.toC(GodotRealSegment.readIndex(first, i.toLong())).toDouble()
+      GodotRealSegment.writeIndex(out, i.toLong(), GodotReal.fromDouble(start + delta * weight))
     }
   }
 
@@ -268,10 +268,10 @@ private object FakeGodot {
     record(base, args, argc)
     val baseBuf = base.reinterpret(GodotReal.SIZE_BYTES * 9)
     val out = ret.reinterpret(GodotReal.SIZE_BYTES * 9)
-    for (i in 0 until 9) GodotReal.writeIndex(
+    for (i in 0 until 9) GodotRealSegment.writeIndex(
       out,
       i.toLong(),
-      GodotReal.readIndex(baseBuf, i.toLong()),
+      GodotRealSegment.readIndex(baseBuf, i.toLong()),
     )
   }
 

@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BUILTIN_TYPES = ROOT / "src/main/kotlin/binding/runtime/BuiltinTypes.kt"
+BUILTIN_TYPES = ROOT / "src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt"
 
 
 def find_function_body(content: str, name: str) -> str:

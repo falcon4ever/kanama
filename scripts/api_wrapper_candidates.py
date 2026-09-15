@@ -3739,7 +3739,7 @@ def is_read_only_candidate(method: ApiMethod) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--api", type=Path, default=Path("extension_api.json"))
-    parser.add_argument("--api-dir", type=Path, default=Path("src/main/kotlin/net/multigesture/kanama/api"))
+    parser.add_argument("--api-dir", type=Path, default=Path("src/jvmMain/kotlin/net/multigesture/kanama/api"))
     parser.add_argument("--class", dest="classes", action="append", help="Limit output to one class; repeatable.")
     parser.add_argument("--limit", type=int, default=30)
     parser.add_argument("--include-unsupported", action="store_true")

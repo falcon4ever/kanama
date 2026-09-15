@@ -34,7 +34,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-API = "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api"
+API = "web-runtime/src/sharedApi/kotlin/net/multigesture/kanama/api"
 WASM = "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web"
 COMMON_WEB = "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/web"
 

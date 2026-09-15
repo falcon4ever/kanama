@@ -21,6 +21,7 @@ import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.GodotReal
+import net.multigesture.kanama.types.GodotRealSegment
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Projection
@@ -612,8 +613,8 @@ object BuiltinTypes {
       val vectorArg = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val boolRet = arena.allocate(JAVA_BYTE)
       for (value in values) {
-        GodotReal.writeIndex(vectorArg, 0, value.x)
-        GodotReal.writeIndex(vectorArg, 1, value.y)
+        GodotRealSegment.writeIndex(vectorArg, 0, value.x)
+        GodotRealSegment.writeIndex(vectorArg, 1, value.y)
         call(
           type = VariantType.PACKED_VECTOR2_ARRAY,
           method = "push_back",
@@ -697,9 +698,9 @@ object BuiltinTypes {
       val vectorArg = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val boolRet = arena.allocate(JAVA_BYTE)
       for (value in values) {
-        GodotReal.writeIndex(vectorArg, 0, value.x)
-        GodotReal.writeIndex(vectorArg, 1, value.y)
-        GodotReal.writeIndex(vectorArg, 2, value.z)
+        GodotRealSegment.writeIndex(vectorArg, 0, value.x)
+        GodotRealSegment.writeIndex(vectorArg, 1, value.y)
+        GodotRealSegment.writeIndex(vectorArg, 2, value.z)
         call(
           type = VariantType.PACKED_VECTOR3_ARRAY,
           method = "push_back",
@@ -748,10 +749,10 @@ object BuiltinTypes {
       val vectorArg = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val boolRet = arena.allocate(JAVA_BYTE)
       for (value in values) {
-        GodotReal.writeIndex(vectorArg, 0, value.x)
-        GodotReal.writeIndex(vectorArg, 1, value.y)
-        GodotReal.writeIndex(vectorArg, 2, value.z)
-        GodotReal.writeIndex(vectorArg, 3, value.w)
+        GodotRealSegment.writeIndex(vectorArg, 0, value.x)
+        GodotRealSegment.writeIndex(vectorArg, 1, value.y)
+        GodotRealSegment.writeIndex(vectorArg, 2, value.z)
+        GodotRealSegment.writeIndex(vectorArg, 3, value.w)
         call(
           type = VariantType.PACKED_VECTOR4_ARRAY,
           method = "push_back",
@@ -1084,7 +1085,7 @@ object BuiltinTypes {
           rReturn = valueRet,
         )
         values +=
-          Vector2(x = GodotReal.readIndex(valueRet, 0), y = GodotReal.readIndex(valueRet, 1))
+          Vector2(x = GodotRealSegment.readIndex(valueRet, 0), y = GodotRealSegment.readIndex(valueRet, 1))
       }
       return values
     }
@@ -1131,9 +1132,9 @@ object BuiltinTypes {
         )
         values +=
           Vector3(
-            x = GodotReal.readIndex(valueRet, 0),
-            y = GodotReal.readIndex(valueRet, 1),
-            z = GodotReal.readIndex(valueRet, 2),
+            x = GodotRealSegment.readIndex(valueRet, 0),
+            y = GodotRealSegment.readIndex(valueRet, 1),
+            z = GodotRealSegment.readIndex(valueRet, 2),
           )
       }
       return values
@@ -1218,10 +1219,10 @@ object BuiltinTypes {
         )
         values +=
           Vector4(
-            x = GodotReal.readIndex(valueRet, 0),
-            y = GodotReal.readIndex(valueRet, 1),
-            z = GodotReal.readIndex(valueRet, 2),
-            w = GodotReal.readIndex(valueRet, 3),
+            x = GodotRealSegment.readIndex(valueRet, 0),
+            y = GodotRealSegment.readIndex(valueRet, 1),
+            z = GodotRealSegment.readIndex(valueRet, 2),
+            w = GodotRealSegment.readIndex(valueRet, 3),
           )
       }
       return values
@@ -2058,16 +2059,16 @@ object BuiltinTypes {
       VariantType.VECTOR2 -> {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.VECTOR2).invoke(scratch, variant)
-        Vector2(x = GodotReal.readIndex(scratch, 0), y = GodotReal.readIndex(scratch, 1))
+        Vector2(x = GodotRealSegment.readIndex(scratch, 0), y = GodotRealSegment.readIndex(scratch, 1))
       }
 
       VariantType.VECTOR3 -> {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.VECTOR3).invoke(scratch, variant)
         Vector3(
-          x = GodotReal.readIndex(scratch, 0),
-          y = GodotReal.readIndex(scratch, 1),
-          z = GodotReal.readIndex(scratch, 2),
+          x = GodotRealSegment.readIndex(scratch, 0),
+          y = GodotRealSegment.readIndex(scratch, 1),
+          z = GodotRealSegment.readIndex(scratch, 2),
         )
       }
 
@@ -2122,10 +2123,10 @@ object BuiltinTypes {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.QUATERNION).invoke(scratch, variant)
         Quaternion(
-          x = GodotReal.readIndex(scratch, 0),
-          y = GodotReal.readIndex(scratch, 1),
-          z = GodotReal.readIndex(scratch, 2),
-          w = GodotReal.readIndex(scratch, 3),
+          x = GodotRealSegment.readIndex(scratch, 0),
+          y = GodotRealSegment.readIndex(scratch, 1),
+          z = GodotRealSegment.readIndex(scratch, 2),
+          w = GodotRealSegment.readIndex(scratch, 3),
         )
       }
 
@@ -2133,10 +2134,10 @@ object BuiltinTypes {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.VECTOR4).invoke(scratch, variant)
         Vector4(
-          x = GodotReal.readIndex(scratch, 0),
-          y = GodotReal.readIndex(scratch, 1),
-          z = GodotReal.readIndex(scratch, 2),
-          w = GodotReal.readIndex(scratch, 3),
+          x = GodotRealSegment.readIndex(scratch, 0),
+          y = GodotRealSegment.readIndex(scratch, 1),
+          z = GodotRealSegment.readIndex(scratch, 2),
+          w = GodotRealSegment.readIndex(scratch, 3),
         )
       }
 
@@ -2144,8 +2145,8 @@ object BuiltinTypes {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.RECT2).invoke(scratch, variant)
         Rect2(
-          position = Vector2(GodotReal.readIndex(scratch, 0), GodotReal.readIndex(scratch, 1)),
-          size = Vector2(GodotReal.readIndex(scratch, 2), GodotReal.readIndex(scratch, 3)),
+          position = Vector2(GodotRealSegment.readIndex(scratch, 0), GodotRealSegment.readIndex(scratch, 1)),
+          size = Vector2(GodotRealSegment.readIndex(scratch, 2), GodotRealSegment.readIndex(scratch, 3)),
         )
       }
 
@@ -2155,15 +2156,15 @@ object BuiltinTypes {
         AABB(
           position =
             Vector3(
-              GodotReal.readIndex(scratch, 0),
-              GodotReal.readIndex(scratch, 1),
-              GodotReal.readIndex(scratch, 2),
+              GodotRealSegment.readIndex(scratch, 0),
+              GodotRealSegment.readIndex(scratch, 1),
+              GodotRealSegment.readIndex(scratch, 2),
             ),
           size =
             Vector3(
-              GodotReal.readIndex(scratch, 3),
-              GodotReal.readIndex(scratch, 4),
-              GodotReal.readIndex(scratch, 5),
+              GodotRealSegment.readIndex(scratch, 3),
+              GodotRealSegment.readIndex(scratch, 4),
+              GodotRealSegment.readIndex(scratch, 5),
             ),
         )
       }
@@ -2174,11 +2175,11 @@ object BuiltinTypes {
         Plane(
           normal =
             Vector3(
-              GodotReal.readIndex(scratch, 0),
-              GodotReal.readIndex(scratch, 1),
-              GodotReal.readIndex(scratch, 2),
+              GodotRealSegment.readIndex(scratch, 0),
+              GodotRealSegment.readIndex(scratch, 1),
+              GodotRealSegment.readIndex(scratch, 2),
             ),
-          d = GodotReal.readIndex(scratch, 3),
+          d = GodotRealSegment.readIndex(scratch, 3),
         )
       }
 
@@ -2188,21 +2189,21 @@ object BuiltinTypes {
         Basis(
           x =
             Vector3(
-              GodotReal.readIndex(scratch, 0),
-              GodotReal.readIndex(scratch, 3),
-              GodotReal.readIndex(scratch, 6),
+              GodotRealSegment.readIndex(scratch, 0),
+              GodotRealSegment.readIndex(scratch, 3),
+              GodotRealSegment.readIndex(scratch, 6),
             ),
           y =
             Vector3(
-              GodotReal.readIndex(scratch, 1),
-              GodotReal.readIndex(scratch, 4),
-              GodotReal.readIndex(scratch, 7),
+              GodotRealSegment.readIndex(scratch, 1),
+              GodotRealSegment.readIndex(scratch, 4),
+              GodotRealSegment.readIndex(scratch, 7),
             ),
           z =
             Vector3(
-              GodotReal.readIndex(scratch, 2),
-              GodotReal.readIndex(scratch, 5),
-              GodotReal.readIndex(scratch, 8),
+              GodotRealSegment.readIndex(scratch, 2),
+              GodotRealSegment.readIndex(scratch, 5),
+              GodotRealSegment.readIndex(scratch, 8),
             ),
         )
       }
@@ -2215,28 +2216,28 @@ object BuiltinTypes {
             Basis(
               x =
                 Vector3(
-                  GodotReal.readIndex(scratch, 0),
-                  GodotReal.readIndex(scratch, 3),
-                  GodotReal.readIndex(scratch, 6),
+                  GodotRealSegment.readIndex(scratch, 0),
+                  GodotRealSegment.readIndex(scratch, 3),
+                  GodotRealSegment.readIndex(scratch, 6),
                 ),
               y =
                 Vector3(
-                  GodotReal.readIndex(scratch, 1),
-                  GodotReal.readIndex(scratch, 4),
-                  GodotReal.readIndex(scratch, 7),
+                  GodotRealSegment.readIndex(scratch, 1),
+                  GodotRealSegment.readIndex(scratch, 4),
+                  GodotRealSegment.readIndex(scratch, 7),
                 ),
               z =
                 Vector3(
-                  GodotReal.readIndex(scratch, 2),
-                  GodotReal.readIndex(scratch, 5),
-                  GodotReal.readIndex(scratch, 8),
+                  GodotRealSegment.readIndex(scratch, 2),
+                  GodotRealSegment.readIndex(scratch, 5),
+                  GodotRealSegment.readIndex(scratch, 8),
                 ),
             ),
           origin =
             Vector3(
-              GodotReal.readIndex(scratch, 9),
-              GodotReal.readIndex(scratch, 10),
-              GodotReal.readIndex(scratch, 11),
+              GodotRealSegment.readIndex(scratch, 9),
+              GodotRealSegment.readIndex(scratch, 10),
+              GodotRealSegment.readIndex(scratch, 11),
             ),
         )
       }
@@ -2245,9 +2246,9 @@ object BuiltinTypes {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.TRANSFORM2D).invoke(scratch, variant)
         Transform2D(
-          x = Vector2(GodotReal.readIndex(scratch, 0), GodotReal.readIndex(scratch, 1)),
-          y = Vector2(GodotReal.readIndex(scratch, 2), GodotReal.readIndex(scratch, 3)),
-          origin = Vector2(GodotReal.readIndex(scratch, 4), GodotReal.readIndex(scratch, 5)),
+          x = Vector2(GodotRealSegment.readIndex(scratch, 0), GodotRealSegment.readIndex(scratch, 1)),
+          y = Vector2(GodotRealSegment.readIndex(scratch, 2), GodotRealSegment.readIndex(scratch, 3)),
+          origin = Vector2(GodotRealSegment.readIndex(scratch, 4), GodotRealSegment.readIndex(scratch, 5)),
         )
       }
 
@@ -2256,10 +2257,10 @@ object BuiltinTypes {
         VariantConverters.variantToType(VariantType.PROJECTION).invoke(scratch, variant)
         fun col(index: Long) =
           Vector4(
-            GodotReal.readIndex(scratch, index),
-            GodotReal.readIndex(scratch, index + 1),
-            GodotReal.readIndex(scratch, index + 2),
-            GodotReal.readIndex(scratch, index + 3),
+            GodotRealSegment.readIndex(scratch, index),
+            GodotRealSegment.readIndex(scratch, index + 1),
+            GodotRealSegment.readIndex(scratch, index + 2),
+            GodotRealSegment.readIndex(scratch, index + 3),
           )
         Projection(col(0), col(4), col(8), col(12))
       }
@@ -2492,16 +2493,16 @@ object BuiltinTypes {
 
   private fun variantFromVector2Into(value: Vector2, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.x)
-    GodotReal.writeIndex(scratch, 1, value.y)
+    GodotRealSegment.writeIndex(scratch, 0, value.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.y)
     VariantConverters.variantFromType(VariantType.VECTOR2).invoke(variantOut, scratch)
   }
 
   private fun variantFromVector3Into(value: Vector3, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.x)
-    GodotReal.writeIndex(scratch, 1, value.y)
-    GodotReal.writeIndex(scratch, 2, value.z)
+    GodotRealSegment.writeIndex(scratch, 0, value.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.y)
+    GodotRealSegment.writeIndex(scratch, 2, value.z)
     VariantConverters.variantFromType(VariantType.VECTOR3).invoke(variantOut, scratch)
   }
 
@@ -2544,62 +2545,62 @@ object BuiltinTypes {
     arena: Arena,
   ) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.x)
-    GodotReal.writeIndex(scratch, 1, value.y)
-    GodotReal.writeIndex(scratch, 2, value.z)
-    GodotReal.writeIndex(scratch, 3, value.w)
+    GodotRealSegment.writeIndex(scratch, 0, value.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.y)
+    GodotRealSegment.writeIndex(scratch, 2, value.z)
+    GodotRealSegment.writeIndex(scratch, 3, value.w)
     VariantConverters.variantFromType(VariantType.QUATERNION).invoke(variantOut, scratch)
   }
 
   private fun variantFromVector4Into(value: Vector4, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.x)
-    GodotReal.writeIndex(scratch, 1, value.y)
-    GodotReal.writeIndex(scratch, 2, value.z)
-    GodotReal.writeIndex(scratch, 3, value.w)
+    GodotRealSegment.writeIndex(scratch, 0, value.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.y)
+    GodotRealSegment.writeIndex(scratch, 2, value.z)
+    GodotRealSegment.writeIndex(scratch, 3, value.w)
     VariantConverters.variantFromType(VariantType.VECTOR4).invoke(variantOut, scratch)
   }
 
   private fun variantFromRect2Into(value: Rect2, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.position.x)
-    GodotReal.writeIndex(scratch, 1, value.position.y)
-    GodotReal.writeIndex(scratch, 2, value.size.x)
-    GodotReal.writeIndex(scratch, 3, value.size.y)
+    GodotRealSegment.writeIndex(scratch, 0, value.position.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.position.y)
+    GodotRealSegment.writeIndex(scratch, 2, value.size.x)
+    GodotRealSegment.writeIndex(scratch, 3, value.size.y)
     VariantConverters.variantFromType(VariantType.RECT2).invoke(variantOut, scratch)
   }
 
   private fun variantFromAABBInto(value: AABB, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.position.x)
-    GodotReal.writeIndex(scratch, 1, value.position.y)
-    GodotReal.writeIndex(scratch, 2, value.position.z)
-    GodotReal.writeIndex(scratch, 3, value.size.x)
-    GodotReal.writeIndex(scratch, 4, value.size.y)
-    GodotReal.writeIndex(scratch, 5, value.size.z)
+    GodotRealSegment.writeIndex(scratch, 0, value.position.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.position.y)
+    GodotRealSegment.writeIndex(scratch, 2, value.position.z)
+    GodotRealSegment.writeIndex(scratch, 3, value.size.x)
+    GodotRealSegment.writeIndex(scratch, 4, value.size.y)
+    GodotRealSegment.writeIndex(scratch, 5, value.size.z)
     VariantConverters.variantFromType(VariantType.AABB).invoke(variantOut, scratch)
   }
 
   private fun variantFromPlaneInto(value: Plane, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.normal.x)
-    GodotReal.writeIndex(scratch, 1, value.normal.y)
-    GodotReal.writeIndex(scratch, 2, value.normal.z)
-    GodotReal.writeIndex(scratch, 3, value.d)
+    GodotRealSegment.writeIndex(scratch, 0, value.normal.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.normal.y)
+    GodotRealSegment.writeIndex(scratch, 2, value.normal.z)
+    GodotRealSegment.writeIndex(scratch, 3, value.d)
     VariantConverters.variantFromType(VariantType.PLANE).invoke(variantOut, scratch)
   }
 
   private fun variantFromBasisInto(value: Basis, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.x.x)
-    GodotReal.writeIndex(scratch, 1, value.y.x)
-    GodotReal.writeIndex(scratch, 2, value.z.x)
-    GodotReal.writeIndex(scratch, 3, value.x.y)
-    GodotReal.writeIndex(scratch, 4, value.y.y)
-    GodotReal.writeIndex(scratch, 5, value.z.y)
-    GodotReal.writeIndex(scratch, 6, value.x.z)
-    GodotReal.writeIndex(scratch, 7, value.y.z)
-    GodotReal.writeIndex(scratch, 8, value.z.z)
+    GodotRealSegment.writeIndex(scratch, 0, value.x.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.y.x)
+    GodotRealSegment.writeIndex(scratch, 2, value.z.x)
+    GodotRealSegment.writeIndex(scratch, 3, value.x.y)
+    GodotRealSegment.writeIndex(scratch, 4, value.y.y)
+    GodotRealSegment.writeIndex(scratch, 5, value.z.y)
+    GodotRealSegment.writeIndex(scratch, 6, value.x.z)
+    GodotRealSegment.writeIndex(scratch, 7, value.y.z)
+    GodotRealSegment.writeIndex(scratch, 8, value.z.z)
     VariantConverters.variantFromType(VariantType.BASIS).invoke(variantOut, scratch)
   }
 
@@ -2609,18 +2610,18 @@ object BuiltinTypes {
     arena: Arena,
   ) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.basis.x.x)
-    GodotReal.writeIndex(scratch, 1, value.basis.y.x)
-    GodotReal.writeIndex(scratch, 2, value.basis.z.x)
-    GodotReal.writeIndex(scratch, 3, value.basis.x.y)
-    GodotReal.writeIndex(scratch, 4, value.basis.y.y)
-    GodotReal.writeIndex(scratch, 5, value.basis.z.y)
-    GodotReal.writeIndex(scratch, 6, value.basis.x.z)
-    GodotReal.writeIndex(scratch, 7, value.basis.y.z)
-    GodotReal.writeIndex(scratch, 8, value.basis.z.z)
-    GodotReal.writeIndex(scratch, 9, value.origin.x)
-    GodotReal.writeIndex(scratch, 10, value.origin.y)
-    GodotReal.writeIndex(scratch, 11, value.origin.z)
+    GodotRealSegment.writeIndex(scratch, 0, value.basis.x.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.basis.y.x)
+    GodotRealSegment.writeIndex(scratch, 2, value.basis.z.x)
+    GodotRealSegment.writeIndex(scratch, 3, value.basis.x.y)
+    GodotRealSegment.writeIndex(scratch, 4, value.basis.y.y)
+    GodotRealSegment.writeIndex(scratch, 5, value.basis.z.y)
+    GodotRealSegment.writeIndex(scratch, 6, value.basis.x.z)
+    GodotRealSegment.writeIndex(scratch, 7, value.basis.y.z)
+    GodotRealSegment.writeIndex(scratch, 8, value.basis.z.z)
+    GodotRealSegment.writeIndex(scratch, 9, value.origin.x)
+    GodotRealSegment.writeIndex(scratch, 10, value.origin.y)
+    GodotRealSegment.writeIndex(scratch, 11, value.origin.z)
     VariantConverters.variantFromType(VariantType.TRANSFORM3D).invoke(variantOut, scratch)
   }
 
@@ -2630,12 +2631,12 @@ object BuiltinTypes {
     arena: Arena,
   ) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-    GodotReal.writeIndex(scratch, 0, value.x.x)
-    GodotReal.writeIndex(scratch, 1, value.x.y)
-    GodotReal.writeIndex(scratch, 2, value.y.x)
-    GodotReal.writeIndex(scratch, 3, value.y.y)
-    GodotReal.writeIndex(scratch, 4, value.origin.x)
-    GodotReal.writeIndex(scratch, 5, value.origin.y)
+    GodotRealSegment.writeIndex(scratch, 0, value.x.x)
+    GodotRealSegment.writeIndex(scratch, 1, value.x.y)
+    GodotRealSegment.writeIndex(scratch, 2, value.y.x)
+    GodotRealSegment.writeIndex(scratch, 3, value.y.y)
+    GodotRealSegment.writeIndex(scratch, 4, value.origin.x)
+    GodotRealSegment.writeIndex(scratch, 5, value.origin.y)
     VariantConverters.variantFromType(VariantType.TRANSFORM2D).invoke(variantOut, scratch)
   }
 
@@ -2646,10 +2647,10 @@ object BuiltinTypes {
   ) {
     val scratch = arena.allocate(GodotReal.SIZE_BYTES * 16, GodotReal.ALIGN_BYTES)
     fun writeCol(index: Long, c: Vector4) {
-      GodotReal.writeIndex(scratch, index, c.x)
-      GodotReal.writeIndex(scratch, index + 1, c.y)
-      GodotReal.writeIndex(scratch, index + 2, c.z)
-      GodotReal.writeIndex(scratch, index + 3, c.w)
+      GodotRealSegment.writeIndex(scratch, index, c.x)
+      GodotRealSegment.writeIndex(scratch, index + 1, c.y)
+      GodotRealSegment.writeIndex(scratch, index + 2, c.z)
+      GodotRealSegment.writeIndex(scratch, index + 3, c.w)
     }
     writeCol(0, value.x)
     writeCol(4, value.y)

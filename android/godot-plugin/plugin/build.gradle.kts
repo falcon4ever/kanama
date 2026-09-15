@@ -20,13 +20,20 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
         }
     }
 
-    from(kanamaRoot.dir("src/main/kotlin")) {
+    from(kanamaRoot.dir("src/jvmMain/kotlin")) {
         exclude("example/**")
         remapForeignImports()
     }
-    // The shared generated wrapper tree (task 103): the same files the root JVM module and
-    // :ios-runtime compile, remapped exactly like the desktop sources.
+    // The shared generated wrapper tree (task 103), now src/sharedApi: the same files the root
+    // module's JVM and iOS targets compile, remapped exactly like the desktop sources.
+    from(kanamaRoot.dir("src/sharedApi/kotlin")) {
+        remapForeignImports()
+    }
+    // The root module's KMP common fragment (task 104 step 3 parcel C'): the value types,
+    // GodotHandle and the expect seams. `*.expect.kt` files are skipped -- an expect declaration
+    // has no body to remap and Android compiles the jvmMain actual with its `actual ` stripped.
     from(kanamaRoot.dir("src/commonMain/kotlin")) {
+        exclude("**/*.expect.kt")
         remapForeignImports()
     }
     from(kanamaRoot.dir("annotations/src/main/kotlin")) {
@@ -34,6 +41,9 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
     }
 
     doLast {
+        // The root module generates real_t into commonMain (`generateKanamaReal`) and the Panama
+        // accessors into jvmMain (`generateKanamaRealSegment`); neither is a tracked source file,
+        // so the Android tree writes both here, single precision, with the remapped FFM package.
         val realFile = androidKanamaSources.get().file(
             "net/multigesture/kanama/types/Real.kt",
         ).asFile
@@ -61,12 +71,14 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
             |    fun fromC(value: Float): real_t = value
             |
             |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
+            |}
             |
+            |object GodotRealSegment {
             |    fun readIndex(segment: MemorySegment, index: Long): real_t =
-            |        segment.get(JAVA_FLOAT, byteOffset(index))
+            |        segment.get(JAVA_FLOAT, GodotReal.byteOffset(index))
             |
             |    fun writeIndex(segment: MemorySegment, index: Long, value: real_t) {
-            |        segment.set(JAVA_FLOAT, byteOffset(index), value)
+            |        segment.set(JAVA_FLOAT, GodotReal.byteOffset(index), value)
             |    }
             |}
             |""".trimMargin(),

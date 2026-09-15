@@ -66,8 +66,8 @@ EXTENSION_API_PATH = ROOT / "extension_api.json"
 # question any real blocker asks, and answering it repo-wide would make the
 # audit fire on unrelated trees.
 SYMBOL_TREES = {
-    "desktop": "src/main/kotlin",
-    "ios": "ios-runtime/src",
+    "desktop": "src/jvmMain/kotlin",
+    "ios": "src/iosMain",
     "web": "web-runtime/src",
     "processor": "processor/src/main/kotlin",
     "example": "example_project",

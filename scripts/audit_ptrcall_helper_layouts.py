@@ -27,7 +27,7 @@ from audit_wrapper_signatures import HelperShape, helper_shape
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OBJECT_CALLS = ROOT / "src/main/kotlin/binding/runtime/ObjectCalls.kt"
+OBJECT_CALLS = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt"
 
 FUN_RE = re.compile(r"fun\s+(?P<name>ptrcall[A-Za-z0-9_]*)\s*\(")
 ARRAY_ALLOC_RE = re.compile(r"val\s+(?P<name>\w+)\s*=\s*arena\.allocate\(ADDRESS,\s*(?P<count>\d+)\)")

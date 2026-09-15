@@ -583,9 +583,9 @@ def scan_wrappers(api_dir: Path) -> dict[str, set[str]]:
 # hand-shaped classes, the classes generated for one platform only, and the generated companion
 # files (`<Class>.jvm.kt` desktop-only members, `<Class>.ios.kt` iOS-only sugar).
 ROOT = Path(__file__).resolve().parents[1]
-SHARED_API_DIR = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api"
-DESKTOP_API_DIR = ROOT / "src/main/kotlin/net/multigesture/kanama/api"
-IOS_API_DIR = ROOT / "ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api"
+SHARED_API_DIR = ROOT / "src/sharedApi/kotlin/net/multigesture/kanama/api"
+DESKTOP_API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
+IOS_API_DIR = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"
 PLATFORM_API_DIRS = (DESKTOP_API_DIR, IOS_API_DIR)
 
 

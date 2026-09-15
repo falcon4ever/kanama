@@ -24,6 +24,7 @@ import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.GodotReal
+import net.multigesture.kanama.types.GodotRealSegment
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Projection
@@ -3731,7 +3732,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -3748,9 +3749,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -4640,9 +4641,9 @@ object ObjectCalls {
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
       valueCell.set(JAVA_INT, 0, value)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
-      GodotReal.writeIndex(vectorCell, 2, vector.z)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 2, vector.z)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4975,9 +4976,9 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
-      GodotReal.writeIndex(vectorCell, 2, value.z)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 2, value.z)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -4997,12 +4998,12 @@ object ObjectCalls {
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, arg0)
@@ -5025,12 +5026,12 @@ object ObjectCalls {
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val boolCell = arena.allocate(JAVA_BYTE)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, ridCell)
@@ -5040,9 +5041,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -5057,18 +5058,18 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
-      GodotReal.writeIndex(vectorCell, 2, value.z)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 2, value.z)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -5083,9 +5084,9 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
-      GodotReal.writeIndex(vectorCell, 2, value.z)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 2, value.z)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -5105,9 +5106,9 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
-      GodotReal.writeIndex(vectorCell, 2, value.z)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 2, value.z)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -5127,8 +5128,8 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -5146,14 +5147,14 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -5167,8 +5168,8 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -5188,8 +5189,8 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -5211,10 +5212,10 @@ object ObjectCalls {
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, arg0)
@@ -5799,7 +5800,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -5924,8 +5925,8 @@ object ObjectCalls {
       vectorCell.set(JAVA_INT, 0, vector.x)
       vectorCell.set(JAVA_INT, 4, vector.y)
       longCell.set(JAVA_LONG, 0, longValue)
-      GodotReal.writeIndex(valueCell, 0, value.x)
-      GodotReal.writeIndex(valueCell, 1, value.y)
+      GodotRealSegment.writeIndex(valueCell, 0, value.x)
+      GodotRealSegment.writeIndex(valueCell, 1, value.y)
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -6046,8 +6047,8 @@ object ObjectCalls {
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       rid0.set(JAVA_LONG, 0, firstRid.value)
       rid1.set(JAVA_LONG, 0, secondRid.value)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, rid0)
       args.setAtIndex(ADDRESS, 1, rid1)
@@ -6228,8 +6229,8 @@ object ObjectCalls {
       val colorCell = arena.allocate(16L, 4L)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       intCell.set(JAVA_INT, 0, intValue)
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.r)
@@ -6800,8 +6801,8 @@ object ObjectCalls {
       val colorCell = arena.allocate(16L, 4L)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.r)
       colorCell.set(JAVA_FLOAT, 4, color.g)
@@ -7669,7 +7670,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -7694,9 +7695,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -8010,7 +8011,7 @@ object ObjectCalls {
         args.setAtIndex(ADDRESS, 6, orientationCell)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
         objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-        return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+        return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -8062,7 +8063,7 @@ object ObjectCalls {
         args.setAtIndex(ADDRESS, 8, orientationCell)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
         objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-        return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+        return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -9058,8 +9059,8 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, intCell)
 
       val vecCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vecCell, 0, vector2Arg.x)
-      GodotReal.writeIndex(vecCell, 1, vector2Arg.y)
+      GodotRealSegment.writeIndex(vecCell, 0, vector2Arg.x)
+      GodotRealSegment.writeIndex(vecCell, 1, vector2Arg.y)
       arr.setAtIndex(ADDRESS, 2, vecCell)
 
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -9102,8 +9103,8 @@ object ObjectCalls {
       val arg0 = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       arg0.set(JAVA_LONG, 0, value)
-      GodotReal.writeIndex(vec, 0, point.x)
-      GodotReal.writeIndex(vec, 1, point.y)
+      GodotRealSegment.writeIndex(vec, 0, point.x)
+      GodotRealSegment.writeIndex(vec, 1, point.y)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, vec)
@@ -9123,8 +9124,8 @@ object ObjectCalls {
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg2 = arena.allocate(JAVA_DOUBLE)
       arg0.set(JAVA_LONG, 0, value)
-      GodotReal.writeIndex(vec, 0, point.x)
-      GodotReal.writeIndex(vec, 1, point.y)
+      GodotRealSegment.writeIndex(vec, 0, point.x)
+      GodotRealSegment.writeIndex(vec, 1, point.y)
       arg2.set(JAVA_DOUBLE, 0, weight)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, arg0)
@@ -9144,9 +9145,9 @@ object ObjectCalls {
       val arg0 = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       arg0.set(JAVA_LONG, 0, value)
-      GodotReal.writeIndex(vec, 0, point.x)
-      GodotReal.writeIndex(vec, 1, point.y)
-      GodotReal.writeIndex(vec, 2, point.z)
+      GodotRealSegment.writeIndex(vec, 0, point.x)
+      GodotRealSegment.writeIndex(vec, 1, point.y)
+      GodotRealSegment.writeIndex(vec, 2, point.z)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, vec)
@@ -9222,9 +9223,9 @@ object ObjectCalls {
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg2 = arena.allocate(JAVA_DOUBLE)
       arg0.set(JAVA_LONG, 0, value)
-      GodotReal.writeIndex(vec, 0, point.x)
-      GodotReal.writeIndex(vec, 1, point.y)
-      GodotReal.writeIndex(vec, 2, point.z)
+      GodotRealSegment.writeIndex(vec, 0, point.x)
+      GodotRealSegment.writeIndex(vec, 1, point.y)
+      GodotRealSegment.writeIndex(vec, 2, point.z)
       arg2.set(JAVA_DOUBLE, 0, weight)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, arg0)
@@ -9496,18 +9497,18 @@ object ObjectCalls {
       val transform = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
       objCell.set(ADDRESS, 0, objectArg)
       intCell.set(JAVA_INT, 0, intArg)
-      GodotReal.writeIndex(transform, 0, transformArg.basis.x.x)
-      GodotReal.writeIndex(transform, 1, transformArg.basis.y.x)
-      GodotReal.writeIndex(transform, 2, transformArg.basis.z.x)
-      GodotReal.writeIndex(transform, 3, transformArg.basis.x.y)
-      GodotReal.writeIndex(transform, 4, transformArg.basis.y.y)
-      GodotReal.writeIndex(transform, 5, transformArg.basis.z.y)
-      GodotReal.writeIndex(transform, 6, transformArg.basis.x.z)
-      GodotReal.writeIndex(transform, 7, transformArg.basis.y.z)
-      GodotReal.writeIndex(transform, 8, transformArg.basis.z.z)
-      GodotReal.writeIndex(transform, 9, transformArg.origin.x)
-      GodotReal.writeIndex(transform, 10, transformArg.origin.y)
-      GodotReal.writeIndex(transform, 11, transformArg.origin.z)
+      GodotRealSegment.writeIndex(transform, 0, transformArg.basis.x.x)
+      GodotRealSegment.writeIndex(transform, 1, transformArg.basis.y.x)
+      GodotRealSegment.writeIndex(transform, 2, transformArg.basis.z.x)
+      GodotRealSegment.writeIndex(transform, 3, transformArg.basis.x.y)
+      GodotRealSegment.writeIndex(transform, 4, transformArg.basis.y.y)
+      GodotRealSegment.writeIndex(transform, 5, transformArg.basis.z.y)
+      GodotRealSegment.writeIndex(transform, 6, transformArg.basis.x.z)
+      GodotRealSegment.writeIndex(transform, 7, transformArg.basis.y.z)
+      GodotRealSegment.writeIndex(transform, 8, transformArg.basis.z.z)
+      GodotRealSegment.writeIndex(transform, 9, transformArg.origin.x)
+      GodotRealSegment.writeIndex(transform, 10, transformArg.origin.y)
+      GodotRealSegment.writeIndex(transform, 11, transformArg.origin.z)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -14188,7 +14189,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -14408,9 +14409,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -14631,7 +14632,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -14649,9 +14650,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -15110,8 +15111,8 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Rect2(
-        position = Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1)),
-        size = Vector2(x = GodotReal.readIndex(ret, 2), y = GodotReal.readIndex(ret, 3)),
+        position = Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
+        size = Vector2(x = GodotRealSegment.readIndex(ret, 2), y = GodotRealSegment.readIndex(ret, 3)),
       )
     }
   }
@@ -15592,7 +15593,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -15887,9 +15888,9 @@ object ObjectCalls {
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       firstCell.set(JAVA_INT, 0, first)
       secondCell.set(JAVA_INT, 0, second)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, secondCell)
@@ -15961,9 +15962,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -16027,8 +16028,8 @@ object ObjectCalls {
       val arg3 = arena.allocate(JAVA_DOUBLE)
       arg0.set(JAVA_INT, 0, first)
       arg1.set(JAVA_INT, 0, second)
-      GodotReal.writeIndex(arg2, 0, vector.x)
-      GodotReal.writeIndex(arg2, 1, vector.y)
+      GodotRealSegment.writeIndex(arg2, 0, vector.x)
+      GodotRealSegment.writeIndex(arg2, 1, vector.y)
       arg3.set(JAVA_DOUBLE, 0, value)
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -16081,7 +16082,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -16296,7 +16297,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -16817,8 +16818,8 @@ object ObjectCalls {
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val intCell = arena.allocate(JAVA_INT)
       objCell.set(ADDRESS, 0, objectArg)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       intCell.set(JAVA_INT, 0, intArg)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, objCell)
@@ -16957,7 +16958,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -16982,9 +16983,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        GodotReal.readIndex(ret, 0),
-        GodotReal.readIndex(ret, 1),
-        GodotReal.readIndex(ret, 2),
+        GodotRealSegment.readIndex(ret, 0),
+        GodotRealSegment.readIndex(ret, 1),
+        GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -17476,9 +17477,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -17591,7 +17592,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -17612,7 +17613,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -17836,7 +17837,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -18113,10 +18114,10 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Quaternion(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
-        w = GodotReal.readIndex(ret, 3),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
+        w = GodotRealSegment.readIndex(ret, 3),
       )
     }
   }
@@ -18139,9 +18140,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -18285,7 +18286,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -18306,9 +18307,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -18352,10 +18353,10 @@ object ObjectCalls {
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       arg0.set(JAVA_INT, 0, intArg)
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
-      GodotReal.writeIndex(arg2, 0, quaternion.x)
-      GodotReal.writeIndex(arg2, 1, quaternion.y)
-      GodotReal.writeIndex(arg2, 2, quaternion.z)
-      GodotReal.writeIndex(arg2, 3, quaternion.w)
+      GodotRealSegment.writeIndex(arg2, 0, quaternion.x)
+      GodotRealSegment.writeIndex(arg2, 1, quaternion.y)
+      GodotRealSegment.writeIndex(arg2, 2, quaternion.z)
+      GodotRealSegment.writeIndex(arg2, 3, quaternion.w)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -18506,10 +18507,10 @@ object ObjectCalls {
       arg0.set(JAVA_INT, 0, intArg)
       arg1.set(JAVA_DOUBLE, 0, firstDouble)
       arg2.set(JAVA_DOUBLE, 0, secondDouble)
-      GodotReal.writeIndex(arg3, 0, firstVector.x)
-      GodotReal.writeIndex(arg3, 1, firstVector.y)
-      GodotReal.writeIndex(arg4, 0, secondVector.x)
-      GodotReal.writeIndex(arg4, 1, secondVector.y)
+      GodotRealSegment.writeIndex(arg3, 0, firstVector.x)
+      GodotRealSegment.writeIndex(arg3, 1, firstVector.y)
+      GodotRealSegment.writeIndex(arg4, 0, secondVector.x)
+      GodotRealSegment.writeIndex(arg4, 1, secondVector.y)
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -18580,10 +18581,10 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Quaternion(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
-        w = GodotReal.readIndex(ret, 3),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
+        w = GodotRealSegment.readIndex(ret, 3),
       )
     }
   }
@@ -18624,9 +18625,9 @@ object ObjectCalls {
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       arg0.set(JAVA_INT, 0, intArg)
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
-      GodotReal.writeIndex(arg2, 0, vector.x)
-      GodotReal.writeIndex(arg2, 1, vector.y)
-      GodotReal.writeIndex(arg2, 2, vector.z)
+      GodotRealSegment.writeIndex(arg2, 0, vector.x)
+      GodotRealSegment.writeIndex(arg2, 1, vector.y)
+      GodotRealSegment.writeIndex(arg2, 2, vector.z)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -18658,9 +18659,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        GodotReal.readIndex(ret, 0),
-        GodotReal.readIndex(ret, 1),
-        GodotReal.readIndex(ret, 2),
+        GodotRealSegment.readIndex(ret, 0),
+        GodotRealSegment.readIndex(ret, 1),
+        GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -18819,18 +18820,18 @@ object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       intCell.set(JAVA_INT, 0, intArg)
       val transform = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(transform, 0, transformArg.basis.x.x)
-      GodotReal.writeIndex(transform, 1, transformArg.basis.y.x)
-      GodotReal.writeIndex(transform, 2, transformArg.basis.z.x)
-      GodotReal.writeIndex(transform, 3, transformArg.basis.x.y)
-      GodotReal.writeIndex(transform, 4, transformArg.basis.y.y)
-      GodotReal.writeIndex(transform, 5, transformArg.basis.z.y)
-      GodotReal.writeIndex(transform, 6, transformArg.basis.x.z)
-      GodotReal.writeIndex(transform, 7, transformArg.basis.y.z)
-      GodotReal.writeIndex(transform, 8, transformArg.basis.z.z)
-      GodotReal.writeIndex(transform, 9, transformArg.origin.x)
-      GodotReal.writeIndex(transform, 10, transformArg.origin.y)
-      GodotReal.writeIndex(transform, 11, transformArg.origin.z)
+      GodotRealSegment.writeIndex(transform, 0, transformArg.basis.x.x)
+      GodotRealSegment.writeIndex(transform, 1, transformArg.basis.y.x)
+      GodotRealSegment.writeIndex(transform, 2, transformArg.basis.z.x)
+      GodotRealSegment.writeIndex(transform, 3, transformArg.basis.x.y)
+      GodotRealSegment.writeIndex(transform, 4, transformArg.basis.y.y)
+      GodotRealSegment.writeIndex(transform, 5, transformArg.basis.z.y)
+      GodotRealSegment.writeIndex(transform, 6, transformArg.basis.x.z)
+      GodotRealSegment.writeIndex(transform, 7, transformArg.basis.y.z)
+      GodotRealSegment.writeIndex(transform, 8, transformArg.basis.z.z)
+      GodotRealSegment.writeIndex(transform, 9, transformArg.origin.x)
+      GodotRealSegment.writeIndex(transform, 10, transformArg.origin.y)
+      GodotRealSegment.writeIndex(transform, 11, transformArg.origin.z)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, transform)
@@ -19220,8 +19221,8 @@ object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       arr.setAtIndex(ADDRESS, 1, vec)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
     }
@@ -19709,7 +19710,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -21415,8 +21416,8 @@ object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       intCell.set(JAVA_INT, 0, value)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vectorCell)
@@ -21879,8 +21880,8 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, objCell)
 
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       arr.setAtIndex(ADDRESS, 2, vectorCell)
 
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -24397,7 +24398,7 @@ object ObjectCalls {
 
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -24406,8 +24407,8 @@ object ObjectCalls {
     val scratch = ptrcallScratch.get()
     objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, scratch.vector2Ret)
     return Vector2(
-      x = GodotReal.readIndex(scratch.vector2Ret, 0),
-      y = GodotReal.readIndex(scratch.vector2Ret, 1),
+      x = GodotRealSegment.readIndex(scratch.vector2Ret, 0),
+      y = GodotRealSegment.readIndex(scratch.vector2Ret, 1),
     )
   }
 
@@ -24416,8 +24417,8 @@ object ObjectCalls {
     val ret = ptrcallScratch.get().rect2Ret
     objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
     return Rect2(
-      position = Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1)),
-      size = Vector2(x = GodotReal.readIndex(ret, 2), y = GodotReal.readIndex(ret, 3)),
+      position = Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
+      size = Vector2(x = GodotRealSegment.readIndex(ret, 2), y = GodotRealSegment.readIndex(ret, 3)),
     )
   }
 
@@ -24456,11 +24457,11 @@ object ObjectCalls {
       return Plane(
         normal =
           Vector3(
-            x = GodotReal.readIndex(ret, 0),
-            y = GodotReal.readIndex(ret, 1),
-            z = GodotReal.readIndex(ret, 2),
+            x = GodotRealSegment.readIndex(ret, 0),
+            y = GodotRealSegment.readIndex(ret, 1),
+            z = GodotRealSegment.readIndex(ret, 2),
           ),
-        d = GodotReal.readIndex(ret, 3),
+        d = GodotRealSegment.readIndex(ret, 3),
       )
     }
   }
@@ -24468,10 +24469,10 @@ object ObjectCalls {
   fun ptrcallWithPlaneArg(methodBind: MemorySegment, instance: MemorySegment, value: Plane) {
     Arena.ofConfined().use { arena ->
       val plane = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(plane, 0, value.normal.x)
-      GodotReal.writeIndex(plane, 1, value.normal.y)
-      GodotReal.writeIndex(plane, 2, value.normal.z)
-      GodotReal.writeIndex(plane, 3, value.d)
+      GodotRealSegment.writeIndex(plane, 0, value.normal.x)
+      GodotRealSegment.writeIndex(plane, 1, value.normal.y)
+      GodotRealSegment.writeIndex(plane, 2, value.normal.z)
+      GodotRealSegment.writeIndex(plane, 3, value.d)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, plane)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -24488,10 +24489,10 @@ object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       val plane = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       intCell.set(JAVA_INT, 0, intValue)
-      GodotReal.writeIndex(plane, 0, value.normal.x)
-      GodotReal.writeIndex(plane, 1, value.normal.y)
-      GodotReal.writeIndex(plane, 2, value.normal.z)
-      GodotReal.writeIndex(plane, 3, value.d)
+      GodotRealSegment.writeIndex(plane, 0, value.normal.x)
+      GodotRealSegment.writeIndex(plane, 1, value.normal.y)
+      GodotRealSegment.writeIndex(plane, 2, value.normal.z)
+      GodotRealSegment.writeIndex(plane, 3, value.d)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, plane)
@@ -24537,8 +24538,8 @@ object ObjectCalls {
       val color1 = arena.allocate(16L, 4L)
       val flagsCell = arena.allocate(JAVA_LONG)
       writeTransform2D(transform, transformValue)
-      GodotReal.writeIndex(vector, 0, vectorValue.x)
-      GodotReal.writeIndex(vector, 1, vectorValue.y)
+      GodotRealSegment.writeIndex(vector, 0, vectorValue.x)
+      GodotRealSegment.writeIndex(vector, 1, vectorValue.y)
       color0.set(JAVA_FLOAT, 0, firstColor.r)
       color0.set(JAVA_FLOAT, 4, firstColor.g)
       color0.set(JAVA_FLOAT, 8, firstColor.b)
@@ -24638,8 +24639,8 @@ object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val arg = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg, 0, value.x)
-      GodotReal.writeIndex(arg, 1, value.y)
+      GodotRealSegment.writeIndex(arg, 0, value.x)
+      GodotRealSegment.writeIndex(arg, 1, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_INT)
@@ -24653,9 +24654,9 @@ object ObjectCalls {
     val ret = ptrcallScratch.get().vector3Ret
     objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
     return Vector3(
-      x = GodotReal.readIndex(ret, 0),
-      y = GodotReal.readIndex(ret, 1),
-      z = GodotReal.readIndex(ret, 2),
+      x = GodotRealSegment.readIndex(ret, 0),
+      y = GodotRealSegment.readIndex(ret, 1),
+      z = GodotRealSegment.readIndex(ret, 2),
     )
   }
 
@@ -24670,10 +24671,10 @@ object ObjectCalls {
   fun ptrcallWithVector4Arg(methodBind: MemorySegment, instance: MemorySegment, value: Vector4) {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
-      GodotReal.writeIndex(vec, 3, value.w)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 3, value.w)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -24684,9 +24685,9 @@ object ObjectCalls {
   fun ptrcallWithVector3Arg(methodBind: MemorySegment, instance: MemorySegment, value: Vector3) {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -24703,9 +24704,9 @@ object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       intCell.set(JAVA_INT, 0, intArg)
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vec)
@@ -24723,9 +24724,9 @@ object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       intCell.set(JAVA_INT, 0, intArg)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vec)
@@ -24764,17 +24765,17 @@ object ObjectCalls {
   ): Vector3 {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -24786,9 +24787,9 @@ object ObjectCalls {
   ): Double {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_DOUBLE)
@@ -24804,9 +24805,9 @@ object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_BYTE)
@@ -24822,14 +24823,14 @@ object ObjectCalls {
   ): Vector2 {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -24840,9 +24841,9 @@ object ObjectCalls {
   ): Vector3i {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(12L, 4L)
@@ -24860,9 +24861,9 @@ object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val amountCell = arena.allocate(JAVA_DOUBLE)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       amountCell.set(JAVA_DOUBLE, 0, amount)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
@@ -24880,9 +24881,9 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
-      GodotReal.writeIndex(vectorCell, 2, vector.z)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 2, vector.z)
 
       val floatCell = arena.allocate(JAVA_DOUBLE)
       floatCell.set(JAVA_DOUBLE, 0, floatValue)
@@ -24906,9 +24907,9 @@ object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
-      GodotReal.writeIndex(vectorCell, 2, vector.z)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 2, vector.z)
 
       val firstBoolCell = arena.allocate(JAVA_BYTE)
       firstBoolCell.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
@@ -24949,9 +24950,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -25000,21 +25001,21 @@ object ObjectCalls {
     return Basis(
       x =
         Vector3(
-          GodotReal.readIndex(ret, 0),
-          GodotReal.readIndex(ret, 3),
-          GodotReal.readIndex(ret, 6),
+          GodotRealSegment.readIndex(ret, 0),
+          GodotRealSegment.readIndex(ret, 3),
+          GodotRealSegment.readIndex(ret, 6),
         ),
       y =
         Vector3(
-          GodotReal.readIndex(ret, 1),
-          GodotReal.readIndex(ret, 4),
-          GodotReal.readIndex(ret, 7),
+          GodotRealSegment.readIndex(ret, 1),
+          GodotRealSegment.readIndex(ret, 4),
+          GodotRealSegment.readIndex(ret, 7),
         ),
       z =
         Vector3(
-          GodotReal.readIndex(ret, 2),
-          GodotReal.readIndex(ret, 5),
-          GodotReal.readIndex(ret, 8),
+          GodotRealSegment.readIndex(ret, 2),
+          GodotRealSegment.readIndex(ret, 5),
+          GodotRealSegment.readIndex(ret, 8),
         ),
     )
   }
@@ -25022,15 +25023,15 @@ object ObjectCalls {
   fun ptrcallWithBasisArg(methodBind: MemorySegment, instance: MemorySegment, value: Basis) {
     Arena.ofConfined().use { arena ->
       val basis = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(basis, 0, value.x.x)
-      GodotReal.writeIndex(basis, 1, value.y.x)
-      GodotReal.writeIndex(basis, 2, value.z.x)
-      GodotReal.writeIndex(basis, 3, value.x.y)
-      GodotReal.writeIndex(basis, 4, value.y.y)
-      GodotReal.writeIndex(basis, 5, value.z.y)
-      GodotReal.writeIndex(basis, 6, value.x.z)
-      GodotReal.writeIndex(basis, 7, value.y.z)
-      GodotReal.writeIndex(basis, 8, value.z.z)
+      GodotRealSegment.writeIndex(basis, 0, value.x.x)
+      GodotRealSegment.writeIndex(basis, 1, value.y.x)
+      GodotRealSegment.writeIndex(basis, 2, value.z.x)
+      GodotRealSegment.writeIndex(basis, 3, value.x.y)
+      GodotRealSegment.writeIndex(basis, 4, value.y.y)
+      GodotRealSegment.writeIndex(basis, 5, value.z.y)
+      GodotRealSegment.writeIndex(basis, 6, value.x.z)
+      GodotRealSegment.writeIndex(basis, 7, value.y.z)
+      GodotRealSegment.writeIndex(basis, 8, value.z.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, basis)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -25047,15 +25048,15 @@ object ObjectCalls {
       val ridCell = arena.allocate(JAVA_LONG)
       val basis = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      GodotReal.writeIndex(basis, 0, value.x.x)
-      GodotReal.writeIndex(basis, 1, value.y.x)
-      GodotReal.writeIndex(basis, 2, value.z.x)
-      GodotReal.writeIndex(basis, 3, value.x.y)
-      GodotReal.writeIndex(basis, 4, value.y.y)
-      GodotReal.writeIndex(basis, 5, value.z.y)
-      GodotReal.writeIndex(basis, 6, value.x.z)
-      GodotReal.writeIndex(basis, 7, value.y.z)
-      GodotReal.writeIndex(basis, 8, value.z.z)
+      GodotRealSegment.writeIndex(basis, 0, value.x.x)
+      GodotRealSegment.writeIndex(basis, 1, value.y.x)
+      GodotRealSegment.writeIndex(basis, 2, value.z.x)
+      GodotRealSegment.writeIndex(basis, 3, value.x.y)
+      GodotRealSegment.writeIndex(basis, 4, value.y.y)
+      GodotRealSegment.writeIndex(basis, 5, value.z.y)
+      GodotRealSegment.writeIndex(basis, 6, value.x.z)
+      GodotRealSegment.writeIndex(basis, 7, value.y.z)
+      GodotRealSegment.writeIndex(basis, 8, value.z.z)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, ridCell)
       arr.setAtIndex(ADDRESS, 1, basis)
@@ -25070,15 +25071,15 @@ object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val basis = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(basis, 0, value.x.x)
-      GodotReal.writeIndex(basis, 1, value.y.x)
-      GodotReal.writeIndex(basis, 2, value.z.x)
-      GodotReal.writeIndex(basis, 3, value.x.y)
-      GodotReal.writeIndex(basis, 4, value.y.y)
-      GodotReal.writeIndex(basis, 5, value.z.y)
-      GodotReal.writeIndex(basis, 6, value.x.z)
-      GodotReal.writeIndex(basis, 7, value.y.z)
-      GodotReal.writeIndex(basis, 8, value.z.z)
+      GodotRealSegment.writeIndex(basis, 0, value.x.x)
+      GodotRealSegment.writeIndex(basis, 1, value.y.x)
+      GodotRealSegment.writeIndex(basis, 2, value.z.x)
+      GodotRealSegment.writeIndex(basis, 3, value.x.y)
+      GodotRealSegment.writeIndex(basis, 4, value.y.y)
+      GodotRealSegment.writeIndex(basis, 5, value.z.y)
+      GodotRealSegment.writeIndex(basis, 6, value.x.z)
+      GodotRealSegment.writeIndex(basis, 7, value.y.z)
+      GodotRealSegment.writeIndex(basis, 8, value.z.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, basis)
       val ret = arena.allocate(JAVA_LONG)
@@ -25094,15 +25095,15 @@ object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val basis = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(basis, 0, value.x.x)
-      GodotReal.writeIndex(basis, 1, value.y.x)
-      GodotReal.writeIndex(basis, 2, value.z.x)
-      GodotReal.writeIndex(basis, 3, value.x.y)
-      GodotReal.writeIndex(basis, 4, value.y.y)
-      GodotReal.writeIndex(basis, 5, value.z.y)
-      GodotReal.writeIndex(basis, 6, value.x.z)
-      GodotReal.writeIndex(basis, 7, value.y.z)
-      GodotReal.writeIndex(basis, 8, value.z.z)
+      GodotRealSegment.writeIndex(basis, 0, value.x.x)
+      GodotRealSegment.writeIndex(basis, 1, value.y.x)
+      GodotRealSegment.writeIndex(basis, 2, value.z.x)
+      GodotRealSegment.writeIndex(basis, 3, value.x.y)
+      GodotRealSegment.writeIndex(basis, 4, value.y.y)
+      GodotRealSegment.writeIndex(basis, 5, value.z.y)
+      GodotRealSegment.writeIndex(basis, 6, value.x.z)
+      GodotRealSegment.writeIndex(basis, 7, value.y.z)
+      GodotRealSegment.writeIndex(basis, 8, value.z.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, basis)
       val ret = arena.allocate(JAVA_INT)
@@ -25119,28 +25120,28 @@ object ObjectCalls {
         Basis(
           x =
             Vector3(
-              GodotReal.readIndex(ret, 0),
-              GodotReal.readIndex(ret, 3),
-              GodotReal.readIndex(ret, 6),
+              GodotRealSegment.readIndex(ret, 0),
+              GodotRealSegment.readIndex(ret, 3),
+              GodotRealSegment.readIndex(ret, 6),
             ),
           y =
             Vector3(
-              GodotReal.readIndex(ret, 1),
-              GodotReal.readIndex(ret, 4),
-              GodotReal.readIndex(ret, 7),
+              GodotRealSegment.readIndex(ret, 1),
+              GodotRealSegment.readIndex(ret, 4),
+              GodotRealSegment.readIndex(ret, 7),
             ),
           z =
             Vector3(
-              GodotReal.readIndex(ret, 2),
-              GodotReal.readIndex(ret, 5),
-              GodotReal.readIndex(ret, 8),
+              GodotRealSegment.readIndex(ret, 2),
+              GodotRealSegment.readIndex(ret, 5),
+              GodotRealSegment.readIndex(ret, 8),
             ),
         ),
       origin =
         Vector3(
-          GodotReal.readIndex(ret, 9),
-          GodotReal.readIndex(ret, 10),
-          GodotReal.readIndex(ret, 11),
+          GodotRealSegment.readIndex(ret, 9),
+          GodotRealSegment.readIndex(ret, 10),
+          GodotRealSegment.readIndex(ret, 11),
         ),
     )
   }
@@ -25152,18 +25153,18 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val transform = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(transform, 0, value.basis.x.x)
-      GodotReal.writeIndex(transform, 1, value.basis.y.x)
-      GodotReal.writeIndex(transform, 2, value.basis.z.x)
-      GodotReal.writeIndex(transform, 3, value.basis.x.y)
-      GodotReal.writeIndex(transform, 4, value.basis.y.y)
-      GodotReal.writeIndex(transform, 5, value.basis.z.y)
-      GodotReal.writeIndex(transform, 6, value.basis.x.z)
-      GodotReal.writeIndex(transform, 7, value.basis.y.z)
-      GodotReal.writeIndex(transform, 8, value.basis.z.z)
-      GodotReal.writeIndex(transform, 9, value.origin.x)
-      GodotReal.writeIndex(transform, 10, value.origin.y)
-      GodotReal.writeIndex(transform, 11, value.origin.z)
+      GodotRealSegment.writeIndex(transform, 0, value.basis.x.x)
+      GodotRealSegment.writeIndex(transform, 1, value.basis.y.x)
+      GodotRealSegment.writeIndex(transform, 2, value.basis.z.x)
+      GodotRealSegment.writeIndex(transform, 3, value.basis.x.y)
+      GodotRealSegment.writeIndex(transform, 4, value.basis.y.y)
+      GodotRealSegment.writeIndex(transform, 5, value.basis.z.y)
+      GodotRealSegment.writeIndex(transform, 6, value.basis.x.z)
+      GodotRealSegment.writeIndex(transform, 7, value.basis.y.z)
+      GodotRealSegment.writeIndex(transform, 8, value.basis.z.z)
+      GodotRealSegment.writeIndex(transform, 9, value.origin.x)
+      GodotRealSegment.writeIndex(transform, 10, value.origin.y)
+      GodotRealSegment.writeIndex(transform, 11, value.origin.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, transform)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -25186,9 +25187,9 @@ object ObjectCalls {
       val color1 = arena.allocate(16L, 4L)
       val flagsCell = arena.allocate(JAVA_LONG)
       writeTransform3D(transform, transformValue)
-      GodotReal.writeIndex(vector, 0, vectorValue.x)
-      GodotReal.writeIndex(vector, 1, vectorValue.y)
-      GodotReal.writeIndex(vector, 2, vectorValue.z)
+      GodotRealSegment.writeIndex(vector, 0, vectorValue.x)
+      GodotRealSegment.writeIndex(vector, 1, vectorValue.y)
+      GodotRealSegment.writeIndex(vector, 2, vectorValue.z)
       color0.set(JAVA_FLOAT, 0, firstColor.r)
       color0.set(JAVA_FLOAT, 4, firstColor.g)
       color0.set(JAVA_FLOAT, 8, firstColor.b)
@@ -25292,18 +25293,18 @@ object ObjectCalls {
   ): Transform3D {
     Arena.ofConfined().use { arena ->
       val transform = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(transform, 0, transformValue.basis.x.x)
-      GodotReal.writeIndex(transform, 1, transformValue.basis.y.x)
-      GodotReal.writeIndex(transform, 2, transformValue.basis.z.x)
-      GodotReal.writeIndex(transform, 3, transformValue.basis.x.y)
-      GodotReal.writeIndex(transform, 4, transformValue.basis.y.y)
-      GodotReal.writeIndex(transform, 5, transformValue.basis.z.y)
-      GodotReal.writeIndex(transform, 6, transformValue.basis.x.z)
-      GodotReal.writeIndex(transform, 7, transformValue.basis.y.z)
-      GodotReal.writeIndex(transform, 8, transformValue.basis.z.z)
-      GodotReal.writeIndex(transform, 9, transformValue.origin.x)
-      GodotReal.writeIndex(transform, 10, transformValue.origin.y)
-      GodotReal.writeIndex(transform, 11, transformValue.origin.z)
+      GodotRealSegment.writeIndex(transform, 0, transformValue.basis.x.x)
+      GodotRealSegment.writeIndex(transform, 1, transformValue.basis.y.x)
+      GodotRealSegment.writeIndex(transform, 2, transformValue.basis.z.x)
+      GodotRealSegment.writeIndex(transform, 3, transformValue.basis.x.y)
+      GodotRealSegment.writeIndex(transform, 4, transformValue.basis.y.y)
+      GodotRealSegment.writeIndex(transform, 5, transformValue.basis.z.y)
+      GodotRealSegment.writeIndex(transform, 6, transformValue.basis.x.z)
+      GodotRealSegment.writeIndex(transform, 7, transformValue.basis.y.z)
+      GodotRealSegment.writeIndex(transform, 8, transformValue.basis.z.z)
+      GodotRealSegment.writeIndex(transform, 9, transformValue.origin.x)
+      GodotRealSegment.writeIndex(transform, 10, transformValue.origin.y)
+      GodotRealSegment.writeIndex(transform, 11, transformValue.origin.z)
       val longArg = arena.allocate(JAVA_LONG)
       longArg.set(JAVA_LONG, 0, longValue)
       val arr = arena.allocate(ADDRESS, 2)
@@ -25342,31 +25343,31 @@ object ObjectCalls {
       return Projection(
         x =
           Vector4(
-            GodotReal.readIndex(ret, 0),
-            GodotReal.readIndex(ret, 1),
-            GodotReal.readIndex(ret, 2),
-            GodotReal.readIndex(ret, 3),
+            GodotRealSegment.readIndex(ret, 0),
+            GodotRealSegment.readIndex(ret, 1),
+            GodotRealSegment.readIndex(ret, 2),
+            GodotRealSegment.readIndex(ret, 3),
           ),
         y =
           Vector4(
-            GodotReal.readIndex(ret, 4),
-            GodotReal.readIndex(ret, 5),
-            GodotReal.readIndex(ret, 6),
-            GodotReal.readIndex(ret, 7),
+            GodotRealSegment.readIndex(ret, 4),
+            GodotRealSegment.readIndex(ret, 5),
+            GodotRealSegment.readIndex(ret, 6),
+            GodotRealSegment.readIndex(ret, 7),
           ),
         z =
           Vector4(
-            GodotReal.readIndex(ret, 8),
-            GodotReal.readIndex(ret, 9),
-            GodotReal.readIndex(ret, 10),
-            GodotReal.readIndex(ret, 11),
+            GodotRealSegment.readIndex(ret, 8),
+            GodotRealSegment.readIndex(ret, 9),
+            GodotRealSegment.readIndex(ret, 10),
+            GodotRealSegment.readIndex(ret, 11),
           ),
         w =
           Vector4(
-            GodotReal.readIndex(ret, 12),
-            GodotReal.readIndex(ret, 13),
-            GodotReal.readIndex(ret, 14),
-            GodotReal.readIndex(ret, 15),
+            GodotRealSegment.readIndex(ret, 12),
+            GodotRealSegment.readIndex(ret, 13),
+            GodotRealSegment.readIndex(ret, 14),
+            GodotRealSegment.readIndex(ret, 15),
           ),
       )
     }
@@ -25382,14 +25383,14 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
 
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
 
       val arg2 = arena.allocate(JAVA_BYTE)
       arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
@@ -25413,19 +25414,19 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
 
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
 
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg2, 0, third.x)
-      GodotReal.writeIndex(arg2, 1, third.y)
-      GodotReal.writeIndex(arg2, 2, third.z)
+      GodotRealSegment.writeIndex(arg2, 0, third.x)
+      GodotRealSegment.writeIndex(arg2, 1, third.y)
+      GodotRealSegment.writeIndex(arg2, 2, third.z)
 
       val arg3 = arena.allocate(JAVA_BYTE)
       arg3.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
@@ -25448,14 +25449,14 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
 
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
 
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -25473,18 +25474,18 @@ object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -25499,15 +25500,15 @@ object ObjectCalls {
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
-      GodotReal.writeIndex(arg2, 0, third.x)
-      GodotReal.writeIndex(arg2, 1, third.y)
-      GodotReal.writeIndex(arg2, 2, third.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg2, 0, third.x)
+      GodotRealSegment.writeIndex(arg2, 1, third.y)
+      GodotRealSegment.writeIndex(arg2, 2, third.z)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -25515,9 +25516,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        GodotReal.readIndex(ret, 0),
-        GodotReal.readIndex(ret, 1),
-        GodotReal.readIndex(ret, 2),
+        GodotRealSegment.readIndex(ret, 0),
+        GodotRealSegment.readIndex(ret, 1),
+        GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -25557,12 +25558,12 @@ object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg0, 2, first.z)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg1, 2, second.z)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 2, first.z)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 2, second.z)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -25581,10 +25582,10 @@ object ObjectCalls {
     val ret = ptrcallScratch.get().quaternionRet
     objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
     return Quaternion(
-      x = GodotReal.readIndex(ret, 0),
-      y = GodotReal.readIndex(ret, 1),
-      z = GodotReal.readIndex(ret, 2),
-      w = GodotReal.readIndex(ret, 3),
+      x = GodotRealSegment.readIndex(ret, 0),
+      y = GodotRealSegment.readIndex(ret, 1),
+      z = GodotRealSegment.readIndex(ret, 2),
+      w = GodotRealSegment.readIndex(ret, 3),
     )
   }
 
@@ -25601,10 +25602,10 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Quaternion(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
-        w = GodotReal.readIndex(ret, 3),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
+        w = GodotRealSegment.readIndex(ret, 3),
       )
     }
   }
@@ -25617,10 +25618,10 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val q = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(q, 0, value.x)
-      GodotReal.writeIndex(q, 1, value.y)
-      GodotReal.writeIndex(q, 2, value.z)
-      GodotReal.writeIndex(q, 3, value.w)
+      GodotRealSegment.writeIndex(q, 0, value.x)
+      GodotRealSegment.writeIndex(q, 1, value.y)
+      GodotRealSegment.writeIndex(q, 2, value.z)
+      GodotRealSegment.writeIndex(q, 3, value.w)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, q)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
@@ -25637,10 +25638,10 @@ object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       val q = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       intCell.set(JAVA_INT, 0, intArg)
-      GodotReal.writeIndex(q, 0, value.x)
-      GodotReal.writeIndex(q, 1, value.y)
-      GodotReal.writeIndex(q, 2, value.z)
-      GodotReal.writeIndex(q, 3, value.w)
+      GodotRealSegment.writeIndex(q, 0, value.x)
+      GodotRealSegment.writeIndex(q, 1, value.y)
+      GodotRealSegment.writeIndex(q, 2, value.z)
+      GodotRealSegment.writeIndex(q, 3, value.w)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, q)
@@ -25665,10 +25666,10 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Quaternion(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
-        w = GodotReal.readIndex(ret, 3),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
+        w = GodotRealSegment.readIndex(ret, 3),
       )
     }
   }
@@ -25686,10 +25687,10 @@ object ObjectCalls {
       val q = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       arg0.set(JAVA_INT, 0, first)
       arg1.set(JAVA_INT, 0, second)
-      GodotReal.writeIndex(q, 0, value.x)
-      GodotReal.writeIndex(q, 1, value.y)
-      GodotReal.writeIndex(q, 2, value.z)
-      GodotReal.writeIndex(q, 3, value.w)
+      GodotRealSegment.writeIndex(q, 0, value.x)
+      GodotRealSegment.writeIndex(q, 1, value.y)
+      GodotRealSegment.writeIndex(q, 2, value.z)
+      GodotRealSegment.writeIndex(q, 3, value.w)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -25701,8 +25702,8 @@ object ObjectCalls {
   /** Calls [methodBind] with one Vector2 arg and no return value. */
   fun ptrcallWithVector2Arg(methodBind: MemorySegment, instance: MemorySegment, value: Vector2) {
     val scratch = ptrcallScratch.get()
-    GodotReal.writeIndex(scratch.vector2Cell, 0, value.x)
-    GodotReal.writeIndex(scratch.vector2Cell, 1, value.y)
+    GodotRealSegment.writeIndex(scratch.vector2Cell, 0, value.x)
+    GodotRealSegment.writeIndex(scratch.vector2Cell, 1, value.y)
     scratch.args1.setAtIndex(ADDRESS, 0, scratch.vector2Cell)
     objectMethodBindPtrcall.invoke(methodBind, instance, scratch.args1, MemorySegment.NULL)
   }
@@ -25714,13 +25715,13 @@ object ObjectCalls {
   ): Vector2 {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -25731,8 +25732,8 @@ object ObjectCalls {
   ): Vector2i {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(8L, 4L)
@@ -25748,8 +25749,8 @@ object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_BYTE)
@@ -25765,8 +25766,8 @@ object ObjectCalls {
   ): Double {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_DOUBLE)
@@ -25782,16 +25783,16 @@ object ObjectCalls {
   ): Vector3 {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -25805,8 +25806,8 @@ object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       doubleCell.set(JAVA_DOUBLE, 0, value)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vectorCell)
@@ -25814,9 +25815,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -25830,8 +25831,8 @@ object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       doubleCell.set(JAVA_DOUBLE, 0, value)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vectorCell)
@@ -25860,8 +25861,8 @@ object ObjectCalls {
       val firstBoolCell = arena.allocate(JAVA_BYTE)
       val floatCell = arena.allocate(JAVA_DOUBLE)
       val secondBoolCell = arena.allocate(JAVA_BYTE)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       firstBoolCell.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       floatCell.set(JAVA_DOUBLE, 0, floatValue)
       secondBoolCell.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
@@ -25883,8 +25884,8 @@ object ObjectCalls {
   ): String {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(8L, 8L)
@@ -25906,12 +25907,12 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
 
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
 
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -25928,11 +25929,11 @@ object ObjectCalls {
   ): List<Vector2> {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -25957,19 +25958,19 @@ object ObjectCalls {
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(arg0, 0, first.x)
-      GodotReal.writeIndex(arg0, 1, first.y)
-      GodotReal.writeIndex(arg1, 0, second.x)
-      GodotReal.writeIndex(arg1, 1, second.y)
-      GodotReal.writeIndex(arg2, 0, third.x)
-      GodotReal.writeIndex(arg2, 1, third.y)
+      GodotRealSegment.writeIndex(arg0, 0, first.x)
+      GodotRealSegment.writeIndex(arg0, 1, first.y)
+      GodotRealSegment.writeIndex(arg1, 0, second.x)
+      GodotRealSegment.writeIndex(arg1, 1, second.y)
+      GodotRealSegment.writeIndex(arg2, 0, third.x)
+      GodotRealSegment.writeIndex(arg2, 1, third.y)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -26112,7 +26113,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -26694,7 +26695,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -26795,8 +26796,8 @@ object ObjectCalls {
       vec2i.set(JAVA_INT, 0, value.x)
       vec2i.set(JAVA_INT, 4, value.y)
       secondCell.set(JAVA_INT, 0, secondInt)
-      GodotReal.writeIndex(vec2, 0, vector.x)
-      GodotReal.writeIndex(vec2, 1, vector.y)
+      GodotRealSegment.writeIndex(vec2, 0, vector.x)
+      GodotRealSegment.writeIndex(vec2, 1, vector.y)
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, vec2i)
@@ -26897,9 +26898,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -27323,8 +27324,8 @@ object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val boolCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
       boolCell.set(
         java.lang.foreign.ValueLayout.JAVA_BYTE,
@@ -27346,8 +27347,8 @@ object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
@@ -27367,8 +27368,8 @@ object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
@@ -27388,9 +27389,9 @@ object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vec, 0, value.x)
-      GodotReal.writeIndex(vec, 1, value.y)
-      GodotReal.writeIndex(vec, 2, value.z)
+      GodotRealSegment.writeIndex(vec, 0, value.x)
+      GodotRealSegment.writeIndex(vec, 1, value.y)
+      GodotRealSegment.writeIndex(vec, 2, value.z)
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
@@ -28200,9 +28201,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -28223,7 +28224,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -28792,7 +28793,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, doubleCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -28809,9 +28810,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -28885,8 +28886,8 @@ object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      GodotReal.writeIndex(vectorCell, 0, value.x)
-      GodotReal.writeIndex(vectorCell, 1, value.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, value.y)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, vectorCell)
       val ret = arena.allocate(JAVA_LONG)
@@ -29834,7 +29835,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -29898,7 +29899,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -29972,7 +29973,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, vectorCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -30170,7 +30171,7 @@ object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-      return Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1))
+      return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -30359,8 +30360,8 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Rect2(
-        position = Vector2(GodotReal.readIndex(ret, 0), GodotReal.readIndex(ret, 1)),
-        size = Vector2(GodotReal.readIndex(ret, 2), GodotReal.readIndex(ret, 3)),
+        position = Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1)),
+        size = Vector2(GodotRealSegment.readIndex(ret, 2), GodotRealSegment.readIndex(ret, 3)),
       )
     }
   }
@@ -32837,9 +32838,9 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return Vector3(
-        x = GodotReal.readIndex(ret, 0),
-        y = GodotReal.readIndex(ret, 1),
-        z = GodotReal.readIndex(ret, 2),
+        x = GodotRealSegment.readIndex(ret, 0),
+        y = GodotRealSegment.readIndex(ret, 1),
+        z = GodotRealSegment.readIndex(ret, 2),
       )
     }
   }
@@ -34352,8 +34353,8 @@ object ObjectCalls {
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       writeTransform2D(transformCell, transform)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, transformCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -34364,21 +34365,21 @@ object ObjectCalls {
   }
 
   private fun writeRect2(dest: MemorySegment, value: Rect2) {
-    GodotReal.writeIndex(dest, 0, value.position.x)
-    GodotReal.writeIndex(dest, 1, value.position.y)
-    GodotReal.writeIndex(dest, 2, value.size.x)
-    GodotReal.writeIndex(dest, 3, value.size.y)
+    GodotRealSegment.writeIndex(dest, 0, value.position.x)
+    GodotRealSegment.writeIndex(dest, 1, value.position.y)
+    GodotRealSegment.writeIndex(dest, 2, value.size.x)
+    GodotRealSegment.writeIndex(dest, 3, value.size.y)
   }
 
   private fun writeVector2(dest: MemorySegment, value: Vector2) {
-    GodotReal.writeIndex(dest, 0, value.x)
-    GodotReal.writeIndex(dest, 1, value.y)
+    GodotRealSegment.writeIndex(dest, 0, value.x)
+    GodotRealSegment.writeIndex(dest, 1, value.y)
   }
 
   private fun writeVector3(dest: MemorySegment, value: Vector3) {
-    GodotReal.writeIndex(dest, 0, value.x)
-    GodotReal.writeIndex(dest, 1, value.y)
-    GodotReal.writeIndex(dest, 2, value.z)
+    GodotRealSegment.writeIndex(dest, 0, value.x)
+    GodotRealSegment.writeIndex(dest, 1, value.y)
+    GodotRealSegment.writeIndex(dest, 2, value.z)
   }
 
   private fun readVector2i(src: MemorySegment): Vector2i =
@@ -34400,16 +34401,16 @@ object ObjectCalls {
 
   private fun readVector4(src: MemorySegment): Vector4 =
     Vector4(
-      x = GodotReal.readIndex(src, 0),
-      y = GodotReal.readIndex(src, 1),
-      z = GodotReal.readIndex(src, 2),
-      w = GodotReal.readIndex(src, 3),
+      x = GodotRealSegment.readIndex(src, 0),
+      y = GodotRealSegment.readIndex(src, 1),
+      z = GodotRealSegment.readIndex(src, 2),
+      w = GodotRealSegment.readIndex(src, 3),
     )
 
   private fun readRect2(src: MemorySegment): Rect2 =
     Rect2(
-      position = Vector2(GodotReal.readIndex(src, 0), GodotReal.readIndex(src, 1)),
-      size = Vector2(GodotReal.readIndex(src, 2), GodotReal.readIndex(src, 3)),
+      position = Vector2(GodotRealSegment.readIndex(src, 0), GodotRealSegment.readIndex(src, 1)),
+      size = Vector2(GodotRealSegment.readIndex(src, 2), GodotRealSegment.readIndex(src, 3)),
     )
 
   private fun readRect2i(src: MemorySegment): Rect2i =
@@ -34422,74 +34423,74 @@ object ObjectCalls {
     AABB(
       position =
         Vector3(
-          GodotReal.readIndex(src, 0),
-          GodotReal.readIndex(src, 1),
-          GodotReal.readIndex(src, 2),
+          GodotRealSegment.readIndex(src, 0),
+          GodotRealSegment.readIndex(src, 1),
+          GodotRealSegment.readIndex(src, 2),
         ),
       size =
         Vector3(
-          GodotReal.readIndex(src, 3),
-          GodotReal.readIndex(src, 4),
-          GodotReal.readIndex(src, 5),
+          GodotRealSegment.readIndex(src, 3),
+          GodotRealSegment.readIndex(src, 4),
+          GodotRealSegment.readIndex(src, 5),
         ),
     )
 
   private fun writeAABB(dest: MemorySegment, value: AABB) {
-    GodotReal.writeIndex(dest, 0, value.position.x)
-    GodotReal.writeIndex(dest, 1, value.position.y)
-    GodotReal.writeIndex(dest, 2, value.position.z)
-    GodotReal.writeIndex(dest, 3, value.size.x)
-    GodotReal.writeIndex(dest, 4, value.size.y)
-    GodotReal.writeIndex(dest, 5, value.size.z)
+    GodotRealSegment.writeIndex(dest, 0, value.position.x)
+    GodotRealSegment.writeIndex(dest, 1, value.position.y)
+    GodotRealSegment.writeIndex(dest, 2, value.position.z)
+    GodotRealSegment.writeIndex(dest, 3, value.size.x)
+    GodotRealSegment.writeIndex(dest, 4, value.size.y)
+    GodotRealSegment.writeIndex(dest, 5, value.size.z)
   }
 
   private fun readPlane(src: MemorySegment): Plane =
     Plane(
       normal =
         Vector3(
-          x = GodotReal.readIndex(src, 0),
-          y = GodotReal.readIndex(src, 1),
-          z = GodotReal.readIndex(src, 2),
+          x = GodotRealSegment.readIndex(src, 0),
+          y = GodotRealSegment.readIndex(src, 1),
+          z = GodotRealSegment.readIndex(src, 2),
         ),
-      d = GodotReal.readIndex(src, 3),
+      d = GodotRealSegment.readIndex(src, 3),
     )
 
   private fun readBasis(src: MemorySegment): Basis =
     Basis(
       x =
         Vector3(
-          GodotReal.readIndex(src, 0),
-          GodotReal.readIndex(src, 3),
-          GodotReal.readIndex(src, 6),
+          GodotRealSegment.readIndex(src, 0),
+          GodotRealSegment.readIndex(src, 3),
+          GodotRealSegment.readIndex(src, 6),
         ),
       y =
         Vector3(
-          GodotReal.readIndex(src, 1),
-          GodotReal.readIndex(src, 4),
-          GodotReal.readIndex(src, 7),
+          GodotRealSegment.readIndex(src, 1),
+          GodotRealSegment.readIndex(src, 4),
+          GodotRealSegment.readIndex(src, 7),
         ),
       z =
         Vector3(
-          GodotReal.readIndex(src, 2),
-          GodotReal.readIndex(src, 5),
-          GodotReal.readIndex(src, 8),
+          GodotRealSegment.readIndex(src, 2),
+          GodotRealSegment.readIndex(src, 5),
+          GodotRealSegment.readIndex(src, 8),
         ),
     )
 
   private fun readTransform2D(src: MemorySegment): Transform2D =
     Transform2D(
-      x = Vector2(GodotReal.readIndex(src, 0), GodotReal.readIndex(src, 1)),
-      y = Vector2(GodotReal.readIndex(src, 2), GodotReal.readIndex(src, 3)),
-      origin = Vector2(GodotReal.readIndex(src, 4), GodotReal.readIndex(src, 5)),
+      x = Vector2(GodotRealSegment.readIndex(src, 0), GodotRealSegment.readIndex(src, 1)),
+      y = Vector2(GodotRealSegment.readIndex(src, 2), GodotRealSegment.readIndex(src, 3)),
+      origin = Vector2(GodotRealSegment.readIndex(src, 4), GodotRealSegment.readIndex(src, 5)),
     )
 
   private fun writeTransform2D(dest: MemorySegment, value: Transform2D) {
-    GodotReal.writeIndex(dest, 0, value.x.x)
-    GodotReal.writeIndex(dest, 1, value.x.y)
-    GodotReal.writeIndex(dest, 2, value.y.x)
-    GodotReal.writeIndex(dest, 3, value.y.y)
-    GodotReal.writeIndex(dest, 4, value.origin.x)
-    GodotReal.writeIndex(dest, 5, value.origin.y)
+    GodotRealSegment.writeIndex(dest, 0, value.x.x)
+    GodotRealSegment.writeIndex(dest, 1, value.x.y)
+    GodotRealSegment.writeIndex(dest, 2, value.y.x)
+    GodotRealSegment.writeIndex(dest, 3, value.y.y)
+    GodotRealSegment.writeIndex(dest, 4, value.origin.x)
+    GodotRealSegment.writeIndex(dest, 5, value.origin.y)
   }
 
   private fun readTransform3D(src: MemorySegment): Transform3D =
@@ -34498,75 +34499,75 @@ object ObjectCalls {
         Basis(
           x =
             Vector3(
-              GodotReal.readIndex(src, 0),
-              GodotReal.readIndex(src, 3),
-              GodotReal.readIndex(src, 6),
+              GodotRealSegment.readIndex(src, 0),
+              GodotRealSegment.readIndex(src, 3),
+              GodotRealSegment.readIndex(src, 6),
             ),
           y =
             Vector3(
-              GodotReal.readIndex(src, 1),
-              GodotReal.readIndex(src, 4),
-              GodotReal.readIndex(src, 7),
+              GodotRealSegment.readIndex(src, 1),
+              GodotRealSegment.readIndex(src, 4),
+              GodotRealSegment.readIndex(src, 7),
             ),
           z =
             Vector3(
-              GodotReal.readIndex(src, 2),
-              GodotReal.readIndex(src, 5),
-              GodotReal.readIndex(src, 8),
+              GodotRealSegment.readIndex(src, 2),
+              GodotRealSegment.readIndex(src, 5),
+              GodotRealSegment.readIndex(src, 8),
             ),
         ),
       origin =
         Vector3(
-          GodotReal.readIndex(src, 9),
-          GodotReal.readIndex(src, 10),
-          GodotReal.readIndex(src, 11),
+          GodotRealSegment.readIndex(src, 9),
+          GodotRealSegment.readIndex(src, 10),
+          GodotRealSegment.readIndex(src, 11),
         ),
     )
 
   private fun writeTransform3D(dest: MemorySegment, value: Transform3D) {
-    GodotReal.writeIndex(dest, 0, value.basis.x.x)
-    GodotReal.writeIndex(dest, 1, value.basis.y.x)
-    GodotReal.writeIndex(dest, 2, value.basis.z.x)
-    GodotReal.writeIndex(dest, 3, value.basis.x.y)
-    GodotReal.writeIndex(dest, 4, value.basis.y.y)
-    GodotReal.writeIndex(dest, 5, value.basis.z.y)
-    GodotReal.writeIndex(dest, 6, value.basis.x.z)
-    GodotReal.writeIndex(dest, 7, value.basis.y.z)
-    GodotReal.writeIndex(dest, 8, value.basis.z.z)
-    GodotReal.writeIndex(dest, 9, value.origin.x)
-    GodotReal.writeIndex(dest, 10, value.origin.y)
-    GodotReal.writeIndex(dest, 11, value.origin.z)
+    GodotRealSegment.writeIndex(dest, 0, value.basis.x.x)
+    GodotRealSegment.writeIndex(dest, 1, value.basis.y.x)
+    GodotRealSegment.writeIndex(dest, 2, value.basis.z.x)
+    GodotRealSegment.writeIndex(dest, 3, value.basis.x.y)
+    GodotRealSegment.writeIndex(dest, 4, value.basis.y.y)
+    GodotRealSegment.writeIndex(dest, 5, value.basis.z.y)
+    GodotRealSegment.writeIndex(dest, 6, value.basis.x.z)
+    GodotRealSegment.writeIndex(dest, 7, value.basis.y.z)
+    GodotRealSegment.writeIndex(dest, 8, value.basis.z.z)
+    GodotRealSegment.writeIndex(dest, 9, value.origin.x)
+    GodotRealSegment.writeIndex(dest, 10, value.origin.y)
+    GodotRealSegment.writeIndex(dest, 11, value.origin.z)
   }
 
   private fun readProjection(src: MemorySegment): Projection =
     Projection(
       x =
         Vector4(
-          GodotReal.readIndex(src, 0),
-          GodotReal.readIndex(src, 1),
-          GodotReal.readIndex(src, 2),
-          GodotReal.readIndex(src, 3),
+          GodotRealSegment.readIndex(src, 0),
+          GodotRealSegment.readIndex(src, 1),
+          GodotRealSegment.readIndex(src, 2),
+          GodotRealSegment.readIndex(src, 3),
         ),
       y =
         Vector4(
-          GodotReal.readIndex(src, 4),
-          GodotReal.readIndex(src, 5),
-          GodotReal.readIndex(src, 6),
-          GodotReal.readIndex(src, 7),
+          GodotRealSegment.readIndex(src, 4),
+          GodotRealSegment.readIndex(src, 5),
+          GodotRealSegment.readIndex(src, 6),
+          GodotRealSegment.readIndex(src, 7),
         ),
       z =
         Vector4(
-          GodotReal.readIndex(src, 8),
-          GodotReal.readIndex(src, 9),
-          GodotReal.readIndex(src, 10),
-          GodotReal.readIndex(src, 11),
+          GodotRealSegment.readIndex(src, 8),
+          GodotRealSegment.readIndex(src, 9),
+          GodotRealSegment.readIndex(src, 10),
+          GodotRealSegment.readIndex(src, 11),
         ),
       w =
         Vector4(
-          GodotReal.readIndex(src, 12),
-          GodotReal.readIndex(src, 13),
-          GodotReal.readIndex(src, 14),
-          GodotReal.readIndex(src, 15),
+          GodotRealSegment.readIndex(src, 12),
+          GodotRealSegment.readIndex(src, 13),
+          GodotRealSegment.readIndex(src, 14),
+          GodotRealSegment.readIndex(src, 15),
         ),
     )
 
@@ -35203,12 +35204,12 @@ object ObjectCalls {
       val planeArray = arena.allocate(8L, 8L)
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(fromCell, 2, from.z)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
-        GodotReal.writeIndex(toCell, 2, to.z)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(fromCell, 2, from.z)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(toCell, 2, to.z)
         BuiltinTypes.initArray(planeArray, planes.map { it as Any? })
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, fromCell)
@@ -35235,10 +35236,10 @@ object ObjectCalls {
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         BuiltinTypes.initPackedVector3Array(pointsCell, points)
-        GodotReal.writeIndex(planeCell, 0, plane.normal.x)
-        GodotReal.writeIndex(planeCell, 1, plane.normal.y)
-        GodotReal.writeIndex(planeCell, 2, plane.normal.z)
-        GodotReal.writeIndex(planeCell, 3, plane.d)
+        GodotRealSegment.writeIndex(planeCell, 0, plane.normal.x)
+        GodotRealSegment.writeIndex(planeCell, 1, plane.normal.y)
+        GodotRealSegment.writeIndex(planeCell, 2, plane.normal.z)
+        GodotRealSegment.writeIndex(planeCell, 3, plane.d)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, pointsCell)
         args.setAtIndex(ADDRESS, 1, planeCell)
@@ -35269,10 +35270,10 @@ object ObjectCalls {
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
         boolCell.set(JAVA_BYTE, 0, if (optimize) 1.toByte() else 0.toByte())
         longCell.set(JAVA_LONG, 0, layers)
         val args = arena.allocate(ADDRESS, 5)
@@ -35307,12 +35308,12 @@ object ObjectCalls {
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(fromCell, 2, from.z)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
-        GodotReal.writeIndex(toCell, 2, to.z)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(fromCell, 2, from.z)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(toCell, 2, to.z)
         boolCell.set(JAVA_BYTE, 0, if (optimize) 1.toByte() else 0.toByte())
         longCell.set(JAVA_LONG, 0, layers)
         val args = arena.allocate(ADDRESS, 5)
@@ -35347,10 +35348,10 @@ object ObjectCalls {
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
         boolCell.set(JAVA_BYTE, 0, if (optimize) 1.toByte() else 0.toByte())
         layersCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(layers))
         val args = arena.allocate(ADDRESS, 5)
@@ -35385,12 +35386,12 @@ object ObjectCalls {
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(fromCell, 2, from.z)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
-        GodotReal.writeIndex(toCell, 2, to.z)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(fromCell, 2, from.z)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(toCell, 2, to.z)
         boolCell.set(JAVA_BYTE, 0, if (optimize) 1.toByte() else 0.toByte())
         layersCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(layers))
         val args = arena.allocate(ADDRESS, 5)
@@ -35477,12 +35478,12 @@ object ObjectCalls {
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         writeTransform2D(transform0, firstTransform)
-        GodotReal.writeIndex(motion0, 0, firstMotion.x)
-        GodotReal.writeIndex(motion0, 1, firstMotion.y)
+        GodotRealSegment.writeIndex(motion0, 0, firstMotion.x)
+        GodotRealSegment.writeIndex(motion0, 1, firstMotion.y)
         objectCell.set(ADDRESS, 0, objectArg)
         writeTransform2D(transform1, secondTransform)
-        GodotReal.writeIndex(motion1, 0, secondMotion.x)
-        GodotReal.writeIndex(motion1, 1, secondMotion.y)
+        GodotRealSegment.writeIndex(motion1, 0, secondMotion.x)
+        GodotRealSegment.writeIndex(motion1, 1, secondMotion.y)
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, transform0)
         args.setAtIndex(ADDRESS, 1, motion0)
@@ -35539,8 +35540,8 @@ object ObjectCalls {
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val pointsCell = BuiltinTypes.allocatePackedArray(arena)
       try {
-        GodotReal.writeIndex(vectorCell, 0, value.x)
-        GodotReal.writeIndex(vectorCell, 1, value.y)
+        GodotRealSegment.writeIndex(vectorCell, 0, value.x)
+        GodotRealSegment.writeIndex(vectorCell, 1, value.y)
         BuiltinTypes.initPackedVector2Array(pointsCell, points)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, vectorCell)
@@ -35691,10 +35692,10 @@ object ObjectCalls {
       val maskCell = arena.allocate(JAVA_LONG)
       val excludeCell = arena.allocate(8L, 8L)
       try {
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
         maskCell.set(JAVA_LONG, 0, mask)
         BuiltinTypes.initArrayOfRids(excludeCell, exclude)
         val args = arena.allocate(ADDRESS, 4)
@@ -35726,10 +35727,10 @@ object ObjectCalls {
       val maskCell = arena.allocate(JAVA_INT)
       val excludeCell = arena.allocate(8L, 8L)
       try {
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
         maskCell.set(JAVA_INT, 0, checkedMask)
         BuiltinTypes.initArrayOfRids(excludeCell, exclude)
         val args = arena.allocate(ADDRESS, 4)
@@ -35760,12 +35761,12 @@ object ObjectCalls {
       val maskCell = arena.allocate(JAVA_LONG)
       val excludeCell = arena.allocate(8L, 8L)
       try {
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(fromCell, 2, from.z)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
-        GodotReal.writeIndex(toCell, 2, to.z)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(fromCell, 2, from.z)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(toCell, 2, to.z)
         maskCell.set(JAVA_LONG, 0, mask)
         BuiltinTypes.initArrayOfRids(excludeCell, exclude)
         val args = arena.allocate(ADDRESS, 4)
@@ -35797,12 +35798,12 @@ object ObjectCalls {
       val maskCell = arena.allocate(JAVA_INT)
       val excludeCell = arena.allocate(8L, 8L)
       try {
-        GodotReal.writeIndex(fromCell, 0, from.x)
-        GodotReal.writeIndex(fromCell, 1, from.y)
-        GodotReal.writeIndex(fromCell, 2, from.z)
-        GodotReal.writeIndex(toCell, 0, to.x)
-        GodotReal.writeIndex(toCell, 1, to.y)
-        GodotReal.writeIndex(toCell, 2, to.z)
+        GodotRealSegment.writeIndex(fromCell, 0, from.x)
+        GodotRealSegment.writeIndex(fromCell, 1, from.y)
+        GodotRealSegment.writeIndex(fromCell, 2, from.z)
+        GodotRealSegment.writeIndex(toCell, 0, to.x)
+        GodotRealSegment.writeIndex(toCell, 1, to.y)
+        GodotRealSegment.writeIndex(toCell, 2, to.z)
         maskCell.set(JAVA_INT, 0, checkedMask)
         BuiltinTypes.initArrayOfRids(excludeCell, exclude)
         val args = arena.allocate(ADDRESS, 4)
@@ -39286,7 +39287,7 @@ object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return Vector2(x = GodotReal.readIndex(ret, 0), y = GodotReal.readIndex(ret, 1))
+      return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
 
@@ -39304,8 +39305,8 @@ object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, intCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -39452,8 +39453,8 @@ object ObjectCalls {
       intCell.set(JAVA_INT, 0, intArg)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       val args = arena.allocate(ADDRESS, 5)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -39625,8 +39626,8 @@ object ObjectCalls {
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val intCell = arena.allocate(JAVA_INT)
       objCell.set(ADDRESS, 0, obj)
-      GodotReal.writeIndex(vectorCell, 0, vector.x)
-      GodotReal.writeIndex(vectorCell, 1, vector.y)
+      GodotRealSegment.writeIndex(vectorCell, 0, vector.x)
+      GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       intCell.set(JAVA_INT, 0, intArg)
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, objCell)

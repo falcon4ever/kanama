@@ -51,8 +51,8 @@ allprojects {
     // Exclude the drift-gated generated API wrappers (see note above).
     exclude("**/net/multigesture/kanama/api/**")
   }
-  // Don't format *.gradle.kts build scripts: ktfmt 0.54 mis-parses the Gradle DSL in
-  // ios-runtime/build.gradle.kts, and build scripts aren't the formatting target here.
+  // Don't format *.gradle.kts build scripts: ktfmt 0.54 mis-parses the Gradle DSL (it did so in
+  // the former ios-runtime/build.gradle.kts), and build scripts aren't the formatting target here.
   tasks.matching { it.name.startsWith("ktfmt") && it.name.endsWith("Scripts") }
     .configureEach { enabled = false }
 }
@@ -67,6 +67,11 @@ subprojects {
 
   extensions.configure<PublishingExtension> { addKanamaPackageRepository() }
 
+// The two iOS targets are compiled into a static lib and shipped as an xcframework; their klibs
+// are not a Maven artifact anyone resolves, and publishing them would compile Kotlin/Native on
+// every `publishToMavenLocal`. `:ios-runtime` disabled all of its publish tasks for this reason.
+tasks.matching { it.name.startsWith("publishIos") }.configureEach { enabled = false }
+
   pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
     extensions.configure<JavaPluginExtension> { withSourcesJar() }
 
@@ -76,8 +81,12 @@ subprojects {
   }
 }
 
-// Root project is the main kanama library module.
-apply(plugin = "org.jetbrains.kotlin.jvm")
+// Root project is the one Kanama runtime module: a Kotlin Multiplatform module whose targets
+// are the desktop/Android JVM and the two iOS Kotlin/Native slices (task 104 step 3). The
+// shared generated wrapper tree under src/commonMain/kotlin is its commonMain, so the Kotlin
+// compiler — not a Python contract gate — proves every platform implements every wrapper call.
+// `:ios-runtime` was this module's second half until step 3 and no longer exists.
+apply(plugin = "org.jetbrains.kotlin.multiplatform")
 
 apply(plugin = "com.google.devtools.ksp")
 
@@ -85,60 +94,64 @@ apply(plugin = "maven-publish")
 
 repositories { mavenCentral() }
 
-configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
-  jvmToolchain(25)
+// A consumer project's iOS script dirs (its kotlin-src, compiled into the static lib): the same
+// four properties `:ios-runtime` accepted, in the same order.
+fun iosScriptDirs(raw: String?): List<String> =
+  raw
+    ?.split(File.pathSeparator, ",")
+    ?.map { it.trim() }
+    ?.filter { it.isNotEmpty() }
+    .orEmpty()
 
-  sourceSets.named("main") {
-    // The shared generated wrapper tree (task 103): one set of generated Godot API wrappers,
-    // compiled by this JVM module, by :ios-runtime (iosMain srcDir) and by the Android plugin
-    // (copied through the PanamaPort remap). Laid out as a KMP commonMain so the root can become
-    // multiplatform later without moving files again.
-    kotlin.srcDir("src/commonMain/kotlin")
-    kotlin.srcDir(layout.buildDirectory.dir("generated/sources/kanamaReal/main/kotlin"))
+val configuredIosScriptDirs =
+  providers
+    .gradleProperty("kanamaIosProjectScriptsDirs")
+    .orElse(providers.gradleProperty("kanamaIosProjectScriptsDir"))
+    .orElse(providers.gradleProperty("kanamaProjectScriptsDirs"))
+    .orElse(providers.gradleProperty("kanamaProjectScriptsDir"))
+
+val kanamaRealPrecision = providers.gradleProperty("kanamaPrecision").orElse("single")
+
+fun kanamaRealIsDouble(selected: String): Boolean =
+  when (selected) {
+    "single" -> false
+    "double" -> true
+    else -> throw GradleException("kanamaPrecision must be 'single' or 'double', got '$selected'")
   }
-}
 
+// real_t, its marshal array and the pure conversions are ONE generated common file: the value
+// types and the generated wrappers name them on every target. -PkanamaPrecision=double is a
+// desktop build; the iOS compile guard further down rejects it.
 val generateKanamaReal by
   tasks.registering {
-    val precision = providers.gradleProperty("kanamaPrecision").orElse("single")
-    val outputFile =
-      layout.buildDirectory.file(
-        "generated/sources/kanamaReal/main/kotlin/net/multigesture/kanama/types/Real.kt"
-      )
+    val precision = kanamaRealPrecision
+    val outputDir = layout.buildDirectory.dir("generated/sources/kanamaReal/common/kotlin")
     inputs.property("kanamaPrecision", precision)
-    outputs.file(outputFile)
+    outputs.dir(outputDir)
 
     doLast {
-      val selected = precision.get()
-      val isDouble =
-        when (selected) {
-          "single" -> false
-          "double" -> true
-          else ->
-            throw GradleException("kanamaPrecision must be 'single' or 'double', got '$selected'")
+      val isDouble = kanamaRealIsDouble(precision.get())
+      val outputFile =
+        outputDir.get().file("net/multigesture/kanama/types/Real.kt").asFile.apply {
+          parentFile.mkdirs()
         }
-      outputFile.get().asFile.apply {
-        parentFile.mkdirs()
-        writeText(
-          """
+      outputFile.writeText(
+        """
                 |package net.multigesture.kanama.types
-                |
-                |import java.lang.foreign.MemorySegment
-                |import java.lang.foreign.ValueLayout.${if (isDouble) "JAVA_DOUBLE" else "JAVA_FLOAT"}
                 |
                 |/**
                 | * Godot's `real_t` scalar.
                 | *
                 | * Kanama builds default to single precision (`Float`), matching normal Godot desktop
                 | * builds. Compile with `-PkanamaPrecision=double` for Godot builds made with
-                | * `precision=double`.
+                | * `precision=double`; iOS supports single precision only.
                 | */
                 |typealias real_t = ${if (isDouble) "Double" else "Float"}
                 |
                 |/**
                 | * A flat buffer of `real_t` components — the marshal form the [net.multigesture
                 | * .kanama.binding.runtime.BuiltinCalls] facade moves value types in and out with.
-                | * One alias per platform so the shared value-type bodies never name Float/Double.
+                | * One alias per precision so the shared value-type bodies never name Float/Double.
                 | */
                 |typealias GodotRealArray = ${if (isDouble) "DoubleArray" else "FloatArray"}
                 |
@@ -157,43 +170,198 @@ val generateKanamaReal by
                 |    fun fromC(value: ${if (isDouble) "Double" else "Float"}): real_t = value
                 |
                 |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
+                |}
+                |"""
+          .trimMargin()
+      )
+    }
+  }
+
+// The other half of `real_t`: reading and writing a component inside a raw engine buffer. It is
+// `java.lang.foreign` work (`MemorySegment.get(JAVA_FLOAT, …)`) with no common spelling — the
+// expect `RawSegment` deliberately carries only `address()` — so the JVM target generates it as
+// `GodotRealSegment` beside the common object. iOS reads its buffers through cinterop
+// (`GodotRealVar`) and Android gets the same pair rewritten to `com.v7878.foreign` by the
+// PanamaPort remap (android/godot-plugin/plugin/build.gradle.kts writes it).
+val generateKanamaRealSegment by
+  tasks.registering {
+    val precision = kanamaRealPrecision
+    val outputDir = layout.buildDirectory.dir("generated/sources/kanamaReal/jvm/kotlin")
+    inputs.property("kanamaPrecision", precision)
+    outputs.dir(outputDir)
+
+    doLast {
+      val isDouble = kanamaRealIsDouble(precision.get())
+      val layoutName = if (isDouble) "JAVA_DOUBLE" else "JAVA_FLOAT"
+      val outputFile =
+        outputDir.get().file("net/multigesture/kanama/types/RealSegment.kt").asFile.apply {
+          parentFile.mkdirs()
+        }
+      outputFile.writeText(
+        """
+                |package net.multigesture.kanama.types
                 |
+                |import java.lang.foreign.MemorySegment
+                |import java.lang.foreign.ValueLayout.$layoutName
+                |
+                |/**
+                | * The Panama half of [GodotReal]: a `real_t` component in and out of a raw engine
+                | * buffer. Desktop and Android only — `java.lang.foreign` has no common name, so
+                | * these two functions cannot live on the common [GodotReal] object.
+                | */
+                |object GodotRealSegment {
                 |    fun readIndex(segment: MemorySegment, index: Long): real_t =
-                |        segment.get(${if (isDouble) "JAVA_DOUBLE" else "JAVA_FLOAT"}, byteOffset(index))
+                |        segment.get($layoutName, GodotReal.byteOffset(index))
                 |
                 |    fun writeIndex(segment: MemorySegment, index: Long, value: real_t) {
-                |        segment.set(${if (isDouble) "JAVA_DOUBLE" else "JAVA_FLOAT"}, byteOffset(index), value)
+                |        segment.set($layoutName, GodotReal.byteOffset(index), value)
                 |    }
                 |}
                 |"""
-            .trimMargin()
+          .trimMargin()
+      )
+    }
+  }
+
+configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
+  jvmToolchain(25)
+
+  jvm()
+  iosArm64()
+  iosSimulatorArm64()
+
+  targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().configureEach {
+    compilations.getByName("main") {
+      cinterops {
+        val kanama_ios by creating {
+          defFile(project.file("src/nativeInterop/cinterop/kanama_ios.def"))
+          includeDirs(project.file("ios/include"))
+        }
+      }
+    }
+
+    // The iOS deliverable is a static lib libkanama_ios_runtime.a, combined with the C shim
+    // into the xcframework by the ios tasks further down. It is never a Maven artifact.
+    binaries { staticLib { baseName = "kanama_ios_runtime" } }
+  }
+
+  sourceSets {
+    val commonMain by getting {
+      // The REAL common fragment (task 104 step 3 parcel C'): the generated real_t, the value
+      // types, GodotHandle and the expect seams. Everything here type-checks with no platform
+      // declaration in sight — K2 resolves a common source file against common code only, even
+      // inside a platform compilation.
+      //
+      // src/commonMain/kotlin also carries the value types and GodotHandle in this commit; they
+      // reference BuiltinCalls, which is still a per-platform object until commit 3 makes it an
+      // `expect object`. Until then the directory is a srcDir of the two platform fragments below
+      // instead of the common one, which is exactly the task-103 arrangement.
+      kotlin.setSrcDirs(emptyList<String>())
+      kotlin.srcDir(generateKanamaReal)
+      dependencies {
+        implementation(kotlin("stdlib"))
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+      }
+    }
+    val jvmMain by getting {
+      // The generated Godot API wrapper tree (task 103): ONE set of sources, compiled by this
+      // target and by the two iOS targets (and copied through the PanamaPort remap for Android).
+      // It is not common code — its classes extend the per-platform hand-shaped wrappers
+      // (GodotObject, Node, …), which a common source file may not name (task 117).
+      kotlin.srcDir("src/sharedApi/kotlin")
+      kotlin.srcDir("src/commonMain/kotlin")
+      kotlin.srcDir(generateKanamaRealSegment)
+      dependencies { implementation(project(":annotations")) }
+    }
+    val jvmTest by getting {
+      dependencies {
+        implementation(kotlin("test-junit5"))
+        runtimeOnly("org.junit.platform:junit-platform-launcher")
+      }
+    }
+    // iosMain is the intermediate source set the two iOS targets share (the hand-written
+    // Kotlin/Native runtime: ObjectCalls, BuiltinCalls, the java.* shims, the per-platform
+    // wrappers). The KMP metadata compilations are disabled below, so it is spelled out here
+    // rather than left to the default hierarchy template.
+    val iosMain by creating {
+      dependsOn(commonMain)
+      kotlin.srcDir("src/sharedApi/kotlin")
+      kotlin.srcDir("src/commonMain/kotlin")
+    }
+    val iosArm64Main by getting {
+      dependsOn(iosMain)
+      iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
+    }
+    val iosSimulatorArm64Main by getting {
+      dependsOn(iosMain)
+      iosScriptDirs(configuredIosScriptDirs.orNull).forEach { kotlin.srcDir(file(it)) }
+    }
+  }
+}
+
+// The KMP *metadata* compilations compile commonMain on its own, and the shared wrapper tree is
+// not self-contained: `class Sprite2D(handle: GodotHandle) : Node2D(handle)` resolves Node2D in
+// commonMain but its base Node in each platform's hand-shaped runtime (77 desktop / 54 iOS api
+// files). Every platform compilation (commonMain + that platform's sources) therefore type-checks
+// — which is what the expect/actual contract is checked against — while a commonMain-only
+// compile cannot. Nothing consumes Kanama as a KMP library (iOS ships an xcframework, desktop a
+// jar), so those compilations are disabled; `:ios-runtime` disabled its own for the same reason.
+// The publication keeps its metadata variant so `net.multigesture.kanama:kanama` still resolves
+// to the JVM variant through Gradle metadata.
+tasks.matching { it.name == "compileIosMainKotlinMetadata" }.configureEach { enabled = false }
+
+// iOS supports single precision only: the generated common Real.kt is shared, so the guard sits
+// on the native compiles instead of the generator.
+tasks.configureEach {
+  if (name.startsWith("compileKotlinIos")) {
+    inputs.property("kanamaPrecision", kanamaRealPrecision)
+    doFirst {
+      val selected = kanamaRealPrecision.get()
+      if (selected != "single") {
+        throw GradleException(
+          "iOS currently supports only single-precision Godot real_t; " +
+            "-PkanamaPrecision=$selected is unsupported for the iOS targets"
         )
       }
     }
   }
-
-tasks.named("compileKotlin") { dependsOn(generateKanamaReal) }
-
-tasks.matching { it.name == "kspKotlin" }.configureEach { dependsOn(generateKanamaReal) }
-
-configure<JavaPluginExtension> { withSourcesJar() }
-
-configure<PublishingExtension> {
-  publications {
-    create<MavenPublication>("maven") {
-      artifactId = "kanama"
-      from(components["java"])
-    }
-  }
-  addKanamaPackageRepository()
 }
 
+tasks.matching { it.name == "compileKotlinJvm" || it.name == "kspKotlinJvm" }
+  .configureEach { dependsOn(generateKanamaReal, generateKanamaRealSegment) }
+
+tasks
+  .matching {
+    it.name.startsWith("compileKotlinIos") ||
+      it.name.startsWith("kspKotlinIos") ||
+      it.name.startsWith("cinterop")
+  }
+  .configureEach { dependsOn(generateKanamaReal) }
+
+configure<PublishingExtension> { addKanamaPackageRepository() }
+
+// The two iOS targets are compiled into a static lib and shipped as an xcframework; their klibs
+// are not a Maven artifact anyone resolves, and publishing them would compile Kotlin/Native on
+// every `publishToMavenLocal`. `:ios-runtime` disabled all of its publish tasks for this reason.
+tasks.matching { it.name.startsWith("publishIos") }.configureEach { enabled = false }
+
 dependencies {
-  "implementation"(project(":annotations"))
-  "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
-  "ksp"(project(":processor"))
-  "testImplementation"(kotlin("test-junit5"))
-  "testRuntimeOnly"("org.junit.platform:junit-platform-launcher")
+  add("kspJvm", project(":processor"))
+  add("kspIosArm64", project(":processor"))
+  add("kspIosSimulatorArm64", project(":processor"))
+}
+
+configure<com.google.devtools.ksp.gradle.KspExtension> {
+  // The processor derives each iOS script's `res://…` path relative to these roots, and emits the
+  // iOS registry as real `.kt` (vs the `.kt.txt` resources used during the Phase 3.2 gate). The
+  // JVM target of this module has no script sources, so the arguments are harmless there.
+  arg(
+    "kanamaScriptRoots",
+    iosScriptDirs(configuredIosScriptDirs.orNull).map { file(it).absolutePath }.joinToString(
+      File.pathSeparator
+    ),
+  )
+  arg("kanamaIosRegistryAsResource", "false")
 }
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
@@ -330,7 +498,7 @@ fun File.enableIosKanamaGdextensionMetadata() {
   writeText(lines.joinToString(System.lineSeparator()) + System.lineSeparator())
 }
 
-tasks.named<Jar>("jar") {
+tasks.named<Jar>("jvmJar") {
   archiveFileName.set("kanama.jar")
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   isPreserveFileTimestamps = false
@@ -339,7 +507,7 @@ tasks.named<Jar>("jar") {
   // self-contained jar. bootstrap.c puts this jar alone on the
   // classpath, so anything Kanama or its users need must be inside.
   from({
-    configurations.named("runtimeClasspath").get().map { if (it.isDirectory) it else zipTree(it) }
+    configurations.named("jvmRuntimeClasspath").get().map { if (it.isDirectory) it else zipTree(it) }
   }) {
     exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/MANIFEST.MF")
   }
@@ -347,7 +515,7 @@ tasks.named<Jar>("jar") {
 
 tasks.register<Copy>("syncExampleAddonJar") {
   dependsOn(buildNativeBootstrap)
-  dependsOn(tasks.named("jar"))
+  dependsOn(tasks.named("jvmJar"))
   dependsOn(":project-scripts:jar")
   from(layout.buildDirectory.file("libs/kanama.jar"))
   from(project(":project-scripts").tasks.named<Jar>("jar").flatMap { it.archiveFile })
@@ -358,7 +526,13 @@ tasks.register("publishKanamaToMavenLocal") {
   group = "publishing"
   description = "Publish Kanama runtime, annotations, and KSP processor jars to mavenLocal()."
   dependsOn(
-    tasks.named("publishToMavenLocal"),
+    // The root is a KMP module (task 104 step 3): the JVM variant is `kanama-jvm` and the root
+    // `kanama` module redirects Gradle-metadata consumers to it, so BOTH publications are needed
+    // for `implementation("net.multigesture.kanama:kanama:<version>")` to resolve. The iOS target
+    // publications are disabled (the iOS deliverable is an xcframework, never a Maven artifact),
+    // which is why this does not simply depend on `publishToMavenLocal`.
+    tasks.named("publishKotlinMultiplatformPublicationToMavenLocal"),
+    tasks.named("publishJvmPublicationToMavenLocal"),
     ":annotations:publishToMavenLocal",
     ":kanama-common-api:publishJvmPublicationToMavenLocal",
     ":kanama-common-api:publishKotlinMultiplatformPublicationToMavenLocal",
@@ -384,7 +558,8 @@ val publishKanamaPackageMavenRepository by
       "Publish Kanama runtime, annotations, and KSP processor jars to the package-local Maven repository."
     dependsOn(cleanKanamaPackageMavenRepository)
     dependsOn(
-    tasks.named("publishMavenPublicationToKanamaPackageRepository"),
+    tasks.named("publishKotlinMultiplatformPublicationToKanamaPackageRepository"),
+    tasks.named("publishJvmPublicationToKanamaPackageRepository"),
     ":annotations:publishMavenPublicationToKanamaPackageRepository",
     ":kanama-common-api:publishJvmPublicationToKanamaPackageRepository",
     ":kanama-common-api:publishKotlinMultiplatformPublicationToKanamaPackageRepository",
@@ -610,7 +785,7 @@ tasks.register<Zip>("packageDesktopKit") {
   group = "distribution"
   description = "Build a source-free Kanama desktop starter kit for the selected host platform."
   dependsOn(
-    tasks.named("jar"),
+    tasks.named("jvmJar"),
     publishKanamaPackageMavenRepository,
     generatePackageGdextensionDescriptor,
     generatePackageExtensionList,
@@ -657,7 +832,7 @@ tasks.register<Zip>("packageStoreAddon") {
   group = "distribution"
   description = "Build an install-safe Kanama addon zip for the Godot Asset Store."
   dependsOn(
-    tasks.named("jar"),
+    tasks.named("jvmJar"),
     publishKanamaPackageMavenRepository,
     generatePackageGdextensionDescriptor,
   )
@@ -1381,10 +1556,7 @@ fun registerCreateIosDeviceXcframeworkTask(
   }
 
 fun iosRuntimeStaticLib(target: String, buildType: String): Provider<RegularFile> =
-  project(":ios-runtime")
-    .layout
-    .buildDirectory
-    .file("bin/$target/${buildType}Static/libkanama_ios_runtime.a")
+  layout.buildDirectory.file("bin/$target/${buildType}Static/libkanama_ios_runtime.a")
 
 val compileIosDeviceDebugShim =
   registerCompileIosShimTask(
@@ -1419,7 +1591,7 @@ val combineIosDeviceDebugLib =
   tasks.register<Exec>("combineIosDeviceDebugLib") {
     group = "ios"
     description = "Combine the Kanama iOS device debug static library."
-    dependsOn(":ios-runtime:linkDebugStaticIosArm64")
+    dependsOn(tasks.named("linkDebugStaticIosArm64"))
     dependsOn(compileIosDeviceDebugShim)
     val outputLibPath = iosBuildDir.map { it.file("lib/iphoneos/debug/libkanama_ios.a") }
     inputs.file(iosRuntimeStaticLib("iosArm64", "debug"))
@@ -1446,7 +1618,7 @@ val combineIosDeviceReleaseLib =
   tasks.register<Exec>("combineIosDeviceReleaseLib") {
     group = "ios"
     description = "Combine the Kanama iOS device release static library."
-    dependsOn(":ios-runtime:linkReleaseStaticIosArm64")
+    dependsOn(tasks.named("linkReleaseStaticIosArm64"))
     dependsOn(compileIosDeviceReleaseShim)
     val outputLibPath = iosBuildDir.map { it.file("lib/iphoneos/release/libkanama_ios.a") }
     inputs.file(iosRuntimeStaticLib("iosArm64", "release"))
@@ -1473,7 +1645,7 @@ val combineIosSimulatorDebugLib =
   tasks.register<Exec>("combineIosSimulatorDebugLib") {
     group = "ios"
     description = "Combine the Kanama iOS simulator debug static library."
-    dependsOn(":ios-runtime:linkDebugStaticIosSimulatorArm64")
+    dependsOn(tasks.named("linkDebugStaticIosSimulatorArm64"))
     dependsOn(compileIosSimulatorDebugShim)
     val outputLibPath = iosBuildDir.map { it.file("lib/iphonesimulator/debug/libkanama_ios.a") }
     inputs.file(iosRuntimeStaticLib("iosSimulatorArm64", "debug"))
@@ -1500,7 +1672,7 @@ val combineIosSimulatorReleaseLib =
   tasks.register<Exec>("combineIosSimulatorReleaseLib") {
     group = "ios"
     description = "Combine the Kanama iOS simulator release static library."
-    dependsOn(":ios-runtime:linkReleaseStaticIosSimulatorArm64")
+    dependsOn(tasks.named("linkReleaseStaticIosSimulatorArm64"))
     dependsOn(compileIosSimulatorReleaseShim)
     val outputLibPath = iosBuildDir.map { it.file("lib/iphonesimulator/release/libkanama_ios.a") }
     inputs.file(iosRuntimeStaticLib("iosSimulatorArm64", "release"))
@@ -1661,7 +1833,7 @@ tasks.register<Copy>("installIosAddon") {
   )
   dependsOn(generateIosGdextensionDescriptor)
   dependsOn(buildNativeBootstrap)
-  dependsOn(tasks.named("jar"))
+  dependsOn(tasks.named("jvmJar"))
   dependsOn(":project-scripts:jar")
 
   from(layout.projectDirectory.dir("example_project/addons/kanama")) {
@@ -1720,7 +1892,7 @@ tasks.register<Copy>("installAddonJar") {
   val preserveAndroidExtensionMetadata = objects.property<Boolean>().convention(false)
   val byteStableFiles = setOf("kanama.jar", "kanama-scripts.jar")
 
-  dependsOn(tasks.named("jar"))
+  dependsOn(tasks.named("jvmJar"))
   dependsOn(":project-scripts:jar")
   dependsOn(buildNativeBootstrap)
 
@@ -2117,4 +2289,18 @@ tasks.register<Zip>("packageMobileAddonAndroid") {
   from(mobileAddonAndroidExtrasDir.map { it.file("kanama.gdextension-android-entries.txt") })
   from(mobileAddonAndroidExtrasDir.map { it.file("README.md") })
   from(layout.projectDirectory.file("LICENSE"))
+}
+
+// TEMP DEBUG
+tasks.register("printJvmSources") {
+  doLast {
+    val kmp = project.extensions.getByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()
+    kmp.sourceSets.forEach { ss ->
+      println("SS ${ss.name}: dirs=${ss.kotlin.srcDirs}")
+      println("   files=${ss.kotlin.files.size}")
+      if (ss.name == "jvmMain") ss.kotlin.files.sortedBy { it.path }.forEach { println("      $it") }
+    }
+    val c = kmp.targets.getByName("jvm").compilations.getByName("main")
+    println("jvm main compilation allKotlinSources=${c.allKotlinSourceSets.map{it.name}}")
+  }
 }
