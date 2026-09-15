@@ -3222,7 +3222,7 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
         " "
         + " ".join(
             f"The `{signature.split('(')[0].split()[-1]}` overload taking "
-            f"`{signature.split('(')[1].split(',')[-1].strip().rstrip(')')}` is desktop-only and "
+            f"`{signature.split('(')[1].split(')')[0].split(',')[-1].strip()}` is desktop-only and "
             "stays platform-only for the same reason."
             for signature in sorted(excluded_overloads)
         )
