@@ -652,7 +652,8 @@ internal class IosScriptCodeEmitter(
           appendLine("@Suppress(\"unused\")")
           appendLine("internal object System {")
           // Read the real process environment (task 111): the device gate launches every demo with
-          // `devicectl … --environment-variables {"KANAMA_DEMO_SMOKE_QUIT":"1"}` so the demos' SmokeQuit
+          // `devicectl … --environment-variables {"KANAMA_DEMO_SMOKE_QUIT":"1"}` so the demos'
+          // SmokeQuit
           // scripts — spawn / damage / free / quit — run on the phone inside the console-watched
           // window instead of being skipped by a hard-coded null.
           appendLine("    @OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)")
