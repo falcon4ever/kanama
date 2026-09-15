@@ -38,23 +38,6 @@ import net.multigesture.kanama.types.GodotRealVar
  * order the [ObjectCalls] ptrcall helpers use.
  */
 actual object BuiltinCalls {
-  // Godot Variant type ids (Variant::Type) — must match the engine enum.
-  actual const val VT_VECTOR2 = 5
-  actual const val VT_VECTOR3 = 9
-  actual const val VT_QUATERNION = 15
-  actual const val VT_BASIS = 17
-  actual const val VT_TRANSFORM3D = 18
-
-  // ptrcall/builtin arg tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c.
-  // Used as the [BArg.Floats] tag for value-type args (struct types are passthrough C-side).
-  actual const val PT_BOOL = 1
-  actual const val PT_INT64 = 3
-  actual const val PT_FLOAT64 = 5
-  actual const val PT_VECTOR2 = 6
-  actual const val PT_VECTOR3 = 8
-  actual const val PT_TRANSFORM3D = 19
-  actual const val PT_QUATERNION = 20
-
   actual fun getBuiltinMethod(variantType: Int, method: String, hash: Long): Long =
     kanama_ios_godot_get_builtin_method(variantType, method, hash)
 

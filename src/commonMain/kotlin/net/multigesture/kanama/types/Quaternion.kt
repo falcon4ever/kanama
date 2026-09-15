@@ -3,6 +3,9 @@ package net.multigesture.kanama.types
 import kotlin.math.sqrt
 import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
+import net.multigesture.kanama.binding.runtime.PT_QUATERNION
+import net.multigesture.kanama.binding.runtime.PT_VECTOR3
+import net.multigesture.kanama.binding.runtime.VT_QUATERNION
 
 private const val SLERP_HASH = 1773590316L
 private const val INVERSE_HASH = 4274879941L
@@ -159,7 +162,7 @@ data class Quaternion(
         slerpBind,
         toGodotRealArray(),
         4,
-        listOf(BArg.Floats(BuiltinCalls.PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight)),
+        listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight)),
       )
     )
 
@@ -183,13 +186,13 @@ data class Quaternion(
     val IDENTITY = Quaternion(0f, 0f, 0f, 1f)
 
     private val inverseBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_QUATERNION, "inverse", INVERSE_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_QUATERNION, "inverse", INVERSE_HASH)
     }
     private val slerpBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_QUATERNION, "slerp", SLERP_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_QUATERNION, "slerp", SLERP_HASH)
     }
     private val fromEulerBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_QUATERNION, "from_euler", FROM_EULER_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_QUATERNION, "from_euler", FROM_EULER_HASH)
     }
 
     /**
@@ -208,7 +211,7 @@ data class Quaternion(
           4,
           listOf(
             BArg.Floats(
-              BuiltinCalls.PT_VECTOR3,
+              PT_VECTOR3,
               GodotRealArray(3).also {
                 it[0] = GodotReal.toC(euler.x)
                 it[1] = GodotReal.toC(euler.y)

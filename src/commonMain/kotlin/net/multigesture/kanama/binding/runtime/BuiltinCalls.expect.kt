@@ -16,29 +16,11 @@ import net.multigesture.kanama.types.GodotRealArray
  * both backends keep their private marshalling helpers.
  *
  * The argument variants are top-level [BArg] rather than members here, because an `expect`
- * classifier may not declare a constructor with property parameters.
+ * classifier may not declare a constructor with property parameters; the `VT_*`/`PT_*` wire numbers
+ * are top-level `const val`s in [BuiltinTags] for a stronger reason — an `expect` declaration
+ * cannot carry a value, so declaring them here would have proven presence and not equality.
  */
 expect object BuiltinCalls {
-  // Godot Variant type ids (Variant::Type) — must match the engine enum, and the [VariantType]
-  // entries of the same name. `expect val` + `actual const val`: an `expect` declaration may not
-  // carry an initializer, and the value stays a compile-time constant on both platforms.
-  val VT_VECTOR2: Int
-  val VT_VECTOR3: Int
-  val VT_QUATERNION: Int
-  val VT_BASIS: Int
-  val VT_TRANSFORM3D: Int
-
-  // Builtin arg tags (the KANAMA_IOS_PT_* enum in kanama_ios_shim.c). The desktop ptr-ABI is
-  // positional and untyped — the callee knows the layout — so these are carried for the shared call
-  // sites and the iOS shim, which dispatches on them.
-  val PT_BOOL: Int
-  val PT_INT64: Int
-  val PT_FLOAT64: Int
-  val PT_VECTOR2: Int
-  val PT_VECTOR3: Int
-  val PT_TRANSFORM3D: Int
-  val PT_QUATERNION: Int
-
   /**
    * Resolve a builtin method of [variantType] by [method] name and signature [hash], as an opaque
    * pointer. Cache the result in a `by lazy` on the value type — resolution costs a StringName and

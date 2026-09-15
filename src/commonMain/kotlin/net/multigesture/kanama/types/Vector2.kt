@@ -6,6 +6,8 @@ import kotlin.math.atan2
 import kotlin.math.sqrt
 import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
+import net.multigesture.kanama.binding.runtime.PT_VECTOR2
+import net.multigesture.kanama.binding.runtime.VT_VECTOR2
 
 private const val LERP_HASH = 4250033116L
 private const val LIMIT_LENGTH_HASH = 2544004089L
@@ -184,7 +186,7 @@ data class Vector2(
         lerpBind,
         toGodotRealArray(),
         2,
-        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR2, to.toGodotRealArray()), BArg.Real(weight)),
+        listOf(BArg.Floats(PT_VECTOR2, to.toGodotRealArray()), BArg.Real(weight)),
       )
     )
 
@@ -223,8 +225,8 @@ data class Vector2(
         toGodotRealArray(),
         2,
         listOf(
-          BArg.Floats(BuiltinCalls.PT_VECTOR2, min.toGodotRealArray()),
-          BArg.Floats(BuiltinCalls.PT_VECTOR2, max.toGodotRealArray()),
+          BArg.Floats(PT_VECTOR2, min.toGodotRealArray()),
+          BArg.Floats(PT_VECTOR2, max.toGodotRealArray()),
         ),
       )
     )
@@ -240,18 +242,14 @@ data class Vector2(
     }
 
   companion object {
-    private val lerpBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "lerp", LERP_HASH)
-    }
+    private val lerpBind by lazy { BuiltinCalls.getBuiltinMethod(VT_VECTOR2, "lerp", LERP_HASH) }
     private val limitLengthBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "limit_length", LIMIT_LENGTH_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR2, "limit_length", LIMIT_LENGTH_HASH)
     }
     private val rotatedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "rotated", ROTATED_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR2, "rotated", ROTATED_HASH)
     }
-    private val clampBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR2, "clamp", CLAMP_HASH)
-    }
+    private val clampBind by lazy { BuiltinCalls.getBuiltinMethod(VT_VECTOR2, "clamp", CLAMP_HASH) }
 
     private fun fromGodotRealArray(c: GodotRealArray): Vector2 =
       Vector2(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]))

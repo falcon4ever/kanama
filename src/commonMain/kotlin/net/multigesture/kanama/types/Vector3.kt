@@ -6,6 +6,8 @@ import kotlin.math.abs
 import kotlin.math.sqrt
 import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
+import net.multigesture.kanama.binding.runtime.PT_VECTOR3
+import net.multigesture.kanama.binding.runtime.VT_VECTOR3
 
 private const val LERP_HASH = 1682608829L
 private const val LIMIT_LENGTH_HASH = 514930144L
@@ -259,7 +261,7 @@ data class Vector3(
         bounceBind,
         toGodotRealArray(),
         3,
-        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, normal.toGodotRealArray())),
+        listOf(BArg.Floats(PT_VECTOR3, normal.toGodotRealArray())),
       )
     )
 
@@ -299,8 +301,8 @@ data class Vector3(
       signedAngleToBind,
       toGodotRealArray(),
       listOf(
-        BArg.Floats(BuiltinCalls.PT_VECTOR3, to.toGodotRealArray()),
-        BArg.Floats(BuiltinCalls.PT_VECTOR3, axis.toGodotRealArray()),
+        BArg.Floats(PT_VECTOR3, to.toGodotRealArray()),
+        BArg.Floats(PT_VECTOR3, axis.toGodotRealArray()),
       ),
     )
 
@@ -311,7 +313,7 @@ data class Vector3(
         methodPtr,
         toGodotRealArray(),
         3,
-        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, vector.toGodotRealArray()), BArg.Real(value)),
+        listOf(BArg.Floats(PT_VECTOR3, vector.toGodotRealArray()), BArg.Real(value)),
       )
     )
 
@@ -333,27 +335,21 @@ data class Vector3(
     private const val AXIS_Y = 1
     private const val AXIS_Z = 2
 
-    private val lerpBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "lerp", LERP_HASH)
-    }
+    private val lerpBind by lazy { BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "lerp", LERP_HASH) }
     private val limitLengthBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "limit_length", LIMIT_LENGTH_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "limit_length", LIMIT_LENGTH_HASH)
     }
     private val bounceBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "bounce", BOUNCE_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "bounce", BOUNCE_HASH)
     }
     private val rotatedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "rotated", ROTATED_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "rotated", ROTATED_HASH)
     }
     private val moveTowardBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "move_toward", MOVE_TOWARD_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "move_toward", MOVE_TOWARD_HASH)
     }
     private val signedAngleToBind by lazy {
-      BuiltinCalls.getBuiltinMethod(
-        BuiltinCalls.VT_VECTOR3,
-        "signed_angle_to",
-        SIGNED_ANGLE_TO_HASH,
-      )
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "signed_angle_to", SIGNED_ANGLE_TO_HASH)
     }
 
     private fun fromGodotRealArray(c: GodotRealArray): Vector3 =

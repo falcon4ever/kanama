@@ -29,24 +29,6 @@ import net.multigesture.kanama.types.GodotRealSegment
  * travel as `Long` on both platforms, so a shared body never names a platform pointer type.
  */
 actual object BuiltinCalls {
-  // Godot Variant type ids (Variant::Type) — must match the engine enum, and the [VariantType]
-  // entries of the same name.
-  actual const val VT_VECTOR2 = 5
-  actual const val VT_VECTOR3 = 9
-  actual const val VT_QUATERNION = 15
-  actual const val VT_BASIS = 17
-  actual const val VT_TRANSFORM3D = 18
-
-  // Builtin arg tags. The desktop ptr-ABI is positional and untyped — the callee knows the layout —
-  // so these are carried for the shared call sites and the iOS shim, which dispatches on them.
-  actual const val PT_BOOL = 1
-  actual const val PT_INT64 = 3
-  actual const val PT_FLOAT64 = 5
-  actual const val PT_VECTOR2 = 6
-  actual const val PT_VECTOR3 = 8
-  actual const val PT_TRANSFORM3D = 19
-  actual const val PT_QUATERNION = 20
-
   private val builtinMethodDescriptor: FunctionDescriptor =
     FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, JAVA_INT)
 

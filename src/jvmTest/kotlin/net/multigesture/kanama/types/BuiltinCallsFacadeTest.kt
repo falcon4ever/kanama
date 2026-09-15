@@ -16,6 +16,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
+import net.multigesture.kanama.binding.runtime.PT_VECTOR3
+import net.multigesture.kanama.binding.runtime.VT_BASIS
+import net.multigesture.kanama.binding.runtime.VT_VECTOR3
 import net.multigesture.kanama.ffi.GodotFFI
 
 /**
@@ -40,7 +43,7 @@ class BuiltinCallsFacadeTest {
     // Shape: Vector3.lerp(to: Vector3, weight: float) -> Vector3. The fake replies with
     // base + arg0 * arg1, so every marshalled field has to arrive intact for the expected
     // value to come back — and `weight` has to arrive as the ptr-ABI's 8-byte double.
-    val method = BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "lerp", LERP_HASH)
+    val method = BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "lerp", LERP_HASH)
     assertTrue(method != 0L, "fake engine returned a null builtin method pointer")
 
     val result =
@@ -48,7 +51,7 @@ class BuiltinCallsFacadeTest {
         method,
         realsOf(1.0, 2.0, 3.0),
         3,
-        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(10.0, 20.0, 30.0)), BArg.Real(0.5)),
+        listOf(BArg.Floats(PT_VECTOR3, realsOf(10.0, 20.0, 30.0)), BArg.Real(0.5)),
       )
 
     assertEquals(3, result.size)
@@ -61,7 +64,7 @@ class BuiltinCallsFacadeTest {
   @Test
   fun noArgCallSizesTheReturnFromTheBase() {
     FakeGodot.bootstrapOnce()
-    val method = BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "inverse", INVERSE_HASH)
+    val method = BuiltinCalls.getBuiltinMethod(VT_BASIS, "inverse", INVERSE_HASH)
     val base = GodotRealArray(9) { GodotReal.fromNumber(it + 1) }
 
     val result = BuiltinCalls.callNoArgsFloat32(method, base)
@@ -77,18 +80,17 @@ class BuiltinCallsFacadeTest {
     val base = realsOf(2.0, 0.0, 0.0)
 
     // A `float` return is an 8-byte double at ptrcall, never a real_t.
-    val dot = BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "dot", DOT_HASH)
+    val dot = BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "dot", DOT_HASH)
     assertEquals(FakeGodot.SCALAR_REPLY, BuiltinCalls.callScalar(dot, base, emptyList()), TOLERANCE)
 
     // A `bool` return is one uint8 byte.
     val isNormalized =
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "is_normalized", IS_NORMALIZED_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "is_normalized", IS_NORMALIZED_HASH)
     assertTrue(BuiltinCalls.callBool(isNormalized, base, emptyList()))
 
     // An `int` return is an int64 — and BArg.Int64 is what carries an int argument down
     // (Basis.get_euler's EulerOrder is the shared bodies' only user of it).
-    val maxAxis =
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "max_axis_index", MAX_AXIS_HASH)
+    val maxAxis = BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "max_axis_index", MAX_AXIS_HASH)
     assertEquals(FakeGodot.INT_REPLY, BuiltinCalls.callInt(maxAxis, base, listOf(BArg.Int64(7L))))
     assertEquals(7L, FakeGodot.lastInt64Arg)
   }
@@ -96,7 +98,7 @@ class BuiltinCallsFacadeTest {
   @Test
   fun staticBuiltinIsCalledWithANullBaseAndABoolArgIsOneByte() {
     FakeGodot.bootstrapOnce()
-    val method = BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "looking_at", LOOKING_AT_HASH)
+    val method = BuiltinCalls.getBuiltinMethod(VT_BASIS, "looking_at", LOOKING_AT_HASH)
 
     val result =
       BuiltinCalls.call(
@@ -104,8 +106,8 @@ class BuiltinCallsFacadeTest {
         GodotRealArray(0),
         9,
         listOf(
-          BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(0.0, 0.0, -4.0)),
-          BArg.Floats(BuiltinCalls.PT_VECTOR3, realsOf(0.0, 1.0, 0.0)),
+          BArg.Floats(PT_VECTOR3, realsOf(0.0, 0.0, -4.0)),
+          BArg.Floats(PT_VECTOR3, realsOf(0.0, 1.0, 0.0)),
           BArg.Bool(true),
         ),
       )

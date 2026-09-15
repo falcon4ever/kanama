@@ -2,6 +2,8 @@ package net.multigesture.kanama.types
 
 import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
+import net.multigesture.kanama.binding.runtime.PT_VECTOR3
+import net.multigesture.kanama.binding.runtime.VT_BASIS
 
 private const val GET_EULER_HASH = 1394941017L
 private const val FROM_EULER_HASH = 2802321791L
@@ -155,7 +157,7 @@ data class Basis(
         scaledBind,
         toGodotRealArray(),
         9,
-        listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(scale))),
+        listOf(BArg.Floats(PT_VECTOR3, vector3Array(scale))),
       )
     )
 
@@ -220,38 +222,38 @@ data class Basis(
     // The hash keys the signature SHAPE, the name selects the method: inverse, transposed and
     // orthonormalized are all no-arg -> Self and share one hash.
     private val inverseBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "inverse", NO_ARG_SELF_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "inverse", NO_ARG_SELF_HASH)
     }
     private val transposedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "transposed", NO_ARG_SELF_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "transposed", NO_ARG_SELF_HASH)
     }
     private val orthonormalizedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "orthonormalized", NO_ARG_SELF_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "orthonormalized", NO_ARG_SELF_HASH)
     }
     private val determinantBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "determinant", DETERMINANT_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "determinant", DETERMINANT_HASH)
     }
     private val scaledBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "scaled", SCALED_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "scaled", SCALED_HASH)
     }
     private val getScaleBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "get_scale", GET_SCALE_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "get_scale", GET_SCALE_HASH)
     }
     private val getRotationQuaternionBind by lazy {
       BuiltinCalls.getBuiltinMethod(
-        BuiltinCalls.VT_BASIS,
+        VT_BASIS,
         "get_rotation_quaternion",
         GET_ROTATION_QUATERNION_HASH,
       )
     }
     private val getEulerBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "get_euler", GET_EULER_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "get_euler", GET_EULER_HASH)
     }
     private val fromEulerBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "from_euler", FROM_EULER_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "from_euler", FROM_EULER_HASH)
     }
     private val lookingAtBind by lazy {
-      BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_BASIS, "looking_at", LOOKING_AT_HASH)
+      BuiltinCalls.getBuiltinMethod(VT_BASIS, "looking_at", LOOKING_AT_HASH)
     }
 
     /**
@@ -270,7 +272,7 @@ data class Basis(
           fromEulerBind,
           GodotRealArray(0),
           9,
-          listOf(BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(euler)), BArg.Int64(order)),
+          listOf(BArg.Floats(PT_VECTOR3, vector3Array(euler)), BArg.Int64(order)),
         )
       )
 
@@ -297,8 +299,8 @@ data class Basis(
           GodotRealArray(0),
           9,
           listOf(
-            BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(target)),
-            BArg.Floats(BuiltinCalls.PT_VECTOR3, vector3Array(up)),
+            BArg.Floats(PT_VECTOR3, vector3Array(target)),
+            BArg.Floats(PT_VECTOR3, vector3Array(up)),
             BArg.Bool(useModelFront),
           ),
         )
