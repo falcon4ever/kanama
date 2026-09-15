@@ -223,13 +223,14 @@ if [[ -z "$kanama_version" ]]; then
 fi
 ensure_gdextension_header "${godot_bins[0]}"
 
-# JVM unit tests across all modules (runtime :test + KSP processor :processor:test) plus the KMP
-# module's JVM tests. `gradlew test` does NOT reach :kanama-common-api -- its tests are `jvmTest`
-# -- so GodotBackendContractTest (1,100 lines) and the checkPlatformBackendContract descriptor
-# check had never run in CI (task 99, review R16). The iOS @ScriptProperty get/set parity
-# contract (task 46) lives in :test alongside the existing type tests.
+# JVM unit tests across all modules. The root runtime is one KMP module since task 104 step 3, so
+# its tests are `jvmTest`, not `test`; `gradlew test` reaches neither it nor :kanama-common-api
+# (also KMP) -- which is how GodotBackendContractTest (1,100 lines) and the
+# checkPlatformBackendContract descriptor check had never run in CI (task 99, review R16). `test`
+# stays in the list for the JVM modules (:processor, :annotations, :project-scripts). The iOS
+# @ScriptProperty get/set parity contract (task 46) lives in src/jvmTest with the type tests.
 stage "JVM unit tests + kanama-common-api contract"
-"$ROOT_DIR/gradlew" -p "$ROOT_DIR" test \
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR" jvmTest test \
   :kanama-common-api:jvmTest :kanama-common-api:checkPlatformBackendContract
 
 stage "public docs local-path guard"
@@ -592,9 +593,14 @@ stage "publish to mavenLocal"
 
 stage "mavenLocal publication"
 maven_local="${KANAMA_MAVEN_LOCAL_REPO:-${HOME}/.m2/repository}/net/multigesture/kanama"
+# The root runtime is a KMP module (task 104 step 3): `kanama` is the root module Gradle-metadata
+# consumers resolve and `kanama-jvm` carries the desktop jar it redirects them to. Both must be
+# there or `implementation("net.multigesture.kanama:kanama:<version>")` stops resolving.
 for artifact in \
+  "kanama/$kanama_version/kanama-$kanama_version.module" \
   "kanama/$kanama_version/kanama-$kanama_version.jar" \
-  "kanama/$kanama_version/kanama-$kanama_version-sources.jar" \
+  "kanama-jvm/$kanama_version/kanama-jvm-$kanama_version.jar" \
+  "kanama-jvm/$kanama_version/kanama-jvm-$kanama_version-sources.jar" \
   "annotations/$kanama_version/annotations-$kanama_version.jar" \
   "annotations/$kanama_version/annotations-$kanama_version-sources.jar" \
   "processor/$kanama_version/processor-$kanama_version.jar" \

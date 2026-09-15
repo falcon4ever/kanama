@@ -8011,7 +8011,10 @@ object ObjectCalls {
         args.setAtIndex(ADDRESS, 6, orientationCell)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
         objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-        return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
+        return Vector2(
+          x = GodotRealSegment.readIndex(ret, 0),
+          y = GodotRealSegment.readIndex(ret, 1),
+        )
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -8063,7 +8066,10 @@ object ObjectCalls {
         args.setAtIndex(ADDRESS, 8, orientationCell)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
         objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-        return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
+        return Vector2(
+          x = GodotRealSegment.readIndex(ret, 0),
+          y = GodotRealSegment.readIndex(ret, 1),
+        )
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -15111,8 +15117,10 @@ object ObjectCalls {
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return Rect2(
-        position = Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
-        size = Vector2(x = GodotRealSegment.readIndex(ret, 2), y = GodotRealSegment.readIndex(ret, 3)),
+        position =
+          Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
+        size =
+          Vector2(x = GodotRealSegment.readIndex(ret, 2), y = GodotRealSegment.readIndex(ret, 3)),
       )
     }
   }
@@ -24417,7 +24425,8 @@ object ObjectCalls {
     val ret = ptrcallScratch.get().rect2Ret
     objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
     return Rect2(
-      position = Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
+      position =
+        Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
       size = Vector2(x = GodotRealSegment.readIndex(ret, 2), y = GodotRealSegment.readIndex(ret, 3)),
     )
   }

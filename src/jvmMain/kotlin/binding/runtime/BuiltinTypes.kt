@@ -1085,7 +1085,10 @@ object BuiltinTypes {
           rReturn = valueRet,
         )
         values +=
-          Vector2(x = GodotRealSegment.readIndex(valueRet, 0), y = GodotRealSegment.readIndex(valueRet, 1))
+          Vector2(
+            x = GodotRealSegment.readIndex(valueRet, 0),
+            y = GodotRealSegment.readIndex(valueRet, 1),
+          )
       }
       return values
     }
@@ -2059,7 +2062,10 @@ object BuiltinTypes {
       VariantType.VECTOR2 -> {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.VECTOR2).invoke(scratch, variant)
-        Vector2(x = GodotRealSegment.readIndex(scratch, 0), y = GodotRealSegment.readIndex(scratch, 1))
+        Vector2(
+          x = GodotRealSegment.readIndex(scratch, 0),
+          y = GodotRealSegment.readIndex(scratch, 1),
+        )
       }
 
       VariantType.VECTOR3 -> {
@@ -2145,8 +2151,10 @@ object BuiltinTypes {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.RECT2).invoke(scratch, variant)
         Rect2(
-          position = Vector2(GodotRealSegment.readIndex(scratch, 0), GodotRealSegment.readIndex(scratch, 1)),
-          size = Vector2(GodotRealSegment.readIndex(scratch, 2), GodotRealSegment.readIndex(scratch, 3)),
+          position =
+            Vector2(GodotRealSegment.readIndex(scratch, 0), GodotRealSegment.readIndex(scratch, 1)),
+          size =
+            Vector2(GodotRealSegment.readIndex(scratch, 2), GodotRealSegment.readIndex(scratch, 3)),
         )
       }
 
@@ -2246,9 +2254,12 @@ object BuiltinTypes {
         val scratch = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
         VariantConverters.variantToType(VariantType.TRANSFORM2D).invoke(scratch, variant)
         Transform2D(
-          x = Vector2(GodotRealSegment.readIndex(scratch, 0), GodotRealSegment.readIndex(scratch, 1)),
-          y = Vector2(GodotRealSegment.readIndex(scratch, 2), GodotRealSegment.readIndex(scratch, 3)),
-          origin = Vector2(GodotRealSegment.readIndex(scratch, 4), GodotRealSegment.readIndex(scratch, 5)),
+          x =
+            Vector2(GodotRealSegment.readIndex(scratch, 0), GodotRealSegment.readIndex(scratch, 1)),
+          y =
+            Vector2(GodotRealSegment.readIndex(scratch, 2), GodotRealSegment.readIndex(scratch, 3)),
+          origin =
+            Vector2(GodotRealSegment.readIndex(scratch, 4), GodotRealSegment.readIndex(scratch, 5)),
         )
       }
 

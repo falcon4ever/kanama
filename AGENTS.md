@@ -306,7 +306,7 @@ python3 scripts/validate_godot_api.py --api extension_api.json
 python3 scripts/check_wrapper_generator.py
 mkdocs build --strict
 ./gradlew ktfmtFormat            # format hand-written Kotlin (ktfmtCheck gates CI)
-./gradlew jar
+./gradlew jvmJar
 ./scripts/local_ci.sh /absolute/path/to/godot-4.7.2-stable
 ```
 

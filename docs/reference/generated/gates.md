@@ -16,7 +16,7 @@ In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the sc
 
 | # | Stage | What it proves | Where it runs | Script | First landed |
 | ---: | --- | --- | --- | --- | --- |
-| 1 | `JVM unit tests + kanama-common-api contract` | JVM unit tests across all modules (runtime :test + KSP processor :processor:test) plus the KMP module's JVM tests. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" test :kanama-common-api:jvmTest :kanama-comm…` | — |
+| 1 | `JVM unit tests + kanama-common-api contract` | JVM unit tests across all modules. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" jvmTest test :kanama-common-api:jvmTest :kan…` | — |
 | 2 | `public docs local-path guard` | Tracked public docs and templates contain no local machine paths or personal checkout names. | PR + push to main (ci.yml `local-ci`); local | `if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+\|/home/[[:alnum:]_.-]+\|l…` | — |
 | 3 | `validate Godot API constants` | Validate hand-written Godot ABI constants against extension_api.json. | PR + push to main (ci.yml `local-ci`); local | `scripts/validate_godot_api.py` | 2026-05-20 |
 | 4 | `API wrapper coverage report` | Report hand-written Kotlin API wrapper coverage against extension_api.json. | PR + push to main (ci.yml `local-ci`); local | `scripts/api_wrapper_coverage.py` | 2026-05-20 |
