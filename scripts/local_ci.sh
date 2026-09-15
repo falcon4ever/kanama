@@ -590,14 +590,13 @@ stage "publish to mavenLocal"
 
 stage "mavenLocal publication"
 maven_local="${KANAMA_MAVEN_LOCAL_REPO:-${HOME}/.m2/repository}/net/multigesture/kanama"
-# The root runtime is a KMP module (task 104 step 3): `kanama` is the root module Gradle-metadata
-# consumers resolve and `kanama-jvm` carries the desktop jar it redirects them to. Both must be
-# there or `implementation("net.multigesture.kanama:kanama:<version>")` stops resolving.
+# The root runtime is a KMP module (task 104 step 3) that publishes ONE Maven module: its JVM
+# variant under the `kanama` artifactId, with the Gradle metadata a modern consumer resolves
+# through. The root KMP publication is disabled, so there is no `kanama-jvm` and no `available-at`
+# indirection: `implementation("net.multigesture.kanama:kanama:<version>")` reads these files.
 for artifact in \
   "kanama/$kanama_version/kanama-$kanama_version.module" \
   "kanama/$kanama_version/kanama-$kanama_version.jar" \
-  "kanama-jvm/$kanama_version/kanama-jvm-$kanama_version.jar" \
-  "kanama-jvm/$kanama_version/kanama-jvm-$kanama_version-sources.jar" \
   "annotations/$kanama_version/annotations-$kanama_version.jar" \
   "annotations/$kanama_version/annotations-$kanama_version-sources.jar" \
   "processor/$kanama_version/processor-$kanama_version.jar" \

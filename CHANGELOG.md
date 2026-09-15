@@ -10,10 +10,10 @@ versioning once public releases begin.
 ### Changed — Kanama is one Kotlin Multiplatform module (task 104, step 3 parcels C+D)
 
 - **Contributors' commands change; game code does not.** No wrapper member, signature or runtime
-  type changed, and `net.multigesture.kanama:kanama:<version>` still resolves for consumers: the
-  module publishes the root `kanama` Gradle-metadata module plus `kanama-jvm`, and a JVM project
-  asking for `kanama` is redirected to the JVM variant (verified against a demo and a bare
-  consumer project). The desktop jar is still `build/libs/kanama.jar`.
+  type changed, and the published surface is unchanged too: the module still publishes exactly one
+  Maven module, `net.multigesture.kanama:kanama`, carrying the JVM variant (the KMP root
+  publication, which would advertise iOS variants Kanama does not publish, is disabled). Verified
+  against a demo and a bare consumer project. The desktop jar is still `build/libs/kanama.jar`.
 - The root project is one `kotlin("multiplatform")` module with targets `jvm()`, `iosArm64()` and
   `iosSimulatorArm64()`. **`:ios-runtime` no longer exists** — its cinterop, static library,
   per-target user-script dirs and per-target KSP moved to the root build.

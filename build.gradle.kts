@@ -336,12 +336,34 @@ tasks
   }
   .configureEach { dependsOn(generateKanamaReal) }
 
-configure<PublishingExtension> { addKanamaPackageRepository() }
+// WHAT KANAMA PUBLISHES: one Maven module, `net.multigesture.kanama:kanama`, carrying the JVM
+// variant -- the same coordinate and the same single module this project published before it became
+// multiplatform.
+//
+// The JVM target's publication takes that artifactId and the KMP ROOT publication is disabled,
+// because the root module's Gradle metadata is a map of every target: it would advertise
+// `iosArm64`/`iosSimulatorArm64` variants with `available-at` pointers to `kanama-iosarm64` and
+// `kanama-iossimulatorarm64` modules, and those must not exist -- the iOS deliverable is a static
+// xcframework built by the `ios` tasks below, never a Maven artifact, and publishing klibs would
+// mean compiling Kotlin/Native on every `publishToMavenLocal`. A consumer resolving `kanama` for a
+// JVM project therefore gets the jar directly, with no indirection that can dangle; a consumer
+// asking for an iOS variant gets Gradle's ordinary "no matching variant" instead of a 404 on a
+// module Kanama never writes. (KGP has no per-target publication switch in 2.3.21:
+// `KotlinTarget.publishable` is a read-only `val`.)
+configure<PublishingExtension> {
+  publications.withType<MavenPublication>().configureEach {
+    if (name == "jvm") {
+      artifactId = "kanama"
+    }
+  }
+  addKanamaPackageRepository()
+}
 
-// The two iOS targets are compiled into a static lib and shipped as an xcframework; their klibs
-// are not a Maven artifact anyone resolves, and publishing them would compile Kotlin/Native on
-// every `publishToMavenLocal`. `:ios-runtime` disabled all of its publish tasks for this reason.
-tasks.matching { it.name.startsWith("publishIos") }.configureEach { enabled = false }
+tasks
+  .matching {
+    it.name.startsWith("publishIos") || it.name.contains("KotlinMultiplatformPublication")
+  }
+  .configureEach { enabled = false }
 
 dependencies {
   add("kspJvm", project(":processor"))
@@ -524,12 +546,9 @@ tasks.register("publishKanamaToMavenLocal") {
   group = "publishing"
   description = "Publish Kanama runtime, annotations, and KSP processor jars to mavenLocal()."
   dependsOn(
-    // The root is a KMP module (task 104 step 3): the JVM variant is `kanama-jvm` and the root
-    // `kanama` module redirects Gradle-metadata consumers to it, so BOTH publications are needed
-    // for `implementation("net.multigesture.kanama:kanama:<version>")` to resolve. The iOS target
-    // publications are disabled (the iOS deliverable is an xcframework, never a Maven artifact),
-    // which is why this does not simply depend on `publishToMavenLocal`.
-    tasks.named("publishKotlinMultiplatformPublicationToMavenLocal"),
+    // The root is a KMP module (task 104 step 3) and publishes exactly one Maven module: the JVM
+    // variant under the `kanama` artifactId (see the publication block above). Naming that task
+    // rather than `publishToMavenLocal` keeps the disabled root/iOS publications out of the graph.
     tasks.named("publishJvmPublicationToMavenLocal"),
     ":annotations:publishToMavenLocal",
     ":kanama-common-api:publishJvmPublicationToMavenLocal",
@@ -556,7 +575,6 @@ val publishKanamaPackageMavenRepository by
       "Publish Kanama runtime, annotations, and KSP processor jars to the package-local Maven repository."
     dependsOn(cleanKanamaPackageMavenRepository)
     dependsOn(
-    tasks.named("publishKotlinMultiplatformPublicationToKanamaPackageRepository"),
     tasks.named("publishJvmPublicationToKanamaPackageRepository"),
     ":annotations:publishMavenPublicationToKanamaPackageRepository",
     ":kanama-common-api:publishJvmPublicationToKanamaPackageRepository",
