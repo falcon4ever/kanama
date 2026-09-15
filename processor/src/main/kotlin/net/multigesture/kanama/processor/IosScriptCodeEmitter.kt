@@ -638,6 +638,8 @@ internal class IosScriptCodeEmitter(
         val source = buildString {
           appendLine("package $packageName")
           appendLine()
+          appendLine("import kotlinx.cinterop.toKString")
+          appendLine()
           appendLine("@Suppress(\"unused\")")
           appendLine(
             "internal fun <T> MutableCollection<T>.removeIf(predicate: (T) -> Boolean): Boolean {"
@@ -649,7 +651,14 @@ internal class IosScriptCodeEmitter(
           appendLine()
           appendLine("@Suppress(\"unused\")")
           appendLine("internal object System {")
-          appendLine("    fun getenv(name: String): String? = null")
+          // Read the real process environment (task 111): the device gate launches every demo with
+          // `devicectl … --environment-variables {"KANAMA_DEMO_SMOKE_QUIT":"1"}` so the demos' SmokeQuit
+          // scripts — spawn / damage / free / quit — run on the phone inside the console-watched
+          // window instead of being skipped by a hard-coded null.
+          appendLine("    @OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)")
+          appendLine(
+            "    fun getenv(name: String): String? = platform.posix.getenv(name)?.toKString()"
+          )
           appendLine(
             "    object PrintShim { fun println(message: Any?) { kotlin.io.println(message) } }"
           )
