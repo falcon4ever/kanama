@@ -90,7 +90,7 @@ flowchart TB
 
     subgraph APP["Exported iOS app (.xcframework, device arm64)"]
         KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, RawSegment aliases the MemorySegment shim"]
-        WRAP["Shared generated wrappers<br/>src/commonMain, the same files desktop/Android compile"]
+        WRAP["Shared generated wrappers<br/>src/sharedApi, the same files desktop/Android compile"]
         OC["ObjectCalls (iOS actual)<br/>typed ptrcall helpers"]
         SHIM["C GDExtension shim<br/>entry, get_method_bind, generic ptrcall dispatch"]
     end
@@ -297,7 +297,7 @@ of `real_t` components, aliased once per platform in `Real.kt` — while a scala
 A wrapper's identity is `net.multigesture.kanama.api.GodotHandle`, a zero-cost
 `@JvmInline value class` that is the only handle type a public signature may name
 (task 104 step 1). Since step 3 it is ONE shared file in
-`src/commonMain/kotlin/net/multigesture/kanama/api`, because what it wraps is now
+`src/sharedApi/kotlin/net/multigesture/kanama/api`, because what it wraps is now
 also Kanama-named: `net.multigesture.kanama.binding.runtime.RawSegment`, the raw
 engine pointer, declared as a plain `typealias` once per backend — the FFM
 `MemorySegment` on desktop (`com.v7878.foreign.MemorySegment` after the Android
@@ -305,7 +305,7 @@ remap), the Kotlin/Native shim of the same name on iOS — with the null pointer
 beside it as a top-level `NULL_SEGMENT`. Web declares its own `GodotHandle` under
 the same fully-qualified name over a generation-tagged registry id.
 
-Nothing in `src/commonMain` names a `java.lang.foreign` type any more, which is what
+Nothing in `src/commonMain` or `src/sharedApi` names a `java.lang.foreign` type any more, which is what
 the rest of task 104 step 3 needs: a real KMP `commonMain` can neither declare nor
 `expect` a JDK package, so the later parcels turn this pair into
 `expect class RawSegment` / `expect val NULL_SEGMENT` with the two typealiases as
@@ -317,8 +317,8 @@ unchanged by the rename.
 
 The 19 Godot builtin value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`,
 `Quaternion`, `AABB`, `Plane`, `RID`, …) are ONE hand-written set under
-`src/commonMain/kotlin/net/multigesture/kanama/types`, in the same shared tree as
-the generated wrappers: the root JVM module, `:ios-runtime` and the Android copy
+`src/commonMain/kotlin/net/multigesture/kanama/types`, the module's KMP common
+fragment beside the generated wrapper tree: the JVM target, the two iOS targets and the Android copy
 task all compile those files (task 104 step 2). Only `Real.kt` is per platform —
 generated at build time on desktop, hand-written on iOS, written by the plugin
 build script on Android. The Web backend keeps its
@@ -345,7 +345,7 @@ signed zero canonicalized in the hash). Methods split by who computes them:
 Panama/FFM for desktop and Android and over the C shim for iOS, because the root
 is a plain JVM module and the Android remap forbids `expect`/`actual`. Nothing in
 the compiler proves the two halves agree, so
-`scripts/check_builtin_calls_contract.py` compares their public member sets as a
+`expect object BuiltinCalls` in the common fragment holds their public member sets as a
 local CI stage; step 3 of task 104 replaces it with an `expect object`.
 
 ## Object lifetime

@@ -36,17 +36,18 @@ generation. `Callable` stays blocked unless a helper has a bounded ownership
 shape; `DirAccess`, `FileAccess`, and `SceneTree` use dedicated handle aliases
 where factory methods return nullable object handles.
 
-**The raw engine pointer in the shared tree is `RawSegment`, never a
-`java.lang.foreign` type** (task 104 step 3). `src/commonMain` is compiled as-is by
-the root JVM module, by `:ios-runtime` and by the Android copy, and it becomes a
-real KMP `commonMain` later in task 104 — where a JDK package can neither be
-declared nor `expect`ed. So the pointer travels under one Kanama name,
-`net.multigesture.kanama.binding.runtime.RawSegment`, with the null pointer beside
-it as a top-level `NULL_SEGMENT` (a Java `static final` field cannot actualize an
-`expect` companion member). Each platform declares the pair itself — desktop/Android
-`src/main/kotlin/binding/runtime/RawSegment.kt` aliases the FFM `MemorySegment` (the
-PanamaPort remap rewrites it to `com.v7878.foreign.MemorySegment`), iOS
-`ios-runtime/.../binding/runtime/RawSegment.kt` aliases its Kotlin/Native shim — so
+**The raw engine pointer in the shared sources is `RawSegment`, never a
+`java.lang.foreign` type** (task 104 step 3). It is declared ONCE, in the root
+module's KMP common fragment, as
+`expect sealed interface RawSegment { fun address(): Long }` in
+`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/RawSegment.expect.kt`,
+with the null pointer beside it as a top-level `expect val NULL_SEGMENT` (a Java
+`static final` field cannot actualize an `expect` companion member). Each platform
+actualizes the pair with a typealias — desktop/Android
+`src/jvmMain/kotlin/binding/runtime/RawSegment.kt` to the FFM `MemorySegment` (the
+PanamaPort remap rewrites it to `com.v7878.foreign.MemorySegment` and strips the
+`actual` modifier), iOS `src/iosMain/.../binding/runtime/RawSegment.kt` to its
+Kotlin/Native shim — so
 `RawSegment` *is* the platform pointer type and the two spellings interoperate
 freely. The generator emits it in the only three shared-tree shapes that name the
 pointer at all: `internal fun wrap(handle: RawSegment)`, `NULL_SEGMENT` for a static
@@ -58,29 +59,33 @@ helpers `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
 `OpenXRAPIExtension.setCustomPlaySpace(space)` take a raw native pointer, not an
 object handle, and are the only public signatures left that name a
 `java.lang.foreign` type. `check_wrapper_generator.py` fails if any file under
-`src/commonMain` names one at all.
+`src/commonMain` or `src/sharedApi` names one at all (comments excluded: the
+`expect` files' KDoc names the JVM type when it explains the typealias).
 
 Generated wrappers are held to a **single-tree drift gate**. There is one generated
-wrapper tree, `src/commonMain/kotlin/net/multigesture/kanama/api`, compiled by the
-root JVM module, by `:ios-runtime` (an `iosMain` source root) and by the Android
-plugin (copied through the PanamaPort remap next to the desktop sources). The shared
+wrapper tree, `src/sharedApi/kotlin/net/multigesture/kanama/api`, a source directory
+of BOTH platform source sets of the one multiplatform module (`jvmMain` and
+`iosMain`), also copied through the PanamaPort remap by the Android plugin. It is
+shared SOURCE, not KMP common code: its classes extend the hand-shaped per-platform
+wrappers (`Node`, `GodotObject`, …), which a common source file may not name — task
+117 is the parcel that would change that. The shared
 file of a class carries the members both native backends can call: the method set is
 the iOS-audited helper-shape set (`IOS_AUDIT_ONLY`), the surface is desktop's
 (`@JvmStatic`, factory helpers). Members desktop can call but iOS cannot yet (no
 audited `ObjectCalls` helper for the ptrcall shape, or a wrapper type iOS does not
 host) are generated as extensions into a per-class desktop companion
-`src/main/kotlin/.../api/<Class>.jvm.kt`; the companion header names the helpers it
+`src/jvmMain/kotlin/.../api/<Class>.jvm.kt`; the companion header names the helpers it
 waits on, and the generated [iOS Shape Gap](../reference/generated/ios-shape-gap.md)
 page lists the whole gap. When a helper lands on iOS the next regen moves the member
 back into the shared file. Because those members are extensions, a script that calls
 one needs the member imported by name (`import net.multigesture.kanama.api.<member>`), not only
 the class import. iOS-only sugar on a shared class (`IOS_EXTENSION_SECTIONS`) is
-generated the same way into `ios-runtime/.../api/<Class>.ios.kt`.
+generated the same way into `src/iosMain/.../api/<Class>.ios.kt`.
 
 The classes that are not shared are listed once, platform-tagged, in
 `PER_PLATFORM_WRAPPERS` (`scripts/generate_api_wrapper.py`): for each, what desktop
-does (`generated` into `src/main/kotlin/.../api`, or `hand`) and what iOS does
-(`generated` into `ios-runtime/.../api`, `hand`, `collision` for a class hand-written
+does (`generated` into `src/jvmMain/kotlin/.../api`, or `hand`) and what iOS does
+(`generated` into `src/iosMain/.../api`, `hand`, `collision` for a class hand-written
 inside `IosGodotApi.kt` or a bespoke file, or `unsupported`). `DESKTOP_HANDSHAPED`,
 `IOS_HANDSHAPED`, `IOS_HANDWRITTEN_COLLISION_CLASSES` and `IOS_UNSUPPORTED_CLASSES` are
 views of that table. A class is per-platform only when the platforms genuinely host it
@@ -266,7 +271,7 @@ in `scripts/check_wrapper_generator.py`:
   the class and breaks the compile. When a class graduates to a real generated wrapper
   (as `Time`/`InputMap`/`PhysicsServer3D` did), delete its entry so generation is allowed.
   `FileAccess` lives here: iOS hosts it as a hand-written static facade plus its own
-  `FileAccessHandle` in `ios-runtime/.../api/FileAccess.kt`.
+  `FileAccessHandle` in `src/iosMain/.../api/FileAccess.kt`.
 
 - **Explicit uncompilable classes.** The `unsupported` cells of `PER_PLATFORM_WRAPPERS` (the
   `IOS_UNSUPPORTED_CLASSES` view) list the classes whose
@@ -508,9 +513,14 @@ single-line `/** … */` form), so re-running is idempotent.
 
 `net.multigesture.kanama.binding.runtime.ObjectCalls` is the only seam between the shared
 wrapper tree and the engine, and it exists once per platform under that one
-fully-qualified name: `src/main/kotlin/binding/runtime/ObjectCalls.kt` over Panama/FFM for
+fully-qualified name: `src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt` over Panama/FFM for
 desktop (Android gets it through the source remap), and
-`ios-runtime/.../binding/runtime/ObjectCalls.kt` over the C shim for iOS.
+`src/iosMain/.../binding/runtime/ObjectCalls.kt` over the C shim for iOS. Since task 104
+step 3 both are `actual object ObjectCalls`, actualizing the GENERATED
+`expect object ObjectCalls` in
+`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt` — 1,352 of
+the 1,359 helpers the tree calls, with seven documented exceptions in
+`scripts/check_objectcalls_parity.py`. The compiler, not a script, is the parity contract.
 
 **One file per platform.** The iOS file is hand-written except for a marked region at the
 end of the `object ObjectCalls` body:
@@ -565,7 +575,7 @@ locks the region's rendering for one class (Node3D) byte-for-byte.
 
 The 19 builtin value types are ONE hand-written set under
 `src/commonMain/kotlin/net/multigesture/kanama/types` since task 104 step 2 — the
-root JVM module, `:ios-runtime` and the Android copy task all compile those
+the module's JVM and iOS targets and the Android copy task all compile those
 files, and neither platform keeps a copy. Only `Real.kt` is per platform
 (generated at build time on desktop, hand-written on iOS, written by the plugin
 build script on Android) — as `GodotHandle` was until task 104 step 3 moved it into
@@ -574,7 +584,7 @@ the shared tree over `RawSegment`.
 A shared body reaches the engine only through
 `net.multigesture.kanama.binding.runtime.BuiltinCalls`, which exists once per
 platform under that one fully-qualified name: over Panama/FFM in
-`src/main/kotlin/binding/runtime/BuiltinCalls.kt` (Android gets it through the
+`src/jvmMain/kotlin/binding/runtime/BuiltinCalls.kt` (Android gets it through the
 source remap) and over the C shim in `ios-runtime/.../binding/runtime/
 BuiltinCalls.kt`. No compiler can prove the two agree until the root is a
 multiplatform module (task 104 step 3 turns the pair into an `expect object`),
