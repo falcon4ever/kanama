@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeWorldPositionFromDepth(handle: GodotHandle) : VisualShader
         fun fromHandle(handle: GodotHandle): VisualShaderNodeWorldPositionFromDepth? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeWorldPositionFromDepth? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeWorldPositionFromDepth? =
             if (handle.address() == 0L) null else VisualShaderNodeWorldPositionFromDepth(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

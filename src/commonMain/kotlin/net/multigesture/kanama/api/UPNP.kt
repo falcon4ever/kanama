@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -40,12 +41,12 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
 
     fun addDevice(device: UPNPDevice?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addDeviceBind, segment, listOf(device?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addDeviceBind, segment, listOf(device?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun setDevice(index: Int, device: UPNPDevice?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDeviceBind, segment, index, device?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setDeviceBind, segment, index, device?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun removeDevice(index: Int) {
@@ -148,7 +149,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): UPNP? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): UPNP? =
+        internal fun wrap(handle: RawSegment): UPNP? =
             if (handle.address() == 0L) null else UPNP(GodotHandle(handle))
 
         private const val GET_DEVICE_COUNT_HASH = 3905245786L

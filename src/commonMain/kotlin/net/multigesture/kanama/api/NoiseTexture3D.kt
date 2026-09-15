@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -63,7 +64,7 @@ class NoiseTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
     fun setNoise(noise: Noise?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNoiseBind, segment, listOf(noise?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getNoise(): Noise? {
@@ -73,7 +74,7 @@ class NoiseTexture3D(handle: GodotHandle) : Texture3D(handle) {
 
     fun setColorRamp(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getColorRamp(): Gradient? {
@@ -126,7 +127,7 @@ class NoiseTexture3D(handle: GodotHandle) : Texture3D(handle) {
         fun fromHandle(handle: GodotHandle): NoiseTexture3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): NoiseTexture3D? =
+        internal fun wrap(handle: RawSegment): NoiseTexture3D? =
             if (handle.address() == 0L) null else NoiseTexture3D(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L

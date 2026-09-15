@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -739,7 +739,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): Camera2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Camera2D? =
+        internal fun wrap(handle: RawSegment): Camera2D? =
             if (handle.address() == 0L) null else Camera2D(GodotHandle(handle))
 
         private const val SET_OFFSET_HASH = 743155724L

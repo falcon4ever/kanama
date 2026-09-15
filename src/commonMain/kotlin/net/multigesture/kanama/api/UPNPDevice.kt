@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -142,7 +142,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): UPNPDevice? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): UPNPDevice? =
+        internal fun wrap(handle: RawSegment): UPNPDevice? =
             if (handle.address() == 0L) null else UPNPDevice(GodotHandle(handle))
 
         private const val IS_VALID_GATEWAY_HASH = 36873697L

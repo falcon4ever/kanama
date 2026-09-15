@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -73,7 +74,7 @@ class CSGSphere3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMaterial(): Material? {
@@ -85,7 +86,7 @@ class CSGSphere3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         fun fromHandle(handle: GodotHandle): CSGSphere3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CSGSphere3D? =
+        internal fun wrap(handle: RawSegment): CSGSphere3D? =
             if (handle.address() == 0L) null else CSGSphere3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L

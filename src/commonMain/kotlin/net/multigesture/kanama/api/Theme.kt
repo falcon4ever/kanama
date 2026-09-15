@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -39,7 +40,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setIcon(name: String, themeType: String, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setIconBind, segment, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setIconBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -118,7 +119,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setStylebox(name: String, themeType: String, texture: StyleBox?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setStyleboxBind, segment, name, themeType, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setStyleboxBind, segment, name, themeType, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -197,7 +198,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setFont(name: String, themeType: String, font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setFontBind, segment, name, themeType, font?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(setFontBind, segment, name, themeType, font?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -556,7 +557,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun setDefaultFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDefaultFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDefaultFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -826,7 +827,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun mergeWith(other: Theme?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeWithBind, segment, listOf(other?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(mergeWithBind, segment, listOf(other?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -852,7 +853,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Theme? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Theme? =
+        internal fun wrap(handle: RawSegment): Theme? =
             if (handle.address() == 0L) null else Theme(GodotHandle(handle))
 
         private const val SET_ICON_HASH = 2188371082L

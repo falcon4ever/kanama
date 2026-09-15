@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class VFlowContainer(handle: GodotHandle) : FlowContainer(handle) {
         fun fromHandle(handle: GodotHandle): VFlowContainer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VFlowContainer? =
+        internal fun wrap(handle: RawSegment): VFlowContainer? =
             if (handle.address() == 0L) null else VFlowContainer(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

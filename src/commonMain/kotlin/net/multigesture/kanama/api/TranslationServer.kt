@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: TranslationServer
  */
 object TranslationServer {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("TranslationServer")
     }
 
@@ -190,7 +191,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun addTranslation(translation: Translation?) {
-        ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -200,7 +201,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun removeTranslation(translation: Translation?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, singleton, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -256,7 +257,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun hasTranslation(translation: Translation?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, singleton, translation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, singleton, translation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -389,7 +390,7 @@ object TranslationServer {
     fun fromHandle(handle: GodotHandle): TranslationServer? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): TranslationServer? =
+    internal fun wrap(handle: RawSegment): TranslationServer? =
         if (handle.address() == 0L) null else this
 
     private const val SET_LOCALE_HASH = 83702148L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -47,7 +47,7 @@ open class ScrollBar(handle: GodotHandle) : Range(handle) {
         fun fromHandle(handle: GodotHandle): ScrollBar? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ScrollBar? =
+        internal fun wrap(handle: RawSegment): ScrollBar? =
             if (handle.address() == 0L) null else ScrollBar(GodotHandle(handle))
 
         private const val SET_CUSTOM_STEP_HASH = 373806689L

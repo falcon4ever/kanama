@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -68,7 +68,7 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): PolygonPathFinder? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PolygonPathFinder? =
+        internal fun wrap(handle: RawSegment): PolygonPathFinder? =
             if (handle.address() == 0L) null else PolygonPathFinder(GodotHandle(handle))
 
         private const val SETUP_HASH = 3251786936L

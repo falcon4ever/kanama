@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -52,7 +52,7 @@ open class ConfirmationDialog(handle: GodotHandle) : AcceptDialog(handle) {
         fun fromHandle(handle: GodotHandle): ConfirmationDialog? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ConfirmationDialog? =
+        internal fun wrap(handle: RawSegment): ConfirmationDialog? =
             if (handle.address() == 0L) null else ConfirmationDialog(GodotHandle(handle))
 
         private const val GET_CANCEL_BUTTON_HASH = 1856205918L

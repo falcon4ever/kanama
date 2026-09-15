@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -35,7 +36,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun createFromImage(image: Image?, compressionMode: Long, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, compressionMode, normalMap, lossyQuality)
+        ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, compressionMode, normalMap, lossyQuality)
     }
 
     /**
@@ -114,7 +115,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: PortableCompressedTexture2D.set_keep_all_compressed_buffers
          */
         fun setKeepAllCompressedBuffers(keep: Boolean) {
-            ObjectCalls.ptrcallWithBoolArg(setKeepAllCompressedBuffersBind, MemorySegment.NULL, keep)
+            ObjectCalls.ptrcallWithBoolArg(setKeepAllCompressedBuffersBind, NULL_SEGMENT, keep)
         }
 
         /**
@@ -123,7 +124,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: PortableCompressedTexture2D.is_keeping_all_compressed_buffers
          */
         fun isKeepingAllCompressedBuffers(): Boolean {
-            return ObjectCalls.ptrcallNoArgsRetBool(isKeepingAllCompressedBuffersBind, MemorySegment.NULL)
+            return ObjectCalls.ptrcallNoArgsRetBool(isKeepingAllCompressedBuffersBind, NULL_SEGMENT)
         }
 
         const val COMPRESSION_MODE_LOSSLESS: Long = 0L
@@ -138,7 +139,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): PortableCompressedTexture2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PortableCompressedTexture2D? =
+        internal fun wrap(handle: RawSegment): PortableCompressedTexture2D? =
             if (handle.address() == 0L) null else PortableCompressedTexture2D(GodotHandle(handle))
 
         private const val CREATE_FROM_IMAGE_HASH = 3679243433L

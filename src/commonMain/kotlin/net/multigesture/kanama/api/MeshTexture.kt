@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -38,7 +39,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setMesh(mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -78,7 +79,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setBaseTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setBaseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -101,7 +102,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): MeshTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MeshTexture? =
+        internal fun wrap(handle: RawSegment): MeshTexture? =
             if (handle.address() == 0L) null else MeshTexture(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L

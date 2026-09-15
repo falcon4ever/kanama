@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -23,7 +23,7 @@ class OpenXRAndroidThreadSettingsExtension(handle: GodotHandle) : OpenXRExtensio
         fun fromHandle(handle: GodotHandle): OpenXRAndroidThreadSettingsExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRAndroidThreadSettingsExtension? =
+        internal fun wrap(handle: RawSegment): OpenXRAndroidThreadSettingsExtension? =
             if (handle.address() == 0L) null else OpenXRAndroidThreadSettingsExtension(GodotHandle(handle))
 
         private const val SET_APPLICATION_THREAD_TYPE_HASH = 1558751158L

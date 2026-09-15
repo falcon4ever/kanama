@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -89,7 +89,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): EditorPaths? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorPaths? =
+        internal fun wrap(handle: RawSegment): EditorPaths? =
             if (handle.address() == 0L) null else EditorPaths(GodotHandle(handle))
 
         private const val GET_DATA_DIR_HASH = 201670096L

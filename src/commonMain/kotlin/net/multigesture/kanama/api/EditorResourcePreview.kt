@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -36,7 +37,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.queue_edited_resource_preview
      */
     fun queueEditedResourcePreview(resource: Resource?, receiver: GodotObject, receiverFunc: String, userdata: Any?) {
-        ObjectCalls.ptrcallWithTwoObjectStringNameVariantArgs(queueEditedResourcePreviewBind, segment, resource?.requireOpenHandle() ?: MemorySegment.NULL, receiver.segment, receiverFunc, userdata)
+        ObjectCalls.ptrcallWithTwoObjectStringNameVariantArgs(queueEditedResourcePreviewBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT, receiver.segment, receiverFunc, userdata)
     }
 
     /**
@@ -45,7 +46,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.add_preview_generator
      */
     fun addPreviewGenerator(generator: EditorResourcePreviewGenerator?) {
-        ObjectCalls.ptrcallWithObjectArgs(addPreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addPreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -54,7 +55,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorResourcePreview.remove_preview_generator
      */
     fun removePreviewGenerator(generator: EditorResourcePreviewGenerator?) {
-        ObjectCalls.ptrcallWithObjectArgs(removePreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removePreviewGeneratorBind, segment, listOf(generator?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -76,7 +77,7 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): EditorResourcePreview? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorResourcePreview? =
+        internal fun wrap(handle: RawSegment): EditorResourcePreview? =
             if (handle.address() == 0L) null else EditorResourcePreview(GodotHandle(handle))
 
         private const val QUEUE_RESOURCE_PREVIEW_HASH = 233177534L

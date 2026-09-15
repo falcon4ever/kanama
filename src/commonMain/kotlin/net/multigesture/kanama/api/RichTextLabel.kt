@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
@@ -255,7 +256,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.add_image
      */
     fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L, altText: String = "") {
-        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, key, pad, tooltip, widthUnit, heightUnit, altText)
+        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign, region, key, pad, tooltip, widthUnit, heightUnit, altText)
     }
 
     /**
@@ -265,7 +266,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.update_image
      */
     fun updateImage(key: Any?, mask: Long, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L) {
-        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, segment, key, mask, image?.requireOpenHandle() ?: MemorySegment.NULL, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
+        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, segment, key, mask, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
     }
 
     /**
@@ -307,7 +308,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_font
      */
     fun pushFont(font: Font?, fontSize: Int = 0) {
-        ObjectCalls.ptrcallWithObjectAndIntArg(pushFontBind, segment, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize)
+        ObjectCalls.ptrcallWithObjectAndIntArg(pushFontBind, segment, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize)
     }
 
     /**
@@ -492,7 +493,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_dropcap
      */
     fun pushDropcap(string: String, font: Font?, size: Int, dropcapMargins: Rect2, color: Color, outlineSize: Int = 0, outlineColor: Color) {
-        ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(pushDropcapBind, segment, string, font?.requireOpenHandle() ?: MemorySegment.NULL, size, dropcapMargins, color, outlineSize, outlineColor)
+        ObjectCalls.ptrcallWithStringObjectIntRect2ColorIntColorArgs(pushDropcapBind, segment, string, font?.requireOpenHandle() ?: NULL_SEGMENT, size, dropcapMargins, color, outlineSize, outlineColor)
     }
 
     /**
@@ -595,7 +596,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: RichTextLabel.push_customfx
      */
     fun pushCustomfx(effect: RichTextEffect?, env: Map<String, Any?>) {
-        ObjectCalls.ptrcallWithObjectAndDictionaryArg(pushCustomfxBind, segment, effect?.requireOpenHandle() ?: MemorySegment.NULL, env)
+        ObjectCalls.ptrcallWithObjectAndDictionaryArg(pushCustomfxBind, segment, effect?.requireOpenHandle() ?: NULL_SEGMENT, env)
     }
 
     /**
@@ -1633,7 +1634,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): RichTextLabel? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RichTextLabel? =
+        internal fun wrap(handle: RawSegment): RichTextLabel? =
             if (handle.address() == 0L) null else RichTextLabel(GodotHandle(handle))
 
         private const val GET_PARSED_TEXT_HASH = 201670096L

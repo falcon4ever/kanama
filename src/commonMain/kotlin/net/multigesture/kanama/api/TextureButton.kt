@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -79,7 +80,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_normal
      */
     fun setTextureNormal(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureNormalBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -90,7 +91,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_pressed
      */
     fun setTexturePressed(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTexturePressedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -100,7 +101,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_hover
      */
     fun setTextureHover(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureHoverBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureHoverBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -110,7 +111,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_disabled
      */
     fun setTextureDisabled(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureDisabledBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureDisabledBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -124,7 +125,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_texture_focused
      */
     fun setTextureFocused(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureFocusedBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureFocusedBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -134,7 +135,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.set_click_mask
      */
     fun setClickMask(mask: BitMap?) {
-        ObjectCalls.ptrcallWithObjectArgs(setClickMaskBind, segment, listOf(mask?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setClickMaskBind, segment, listOf(mask?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -291,7 +292,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
         fun fromHandle(handle: GodotHandle): TextureButton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextureButton? =
+        internal fun wrap(handle: RawSegment): TextureButton? =
             if (handle.address() == 0L) null else TextureButton(GodotHandle(handle))
 
         private const val SET_TEXTURE_NORMAL_HASH = 4051416890L

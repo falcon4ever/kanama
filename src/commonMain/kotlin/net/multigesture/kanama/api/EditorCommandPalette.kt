@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -39,7 +39,7 @@ class EditorCommandPalette(handle: GodotHandle) : ConfirmationDialog(handle) {
         fun fromHandle(handle: GodotHandle): EditorCommandPalette? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorCommandPalette? =
+        internal fun wrap(handle: RawSegment): EditorCommandPalette? =
             if (handle.address() == 0L) null else EditorCommandPalette(GodotHandle(handle))
 
         private const val ADD_COMMAND_HASH = 864043298L

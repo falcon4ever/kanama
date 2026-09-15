@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -26,7 +26,7 @@ class PackedDataContainerRef(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): PackedDataContainerRef? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PackedDataContainerRef? =
+        internal fun wrap(handle: RawSegment): PackedDataContainerRef? =
             if (handle.address() == 0L) null else PackedDataContainerRef(GodotHandle(handle))
 
         private const val SIZE_HASH = 3905245786L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
@@ -150,7 +150,7 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): KinematicCollision2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): KinematicCollision2D? =
+        internal fun wrap(handle: RawSegment): KinematicCollision2D? =
             if (handle.address() == 0L) null else KinematicCollision2D(GodotHandle(handle))
 
         private const val GET_POSITION_HASH = 3341600327L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -278,7 +279,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_shortcut
      */
     fun setShortcut(shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -297,7 +298,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_button_group
      */
     fun setButtonGroup(buttonGroup: ButtonGroup?) {
-        ObjectCalls.ptrcallWithObjectArgs(setButtonGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setButtonGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -330,7 +331,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): BaseButton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BaseButton? =
+        internal fun wrap(handle: RawSegment): BaseButton? =
             if (handle.address() == 0L) null else BaseButton(GodotHandle(handle))
 
         private const val SET_PRESSED_HASH = 2586408642L

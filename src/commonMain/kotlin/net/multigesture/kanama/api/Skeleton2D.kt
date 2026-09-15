@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
@@ -48,7 +49,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.set_modification_stack
      */
     fun setModificationStack(modificationStack: SkeletonModificationStack2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setModificationStackBind, segment, listOf(modificationStack?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setModificationStackBind, segment, listOf(modificationStack?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -100,7 +101,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): Skeleton2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Skeleton2D? =
+        internal fun wrap(handle: RawSegment): Skeleton2D? =
             if (handle.address() == 0L) null else Skeleton2D(GodotHandle(handle))
 
         private const val GET_BONE_COUNT_HASH = 3905245786L

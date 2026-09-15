@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -23,7 +24,7 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
 
     fun setNext(entity: OpenXRStructureBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNextBind, segment, listOf(entity?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNextBind, segment, listOf(entity?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getNext(): OpenXRStructureBase? {
@@ -41,7 +42,7 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRStructureBase? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRStructureBase? =
+        internal fun wrap(handle: RawSegment): OpenXRStructureBase? =
             if (handle.address() == 0L) null else OpenXRStructureBase(GodotHandle(handle))
 
         private const val GET_STRUCTURE_TYPE_HASH = 2455072627L

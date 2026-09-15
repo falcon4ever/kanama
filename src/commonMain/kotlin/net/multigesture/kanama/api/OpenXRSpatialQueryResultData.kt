@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -29,7 +29,7 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
         fun fromHandle(handle: GodotHandle): OpenXRSpatialQueryResultData? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialQueryResultData? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialQueryResultData? =
             if (handle.address() == 0L) null else OpenXRSpatialQueryResultData(GodotHandle(handle))
 
         private const val GET_CAPACITY_HASH = 3905245786L

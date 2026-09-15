@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeUVPolarCoord(handle: GodotHandle) : VisualShaderNode(handl
         fun fromHandle(handle: GodotHandle): VisualShaderNodeUVPolarCoord? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeUVPolarCoord? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeUVPolarCoord? =
             if (handle.address() == 0L) null else VisualShaderNodeUVPolarCoord(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -248,7 +248,7 @@ class SkeletonModification2DCCDIK(handle: GodotHandle) : SkeletonModification2D(
         fun fromHandle(handle: GodotHandle): SkeletonModification2DCCDIK? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SkeletonModification2DCCDIK? =
+        internal fun wrap(handle: RawSegment): SkeletonModification2DCCDIK? =
             if (handle.address() == 0L) null else SkeletonModification2DCCDIK(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L

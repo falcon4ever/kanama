@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -56,14 +57,14 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
 
     companion object {
         fun createFromString(pattern: String, showError: Boolean = true): RegEx? {
-            return RegEx.wrap(ObjectCalls.ptrcallWithStringAndBoolArgRetObject(createFromStringBind, MemorySegment.NULL, pattern, showError))
+            return RegEx.wrap(ObjectCalls.ptrcallWithStringAndBoolArgRetObject(createFromStringBind, NULL_SEGMENT, pattern, showError))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RegEx? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RegEx? =
+        internal fun wrap(handle: RawSegment): RegEx? =
             if (handle.address() == 0L) null else RegEx(GodotHandle(handle))
 
         private const val CREATE_FROM_STRING_HASH = 4249111514L

@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -72,7 +73,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
 
     companion object {
         fun setDefaultExtension(extensionClass: String) {
-            ObjectCalls.ptrcallWithStringNameArg(setDefaultExtensionBind, MemorySegment.NULL, extensionClass)
+            ObjectCalls.ptrcallWithStringNameArg(setDefaultExtensionBind, NULL_SEGMENT, extensionClass)
         }
 
         const val STATE_NEW: Long = 0L
@@ -95,7 +96,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): WebRTCPeerConnection? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): WebRTCPeerConnection? =
+        internal fun wrap(handle: RawSegment): WebRTCPeerConnection? =
             if (handle.address() == 0L) null else WebRTCPeerConnection(GodotHandle(handle))
 
         private const val SET_DEFAULT_EXTENSION_HASH = 3304788590L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -81,7 +82,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun addModification(modification: SkeletonModification2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addModificationBind, segment, listOf(modification?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addModificationBind, segment, listOf(modification?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -101,7 +102,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun setModification(modIdx: Int, modification: SkeletonModification2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, segment, modIdx, modification?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setModificationBind, segment, modIdx, modification?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -195,7 +196,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): SkeletonModificationStack2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SkeletonModificationStack2D? =
+        internal fun wrap(handle: RawSegment): SkeletonModificationStack2D? =
             if (handle.address() == 0L) null else SkeletonModificationStack2D(GodotHandle(handle))
 
         private const val SETUP_HASH = 3218959716L

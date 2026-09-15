@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -37,7 +37,7 @@ open class Occluder3D(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Occluder3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Occluder3D? =
+        internal fun wrap(handle: RawSegment): Occluder3D? =
             if (handle.address() == 0L) null else Occluder3D(GodotHandle(handle))
 
         private const val GET_VERTICES_HASH = 497664490L

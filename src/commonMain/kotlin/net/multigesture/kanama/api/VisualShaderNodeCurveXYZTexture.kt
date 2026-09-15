@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +19,7 @@ class VisualShaderNodeCurveXYZTexture(handle: GodotHandle) : VisualShaderNodeRes
 
     fun setTexture(texture: CurveXYZTexture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getTexture(): CurveXYZTexture? {
@@ -31,7 +32,7 @@ class VisualShaderNodeCurveXYZTexture(handle: GodotHandle) : VisualShaderNodeRes
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCurveXYZTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeCurveXYZTexture? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeCurveXYZTexture? =
             if (handle.address() == 0L) null else VisualShaderNodeCurveXYZTexture(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 8031783L

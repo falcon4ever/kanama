@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -90,7 +91,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addTranslation(translation: Translation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -100,7 +101,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun removeTranslation(translation: Translation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeTranslationBind, segment, listOf(translation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -142,7 +143,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasTranslation(translation: Translation?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, segment, translation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(hasTranslationBind, segment, translation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -484,7 +485,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): TranslationDomain? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TranslationDomain? =
+        internal fun wrap(handle: RawSegment): TranslationDomain? =
             if (handle.address() == 0L) null else TranslationDomain(GodotHandle(handle))
 
         private const val GET_TRANSLATION_OBJECT_HASH = 606768082L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
@@ -93,7 +94,7 @@ class Sprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -367,7 +368,7 @@ class Sprite2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): Sprite2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Sprite2D? =
+        internal fun wrap(handle: RawSegment): Sprite2D? =
             if (handle.address() == 0L) null else Sprite2D(GodotHandle(handle))
 
         @JvmStatic

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -64,7 +64,7 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
         fun fromHandle(handle: GodotHandle): EditorExportPlatformExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorExportPlatformExtension? =
+        internal fun wrap(handle: RawSegment): EditorExportPlatformExtension? =
             if (handle.address() == 0L) null else EditorExportPlatformExtension(GodotHandle(handle))
 
         private const val SET_CONFIG_ERROR_HASH = 3089850668L

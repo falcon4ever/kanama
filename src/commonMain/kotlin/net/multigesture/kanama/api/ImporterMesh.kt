@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2i
@@ -94,7 +95,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun addSurface(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: MemorySegment.NULL, name, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
     }
 
     /**
@@ -215,7 +216,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setSurfaceMaterial(surfaceIdx: Int, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceMaterialBind, segment, surfaceIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceMaterialBind, segment, surfaceIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -244,7 +245,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, segment, baseMesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -294,7 +295,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: ImporterMesh.merge_importer_meshes
          */
         fun mergeImporterMeshes(importerMeshes: List<ImporterMesh>, relativeTransforms: List<Transform3D>, deduplicateSurfaces: Boolean = true): ImporterMesh? {
-            return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, MemorySegment.NULL, importerMeshes, relativeTransforms, deduplicateSurfaces))
+            return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, NULL_SEGMENT, importerMeshes, relativeTransforms, deduplicateSurfaces))
         }
 
         /**
@@ -304,14 +305,14 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: ImporterMesh.from_mesh
          */
         fun fromMesh(mesh: Mesh?): ImporterMesh? {
-            return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromMeshBind, MemorySegment.NULL, mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+            return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromMeshBind, NULL_SEGMENT, mesh?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImporterMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImporterMesh? =
+        internal fun wrap(handle: RawSegment): ImporterMesh? =
             if (handle.address() == 0L) null else ImporterMesh(GodotHandle(handle))
 
         private const val MERGE_IMPORTER_MESHES_HASH = 1030647649L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -19,7 +19,7 @@ class GDScript(handle: GodotHandle) : Script(handle) {
         fun fromHandle(handle: GodotHandle): GDScript? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GDScript? =
+        internal fun wrap(handle: RawSegment): GDScript? =
             if (handle.address() == 0L) null else GDScript(GodotHandle(handle))
 
         private const val NEW_HASH = 1545262638L

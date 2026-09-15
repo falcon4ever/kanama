@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
@@ -1290,7 +1291,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.set_theme
      */
     fun setTheme(theme: Theme?) {
-        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setThemeBind, segment, listOf(theme?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2499,7 +2500,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         fun fromHandle(handle: GodotHandle): Control? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Control? =
+        internal fun wrap(handle: RawSegment): Control? =
             if (handle.address() == 0L) null else Control(GodotHandle(handle))
 
         private const val ACCEPT_EVENT_HASH = 3218959716L

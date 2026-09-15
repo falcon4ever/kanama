@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -286,7 +286,7 @@ class Parallax2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): Parallax2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Parallax2D? =
+        internal fun wrap(handle: RawSegment): Parallax2D? =
             if (handle.address() == 0L) null else Parallax2D(GodotHandle(handle))
 
         private const val SET_SCROLL_SCALE_HASH = 743155724L

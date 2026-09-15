@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -120,7 +120,7 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
         fun fromHandle(handle: GodotHandle): ProgressBar? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ProgressBar? =
+        internal fun wrap(handle: RawSegment): ProgressBar? =
             if (handle.address() == 0L) null else ProgressBar(GodotHandle(handle))
 
         private const val SET_FILL_MODE_HASH = 1286410249L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -164,7 +165,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      */
     fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, segment, name, node?.requireOpenHandle() ?: MemorySegment.NULL, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
+        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
     }
 
     /**
@@ -218,7 +219,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): AnimationNode? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNode? =
+        internal fun wrap(handle: RawSegment): AnimationNode? =
             if (handle.address() == 0L) null else AnimationNode(GodotHandle(handle))
 
         private const val ADD_INPUT_HASH = 2323990056L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -107,7 +108,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.activate_item_by_event
      */
     fun activateItemByEvent(event: InputEvent?, forGlobalOnly: Boolean = false): Boolean {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(activateItemByEventBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL, forGlobalOnly)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetBool(activateItemByEventBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, forGlobalOnly)
     }
 
     /**
@@ -165,7 +166,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_item
      */
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
     }
 
     /**
@@ -195,7 +196,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_check_item
      */
     fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
     }
 
     /**
@@ -219,7 +220,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_item
      */
     fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id, accel)
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
     }
 
     /**
@@ -245,7 +246,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_shortcut
      */
     fun addShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(addShortcutBind, segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
+        ObjectCalls.ptrcallWithObjectIntTwoBoolArgs(addShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
     }
 
     /**
@@ -257,7 +258,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_shortcut
      */
     fun addIconShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false, allowEcho: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(addIconShortcutBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global, allowEcho)
+        ObjectCalls.ptrcallWithObjectObjectIntTwoBoolArgs(addIconShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global, allowEcho)
     }
 
     /**
@@ -270,7 +271,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_check_shortcut
      */
     fun addCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntBoolArgs(addCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectIntBoolArgs(addCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -283,7 +284,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_check_shortcut
      */
     fun addIconCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconCheckShortcutBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -296,7 +297,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_radio_check_shortcut
      */
     fun addRadioCheckShortcut(shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectIntBoolArgs(addRadioCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectIntBoolArgs(addRadioCheckShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -305,7 +306,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_shortcut
      */
     fun addIconRadioCheckShortcut(texture: Texture2D?, shortcut: Shortcut?, id: Int = -1, global: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconRadioCheckShortcutBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, id, global)
+        ObjectCalls.ptrcallWithObjectObjectIntBoolArgs(addIconRadioCheckShortcutBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, id, global)
     }
 
     /**
@@ -381,7 +382,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_icon
      */
     fun setItemIcon(index: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, index, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, index, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -523,7 +524,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.set_item_shortcut
      */
     fun setItemShortcut(index: Int, shortcut: Shortcut?, global: Boolean = false) {
-        ObjectCalls.ptrcallWithIntObjectBoolArgs(setItemShortcutBind, segment, index, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, global)
+        ObjectCalls.ptrcallWithIntObjectBoolArgs(setItemShortcutBind, segment, index, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, global)
     }
 
     /**
@@ -1170,7 +1171,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
         fun fromHandle(handle: GodotHandle): PopupMenu? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PopupMenu? =
+        internal fun wrap(handle: RawSegment): PopupMenu? =
             if (handle.address() == 0L) null else PopupMenu(GodotHandle(handle))
 
         private const val ACTIVATE_ITEM_BY_EVENT_HASH = 3716412023L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: Time
  */
 object Time {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("Time")
     }
 
@@ -223,7 +223,7 @@ object Time {
     fun fromHandle(handle: GodotHandle): Time? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): Time? =
+    internal fun wrap(handle: RawSegment): Time? =
         if (handle.address() == 0L) null else this
 
     private const val GET_DATETIME_DICT_FROM_UNIX_TIME_HASH = 3485342025L

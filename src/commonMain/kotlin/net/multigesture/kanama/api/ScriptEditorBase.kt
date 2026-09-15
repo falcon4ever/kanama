@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -17,7 +18,7 @@ class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
      * Generated from Godot docs: ScriptEditorBase.add_syntax_highlighter
      */
     fun addSyntaxHighlighter(highlighter: EditorSyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(addSyntaxHighlighterBind, segment, listOf(highlighter?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addSyntaxHighlighterBind, segment, listOf(highlighter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -48,7 +49,7 @@ class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
         fun fromHandle(handle: GodotHandle): ScriptEditorBase? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ScriptEditorBase? =
+        internal fun wrap(handle: RawSegment): ScriptEditorBase? =
             if (handle.address() == 0L) null else ScriptEditorBase(GodotHandle(handle))
 
         private const val ADD_SYNTAX_HIGHLIGHTER_HASH = 1092774468L

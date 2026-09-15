@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -22,7 +22,7 @@ open class OpenXRExtensionWrapper(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRExtensionWrapper? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRExtensionWrapper? =
+        internal fun wrap(handle: RawSegment): OpenXRExtensionWrapper? =
             if (handle.address() == 0L) null else OpenXRExtensionWrapper(GodotHandle(handle))
 
         private const val GET_OPENXR_API_HASH = 1637791613L

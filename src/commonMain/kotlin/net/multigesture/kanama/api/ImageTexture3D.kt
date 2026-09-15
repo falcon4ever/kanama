@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -39,7 +39,7 @@ class ImageTexture3D(handle: GodotHandle) : Texture3D(handle) {
         fun fromHandle(handle: GodotHandle): ImageTexture3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImageTexture3D? =
+        internal fun wrap(handle: RawSegment): ImageTexture3D? =
             if (handle.address() == 0L) null else ImageTexture3D(GodotHandle(handle))
 
         private const val CREATE_HASH = 1130379827L

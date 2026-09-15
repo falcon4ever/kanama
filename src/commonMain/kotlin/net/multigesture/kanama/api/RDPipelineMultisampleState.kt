@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -201,7 +201,7 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RDPipelineMultisampleState? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDPipelineMultisampleState? =
+        internal fun wrap(handle: RawSegment): RDPipelineMultisampleState? =
             if (handle.address() == 0L) null else RDPipelineMultisampleState(GodotHandle(handle))
 
         private const val SET_SAMPLE_COUNT_HASH = 3774171498L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class AnimationNodeBlend2(handle: GodotHandle) : AnimationNodeSync(handle) {
         fun fromHandle(handle: GodotHandle): AnimationNodeBlend2? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeBlend2? =
+        internal fun wrap(handle: RawSegment): AnimationNodeBlend2? =
             if (handle.address() == 0L) null else AnimationNodeBlend2(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

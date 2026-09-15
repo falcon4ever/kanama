@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: Geometry2D
  */
 object Geometry2D {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("Geometry2D")
     }
 
@@ -340,7 +340,7 @@ object Geometry2D {
     fun fromHandle(handle: GodotHandle): Geometry2D? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): Geometry2D? =
+    internal fun wrap(handle: RawSegment): Geometry2D? =
         if (handle.address() == 0L) null else this
 
     private const val IS_POINT_IN_CIRCLE_HASH = 2929491703L

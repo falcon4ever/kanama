@@ -129,7 +129,12 @@ def check_rendered_kotlin_type(
         return []
 
     errors: list[str] = []
-    forbidden_tokens = {"GodotObject", "MemorySegment", "Object", "List<GodotObject>", "List<MemorySegment>", "List<Object>"}
+    # "RawSegment" is the shared tree's spelling of the raw engine pointer (task 104 step 3): it is
+    # as unsafe in a public signature as the JDK name it aliases.
+    forbidden_tokens = {
+        "GodotObject", "MemorySegment", "RawSegment", "Object",
+        "List<GodotObject>", "List<MemorySegment>", "List<RawSegment>", "List<Object>",
+    }
     if rendered_type in forbidden_tokens:
         errors.append(f"{prefix} rendered as unsafe/widened Kotlin type {rendered_type}")
 

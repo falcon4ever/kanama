@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -14,7 +15,7 @@ class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) 
     }
 
     fun setup(actionMap: OpenXRActionMap?, bindingModifier: OpenXRBindingModifier?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(setupBind, segment, actionMap?.requireOpenHandle() ?: MemorySegment.NULL, bindingModifier?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectArgs(setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, bindingModifier?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     object Signals {
@@ -26,7 +27,7 @@ class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) 
         fun fromHandle(handle: GodotHandle): OpenXRBindingModifierEditor? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRBindingModifierEditor? =
+        internal fun wrap(handle: RawSegment): OpenXRBindingModifierEditor? =
             if (handle.address() == 0L) null else OpenXRBindingModifierEditor(GodotHandle(handle))
 
         private const val GET_BINDING_MODIFIER_HASH = 2930765082L

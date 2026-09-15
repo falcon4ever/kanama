@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -198,7 +198,7 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): ScriptBacktrace? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ScriptBacktrace? =
+        internal fun wrap(handle: RawSegment): ScriptBacktrace? =
             if (handle.address() == 0L) null else ScriptBacktrace(GodotHandle(handle))
 
         private const val GET_LANGUAGE_NAME_HASH = 201670096L

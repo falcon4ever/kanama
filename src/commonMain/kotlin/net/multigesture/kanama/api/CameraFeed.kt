@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform2D
 
@@ -126,7 +127,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRgbImage(rgbImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, segment, listOf(rgbImage?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, segment, listOf(rgbImage?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -136,7 +137,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setYcbcrImage(ycbcrImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, segment, listOf(ycbcrImage?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, segment, listOf(ycbcrImage?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -146,7 +147,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setYcbcrImages(yImage: Image?, cbcrImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, segment, yImage?.requireOpenHandle() ?: MemorySegment.NULL, cbcrImage?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, segment, yImage?.requireOpenHandle() ?: NULL_SEGMENT, cbcrImage?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -223,7 +224,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): CameraFeed? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CameraFeed? =
+        internal fun wrap(handle: RawSegment): CameraFeed? =
             if (handle.address() == 0L) null else CameraFeed(GodotHandle(handle))
 
         private const val GET_ID_HASH = 3905245786L

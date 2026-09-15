@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -100,7 +100,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
         fun fromHandle(handle: GodotHandle): SkeletonModification2DPhysicalBones? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SkeletonModification2DPhysicalBones? =
+        internal fun wrap(handle: RawSegment): SkeletonModification2DPhysicalBones? =
             if (handle.address() == 0L) null else SkeletonModification2DPhysicalBones(GodotHandle(handle))
 
         private const val SET_PHYSICAL_BONE_CHAIN_LENGTH_HASH = 1286410249L

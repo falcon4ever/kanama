@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -25,7 +26,7 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MultiMeshInstance3D.set_multimesh
      */
     fun setMultimesh(multimesh: MultiMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -43,7 +44,7 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): MultiMeshInstance3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MultiMeshInstance3D? =
+        internal fun wrap(handle: RawSegment): MultiMeshInstance3D? =
             if (handle.address() == 0L) null else MultiMeshInstance3D(GodotHandle(handle))
 
         private const val SET_MULTIMESH_HASH = 2246127404L

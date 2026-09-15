@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Vector3
@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Geometry3D
  */
 object Geometry3D {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("Geometry3D")
     }
 
@@ -207,7 +207,7 @@ object Geometry3D {
     fun fromHandle(handle: GodotHandle): Geometry3D? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): Geometry3D? =
+    internal fun wrap(handle: RawSegment): Geometry3D? =
         if (handle.address() == 0L) null else this
 
     private const val COMPUTE_CONVEX_MESH_POINTS_HASH = 1936902142L

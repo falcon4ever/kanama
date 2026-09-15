@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: NavigationMeshGenerator
  */
 object NavigationMeshGenerator {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("NavigationMeshGenerator")
     }
 
@@ -22,7 +23,7 @@ object NavigationMeshGenerator {
      */
     @JvmStatic
     fun bake(navigationMesh: NavigationMesh?, rootNode: Node) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(bakeBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.segment)
+        ObjectCalls.ptrcallWithTwoObjectArgs(bakeBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment)
     }
 
     /**
@@ -32,7 +33,7 @@ object NavigationMeshGenerator {
      */
     @JvmStatic
     fun clear(navigationMesh: NavigationMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(clearBind, singleton, listOf(navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(clearBind, singleton, listOf(navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -50,7 +51,7 @@ object NavigationMeshGenerator {
      */
     @JvmStatic
     fun parseSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, rootNode: Node, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, rootNode.segment, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithThreeObjectCallableArgs(parseSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, rootNode.segment, callback.target.segment, callback.method)
     }
 
     /**
@@ -61,14 +62,14 @@ object NavigationMeshGenerator {
      */
     @JvmStatic
     fun bakeFromSourceGeometryData(navigationMesh: NavigationMesh?, sourceGeometryData: NavigationMeshSourceGeometryData3D?, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL, sourceGeometryData?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithTwoObjectCallableArgs(bakeFromSourceGeometryDataBind, singleton, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT, sourceGeometryData?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     @JvmStatic
     fun fromHandle(handle: GodotHandle): NavigationMeshGenerator? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): NavigationMeshGenerator? =
+    internal fun wrap(handle: RawSegment): NavigationMeshGenerator? =
         if (handle.address() == 0L) null else this
 
     private const val BAKE_HASH = 1401173477L

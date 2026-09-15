@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -27,7 +27,7 @@ class WeakRef(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): WeakRef? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): WeakRef? =
+        internal fun wrap(handle: RawSegment): WeakRef? =
             if (handle.address() == 0L) null else WeakRef(GodotHandle(handle))
 
         private const val GET_REF_HASH = 1214101251L

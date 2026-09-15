@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Quaternion
@@ -82,7 +83,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.add_animation_library
      */
     fun addAnimationLibrary(name: String, library: AnimationLibrary?): Long {
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -516,7 +517,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation
      */
     fun findAnimation(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationBind, segment, animation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -526,7 +527,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation_library
      */
     fun findAnimationLibrary(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     object Signals {
@@ -553,7 +554,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): AnimationMixer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationMixer? =
+        internal fun wrap(handle: RawSegment): AnimationMixer? =
             if (handle.address() == 0L) null else AnimationMixer(GodotHandle(handle))
 
         private const val ADD_ANIMATION_LIBRARY_HASH = 618909818L

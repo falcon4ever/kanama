@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -49,7 +49,7 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): ExternalTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ExternalTexture? =
+        internal fun wrap(handle: RawSegment): ExternalTexture? =
             if (handle.address() == 0L) null else ExternalTexture(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L

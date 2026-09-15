@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -158,7 +158,7 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectPhaser? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectPhaser? =
+        internal fun wrap(handle: RawSegment): AudioEffectPhaser? =
             if (handle.address() == 0L) null else AudioEffectPhaser(GodotHandle(handle))
 
         private const val SET_RANGE_MIN_HZ_HASH = 373806689L

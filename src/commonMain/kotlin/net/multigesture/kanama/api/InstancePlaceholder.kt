@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -32,7 +33,7 @@ class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: InstancePlaceholder.create_instance
      */
     fun createInstance(replace: Boolean = false, customScene: PackedScene?): Node? {
-        return Node.wrap(ObjectCalls.ptrcallWithBoolObjectArgsRetObject(createInstanceBind, segment, replace, customScene?.requireOpenHandle() ?: MemorySegment.NULL))
+        return Node.wrap(ObjectCalls.ptrcallWithBoolObjectArgsRetObject(createInstanceBind, segment, replace, customScene?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -50,7 +51,7 @@ class InstancePlaceholder(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): InstancePlaceholder? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): InstancePlaceholder? =
+        internal fun wrap(handle: RawSegment): InstancePlaceholder? =
             if (handle.address() == 0L) null else InstancePlaceholder(GodotHandle(handle))
 
         private const val GET_STORED_VALUES_HASH = 2230153369L

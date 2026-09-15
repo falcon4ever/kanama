@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -144,7 +145,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -273,7 +274,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder_polygon
      */
     fun setOccluderPolygon(layerId: Int, polygonIndex: Int, polygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setOccluderPolygonBind, segment, layerId, polygonIndex, polygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setOccluderPolygonBind, segment, layerId, polygonIndex, polygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -293,7 +294,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder
      */
     fun setOccluder(layerId: Int, occluderPolygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setOccluderBind, segment, layerId, occluderPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setOccluderBind, segment, layerId, occluderPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -511,7 +512,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_navigation_polygon
      */
     fun setNavigationPolygon(layerId: Int, navigationPolygon: NavigationPolygon?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setNavigationPolygonBind, segment, layerId, navigationPolygon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setNavigationPolygonBind, segment, layerId, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -597,7 +598,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): TileData? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TileData? =
+        internal fun wrap(handle: RawSegment): TileData? =
             if (handle.address() == 0L) null else TileData(GodotHandle(handle))
 
         private const val SET_FLIP_H_HASH = 2586408642L

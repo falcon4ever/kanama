@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -173,7 +173,7 @@ class CollisionPolygon3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): CollisionPolygon3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CollisionPolygon3D? =
+        internal fun wrap(handle: RawSegment): CollisionPolygon3D? =
             if (handle.address() == 0L) null else CollisionPolygon3D(GodotHandle(handle))
 
         private const val SET_DEPTH_HASH = 373806689L

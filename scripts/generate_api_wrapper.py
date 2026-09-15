@@ -145,6 +145,12 @@ SCALAR_KOTLIN_TYPES = {
 
 DEFAULT_IMPORTS = {
     "ObjectCalls": "net.multigesture.kanama.binding.runtime.ObjectCalls",
+    # The raw engine pointer has two spellings. The shared tree (src/commonMain) may not name a
+    # java.lang.foreign type, so it uses Kanama's per-platform alias (task 104 step 3); the
+    # per-platform generated files sit beside their own backend and keep the JDK/shim spelling,
+    # which is also the one a genuine `const void*` argument (ConstVoidPtr) still renders as.
+    "RawSegment": "net.multigesture.kanama.binding.runtime.RawSegment",
+    "NULL_SEGMENT": "net.multigesture.kanama.binding.runtime.NULL_SEGMENT",
     "MemorySegment": "java.lang.foreign.MemorySegment",
     "JvmName": "kotlin.jvm.JvmName",
     "JvmStatic": "kotlin.jvm.JvmStatic",
@@ -232,6 +238,37 @@ def _jvm_static() -> bool:
     # compileKotlinIosArm64 on the shared tree, task 103), so every render target carries it and
     # the desktop/iOS files of one class read the same.
     return True
+
+
+def _segment_type() -> str:
+    """How the file being rendered spells the raw engine pointer.
+
+    The shared tree cannot import `java.lang.foreign` (a `commonMain` may not name a JDK package),
+    so it uses `net.multigesture.kanama.binding.runtime.RawSegment`, the per-platform alias task 104
+    step 3 introduced; the desktop/iOS per-platform files keep the JDK/shim name. Both are the same
+    type on each platform, so the two spellings interoperate freely.
+    """
+    return "RawSegment" if RENDER_TARGET == "shared" else "MemorySegment"
+
+
+def _add_null_segment_import(content: str) -> str:
+    """Import `NULL_SEGMENT` by name when the rendered body uses it.
+
+    Unlike the handle type (every wrapper file declares a `wrap` helper, so the import is always
+    live), the null pointer only appears in files with a static receiver or a nullable object
+    argument. Kanama imports by name, so the line is added exactly where it is used; it sorts
+    before the `ObjectCalls` import, which every wrapper file has.
+    """
+    marker = f"import {DEFAULT_IMPORTS['NULL_SEGMENT']}\n"
+    if marker in content or "NULL_SEGMENT" not in content:
+        return content
+    anchor = f"import {DEFAULT_IMPORTS['ObjectCalls']}\n"
+    return content.replace(anchor, marker + anchor, 1)
+
+
+def _null_segment() -> str:
+    """The null engine pointer literal, in the spelling [_segment_type] selected."""
+    return "NULL_SEGMENT" if RENDER_TARGET == "shared" else "MemorySegment.NULL"
 
 
 @contextmanager
@@ -1200,7 +1237,8 @@ def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
     for directory in (SHARED_API_DIR, api_dir):
         path = directory / f"{class_name}.kt"
         if path.exists():
-            return "fun wrap(handle: MemorySegment)" in path.read_text(encoding="utf-8")
+            text = path.read_text(encoding="utf-8")
+            return any(f"fun wrap(handle: {name})" in text for name in ("RawSegment", "MemorySegment"))
     return False
 
 
@@ -2067,13 +2105,14 @@ def object_arg_expression(
     is_nullable: bool,
     api_classes: dict[str, ApiClass],
 ) -> str:
-    """Marshal an Object parameter to its raw MemorySegment. [is_nullable] is the decision from
+    """Marshal an Object parameter to its raw engine pointer. [is_nullable] is the decision from
     [object_param_is_nullable] so the type and the marshalling stay in lockstep. Resource-like keeps
     the closed-handle check via requireOpenHandle()."""
     resource_like = is_resource_like(type_name, api_classes)
+    null_segment = _null_segment()
     if resource_like:
-        return f"{name}?.requireOpenHandle() ?: MemorySegment.NULL" if is_nullable else f"{name}.requireOpenHandle()"
-    return f"{name}?.segment ?: MemorySegment.NULL" if is_nullable else f"{name}.segment"
+        return f"{name}?.requireOpenHandle() ?: {null_segment}" if is_nullable else f"{name}.requireOpenHandle()"
+    return f"{name}?.segment ?: {null_segment}" if is_nullable else f"{name}.segment"
 
 
 def call_argument_expressions(
@@ -2206,10 +2245,10 @@ def render_method(
         # `fromHandle(GodotHandle)` (task 104 step 1).
         call_args.append(f"{return_wrapper}::wrap")
     if shape.function == "ptrcallWithObjectArgs":
-        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "segment")
+        receiver = singleton_expr if singleton else (_null_segment() if method.is_static else "segment")
         call = f"ObjectCalls.{shape.function}({bind_name}, {receiver}, listOf({', '.join(call_args)}))"
     else:
-        receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "segment")
+        receiver = singleton_expr if singleton else (_null_segment() if method.is_static else "segment")
         call = f"ObjectCalls.{shape.function}({', '.join([bind_name, receiver, *call_args])})"
     return_expression = render_return_expression(call, method, wrapper_classes)
     return_kind = method.logical_return_kind(object_types)
@@ -2296,7 +2335,7 @@ def render_vararg_method(
         call_args = f"listOf({fixed_args}, *extraArgs)"
     else:
         call_args = "listOf(*extraArgs)"
-    receiver = singleton_expr if singleton else ("MemorySegment.NULL" if method.is_static else "segment")
+    receiver = singleton_expr if singleton else (_null_segment() if method.is_static else "segment")
     # A METHOD_CALL_SHAPE_OVERRIDES entry names an alternate dispatch helper (e.g.
     # callWithVariantArgsOwned for the owned return decode); default is callWithVariantArgs.
     override = METHOD_CALL_SHAPE_OVERRIDES.get((class_name, method.name))
@@ -2598,7 +2637,7 @@ def render_wrap_helpers(class_name: str) -> str:
                 f"        fun fromHandle(handle: GodotHandle): {class_name} =",
                 f"            {class_name}(handle)",
                 "",
-                f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
+                f"        internal fun wrap(handle: {_segment_type()}): {class_name}? =",
                 f"            if (handle.address() == 0L) null else {class_name}(GodotHandle(handle))",
             ],
         )
@@ -2608,7 +2647,7 @@ def render_wrap_helpers(class_name: str) -> str:
                 f"        fun fromHandle(handle: GodotHandle): {class_name}? =",
                 "            wrap(handle.segment)",
                 "",
-                f"        internal fun wrap(handle: MemorySegment): {class_name}? =",
+                f"        internal fun wrap(handle: {_segment_type()}): {class_name}? =",
                 f"            if (handle.address() == 0L) null else {class_name}(GodotHandle(handle))",
             ],
         )
@@ -2622,7 +2661,7 @@ def render_singleton_wrap_helpers(class_name: str) -> str:
             f"    fun fromHandle(handle: GodotHandle): {class_name}? =",
             "        wrap(handle.segment)",
             "",
-            f"    internal fun wrap(handle: MemorySegment): {class_name}? =",
+            f"    internal fun wrap(handle: {_segment_type()}): {class_name}? =",
             "        if (handle.address() == 0L) null else this",
         ],
     )
@@ -2634,7 +2673,9 @@ def _add_kind_imports(kind: str, imports: set[str]) -> None:
     # file mentions it (a desktop companion may hold only that one method — task 103).
     if kind.startswith("Typed") and kind.endswith("Array"):
         element = kind.removeprefix("Typed").removesuffix("Array")
-        if element in DEFAULT_IMPORTS and element not in {"ObjectCalls", "MemorySegment", "JvmName", "JvmStatic"}:
+        if element in DEFAULT_IMPORTS and element not in {
+            "ObjectCalls", "MemorySegment", "RawSegment", "NULL_SEGMENT", "JvmName", "JvmStatic",
+        }:
             imports.add(element)
     if kind in {
         "AABB",
@@ -2722,6 +2763,10 @@ def _add_kind_imports(kind: str, imports: set[str]) -> None:
         else:
             imports.add(kind)
     if kind == "Object":
+        imports.add(_segment_type())
+    # A genuine `const void*` argument stays a raw JDK pointer in the rendered signature (the five
+    # documented step-1 exceptions), so it needs the JDK import whatever the file's handle spelling.
+    if kind in {"ConstVoidPtr", "ConstGDExtensionInitializationFunctionPtr"}:
         imports.add("MemorySegment")
 
 
@@ -2733,7 +2778,7 @@ def render_draft(
     api_dir: Path,
     singleton_names: set[str] | None = None,
 ) -> tuple[str, list[str]]:
-    imports = {"ObjectCalls", "MemorySegment"}
+    imports = {"ObjectCalls", _segment_type()}
     if _jvm_static():
         imports.add("JvmStatic")
     singleton = cls.name in (singleton_names or set())
@@ -2839,7 +2884,7 @@ def render_draft(
                 f" * Generated from Godot docs: {cls.name}",
                 " */",
                 f"object {cls.name} {{",
-                "    private val singleton: MemorySegment by lazy {",
+                f"    private val singleton: {_segment_type()} by lazy {{",
                 f'        ObjectCalls.getSingleton("{cls.name}")',
                 "    }",
                 "",
@@ -2881,7 +2926,7 @@ def render_draft(
                 "",
             ],
         )
-    return content, skips
+    return _add_null_segment_import(content), skips
 
 
 # --- Shared wrapper tree (task 103) ---------------------------------------------------------------
@@ -2906,12 +2951,15 @@ IOS_COMPANION_SUFFIX = ".ios.kt"
 def _inject_ios_helper_import(content: str) -> str:
     """The iOS ObjectCalls helpers are generated extension functions, so a file compiled on iOS must
     star-import the binding.runtime package. Same-package wrapper names win over the star import, so
-    the line is inert on desktop/Android."""
-    return content.replace(
-        "import net.multigesture.kanama.binding.runtime.ObjectCalls\n",
-        "import net.multigesture.kanama.binding.runtime.ObjectCalls\n" + IOS_HELPER_IMPORT,
-        1,
-    )
+    the line is inert on desktop/Android. It trails the package's by-name imports (RawSegment,
+    NULL_SEGMENT, ObjectCalls) so those stay in sorted order."""
+    lines = content.splitlines(keepends=True)
+    prefix = "import net.multigesture.kanama.binding.runtime."
+    last = max((i for i, line in enumerate(lines) if line.startswith(prefix)), default=None)
+    if last is None:
+        return content
+    lines.insert(last + 1, IOS_HELPER_IMPORT)
+    return "".join(lines)
 
 
 def _to_extension(member: str, receiver: str) -> str:
@@ -3042,7 +3090,11 @@ def render_shared_class(
                         companion_methods.append(method)
             emitted_desktop = rendered_method_names(cls, object_types, wrapper_classes, api_classes, api_dir)
 
-        imports = {"ObjectCalls", "MemorySegment"}
+        # A companion declares no `wrap` helper, so it names the raw pointer type only when it
+        # carries the singleton handle; the by-name import follows that.
+        imports = {"ObjectCalls"}
+        if singleton:
+            imports.add(_segment_type())
         members: list[str] = []
         member_names: list[str] = []
         waits_on: set[str] = set()
@@ -3106,13 +3158,15 @@ def render_shared_class(
             sections = ["\n\n".join(members)]
             if singleton:
                 sections.append(
-                    f"private val {singleton_expr}: MemorySegment by lazy {{\n"
+                    f"private val {singleton_expr}: {_segment_type()} by lazy {{\n"
                     f'    ObjectCalls.getSingleton("{cls.name}")\n'
                     "}"
                 )
             if binds:
                 sections.append("\n\n".join(binds))
-            desktop_companion = "\n".join(header) + "\n" + "\n\n".join(sections) + "\n"
+            desktop_companion = _add_null_segment_import(
+                "\n".join(header) + "\n" + "\n\n".join(sections) + "\n"
+            )
 
         # 4. iOS-only sugar on a shared class: extension-style section into `<Class>.ios.kt`.
         ios_companion = None
@@ -3145,8 +3199,10 @@ def render_shared_class(
                     [
                         "package net.multigesture.kanama.api",
                         "",
-                        f"import {DEFAULT_IMPORTS['MemorySegment']}",
-                        f"import {DEFAULT_IMPORTS['ObjectCalls']}",
+                        *sorted(
+                            f"import {DEFAULT_IMPORTS[name]}"
+                            for name in ("ObjectCalls", _segment_type())
+                        ),
                         "",
                         f"// GENERATED desktop/Android companion for {cls.name} (scripts/generate_api_wrapper.py --write-tree).",
                         "// DO NOT EDIT BY HAND.",

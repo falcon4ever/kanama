@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class EditorSceneFormatImporterBlend(handle: GodotHandle) : EditorSceneFormatImp
         fun fromHandle(handle: GodotHandle): EditorSceneFormatImporterBlend? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorSceneFormatImporterBlend? =
+        internal fun wrap(handle: RawSegment): EditorSceneFormatImporterBlend? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterBlend(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

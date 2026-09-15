@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -72,7 +73,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun addBlendPoint(node: AnimationRootNode?, pos: Double, atIndex: Int = -1, name: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectDoubleIntStringNameArgs(addBlendPointBind, segment, node?.requireOpenHandle() ?: MemorySegment.NULL, pos, atIndex, name)
+        ObjectCalls.ptrcallWithObjectDoubleIntStringNameArgs(addBlendPointBind, segment, node?.requireOpenHandle() ?: NULL_SEGMENT, pos, atIndex, name)
     }
 
     /**
@@ -102,7 +103,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun setBlendPointNode(point: Int, node: AnimationRootNode?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, segment, point, node?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setBlendPointNodeBind, segment, point, node?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -362,7 +363,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
         fun fromHandle(handle: GodotHandle): AnimationNodeBlendSpace1D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeBlendSpace1D? =
+        internal fun wrap(handle: RawSegment): AnimationNodeBlendSpace1D? =
             if (handle.address() == 0L) null else AnimationNodeBlendSpace1D(GodotHandle(handle))
 
         private const val ADD_BLEND_POINT_HASH = 398361042L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 
@@ -70,7 +70,7 @@ class Skin(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Skin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Skin? =
+        internal fun wrap(handle: RawSegment): Skin? =
             if (handle.address() == 0L) null else Skin(GodotHandle(handle))
 
         private const val SET_BIND_COUNT_HASH = 1286410249L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -56,7 +57,7 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getOnHaptic(): OpenXRHapticBase? {
@@ -66,7 +67,7 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getOffHaptic(): OpenXRHapticBase? {
@@ -79,7 +80,7 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
         fun fromHandle(handle: GodotHandle): OpenXRAnalogThresholdModifier? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRAnalogThresholdModifier? =
+        internal fun wrap(handle: RawSegment): OpenXRAnalogThresholdModifier? =
             if (handle.address() == 0L) null else OpenXRAnalogThresholdModifier(GodotHandle(handle))
 
         private const val SET_ON_THRESHOLD_HASH = 373806689L

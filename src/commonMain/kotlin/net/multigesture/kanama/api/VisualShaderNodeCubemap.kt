@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -40,7 +41,7 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun setCubeMap(value: TextureLayered?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCubeMapBind, segment, listOf(value?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCubeMapBind, segment, listOf(value?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getCubeMap(): TextureLayered? {
@@ -71,7 +72,7 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCubemap? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeCubemap? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeCubemap? =
             if (handle.address() == 0L) null else VisualShaderNodeCubemap(GodotHandle(handle))
 
         private const val SET_SOURCE_HASH = 1625400621L

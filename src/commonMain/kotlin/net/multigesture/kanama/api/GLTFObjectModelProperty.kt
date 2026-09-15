@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -69,7 +70,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
     fun setGltfToGodotExpression(gltfToGodotExpr: Expression?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGltfToGodotExpressionBind, segment, listOf(gltfToGodotExpr?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGltfToGodotExpressionBind, segment, listOf(gltfToGodotExpr?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getGodotToGltfExpression(): Expression? {
@@ -79,7 +80,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
     fun setGodotToGltfExpression(godotToGltfExpr: Expression?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGodotToGltfExpressionBind, segment, listOf(godotToGltfExpr?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGodotToGltfExpressionBind, segment, listOf(godotToGltfExpr?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getNodePaths(): List<NodePath> {
@@ -154,7 +155,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): GLTFObjectModelProperty? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFObjectModelProperty? =
+        internal fun wrap(handle: RawSegment): GLTFObjectModelProperty? =
             if (handle.address() == 0L) null else GLTFObjectModelProperty(GodotHandle(handle))
 
         private const val APPEND_NODE_PATH_HASH = 1348162250L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
@@ -151,7 +151,7 @@ class PhysicsTestMotionResult2D(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): PhysicsTestMotionResult2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsTestMotionResult2D? =
+        internal fun wrap(handle: RawSegment): PhysicsTestMotionResult2D? =
             if (handle.address() == 0L) null else PhysicsTestMotionResult2D(GodotHandle(handle))
 
         private const val GET_TRAVEL_HASH = 3341600327L

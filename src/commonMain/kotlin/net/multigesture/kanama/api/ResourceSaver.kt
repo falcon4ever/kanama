@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: ResourceSaver
  */
 object ResourceSaver {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("ResourceSaver")
     }
 
@@ -98,7 +98,7 @@ object ResourceSaver {
     fun fromHandle(handle: GodotHandle): ResourceSaver? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): ResourceSaver? =
+    internal fun wrap(handle: RawSegment): ResourceSaver? =
         if (handle.address() == 0L) null else this
 
     private const val SAVE_HASH = 2983274697L

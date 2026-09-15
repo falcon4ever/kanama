@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -166,7 +167,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun addShortcut(path: String, shortcut: Shortcut?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndObjectArg(addShortcutBind, segment, path, shortcut?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndObjectArg(addShortcutBind, segment, path, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -187,7 +188,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun isShortcut(path: String, event: InputEvent?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(isShortcutBind, segment, path, event?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringAndObjectArgRetBool(isShortcutBind, segment, path, event?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -267,7 +268,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): EditorSettings? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorSettings? =
+        internal fun wrap(handle: RawSegment): EditorSettings? =
             if (handle.address() == 0L) null else EditorSettings(GodotHandle(handle))
 
         private const val HAS_SETTING_HASH = 3927539163L

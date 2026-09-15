@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -108,18 +109,18 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
 
     companion object {
         fun loadFromBuffer(streamData: ByteArray): AudioStreamMP3? {
-            return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData))
+            return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
         fun loadFromFile(path: String): AudioStreamMP3? {
-            return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, MemorySegment.NULL, path))
+            return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamMP3? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamMP3? =
+        internal fun wrap(handle: RawSegment): AudioStreamMP3? =
             if (handle.address() == 0L) null else AudioStreamMP3(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 1674970313L

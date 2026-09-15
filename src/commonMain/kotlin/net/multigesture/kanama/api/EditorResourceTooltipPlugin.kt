@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -27,7 +27,7 @@ class EditorResourceTooltipPlugin(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorResourceTooltipPlugin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorResourceTooltipPlugin? =
+        internal fun wrap(handle: RawSegment): EditorResourceTooltipPlugin? =
             if (handle.address() == 0L) null else EditorResourceTooltipPlugin(GodotHandle(handle))
 
         private const val REQUEST_THUMBNAIL_HASH = 3245519720L

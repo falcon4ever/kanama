@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -87,7 +88,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.instantiate_property_editor
          */
         fun instantiatePropertyEditor(objectValue: GodotObject, type: Long, path: String, hint: Long, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
-            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, MemorySegment.NULL, objectValue.segment, type, path, hint, hintText, usage, wide))
+            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, NULL_SEGMENT, objectValue.segment, type, path, hint, hintText, usage, wide))
         }
 
         /**
@@ -98,14 +99,14 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.create_default_inspector
          */
         fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector? {
-            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createDefaultInspectorBind, MemorySegment.NULL, filterLineEdit.segment))
+            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createDefaultInspectorBind, NULL_SEGMENT, filterLineEdit.segment))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorInspector? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorInspector? =
+        internal fun wrap(handle: RawSegment): EditorInspector? =
             if (handle.address() == 0L) null else EditorInspector(GodotHandle(handle))
 
         private const val EDIT_HASH = 3975164845L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -44,7 +44,7 @@ class BoxOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
         fun fromHandle(handle: GodotHandle): BoxOccluder3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BoxOccluder3D? =
+        internal fun wrap(handle: RawSegment): BoxOccluder3D? =
             if (handle.address() == 0L) null else BoxOccluder3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

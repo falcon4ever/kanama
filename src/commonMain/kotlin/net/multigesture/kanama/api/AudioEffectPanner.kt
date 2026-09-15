@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -45,7 +45,7 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectPanner? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectPanner? =
+        internal fun wrap(handle: RawSegment): AudioEffectPanner? =
             if (handle.address() == 0L) null else AudioEffectPanner(GodotHandle(handle))
 
         private const val SET_PAN_HASH = 373806689L

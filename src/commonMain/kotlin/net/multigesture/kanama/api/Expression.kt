@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -61,7 +61,7 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): Expression? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Expression? =
+        internal fun wrap(handle: RawSegment): Expression? =
             if (handle.address() == 0L) null else Expression(GodotHandle(handle))
 
         private const val PARSE_HASH = 3069722906L

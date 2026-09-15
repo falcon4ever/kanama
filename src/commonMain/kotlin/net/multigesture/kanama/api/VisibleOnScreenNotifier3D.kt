@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 
@@ -42,7 +42,7 @@ open class VisibleOnScreenNotifier3D(handle: GodotHandle) : VisualInstance3D(han
         fun fromHandle(handle: GodotHandle): VisibleOnScreenNotifier3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisibleOnScreenNotifier3D? =
+        internal fun wrap(handle: RawSegment): VisibleOnScreenNotifier3D? =
             if (handle.address() == 0L) null else VisibleOnScreenNotifier3D(GodotHandle(handle))
 
         private const val SET_AABB_HASH = 259215842L

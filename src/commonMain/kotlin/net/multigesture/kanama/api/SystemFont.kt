@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -458,7 +458,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
         fun fromHandle(handle: GodotHandle): SystemFont? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SystemFont? =
+        internal fun wrap(handle: RawSegment): SystemFont? =
             if (handle.address() == 0L) null else SystemFont(GodotHandle(handle))
 
         private const val SET_ANTIALIASING_HASH = 1669900L

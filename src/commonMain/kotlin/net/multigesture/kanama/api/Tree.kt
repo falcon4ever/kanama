@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
@@ -852,7 +852,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): Tree? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Tree? =
+        internal fun wrap(handle: RawSegment): Tree? =
             if (handle.address() == 0L) null else Tree(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L

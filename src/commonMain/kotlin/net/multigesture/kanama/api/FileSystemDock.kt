@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -27,7 +28,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.add_resource_tooltip_plugin
      */
     fun addResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -36,7 +37,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.remove_resource_tooltip_plugin
      */
     fun removeResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     object Signals {
@@ -57,7 +58,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
         fun fromHandle(handle: GodotHandle): FileSystemDock? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FileSystemDock? =
+        internal fun wrap(handle: RawSegment): FileSystemDock? =
             if (handle.address() == 0L) null else FileSystemDock(GodotHandle(handle))
 
         private const val NAVIGATE_TO_PATH_HASH = 83702148L

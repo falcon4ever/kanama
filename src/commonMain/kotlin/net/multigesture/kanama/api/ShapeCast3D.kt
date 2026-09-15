@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -85,7 +86,7 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.resource_changed
      */
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -112,7 +113,7 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: ShapeCast3D.set_shape
      */
     fun setShape(shape: Shape3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -464,7 +465,7 @@ class ShapeCast3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): ShapeCast3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ShapeCast3D? =
+        internal fun wrap(handle: RawSegment): ShapeCast3D? =
             if (handle.address() == 0L) null else ShapeCast3D(GodotHandle(handle))
 
         private const val RESOURCE_CHANGED_HASH = 968641751L

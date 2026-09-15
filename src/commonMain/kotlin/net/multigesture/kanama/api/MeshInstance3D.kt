@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -37,7 +38,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_mesh
      */
     fun setMesh(mesh: Mesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -79,7 +80,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_skin
      */
     fun setSkin(skin: Skin?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -122,7 +123,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.set_surface_override_material
      */
     fun setSurfaceOverrideMaterial(surface: Int, material: Material?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceOverrideMaterialBind, segment, surface, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceOverrideMaterialBind, segment, surface, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -182,7 +183,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.create_multiple_convex_collisions
      */
     fun createMultipleConvexCollisions(settings: MeshConvexDecompositionSettings?) {
-        ObjectCalls.ptrcallWithObjectArgs(createMultipleConvexCollisionsBind, segment, listOf(settings?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(createMultipleConvexCollisionsBind, segment, listOf(settings?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -244,7 +245,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_blend_shape_mix
      */
     fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -257,7 +258,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_skeleton_pose
      */
     fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL))
+        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -265,7 +266,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): MeshInstance3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MeshInstance3D? =
+        internal fun wrap(handle: RawSegment): MeshInstance3D? =
             if (handle.address() == 0L) null else MeshInstance3D(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L

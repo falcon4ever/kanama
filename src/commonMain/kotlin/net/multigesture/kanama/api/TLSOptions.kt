@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -84,7 +85,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.client
          */
         fun client(trustedChain: X509Certificate?, commonNameOverride: String = ""): TLSOptions? {
-            return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectStringArgRetObject(clientBind, MemorySegment.NULL, trustedChain?.requireOpenHandle() ?: MemorySegment.NULL, commonNameOverride))
+            return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectStringArgRetObject(clientBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT, commonNameOverride))
         }
 
         /**
@@ -97,7 +98,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.client_unsafe
          */
         fun clientUnsafe(trustedChain: X509Certificate?): TLSOptions? {
-            return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(clientUnsafeBind, MemorySegment.NULL, trustedChain?.requireOpenHandle() ?: MemorySegment.NULL))
+            return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(clientUnsafeBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         /**
@@ -108,14 +109,14 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.server
          */
         fun server(key: CryptoKey?, certificate: X509Certificate?): TLSOptions? {
-            return TLSOptions.wrap(ObjectCalls.ptrcallWithTwoObjectArgsRetObject(serverBind, MemorySegment.NULL, key?.requireOpenHandle() ?: MemorySegment.NULL, certificate?.requireOpenHandle() ?: MemorySegment.NULL))
+            return TLSOptions.wrap(ObjectCalls.ptrcallWithTwoObjectArgsRetObject(serverBind, NULL_SEGMENT, key?.requireOpenHandle() ?: NULL_SEGMENT, certificate?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TLSOptions? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TLSOptions? =
+        internal fun wrap(handle: RawSegment): TLSOptions? =
             if (handle.address() == 0L) null else TLSOptions(GodotHandle(handle))
 
         private const val CLIENT_HASH = 3565000357L

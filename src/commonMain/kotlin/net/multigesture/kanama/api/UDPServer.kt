@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -126,7 +126,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): UDPServer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): UDPServer? =
+        internal fun wrap(handle: RawSegment): UDPServer? =
             if (handle.address() == 0L) null else UDPServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 3167955072L

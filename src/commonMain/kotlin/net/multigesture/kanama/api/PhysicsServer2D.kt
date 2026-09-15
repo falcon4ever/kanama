@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
@@ -14,7 +15,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: PhysicsServer2D
  */
 object PhysicsServer2D {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("PhysicsServer2D")
     }
 
@@ -1241,7 +1242,7 @@ object PhysicsServer2D {
      */
     @JvmStatic
     fun bodyTestMotion(body: RID, parameters: PhysicsTestMotionParameters2D, result: PhysicsTestMotionResult2D?): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithRIDAndTwoObjectArgsRetBool(bodyTestMotionBind, singleton, body, parameters.requireOpenHandle(), result?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1460,7 +1461,7 @@ object PhysicsServer2D {
     fun fromHandle(handle: GodotHandle): PhysicsServer2D? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): PhysicsServer2D? =
+    internal fun wrap(handle: RawSegment): PhysicsServer2D? =
         if (handle.address() == 0L) null else this
 
     private const val WORLD_BOUNDARY_SHAPE_CREATE_HASH = 529393457L

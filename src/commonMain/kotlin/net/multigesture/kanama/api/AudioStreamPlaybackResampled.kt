@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -27,7 +27,7 @@ open class AudioStreamPlaybackResampled(handle: GodotHandle) : AudioStreamPlayba
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackResampled? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamPlaybackResampled? =
+        internal fun wrap(handle: RawSegment): AudioStreamPlaybackResampled? =
             if (handle.address() == 0L) null else AudioStreamPlaybackResampled(GodotHandle(handle))
 
         private const val BEGIN_RESAMPLE_HASH = 3218959716L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -85,7 +86,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setEnvironment(env: Environment?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -105,7 +106,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setFallbackEnvironment(env: Environment?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFallbackEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -125,7 +126,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setCameraAttributes(attributes: CameraAttributes?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(attributes?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCameraAttributesBind, segment, listOf(attributes?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -155,7 +156,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): World3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): World3D? =
+        internal fun wrap(handle: RawSegment): World3D? =
             if (handle.address() == 0L) null else World3D(GodotHandle(handle))
 
         private const val GET_SPACE_HASH = 2944877500L

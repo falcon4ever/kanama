@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -42,7 +42,7 @@ class GPUParticlesCollisionBox3D(handle: GodotHandle) : GPUParticlesCollision3D(
         fun fromHandle(handle: GodotHandle): GPUParticlesCollisionBox3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GPUParticlesCollisionBox3D? =
+        internal fun wrap(handle: RawSegment): GPUParticlesCollisionBox3D? =
             if (handle.address() == 0L) null else GPUParticlesCollisionBox3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -68,7 +68,7 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRAction? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRAction? =
+        internal fun wrap(handle: RawSegment): OpenXRAction? =
             if (handle.address() == 0L) null else OpenXRAction(GodotHandle(handle))
 
         private const val SET_LOCALIZED_NAME_HASH = 83702148L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -42,7 +42,7 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GDExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GDExtension? =
+        internal fun wrap(handle: RawSegment): GDExtension? =
             if (handle.address() == 0L) null else GDExtension(GodotHandle(handle))
 
         private const val IS_LIBRARY_OPEN_HASH = 36873697L

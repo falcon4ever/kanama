@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
@@ -161,7 +161,7 @@ class PhysicsPointQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): PhysicsPointQueryParameters3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsPointQueryParameters3D? =
+        internal fun wrap(handle: RawSegment): PhysicsPointQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsPointQueryParameters3D(GodotHandle(handle))
 
         private const val SET_POSITION_HASH = 3460891852L

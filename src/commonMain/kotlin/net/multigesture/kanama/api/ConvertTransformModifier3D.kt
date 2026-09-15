@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -206,7 +206,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
         fun fromHandle(handle: GodotHandle): ConvertTransformModifier3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ConvertTransformModifier3D? =
+        internal fun wrap(handle: RawSegment): ConvertTransformModifier3D? =
             if (handle.address() == 0L) null else ConvertTransformModifier3D(GodotHandle(handle))
 
         private const val SET_APPLY_TRANSFORM_MODE_HASH = 1386463405L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Transform2D
@@ -93,7 +94,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      */
     fun setBaseFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setBaseFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setBaseFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -301,7 +302,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
         fun fromHandle(handle: GodotHandle): FontVariation? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FontVariation? =
+        internal fun wrap(handle: RawSegment): FontVariation? =
             if (handle.address() == 0L) null else FontVariation(GodotHandle(handle))
 
         private const val SET_BASE_FONT_HASH = 1262170328L

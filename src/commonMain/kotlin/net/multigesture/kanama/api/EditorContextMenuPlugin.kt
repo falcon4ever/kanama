@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -21,7 +22,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addMenuShortcut(shortcut: Shortcut?, callback: GodotCallable) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectCallableArgs(addMenuShortcutBind, segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithObjectCallableArgs(addMenuShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -33,7 +34,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringCallableObjectArgs(addContextMenuItemBind, segment, name, callback.target.segment, callback.method, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringCallableObjectArgs(addContextMenuItemBind, segment, name, callback.target.segment, callback.method, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -45,7 +46,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextMenuItemFromShortcutBind, segment, name, shortcut?.requireOpenHandle() ?: MemorySegment.NULL, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextMenuItemFromShortcutBind, segment, name, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -57,7 +58,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextSubmenuItemBind, segment, name, menu.segment, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextSubmenuItemBind, segment, name, menu.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     companion object {
@@ -74,7 +75,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): EditorContextMenuPlugin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorContextMenuPlugin? =
+        internal fun wrap(handle: RawSegment): EditorContextMenuPlugin? =
             if (handle.address() == 0L) null else EditorContextMenuPlugin(GodotHandle(handle))
 
         private const val ADD_MENU_SHORTCUT_HASH = 851596305L

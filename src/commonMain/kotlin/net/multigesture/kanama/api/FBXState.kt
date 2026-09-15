@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -31,7 +31,7 @@ class FBXState(handle: GodotHandle) : GLTFState(handle) {
         fun fromHandle(handle: GodotHandle): FBXState? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FBXState? =
+        internal fun wrap(handle: RawSegment): FBXState? =
             if (handle.address() == 0L) null else FBXState(GodotHandle(handle))
 
         private const val GET_ALLOW_GEOMETRY_HELPER_NODES_HASH = 2240911060L

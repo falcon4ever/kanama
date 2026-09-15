@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -102,18 +103,18 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromNode(cameraNode: Camera3D): GLTFCamera? {
-            return GLTFCamera.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, MemorySegment.NULL, cameraNode.segment))
+            return GLTFCamera.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, cameraNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFCamera? {
-            return GLTFCamera.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, MemorySegment.NULL, dictionary))
+            return GLTFCamera.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFCamera? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFCamera? =
+        internal fun wrap(handle: RawSegment): GLTFCamera? =
             if (handle.address() == 0L) null else GLTFCamera(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 237784L

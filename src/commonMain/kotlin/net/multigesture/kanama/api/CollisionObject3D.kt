@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
@@ -385,7 +385,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): CollisionObject3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CollisionObject3D? =
+        internal fun wrap(handle: RawSegment): CollisionObject3D? =
             if (handle.address() == 0L) null else CollisionObject3D(GodotHandle(handle))
 
         private const val SET_COLLISION_LAYER_HASH = 1286410249L

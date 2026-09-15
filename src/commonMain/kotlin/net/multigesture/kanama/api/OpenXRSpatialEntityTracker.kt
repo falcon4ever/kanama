@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -60,12 +61,12 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
 
     fun addNext(next: OpenXRStructureBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addNextBind, segment, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addNextBind, segment, listOf(next?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun removeNext(next: OpenXRStructureBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeNextBind, segment, listOf(next?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeNextBind, segment, listOf(next?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     object Signals {
@@ -82,7 +83,7 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
         fun fromHandle(handle: GodotHandle): OpenXRSpatialEntityTracker? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialEntityTracker? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialEntityTracker? =
             if (handle.address() == 0L) null else OpenXRSpatialEntityTracker(GodotHandle(handle))
 
         private const val SET_SPATIAL_CONTEXT_HASH = 2722037293L

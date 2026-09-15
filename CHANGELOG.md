@@ -7,6 +7,28 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Internal — the shared wrapper tree no longer names `java.lang.foreign` (task 104, step 3 parcel A)
+
+- **Not a user-facing change.** No member, signature or runtime type changed: `GodotHandle.segment`
+  is declared as `net.multigesture.kanama.binding.runtime.RawSegment`, which is a plain `typealias`
+  to the same pointer type each backend already used — the FFM `MemorySegment` on desktop/Android
+  (`com.v7878.foreign.MemorySegment` after the Android remap), the Kotlin/Native shim on iOS. Game
+  code never names either.
+- `RawSegment` and the top-level `NULL_SEGMENT` beside it are declared once per platform under one
+  fully-qualified name, and the wrapper generator emits them in the only three shared-tree shapes
+  that named the pointer: `internal fun wrap(handle: RawSegment)` (979 files), `NULL_SEGMENT` for a
+  static receiver or a null object argument (600 sites), and `private val singleton: RawSegment by
+  lazy` (38 files). `GodotHandle` is now ONE file in `src/commonMain` instead of a copy per platform.
+- Why: `src/commonMain` becomes a real KMP `commonMain` in the rest of task 104 step 3, and a
+  `commonMain` can neither declare nor `expect` a JDK package. The later parcel turns this pair into
+  `expect class RawSegment` / `expect val NULL_SEGMENT` with these typealiases as the `actual`s.
+- The documented public raw-pointer exceptions drop from five to three: the two `value class
+  GodotHandle` declarations are now one shared declaration over `RawSegment`, leaving only the three
+  desktop-only `const void*` helpers (`GDExtensionManager.loadExtensionFromFunction`,
+  `OpenXRAPIExtension.transformFromPose`, `OpenXRAPIExtension.setCustomPlaySpace`).
+- `check_wrapper_generator.py` now fails when any file under `src/commonMain` names a
+  `java.lang.foreign` type.
+
 ### Fixed — iOS: calling a `@RegisterFunction` with omitted default arguments aborted the app (task 114)
 
 - The generated iOS bridge dispatched every registered method as one positional call

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -39,7 +39,7 @@ class EditorScriptPicker(handle: GodotHandle) : EditorResourcePicker(handle) {
         fun fromHandle(handle: GodotHandle): EditorScriptPicker? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorScriptPicker? =
+        internal fun wrap(handle: RawSegment): EditorScriptPicker? =
             if (handle.address() == 0L) null else EditorScriptPicker(GodotHandle(handle))
 
         private const val SET_SCRIPT_OWNER_HASH = 1078189570L

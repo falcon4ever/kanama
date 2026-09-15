@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -44,7 +44,7 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
         fun fromHandle(handle: GodotHandle): ConvexPolygonShape3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ConvexPolygonShape3D? =
+        internal fun wrap(handle: RawSegment): ConvexPolygonShape3D? =
             if (handle.address() == 0L) null else ConvexPolygonShape3D(GodotHandle(handle))
 
         private const val SET_POINTS_HASH = 334873810L

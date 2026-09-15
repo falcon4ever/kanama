@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 
@@ -168,7 +169,7 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
 
     fun setGodotSkin(godotSkin: Skin?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGodotSkinBind, segment, listOf(godotSkin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGodotSkinBind, segment, listOf(godotSkin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -176,7 +177,7 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GLTFSkin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFSkin? =
+        internal fun wrap(handle: RawSegment): GLTFSkin? =
             if (handle.address() == 0L) null else GLTFSkin(GodotHandle(handle))
 
         private const val GET_SKIN_ROOT_HASH = 2455072627L

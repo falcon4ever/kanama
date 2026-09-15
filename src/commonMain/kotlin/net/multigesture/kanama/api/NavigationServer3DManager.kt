@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: NavigationServer3DManager
  */
 object NavigationServer3DManager {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("NavigationServer3DManager")
     }
 
@@ -41,7 +41,7 @@ object NavigationServer3DManager {
     fun fromHandle(handle: GodotHandle): NavigationServer3DManager? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): NavigationServer3DManager? =
+    internal fun wrap(handle: RawSegment): NavigationServer3DManager? =
         if (handle.address() == 0L) null else this
 
     private const val REGISTER_SERVER_HASH = 2137474292L

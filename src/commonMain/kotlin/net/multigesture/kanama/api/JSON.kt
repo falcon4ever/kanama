@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -106,7 +107,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.stringify
          */
         fun stringify(data: Any?, indent: String = "", sortKeys: Boolean = true, fullPrecision: Boolean = false): String {
-            return ObjectCalls.ptrcallWithVariantStringTwoBoolArgsRetString(stringifyBind, MemorySegment.NULL, data, indent, sortKeys, fullPrecision)
+            return ObjectCalls.ptrcallWithVariantStringTwoBoolArgsRetString(stringifyBind, NULL_SEGMENT, data, indent, sortKeys, fullPrecision)
         }
 
         /**
@@ -116,7 +117,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.parse_string
          */
         fun parseString(jsonString: String): Any? {
-            return ObjectCalls.ptrcallWithStringArgRetVariantScalar(parseStringBind, MemorySegment.NULL, jsonString)
+            return ObjectCalls.ptrcallWithStringArgRetVariantScalar(parseStringBind, NULL_SEGMENT, jsonString)
         }
 
         /**
@@ -127,7 +128,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.from_native
          */
         fun fromNative(variant: Any?, fullObjects: Boolean = false): Any? {
-            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(fromNativeBind, MemorySegment.NULL, variant, fullObjects)
+            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(fromNativeBind, NULL_SEGMENT, variant, fullObjects)
         }
 
         /**
@@ -138,14 +139,14 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: JSON.to_native
          */
         fun toNative(json: Any?, allowObjects: Boolean = false): Any? {
-            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(toNativeBind, MemorySegment.NULL, json, allowObjects)
+            return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(toNativeBind, NULL_SEGMENT, json, allowObjects)
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): JSON? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): JSON? =
+        internal fun wrap(handle: RawSegment): JSON? =
             if (handle.address() == 0L) null else JSON(GodotHandle(handle))
 
         private const val STRINGIFY_HASH = 462733549L

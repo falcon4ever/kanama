@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -70,7 +70,7 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RDPipelineShader? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDPipelineShader? =
+        internal fun wrap(handle: RawSegment): RDPipelineShader? =
             if (handle.address() == 0L) null else RDPipelineShader(GodotHandle(handle))
 
         private const val SET_SHADER_HASH = 2722037293L

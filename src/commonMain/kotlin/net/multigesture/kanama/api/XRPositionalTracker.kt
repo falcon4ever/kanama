@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -152,7 +152,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
         fun fromHandle(handle: GodotHandle): XRPositionalTracker? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XRPositionalTracker? =
+        internal fun wrap(handle: RawSegment): XRPositionalTracker? =
             if (handle.address() == 0L) null else XRPositionalTracker(GodotHandle(handle))
 
         private const val GET_TRACKER_PROFILE_HASH = 201670096L

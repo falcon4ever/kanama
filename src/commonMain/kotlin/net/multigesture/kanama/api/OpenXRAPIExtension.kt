@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2i
@@ -254,7 +255,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
 
     companion object {
         fun openxrIsEnabled(checkRunInEditor: Boolean): Boolean {
-            return ObjectCalls.ptrcallWithBoolArgRetBool(openxrIsEnabledBind, MemorySegment.NULL, checkRunInEditor)
+            return ObjectCalls.ptrcallWithBoolArgRetBool(openxrIsEnabledBind, NULL_SEGMENT, checkRunInEditor)
         }
 
         const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_NONE: Long = 0L
@@ -265,7 +266,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRAPIExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRAPIExtension? =
+        internal fun wrap(handle: RawSegment): OpenXRAPIExtension? =
             if (handle.address() == 0L) null else OpenXRAPIExtension(GodotHandle(handle))
 
         private const val GET_OPENXR_VERSION_HASH = 2455072627L

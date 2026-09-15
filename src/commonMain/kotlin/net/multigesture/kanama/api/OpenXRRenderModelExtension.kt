@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
@@ -74,7 +74,7 @@ class OpenXRRenderModelExtension(handle: GodotHandle) : OpenXRExtensionWrapper(h
         fun fromHandle(handle: GodotHandle): OpenXRRenderModelExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRRenderModelExtension? =
+        internal fun wrap(handle: RawSegment): OpenXRRenderModelExtension? =
             if (handle.address() == 0L) null else OpenXRRenderModelExtension(GodotHandle(handle))
 
         private const val IS_ACTIVE_HASH = 36873697L

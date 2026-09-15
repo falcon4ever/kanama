@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -70,7 +71,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_edited_resource
      */
     fun setEditedResource(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEditedResourceBind, segment, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEditedResourceBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -139,7 +140,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
         fun fromHandle(handle: GodotHandle): EditorResourcePicker? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorResourcePicker? =
+        internal fun wrap(handle: RawSegment): EditorResourcePicker? =
             if (handle.address() == 0L) null else EditorResourcePicker(GodotHandle(handle))
 
         private const val SET_BASE_TYPE_HASH = 83702148L

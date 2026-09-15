@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
@@ -147,7 +148,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun setTexture(groupIdx: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, segment, groupIdx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTextureBind, segment, groupIdx, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -367,7 +368,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): SkeletonProfile? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SkeletonProfile? =
+        internal fun wrap(handle: RawSegment): SkeletonProfile? =
             if (handle.address() == 0L) null else SkeletonProfile(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_HASH = 3304788590L

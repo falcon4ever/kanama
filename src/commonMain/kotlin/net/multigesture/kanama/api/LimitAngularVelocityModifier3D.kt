@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -184,7 +184,7 @@ class LimitAngularVelocityModifier3D(handle: GodotHandle) : SkeletonModifier3D(h
         fun fromHandle(handle: GodotHandle): LimitAngularVelocityModifier3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): LimitAngularVelocityModifier3D? =
+        internal fun wrap(handle: RawSegment): LimitAngularVelocityModifier3D? =
             if (handle.address() == 0L) null else LimitAngularVelocityModifier3D(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L

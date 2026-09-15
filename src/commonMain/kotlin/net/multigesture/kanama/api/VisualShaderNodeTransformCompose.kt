@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeTransformCompose(handle: GodotHandle) : VisualShaderNode(h
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformCompose? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeTransformCompose? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeTransformCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformCompose(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

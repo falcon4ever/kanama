@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
@@ -132,7 +133,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.add_item
      */
     fun addItem(text: String, icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(addItemBind, segment, text, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
+        return ObjectCalls.ptrcallWithStringObjectBoolArgsRetInt(addItemBind, segment, text, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
     }
 
     /**
@@ -141,7 +142,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.add_icon_item
      */
     fun addIconItem(icon: Texture2D?, selectable: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(addIconItemBind, segment, icon?.requireOpenHandle() ?: MemorySegment.NULL, selectable)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetInt(addIconItemBind, segment, icon?.requireOpenHandle() ?: NULL_SEGMENT, selectable)
     }
 
     /**
@@ -168,7 +169,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ItemList.set_item_icon
      */
     fun setItemIcon(idx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -956,7 +957,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): ItemList? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ItemList? =
+        internal fun wrap(handle: RawSegment): ItemList? =
             if (handle.address() == 0L) null else ItemList(GodotHandle(handle))
 
         private const val ADD_ITEM_HASH = 359861678L

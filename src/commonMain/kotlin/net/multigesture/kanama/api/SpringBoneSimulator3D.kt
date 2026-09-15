@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
@@ -312,7 +313,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.set_radius_damping_curve
      */
     fun setRadiusDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setRadiusDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setRadiusDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -351,7 +352,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.set_stiffness_damping_curve
      */
     fun setStiffnessDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setStiffnessDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setStiffnessDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -389,7 +390,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.set_drag_damping_curve
      */
     fun setDragDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDragDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setDragDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -428,7 +429,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.set_gravity_damping_curve
      */
     fun setGravityDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setGravityDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setGravityDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -862,7 +863,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         fun fromHandle(handle: GodotHandle): SpringBoneSimulator3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SpringBoneSimulator3D? =
+        internal fun wrap(handle: RawSegment): SpringBoneSimulator3D? =
             if (handle.address() == 0L) null else SpringBoneSimulator3D(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L

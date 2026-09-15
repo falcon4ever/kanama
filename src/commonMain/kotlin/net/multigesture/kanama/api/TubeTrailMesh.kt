@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -219,7 +220,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -239,7 +240,7 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         fun fromHandle(handle: GodotHandle): TubeTrailMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TubeTrailMesh? =
+        internal fun wrap(handle: RawSegment): TubeTrailMesh? =
             if (handle.address() == 0L) null else TubeTrailMesh(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L

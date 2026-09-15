@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -194,7 +195,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setFont(font: Font?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFontBind, segment, listOf(font?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -528,7 +529,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         fun fromHandle(handle: GodotHandle): TextMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextMesh? =
+        internal fun wrap(handle: RawSegment): TextMesh? =
             if (handle.address() == 0L) null else TextMesh(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L

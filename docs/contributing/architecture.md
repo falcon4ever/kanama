@@ -89,7 +89,7 @@ flowchart TB
     end
 
     subgraph APP["Exported iOS app (.xcframework, device arm64)"]
-        KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, GodotHandle over the MemorySegment shim"]
+        KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, RawSegment aliases the MemorySegment shim"]
         WRAP["Shared generated wrappers<br/>src/commonMain, the same files desktop/Android compile"]
         OC["ObjectCalls (iOS actual)<br/>typed ptrcall helpers"]
         SHIM["C GDExtension shim<br/>entry, get_method_bind, generic ptrcall dispatch"]
@@ -292,6 +292,27 @@ they can be shared: a value type marshals as a `GodotRealArray` — a flat buffe
 of `real_t` components, aliased once per platform in `Real.kt` — while a scalar
 `float` argument travels as `BuiltinCalls.BArg.Real`, the 8-byte double.
 
+## The object handle and the raw pointer
+
+A wrapper's identity is `net.multigesture.kanama.api.GodotHandle`, a zero-cost
+`@JvmInline value class` that is the only handle type a public signature may name
+(task 104 step 1). Since step 3 it is ONE shared file in
+`src/commonMain/kotlin/net/multigesture/kanama/api`, because what it wraps is now
+also Kanama-named: `net.multigesture.kanama.binding.runtime.RawSegment`, the raw
+engine pointer, declared as a plain `typealias` once per backend — the FFM
+`MemorySegment` on desktop (`com.v7878.foreign.MemorySegment` after the Android
+remap), the Kotlin/Native shim of the same name on iOS — with the null pointer
+beside it as a top-level `NULL_SEGMENT`. Web declares its own `GodotHandle` under
+the same fully-qualified name over a generation-tagged registry id.
+
+Nothing in `src/commonMain` names a `java.lang.foreign` type any more, which is what
+the rest of task 104 step 3 needs: a real KMP `commonMain` can neither declare nor
+`expect` a JDK package, so the later parcels turn this pair into
+`expect class RawSegment` / `expect val NULL_SEGMENT` with the two typealiases as
+their `actual`s. Because `RawSegment` *is* each platform's pointer type today, the
+runtime seam (`ObjectCalls`, `GodotObject.requireOpenHandle()`, the KSP glue) is
+unchanged by the rename.
+
 ## Value types
 
 The 19 Godot builtin value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`,
@@ -300,7 +321,7 @@ The 19 Godot builtin value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`,
 the generated wrappers: the root JVM module, `:ios-runtime` and the Android copy
 task all compile those files (task 104 step 2). Only `Real.kt` is per platform —
 generated at build time on desktop, hand-written on iOS, written by the plugin
-build script on Android — exactly like `GodotHandle`. The Web backend keeps its
+build script on Android. The Web backend keeps its
 own `WebValueTypes.kt`; it could adopt the shared bodies later behind a
 pure-Kotlin `BuiltinCalls`.
 

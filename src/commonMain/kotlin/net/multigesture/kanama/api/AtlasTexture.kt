@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 
@@ -45,7 +46,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setAtlas(atlas: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAtlasBind, segment, listOf(atlas?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAtlasBind, segment, listOf(atlas?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -139,7 +140,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): AtlasTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AtlasTexture? =
+        internal fun wrap(handle: RawSegment): AtlasTexture? =
             if (handle.address() == 0L) null else AtlasTexture(GodotHandle(handle))
 
         private const val SET_ATLAS_HASH = 4051416890L

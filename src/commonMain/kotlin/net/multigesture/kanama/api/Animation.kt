@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
@@ -596,7 +597,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackInsertKey(trackIdx: Int, time: Double, stream: Resource?, startOffset: Double = 0.0, endOffset: Double = 0.0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(audioTrackInsertKeyBind, segment, trackIdx, time, stream?.requireOpenHandle() ?: MemorySegment.NULL, startOffset, endOffset)
+        return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(audioTrackInsertKeyBind, segment, trackIdx, time, stream?.requireOpenHandle() ?: NULL_SEGMENT, startOffset, endOffset)
     }
 
     /**
@@ -607,7 +608,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackSetKeyStream(trackIdx: Int, keyIdx: Int, stream: Resource?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(audioTrackSetKeyStreamBind, segment, trackIdx, keyIdx, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(audioTrackSetKeyStreamBind, segment, trackIdx, keyIdx, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -910,7 +911,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun copyTrack(trackIdx: Int, toAnimation: Animation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(copyTrackBind, segment, trackIdx, toAnimation?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(copyTrackBind, segment, trackIdx, toAnimation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -982,7 +983,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Animation? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Animation? =
+        internal fun wrap(handle: RawSegment): Animation? =
             if (handle.address() == 0L) null else Animation(GodotHandle(handle))
 
         private const val ADD_TRACK_HASH = 3843682357L

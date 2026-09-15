@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Quaternion
 
@@ -294,7 +295,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.set_damping_curve
      */
     fun setDampingCurve(index: Int, curve: Curve?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setDampingCurveBind, segment, index, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -362,7 +363,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         fun fromHandle(handle: GodotHandle): BoneTwistDisperser3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BoneTwistDisperser3D? =
+        internal fun wrap(handle: RawSegment): BoneTwistDisperser3D? =
             if (handle.address() == 0L) null else BoneTwistDisperser3D(GodotHandle(handle))
 
         private const val SET_SETTING_COUNT_HASH = 1286410249L

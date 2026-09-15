@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 
@@ -267,7 +268,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
          * Generated from Godot docs: PathFollow3D.correct_posture
          */
         fun correctPosture(transform: Transform3D, rotationMode: Long): Transform3D {
-            return ObjectCalls.ptrcallWithTransform3DAndLongArgsRetTransform3D(correctPostureBind, MemorySegment.NULL, transform, rotationMode)
+            return ObjectCalls.ptrcallWithTransform3DAndLongArgsRetTransform3D(correctPostureBind, NULL_SEGMENT, transform, rotationMode)
         }
 
         const val ROTATION_NONE: Long = 0L
@@ -280,7 +281,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): PathFollow3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PathFollow3D? =
+        internal fun wrap(handle: RawSegment): PathFollow3D? =
             if (handle.address() == 0L) null else PathFollow3D(GodotHandle(handle))
 
         private const val SET_PROGRESS_HASH = 373806689L

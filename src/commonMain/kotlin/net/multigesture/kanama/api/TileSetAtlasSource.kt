@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
@@ -52,7 +53,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -218,7 +219,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTilesToBeRemovedOnChange(texture: Texture2D?, margins: Vector2i, separation: Vector2i, textureRegionSize: Vector2i): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(getTilesToBeRemovedOnChangeBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, margins, separation, textureRegionSize)
+        return ObjectCalls.ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List(getTilesToBeRemovedOnChangeBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, margins, separation, textureRegionSize)
     }
 
     /**
@@ -505,7 +506,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
         fun fromHandle(handle: GodotHandle): TileSetAtlasSource? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TileSetAtlasSource? =
+        internal fun wrap(handle: RawSegment): TileSetAtlasSource? =
             if (handle.address() == 0L) null else TileSetAtlasSource(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L

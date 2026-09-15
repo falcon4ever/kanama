@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2i
@@ -211,14 +212,14 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: DPITexture.create_from_string
          */
         fun createFromString(source: String, scale: Double = 1.0, saturation: Double = 1.0, colorMap: Map<String, Any?> = emptyMap()): DPITexture? {
-            return DPITexture.wrap(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(createFromStringBind, MemorySegment.NULL, source, scale, saturation, colorMap))
+            return DPITexture.wrap(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(createFromStringBind, NULL_SEGMENT, source, scale, saturation, colorMap))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): DPITexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): DPITexture? =
+        internal fun wrap(handle: RawSegment): DPITexture? =
             if (handle.address() == 0L) null else DPITexture(GodotHandle(handle))
 
         private const val CREATE_FROM_STRING_HASH = 755140520L

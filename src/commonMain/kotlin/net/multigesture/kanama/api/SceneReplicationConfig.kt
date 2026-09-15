@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -84,7 +84,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): SceneReplicationConfig? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SceneReplicationConfig? =
+        internal fun wrap(handle: RawSegment): SceneReplicationConfig? =
             if (handle.address() == 0L) null else SceneReplicationConfig(GodotHandle(handle))
 
         private const val GET_PROPERTIES_HASH = 3995934104L

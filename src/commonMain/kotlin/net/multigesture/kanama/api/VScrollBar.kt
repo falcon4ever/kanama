@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class VScrollBar(handle: GodotHandle) : ScrollBar(handle) {
         fun fromHandle(handle: GodotHandle): VScrollBar? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VScrollBar? =
+        internal fun wrap(handle: RawSegment): VScrollBar? =
             if (handle.address() == 0L) null else VScrollBar(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ open class TextServerExtension(handle: GodotHandle) : TextServer(handle) {
         fun fromHandle(handle: GodotHandle): TextServerExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextServerExtension? =
+        internal fun wrap(handle: RawSegment): TextServerExtension? =
             if (handle.address() == 0L) null else TextServerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

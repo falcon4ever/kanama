@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
@@ -143,7 +143,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): RootMotionView? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RootMotionView? =
+        internal fun wrap(handle: RawSegment): RootMotionView? =
             if (handle.address() == 0L) null else RootMotionView(GodotHandle(handle))
 
         private const val SET_ANIMATION_PATH_HASH = 1348162250L

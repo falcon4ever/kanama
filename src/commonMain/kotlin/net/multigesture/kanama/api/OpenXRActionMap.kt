@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -49,12 +50,12 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
 
     fun addActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun removeActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun setInteractionProfiles(interactionProfiles: List<Any?>) {
@@ -84,12 +85,12 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
 
     fun addInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(addInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun removeInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(removeInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeInteractionProfileBind, segment, listOf(interactionProfile?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun createDefaultActionSets() {
@@ -102,7 +103,7 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRActionMap? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRActionMap? =
+        internal fun wrap(handle: RawSegment): OpenXRActionMap? =
             if (handle.address() == 0L) null else OpenXRActionMap(GodotHandle(handle))
 
         private const val SET_ACTION_SETS_HASH = 381264803L

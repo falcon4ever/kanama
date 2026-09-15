@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -31,7 +32,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setGradient(gradient: Gradient?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(gradient?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -85,7 +86,7 @@ class GradientTexture1D(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): GradientTexture1D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GradientTexture1D? =
+        internal fun wrap(handle: RawSegment): GradientTexture1D? =
             if (handle.address() == 0L) null else GradientTexture1D(GodotHandle(handle))
 
         private const val SET_GRADIENT_HASH = 2756054477L

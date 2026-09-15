@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Vector3
@@ -251,7 +252,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.set_physics_material_override
      */
     fun setPhysicsMaterialOverride(physicsMaterialOverride: PhysicsMaterial?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPhysicsMaterialOverrideBind, segment, listOf(physicsMaterialOverride?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -816,7 +817,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         fun fromHandle(handle: GodotHandle): RigidBody3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RigidBody3D? =
+        internal fun wrap(handle: RawSegment): RigidBody3D? =
             if (handle.address() == 0L) null else RigidBody3D(GodotHandle(handle))
 
         private const val SET_MASS_HASH = 373806689L

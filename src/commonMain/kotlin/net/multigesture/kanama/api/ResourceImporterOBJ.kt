@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class ResourceImporterOBJ(handle: GodotHandle) : ResourceImporter(handle) {
         fun fromHandle(handle: GodotHandle): ResourceImporterOBJ? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ResourceImporterOBJ? =
+        internal fun wrap(handle: RawSegment): ResourceImporterOBJ? =
             if (handle.address() == 0L) null else ResourceImporterOBJ(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

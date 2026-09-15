@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
@@ -63,7 +64,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.set_icon
      */
     fun setIcon(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setIconBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setIconBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -132,7 +133,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): StatusIndicator? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): StatusIndicator? =
+        internal fun wrap(handle: RawSegment): StatusIndicator? =
             if (handle.address() == 0L) null else StatusIndicator(GodotHandle(handle))
 
         private const val SET_TOOLTIP_HASH = 83702148L

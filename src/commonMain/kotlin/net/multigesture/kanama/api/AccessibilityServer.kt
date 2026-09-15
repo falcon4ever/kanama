@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Transform2D
  * Generated from Godot docs: AccessibilityServer
  */
 object AccessibilityServer {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("AccessibilityServer")
     }
 
@@ -890,7 +890,7 @@ object AccessibilityServer {
     fun fromHandle(handle: GodotHandle): AccessibilityServer? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): AccessibilityServer? =
+    internal fun wrap(handle: RawSegment): AccessibilityServer? =
         if (handle.address() == 0L) null else this
 
     private const val IS_SUPPORTED_HASH = 36873697L

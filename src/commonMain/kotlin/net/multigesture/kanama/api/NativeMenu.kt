@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
@@ -14,7 +15,7 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: NativeMenu
  */
 object NativeMenu {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("NativeMenu")
     }
 
@@ -293,7 +294,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -311,7 +312,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -351,7 +352,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun addIconRadioCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: MemorySegment.NULL, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
     }
 
     /**
@@ -783,7 +784,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun setItemIcon(rid: RID, idx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithRIDIntAndObjectArg(setItemIconBind, singleton, rid, idx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithRIDIntAndObjectArg(setItemIconBind, singleton, rid, idx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -858,7 +859,7 @@ object NativeMenu {
     fun fromHandle(handle: GodotHandle): NativeMenu? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): NativeMenu? =
+    internal fun wrap(handle: RawSegment): NativeMenu? =
         if (handle.address() == 0L) null else this
 
     private const val HAS_FEATURE_HASH = 1708975490L

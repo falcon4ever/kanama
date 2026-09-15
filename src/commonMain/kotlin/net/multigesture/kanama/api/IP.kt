@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: IP
  */
 object IP {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("IP")
     }
 
@@ -138,7 +138,7 @@ object IP {
     fun fromHandle(handle: GodotHandle): IP? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): IP? =
+    internal fun wrap(handle: RawSegment): IP? =
         if (handle.address() == 0L) null else this
 
     private const val RESOLVE_HOSTNAME_HASH = 4283295457L

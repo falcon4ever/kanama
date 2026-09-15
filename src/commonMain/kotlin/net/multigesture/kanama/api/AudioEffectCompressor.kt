@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -212,7 +212,7 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectCompressor? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectCompressor? =
+        internal fun wrap(handle: RawSegment): AudioEffectCompressor? =
             if (handle.address() == 0L) null else AudioEffectCompressor(GodotHandle(handle))
 
         private const val SET_THRESHOLD_HASH = 373806689L

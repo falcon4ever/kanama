@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -59,7 +59,7 @@ class SliderJoint3D(handle: GodotHandle) : Joint3D(handle) {
         fun fromHandle(handle: GodotHandle): SliderJoint3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SliderJoint3D? =
+        internal fun wrap(handle: RawSegment): SliderJoint3D? =
             if (handle.address() == 0L) null else SliderJoint3D(GodotHandle(handle))
 
         private const val SET_PARAM_HASH = 918243683L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class Texture2DArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
         fun fromHandle(handle: GodotHandle): Texture2DArrayRD? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Texture2DArrayRD? =
+        internal fun wrap(handle: RawSegment): Texture2DArrayRD? =
             if (handle.address() == 0L) null else Texture2DArrayRD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

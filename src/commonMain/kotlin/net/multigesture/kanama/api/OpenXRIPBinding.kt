@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -36,7 +37,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
 
     fun setAction(action: OpenXRAction?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setActionBind, segment, listOf(action?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setActionBind, segment, listOf(action?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getAction(): OpenXRAction? {
@@ -109,7 +110,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): OpenXRIPBinding? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRIPBinding? =
+        internal fun wrap(handle: RawSegment): OpenXRIPBinding? =
             if (handle.address() == 0L) null else OpenXRIPBinding(GodotHandle(handle))
 
         private const val SET_ACTION_HASH = 349361333L

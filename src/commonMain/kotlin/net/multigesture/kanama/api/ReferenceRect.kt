@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -94,7 +94,7 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): ReferenceRect? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ReferenceRect? =
+        internal fun wrap(handle: RawSegment): ReferenceRect? =
             if (handle.address() == 0L) null else ReferenceRect(GodotHandle(handle))
 
         private const val GET_BORDER_COLOR_HASH = 3444240500L

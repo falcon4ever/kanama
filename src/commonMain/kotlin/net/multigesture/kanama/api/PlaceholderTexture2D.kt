@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -27,7 +27,7 @@ class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): PlaceholderTexture2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PlaceholderTexture2D? =
+        internal fun wrap(handle: RawSegment): PlaceholderTexture2D? =
             if (handle.address() == 0L) null else PlaceholderTexture2D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L

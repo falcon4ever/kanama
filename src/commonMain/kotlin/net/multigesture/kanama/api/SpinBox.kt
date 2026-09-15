@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -248,7 +248,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
         fun fromHandle(handle: GodotHandle): SpinBox? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SpinBox? =
+        internal fun wrap(handle: RawSegment): SpinBox? =
             if (handle.address() == 0L) null else SpinBox(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L

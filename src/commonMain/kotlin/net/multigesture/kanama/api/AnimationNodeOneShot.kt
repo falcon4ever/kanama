@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -104,7 +105,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setFadeinCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFadeinCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -150,7 +151,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun setFadeoutCurve(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setFadeoutCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -308,7 +309,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
         fun fromHandle(handle: GodotHandle): AnimationNodeOneShot? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeOneShot? =
+        internal fun wrap(handle: RawSegment): AnimationNodeOneShot? =
             if (handle.address() == 0L) null else AnimationNodeOneShot(GodotHandle(handle))
 
         private const val SET_FADEIN_TIME_HASH = 373806689L

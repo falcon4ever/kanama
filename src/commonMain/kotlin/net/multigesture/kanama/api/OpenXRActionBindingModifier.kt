@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ open class OpenXRActionBindingModifier(handle: GodotHandle) : OpenXRBindingModif
         fun fromHandle(handle: GodotHandle): OpenXRActionBindingModifier? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRActionBindingModifier? =
+        internal fun wrap(handle: RawSegment): OpenXRActionBindingModifier? =
             if (handle.address() == 0L) null else OpenXRActionBindingModifier(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

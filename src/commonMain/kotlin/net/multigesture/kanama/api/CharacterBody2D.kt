@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -654,7 +654,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         fun fromHandle(handle: GodotHandle): CharacterBody2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CharacterBody2D? =
+        internal fun wrap(handle: RawSegment): CharacterBody2D? =
             if (handle.address() == 0L) null else CharacterBody2D(GodotHandle(handle))
 
         private const val MOVE_AND_SLIDE_HASH = 2240911060L

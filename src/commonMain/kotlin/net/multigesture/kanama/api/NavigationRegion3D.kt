@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.RID
@@ -67,7 +68,7 @@ class NavigationRegion3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: NavigationRegion3D.set_navigation_mesh
      */
     fun setNavigationMesh(navigationMesh: NavigationMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setNavigationMeshBind, segment, listOf(navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNavigationMeshBind, segment, listOf(navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -269,7 +270,7 @@ class NavigationRegion3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): NavigationRegion3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): NavigationRegion3D? =
+        internal fun wrap(handle: RawSegment): NavigationRegion3D? =
             if (handle.address() == 0L) null else NavigationRegion3D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L

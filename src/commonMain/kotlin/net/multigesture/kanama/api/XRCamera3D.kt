@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class XRCamera3D(handle: GodotHandle) : Camera3D(handle) {
         fun fromHandle(handle: GodotHandle): XRCamera3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XRCamera3D? =
+        internal fun wrap(handle: RawSegment): XRCamera3D? =
             if (handle.address() == 0L) null else XRCamera3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

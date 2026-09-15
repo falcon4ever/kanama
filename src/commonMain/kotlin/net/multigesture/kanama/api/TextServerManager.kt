@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: TextServerManager
  */
 object TextServerManager {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("TextServerManager")
     }
 
@@ -22,7 +23,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun addInterface(interfaceValue: TextServer?) {
-        ObjectCalls.ptrcallWithObjectArgs(addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -43,7 +44,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun removeInterface(interfaceValue: TextServer?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -83,7 +84,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun setPrimaryInterface(index: TextServer?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(index?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(index?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -105,7 +106,7 @@ object TextServerManager {
     fun fromHandle(handle: GodotHandle): TextServerManager? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): TextServerManager? =
+    internal fun wrap(handle: RawSegment): TextServerManager? =
         if (handle.address() == 0L) null else this
 
     private const val ADD_INTERFACE_HASH = 1799689403L

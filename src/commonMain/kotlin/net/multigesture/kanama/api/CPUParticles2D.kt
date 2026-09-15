@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -745,7 +746,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -847,7 +848,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_param_curve
      */
     fun setParamCurve(param: Long, curve: Curve?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param, curve?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -884,7 +885,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_color_ramp
      */
     fun setColorRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -903,7 +904,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_color_initial_ramp
      */
     fun setColorInitialRamp(ramp: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setColorInitialRampBind, segment, listOf(ramp?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1136,7 +1137,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_scale_curve_x
      */
     fun setScaleCurveX(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveXBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1156,7 +1157,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.set_scale_curve_y
      */
     fun setScaleCurveY(scaleCurve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setScaleCurveYBind, segment, listOf(scaleCurve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1206,7 +1207,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): CPUParticles2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CPUParticles2D? =
+        internal fun wrap(handle: RawSegment): CPUParticles2D? =
             if (handle.address() == 0L) null else CPUParticles2D(GodotHandle(handle))
 
         private const val SET_EMITTING_HASH = 2586408642L

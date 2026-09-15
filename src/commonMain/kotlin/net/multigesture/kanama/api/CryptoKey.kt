@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -70,7 +70,7 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): CryptoKey? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CryptoKey? =
+        internal fun wrap(handle: RawSegment): CryptoKey? =
             if (handle.address() == 0L) null else CryptoKey(GodotHandle(handle))
 
         private const val SAVE_HASH = 885841341L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -66,7 +67,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
 
     fun setActionSet(actionSet: OpenXRActionSet?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setActionSetBind, segment, listOf(actionSet?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getActionSet(): OpenXRActionSet? {
@@ -136,7 +137,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
 
     fun setOnHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOnHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getOnHaptic(): OpenXRHapticBase? {
@@ -146,7 +147,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOffHapticBind, segment, listOf(haptic?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getOffHaptic(): OpenXRHapticBase? {
@@ -159,7 +160,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
         fun fromHandle(handle: GodotHandle): OpenXRDpadBindingModifier? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRDpadBindingModifier? =
+        internal fun wrap(handle: RawSegment): OpenXRDpadBindingModifier? =
             if (handle.address() == 0L) null else OpenXRDpadBindingModifier(GodotHandle(handle))
 
         private const val SET_ACTION_SET_HASH = 2093310581L

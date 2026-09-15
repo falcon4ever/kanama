@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -251,7 +252,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDropcap(text: String, font: Font?, fontSize: Int, dropcapMargins: Rect2, language: String = ""): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(setDropcapBind, segment, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, dropcapMargins, language)
+        return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(setDropcapBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, dropcapMargins, language)
     }
 
     /**
@@ -271,7 +272,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, segment, text, font?.requireOpenHandle() ?: MemorySegment.NULL, fontSize, language, meta)
+        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, language, meta)
     }
 
     /**
@@ -748,7 +749,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): TextParagraph? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TextParagraph? =
+        internal fun wrap(handle: RawSegment): TextParagraph? =
             if (handle.address() == 0L) null else TextParagraph(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L

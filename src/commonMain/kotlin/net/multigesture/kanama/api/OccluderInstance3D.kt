@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -130,7 +131,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.set_occluder
      */
     fun setOccluder(occluder: Occluder3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOccluderBind, segment, listOf(occluder?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOccluderBind, segment, listOf(occluder?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -151,7 +152,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): OccluderInstance3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OccluderInstance3D? =
+        internal fun wrap(handle: RawSegment): OccluderInstance3D? =
             if (handle.address() == 0L) null else OccluderInstance3D(GodotHandle(handle))
 
         private const val SET_BAKE_MASK_HASH = 1286410249L

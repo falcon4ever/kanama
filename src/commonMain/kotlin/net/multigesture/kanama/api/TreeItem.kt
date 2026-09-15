@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
@@ -343,7 +344,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_icon
      */
     fun setIcon(column: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setIconBind, segment, column, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setIconBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -362,7 +363,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_icon_overlay
      */
     fun setIconOverlay(column: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setIconOverlayBind, segment, column, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setIconOverlayBind, segment, column, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -528,7 +529,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_stylebox
      */
     fun setCustomStylebox(column: Int, stylebox: StyleBox?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setCustomStyleboxBind, segment, column, stylebox?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setCustomStyleboxBind, segment, column, stylebox?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -730,7 +731,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_custom_font
      */
     fun setCustomFont(column: Int, font: Font?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setCustomFontBind, segment, column, font?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setCustomFontBind, segment, column, font?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -826,7 +827,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.add_button
      */
     fun addButton(column: Int, button: Texture2D?, id: Int = -1, disabled: Boolean = false, tooltipText: String = "", description: String = "") {
-        ObjectCalls.ptrcallWithIntObjectIntBoolTwoStringArgs(addButtonBind, segment, column, button?.requireOpenHandle() ?: MemorySegment.NULL, id, disabled, tooltipText, description)
+        ObjectCalls.ptrcallWithIntObjectIntBoolTwoStringArgs(addButtonBind, segment, column, button?.requireOpenHandle() ?: NULL_SEGMENT, id, disabled, tooltipText, description)
     }
 
     /**
@@ -900,7 +901,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.set_button
      */
     fun setButton(column: Int, buttonIndex: Int, button: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setButtonBind, segment, column, buttonIndex, button?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setButtonBind, segment, column, buttonIndex, button?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1241,7 +1242,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): TreeItem? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TreeItem? =
+        internal fun wrap(handle: RawSegment): TreeItem? =
             if (handle.address() == 0L) null else TreeItem(GodotHandle(handle))
 
         private const val SET_CELL_MODE_HASH = 289920701L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class AnimationNodeTimeScale(handle: GodotHandle) : AnimationNode(handle) {
         fun fromHandle(handle: GodotHandle): AnimationNodeTimeScale? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationNodeTimeScale? =
+        internal fun wrap(handle: RawSegment): AnimationNodeTimeScale? =
             if (handle.address() == 0L) null else AnimationNodeTimeScale(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

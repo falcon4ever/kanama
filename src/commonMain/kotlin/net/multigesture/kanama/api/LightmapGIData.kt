@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
@@ -149,7 +150,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setLightTexture(lightTexture: TextureLayered?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setLightTextureBind, segment, listOf(lightTexture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setLightTextureBind, segment, listOf(lightTexture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -171,7 +172,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): LightmapGIData? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): LightmapGIData? =
+        internal fun wrap(handle: RawSegment): LightmapGIData? =
             if (handle.address() == 0L) null else LightmapGIData(GodotHandle(handle))
 
         private const val SET_LIGHTMAP_TEXTURES_HASH = 381264803L

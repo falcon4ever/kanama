@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -32,7 +32,7 @@ class AudioEffectSpectrumAnalyzerInstance(handle: GodotHandle) : AudioEffectInst
         fun fromHandle(handle: GodotHandle): AudioEffectSpectrumAnalyzerInstance? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectSpectrumAnalyzerInstance? =
+        internal fun wrap(handle: RawSegment): AudioEffectSpectrumAnalyzerInstance? =
             if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzerInstance(GodotHandle(handle))
 
         private const val GET_MAGNITUDE_FOR_FREQUENCY_RANGE_HASH = 797993915L

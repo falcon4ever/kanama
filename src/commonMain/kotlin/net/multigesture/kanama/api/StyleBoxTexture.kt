@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
@@ -105,7 +106,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -297,7 +298,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
         fun fromHandle(handle: GodotHandle): StyleBoxTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): StyleBoxTexture? =
+        internal fun wrap(handle: RawSegment): StyleBoxTexture? =
             if (handle.address() == 0L) null else StyleBoxTexture(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L

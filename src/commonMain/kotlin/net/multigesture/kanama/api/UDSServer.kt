@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -38,7 +38,7 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
         fun fromHandle(handle: GodotHandle): UDSServer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): UDSServer? =
+        internal fun wrap(handle: RawSegment): UDSServer? =
             if (handle.address() == 0L) null else UDSServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 166001499L

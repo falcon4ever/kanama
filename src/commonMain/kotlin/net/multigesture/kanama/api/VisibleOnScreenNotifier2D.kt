@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 
@@ -86,7 +86,7 @@ open class VisibleOnScreenNotifier2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): VisibleOnScreenNotifier2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisibleOnScreenNotifier2D? =
+        internal fun wrap(handle: RawSegment): VisibleOnScreenNotifier2D? =
             if (handle.address() == 0L) null else VisibleOnScreenNotifier2D(GodotHandle(handle))
 
         private const val SET_RECT_HASH = 2046264180L

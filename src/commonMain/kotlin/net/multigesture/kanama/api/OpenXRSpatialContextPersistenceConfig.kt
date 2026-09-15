@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -30,7 +30,7 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
         fun fromHandle(handle: GodotHandle): OpenXRSpatialContextPersistenceConfig? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialContextPersistenceConfig? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialContextPersistenceConfig? =
             if (handle.address() == 0L) null else OpenXRSpatialContextPersistenceConfig(GodotHandle(handle))
 
         private const val ADD_PERSISTENCE_CONTEXT_HASH = 2722037293L

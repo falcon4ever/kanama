@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
@@ -1185,7 +1185,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): NavigationAgent3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): NavigationAgent3D? =
+        internal fun wrap(handle: RawSegment): NavigationAgent3D? =
             if (handle.address() == 0L) null else NavigationAgent3D(GodotHandle(handle))
 
         private const val GET_RID_HASH = 2944877500L

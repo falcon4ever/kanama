@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +19,7 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setup(serverOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, segment, serverOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -31,7 +32,7 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeConnection(udpPeer: PacketPeerUDP?): PacketPeerDTLS? {
         checkOpen()
-        return PacketPeerDTLS.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, segment, udpPeer?.requireOpenHandle() ?: MemorySegment.NULL))
+        return PacketPeerDTLS.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, segment, udpPeer?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -39,7 +40,7 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): DTLSServer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): DTLSServer? =
+        internal fun wrap(handle: RawSegment): DTLSServer? =
             if (handle.address() == 0L) null else DTLSServer(GodotHandle(handle))
 
         private const val SETUP_HASH = 1262296096L

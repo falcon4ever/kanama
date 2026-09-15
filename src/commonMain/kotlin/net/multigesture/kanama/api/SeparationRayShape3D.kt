@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -73,7 +73,7 @@ class SeparationRayShape3D(handle: GodotHandle) : Shape3D(handle) {
         fun fromHandle(handle: GodotHandle): SeparationRayShape3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SeparationRayShape3D? =
+        internal fun wrap(handle: RawSegment): SeparationRayShape3D? =
             if (handle.address() == 0L) null else SeparationRayShape3D(GodotHandle(handle))
 
         private const val SET_LENGTH_HASH = 373806689L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector3
@@ -599,7 +600,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setSky(sky: Sky?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSkyBind, segment, listOf(sky?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSkyBind, segment, listOf(sky?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2127,7 +2128,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setGlowMap(mode: Texture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGlowMapBind, segment, listOf(mode?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGlowMapBind, segment, listOf(mode?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2902,7 +2903,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun setAdjustmentColorCorrection(colorCorrection: Texture?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setAdjustmentColorCorrectionBind, segment, listOf(colorCorrection?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAdjustmentColorCorrectionBind, segment, listOf(colorCorrection?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2953,7 +2954,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Environment? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Environment? =
+        internal fun wrap(handle: RawSegment): Environment? =
             if (handle.address() == 0L) null else Environment(GodotHandle(handle))
 
         private const val SET_BACKGROUND_HASH = 4071623990L

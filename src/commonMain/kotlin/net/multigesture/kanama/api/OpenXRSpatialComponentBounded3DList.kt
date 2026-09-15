@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -26,7 +26,7 @@ class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialCo
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentBounded3DList? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): OpenXRSpatialComponentBounded3DList? =
+        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentBounded3DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentBounded3DList(GodotHandle(handle))
 
         private const val GET_CENTER_POSE_HASH = 1965739696L

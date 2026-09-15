@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -62,7 +62,7 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): SyntaxHighlighter? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SyntaxHighlighter? =
+        internal fun wrap(handle: RawSegment): SyntaxHighlighter? =
             if (handle.address() == 0L) null else SyntaxHighlighter(GodotHandle(handle))
 
         private const val GET_LINE_SYNTAX_HIGHLIGHTING_HASH = 3554694381L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -32,7 +33,7 @@ class CSGBox3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMaterial(): Material? {
@@ -44,7 +45,7 @@ class CSGBox3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         fun fromHandle(handle: GodotHandle): CSGBox3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CSGBox3D? =
+        internal fun wrap(handle: RawSegment): CSGBox3D? =
             if (handle.address() == 0L) null else CSGBox3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

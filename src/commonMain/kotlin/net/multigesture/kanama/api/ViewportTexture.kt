@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -50,7 +50,7 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): ViewportTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ViewportTexture? =
+        internal fun wrap(handle: RawSegment): ViewportTexture? =
             if (handle.address() == 0L) null else ViewportTexture(GodotHandle(handle))
 
         private const val SET_VIEWPORT_PATH_IN_SCENE_HASH = 1348162250L

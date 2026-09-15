@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -42,7 +42,7 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): Semaphore? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Semaphore? =
+        internal fun wrap(handle: RawSegment): Semaphore? =
             if (handle.address() == 0L) null else Semaphore(GodotHandle(handle))
 
         private const val WAIT_HASH = 3218959716L

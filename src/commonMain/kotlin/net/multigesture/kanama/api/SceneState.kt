@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -269,7 +269,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): SceneState? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SceneState? =
+        internal fun wrap(handle: RawSegment): SceneState? =
             if (handle.address() == 0L) null else SceneState(GodotHandle(handle))
 
         private const val GET_PATH_HASH = 201670096L

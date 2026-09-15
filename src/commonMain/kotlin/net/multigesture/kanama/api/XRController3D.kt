@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -79,7 +79,7 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
         fun fromHandle(handle: GodotHandle): XRController3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): XRController3D? =
+        internal fun wrap(handle: RawSegment): XRController3D? =
             if (handle.address() == 0L) null else XRController3D(GodotHandle(handle))
 
         private const val IS_BUTTON_PRESSED_HASH = 2619796661L

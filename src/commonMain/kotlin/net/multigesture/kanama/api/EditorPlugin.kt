@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -103,7 +104,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_custom_type
      */
     fun addCustomType(type: String, base: String, script: Script?, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoStringTwoObjectArgs(addCustomTypeBind, segment, type, base, script?.requireOpenHandle() ?: MemorySegment.NULL, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoStringTwoObjectArgs(addCustomTypeBind, segment, type, base, script?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -125,7 +126,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_control_to_dock
      */
     fun addControlToDock(slot: Long, control: Control, shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithLongAndTwoObjectArgs(addControlToDockBind, segment, slot, control.segment, shortcut?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndTwoObjectArgs(addControlToDockBind, segment, slot, control.segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -143,7 +144,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.set_dock_tab_icon
      */
     fun setDockTabIcon(control: Control, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(setDockTabIconBind, segment, control.segment, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithTwoObjectArgs(setDockTabIconBind, segment, control.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -158,7 +159,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_control_to_bottom_panel
      */
     fun addControlToBottomPanel(control: Control, title: String, shortcut: Shortcut?): Button? {
-        return Button.wrap(ObjectCalls.ptrcallWithObjectStringObjectArgsRetObject(addControlToBottomPanelBind, segment, control.segment, title, shortcut?.requireOpenHandle() ?: MemorySegment.NULL))
+        return Button.wrap(ObjectCalls.ptrcallWithObjectStringObjectArgsRetObject(addControlToBottomPanelBind, segment, control.segment, title, shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -266,7 +267,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_translation_parser_plugin
      */
     fun addTranslationParserPlugin(parser: EditorTranslationParserPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -275,7 +276,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_translation_parser_plugin
      */
     fun removeTranslationParserPlugin(parser: EditorTranslationParserPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeTranslationParserPluginBind, segment, listOf(parser?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -288,7 +289,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_import_plugin
      */
     fun addImportPlugin(importer: EditorImportPlugin?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addImportPluginBind, segment, importer?.requireOpenHandle() ?: MemorySegment.NULL, firstPriority)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(addImportPluginBind, segment, importer?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
     }
 
     /**
@@ -297,7 +298,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_import_plugin
      */
     fun removeImportPlugin(importer: EditorImportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeImportPluginBind, segment, listOf(importer?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeImportPluginBind, segment, listOf(importer?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -308,7 +309,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_scene_format_importer_plugin
      */
     fun addSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addSceneFormatImporterPluginBind, segment, sceneFormatImporter?.requireOpenHandle() ?: MemorySegment.NULL, firstPriority)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(addSceneFormatImporterPluginBind, segment, sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
     }
 
     /**
@@ -317,7 +318,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_scene_format_importer_plugin
      */
     fun removeSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeSceneFormatImporterPluginBind, segment, listOf(sceneFormatImporter?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeSceneFormatImporterPluginBind, segment, listOf(sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -328,7 +329,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_scene_post_import_plugin
      */
     fun addScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(addScenePostImportPluginBind, segment, sceneImportPlugin?.requireOpenHandle() ?: MemorySegment.NULL, firstPriority)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(addScenePostImportPluginBind, segment, sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
     }
 
     /**
@@ -337,7 +338,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_scene_post_import_plugin
      */
     fun removeScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeScenePostImportPluginBind, segment, listOf(sceneImportPlugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeScenePostImportPluginBind, segment, listOf(sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -347,7 +348,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_export_plugin
      */
     fun addExportPlugin(plugin: EditorExportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -356,7 +357,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_export_plugin
      */
     fun removeExportPlugin(plugin: EditorExportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeExportPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -366,7 +367,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_export_platform
      */
     fun addExportPlatform(platform: EditorExportPlatform?) {
-        ObjectCalls.ptrcallWithObjectArgs(addExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -375,7 +376,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_export_platform
      */
     fun removeExportPlatform(platform: EditorExportPlatform?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -386,7 +387,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_node_3d_gizmo_plugin
      */
     fun addNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -395,7 +396,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_node_3d_gizmo_plugin
      */
     fun removeNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -407,7 +408,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_inspector_plugin
      */
     fun addInspectorPlugin(plugin: EditorInspectorPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -416,7 +417,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_inspector_plugin
      */
     fun removeInspectorPlugin(plugin: EditorInspectorPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeInspectorPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -427,7 +428,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_resource_conversion_plugin
      */
     fun addResourceConversionPlugin(plugin: EditorResourceConversionPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -436,7 +437,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_resource_conversion_plugin
      */
     fun removeResourceConversionPlugin(plugin: EditorResourceConversionPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeResourceConversionPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -468,7 +469,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_context_menu_plugin
      */
     fun addContextMenuPlugin(slot: Long, plugin: EditorContextMenuPlugin?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(addContextMenuPluginBind, segment, slot, plugin?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(addContextMenuPluginBind, segment, slot, plugin?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -477,7 +478,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_context_menu_plugin
      */
     fun removeContextMenuPlugin(plugin: EditorContextMenuPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeContextMenuPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeContextMenuPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -507,7 +508,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.add_debugger_plugin
      */
     fun addDebuggerPlugin(script: EditorDebuggerPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -516,7 +517,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: EditorPlugin.remove_debugger_plugin
      */
     fun removeDebuggerPlugin(script: EditorDebuggerPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(removeDebuggerPluginBind, segment, listOf(script?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -569,7 +570,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): EditorPlugin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorPlugin? =
+        internal fun wrap(handle: RawSegment): EditorPlugin? =
             if (handle.address() == 0L) null else EditorPlugin(GodotHandle(handle))
 
         private const val ADD_DOCK_HASH = 158651717L

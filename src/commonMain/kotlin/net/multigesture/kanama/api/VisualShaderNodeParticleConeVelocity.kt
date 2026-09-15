@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeParticleConeVelocity(handle: GodotHandle) : VisualShaderNo
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleConeVelocity? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeParticleConeVelocity? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleConeVelocity? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleConeVelocity(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

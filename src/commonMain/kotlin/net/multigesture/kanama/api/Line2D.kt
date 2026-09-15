@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
@@ -227,7 +228,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_curve
      */
     fun setCurve(curve: Curve?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -265,7 +266,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_gradient
      */
     fun setGradient(color: Gradient?) {
-        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(color?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setGradientBind, segment, listOf(color?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -284,7 +285,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -447,7 +448,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): Line2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Line2D? =
+        internal fun wrap(handle: RawSegment): Line2D? =
             if (handle.address() == 0L) null else Line2D(GodotHandle(handle))
 
         private const val SET_POINTS_HASH = 1509147220L

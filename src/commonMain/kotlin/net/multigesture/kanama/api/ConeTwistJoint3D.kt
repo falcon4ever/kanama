@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -75,7 +75,7 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
         fun fromHandle(handle: GodotHandle): ConeTwistJoint3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ConeTwistJoint3D? =
+        internal fun wrap(handle: RawSegment): ConeTwistJoint3D? =
             if (handle.address() == 0L) null else ConeTwistJoint3D(GodotHandle(handle))
 
         private const val SET_PARAM_HASH = 1062470226L

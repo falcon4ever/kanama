@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -119,7 +119,7 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
         fun fromHandle(handle: GodotHandle): VisualShaderNodeGroupBase? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeGroupBase? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeGroupBase? =
             if (handle.address() == 0L) null else VisualShaderNodeGroupBase(GodotHandle(handle))
 
         private const val SET_INPUTS_HASH = 83702148L

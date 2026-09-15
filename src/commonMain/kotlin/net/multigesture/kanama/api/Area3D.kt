@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
@@ -683,7 +683,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
         fun fromHandle(handle: GodotHandle): Area3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Area3D? =
+        internal fun wrap(handle: RawSegment): Area3D? =
             if (handle.address() == 0L) null else Area3D(GodotHandle(handle))
 
         private const val SET_GRAVITY_SPACE_OVERRIDE_MODE_HASH = 2311433571L

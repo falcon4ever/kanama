@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -146,7 +146,7 @@ class EditorFileSystemDirectory(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): EditorFileSystemDirectory? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorFileSystemDirectory? =
+        internal fun wrap(handle: RawSegment): EditorFileSystemDirectory? =
             if (handle.address() == 0L) null else EditorFileSystemDirectory(GodotHandle(handle))
 
         private const val GET_SUBDIR_COUNT_HASH = 3905245786L

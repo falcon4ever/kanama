@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -109,7 +109,7 @@ class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): GDScriptTextDocument? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GDScriptTextDocument? =
+        internal fun wrap(handle: RawSegment): GDScriptTextDocument? =
             if (handle.address() == 0L) null else GDScriptTextDocument(GodotHandle(handle))
 
         private const val SHOW_NATIVE_SYMBOL_IN_EDITOR_HASH = 83702148L

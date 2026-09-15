@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -265,7 +266,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
          * Generated from Godot docs: AudioStreamWAV.load_from_buffer
          */
         fun loadFromBuffer(streamData: ByteArray, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
-            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithByteArrayAndDictionaryArgRetObject(loadFromBufferBind, MemorySegment.NULL, streamData, options))
+            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithByteArrayAndDictionaryArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData, options))
         }
 
         /**
@@ -275,7 +276,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
          * Generated from Godot docs: AudioStreamWAV.load_from_file
          */
         fun loadFromFile(path: String, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
-            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(loadFromFileBind, MemorySegment.NULL, path, options))
+            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(loadFromFileBind, NULL_SEGMENT, path, options))
         }
 
         const val FORMAT_8_BITS: Long = 0L
@@ -291,7 +292,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
         fun fromHandle(handle: GodotHandle): AudioStreamWAV? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamWAV? =
+        internal fun wrap(handle: RawSegment): AudioStreamWAV? =
             if (handle.address() == 0L) null else AudioStreamWAV(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 4266838938L

@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector3
 
@@ -53,7 +53,7 @@ class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
         fun fromHandle(handle: GodotHandle): ArrayOccluder3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ArrayOccluder3D? =
+        internal fun wrap(handle: RawSegment): ArrayOccluder3D? =
             if (handle.address() == 0L) null else ArrayOccluder3D(GodotHandle(handle))
 
         private const val SET_ARRAYS_HASH = 3233972621L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -78,7 +78,7 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
         fun fromHandle(handle: GodotHandle): VisibleOnScreenEnabler3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisibleOnScreenEnabler3D? =
+        internal fun wrap(handle: RawSegment): VisibleOnScreenEnabler3D? =
             if (handle.address() == 0L) null else VisibleOnScreenEnabler3D(GodotHandle(handle))
 
         private const val SET_ENABLE_MODE_HASH = 320303646L

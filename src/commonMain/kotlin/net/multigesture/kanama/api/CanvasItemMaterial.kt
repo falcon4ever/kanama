@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -200,7 +200,7 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
         fun fromHandle(handle: GodotHandle): CanvasItemMaterial? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CanvasItemMaterial? =
+        internal fun wrap(handle: RawSegment): CanvasItemMaterial? =
             if (handle.address() == 0L) null else CanvasItemMaterial(GodotHandle(handle))
 
         private const val SET_BLEND_MODE_HASH = 1786054936L

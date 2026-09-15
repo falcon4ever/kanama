@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class JacobianIK3D(handle: GodotHandle) : IterateIK3D(handle) {
         fun fromHandle(handle: GodotHandle): JacobianIK3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): JacobianIK3D? =
+        internal fun wrap(handle: RawSegment): JacobianIK3D? =
             if (handle.address() == 0L) null else JacobianIK3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

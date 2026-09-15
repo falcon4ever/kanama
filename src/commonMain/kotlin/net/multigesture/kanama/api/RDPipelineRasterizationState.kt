@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -319,7 +319,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): RDPipelineRasterizationState? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RDPipelineRasterizationState? =
+        internal fun wrap(handle: RawSegment): RDPipelineRasterizationState? =
             if (handle.address() == 0L) null else RDPipelineRasterizationState(GodotHandle(handle))
 
         private const val SET_ENABLE_DEPTH_CLAMP_HASH = 2586408642L

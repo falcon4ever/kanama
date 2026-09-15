@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.RID
@@ -232,7 +233,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.register_skin
      */
     fun registerSkin(skin: Skin?): SkinReference? {
-        return SkinReference.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(registerSkinBind, segment, skin?.requireOpenHandle() ?: MemorySegment.NULL))
+        return SkinReference.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(registerSkinBind, segment, skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -607,7 +608,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): Skeleton3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Skeleton3D? =
+        internal fun wrap(handle: RawSegment): Skeleton3D? =
             if (handle.address() == 0L) null else Skeleton3D(GodotHandle(handle))
 
         private const val ADD_BONE_HASH = 1597066294L

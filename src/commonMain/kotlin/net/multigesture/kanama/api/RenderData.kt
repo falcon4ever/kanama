@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -55,7 +55,7 @@ open class RenderData(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): RenderData? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RenderData? =
+        internal fun wrap(handle: RawSegment): RenderData? =
             if (handle.address() == 0L) null else RenderData(GodotHandle(handle))
 
         private const val GET_RENDER_SCENE_BUFFERS_HASH = 2793216201L

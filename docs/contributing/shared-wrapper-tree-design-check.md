@@ -58,6 +58,10 @@ to answer.
    **Resolved by task 104 step 1:** `GodotHandle` is now a per-platform
    `@JvmInline value class` under one fully-qualified name, and no public wrapper or
    script signature names a `java.lang.foreign` type any more.
+   **Closed by task 104 step 3 (parcel A):** the shared tree names no `java.lang.foreign`
+   type at all — the raw pointer is `net.multigesture.kanama.binding.runtime.RawSegment`
+   (plus a top-level `NULL_SEGMENT`), a plain `typealias` per platform that parcel C turns
+   into `expect`/`actual`, and `GodotHandle` is one shared file over it.
 3. **Value types are hand-written and diverged per platform.** The 18 shared
    `types/*.kt` names differ in about 2,400 lines (desktop uses Panama `Arena`
    and `ValueLayout` plus method-bind calls; iOS uses `BuiltinCalls`);

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Vector2
 
@@ -70,7 +70,7 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
         fun fromHandle(handle: GodotHandle): SegmentShape2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SegmentShape2D? =
+        internal fun wrap(handle: RawSegment): SegmentShape2D? =
             if (handle.address() == 0L) null else SegmentShape2D(GodotHandle(handle))
 
         private const val SET_A_HASH = 743155724L

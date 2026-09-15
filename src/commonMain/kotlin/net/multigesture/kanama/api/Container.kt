@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2
 
@@ -74,7 +74,7 @@ open class Container(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): Container? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Container? =
+        internal fun wrap(handle: RawSegment): Container? =
             if (handle.address() == 0L) null else Container(GodotHandle(handle))
 
         private const val QUEUE_SORT_HASH = 3218959716L

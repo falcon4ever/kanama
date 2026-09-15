@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -55,7 +56,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMultiplayerPeer(peer: MultiplayerPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMultiplayerPeerBind, segment, listOf(peer?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMultiplayerPeerBind, segment, listOf(peer?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -175,7 +176,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: MultiplayerAPI.set_default_interface
          */
         fun setDefaultInterface(interfaceName: String) {
-            ObjectCalls.ptrcallWithStringNameArg(setDefaultInterfaceBind, MemorySegment.NULL, interfaceName)
+            ObjectCalls.ptrcallWithStringNameArg(setDefaultInterfaceBind, NULL_SEGMENT, interfaceName)
         }
 
         /**
@@ -185,7 +186,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: MultiplayerAPI.get_default_interface
          */
         fun getDefaultInterface(): String {
-            return ObjectCalls.ptrcallNoArgsRetStringName(getDefaultInterfaceBind, MemorySegment.NULL)
+            return ObjectCalls.ptrcallNoArgsRetStringName(getDefaultInterfaceBind, NULL_SEGMENT)
         }
 
         /**
@@ -194,7 +195,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: MultiplayerAPI.create_default_interface
          */
         fun createDefaultInterface(): MultiplayerAPI? {
-            return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(createDefaultInterfaceBind, MemorySegment.NULL))
+            return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(createDefaultInterfaceBind, NULL_SEGMENT))
         }
 
         const val RPC_MODE_DISABLED: Long = 0L
@@ -205,7 +206,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): MultiplayerAPI? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MultiplayerAPI? =
+        internal fun wrap(handle: RawSegment): MultiplayerAPI? =
             if (handle.address() == 0L) null else MultiplayerAPI(GodotHandle(handle))
 
         private const val HAS_MULTIPLAYER_PEER_HASH = 2240911060L

@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -142,7 +142,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
         fun fromHandle(handle: GodotHandle): AudioEffectFilter? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioEffectFilter? =
+        internal fun wrap(handle: RawSegment): AudioEffectFilter? =
             if (handle.address() == 0L) null else AudioEffectFilter(GodotHandle(handle))
 
         private const val SET_CUTOFF_HASH = 373806689L

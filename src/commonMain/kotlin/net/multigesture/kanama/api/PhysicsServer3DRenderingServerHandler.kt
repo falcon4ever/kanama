@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector3
@@ -46,7 +46,7 @@ class PhysicsServer3DRenderingServerHandler(handle: GodotHandle) : GodotObject(h
         fun fromHandle(handle: GodotHandle): PhysicsServer3DRenderingServerHandler? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsServer3DRenderingServerHandler? =
+        internal fun wrap(handle: RawSegment): PhysicsServer3DRenderingServerHandler? =
             if (handle.address() == 0L) null else PhysicsServer3DRenderingServerHandler(GodotHandle(handle))
 
         private const val SET_VERTEX_HASH = 1530502735L

@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2
@@ -33,7 +34,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun createFromImageAlpha(image: Image?, threshold: Double = 0.1) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, segment, image?.requireOpenHandle() ?: MemorySegment.NULL, threshold)
+        ObjectCalls.ptrcallWithObjectAndDoubleArg(createFromImageAlphaBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, threshold)
     }
 
     /**
@@ -159,7 +160,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): BitMap? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BitMap? =
+        internal fun wrap(handle: RawSegment): BitMap? =
             if (handle.address() == 0L) null else BitMap(GodotHandle(handle))
 
         private const val CREATE_HASH = 1130785943L

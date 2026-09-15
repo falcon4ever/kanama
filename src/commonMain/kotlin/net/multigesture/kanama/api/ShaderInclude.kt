@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -45,7 +45,7 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): ShaderInclude? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ShaderInclude? =
+        internal fun wrap(handle: RawSegment): ShaderInclude? =
             if (handle.address() == 0L) null else ShaderInclude(GodotHandle(handle))
 
         private const val SET_CODE_HASH = 83702148L

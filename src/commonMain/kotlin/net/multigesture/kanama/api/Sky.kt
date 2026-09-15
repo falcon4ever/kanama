@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -86,7 +87,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -118,7 +119,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Sky? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Sky? =
+        internal fun wrap(handle: RawSegment): Sky? =
             if (handle.address() == 0L) null else Sky(GodotHandle(handle))
 
         private const val SET_RADIANCE_SIZE_HASH = 1512957179L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -41,7 +42,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun connectToHost(host: String, port: Int = -1, tlsOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringIntObjectArgsRetLong(connectToHostBind, segment, host, port, tlsOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -51,7 +52,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setConnection(connection: StreamPeer?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setConnectionBind, segment, listOf(connection?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setConnectionBind, segment, listOf(connection?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -356,7 +357,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): HTTPClient? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): HTTPClient? =
+        internal fun wrap(handle: RawSegment): HTTPClient? =
             if (handle.address() == 0L) null else HTTPClient(GodotHandle(handle))
 
         private const val CONNECT_TO_HOST_HASH = 504540374L

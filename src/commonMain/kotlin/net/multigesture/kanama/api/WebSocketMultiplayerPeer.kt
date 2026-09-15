@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -48,12 +49,12 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
     fun createClient(url: String, tlsClientOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun getPeer(peerId: Int): WebSocketPeer? {
@@ -136,7 +137,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         fun fromHandle(handle: GodotHandle): WebSocketMultiplayerPeer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): WebSocketMultiplayerPeer? =
+        internal fun wrap(handle: RawSegment): WebSocketMultiplayerPeer? =
             if (handle.address() == 0L) null else WebSocketMultiplayerPeer(GodotHandle(handle))
 
         private const val CREATE_CLIENT_HASH = 1966198364L

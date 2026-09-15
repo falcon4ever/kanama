@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -25,7 +25,7 @@ class JNISingleton(handle: GodotHandle) : GodotObject(handle) {
         fun fromHandle(handle: GodotHandle): JNISingleton? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): JNISingleton? =
+        internal fun wrap(handle: RawSegment): JNISingleton? =
             if (handle.address() == 0L) null else JNISingleton(GodotHandle(handle))
 
         private const val HAS_JAVA_METHOD_HASH = 2619796661L

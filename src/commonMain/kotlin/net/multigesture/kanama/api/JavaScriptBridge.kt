@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.*
  * Generated from Godot docs: JavaScriptBridge
  */
 object JavaScriptBridge {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("JavaScriptBridge")
     }
 
@@ -67,7 +68,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun isJsBuffer(javascriptObject: JavaScriptObject?): Boolean {
-        return ObjectCalls.ptrcallWithObjectArgRetBool(isJsBufferBind, singleton, javascriptObject?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetBool(isJsBufferBind, singleton, javascriptObject?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -78,7 +79,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun jsBufferToPackedByteArray(javascriptBuffer: JavaScriptObject?): ByteArray {
-        return ObjectCalls.ptrcallWithObjectArgRetByteArray(jsBufferToPackedByteArrayBind, singleton, javascriptBuffer?.requireOpenHandle() ?: MemorySegment.NULL)
+        return ObjectCalls.ptrcallWithObjectArgRetByteArray(jsBufferToPackedByteArrayBind, singleton, javascriptBuffer?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -149,7 +150,7 @@ object JavaScriptBridge {
     fun fromHandle(handle: GodotHandle): JavaScriptBridge? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): JavaScriptBridge? =
+    internal fun wrap(handle: RawSegment): JavaScriptBridge? =
         if (handle.address() == 0L) null else this
 
     private const val EVAL_HASH = 218087648L

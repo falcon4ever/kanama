@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -114,7 +114,7 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): PacketPeer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PacketPeer? =
+        internal fun wrap(handle: RawSegment): PacketPeer? =
             if (handle.address() == 0L) null else PacketPeer(GodotHandle(handle))
 
         private const val GET_VAR_HASH = 3442865206L

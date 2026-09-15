@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -18,7 +18,7 @@ class RenderSceneBuffersExtension(handle: GodotHandle) : RenderSceneBuffers(hand
         fun fromHandle(handle: GodotHandle): RenderSceneBuffersExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): RenderSceneBuffersExtension? =
+        internal fun wrap(handle: RawSegment): RenderSceneBuffersExtension? =
             if (handle.address() == 0L) null else RenderSceneBuffersExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

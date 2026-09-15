@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -16,7 +16,7 @@ class VisualShaderNodeTexture2DArrayParameter(handle: GodotHandle) : VisualShade
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture2DArrayParameter? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): VisualShaderNodeTexture2DArrayParameter? =
+        internal fun wrap(handle: RawSegment): VisualShaderNodeTexture2DArrayParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture2DArrayParameter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -208,7 +209,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun appendGltfNode(gltfNode: GLTFNode?, godotSceneNode: Node, parentNodeIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(appendGltfNodeBind, segment, gltfNode?.requireOpenHandle() ?: MemorySegment.NULL, godotSceneNode.segment, parentNodeIndex)
+        return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(appendGltfNodeBind, segment, gltfNode?.requireOpenHandle() ?: NULL_SEGMENT, godotSceneNode.segment, parentNodeIndex)
     }
 
     fun getJson(): Map<String, Any?> {
@@ -565,7 +566,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): GLTFState? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GLTFState? =
+        internal fun wrap(handle: RawSegment): GLTFState? =
             if (handle.address() == 0L) null else GLTFState(GodotHandle(handle))
 
         private const val ADD_USED_EXTENSION_HASH = 2678287736L

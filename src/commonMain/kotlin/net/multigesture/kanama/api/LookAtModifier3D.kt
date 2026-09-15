@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Vector3
@@ -841,7 +841,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         fun fromHandle(handle: GodotHandle): LookAtModifier3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): LookAtModifier3D? =
+        internal fun wrap(handle: RawSegment): LookAtModifier3D? =
             if (handle.address() == 0L) null else LookAtModifier3D(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L

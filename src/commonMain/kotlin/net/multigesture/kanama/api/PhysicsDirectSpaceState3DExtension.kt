@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.RID
 
@@ -22,7 +22,7 @@ class PhysicsDirectSpaceState3DExtension(handle: GodotHandle) : PhysicsDirectSpa
         fun fromHandle(handle: GodotHandle): PhysicsDirectSpaceState3DExtension? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsDirectSpaceState3DExtension? =
+        internal fun wrap(handle: RawSegment): PhysicsDirectSpaceState3DExtension? =
             if (handle.address() == 0L) null else PhysicsDirectSpaceState3DExtension(GodotHandle(handle))
 
         private const val IS_BODY_EXCLUDED_FROM_QUERY_HASH = 4155700596L

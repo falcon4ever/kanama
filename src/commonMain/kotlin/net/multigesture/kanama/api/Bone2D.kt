@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Transform2D
 
@@ -135,7 +135,7 @@ class Bone2D(handle: GodotHandle) : Node2D(handle) {
         fun fromHandle(handle: GodotHandle): Bone2D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Bone2D? =
+        internal fun wrap(handle: RawSegment): Bone2D? =
             if (handle.address() == 0L) null else Bone2D(GodotHandle(handle))
 
         private const val SET_REST_HASH = 2761652528L

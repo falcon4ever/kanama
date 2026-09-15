@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -49,7 +50,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurveX(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveXBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -69,7 +70,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurveY(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveYBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -89,7 +90,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurveZ(curve: Curve?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, segment, listOf(curve?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCurveZBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -107,7 +108,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): CurveXYZTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CurveXYZTexture? =
+        internal fun wrap(handle: RawSegment): CurveXYZTexture? =
             if (handle.address() == 0L) null else CurveXYZTexture(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L

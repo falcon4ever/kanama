@@ -1,9 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -241,7 +241,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
         fun fromHandle(handle: GodotHandle): MultiplayerPeer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MultiplayerPeer? =
+        internal fun wrap(handle: RawSegment): MultiplayerPeer? =
             if (handle.address() == 0L) null else MultiplayerPeer(GodotHandle(handle))
 
         private const val SET_TRANSFER_CHANNEL_HASH = 1286410249L

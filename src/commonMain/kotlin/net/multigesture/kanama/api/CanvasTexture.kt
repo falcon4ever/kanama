@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -62,7 +63,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setDiffuseTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -90,7 +91,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setNormalTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -121,7 +122,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSpecularTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -237,7 +238,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
         fun fromHandle(handle: GodotHandle): CanvasTexture? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): CanvasTexture? =
+        internal fun wrap(handle: RawSegment): CanvasTexture? =
             if (handle.address() == 0L) null else CanvasTexture(GodotHandle(handle))
 
         private const val SET_DIFFUSE_TEXTURE_HASH = 4051416890L

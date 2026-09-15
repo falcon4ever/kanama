@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
 
@@ -33,7 +34,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun createIconMaterial(name: String, texture: Texture2D?, onTop: Boolean = false, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringObjectBoolColorArgs(createIconMaterialBind, segment, name, texture?.requireOpenHandle() ?: MemorySegment.NULL, onTop, color)
+        ObjectCalls.ptrcallWithStringObjectBoolColorArgs(createIconMaterialBind, segment, name, texture?.requireOpenHandle() ?: NULL_SEGMENT, onTop, color)
     }
 
     /**
@@ -46,7 +47,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun createHandleMaterial(name: String, billboard: Boolean = false, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringBoolObjectArgs(createHandleMaterialBind, segment, name, billboard, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringBoolObjectArgs(createHandleMaterialBind, segment, name, billboard, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -57,7 +58,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun addMaterial(name: String, material: StandardMaterial3D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndObjectArg(addMaterialBind, segment, name, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndObjectArg(addMaterialBind, segment, name, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -68,7 +69,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
         checkOpen()
-        return StandardMaterial3D.wrap(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
+        return StandardMaterial3D.wrap(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
@@ -76,7 +77,7 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): EditorNode3DGizmoPlugin? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorNode3DGizmoPlugin? =
+        internal fun wrap(handle: RawSegment): EditorNode3DGizmoPlugin? =
             if (handle.address() == 0L) null else EditorNode3DGizmoPlugin(GodotHandle(handle))
 
         private const val CREATE_MATERIAL_HASH = 3486012546L

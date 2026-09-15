@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -175,7 +175,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
         fun fromHandle(handle: GodotHandle): ChainIK3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ChainIK3D? =
+        internal fun wrap(handle: RawSegment): ChainIK3D? =
             if (handle.address() == 0L) null else ChainIK3D(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L

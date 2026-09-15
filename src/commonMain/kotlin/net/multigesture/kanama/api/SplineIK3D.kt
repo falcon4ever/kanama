@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.NodePath
 
@@ -99,7 +99,7 @@ class SplineIK3D(handle: GodotHandle) : ChainIK3D(handle) {
         fun fromHandle(handle: GodotHandle): SplineIK3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SplineIK3D? =
+        internal fun wrap(handle: RawSegment): SplineIK3D? =
             if (handle.address() == 0L) null else SplineIK3D(GodotHandle(handle))
 
         private const val SET_PATH_3D_HASH = 2761262315L

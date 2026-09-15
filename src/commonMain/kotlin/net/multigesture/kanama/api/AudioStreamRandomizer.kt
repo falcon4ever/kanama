@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 
 /**
@@ -50,7 +51,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun addStream(index: Int, stream: AudioStream?, weight: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntObjectDoubleArgs(addStreamBind, segment, index, stream?.requireOpenHandle() ?: MemorySegment.NULL, weight)
+        ObjectCalls.ptrcallWithIntObjectDoubleArgs(addStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT, weight)
     }
 
     /**
@@ -80,7 +81,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setStream(index: Int, stream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setStreamBind, segment, index, stream?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setStreamBind, segment, index, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -240,7 +241,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
         fun fromHandle(handle: GodotHandle): AudioStreamRandomizer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AudioStreamRandomizer? =
+        internal fun wrap(handle: RawSegment): AudioStreamRandomizer? =
             if (handle.address() == 0L) null else AudioStreamRandomizer(GodotHandle(handle))
 
         private const val ADD_STREAM_HASH = 1892018854L

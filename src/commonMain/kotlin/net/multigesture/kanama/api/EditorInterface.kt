@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2i
@@ -14,7 +15,7 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: EditorInterface
  */
 object EditorInterface {
-    private val singleton: MemorySegment by lazy {
+    private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("EditorInterface")
     }
 
@@ -574,7 +575,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun editResource(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(editResourceBind, singleton, listOf(resource?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(editResourceBind, singleton, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -596,7 +597,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun editScript(script: Script?, line: Int = -1, column: Int = 0, grabFocus: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectTwoIntBoolArgs(editScriptBind, singleton, script?.requireOpenHandle() ?: MemorySegment.NULL, line, column, grabFocus)
+        ObjectCalls.ptrcallWithObjectTwoIntBoolArgs(editScriptBind, singleton, script?.requireOpenHandle() ?: NULL_SEGMENT, line, column, grabFocus)
     }
 
     /**
@@ -835,7 +836,7 @@ object EditorInterface {
     fun fromHandle(handle: GodotHandle): EditorInterface? =
         wrap(handle.segment)
 
-    internal fun wrap(handle: MemorySegment): EditorInterface? =
+    internal fun wrap(handle: RawSegment): EditorInterface? =
         if (handle.address() == 0L) null else this
 
     private const val RESTART_EDITOR_HASH = 3216645846L
