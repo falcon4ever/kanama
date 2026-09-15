@@ -363,11 +363,11 @@ actual object ObjectCalls {
    * select it as a dispatch helper via `METHOD_CALL_SHAPE_OVERRIDES` (the vararg analogue of
    * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate).
    */
-  actual fun callWithVariantArgs(
+  fun callWithVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     args: List<Any?>,
-    owned: Boolean,
+    owned: Boolean = false,
   ): Any? {
     Arena.ofConfined().use { arena ->
       val variantBuffer =
@@ -30419,7 +30419,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
     pattern: String,
     recursive: Boolean,
-    owned: Boolean,
+    owned: Boolean = false,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)

@@ -3376,11 +3376,11 @@ actual object ObjectCalls {
    * generator can select it as a dispatch helper via `METHOD_CALL_SHAPE_OVERRIDES`, mirroring
    * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate.
    */
-  actual fun callWithVariantArgs(
+  fun callWithVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     args: List<Any?>,
-    owned: Boolean,
+    owned: Boolean = false,
   ): Any? = memScoped {
     val (tags, ptrs, n) = encodeVariantArgs(args)
     val outInt = alloc<LongVar>()
@@ -31047,7 +31047,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
     pattern: String,
     recursive: Boolean,
-    owned: Boolean,
+    owned: Boolean = false,
   ): MemorySegment = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0

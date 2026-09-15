@@ -50,15 +50,12 @@ expect object BuiltinCalls {
    * Call a builtin method whose base and return are value types laid out as `real_t` components
    * ([base] in, [retCount] values out), with optional [args].
    *
-   * Default argument values live on the `expect` declaration — an `actual` may not restate them —
-   * and callers on either side of the seam get them from here.
+   * No default for [args]: an `actual` may not restate a default, so it would have to live here —
+   * and the ANDROID lane compiles a copy of these sources with no common fragment at all (the
+   * `*.expect.kt` files are skipped, the `actual ` modifiers stripped), where a default declared
+   * here is simply gone. The five callers that pass no arguments spell `emptyList()`.
    */
-  fun call(
-    methodPtr: Long,
-    base: GodotRealArray,
-    retCount: Int,
-    args: List<BArg> = emptyList(),
-  ): GodotRealArray
+  fun call(methodPtr: Long, base: GodotRealArray, retCount: Int, args: List<BArg>): GodotRealArray
 
   /**
    * No-arg builtin method whose base and return are the same value type laid out as `real_t`
@@ -71,17 +68,17 @@ expect object BuiltinCalls {
    * ptr-ABI encodes a `float`-typed (Variant FLOAT) return as an 8-byte `double` regardless of the
    * engine's real_t precision — NOT a real_t, unlike value-type *components*.
    */
-  fun callScalar(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Double
+  fun callScalar(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Double
 
   /**
    * Builtin method returning a `bool` (is_normalized / is_finite / …). Godot's ptr-ABI encodes a
    * bool return as a single `uint8_t` (`PtrToArg<bool>` = uint8), so decode one byte (≠ 0 → true).
    */
-  fun callBool(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Boolean
+  fun callBool(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Boolean
 
   /**
    * Builtin method returning an `int` (max_axis_index / …). Godot's ptr-ABI encodes an int return
    * as `int64_t` (`PtrToArg<int64_t>` is direct 8-byte), so decode a Long.
    */
-  fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg> = emptyList()): Long
+  fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Long
 }

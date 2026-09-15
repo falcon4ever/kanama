@@ -2986,13 +2986,15 @@ COMMON_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
 # exceptions. Keep this list in sync with that gate's EXPECT_EXCEPTIONS.
 PLATFORM_ONLY_SIGNATURE_TYPES = ("GodotCallable", "Material")
 
-# Default argument values of `expect` members. An `actual` may NOT restate a default ("Actual
-# function cannot have default argument values. They must be declared in the expected function"),
-# so neither backend's file can carry one and the desktop signature this file is derived from
-# cannot supply it either -- the value lives here, next to the declaration that owns it. One entry
-# today; `render_objectcalls_expect` refuses to run if a referenced desktop member carries an inline
-# default this table does not know about, so a new one cannot be dropped silently.
-EXPECT_MEMBER_DEFAULTS = {("callWithVariantArgs", "owned"): "false"}
+# Referenced helpers with a DEFAULT ARGUMENT, which cannot be `expect` members. An `actual` may not
+# restate a default ("Actual function cannot have default argument values. They must be declared in
+# the expected function"), so the default would have to live on the `expect` declaration -- and
+# ANDROID compiles a copy of these same sources with no common fragment at all (the `*.expect.kt`
+# files are skipped, the `actual ` modifiers stripped), so on that lane the default would simply be
+# gone and every caller that omits the argument would fail to compile. Keeping the helper out of the
+# `expect` object keeps one default in one place on all four lanes; the desktop/iOS parameter-name
+# parity of these helpers is still gated by scripts/check_objectcalls_parity.py.
+EXPECT_DEFAULT_ARG_EXCLUSIONS = {"callWithVariantArgs"}
 
 # Desktop OVERLOADS that stay platform-only. Desktop declares two type-differentiated overloads of
 # these two helpers (`value: Int` / `value: Long`, `path: NodePath` / `path: String`) and iOS has
@@ -3101,19 +3103,15 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
             excluded_overloads.append(signature)
             continue
         if "=" in _read_parens(signature, signature.index("(")):
-            raise SystemExit(
-                f"{name}: the desktop signature carries an inline default argument; an `actual` may "
-                "not, so move it into EXPECT_MEMBER_DEFAULTS in scripts/generate_api_wrapper.py"
-            )
-        for (helper, parameter), value in EXPECT_MEMBER_DEFAULTS.items():
-            if helper != name:
-                continue
-            marker = re.search(rf"\b{parameter}: [A-Za-z0-9_<>?., ]+?(?=[,)])", signature)
-            if marker is None:
-                raise SystemExit(f"{name}: EXPECT_MEMBER_DEFAULTS names no parameter {parameter}")
-            signature = (
-                signature[: marker.end()] + f" = {value}" + signature[marker.end() :]
-            )
+            if name not in EXPECT_DEFAULT_ARG_EXCLUSIONS:
+                raise SystemExit(
+                    f"{name}: the desktop signature carries a default argument, which an `expect` "
+                    "member cannot express on the Android lane; add it to "
+                    "EXPECT_DEFAULT_ARG_EXCLUSIONS in scripts/generate_api_wrapper.py (and to "
+                    "EXPECT_EXCEPTIONS in scripts/check_objectcalls_parity.py)"
+                )
+            excluded.append(name)
+            continue
         members.append(f"  {signature}")
     members.sort()
     excluded = sorted(set(excluded))
@@ -3140,8 +3138,9 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
     excluded_note = (
         "Excluded, and listed in the gate as such: "
         + ", ".join(f"`{name}`" for name in excluded)
-        + " -- their signatures name a hand-shaped per-platform wrapper class, which a common "
-        "declaration cannot see until task 117."
+        + " -- their signatures name a hand-shaped per-platform wrapper class (which a common "
+        "declaration cannot see until task 117) or carry a default argument (which an `expect` "
+        "member cannot express on the Android lane)."
         if excluded
         else "No referenced helper is excluded."
     ) + overload_note

@@ -82,7 +82,8 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.determinant
    */
-  fun determinant(): Double = BuiltinCalls.callScalar(determinantBind, toGodotRealArray())
+  fun determinant(): Double =
+    BuiltinCalls.callScalar(determinantBind, toGodotRealArray(), emptyList())
 
   /**
    * Returns the inverse of this basis's matrix (https://en.wikipedia.org/wiki/Invertible_matrix).
@@ -123,7 +124,7 @@ data class Basis(
    * Generated from Godot docs: Basis.get_rotation_quaternion
    */
   fun getRotationQuaternion(): Quaternion {
-    val c = BuiltinCalls.call(getRotationQuaternionBind, toGodotRealArray(), 4)
+    val c = BuiltinCalls.call(getRotationQuaternionBind, toGodotRealArray(), 4, emptyList())
     return Quaternion(
       GodotReal.fromC(c[0]),
       GodotReal.fromC(c[1]),
@@ -138,7 +139,8 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.get_scale
    */
-  fun getScale(): Vector3 = vector3From(BuiltinCalls.call(getScaleBind, toGodotRealArray(), 3))
+  fun getScale(): Vector3 =
+    vector3From(BuiltinCalls.call(getScaleBind, toGodotRealArray(), 3, emptyList()))
 
   /**
    * Returns this basis with each axis's components scaled by the given `scale`'s components. The

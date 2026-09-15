@@ -78,12 +78,12 @@ class BuiltinCallsFacadeTest {
 
     // A `float` return is an 8-byte double at ptrcall, never a real_t.
     val dot = BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "dot", DOT_HASH)
-    assertEquals(FakeGodot.SCALAR_REPLY, BuiltinCalls.callScalar(dot, base), TOLERANCE)
+    assertEquals(FakeGodot.SCALAR_REPLY, BuiltinCalls.callScalar(dot, base, emptyList()), TOLERANCE)
 
     // A `bool` return is one uint8 byte.
     val isNormalized =
       BuiltinCalls.getBuiltinMethod(BuiltinCalls.VT_VECTOR3, "is_normalized", IS_NORMALIZED_HASH)
-    assertTrue(BuiltinCalls.callBool(isNormalized, base))
+    assertTrue(BuiltinCalls.callBool(isNormalized, base, emptyList()))
 
     // An `int` return is an int64 — and BArg.Int64 is what carries an int argument down
     // (Basis.get_euler's EulerOrder is the shared bodies' only user of it).

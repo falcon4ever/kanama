@@ -33,7 +33,7 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
     // GodotHandle and the expect seams. `*.expect.kt` files are skipped -- an expect declaration
     // has no body to remap and Android compiles the jvmMain actual with its `actual ` stripped.
     from(kanamaRoot.dir("src/commonMain/kotlin")) {
-        exclude("**/*.expect.kt")
+        exclude("**/*${KanamaAndroidRemap.EXPECT_FILE_SUFFIX}")
         remapForeignImports()
     }
     from(kanamaRoot.dir("annotations/src/main/kotlin")) {

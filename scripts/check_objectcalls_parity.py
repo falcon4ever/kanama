@@ -134,6 +134,11 @@ EXPECT = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/O
 # exactly as before. Keep in sync with PLATFORM_ONLY_SIGNATURE_TYPES in
 # scripts/generate_api_wrapper.py, which computes this set from the same desktop signatures.
 EXPECT_EXCEPTIONS = {
+    # A default argument cannot cross the seam: an `actual` may not restate one, and the Android
+    # lane compiles these sources with no common fragment, so a default declared on the `expect`
+    # would be gone there. `callWithVariantArgs(..., owned: Boolean = false)` therefore keeps its
+    # default as a plain member on both backends. Its parameter names are still gated above.
+    "callWithVariantArgs",
     "ptrcallNoArgsRetCallable",
     "ptrcallWithIntArgRetCallable",
     "ptrcallWithRIDArgRetCallable",

@@ -36,11 +36,12 @@ import net.multigesture.kanama.types.Vector4
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
- * Excluded, and listed in the gate as such: `ptrcallNoArgsRetCallable`,
+ * Excluded, and listed in the gate as such: `callWithVariantArgs`, `ptrcallNoArgsRetCallable`,
  * `ptrcallWithIntArgRetCallable`, `ptrcallWithRIDArgRetCallable`,
  * `ptrcallWithRIDIntArgsRetCallable`, `ptrcallWithStringIntArgsRetCallable`,
  * `ptrcallWithTypedMaterialListArg` -- their signatures name a hand-shaped per-platform wrapper
- * class, which a common declaration cannot see until task 117. The `ptrcallWithIntArgRetVector3`
+ * class (which a common declaration cannot see until task 117) or carry a default argument (which
+ * an `expect` member cannot express on the Android lane). The `ptrcallWithIntArgRetVector3`
  * overload taking `value: Long): Vector3` is desktop-only and stays platform-only for the same
  * reason. The `ptrcallWithNodePathArgRetBool` overload taking `path: String): Boolean` is
  * desktop-only and stays platform-only for the same reason.
@@ -122,13 +123,6 @@ expect object ObjectCalls {
     secondBool: Boolean,
     wrapper: (RawSegment) -> T?,
   ): List<T>
-
-  fun callWithVariantArgs(
-    methodBind: RawSegment,
-    instance: RawSegment,
-    args: List<Any?>,
-    owned: Boolean = false,
-  ): Any?
 
   fun callWithVariantArgsOwned(methodBind: RawSegment, instance: RawSegment, args: List<Any?>): Any?
 
