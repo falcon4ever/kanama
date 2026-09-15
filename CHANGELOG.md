@@ -7,6 +7,31 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Internal — `ObjectCalls` is one object per platform, with a name-parity gate (task 104, step 3 parcel B)
+
+- **Not a user-facing change.** No wrapper member, signature or runtime type changed; game code
+  never names `ObjectCalls`.
+- The 1,388 generated iOS ptrcall helpers were extension functions (`fun ObjectCalls.x(...)`) in a
+  39,252-line `ObjectCallsGenerated.kt`. That file is gone: the generator now writes them as MEMBERS
+  into a marked `GENERATED MEMBERS` region at the end of the hand-written iOS
+  `object ObjectCalls` body (one ~50k-line file, like desktop's), and rewrites only that region.
+  Four helpers that were both generated and hand-written join the generator's override set — a
+  member always won over the extension, so the generated bodies were dead code and the behaviour is
+  unchanged.
+- Every one of the 1,359 helpers the shared tree calls now carries the DESKTOP file's parameter
+  names on both platforms (the generator reads them from the desktop signature; nine hand-written
+  iOS helpers were renamed by hand). Why: the rest of task 104 step 3 makes this an `expect object`,
+  and an `expect` member is actualized only by a MEMBER with the same parameter names — an
+  extension is invisible from common code and a differently spelled parameter breaks
+  `foo(bar = 1)`.
+- New gate `scripts/check_objectcalls_parity.py` (`local_ci` stage 34) proves it: every referenced
+  helper is a member on both platforms with equal arity and equal parameter names in order.
+  Parameter TYPES are deliberately not compared — the raw pointer differs by design (`RawSegment`).
+- `ObjectCallsGenerated.kt`'s deletion is swept through `scripts/`, `AGENTS.md` and
+  `docs/contributing/`. The drift gate and `--write-tree` now compare the region's member set with a
+  whitespace-tolerant regex, which also fixes a regen that rewrote the generated file raw on every
+  run because three ktfmt-wrapped helpers were missed.
+
 ### Internal — the shared wrapper tree no longer names `java.lang.foreign` (task 104, step 3 parcel A)
 
 - **Not a user-facing change.** No member, signature or runtime type changed: `GodotHandle.segment`

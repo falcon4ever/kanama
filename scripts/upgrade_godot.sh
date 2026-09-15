@@ -21,7 +21,7 @@ Steps:
   3. classify    metadata-only vs real API change vs no-op
   4. constants   regenerate engine-wide name constants
   5. re-adopt    regenerate the whole generated wrapper tree (shared tree, per-platform
-                 files, desktop/iOS companions, iOS ObjectCallsGenerated, gap index:
+                 files, desktop/iOS companions, iOS ObjectCalls GENERATED MEMBERS, gap index:
                  generate_api_wrapper.py --write-tree) and re-sync KDoc  [skipped with --dry-run]
   6. reports     refresh coverage + generator reports
   7. gates       full drift-gate, sync_kdoc --check, version-pin check
@@ -254,7 +254,7 @@ fi
 if [[ $DRY_RUN -eq 1 ]]; then
   echo "[upgrade_godot] step 5: skip re-adopt (--dry-run; the drift-gate performs the same full regen check-only)"
 else
-  echo "[upgrade_godot] step 5: re-adopt the generated wrapper tree (shared tree, per-platform files, companions, iOS ObjectCallsGenerated, gap index)"
+  echo "[upgrade_godot] step 5: re-adopt the generated wrapper tree (shared tree, per-platform files, companions, iOS ObjectCalls GENERATED MEMBERS, gap index)"
   python3 "$ROOT_DIR/scripts/generate_api_wrapper.py" --write-tree
   (cd "$ROOT_DIR" && PYTHONPATH="$ROOT_DIR/scripts" python3 - <<'EOF'
 import json, subprocess
@@ -334,7 +334,7 @@ cat <<EOF
   1. Review the API diff classification above. New classes are coverage/policy
      work (generator policy, audits, adoption) — never bulk-adopt them blindly.
   2. Run ./gradlew ktfmtFormat: when the iOS helper set changed, step 5 rewrote
-     ios-runtime/.../ObjectCallsGenerated.kt unformatted (it is not ktfmt-exempt, unlike the
+     the ios-runtime ObjectCalls.kt GENERATED MEMBERS region unformatted (that file is not ktfmt-exempt, unlike the
      api/** wrappers) and ktfmtCheck gates it.
   3. Run local CI against the new binary: scripts/local_ci.sh $GODOT_BIN
   4. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
