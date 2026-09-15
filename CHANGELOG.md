@@ -7,6 +7,17 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS: calling a `@RegisterFunction` with omitted default arguments aborted the app (task 114)
+
+- The generated iOS bridge dispatched every registered method as one positional call
+  (`script.spawn(args[0] as Double)`), so a Godot-side caller that left a defaulted parameter out —
+  GDScript `coin.spawn()`, `call("spawn")`, a connection with fewer bound arguments — threw
+  `IndexOutOfBoundsException` inside `callV` and the uncaught exception aborted the app. Found by the
+  first smoke-on-device run (task 111) in third-person's `Coin.spawn(coinDelay: Double = 0.5)`. The
+  emitter now dispatches by argument count for methods whose trailing parameters have defaults, one
+  branch per admissible count, so Kotlin fills the defaults — the same shape the JVM bridge has always
+  used. Value-returning methods (`callVReturning`) get the same treatment.
+
 ### Changed — iOS device gate: the demos' smoke scripts run on the phone; crash reports are read (task 111)
 
 - **`System.getenv` on iOS reads the process environment** (`platform.posix.getenv`) instead of
