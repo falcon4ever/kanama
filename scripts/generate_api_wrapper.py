@@ -2983,7 +2983,7 @@ COMMON_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
 # cannot be an `expect` member, because the common fragment cannot see the class. Those helpers stay
 # plain members on both platforms -- the shared api tree is platform-compiled source, so it calls
 # them exactly as before -- and `check_objectcalls_parity.py` carries them as its documented
-# exceptions. Keep this list in sync with that gate's EXPECT_EXCEPTIONS.
+# exceptions; the parity gate reads this list back through render_objectcalls_expect(), so there is no second list to edit.
 PLATFORM_ONLY_SIGNATURE_TYPES = ("GodotCallable", "Material")
 
 # Referenced helpers with a DEFAULT ARGUMENT, which cannot be `expect` members. An `actual` may not
@@ -3202,8 +3202,7 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
                 raise SystemExit(
                     f"{name}: the desktop signature carries a default argument, which an `expect` "
                     "member cannot express on the Android lane; add it to "
-                    "EXPECT_DEFAULT_ARG_EXCLUSIONS in scripts/generate_api_wrapper.py (and to "
-                    "EXPECT_EXCEPTIONS in scripts/check_objectcalls_parity.py)"
+                    "EXPECT_DEFAULT_ARG_EXCLUSIONS in scripts/generate_api_wrapper.py"
                 )
             excluded.append(name)
             continue
