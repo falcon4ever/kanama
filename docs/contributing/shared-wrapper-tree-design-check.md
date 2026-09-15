@@ -86,6 +86,12 @@ unified or `expect`ed (blocker 3); the desktop 40k-line hand-written
 (`getSingleton(name)` vs `getSingleton(className)` today); the iOS generated
 extension helpers become members of the `actual object`. Gains a compiler-checked
 contract declaration.
+**Done by task 104 step 3 parcel B (the keywords excepted):** all 1,359 helpers the shared
+tree calls are members of `object ObjectCalls` on both platforms with the same parameter
+names in the same order, desktop's being canonical — the 1,384 generated iOS helpers now
+land as members in the `GENERATED MEMBERS` region of the iOS `ObjectCalls.kt` instead of as
+extensions in a separate file, and `scripts/check_objectcalls_parity.py` proves it on every
+`local_ci` run (0 deltas).
 
 **(b) One shared source directory compiled by each platform module.** The
 generator emits one file per class into a shared root; the root JVM module and

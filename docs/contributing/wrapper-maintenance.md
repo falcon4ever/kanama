@@ -504,6 +504,63 @@ KDoc refresh never affects drift-gate correctness and only touches comments. The
 sync replaces an existing generated block in place (multi-line **or** the older
 single-line `/** … */` form), so re-running is idempotent.
 
+## ObjectCalls: one object per platform, one generated region
+
+`net.multigesture.kanama.binding.runtime.ObjectCalls` is the only seam between the shared
+wrapper tree and the engine, and it exists once per platform under that one
+fully-qualified name: `src/main/kotlin/binding/runtime/ObjectCalls.kt` over Panama/FFM for
+desktop (Android gets it through the source remap), and
+`ios-runtime/.../binding/runtime/ObjectCalls.kt` over the C shim for iOS.
+
+**One file per platform.** The iOS file is hand-written except for a marked region at the
+end of the `object ObjectCalls` body:
+
+```kotlin
+  // ===== BEGIN GENERATED MEMBERS (scripts/generate_api_wrapper.py — do not edit) =====
+  ...  1,384 generated helper members + the PT_* ptrcall tag table
+  // ===== END GENERATED MEMBERS =====
+```
+
+`generate_api_wrapper.py --write-tree` rewrites only what is between the markers, and
+refuses to run when the pair is missing, duplicated or inverted. Everything above the BEGIN
+marker is hand-written: the override set (`IOS_HANDWRITTEN_HELPERS`), the read-back and
+descriptor machinery the generated bodies call (`ptrcallRetUtf8`, `pack<Kind>Desc`, …) and
+the device self-test. The PT_* tags are declared once, inside the region: the generator
+emits the whole table (not just the tags a run happens to use) because both halves read it.
+
+Before task 104 step 3 parcel B the generated helpers were extension functions
+`fun ObjectCalls.x(...)` in a separate `ObjectCallsGenerated.kt`. They are members now
+because the rest of step 3 makes this object an `expect object`, and common code can only
+see MEMBERS of one — a platform-only extension is invisible from `src/commonMain`.
+Extensions are still fine for a helper nothing in the shared tree references.
+
+**Parameter names are desktop's.** An `expect` member is actualized only by a member with
+the same parameter names, and `foo(bar = 1)` does not compile against an `actual` that
+spells the parameter differently. The generator reads the desktop file's signature for each
+helper name and applies it positionally
+(`desktop_objectcalls_signatures` / `_desktop_parameter_rename`); it refuses — keeping the
+generated names and printing the helper in the run summary — when desktop has no such
+helper, when the arities disagree, or when a generated parameter is not one of the
+`a<N>` / `a<N>Object` / `a<N>Method` / `fromHandle` shapes it knows how to map, so a
+surprise can never silently relabel an argument.
+
+**The gate.** `scripts/check_objectcalls_parity.py` (a local_ci stage) parses both objects
+and requires every helper the shared tree calls to be a member on both platforms with equal
+arity and equal parameter names in order. It compares names, never types: the raw engine
+pointer is `MemorySegment` on desktop/Android and the Kotlin/Native shim on iOS by design
+(`RawSegment`), and `expect`/`actual` resolves that through the typealias. It reports
+missing-on-desktop, missing-on-iOS, extension-not-member, param-count and name-mismatch,
+and `--list` prints the contract. Overloads compare as sets of parameter-name tuples, and
+iOS may declare more than desktop needs — an `actual object` may carry extra members, which
+is how the iOS-only `ptrcallNoArgsRetByteArray(methodBind, instance, sizeHint)` coexists
+with the two-argument shape desktop declares.
+
+The drift gate (`check_single_tree`) compares the region's MEMBER SET rather than its bytes,
+because the file is ktfmt-formatted outside the region and so the region gets reformatted
+after every regen; `--write-tree` skips rewriting the file for the same reason when the
+member set has not changed. `scripts/fixtures/wrapper_generator/ios/ObjectCalls.generated-members.kt.txt`
+locks the region's rendering for one class (Node3D) byte-for-byte.
+
 ## Value-Type Audits
 
 The 19 builtin value types are ONE hand-written set under
