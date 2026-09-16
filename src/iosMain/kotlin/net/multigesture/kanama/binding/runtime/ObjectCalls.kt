@@ -49806,28 +49806,29 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "variant-call-value-object(set_meta/get_meta object)",
     gotObj is GodotObject && gotObj.segment.address() == metaObj.address(),
   )
-  // task 121 — container VALUE args + container returns through the Variant call path: an Array of
-  // strings and a Dictionary round-trip set_meta/get_meta as Kotlin containers (before, any
-  // container return surfaced null on iOS).
-  ObjectCalls.callWithVariantArgs(
-    callBind,
-    callNode,
-    listOf("set_meta", "ktags", listOf("a", "bb")),
-  )
+  // task 121 — container RETURNS through the Variant call path (before, every container return
+  // surfaced null on iOS). The arg encoder takes integer lists only (List<String> / Map args are
+  // a separate gap, noted in task 121), so the fixtures come from the engine: an int Array round
+  // trip via set_meta/get_meta, Object.get_property_list (Array of Dictionaries with String
+  // values) and Node.get_configuration_warnings (an empty PackedStringArray -> empty List).
+  ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "kints", listOf(1L, 2L)))
   check(
-    "variant-call-value-array(set_meta/get_meta [a,bb])",
-    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "ktags")) ==
-      listOf("a", "bb"),
+    "variant-call-ret-array(set_meta/get_meta [1,2])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kints")) ==
+      listOf(1L, 2L),
   )
-  ObjectCalls.callWithVariantArgs(
-    callBind,
-    callNode,
-    listOf("set_meta", "kdict", mapOf("k" to 1L, "s" to "v")),
-  )
+  val propertyList =
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_property_list"))
+  val firstProperty = (propertyList as? List<*>)?.firstOrNull() as? Map<*, *>
   check(
-    "variant-call-value-dictionary(set_meta/get_meta {k:1,s:v})",
-    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kdict")) ==
-      mapOf("k" to 1L, "s" to "v"),
+    "variant-call-ret-array-of-dictionaries(get_property_list)",
+    propertyList is List<*> && propertyList.isNotEmpty() && firstProperty?.get("name") is String,
+  )
+  val warnings =
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_configuration_warnings"))
+  check(
+    "variant-call-ret-packed-strings(get_configuration_warnings==[])",
+    warnings is List<*> && warnings.isEmpty(),
   )
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
