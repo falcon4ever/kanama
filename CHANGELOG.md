@@ -7,6 +7,26 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS: Object-typed values now cross from Kotlin scripts to the engine (task 115)
+
+- `Object.get("shooter")` on a `@ScriptProperty var shooter: Node?` returned nil on iOS (desktop
+  returned the node): the iOS bridge generator skipped Object and `@ScriptClass`-typed properties in
+  `getProperty`, and the runtime's return encoder had no case for a wrapper, so the value never
+  reached the engine. Both are fixed; the get/set parity guard now covers object refs too, so a
+  future set-only object property fails the build instead of shipping write-only.
+- The same encoder gap made Object-returning script methods and virtuals (`fun target():
+  GodotObject?` — typed wrapper returns such as `Node?` are still rejected by the processor on every
+  platform) ship nil (the generator warned and dropped them), and wrapper elements inside a returned
+  `List` or `Map` encode as nil. Wrappers and script instances now ship their owner handle; the
+  engine boxes it as an Object Variant (taking a reference for RefCounted, as `Variant(Object*)`
+  does). A null Object property reads back as nil (not "property not found"), a closed RefCounted
+  or a `lateinit` read before `_ready` answers nil instead of aborting the app.
+- `Object.call`/`Object.get` results that are Objects come back as a `GodotObject` wrapper on iOS,
+  as on desktop (they were the raw handle; `ClassDB.instantiate` of a non-RefCounted class too).
+  Packed-array, `Array` and `Dictionary` results still decode to nil on iOS — task 121.
+- Found by the third-person demo's iPhone smoke, which sets a bullet's `shooter` through
+  `Object.set` before `add_child` and reads it back through `Object.get`.
+
 ### Changed — Kanama is one Kotlin Multiplatform module (task 104, step 3 parcels C+D)
 
 - **Contributors' commands change; game code does not.** No wrapper member, signature or runtime

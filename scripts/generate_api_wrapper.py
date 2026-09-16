@@ -1140,8 +1140,6 @@ fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMach
     val value = getParameter(path)
     val playback = when (value) {
         is AnimationNodeStateMachinePlayback -> value
-        // iOS decodes a Variant Object return as a raw handle (MemorySegment), not a wrapper.
-        is MemorySegment -> if (value.address() != 0L) AnimationNodeStateMachinePlayback(GodotHandle(value)) else null
         is Resource -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
         is GodotObject -> AnimationNodeStateMachinePlayback.fromHandle(value.handle)
         else -> null

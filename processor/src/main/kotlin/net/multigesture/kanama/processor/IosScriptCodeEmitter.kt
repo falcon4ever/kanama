@@ -62,6 +62,11 @@ private val iosReturnTypes =
     // Variant returns reuse the per-runtime-type encodeIosReturn dispatch (audited inner types;
     // an unaudited inner value serializes as nil — a valid Variant). task 13.
     TypeMapping.VARIANT,
+    // Object returns: encodeIosReturn ships the owner handle PT_OBJECT-tagged (task 115; before, a
+    // `fun target(): GodotObject?` was warned as unmarshalled and dropped). Only `GodotObject?`
+    // resolves to OBJECT in the shared processor (fqToTypeMapping); typed wrapper returns such as
+    // `Node?` are still rejected at model time on every platform.
+    TypeMapping.OBJECT,
     TypeMapping.RID,
     TypeMapping.PACKED_BYTE_ARRAY,
     TypeMapping.PACKED_INT32_ARRAY,
@@ -728,7 +733,7 @@ internal class IosScriptCodeEmitter(
         warn(
           "[kanama-ios] $kotlinMethodName ($virtualName): @OverrideVirtual return type " +
             "$returnType not yet marshalled on iOS (supported: Bool/Int/Float/Vector2/" +
-            "Vector2i/Vector3/String/RID/Packed*Array/Dictionary/Array/Variant) — silent no-op"
+            "Vector2i/Vector3/String/RID/Packed*Array/Dictionary/Array/Variant/GodotObject) — silent no-op"
         )
         null
       }
@@ -881,7 +886,13 @@ internal class IosScriptCodeEmitter(
       }
     val scalarGetExpression =
       when {
-        isObject || isList || customScript.isNotEmpty() -> ""
+        isList -> ""
+        // Object and @ScriptClass refs are engine-readable: getProperty hands the wrapper (or the
+        // script instance) to encodeIosReturn, which ships its owner handle PT_OBJECT-tagged and
+        // the C side boxes it as an Object Variant. Before task 115 these were skipped, so
+        // `Object.get("shooter")` on a set Node property answered nil on iOS while desktop
+        // returned the node — the third-person bullet smoke caught it.
+        isObject || customScript.isNotEmpty() -> "script.$kotlinName"
         enumFqName != null -> "script.$kotlinName.ordinal.toLong()"
         scalarSetExpression.isNotEmpty() -> "script.$kotlinName"
         // Types that write through a dedicated set path (Vector2/Vector3/NodePath via
@@ -900,16 +911,19 @@ internal class IosScriptCodeEmitter(
     // Get/set parity guard: a *data* @ScriptProperty the engine can set but not read back is
     // write-only on iOS — the engine gets nil, silently breaking MultiplayerSynchronizer
     // replication and inspector reads (exactly how the Vector2 `motion` / Vector3 `shoot_target`
-    // bug hid). Object and custom-script refs are intentionally excluded: replicating an object
-    // handle across peers is meaningless and the inspector edits them via the node picker, not
-    // get(). With Vector2/Vector3/String/NodePath and List<String> now readable this stays silent
-    // in a healthy codebase and only trips if a new data type is added set-only (or one regresses).
+    // bug hid). Object and custom-script refs are covered too since task 115: `Object.get` of a
+    // Node-typed property is how scripts and the third-person bullet smoke read a shooter back.
+    // With Vector2/Vector3/String/NodePath, List<String> and object refs now readable this stays
+    // silent in a healthy codebase and only trips if a new data type is added set-only (or one
+    // regresses).
     // This is a hard build ERROR, not a warning: a warning is exactly what let the original
     // write-only asymmetry ship unnoticed. A new settable data type must gain a getProperty path
     // (or be explicitly excluded here) before it can compile.
     val engineReadableData = scalarGetExpression.isNotEmpty() || (isList && arrayElementString)
     val engineSettableDataType =
       valueTypeClassName.isNotEmpty() ||
+        isObject ||
+        customScript.isNotEmpty() ||
         (!isObject && !isList && godotClassName == "String") ||
         (isList && arrayElementString)
     if (engineSettableDataType && !engineReadableData) {
