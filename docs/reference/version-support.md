@@ -1,6 +1,6 @@
 # Version Support
 
-Kanama `0.4.0` is the current public release (a pre-1.0 preview baseline). This
+Kanama `0.5.0` is the current public release (a pre-1.0 preview baseline). This
 page is the single owner of two kinds of fact: what Kanama **requires** (the
 Godot pin, JDKs, host platforms, per-workflow toolchains) and what each
 platform's **status** is, with the evidence behind it. Other pages — the
@@ -79,7 +79,7 @@ TPS, package, and native-artifact gates against Godot 4.7 stable (x86_64 on
 
 ## Kanama Version
 
-The current Gradle artifact version is `0.4.0`.
+The current Gradle artifact version is `0.5.0`.
 
 Release version changes should be paired with matching Gradle coordinates, docs
 snippets, demo project versions, badges, changelog headings, and a passing
@@ -296,6 +296,15 @@ above — mobile WebKit stays outside the validated claim.
 - Reproducible export builds currently require
   `--no-daemon -Pkotlin.compiler.execution.strategy=in-process` (Kotlin daemon
   builds exhausted memory).
+<!-- KANAMA-BLOCKED(since:2026-08-05, task:77): cc-on-Firefox converged module collapses movement; bimodal physics ticks, unexplained -->
+- A second defect is tracked openly rather than solved (task 77): the
+  **converged** character-controller module on Firefox is bimodal — about half
+  the runs deliver ~505 physics ticks and pass, the other half ~266 ticks and
+  the player never moves, with identical startup and a clean teardown. Nothing
+  measured since 2026-08 has changed it, and nothing implicates the Kanama
+  backend or the shipped demos: the converged file is not in any demo (the
+  convergence stays deferred), so the listed Web demos are not affected. It is
+  a determinism finding, not a crash, and stays open until root-caused.
 
 ## Local Validation
 

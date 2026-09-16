@@ -589,5 +589,5 @@ if [[ -n "$START_AT" ]]; then
   echo "[ios_device_gate] partial run (--start-at $START_AT): not recorded in evidence/gates.json"
 else
   python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate ios-device-gate --claim "iOS Supported" \
-    --result PASS --where "${DEVICE_LABEL:-$DEVICE_ID}" --source scripts/ios_device_gate.sh
+    --result PASS --where "${DEVICE_LABEL:-$DEVICE_ID}; console-watched ${CONSOLE_SECONDS}s per demo, smokes on (task 111)" --source scripts/ios_device_gate.sh
 fi
