@@ -1886,7 +1886,8 @@ def ios_method_supported(method: ApiMethod, object_types: set[str], class_name: 
     # Variant-scalar returns (kotlin_return "Any?"): every audited arg shape is admitted — the
     # generated helper ptrcalls into a Variant cell and decodes the scalar payload through
     # kanama_ios_godot_ptrcall_ret_variant_scalar (task 100, parcel 2; bool/int/float/String/Object
-    # scalars, complex types surface null, matching desktop's RetVariantScalar). The hand-written
+    # scalars, the small vectors, and Array/Dictionary/Packed*Array containers since task 121;
+    # the remaining Variant types surface null, matching desktop's RetVariantScalar). The hand-written
     # no-arg / StringName-arg getters and the owned ClassDB.instantiate decode keep their bodies.
     # PackedInt32Array read-back is wired only for the no-arg getter
     # (ptrcallNoArgsRetPackedInt32List → List<Int> via the size + operator_index_const C
@@ -4376,7 +4377,7 @@ IOS_CONTAINER_RETURNS = {
     "Array": ("ptrcallRetArray", "List<Any?>"),
     "typedarray::Dictionary": ("ptrcallRetDictionaryList", "List<Map<String, Any?>>"),
     # task 100 parcel 10 — Array[Array] returns ride the same blob; nested PackedByteArray elements
-    # decode to ByteArray (other nested packed arrays still surface null, the recorded limit).
+    # decode to ByteArray and, since task 121, the other packed kinds to their List types.
     "typedarray::Array": ("ptrcallRetArrayList", "List<List<Any?>>"),
 }
 

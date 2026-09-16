@@ -827,8 +827,9 @@ actual object ObjectCalls {
   // into a self-describing blob (records of [variant_type][byteLen][bytes], nested containers as
   // nested blobs, String/StringName keys as utf8). A blob longer than the inline buffer is parked
   // C-side and drained whole; nothing is truncated and the method is not re-issued. The decode is
-  // the same scalar set as decodeVariantScalarReturn plus the nested containers; other types
-  // surface null. Desktop parity: BuiltinTypes.readDictionaryScalars keeps String keys only and
+  // the same scalar set as decodeVariantScalarReturn plus the nested containers and packed
+  // arrays (task 121); other types surface null. Desktop parity: BuiltinTypes.readDictionaryScalars
+  // keeps String keys only and
   // decodes values with variantToScalar; readArrayDictionaries maps the non-Map elements away.
   private class ContainerBlob(private val b: ByteArray, private var off: Int) {
     private fun i32(): Int {
@@ -885,6 +886,40 @@ actual object ObjectCalls {
             else null
           VT_ARRAY -> if (len >= 4) ContainerBlob(b, start).array() else null
           VT_DICTIONARY -> if (len >= 4) ContainerBlob(b, start).dictionary() else null
+          // task 121 — packed kinds: contiguous element bytes (count = byteLen / element size,
+          // real_t = float32; byteLen 0 = empty list, as for a genuinely empty array) or, for
+          // strings, the [count]([len][utf8])* layout parseBlobRecords already reads. Kotlin types
+          // match desktop's BuiltinTypes.readPacked*Array: List<Int/Long/Float/Double/Vector2/
+          // Vector3/Color/String>. PackedVector4Array (type 38) is not decoded on either iOS path.
+          VT_PACKED_STRING_ARRAY_TYPE ->
+            if (len >= 4)
+              parseBlobRecords(b.copyOfRange(start, end)) { bb, oo, ll ->
+                bb.decodeToString(oo, oo + ll)
+              }
+            else null
+          VT_PACKED_INT32_ARRAY -> List(len / 4) { i32LE(b, start + it * 4) }
+          VT_PACKED_INT64_ARRAY -> List(len / 8) { i64At(start + it * 8) }
+          VT_PACKED_FLOAT32_ARRAY -> List(len / 4) { f32At(start + it * 4) }
+          VT_PACKED_FLOAT64_ARRAY -> List(len / 8) { Double.fromBits(i64At(start + it * 8)) }
+          VT_PACKED_VECTOR2_ARRAY ->
+            List(len / 8) {
+              val o = start + it * 8
+              Vector2(GodotReal.fromFloat(f32At(o)), GodotReal.fromFloat(f32At(o + 4)))
+            }
+          VT_PACKED_VECTOR3_ARRAY ->
+            List(len / 12) {
+              val o = start + it * 12
+              Vector3(
+                GodotReal.fromFloat(f32At(o)),
+                GodotReal.fromFloat(f32At(o + 4)),
+                GodotReal.fromFloat(f32At(o + 8)),
+              )
+            }
+          VT_PACKED_COLOR_ARRAY ->
+            List(len / 16) {
+              val o = start + it * 16
+              Color(f32At(o), f32At(o + 4), f32At(o + 8), f32At(o + 12))
+            }
           // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
           VT_PACKED_BYTE_ARRAY -> b.copyOfRange(start, end)
           else -> null
@@ -3144,6 +3179,33 @@ actual object ObjectCalls {
         } else {
           null
         }
+      // task 121 — container returns arrive as one self-describing blob record in out_str (parked
+      // C-side and drained whole when longer than the inline buffer), decoded by the same reader
+      // the parcel-6 container ptrcalls use. Before, these surfaced null.
+      VT_ARRAY,
+      VT_DICTIONARY,
+      VT_PACKED_BYTE_ARRAY,
+      VT_PACKED_INT32_ARRAY,
+      VT_PACKED_INT64_ARRAY,
+      VT_PACKED_FLOAT32_ARRAY,
+      VT_PACKED_FLOAT64_ARRAY,
+      VT_PACKED_VECTOR2_ARRAY,
+      VT_PACKED_VECTOR3_ARRAY,
+      VT_PACKED_COLOR_ARRAY,
+      VT_PACKED_STRING_ARRAY_TYPE -> {
+        val len = outStrLen.value
+        val bytes =
+          when {
+            len < 8L -> ByteArray(0) // a record header alone is 8 bytes
+            len <= strBufSize -> outStr.readBytes(len.toInt())
+            else -> {
+              val full = allocArray<ByteVar>(len)
+              val got = kanama_ios_godot_take_pending_container_blob(full, len)
+              if (got < 8L) ByteArray(0) else full.readBytes(minOf(got, len).toInt())
+            }
+          }
+        if (bytes.size < 8) null else ContainerBlob(bytes, 0).record()
+      }
       // Small fixed-size returns arrive as raw component bytes in out_str (see
       // kanama_ios_godot_object_call); zero length = the C side could not decode.
       VT_VECTOR2 ->
@@ -3178,10 +3240,12 @@ actual object ObjectCalls {
   // boxes each arg into a Variant C-side and invokes [methodBind] via the Variant path,
   // for the varargs / dynamic methods ptrcall can't express (Object.call, set_deferred,
   // set_custom_mouse_cursor). Returns the decoded result — scalar (Boolean/Long/Double/
-  // String/object MemorySegment) or small fixed-size (Vector2/Vector2i/Vector3/Color,
-  // raw component bytes via out_str) — or null (nil / un-decoded return, e.g. Dictionary/
-  // Array/Transform). A String-family return longer than the 1 KiB inline buffer is parked
-  // C-side and drained whole (task 100) — the value is captured once, the call is not re-issued.
+  // String/GodotObject wrapper), small fixed-size (Vector2/Vector2i/Vector3/Color, raw
+  // component bytes via out_str), or a container (Array -> List, Dictionary -> Map,
+  // Packed*Array -> List of the element type; one blob record via out_str, task 121) — or
+  // null (nil / an un-decoded return such as Transform). A String or blob longer than the 1 KiB
+  // inline buffer is parked C-side and drained whole (task 100) — the value is captured once,
+  // the call is not re-issued.
   // Build the tagged-entry blob consumed by the C shim's PT_ARRAY boxer. Object.set uses this
   // path for List<Enum> values after callers map the enum entries to integer ordinals. Keep this
   // deliberately narrow: other List element families need their own audited Variant encoding.
@@ -3426,6 +3490,12 @@ actual object ObjectCalls {
    * fresh object whose sole reference lives in the return Variant (ClassDB.class_call_static static
    * factories). A named helper so the generator can route to it through
    * `METHOD_CALL_SHAPE_OVERRIDES`, mirroring [ptrcallWithStringNameArgRetVariantScalarOwned].
+   *
+   * Ownership covers a TOP-LEVEL RefCounted result only. A container result (task 121) is decoded
+   * from a blob after the C side destroyed the return Variant, so RefCounted ELEMENTS whose sole
+   * reference lived in that container come back as dangling borrowed handles — the same behaviour
+   * as desktop's readArrayScalars, and the same gap task 121 records for borrowed `call(...)`
+   * results. Do not route a factory that returns Array[RefCounted] through this.
    */
   actual fun callWithVariantArgsOwned(
     methodBind: MemorySegment,
@@ -3434,8 +3504,8 @@ actual object ObjectCalls {
   ): Any? = callWithVariantArgs(methodBind, instance, args, owned = true)
 
   // Variant (scalar) returns route through the same device-proven Object-call decode as
-  // callWithVariantArgs (kanama_ios_godot_object_call: bool/int/float/String/Object scalars;
-  // complex Variant types surface null, matching desktop ptrcall*RetVariantScalar). Calling the
+  // callWithVariantArgs (kanama_ios_godot_object_call: bool/int/float/String/Object scalars, the
+  // small vectors, and Array/Dictionary/Packed*Array containers since task 121). Calling the
   // method's OWN bind with Variant-encoded args is a real method invocation — Godot performs the
   // arg type coercion (e.g. String -> StringName) the call path needs. Phase 2.7e.
   actual fun ptrcallNoArgsRetVariantScalar(
@@ -49730,6 +49800,36 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check(
     "variant-call-value-object(set_meta/get_meta object)",
     gotObj is GodotObject && gotObj.segment.address() == metaObj.address(),
+  )
+  // task 121 — container RETURNS through the Variant call path (before, every container return
+  // surfaced null on iOS). The arg encoder takes integer lists only (List<String> / Map args are
+  // a separate gap, noted in task 121), so the fixtures come from the engine: an int Array round
+  // trip via set_meta/get_meta, Object.get_property_list (Array of Dictionaries with String
+  // values) and Engine.get_singleton_list (a PackedStringArray -> List<String>).
+  ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "kints", listOf(1L, 2L)))
+  check(
+    "variant-call-ret-array(set_meta/get_meta [1,2])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kints")) ==
+      listOf(1L, 2L),
+  )
+  val propertyList =
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_property_list"))
+  val firstProperty = (propertyList as? List<*>)?.firstOrNull() as? Map<*, *>
+  check(
+    "variant-call-ret-array-of-dictionaries(get_property_list)",
+    propertyList is List<*> && propertyList.isNotEmpty() && firstProperty?.get("name") is String,
+  )
+  // Engine.get_singleton_list() -> PackedStringArray (Node has only the virtual
+  // _get_configuration_warnings; calling that through Object.call is an invalid-method error).
+  val singletonNames =
+    ObjectCalls.callWithVariantArgs(
+      callBind,
+      ObjectCalls.getSingleton("Engine"),
+      listOf("get_singleton_list"),
+    )
+  check(
+    "variant-call-ret-packed-strings(Engine.get_singleton_list contains Engine)",
+    singletonNames is List<*> && singletonNames.contains("Engine"),
   )
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
