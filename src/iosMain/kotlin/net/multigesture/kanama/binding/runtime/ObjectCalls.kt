@@ -49805,7 +49805,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // surfaced null on iOS). The arg encoder takes integer lists only (List<String> / Map args are
   // a separate gap, noted in task 121), so the fixtures come from the engine: an int Array round
   // trip via set_meta/get_meta, Object.get_property_list (Array of Dictionaries with String
-  // values) and Node.get_configuration_warnings (an empty PackedStringArray -> empty List).
+  // values) and Engine.get_singleton_list (a PackedStringArray -> List<String>).
   ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "kints", listOf(1L, 2L)))
   check(
     "variant-call-ret-array(set_meta/get_meta [1,2])",
@@ -49819,11 +49819,17 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "variant-call-ret-array-of-dictionaries(get_property_list)",
     propertyList is List<*> && propertyList.isNotEmpty() && firstProperty?.get("name") is String,
   )
-  val warnings =
-    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_configuration_warnings"))
+  // Engine.get_singleton_list() -> PackedStringArray (Node has only the virtual
+  // _get_configuration_warnings; calling that through Object.call is an invalid-method error).
+  val singletonNames =
+    ObjectCalls.callWithVariantArgs(
+      callBind,
+      ObjectCalls.getSingleton("Engine"),
+      listOf("get_singleton_list"),
+    )
   check(
-    "variant-call-ret-packed-strings(get_configuration_warnings==[])",
-    warnings is List<*> && warnings.isEmpty(),
+    "variant-call-ret-packed-strings(Engine.get_singleton_list contains Engine)",
+    singletonNames is List<*> && singletonNames.contains("Engine"),
   )
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.

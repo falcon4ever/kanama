@@ -2705,6 +2705,21 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] project script value-type NodePath property missing" >&2
     exit 1
   fi
+  # Runtime self-tests (task 118, found by task 121's first device run): a FAIL line or a non-zero
+  # failed count in either self-test fails the gate. Before, only the presence of the ObjectCalls
+  # summary line was checked, so "197 passed, 1 failed" printed OK.
+  if rg -q 'SELFTEST FAIL:|SELFTEST( MATRIX)?: [0-9]+ passed, [1-9][0-9]* failed' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
+    rg 'SELFTEST FAIL:|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 || true
+    exit 1
+  fi
+  if rg -q 'PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed' "$stderr_log" "$stdout_log" \
+    && rg -q 'OBJECTCALLS SELFTEST: [0-9]+ passed, 0 failed' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] runtime self-tests (ptrcall matrix + ObjectCalls) all passed"
+  else
+    echo "[ios_visual_smoke] runtime self-test summary missing (ptrcall matrix / ObjectCalls)" >&2
+    exit 1
+  fi
   # Task 106: the scene-stored PackedScene @ScriptProperty survived the export's text->binary
   # re-pack and reached the script before _ready (Match3's tile_scene shape).
   if rg -q 'task106 resource property probe_scene delivered=true instantiated=true' "$stderr_log" "$stdout_log"; then
