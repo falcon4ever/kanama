@@ -244,6 +244,36 @@
       "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh (task 104 step 3 close-out run, one KMP module; log kanama-tasks/evidence/task104/closeout-android-matrix-2026-09-15.log)",
       "result": "PASS",
       "source": "scripts/android_smoke.sh"
+    },
+    {
+      "gate": "ios-device-gate",
+      "claim": "iOS Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "9dff2cbda0ffb5721c630acf279b6c1fc6d8b90a",
+      "date": "2026-09-16",
+      "where": "iPhone 12, iOS 26.6.2; console-watched 60s per demo, smokes on (task 111); 10/10 incl. fresh-starter probe (summary kanama-tasks/evidence/task110/release-gate-ios-2026-09-16-main-9dff2cbd-10of10.md)",
+      "result": "PASS",
+      "source": "scripts/ios_device_gate.sh"
+    },
+    {
+      "gate": "android-debug-matrix",
+      "claim": "Android Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "9dff2cbda0ffb5721c630acf279b6c1fc6d8b90a",
+      "date": "2026-09-16",
+      "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh (v0.5.0 release gate run; log kanama-tasks/evidence/task110/release-gate-android-2026-09-16-main-9dff2cbd.log)",
+      "result": "PASS",
+      "source": "scripts/android_smoke.sh"
+    },
+    {
+      "gate": "macos-local-ci-desktop-smoke",
+      "claim": "Desktop Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "9dff2cbda0ffb5721c630acf279b6c1fc6d8b90a",
+      "date": "2026-09-16",
+      "where": "macOS 26.6.2 arm64, Godot 4.7.2.stable, Temurin 25: scripts/local_ci.sh end to end (v0.5.0 release gate run; summary kanama-tasks/evidence/task110/release-gate-local_ci-2026-09-16-main-9dff2cbd.txt)",
+      "result": "PASS",
+      "source": "scripts/local_ci.sh"
     }
   ]
 }
