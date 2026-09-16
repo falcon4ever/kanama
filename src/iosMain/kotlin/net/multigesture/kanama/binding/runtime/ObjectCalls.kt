@@ -165,6 +165,7 @@ actual object ObjectCalls {
   private const val VT_OBJECT = 24
   private const val VT_DICTIONARY = 27
   private const val VT_ARRAY = 28
+  private const val VT_PACKED_STRING_ARRAY = 34
 
   actual fun constructObject(className: String): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_construct_object(className))
@@ -885,6 +886,34 @@ actual object ObjectCalls {
             else null
           VT_ARRAY -> if (len >= 4) ContainerBlob(b, start).array() else null
           VT_DICTIONARY -> if (len >= 4) ContainerBlob(b, start).dictionary() else null
+          // task 121 — packed kinds: contiguous element bytes (count = byteLen / element size,
+          // real_t = float32) or, for strings, [count]([len][utf8])*. Kotlin types match desktop's
+          // BuiltinTypes.readPacked*Array:
+          // List<Int/Long/Float/Double/Vector2/Vector3/Color/String>.
+          VT_PACKED_STRING_ARRAY -> if (len >= 4) ContainerBlob(b, start).strings() else null
+          VT_PACKED_INT32_ARRAY -> List(len / 4) { i32LE(b, start + it * 4) }
+          VT_PACKED_INT64_ARRAY -> List(len / 8) { i64At(start + it * 8) }
+          VT_PACKED_FLOAT32_ARRAY -> List(len / 4) { f32At(start + it * 4) }
+          VT_PACKED_FLOAT64_ARRAY -> List(len / 8) { Double.fromBits(i64At(start + it * 8)) }
+          VT_PACKED_VECTOR2_ARRAY ->
+            List(len / 8) {
+              val o = start + it * 8
+              Vector2(GodotReal.fromFloat(f32At(o)), GodotReal.fromFloat(f32At(o + 4)))
+            }
+          VT_PACKED_VECTOR3_ARRAY ->
+            List(len / 12) {
+              val o = start + it * 12
+              Vector3(
+                GodotReal.fromFloat(f32At(o)),
+                GodotReal.fromFloat(f32At(o + 4)),
+                GodotReal.fromFloat(f32At(o + 8)),
+              )
+            }
+          VT_PACKED_COLOR_ARRAY ->
+            List(len / 16) {
+              val o = start + it * 16
+              Color(f32At(o), f32At(o + 4), f32At(o + 8), f32At(o + 12))
+            }
           // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
           VT_PACKED_BYTE_ARRAY -> b.copyOfRange(start, end)
           else -> null
@@ -899,6 +928,23 @@ actual object ObjectCalls {
       repeat(count) { out.add(record()) }
       return out
     }
+
+    // [int32 count]([int32 len][utf8])* — a PackedStringArray payload (task 121).
+    fun strings(): List<String> {
+      val count = i32()
+      val out = ArrayList<String>(if (count > 0) count else 0)
+      repeat(count) {
+        val len = i32()
+        out.add(b.decodeToString(off, off + len))
+        off += len
+      }
+      return out
+    }
+
+    // One top-level record: the whole Variant return of callWithVariantArgs /
+    // ptrcallRetVariantScalar
+    // when it is a container (task 121).
+    fun value(): Any? = record()
 
     fun dictionary(): Map<String, Any?> {
       val count = i32()
@@ -3144,6 +3190,33 @@ actual object ObjectCalls {
         } else {
           null
         }
+      // task 121 — container returns arrive as one self-describing blob record in out_str (parked
+      // C-side and drained whole when longer than the inline buffer), decoded by the same reader
+      // the parcel-6 container ptrcalls use. Before, these surfaced null.
+      VT_ARRAY,
+      VT_DICTIONARY,
+      VT_PACKED_BYTE_ARRAY,
+      VT_PACKED_INT32_ARRAY,
+      VT_PACKED_INT64_ARRAY,
+      VT_PACKED_FLOAT32_ARRAY,
+      VT_PACKED_FLOAT64_ARRAY,
+      VT_PACKED_VECTOR2_ARRAY,
+      VT_PACKED_VECTOR3_ARRAY,
+      VT_PACKED_COLOR_ARRAY,
+      VT_PACKED_STRING_ARRAY -> {
+        val len = outStrLen.value
+        val bytes =
+          when {
+            len < 8L -> ByteArray(0) // a record header alone is 8 bytes
+            len <= strBufSize -> outStr.readBytes(len.toInt())
+            else -> {
+              val full = allocArray<ByteVar>(len)
+              val got = kanama_ios_godot_take_pending_container_blob(full, len)
+              if (got < 8L) ByteArray(0) else full.readBytes(minOf(got, len).toInt())
+            }
+          }
+        if (bytes.size < 8) null else ContainerBlob(bytes, 0).value()
+      }
       // Small fixed-size returns arrive as raw component bytes in out_str (see
       // kanama_ios_godot_object_call); zero length = the C side could not decode.
       VT_VECTOR2 ->
@@ -3178,10 +3251,12 @@ actual object ObjectCalls {
   // boxes each arg into a Variant C-side and invokes [methodBind] via the Variant path,
   // for the varargs / dynamic methods ptrcall can't express (Object.call, set_deferred,
   // set_custom_mouse_cursor). Returns the decoded result — scalar (Boolean/Long/Double/
-  // String/object MemorySegment) or small fixed-size (Vector2/Vector2i/Vector3/Color,
-  // raw component bytes via out_str) — or null (nil / un-decoded return, e.g. Dictionary/
-  // Array/Transform). A String-family return longer than the 1 KiB inline buffer is parked
-  // C-side and drained whole (task 100) — the value is captured once, the call is not re-issued.
+  // String/GodotObject wrapper), small fixed-size (Vector2/Vector2i/Vector3/Color, raw
+  // component bytes via out_str), or a container (Array -> List, Dictionary -> Map,
+  // Packed*Array -> List of the element type; one blob record via out_str, task 121) — or
+  // null (nil / an un-decoded return such as Transform). A String or blob longer than the 1 KiB
+  // inline buffer is parked C-side and drained whole (task 100) — the value is captured once,
+  // the call is not re-issued.
   // Build the tagged-entry blob consumed by the C shim's PT_ARRAY boxer. Object.set uses this
   // path for List<Enum> values after callers map the enum entries to integer ordinals. Keep this
   // deliberately narrow: other List element families need their own audited Variant encoding.
@@ -49730,6 +49805,29 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check(
     "variant-call-value-object(set_meta/get_meta object)",
     gotObj is GodotObject && gotObj.segment.address() == metaObj.address(),
+  )
+  // task 121 — container VALUE args + container returns through the Variant call path: an Array of
+  // strings and a Dictionary round-trip set_meta/get_meta as Kotlin containers (before, any
+  // container return surfaced null on iOS).
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "ktags", listOf("a", "bb")),
+  )
+  check(
+    "variant-call-value-array(set_meta/get_meta [a,bb])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "ktags")) ==
+      listOf("a", "bb"),
+  )
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kdict", mapOf("k" to 1L, "s" to "v")),
+  )
+  check(
+    "variant-call-value-dictionary(set_meta/get_meta {k:1,s:v})",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kdict")) ==
+      mapOf("k" to 1L, "s" to "v"),
   )
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.

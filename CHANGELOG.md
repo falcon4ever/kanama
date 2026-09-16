@@ -7,6 +7,17 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS: container results of `Object.call` / `Object.get` reach Kotlin (task 121)
+
+- `Object.get` of a `List<String>` `@ScriptProperty` (and any `call(...)` whose result is an Array,
+  Dictionary or Packed*Array) returned null on iOS; desktop returned the container. The C call path
+  now serialises a container return as one self-describing blob record (the same encoder the
+  container ptrcalls use) and Kotlin decodes it: Array → `List<Any?>`, Dictionary → `Map<String,
+  Any?>`, `Packed{Byte,Int32,Int64,Float32,Float64,Vector2,Vector3,Color,String}Array` → the desktop
+  list types. Packed kinds other than bytes also decode as Array/Dictionary elements now.
+- Found by the third-person demo's iPhone smoke reading a BeetlebotSkin `_force_loop` export; its
+  starter-probe twin (`probe_tags`, `smoke_modes`) is now asserted instead of "requested".
+
 ### Fixed — iOS: Object-typed values now cross from Kotlin scripts to the engine (task 115)
 
 - `Object.get("shooter")` on a `@ScriptProperty var shooter: Node?` returned nil on iOS (desktop

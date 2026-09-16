@@ -727,9 +727,8 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
                 "enumList=${smokeModes == listOf(IosSmokeMode.HARD, IosSmokeMode.HARD, IosSmokeMode.EASY)}",
         )
         // Drive the same setters through Object.set after instantiation, then read every property
-        // through Object.get so the engine calls the ScriptInstance getter. The generic iOS
-        // Object.call decoder currently exposes scalar returns but not generic Array returns; the
-        // enum-list get still exercises the getter and C Array reconstruction before decoding null.
+        // through Object.get so the engine calls the ScriptInstance getter (container returns
+        // decode on iOS since task 121, so the enum list is asserted too).
         self.set("narrow_float", 2.5)
         self.set("narrow_int", 7L)
         self.set("smoke_mode", 0L)
@@ -740,7 +739,9 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
         val engineFloat = self.get("narrow_float")
         val engineInt = self.get("narrow_int")
         val engineEnum = self.get("smoke_mode")
-        self.get("smoke_modes")
+        // Task 121: the enum list reads back through the engine as an Array of ordinals (the iOS
+        // Variant call path now decodes container returns; before it surfaced null).
+        val engineEnumList = self.get("smoke_modes")
         val engineScalarReadsOk =
             engineFloat == 2.5 && engineInt == 7L && engineEnum == 0L
         val roundTripPropertyConversions =
@@ -757,16 +758,14 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
         println(
             "[kanama][ios][kn] task39 property engine get " +
                 "float=${engineFloat == 2.5} int=${engineInt == 7L} enum=${engineEnum == 0L} " +
-                "enumListRequested=true",
+                "enumList=${engineEnumList == listOf(1L, 0L, 0L)}",
         )
         // Data @ScriptProperty get parity: assign the Kotlin fields directly, then read each back
         // through Object.get so the engine calls the ScriptInstance getter — the path
         // MultiplayerSynchronizer uses on the authority peer. Whole-number vector components are exact
         // in float32, so the round trip is bit-exact. Before the getProperty data-type fixes these
         // read back as nil. Object.get decodes Vector2/Vector3/String/NodePath on iOS; the List<String>
-        // read exercises the getProperty + PackedStringArray encode path (Object.get can't decode a
-        // packed array back, so it is not asserted here — the emitter parity guard + the cross-backend
-        // parity check cover List<String> regressions).
+        // read decodes the PackedStringArray back on iOS since task 121 and is asserted below.
         probeMotion = Vector2(3.0, 4.0)
         probeShootTarget = Vector3(5.0, 6.0, 7.0)
         probeName = "kanama"
@@ -776,13 +775,16 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
         val engineShootTarget = self.get("probe_shoot_target")
         val engineName = self.get("probe_name")
         val engineView = self.get("probe_view")
-        self.get("probe_tags") // exercises the List<String> getProperty + PackedStringArray encode path
+        // Task 121: a List<String> @ScriptProperty reads back through Object.get as the same list
+        // (PackedStringArray return decoded on iOS; the third-person `_force_loop` shape).
+        val engineTags = self.get("probe_tags")
         println(
             "[kanama][ios][kn] datatype property engine get " +
                 "vector2=${engineMotion == Vector2(3.0, 4.0)} " +
                 "vector3=${engineShootTarget == Vector3(5.0, 6.0, 7.0)} " +
                 "string=${engineName == "kanama"} " +
-                "nodepath=${(engineView as? String) == "../Background"}",
+                "nodepath=${(engineView as? String) == "../Background"} " +
+                "tags=${engineTags == listOf("alpha", "beta")}",
         )
         // Task 115: Object-typed @ScriptProperty through the engine setter and getter. Object.get
         // must call the ScriptInstance getter and hand back the very node that was set.
@@ -2713,7 +2715,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   fi
   if rg -q 'task39 property initial float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
     && rg -q 'task39 property roundtrip float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log" \
-    && rg -q 'task39 property engine get float=true int=true enum=true enumListRequested=true' "$stderr_log" "$stdout_log"; then
+    && rg -q 'task39 property engine get float=true int=true enum=true enumList=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] task 39 narrow/enum property conversions delivered and round-tripped"
   else
     echo "[ios_visual_smoke] task 39 property conversion probe failed" >&2
@@ -2722,8 +2724,8 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   # Data @ScriptProperty get parity: Vector2/Vector3/String/NodePath read back through the engine
   # getter (the path MultiplayerSynchronizer uses on the authority peer). Regression for the
   # write-only data-type getProperty bug that broke iOS multiplayer movement/shooting.
-  if rg -q 'datatype property engine get vector2=true vector3=true string=true nodepath=true' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] data @ScriptProperty get parity (Vector2/Vector3/String/NodePath) round-tripped"
+  if rg -q 'datatype property engine get vector2=true vector3=true string=true nodepath=true tags=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] data @ScriptProperty get parity (Vector2/Vector3/String/NodePath/List<String>) round-tripped"
   else
     echo "[ios_visual_smoke] data @ScriptProperty get parity probe failed" >&2
     exit 1
