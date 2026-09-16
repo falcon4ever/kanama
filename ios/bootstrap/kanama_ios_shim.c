@@ -3603,8 +3603,9 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
 //   record:     [int32 variant_type][int32 byteLen][bytes]
 // Scalar payloads: BOOL 1 byte, INT/OBJECT-handle 8, FLOAT 8 (double), STRING/STRING_NAME/NODE_PATH
 // utf8, VECTOR2 2x float32, VECTOR2I 2x int32, VECTOR3 3x float32, COLOR 4x float32. A DICTIONARY
-// or ARRAY value is a nested blob (recursive, depth-limited); a PACKED_BYTE_ARRAY value is its raw
-// bytes (task 100 parcel 10); any other type keeps its tag with byteLen 0 and Kotlin surfaces null. Dictionary keys: String and StringName only, as utf8 — the
+// or ARRAY value is a nested blob (recursive, depth-limited); a Packed*Array value is its element
+// bytes, PackedStringArray its [count]([len][utf8])* (tasks 100 parcel 10 + 121); any other type
+// keeps its tag with byteLen 0 and Kotlin surfaces null. Dictionary keys: String and StringName only, as utf8 — the
 // desktop reader (BuiltinTypes.readDictionaryScalars) drops every other key type, so iOS does too.
 typedef struct {
     char *buf;
@@ -3612,6 +3613,7 @@ typedef struct {
     int64_t cap;
     int oom;
 } KanamaIosBlob;
+static void kanama_ios_blob_encode_packed(KanamaIosBlob *b, int32_t vtype, uint8_t *variant);
 
 static int kanama_ios_blob_reserve(KanamaIosBlob *b, int64_t extra) {
     if (b->oom) {
@@ -3798,27 +3800,18 @@ static void kanama_ios_blob_encode_variant(KanamaIosBlob *b, uint8_t *variant, i
             }
             break;
         }
-        case KANAMA_IOS_VARIANT_TYPE_PACKED_BYTE_ARRAY: {
-            // task 100 parcel 10 — a PackedByteArray inside an Array / Array[Array] return
-            // (OggPacketSequence packet data) carries its raw bytes; Kotlin decodes a ByteArray.
-            kanama_ios_cache_return_family_converters();
-            kanama_ios_cache_packed_byte_methods();
-            if (g_variant_to_packed_byte_array != NULL && g_packed_byte_array_size_method != NULL &&
-                g_packed_byte_array_operator_index_const != NULL &&
-                g_packed_byte_array_destructor != NULL) {
-                KANAMA_IOS_PACKED_ARRAY_STORAGE(pba);
-                g_variant_to_packed_byte_array((GDExtensionUninitializedTypePtr)pba, variant);
-                int64_t count = 0;
-                g_packed_byte_array_size_method((GDExtensionTypePtr)pba, NULL, &count, 0);
-                if (count > 0) {
-                    const uint8_t *base =
-                        g_packed_byte_array_operator_index_const((GDExtensionConstTypePtr)pba, (GDExtensionInt)0);
-                    if (base != NULL) kanama_ios_blob_put(b, base, count);
-                }
-                g_packed_byte_array_destructor((GDExtensionTypePtr)pba);
-            }
+        // task 100 parcel 10 (bytes) + task 121 (the other eight): packed payloads via the kind table.
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_BYTE_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_INT32_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_INT64_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT32_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT64_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY:
+            kanama_ios_blob_encode_packed(b, vtype, variant);
             break;
-        }
         default:
             break;  // un-decoded type: byteLen 0 -> Kotlin surfaces null (scalar-decode philosophy)
     }
@@ -3826,6 +3819,7 @@ static void kanama_ios_blob_encode_variant(KanamaIosBlob *b, uint8_t *variant, i
 }
 
 static void kanama_ios_blob_encode_array(KanamaIosBlob *b, uint64_t *array_storage, int depth) {
+    kanama_ios_cache_array_methods();
     int64_t count = 0;
     if (g_array_size_method != NULL) {
         g_array_size_method(array_storage, NULL, &count, 0);
@@ -3850,6 +3844,7 @@ static void kanama_ios_blob_encode_dictionary(KanamaIosBlob *b, uint64_t *dict_s
     int64_t count_at = b->len;
     kanama_ios_blob_put_i32(b, 0);
     int32_t kept = 0;
+    kanama_ios_cache_array_methods();
     kanama_ios_cache_dictionary_keys_method();
     if (g_dictionary_keys_method == NULL || g_array_size_method == NULL || g_array_get_method == NULL ||
         g_dictionary_keyed_getter == NULL || g_array_destructor == NULL) {
@@ -3965,6 +3960,30 @@ static void kanama_ios_drop_pending_container_blob(void) {
     g_pending_container_len = 0;
 }
 
+// Hand a finished blob to the caller: copied into out_buf when it fits (and freed), otherwise
+// parked in the single pending slot for kanama_ios_godot_take_pending_container_blob. Returns the
+// blob's full length, or -1 on encoder OOM (blob freed, nothing parked). The one writer of the
+// pending slot besides the drop above (task 121 unified the two producers).
+static int64_t kanama_ios_blob_deliver_or_park(KanamaIosBlob *b, char *out_buf, int64_t buf_size) {
+    if (b->oom) {
+        free(b->buf);
+        b->buf = NULL;
+        return -1;
+    }
+    int64_t len = b->len;
+    if (len <= buf_size) {
+        if (out_buf != NULL && len > 0) {
+            memcpy(out_buf, b->buf, (size_t)len);
+        }
+        free(b->buf);
+    } else {
+        g_pending_container_blob = b->buf;
+        g_pending_container_len = len;
+    }
+    b->buf = NULL;
+    return len;
+}
+
 int64_t kanama_ios_godot_ptrcall_ret_container_blob(
     int64_t method_bind,
     int64_t instance,
@@ -3988,20 +4007,7 @@ int64_t kanama_ios_godot_ptrcall_ret_container_blob(
         free(b.buf);
         return -1;
     }
-    if (b.oom) {
-        free(b.buf);
-        return -1;
-    }
-    if (b.len <= buf_size) {
-        if (out_buf != NULL && b.len > 0) {
-            memcpy(out_buf, b.buf, (size_t)b.len);
-        }
-        free(b.buf);
-    } else {
-        g_pending_container_blob = b.buf;
-        g_pending_container_len = b.len;
-    }
-    return b.len;
+    return kanama_ios_blob_deliver_or_park(&b, out_buf, buf_size);
 }
 
 int64_t kanama_ios_godot_take_pending_container_blob(
@@ -6588,8 +6594,9 @@ int64_t kanama_ios_godot_ptrcall_ret_callable(
 // Kotlin decoders read (ObjectCalls.decodeVariantScalarReturn): bool/int -> out_int, float ->
 // out_double, String/StringName/NodePath -> utf8 in out_str (or parked, see above), Object ->
 // handle in out_int (retained + reported when out_is_refcounted is non-NULL, the owned decode),
-// Vector2/Vector2i/Vector3/Color -> raw component bytes in out_str. Anything else leaves the outs
-// zero and Kotlin surfaces null, matching desktop's RetVariantScalar. Returns the Variant type.
+// Vector2/Vector2i/Vector3/Color -> raw component bytes in out_str, Array/Dictionary/Packed*Array
+// -> one blob record in out_str (or parked, task 121). Anything else leaves the outs zero and
+// Kotlin surfaces null, matching desktop's RetVariantScalar. Returns the Variant type.
 // Shared by kanama_ios_godot_object_call and kanama_ios_godot_ptrcall_ret_variant_scalar; the
 // caller destroys ret_variant afterwards.
 static int32_t kanama_ios_decode_variant_scalar(
@@ -6722,6 +6729,30 @@ static int32_t kanama_ios_decode_variant_scalar(
             }
             break;
         }
+        case KANAMA_IOS_VARIANT_TYPE_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_DICTIONARY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_BYTE_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_INT32_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_INT64_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT32_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT64_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY: {
+            // task 121 — container returns (Object.get of a List<String> @ScriptProperty, call()
+            // of a method returning Array/Dictionary/Packed*Array): one self-describing record
+            // ([vt][byteLen][payload], the parcel-6 blob), inline through out_str when it fits,
+            // otherwise parked in the pending container slot and drained whole by
+            // kanama_ios_godot_take_pending_container_blob. Before this the Kotlin side saw an
+            // empty out_str and surfaced null (the third-person smoke's _force_loop read).
+            kanama_ios_drop_pending_container_blob();
+            KanamaIosBlob b = { NULL, 0, 0, 0 };
+            kanama_ios_blob_encode_variant(&b, ret_variant, 0);
+            int64_t len = kanama_ios_blob_deliver_or_park(&b, out_str, out_str_size);
+            if (out_str_len != NULL) *out_str_len = (len < 0) ? 0 : len;
+            break;
+        }
         default:
             // NIL / un-decoded type: leave outs zero; Kotlin surfaces null.
             break;
@@ -6743,15 +6774,18 @@ typedef struct {
     GDExtensionPtrBuiltInMethod size_method;
     const void *(*index_const)(GDExtensionConstTypePtr, GDExtensionInt);
     int64_t elem_bytes;
+    GDExtensionTypeFromVariantConstructorFunc to_packed;  // Variant -> this packed kind (task 121)
 } KanamaIosPackedKind;
 
 // Resolve the kind's cached accessors; returns 0 when the kind is not one of the eight or a
 // pointer failed to resolve (the caller then reports -1).
 static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out) {
     memset(out, 0, sizeof(*out));
+    kanama_ios_cache_return_family_converters();
     switch (packed_kind) {
         case KANAMA_IOS_VARIANT_TYPE_PACKED_BYTE_ARRAY:
             kanama_ios_cache_packed_byte_methods();
+            out->to_packed = g_variant_to_packed_byte_array;
             out->destructor = g_packed_byte_array_destructor;
             out->size_method = g_packed_byte_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_byte_array_operator_index_const;
@@ -6759,6 +6793,7 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_INT32_ARRAY:
             kanama_ios_cache_packed_int32_methods();
+            out->to_packed = g_variant_to_packed_int32_array;
             out->destructor = g_packed_int32_array_destructor;
             out->size_method = g_packed_int32_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_int32_array_operator_index_const;
@@ -6766,6 +6801,7 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_INT64_ARRAY:
             kanama_ios_cache_packed_int64_methods();
+            out->to_packed = g_variant_to_packed_int64_array;
             out->destructor = g_packed_int64_array_destructor;
             out->size_method = g_packed_int64_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_int64_array_operator_index_const;
@@ -6773,6 +6809,7 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT32_ARRAY:
             kanama_ios_cache_packed_float32_methods();
+            out->to_packed = g_variant_to_packed_float32_array;
             out->destructor = g_packed_float32_array_destructor;
             out->size_method = g_packed_float32_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_float32_array_operator_index_const;
@@ -6780,6 +6817,7 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_FLOAT64_ARRAY:
             kanama_ios_cache_packed_float64_methods();
+            out->to_packed = g_variant_to_packed_float64_array;
             out->destructor = g_packed_float64_array_destructor;
             out->size_method = g_packed_float64_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_float64_array_operator_index_const;
@@ -6787,6 +6825,7 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
             kanama_ios_cache_packed_vector2_methods();
+            out->to_packed = g_variant_to_packed_vector2_array;
             out->destructor = g_packed_vector2_array_destructor;
             out->size_method = g_packed_vector2_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_vector2_array_operator_index_const;
@@ -6794,6 +6833,7 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
             kanama_ios_cache_packed_vector3_methods();
+            out->to_packed = g_variant_to_packed_vector3_array;
             out->destructor = g_packed_vector3_array_destructor;
             out->size_method = g_packed_vector3_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_vector3_array_operator_index_const;
@@ -6801,6 +6841,7 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
             kanama_ios_cache_packed_color_methods();
+            out->to_packed = g_variant_to_packed_color_array;
             out->destructor = g_packed_color_array_destructor;
             out->size_method = g_packed_color_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_color_array_operator_index_const;
@@ -6809,7 +6850,8 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
         default:
             return 0;
     }
-    return out->destructor != NULL && out->size_method != NULL && out->index_const != NULL;
+    return out->destructor != NULL && out->size_method != NULL && out->index_const != NULL &&
+        out->to_packed != NULL;
 }
 
 // Copy up to buf_cap elements of `storage` into out_buf; returns the array's full element count.
@@ -6824,6 +6866,48 @@ static int64_t kanama_ios_packed_copy(const KanamaIosPackedKind *kind, void *sto
         }
     }
     return count;
+}
+
+// task 121 — packed-array payload inside a blob record. The eight fixed-size kinds carry their
+// contiguous element bytes (Kotlin derives the count from byteLen / element size; real_t is float32
+// on the single-precision engine, Color is always float32; byteLen 0 decodes as an EMPTY list, which
+// is also what a genuinely empty array produces); PackedStringArray reuses the
+// [int32 count]([int32 len][utf8])* layout of kanama_ios_encode_packed_string_blob so nested and
+// top-level PackedStringArrays share one encoder (Kotlin: parseBlobRecords). Unresolvable
+// accessors leave the record empty.
+static void kanama_ios_blob_encode_packed(KanamaIosBlob *b, int32_t vtype, uint8_t *variant) {
+    if (vtype == KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY) {
+        kanama_ios_cache_return_family_converters();
+        kanama_ios_cache_packed_string_methods();
+        if (g_variant_to_packed_string_array == NULL || g_packed_string_array_size_method == NULL ||
+            g_packed_string_array_operator_index_const == NULL || g_packed_string_array_destructor == NULL) {
+            return;
+        }
+        KANAMA_IOS_PACKED_ARRAY_STORAGE(psa);
+        g_variant_to_packed_string_array((GDExtensionUninitializedTypePtr)psa, variant);
+        int64_t n = kanama_ios_encode_packed_string_blob(psa, NULL, 0);
+        if (n > 0 && kanama_ios_blob_reserve(b, n)) {
+            kanama_ios_encode_packed_string_blob(psa, b->buf + b->len, n);
+            b->len += n;
+        }
+        g_packed_string_array_destructor((GDExtensionTypePtr)psa);
+        return;
+    }
+    KanamaIosPackedKind kind;
+    if (!kanama_ios_packed_kind(vtype, &kind)) {
+        return;
+    }
+    KANAMA_IOS_PACKED_ARRAY_STORAGE(storage);
+    kind.to_packed((GDExtensionUninitializedTypePtr)storage, variant);
+    int64_t count = 0;
+    kind.size_method((GDExtensionTypePtr)storage, NULL, &count, 0);
+    if (count > 0) {
+        const void *base = kind.index_const((GDExtensionConstTypePtr)storage, (GDExtensionInt)0);
+        if (base != NULL) {
+            kanama_ios_blob_put(b, base, count * kind.elem_bytes);
+        }
+    }
+    kind.destructor((GDExtensionTypePtr)storage);
 }
 
 static int32_t g_pending_packed_kind = 0;
@@ -6941,9 +7025,10 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
 // Generic Variant Object.call dispatch. Boxes each PT-tagged arg into a Variant,
 // invokes method_bind via object_method_bind_call (the Variant path, for varargs /
 // dynamic dispatch the ptrcall path can't express — Object::call, set_deferred,
-// set_custom_mouse_cursor, …), and decodes a SCALAR return (nil/bool/int/float/
-// String/Object) or small fixed-size return (Vector2/Vector2i/Vector3/Color, raw
-// component bytes via out_str) back through the out params. Returns the decoded Variant type tag
+// set_custom_mouse_cursor, …), and decodes the return — scalar (nil/bool/int/float/
+// String/Object), small fixed-size (Vector2/Vector2i/Vector3/Color, raw component
+// bytes via out_str) or container (Array/Dictionary/Packed*Array as one blob record via
+// out_str, task 121) — back through the out params. Returns the decoded Variant type tag
 // (KANAMA_IOS_VARIANT_TYPE_*), or -1 if the call did not dispatch. Marshalling is
 // concentrated here and guarded by check_call_error so the boxing bug class stays
 // in one place (see docs/contributing/backends/ios.md).
