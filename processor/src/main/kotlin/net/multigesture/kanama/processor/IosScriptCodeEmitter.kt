@@ -911,7 +911,8 @@ internal class IosScriptCodeEmitter(
     // replication and inspector reads (exactly how the Vector2 `motion` / Vector3 `shoot_target`
     // bug hid). Object and custom-script refs are covered too since task 115: `Object.get` of a
     // Node-typed property is how scripts and the third-person bullet smoke read a shooter back.
-    // With Vector2/Vector3/String/NodePath, List<String> and object refs now readable this stays silent
+    // With Vector2/Vector3/String/NodePath, List<String> and object refs now readable this stays
+    // silent
     // in a healthy codebase and only trips if a new data type is added set-only (or one regresses).
     // This is a hard build ERROR, not a warning: a warning is exactly what let the original
     // write-only asymmetry ship unnoticed. A new settable data type must gain a getProperty path

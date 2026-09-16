@@ -17,8 +17,8 @@ import kotlin.test.assertTrue
  * This locks the contract as a fast, device-free unit test: for every *data* type the iOS emitter
  * supports, it must be both settable AND readable (matching the JVM's uniform capability), object
  * and custom-script refs included since task 115 (they answer `Object.get` with the owner handle).
- * The codegen guard already fails the build on a violation; this test is the same rule
- * exercised over an explicit type fixture, so a regression is caught in the JVM test suite too.
+ * The codegen guard already fails the build on a violation; this test is the same rule exercised
+ * over an explicit type fixture, so a regression is caught in the JVM test suite too.
  */
 class IosScriptPropertyParityTest {
 
@@ -134,17 +134,20 @@ class IosScriptPropertyParityTest {
     )
 
   /**
-   * Task 115: Object and @ScriptClass refs are engine-readable like every other settable type.
-   * The third-person bullet smoke sets `shooter` (a `Node?`) through `Object.set` before
-   * `add_child` and reads it back through `Object.get`; on iOS the read answered nil because the
-   * emitter skipped object refs in getProperty. Reverting the branch fails this test.
+   * Task 115: Object and @ScriptClass refs are engine-readable like every other settable type. The
+   * third-person bullet smoke sets `shooter` (a `Node?`) through `Object.set` before `add_child`
+   * and reads it back through `Object.get`; on iOS the read answered nil because the emitter
+   * skipped object refs in getProperty. Reverting the branch fails this test.
    */
   @Test
   fun objectAndScriptRefsAreReadableViaGetProperty() {
     val r = emit(objectProp("crosshair"), customScriptProp("driver"))
     assertTrue(r.errors.isEmpty(), "object-ref @ScriptProperty flagged: ${r.errors}")
     assertTrue(r.readable("crosshair"), "Node-typed @ScriptProperty must be engine-readable on iOS")
-    assertTrue(r.readable("driver"), "@ScriptClass-typed @ScriptProperty must be engine-readable on iOS")
+    assertTrue(
+      r.readable("driver"),
+      "@ScriptClass-typed @ScriptProperty must be engine-readable on iOS",
+    )
   }
 
   @Test
