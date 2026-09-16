@@ -515,18 +515,13 @@ class SceneTree(handle: GodotHandle) : Node(handle) {
             ?.let { Tween(GodotHandle(it)) }
 
     // SceneTree.get_nodes_in_group(group) -> Array[Node]. The (StringName)->typed-object-array ptrcall
-    // shape isn't wired, so this goes through the Variant call path; OBJECT elements surface as raw
-    // handles (or wrapped objects), wrapped back to Node. A non-array/unsupported decode yields empty
-    // (only the F10 free-camera HUD toggle uses this — graceful no-op if the decode degrades).
+    // shape isn't wired, so this goes through the Variant call path — which on iOS does NOT decode
+    // an Array return yet (task 121: decodeVariantScalarReturn has no VT_ARRAY case), so today this
+    // always returns empty (only the F10 free-camera HUD toggle uses it). Once 121 lands, the
+    // elements arrive as GodotObject wrappers and this wraps them back to Node.
     fun getNodesInGroup(group: String): List<Node> =
         (call("get_nodes_in_group", group) as? List<*>)?.mapNotNull { element ->
-            when (element) {
-                is Node -> element
-                is GodotObject -> Node(element.handle)
-                is MemorySegment -> Node(GodotHandle(element))
-                is Long -> Node(GodotHandle(MemorySegment.ofAddress(element)))
-                else -> null
-            }
+            (element as? GodotObject)?.let { Node(it.handle) }
         } ?: emptyList()
 
     // The root Window handle (an Object); wrap with Window(...) or Node(...) at the call site,
