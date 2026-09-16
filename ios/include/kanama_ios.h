@@ -190,7 +190,9 @@ int64_t kanama_ios_godot_ptrcall_ret_callable(
  * parcel 2): bool/int/Object handle -> out_int, float -> out_double, String/StringName/NodePath
  * -> UTF-8 in out_str with the full length in out_str_len (parked for
  * kanama_ios_godot_take_pending_utf8 when longer than out_str_size), Vector2/Vector2i/Vector3/
- * Color -> raw component bytes in out_str. Object results are borrowed. Returns the Variant type
+ * Color -> raw component bytes in out_str, Array/Dictionary/Packed*Array -> one self-describing
+ * blob record in out_str (parked for kanama_ios_godot_take_pending_container_blob when longer;
+ * task 121). Object results are borrowed. Returns the Variant type
  * (KANAMA_IOS_VARIANT_TYPE_*), or -1 on a null method/instance or an unavailable API.
  */
 int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
@@ -248,7 +250,8 @@ int64_t kanama_ios_godot_take_pending_packed(
  *   record:     [int32 variant_type][int32 byteLen][bytes]
  * Scalar records: BOOL 1, INT / OBJECT handle 8, FLOAT 8 (double), STRING family utf8, VECTOR2
  * 2x float32, VECTOR2I 2x int32, VECTOR3 3x float32, COLOR 4x float32; a nested DICTIONARY / ARRAY
- * value is a nested blob; every other type keeps its tag with byteLen 0. container_kind is
+ * value is a nested blob; a Packed*Array value is its element bytes (PackedStringArray:
+ * [count]([len][utf8])*); every other type keeps its tag with byteLen 0. container_kind is
  * KANAMA_IOS_VARIANT_TYPE_DICTIONARY (27) or KANAMA_IOS_VARIANT_TYPE_ARRAY (28). Returns the full
  * blob size: when it fits buf_size the blob is written to out_buf, otherwise it is parked in a
  * single pending slot for kanama_ios_godot_take_pending_container_blob. -1 on a null method /
@@ -266,7 +269,8 @@ int64_t kanama_ios_godot_ptrcall_ret_container_blob(
 );
 
 /*
- * Drain the blob parked by kanama_ios_godot_ptrcall_ret_container_blob into out_buf (up to
+ * Drain the blob parked by kanama_ios_godot_ptrcall_ret_container_blob or by a container return
+ * of kanama_ios_godot_object_call / kanama_ios_godot_ptrcall_ret_variant_scalar into out_buf (up to
  * buf_size bytes), free it and return its full size. -1 when nothing is pending. Single slot:
  * drain before the next container-returning call.
  */
@@ -748,9 +752,9 @@ int32_t kanama_ios_godot_object_disconnect_callable(
  * express). arg_tags[i] is a KANAMA_IOS_PT_* tag and arg_ptrs[i] points to that
  * arg's payload (uint8 bool / int64 / double / C-string for String-family / int64
  * handle for Object / laid-out float32|int32 for Vector2/Vector2i/Color). The args
- * are boxed into Variants, method_bind is invoked via object_method_bind_call, and a
- * SCALAR return is decoded: bool/int/Object-handle into *out_int, float into
- * *out_double, String UTF-8 into out_str (no terminator; *out_str_len gets the full
+ * are boxed into Variants, method_bind is invoked via object_method_bind_call, and the
+ * return is decoded: bool/int/Object-handle into *out_int, float into *out_double,
+ * String UTF-8 or a container blob record (task 121) into out_str (no terminator; *out_str_len gets the full
  * byte length, pass out_str=NULL/out_str_size=0 to measure). Returns the decoded
  * Variant type tag (KANAMA_IOS_VARIANT_TYPE_*), or -1 if the call did not dispatch.
  *

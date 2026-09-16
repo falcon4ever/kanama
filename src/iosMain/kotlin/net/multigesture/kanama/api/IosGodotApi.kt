@@ -226,8 +226,9 @@ open class GodotObject(
         GodotSignal(this, name)
 
     // Variant Object.call dispatch: [method, *args] boxed into Variants, called via the
-    // Variant path (the varargs path ptrcall can't express). Scalar and small fixed-size
-    // (Vector2/Vector2i/Vector3/Color) returns decoded to Any?; other types surface null.
+    // Variant path (the varargs path ptrcall can't express). Scalar, small fixed-size
+    // (Vector2/Vector2i/Vector3/Color) and container (Array -> List, Dictionary -> Map,
+    // Packed*Array -> List, task 121) returns decoded to Any?; other types surface null.
     fun call(method: String, vararg args: Any?): Any? =
         ObjectCalls.callWithVariantArgs(callBind, segment, listOf(method, *args))
 
@@ -515,10 +516,9 @@ class SceneTree(handle: GodotHandle) : Node(handle) {
             ?.let { Tween(GodotHandle(it)) }
 
     // SceneTree.get_nodes_in_group(group) -> Array[Node]. The (StringName)->typed-object-array ptrcall
-    // shape isn't wired, so this goes through the Variant call path — which on iOS does NOT decode
-    // an Array return yet (task 121: decodeVariantScalarReturn has no VT_ARRAY case), so today this
-    // always returns empty (only the F10 free-camera HUD toggle uses it). Once 121 lands, the
-    // elements arrive as GodotObject wrappers and this wraps them back to Node.
+    // shape isn't wired, so this goes through the Variant call path; the Array return decodes to a
+    // List of GodotObject wrappers (task 121), wrapped back to Node here. A non-array result
+    // yields empty (only the F10 free-camera HUD toggle uses it).
     fun getNodesInGroup(group: String): List<Node> =
         (call("get_nodes_in_group", group) as? List<*>)?.mapNotNull { element ->
             (element as? GodotObject)?.let { Node(it.handle) }

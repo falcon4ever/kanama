@@ -165,7 +165,6 @@ actual object ObjectCalls {
   private const val VT_OBJECT = 24
   private const val VT_DICTIONARY = 27
   private const val VT_ARRAY = 28
-  private const val VT_PACKED_STRING_ARRAY = 34
 
   actual fun constructObject(className: String): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_construct_object(className))
@@ -828,8 +827,9 @@ actual object ObjectCalls {
   // into a self-describing blob (records of [variant_type][byteLen][bytes], nested containers as
   // nested blobs, String/StringName keys as utf8). A blob longer than the inline buffer is parked
   // C-side and drained whole; nothing is truncated and the method is not re-issued. The decode is
-  // the same scalar set as decodeVariantScalarReturn plus the nested containers; other types
-  // surface null. Desktop parity: BuiltinTypes.readDictionaryScalars keeps String keys only and
+  // the same scalar set as decodeVariantScalarReturn plus the nested containers and packed
+  // arrays (task 121); other types surface null. Desktop parity: BuiltinTypes.readDictionaryScalars
+  // keeps String keys only and
   // decodes values with variantToScalar; readArrayDictionaries maps the non-Map elements away.
   private class ContainerBlob(private val b: ByteArray, private var off: Int) {
     private fun i32(): Int {
@@ -887,10 +887,16 @@ actual object ObjectCalls {
           VT_ARRAY -> if (len >= 4) ContainerBlob(b, start).array() else null
           VT_DICTIONARY -> if (len >= 4) ContainerBlob(b, start).dictionary() else null
           // task 121 — packed kinds: contiguous element bytes (count = byteLen / element size,
-          // real_t = float32) or, for strings, [count]([len][utf8])*. Kotlin types match desktop's
-          // BuiltinTypes.readPacked*Array:
-          // List<Int/Long/Float/Double/Vector2/Vector3/Color/String>.
-          VT_PACKED_STRING_ARRAY -> if (len >= 4) ContainerBlob(b, start).strings() else null
+          // real_t = float32; byteLen 0 = empty list, as for a genuinely empty array) or, for
+          // strings, the [count]([len][utf8])* layout parseBlobRecords already reads. Kotlin types
+          // match desktop's BuiltinTypes.readPacked*Array: List<Int/Long/Float/Double/Vector2/
+          // Vector3/Color/String>. PackedVector4Array (type 38) is not decoded on either iOS path.
+          VT_PACKED_STRING_ARRAY_TYPE ->
+            if (len >= 4)
+              parseBlobRecords(b.copyOfRange(start, end)) { bb, oo, ll ->
+                bb.decodeToString(oo, oo + ll)
+              }
+            else null
           VT_PACKED_INT32_ARRAY -> List(len / 4) { i32LE(b, start + it * 4) }
           VT_PACKED_INT64_ARRAY -> List(len / 8) { i64At(start + it * 8) }
           VT_PACKED_FLOAT32_ARRAY -> List(len / 4) { f32At(start + it * 4) }
@@ -928,23 +934,6 @@ actual object ObjectCalls {
       repeat(count) { out.add(record()) }
       return out
     }
-
-    // [int32 count]([int32 len][utf8])* — a PackedStringArray payload (task 121).
-    fun strings(): List<String> {
-      val count = i32()
-      val out = ArrayList<String>(if (count > 0) count else 0)
-      repeat(count) {
-        val len = i32()
-        out.add(b.decodeToString(off, off + len))
-        off += len
-      }
-      return out
-    }
-
-    // One top-level record: the whole Variant return of callWithVariantArgs /
-    // ptrcallRetVariantScalar
-    // when it is a container (task 121).
-    fun value(): Any? = record()
 
     fun dictionary(): Map<String, Any?> {
       val count = i32()
@@ -3203,7 +3192,7 @@ actual object ObjectCalls {
       VT_PACKED_VECTOR2_ARRAY,
       VT_PACKED_VECTOR3_ARRAY,
       VT_PACKED_COLOR_ARRAY,
-      VT_PACKED_STRING_ARRAY -> {
+      VT_PACKED_STRING_ARRAY_TYPE -> {
         val len = outStrLen.value
         val bytes =
           when {
@@ -3215,7 +3204,7 @@ actual object ObjectCalls {
               if (got < 8L) ByteArray(0) else full.readBytes(minOf(got, len).toInt())
             }
           }
-        if (bytes.size < 8) null else ContainerBlob(bytes, 0).value()
+        if (bytes.size < 8) null else ContainerBlob(bytes, 0).record()
       }
       // Small fixed-size returns arrive as raw component bytes in out_str (see
       // kanama_ios_godot_object_call); zero length = the C side could not decode.
@@ -3501,6 +3490,12 @@ actual object ObjectCalls {
    * fresh object whose sole reference lives in the return Variant (ClassDB.class_call_static static
    * factories). A named helper so the generator can route to it through
    * `METHOD_CALL_SHAPE_OVERRIDES`, mirroring [ptrcallWithStringNameArgRetVariantScalarOwned].
+   *
+   * Ownership covers a TOP-LEVEL RefCounted result only. A container result (task 121) is decoded
+   * from a blob after the C side destroyed the return Variant, so RefCounted ELEMENTS whose sole
+   * reference lived in that container come back as dangling borrowed handles — the same behaviour
+   * as desktop's readArrayScalars, and the same gap task 121 records for borrowed `call(...)`
+   * results. Do not route a factory that returns Array[RefCounted] through this.
    */
   actual fun callWithVariantArgsOwned(
     methodBind: MemorySegment,
@@ -3509,8 +3504,8 @@ actual object ObjectCalls {
   ): Any? = callWithVariantArgs(methodBind, instance, args, owned = true)
 
   // Variant (scalar) returns route through the same device-proven Object-call decode as
-  // callWithVariantArgs (kanama_ios_godot_object_call: bool/int/float/String/Object scalars;
-  // complex Variant types surface null, matching desktop ptrcall*RetVariantScalar). Calling the
+  // callWithVariantArgs (kanama_ios_godot_object_call: bool/int/float/String/Object scalars, the
+  // small vectors, and Array/Dictionary/Packed*Array containers since task 121). Calling the
   // method's OWN bind with Variant-encoded args is a real method invocation — Godot performs the
   // arg type coercion (e.g. String -> StringName) the call path needs. Phase 2.7e.
   actual fun ptrcallNoArgsRetVariantScalar(
