@@ -602,6 +602,7 @@ import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.ClassDB
 import net.multigesture.kanama.api.Mathf
+import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.PackedScene
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.types.NodePath
@@ -657,6 +658,13 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
     // Must be non-null when _ready runs, and instantiable. Match3's tile_scene has this shape.
     @ScriptProperty
     var probeScene: PackedScene? = null
+
+    // Task 115: an Object-typed @ScriptProperty set through Object.set and read back through
+    // Object.get must answer the same instance (the third-person bullet's `shooter` shape). Before
+    // the fix the iOS getProperty skipped object refs, so the engine read nil while desktop
+    // returned the node.
+    @ScriptProperty
+    var probeShooter: Node? = null
 
     // Called by scripts/class_name_probe.gd with what GDScript saw in the
     // engine-visible property list; println is the only channel that streams
@@ -775,6 +783,16 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
                 "vector3=${engineShootTarget == Vector3(5.0, 6.0, 7.0)} " +
                 "string=${engineName == "kanama"} " +
                 "nodepath=${(engineView as? String) == "../Background"}",
+        )
+        // Task 115: Object-typed @ScriptProperty through the engine setter and getter. Object.get
+        // must call the ScriptInstance getter and hand back the very node that was set.
+        val shooterSource: Node = self.getParent() ?: self
+        self.set("probe_shooter", GodotObject(shooterSource.handle))
+        val engineShooter = self.get("probe_shooter") as? GodotObject
+        println(
+            "[kanama][ios][kn] task115 object property engine get " +
+                "fieldSet=${probeShooter?.isSameInstance(shooterSource) == true} " +
+                "same=${engineShooter?.isSameInstance(shooterSource) == true}",
         )
         val propertyConversionsOk =
             initialPropertyConversions && roundTripPropertyConversions && engineScalarReadsOk
@@ -2708,6 +2726,15 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] data @ScriptProperty get parity (Vector2/Vector3/String/NodePath) round-tripped"
   else
     echo "[ios_visual_smoke] data @ScriptProperty get parity probe failed" >&2
+    exit 1
+  fi
+  # Task 115: an Object-typed @ScriptProperty set through Object.set reads back through Object.get
+  # as the same instance (the third-person bullet's `shooter`). Regression for the iOS getProperty
+  # object-ref gap that answered nil.
+  if rg -q 'task115 object property engine get fieldSet=true same=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] Object-typed @ScriptProperty set via Object.set reads back through Object.get (task 115)"
+  else
+    echo "[ios_visual_smoke] Object-typed @ScriptProperty engine get probe failed (task 115)" >&2
     exit 1
   fi
   # Phase 3.3: an arg-bearing virtual dispatched through the generic callV path.

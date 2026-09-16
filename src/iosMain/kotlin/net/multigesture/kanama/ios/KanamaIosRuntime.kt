@@ -24,6 +24,8 @@ import kotlinx.cinterop.set
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.toLong
 import kotlinx.cinterop.value
+import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
@@ -1081,6 +1083,20 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       retBuf.reinterpret<DoubleVar>()[0] = value.toDouble()
       retTag[0] = IOS_PT_FLOAT64
     }
+    // Engine wrapper (task 115): ship the object handle; the C side boxes it as an Object
+    // Variant (g_variant_from_object, which takes a reference for RefCounted). A closed/null
+    // handle ships 0 and boxes as nil. Used by getProperty of Object-typed @ScriptProperty
+    // (`Object.get("shooter")`) and by Object-returning methods/virtuals.
+    is GodotObject -> {
+      retBuf.reinterpret<LongVar>()[0] = value.segment.address()
+      retTag[0] = IOS_PT_OBJECT
+    }
+    // A @ScriptClass instance answers as its owner object (node_paths-exported script refs,
+    // `fun driver(): Vehicle?`), the same identity desktop's initVariantFromAny uses.
+    is KanamaScript<*> -> {
+      retBuf.reinterpret<LongVar>()[0] = value.godotObject.segment.address()
+      retTag[0] = IOS_PT_OBJECT
+    }
     is Vector2 -> {
       val f = retBuf.reinterpret<GodotRealVar>()
       f[0] = GodotReal.toC(value.x)
@@ -1504,6 +1520,10 @@ internal object IosReturnContainerScratch {
         )
       is Color -> Pair(IOS_PT_COLOR, float32Bytes(value.r, value.g, value.b, value.a))
       is RID -> Pair(IOS_PT_RID, int64Bytes(value.value))
+      // Wrapper / @ScriptClass elements ship their owner handle; the C array/dictionary builders
+      // box PT_OBJECT elements as Object Variants (task 115; `List<Node>` returns were nil before).
+      is GodotObject -> Pair(IOS_PT_OBJECT, int64Bytes(value.segment.address()))
+      is KanamaScript<*> -> Pair(IOS_PT_OBJECT, int64Bytes(value.godotObject.segment.address()))
       // task 100 parcel 10: a PackedByteArray value (OggPacketSequence packet data inside an
       // Array[Array]) travels as its raw bytes; the C boxer rebuilds the packed array.
       is ByteArray -> Pair(IOS_PT_PACKED_BYTE_ARRAY, value)
