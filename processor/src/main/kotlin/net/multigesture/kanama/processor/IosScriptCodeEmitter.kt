@@ -62,8 +62,10 @@ private val iosReturnTypes =
     // Variant returns reuse the per-runtime-type encodeIosReturn dispatch (audited inner types;
     // an unaudited inner value serializes as nil — a valid Variant). task 13.
     TypeMapping.VARIANT,
-    // Wrapper / @ScriptClass returns: encodeIosReturn ships the owner handle PT_OBJECT-tagged
-    // (task 115; before, a `fun target(): Node?` was warned as unmarshalled and dropped).
+    // Object returns: encodeIosReturn ships the owner handle PT_OBJECT-tagged (task 115; before, a
+    // `fun target(): GodotObject?` was warned as unmarshalled and dropped). Only `GodotObject?`
+    // resolves to OBJECT in the shared processor (fqToTypeMapping); typed wrapper returns such as
+    // `Node?` are still rejected at model time on every platform.
     TypeMapping.OBJECT,
     TypeMapping.RID,
     TypeMapping.PACKED_BYTE_ARRAY,
@@ -731,7 +733,7 @@ internal class IosScriptCodeEmitter(
         warn(
           "[kanama-ios] $kotlinMethodName ($virtualName): @OverrideVirtual return type " +
             "$returnType not yet marshalled on iOS (supported: Bool/Int/Float/Vector2/" +
-            "Vector2i/Vector3/String/RID/Packed*Array/Dictionary/Array/Variant) — silent no-op"
+            "Vector2i/Vector3/String/RID/Packed*Array/Dictionary/Array/Variant/GodotObject) — silent no-op"
         )
         null
       }
@@ -912,15 +914,15 @@ internal class IosScriptCodeEmitter(
     // bug hid). Object and custom-script refs are covered too since task 115: `Object.get` of a
     // Node-typed property is how scripts and the third-person bullet smoke read a shooter back.
     // With Vector2/Vector3/String/NodePath, List<String> and object refs now readable this stays
-    // silent
-    // in a healthy codebase and only trips if a new data type is added set-only (or one regresses).
+    // silent in a healthy codebase and only trips if a new data type is added set-only (or one
+    // regresses).
     // This is a hard build ERROR, not a warning: a warning is exactly what let the original
     // write-only asymmetry ship unnoticed. A new settable data type must gain a getProperty path
     // (or be explicitly excluded here) before it can compile.
     val engineReadableData = scalarGetExpression.isNotEmpty() || (isList && arrayElementString)
     val engineSettableDataType =
       valueTypeClassName.isNotEmpty() ||
-        (isObject && godotClassName.isNotEmpty()) ||
+        isObject ||
         customScript.isNotEmpty() ||
         (!isObject && !isList && godotClassName == "String") ||
         (isList && arrayElementString)

@@ -7,10 +7,12 @@ import kotlin.test.assertTrue
 /**
  * Task 115 — Object-typed values must reach the engine from the iOS bridge.
  *
- * A `fun target(): Node?` used to be warned as "not yet marshalled on iOS" and dropped from
- * `callVReturning`, so `call("target")` answered nil on the phone while desktop returned the node.
- * `TypeMapping.OBJECT` is now in the marshalled return set (the runtime's encodeIosReturn ships the
- * wrapper's owner handle PT_OBJECT-tagged). Reverting the set entry fails this test.
+ * A `fun target(): GodotObject?` (the one wrapper type the shared processor resolves to OBJECT;
+ * typed wrappers like `Node?` are rejected at model time on every platform) used to be warned as
+ * "not yet marshalled on iOS" and dropped from `callVReturning`, so `call("target")` answered nil
+ * on the phone while desktop returned the object. `TypeMapping.OBJECT` is now in the marshalled
+ * return set (the runtime's encodeIosReturn ships the wrapper's owner handle PT_OBJECT-tagged).
+ * Reverting the set entry fails this test.
  */
 class IosObjectReturnMarshallingTest {
 

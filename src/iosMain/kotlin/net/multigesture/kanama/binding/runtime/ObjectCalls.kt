@@ -865,11 +865,7 @@ actual object ObjectCalls {
           // Object elements decode to a GodotObject wrapper, as desktop's variantToAny does (task
           // 115); callers used to receive the raw handle here and re-wrap it per call site.
           VT_OBJECT ->
-            if (len >= 8)
-              i64At(start).let {
-                if (it != 0L) GodotObject(GodotHandle(MemorySegment.ofAddress(it))) else null
-              }
-            else null
+            if (len >= 8) GodotObject.wrap(MemorySegment.ofAddress(i64At(start))) else null
           VT_VECTOR2 ->
             if (len >= 8)
               Vector2(GodotReal.fromFloat(f32At(start)), GodotReal.fromFloat(f32At(start + 4)))
@@ -3458,7 +3454,8 @@ actual object ObjectCalls {
   // sees the handle (use-after-free for RefCounted classes). The dedicated C entry retains
   // RefCounted results before the Variant destroy; those come back as the owning
   // RefCounted wrapper (close() releases — task-31 return-ownership). Non-RefCounted
-  // results stay a borrowed raw handle, matching the other dynamic object returns.
+  // results come back as a borrowed GodotObject wrapper, like every other dynamic object
+  // return since task 115 (desktop: readVariantScalarOwned).
   actual fun ptrcallWithStringNameArgRetVariantScalarOwned(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -3476,7 +3473,7 @@ actual object ObjectCalls {
     when {
       handle == 0L -> null
       isRefCounted.value != 0 -> RefCounted(GodotHandle(MemorySegment.ofAddress(handle)))
-      else -> MemorySegment.ofAddress(handle)
+      else -> GodotObject(GodotHandle(MemorySegment.ofAddress(handle)))
     }
   }
 
@@ -47707,10 +47704,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // Virtual Variant-RETURN routing (task 13). A Variant-returning @OverrideVirtual (e.g.
   // Control._get_drag_data) returns Any?; encodeIosReturn dispatches on the runtime type to the
   // right PT tag, and the C side builds the concrete Variant. Assert the routing for the audited
-  // inner types (PT tags: VOID=0, BOOL=1, INT64=3, STRING=16, PACKED_STRING_ARRAY=28).
+  // inner types (PT tags: BOOL=1, INT64=3, OBJECT=13, STRING=16, PACKED_STRING_ARRAY=28). null
+  // routes to OBJECT with a 0 handle, which the C side boxes as a nil Variant — not VOID, which the
+  // property-get export would report as "property not found" (task 115).
   check(
     "virtual-variant-ret(null->nil)",
-    net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(null) == 0,
+    net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(null) == 13,
   )
   check(
     "virtual-variant-ret(String->STRING)",

@@ -787,7 +787,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
         // Task 115: Object-typed @ScriptProperty through the engine setter and getter. Object.get
         // must call the ScriptInstance getter and hand back the very node that was set.
         val shooterSource: Node = self.getParent() ?: self
-        self.set("probe_shooter", GodotObject(shooterSource.handle))
+        self.set("probe_shooter", shooterSource)
         val engineShooter = self.get("probe_shooter") as? GodotObject
         println(
             "[kanama][ios][kn] task115 object property engine get " +
