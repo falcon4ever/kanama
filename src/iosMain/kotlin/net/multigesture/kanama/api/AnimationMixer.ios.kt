@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 
