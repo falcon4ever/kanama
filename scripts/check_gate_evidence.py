@@ -41,6 +41,9 @@ GRADLE_PROPERTIES = ROOT / "gradle.properties"
 
 REQUIRED_FIELDS = ("gate", "claim", "godotPin", "kanamaSha", "date", "where", "result", "source")
 OPTIONAL_FIELDS = ("acceptedStaleUntil", "acceptedStaleReason")
+IOS_GATE = "ios-device-gate"
+CONSOLE_WATCHED_SINCE = dt.date(2026, 9, 14)
+IOS_FLAVOUR_MARKER = "console-watched"
 NON_EMPTY_FIELDS = ("gate", "godotPin", "date", "where", "result")
 RESULTS = ("PASS", "FAIL", "PARTIAL")
 ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -117,6 +120,21 @@ def main() -> int:
         if entry.get("result") not in RESULTS:
             errors.append(f"{label}: result must be one of {RESULTS}, got {entry.get('result')!r}")
         date = parse_date(entry.get("date"), f"{label}: date", errors)
+        # Ledger flavour rule (task 110, post-mortem item 8): an iOS gate entry dated after the
+        # console-watched runner landed (2026-09-14) must come from a console-watched run —
+        # ios_device_gate.sh writes "console-watched <N>s per demo, smokes on" into `where`. A
+        # launch-only run (the pre-105 flavour) certified a Match3 build that crashed at launch.
+        if (
+            entry.get("gate") == IOS_GATE
+            and date is not None
+            and date > CONSOLE_WATCHED_SINCE
+            and IOS_FLAVOUR_MARKER not in str(entry.get("where", ""))
+        ):
+            errors.append(
+                f"{label}: an ios-device-gate entry after {CONSOLE_WATCHED_SINCE} must record a "
+                f"console-watched run (`where` must contain {IOS_FLAVOUR_MARKER!r}; "
+                "ios_device_gate.sh --console-seconds N writes it)"
+            )
         if date is not None and entry.get("godotPin") == pin:
             current_by_gate[entry["gate"]] = max(date, current_by_gate.get(entry["gate"], date))
 

@@ -5,7 +5,33 @@ All notable user-facing changes will be recorded here.
 This project uses a Keep a Changelog-style format and follows semantic
 versioning once public releases begin.
 
-## Unreleased
+## 0.5.0 - 2026-09-16
+
+### Highlights
+
+- **One Kotlin Multiplatform module.** Desktop/Android (Panama FFM) and iOS (Kotlin/Native) share
+  `src/commonMain` (value types, `GodotHandle`, the `RawSegment` / `BuiltinCalls` / `ObjectCalls`
+  seams — 1,352 wrapper-call helpers the compiler now proves on every platform) and one generated
+  wrapper tree; `:ios-runtime` is gone. Contributors' task names change (`compileKotlinJvm`,
+  `jvmTest`, `jvmJar`); game code does not (tasks 103, 104).
+- **Source-breaking, once:** `GodotHandle` replaces `java.lang.foreign.MemorySegment` in every
+  public signature, which is what lets one script source compile for all four backends. Migrating
+  a script is two edits — the constructor parameter type and the `import` — and nothing else:
+  `GodotObject.handle` keeps its name and re-wrapping through another wrapper's handle is
+  unchanged (a script left on the old type fails the build with the migration spelled out; see
+  the entry below). Web wrappers are generated from the same call contract (task 96).
+- **iOS moves from "it launches" to device-proven behaviour.** The iPhone gate runs every demo's
+  own smoke on the phone and reads crash reports (tasks 105, 111); the bugs it found are fixed —
+  scene-stored `@ScriptProperty` values dropped at export (106), a quit-time crash (108), omitted
+  default arguments aborting the app (114), Object-typed properties unreadable from the engine and
+  returned as raw handles (115), container results decoding to nil (121). An export-integrity
+  check catches property-dropping exports on any platform (112).
+- **Web:** Kotlin/Wasm wrappers generated from the call contract, plus the demo families the
+  third-person port needed (task 64 parcels 3–8).
+- **Known, tracked, not hidden:** the `dodge:firefox` Linux-host cell stays quarantined (task 71)
+  and the converged character controller's bimodal Firefox physics tick is written up as an open
+  determinism finding (task 77) — both on the version-support page. Kotlin 2.4.20 is deferred
+  to the next cycle (task 120).
 
 ### Fixed — iOS: container results of `Object.call` / `Object.get` reach Kotlin (task 121)
 

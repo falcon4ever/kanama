@@ -16,7 +16,7 @@
   <img alt="Android: supported" src="https://img.shields.io/badge/Android-supported-3ddc84.svg">
   <img alt="iOS: supported" src="https://img.shields.io/badge/iOS-supported-000000.svg">
   <img alt="Web: experimental" src="https://img.shields.io/badge/Web-experimental-f5a623.svg">
-  <img alt="Status: 0.4.0 preview" src="https://img.shields.io/badge/status-0.4.0_preview-478cbf.svg">
+  <img alt="Status: 0.5.0 preview" src="https://img.shields.io/badge/status-0.5.0_preview-478cbf.svg">
 </p>
 
 Kanama lets Kotlin scripts attach to Godot nodes through a GDExtension runtime.
@@ -27,7 +27,7 @@ the JVM ecosystem.
 
 ## Related Projects
 
-Kanama is a preview-stage (`0.4.0`) project using a Panama/FFM-based GDExtension
+Kanama is a preview-stage (`0.5.0`) project using a Panama/FFM-based GDExtension
 architecture. If you want a more established Kotlin integration for Godot today, also
 evaluate [Godot Kotlin/JVM](https://godot-kotl.in/en/stable/). It is a
 separate project with a different runtime and export model.
