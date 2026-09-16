@@ -515,16 +515,14 @@ class SceneTree(handle: GodotHandle) : Node(handle) {
             ?.let { Tween(GodotHandle(it)) }
 
     // SceneTree.get_nodes_in_group(group) -> Array[Node]. The (StringName)->typed-object-array ptrcall
-    // shape isn't wired, so this goes through the Variant call path; OBJECT elements surface as raw
-    // handles (or wrapped objects), wrapped back to Node. A non-array/unsupported decode yields empty
-    // (only the F10 free-camera HUD toggle uses this — graceful no-op if the decode degrades).
+    // shape isn't wired, so this goes through the Variant call path; OBJECT elements decode to
+    // GodotObject wrappers (task 115), wrapped back to Node. A non-array/unsupported decode yields
+    // empty (only the F10 free-camera HUD toggle uses this — graceful no-op if the decode degrades).
     fun getNodesInGroup(group: String): List<Node> =
         (call("get_nodes_in_group", group) as? List<*>)?.mapNotNull { element ->
             when (element) {
                 is Node -> element
                 is GodotObject -> Node(element.handle)
-                is MemorySegment -> Node(GodotHandle(element))
-                is Long -> Node(GodotHandle(MemorySegment.ofAddress(element)))
                 else -> null
             }
         } ?: emptyList()

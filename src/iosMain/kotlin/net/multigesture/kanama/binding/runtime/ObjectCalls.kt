@@ -862,8 +862,13 @@ actual object ObjectCalls {
           VT_STRING,
           VT_STRING_NAME -> b.decodeToString(start, end)
           VT_NODE_PATH -> NodePath(b.decodeToString(start, end))
+          // Object elements decode to a GodotObject wrapper, as desktop's variantToAny does (task
+          // 115); callers used to receive the raw handle here and re-wrap it per call site.
           VT_OBJECT ->
-            if (len >= 8) i64At(start).let { if (it != 0L) MemorySegment.ofAddress(it) else null }
+            if (len >= 8)
+              i64At(start).let {
+                if (it != 0L) GodotObject(GodotHandle(MemorySegment.ofAddress(it))) else null
+              }
             else null
           VT_VECTOR2 ->
             if (len >= 8)
@@ -3131,11 +3136,15 @@ actual object ObjectCalls {
           }
         }
       }
+      // A Variant Object return is a GodotObject wrapper (RefCounted when the engine flagged the
+      // handle as ref-counted and the caller owns it), the desktop contract. Until task 115 the
+      // non-ref-counted case surfaced the raw MemorySegment, so `call("get", "shooter") as?
+      // GodotObject` was null on iOS while desktop returned the node.
       VT_OBJECT ->
         if (outInt.value != 0L) {
-          val handle = MemorySegment.ofAddress(outInt.value)
-          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(GodotHandle(handle))
-          else handle
+          val handle = GodotHandle(MemorySegment.ofAddress(outInt.value))
+          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(handle)
+          else GodotObject(handle)
         } else {
           null
         }
@@ -49421,7 +49430,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check(
     "variant-array-ret(get_node_and_resource==[child,null,path])",
     ndr.size == 3 &&
-      (ndr[0] as? MemorySegment)?.address() == ndrChild.address() &&
+      (ndr[0] as? GodotObject)?.segment?.address() == ndrChild.address() &&
       ndr[1] == null &&
       ndr[2] is NodePath,
   )
@@ -49721,7 +49730,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   val gotObj = ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kobj"))
   check(
     "variant-call-value-object(set_meta/get_meta object)",
-    gotObj is MemorySegment && gotObj.address() == metaObj.address(),
+    gotObj is GodotObject && gotObj.segment.address() == metaObj.address(),
   )
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
