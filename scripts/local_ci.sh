@@ -354,7 +354,7 @@ stage "ObjectCalls member/name parity (desktop vs iOS)"
 python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
 
 stage "hand-shaped wrapper parity (desktop vs iOS, task 117)"
-# The 30 hand-shaped classes must keep identical public shapes before they can become
+# The remaining hand-shaped classes (the gate prints the count) must keep identical public shapes before they can become
 # expect/actual; every known divergence is listed with its decision in the allowlist, which can
 # only shrink (a stale line fails too).
 python3 "$ROOT_DIR/scripts/check_wrapper_parity.py"

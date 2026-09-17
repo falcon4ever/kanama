@@ -16,10 +16,11 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  *    asking it about a wrapper whose object was freed is safe (before task 98 it built an OBJECT
  *    Variant from the raw pointer, reading the freed object's header).
  * 2. Every RefCounted-derived wrapper refuses a call through a closed handle with the same
- *    `IllegalStateException("RefCounted handle is closed")` the hand-shaped Tween/Mesh family
- *    raised before: receiver-side on a hand-shaped class (`Material.getRenderPriority`), on an
- *    inherited hand-shaped accessor (`BaseMaterial3D.albedoColor`), on a generated class
- *    (`Image.getWidth`), and argument-side (`requireOpenHandle()` in `setNextPass`).
+ *    `IllegalStateException("RefCounted handle is closed")` the hand-shaped Tween family raised
+ *    before: receiver-side on a generated class (`Material.getRenderPriority`, generated once since
+ *    task 117 P1'(a)), on an inherited hand-shaped accessor (`BaseMaterial3D.albedoColor`), on a
+ *    generated class (`Image.getWidth`), and argument-side (`requireOpenHandle()` in
+ *    `setNextPass`).
  */
 @ScriptClass(attachTo = "Node")
 class LifetimeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {

@@ -387,12 +387,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "emit"),
     "LineEdit": WrapperHome("hand", "generated",
         "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "Material": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "Mesh": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -410,9 +404,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
     "OpenXRSpatialAnchorCapability": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "PackedScene": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
     "ParticleProcessMaterial": WrapperHome("generated", "hand",
@@ -1030,11 +1021,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         fun create(): LightmapGI =
             LightmapGI(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI"))))
 """.strip("\n"),
-    "Material": """
-        // Downcast a Resource to Material (null if not), mirroring the desktop helper.
-        fun fromResource(value: Resource?): Material? =
-            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
-""".strip("\n"),
     "SceneMultiplayer": """
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not), mirroring the desktop helper.
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
@@ -1074,6 +1060,27 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
 SHARED_COMPANION_MEMBER_SECTIONS = {
+    "PackedScene": """
+        // Instantiate an empty PackedScene (for pack() + ResourceSaver.save); the desktop hand
+        // file's factory helper (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun create(): PackedScene =
+            PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))
+""".strip("\n"),
+    "Mesh": """
+        // Downcast a GodotObject to Mesh (null if not); the desktop hand file's factory helper
+        // (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun fromObject(value: GodotObject): Mesh? =
+            if (value.isClass("Mesh")) Mesh(value.handle) else null
+""".strip("\n"),
+    "Material": """
+        // Downcast a Resource to Material (null if not); the desktop hand file's factory helper
+        // (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun fromResource(value: Resource?): Material? =
+            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
+""".strip("\n"),
     "Sprite2D": """
         @JvmStatic
         fun create(): Sprite2D =
@@ -2983,6 +2990,10 @@ COMMON_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
 # plain members on both platforms -- the shared api tree is platform-compiled source, so it calls
 # them exactly as before -- and `check_objectcalls_parity.py` carries them as its documented
 # exceptions; the parity gate reads this list back through render_objectcalls_expect(), so there is no second list to edit.
+# Kept out of the common `expect object ObjectCalls` because the common fragment cannot NAME these
+# classes: GodotCallable is a per-platform root; Material is generated once now (task 117 P1'(a)) but
+# lives in src/sharedApi, which is compiled PER PLATFORM, not in commonMain, until task 117 P4'. Do
+# not delete an entry because the class stopped being hand-written — delete it when it is common.
 PLATFORM_ONLY_SIGNATURE_TYPES = ("GodotCallable", "Material")
 
 # Referenced helpers with a DEFAULT ARGUMENT, which cannot be `expect` members. An `actual` may not
@@ -3231,8 +3242,8 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
     excluded_note = (
         "Excluded, and listed in the gate as such: "
         + ", ".join(f"`{name}`" for name in excluded)
-        + " -- their signatures name a hand-shaped per-platform wrapper class (which a common "
-        "declaration cannot see until task 117) or carry a default argument (which an `expect` "
+        + " -- their signatures name a wrapper class the common fragment cannot see (per-platform "
+        "or shared-tree, until task 117 moves the tree to commonMain) or carry a default argument (which an `expect` "
         "member cannot express on the Android lane)."
         if excluded
         else "No referenced helper is excluded."

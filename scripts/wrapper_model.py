@@ -562,8 +562,11 @@ def abi_kind(type_name: str, meta: str | None = None) -> str:
 
 
 def scan_wrappers(api_dir: Path) -> dict[str, set[str]]:
+    """Method coverage per class over the shared tree AND the platform directory (task 117 P1'(a):
+    a class that moves into src/sharedApi used to drop to 0/N because only the platform dir was
+    read; companion files count too, they carry generated sugar)."""
     wrapped: dict[str, set[str]] = {}
-    for path in sorted(api_dir.glob("*.kt")):
+    for path in wrapper_source_files(api_dir, companions=True):
         content = path.read_text(encoding="utf-8")
         wrapper_class = path.stem
         api_class = WRAPPER_CLASS_ALIASES.get(wrapper_class, wrapper_class)
