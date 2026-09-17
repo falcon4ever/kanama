@@ -49890,12 +49890,13 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "variant-call-arg-array-object-element(set_meta/get_meta same instance)",
     refBack is GodotObject && refBack.segment.address() == refElem.address(),
   )
-  // task 122 — top-level NodePath argument (was accepted only inside containers).
+  // task 122 — top-level NodePath argument (was accepted only inside containers). The scalar
+  // return path hands a NODE_PATH back as its String (see decodeVariantScalarReturn; NodePath-
+  // returning wrappers re-wrap), so the round trip compares the path text.
   ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "knp", NodePath("A/B")))
   check(
     "variant-call-arg-nodepath(set_meta/get_meta A/B)",
-    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "knp")) ==
-      NodePath("A/B"),
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "knp")) == "A/B",
   )
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
