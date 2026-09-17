@@ -195,8 +195,11 @@ kanama_web_quarantine_reason() {
 # citing task is re-planned; the matrix warns loudly once today is past it.
 kanama_web_quarantine_until() {
   case "$1" in
-    # quarantined 2026-07-28 (task 71 parked); maintainer sets the real date.
-    dodge:firefox) echo "2026-10-31" ;;
+    # quarantined 2026-07-28 (task 71 parked). Extended 2026-09-12 by the maintainer: the cell
+    # still fails on GitHub's Linux runners and reproduces nowhere else (both Linux VMs, macOS),
+    # so task 71 stays parked with no work planned until it shows on hardware we control;
+    # the quarantine keeps the evidence visible without blocking the lane.
+    dodge:firefox) echo "2027-03-31" ;;
     *) : ;;
   esac
 }
