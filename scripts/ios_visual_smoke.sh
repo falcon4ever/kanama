@@ -778,13 +778,17 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
         // Task 121: a List<String> @ScriptProperty reads back through Object.get as the same list
         // (PackedStringArray return decoded on iOS; the third-person `_force_loop` shape).
         val engineTags = self.get("probe_tags")
+        // Task 122: a List<String> ARGUMENT through Object.set (the iOS arg encoder used to throw
+        // on it), read back through the field and through Object.get.
+        self.set("probe_tags", listOf("gamma", "delta"))
+        val tagsSetOk = probeTags == listOf("gamma", "delta") && self.get("probe_tags") == listOf("gamma", "delta")
         println(
             "[kanama][ios][kn] datatype property engine get " +
                 "vector2=${engineMotion == Vector2(3.0, 4.0)} " +
                 "vector3=${engineShootTarget == Vector3(5.0, 6.0, 7.0)} " +
                 "string=${engineName == "kanama"} " +
                 "nodepath=${(engineView as? String) == "../Background"} " +
-                "tags=${engineTags == listOf("alpha", "beta")}",
+                "tags=${engineTags == listOf("alpha", "beta")} tagsSet=$tagsSetOk",
         )
         // Task 115: Object-typed @ScriptProperty through the engine setter and getter. Object.get
         // must call the ScriptInstance getter and hand back the very node that was set.
@@ -2739,8 +2743,8 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   # Data @ScriptProperty get parity: Vector2/Vector3/String/NodePath read back through the engine
   # getter (the path MultiplayerSynchronizer uses on the authority peer). Regression for the
   # write-only data-type getProperty bug that broke iOS multiplayer movement/shooting.
-  if rg -q 'datatype property engine get vector2=true vector3=true string=true nodepath=true tags=true' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] data @ScriptProperty get parity (Vector2/Vector3/String/NodePath/List<String>) round-tripped"
+  if rg -q 'datatype property engine get vector2=true vector3=true string=true nodepath=true tags=true tagsSet=true' "$stderr_log" "$stdout_log"; then
+    echo "[ios_visual_smoke] data @ScriptProperty get parity (Vector2/Vector3/String/NodePath/List<String>, incl. a List<String> set through Object.set) round-tripped"
   else
     echo "[ios_visual_smoke] data @ScriptProperty get parity probe failed" >&2
     exit 1

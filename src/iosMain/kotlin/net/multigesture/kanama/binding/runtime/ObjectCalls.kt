@@ -139,6 +139,7 @@ actual object ObjectCalls {
   internal const val VT_PACKED_VECTOR2_ARRAY = 35
   internal const val VT_PACKED_VECTOR3_ARRAY = 36
   internal const val VT_PACKED_COLOR_ARRAY = 37
+  internal const val VT_PACKED_VECTOR4_ARRAY = 38
   // Variant.Type ids array_set_typed takes for typed-Array ARGUMENTS (task 100, parcel 8); VT_INT
   // (2) is the existing constant below.
   internal const val VT_STRING_TYPE = 4
@@ -865,6 +866,9 @@ actual object ObjectCalls {
           VT_NODE_PATH -> NodePath(b.decodeToString(start, end))
           // Object elements decode to a GodotObject wrapper, as desktop's variantToAny does (task
           // 115); callers used to receive the raw handle here and re-wrap it per call site.
+          // Object elements are BORROWED wrappers (desktop parity, variantToAny); an element whose
+          // only reference lived in the container dies with the return Variant — task 122
+          // follow-up.
           VT_OBJECT ->
             if (len >= 8) GodotObject.wrap(MemorySegment.ofAddress(i64At(start))) else null
           VT_VECTOR2 ->
@@ -890,7 +894,7 @@ actual object ObjectCalls {
           // real_t = float32; byteLen 0 = empty list, as for a genuinely empty array) or, for
           // strings, the [count]([len][utf8])* layout parseBlobRecords already reads. Kotlin types
           // match desktop's BuiltinTypes.readPacked*Array: List<Int/Long/Float/Double/Vector2/
-          // Vector3/Color/String>. PackedVector4Array (type 38) is not decoded on either iOS path.
+          // Vector3/Color/String>; PackedVector4Array -> List<Vector4> (task 122).
           VT_PACKED_STRING_ARRAY_TYPE ->
             if (len >= 4)
               parseBlobRecords(b.copyOfRange(start, end)) { bb, oo, ll ->
@@ -919,6 +923,16 @@ actual object ObjectCalls {
             List(len / 16) {
               val o = start + it * 16
               Color(f32At(o), f32At(o + 4), f32At(o + 8), f32At(o + 12))
+            }
+          VT_PACKED_VECTOR4_ARRAY ->
+            List(len / 16) {
+              val o = start + it * 16
+              Vector4(
+                GodotReal.fromFloat(f32At(o)),
+                GodotReal.fromFloat(f32At(o + 4)),
+                GodotReal.fromFloat(f32At(o + 8)),
+                GodotReal.fromFloat(f32At(o + 12)),
+              )
             }
           // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
           VT_PACKED_BYTE_ARRAY -> b.copyOfRange(start, end)
@@ -1613,7 +1627,7 @@ actual object ObjectCalls {
           "iOS: unsupported Variant argument type " +
             (value::class.simpleName ?: "<anonymous>") +
             " (task 100 parcel 7 marshals scalars, String/NodePath, Vector2/2i/3, Color, RID, " +
-            "object handles and one level of Map / List)"
+            "object handles and nested Map / List up to 8 levels)"
         )
     }
     return descPtr
@@ -2329,7 +2343,8 @@ actual object ObjectCalls {
     )
 
   // task 100 (parcel 10) — typed arrays whose ELEMENTS are containers or packed arrays. A
-  // Dictionary / Array element is a whole task-29 blob (scalars and ByteArrays inside, one level:
+  // Dictionary / Array element is a whole task-29 blob (scalars, ByteArrays and nested containers
+  // inside, one level:
   // the strict encoder throws on anything deeper), a PackedByteArray element is its raw bytes and
   // a PackedStringArray element is the task-13 string blob; the dispatch's blob boxer rebuilds
   // each element before push_back. One helper per argument layout, never per element content.
@@ -3192,6 +3207,7 @@ actual object ObjectCalls {
       VT_PACKED_VECTOR2_ARRAY,
       VT_PACKED_VECTOR3_ARRAY,
       VT_PACKED_COLOR_ARRAY,
+      VT_PACKED_VECTOR4_ARRAY,
       VT_PACKED_STRING_ARRAY_TYPE -> {
         val len = outStrLen.value
         val bytes =
@@ -3246,47 +3262,6 @@ actual object ObjectCalls {
   // null (nil / an un-decoded return such as Transform). A String or blob longer than the 1 KiB
   // inline buffer is parked C-side and drained whole (task 100) — the value is captured once,
   // the call is not re-issued.
-  // Build the tagged-entry blob consumed by the C shim's PT_ARRAY boxer. Object.set uses this
-  // path for List<Enum> values after callers map the enum entries to integer ordinals. Keep this
-  // deliberately narrow: other List element families need their own audited Variant encoding.
-  private fun MemScope.encodeIntegerArrayArg(values: List<*>): CPointer<ByteVar> {
-    val entries =
-      values.map { value ->
-        when (value) {
-          null -> Pair(PT_VOID, null)
-          is Int -> Pair(PT_INT64, value.toLong())
-          is Long -> Pair(PT_INT64, value)
-          else ->
-            error(
-              "encodeVariantArgs: unsupported List element type " +
-                (value::class.simpleName ?: "<anonymous>")
-            )
-        }
-      }
-    val byteCount = 4 + entries.sumOf { (_, value) -> 8 + if (value == null) 0 else 8 }
-    val blob = allocArray<ByteVar>(byteCount)
-    var offset = 0
-    fun putInt32(value: Int) {
-      for (byteIndex in 0 until 4) {
-        blob[offset + byteIndex] = ((value ushr (byteIndex * 8)) and 0xFF).toByte()
-      }
-      offset += 4
-    }
-    fun putInt64(value: Long) {
-      for (byteIndex in 0 until 8) {
-        blob[offset + byteIndex] = ((value ushr (byteIndex * 8)) and 0xFF).toByte()
-      }
-      offset += 8
-    }
-    putInt32(entries.size)
-    for ((tag, value) in entries) {
-      putInt32(tag)
-      putInt32(if (value == null) 0 else 8)
-      if (value != null) putInt64(value)
-    }
-    return blob
-  }
-
   // Lay out a List<Any?> into parallel PT-tag + payload-pointer arrays inside the given MemScope.
   // Shared by the Variant Object.call dispatch and the bound-Callable connect/disconnect path.
   private fun MemScope.encodeVariantArgs(
@@ -3378,9 +3353,29 @@ actual object ObjectCalls {
           tags[i] = PT_OBJECT
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
+        // task 122 — containers box like desktop's initVariantFromAny (List -> Array, Map ->
+        // Dictionary): the return-side blob builders lay them out, strict mode throws on a value
+        // type no Variant can hold, nested containers recurse.
         is List<*> -> {
           tags[i] = PT_ARRAY
-          ptrs[i] = encodeIntegerArrayArg(a).reinterpret<CPointed>()
+          ptrs[i] = packArrayBlob(a).reinterpret<CPointed>()
+        }
+        is Map<*, *> -> {
+          tags[i] = PT_DICTIONARY
+          @Suppress("UNCHECKED_CAST")
+          ptrs[i] = packDictionaryBlob(a as Map<String, Any?>).reinterpret<CPointed>()
+        }
+        // task 122 — NodePath and RID were accepted nested but not at the top level; the C boxer
+        // already takes PT_NODE_PATH (utf8) and PT_RID (int64).
+        is NodePath -> {
+          tags[i] = PT_NODE_PATH
+          ptrs[i] = a.path.cstr.ptr.reinterpret<CPointed>()
+        }
+        is RID -> {
+          val c = alloc<LongVar>()
+          c.value = a.value
+          tags[i] = PT_RID
+          ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
         else ->
           error("encodeVariantArgs: unsupported arg type " + (a::class.simpleName ?: "<anonymous>"))
@@ -3494,8 +3489,9 @@ actual object ObjectCalls {
    * Ownership covers a TOP-LEVEL RefCounted result only. A container result (task 121) is decoded
    * from a blob after the C side destroyed the return Variant, so RefCounted ELEMENTS whose sole
    * reference lived in that container come back as dangling borrowed handles — the same behaviour
-   * as desktop's readArrayScalars, and the same gap task 121 records for borrowed `call(...)`
-   * results. Do not route a factory that returns Array[RefCounted] through this.
+   * as desktop's readArrayScalars. Task 122 records the fix design (an owned flag threaded through
+   * kanama_ios_godot_object_call so ONLY this path retains elements, in one encode pass). Do not
+   * route a factory that returns Array[RefCounted] through this yet.
    */
   actual fun callWithVariantArgsOwned(
     methodBind: MemorySegment,
@@ -49802,8 +49798,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     gotObj is GodotObject && gotObj.segment.address() == metaObj.address(),
   )
   // task 121 — container RETURNS through the Variant call path (before, every container return
-  // surfaced null on iOS). The arg encoder takes integer lists only (List<String> / Map args are
-  // a separate gap, noted in task 121), so the fixtures come from the engine: an int Array round
+  // surfaced null on iOS). Container ARGS are exercised by the task-122 rows below; these fixtures
+  // come from the engine: an int Array round
   // trip via set_meta/get_meta, Object.get_property_list (Array of Dictionaries with String
   // values) and Engine.get_singleton_list (a PackedStringArray -> List<String>).
   ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "kints", listOf(1L, 2L)))
@@ -49830,6 +49826,77 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check(
     "variant-call-ret-packed-strings(Engine.get_singleton_list contains Engine)",
     singletonNames is List<*> && singletonNames.contains("Engine"),
+  )
+  // task 122 — container ARGUMENTS: List<String>, List<Double>, List<Vector2>, a Dictionary and a
+  // nested container round-trip set_meta/get_meta (the arg encoder used to throw on all of them).
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kstrs", listOf("a", "bb")),
+  )
+  check(
+    "variant-call-arg-array-strings(set_meta/get_meta [a,bb])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kstrs")) ==
+      listOf("a", "bb"),
+  )
+  ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "kdbl", listOf(1.5, 2.5)))
+  check(
+    "variant-call-arg-array-doubles(set_meta/get_meta [1.5,2.5])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kdbl")) ==
+      listOf(1.5, 2.5),
+  )
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kvec", listOf(Vector2(1.0, 2.0), Vector2(3.0, 4.0))),
+  )
+  check(
+    "variant-call-arg-array-vector2(set_meta/get_meta)",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kvec")) ==
+      listOf(Vector2(1.0, 2.0), Vector2(3.0, 4.0)),
+  )
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kdict", mapOf("k" to 1L, "s" to "v")),
+  )
+  check(
+    "variant-call-arg-dictionary(set_meta/get_meta {k:1,s:v})",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kdict")) ==
+      mapOf("k" to 1L, "s" to "v"),
+  )
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "knest", listOf(listOf(1L, 2L), mapOf("a" to "b"))),
+  )
+  check(
+    "variant-call-arg-nested(set_meta/get_meta [[1,2],{a:b}])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "knest")) ==
+      listOf(listOf(1L, 2L), mapOf("a" to "b")),
+  )
+  // task 122 — an object ELEMENT of a container argument round-trips as a borrowed wrapper of the
+  // same instance (the meta Array keeps it alive; sole-reference elements are the 122 follow-up).
+  val refElem = ObjectCalls.constructObject("RefCounted")
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kref", listOf(GodotObject(GodotHandle(refElem)))),
+  )
+  val refBack =
+    (ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kref")) as? List<*>)
+      ?.firstOrNull()
+  check(
+    "variant-call-arg-array-object-element(set_meta/get_meta same instance)",
+    refBack is GodotObject && refBack.segment.address() == refElem.address(),
+  )
+  // task 122 — top-level NodePath argument (was accepted only inside containers). The scalar
+  // return path hands a NODE_PATH back as its String (see decodeVariantScalarReturn; NodePath-
+  // returning wrappers re-wrap), so the round trip compares the path text.
+  ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "knp", NodePath("A/B")))
+  check(
+    "variant-call-arg-nodepath(set_meta/get_meta A/B)",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "knp")) == "A/B",
   )
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
