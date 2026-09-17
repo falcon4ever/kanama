@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Hand-shaped wrapper parity gate (task 117, parcel P0).
 
-The 30 hand-shaped wrapper classes exist twice — `src/jvmMain/.../api/<Class>.kt` and
+The 29 hand-shaped wrapper classes exist twice — `src/jvmMain/.../api/<Class>.kt` and
 `src/iosMain/.../api/<Class>.kt` (three live inside `IosGodotApi.kt`) — and the generated wrapper
 tree extends them. Until task 117 turns them into `expect`/`actual` (which needs identical public
 shapes), this gate is the contract: it parses both copies and reports every difference in
@@ -39,16 +39,16 @@ IOS_API = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"
 ALLOWLIST = ROOT / "scripts/wrapper_parity_allowlist.txt"
 TAG = "[wrapper_parity]"
 
-# The 30 classes the generated tree (src/sharedApi) extends or calls that are NOT part of that
+# The 29 classes the generated tree (src/sharedApi) extends or calls that are NOT part of that
 # shared tree: each exists as a separate per-platform file. Provenance differs (P0 finding,
 # 2026-09-17): GodotObject/GodotCallable are hand-written roots outside the generator's table,
-# StandardMaterial3D is hand/hand, 23 are hand on desktop + GENERATED on iOS, Image/PlaneMesh are
+# StandardMaterial3D is hand/hand, 22 are hand on desktop + GENERATED on iOS, Image/PlaneMesh are
 # generated on desktop + hand on iOS, StaticBody3D/Tweener generated on desktop + hand inside
 # IosGodotApi.kt. The gate compares the two committed files regardless of who wrote them; a
 # regenerated file that changes shape shows up here like any other change and P1 decides. Every
 # name except the two roots must appear in the generator's PER_PLATFORM_WRAPPERS (checked below).
 HAND_SHAPED = [
-    "GodotObject", "Node", "RefCounted", "Resource", "GodotCallable", "Material", "Image", "Font",
+    "GodotObject", "Node", "RefCounted", "Resource", "GodotCallable", "Image", "Font",
     "Mesh", "Node3D", "Button", "ArrayMesh", "EditorExportPlatform", "PackedScene", "Light3D",
     "LineEdit", "Range", "PhysicsBody3D", "MeshLibrary", "Camera3D", "ButtonGroup", "Tweener",
     "StandardMaterial3D", "Viewport", "TabBar", "Slider", "AnimationPlayer", "StaticBody3D",

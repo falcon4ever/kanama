@@ -7,6 +7,15 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `Material` (task 117 P1'(a))
+
+- `Material` is no longer hand-written per platform: it is generated once into the shared wrapper
+  tree, so desktop/Android and iOS get the same class from the same renderer. `Material.fromResource`
+  survives as a generated companion helper with the same signature, so callers are unaffected.
+- Behaviour gained on desktop/Android: `getNextPass()` and `createPlaceholder()` now use the shared
+  tree's self-return collapse (a call that returns this object releases the extra reference and
+  returns `this` instead of minting a second wrapper).
+
 ### Fixed — iOS: container arguments and `PackedVector4Array` (task 122)
 
 - `Object.set` / `call` / `set_deferred` with a `List<String>`, `List<Double>`, `List<Vector2>`, a `Map` or a nested

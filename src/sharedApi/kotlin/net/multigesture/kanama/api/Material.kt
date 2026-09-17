@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Virtual base class for applying visual properties to an object, such as color and roughness.
@@ -48,7 +49,12 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun getNextPass(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNextPassBind, segment))
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNextPassBind, segment)
+        if (ret.address() == segment.address()) {
+            RefCounted.releaseHandle(ret)
+            return this
+        }
+        return Material.wrap(ret)
     }
 
     /**
@@ -102,7 +108,12 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment))
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        if (ret.address() == segment.address()) {
+            RefCounted.releaseHandle(ret)
+            return this
+        }
+        return Resource.wrap(ret)
     }
 
     companion object {
@@ -113,12 +124,14 @@ open class Material(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Material? =
             wrap(handle.segment)
 
+        internal fun wrap(handle: RawSegment): Material? =
+            if (handle.address() == 0L) null else Material(GodotHandle(handle))
+
+        // Downcast a Resource to Material (null if not); the desktop hand file's factory helper
+        // (task 117 P1'(a)), now generated once for every platform.
         @JvmStatic
         fun fromResource(value: Resource?): Material? =
             value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
-
-        internal fun wrap(handle: RawSegment): Material? =
-            if (handle.address() == 0L) null else Material(GodotHandle(handle))
 
         private const val SET_NEXT_PASS_HASH = 2757459619L
         private val setNextPassBind by lazy {

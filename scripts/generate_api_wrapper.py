@@ -387,9 +387,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "emit"),
     "LineEdit": WrapperHome("hand", "generated",
         "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "Material": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "Mesh": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -1030,11 +1027,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         fun create(): LightmapGI =
             LightmapGI(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI"))))
 """.strip("\n"),
-    "Material": """
-        // Downcast a Resource to Material (null if not), mirroring the desktop helper.
-        fun fromResource(value: Resource?): Material? =
-            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
-""".strip("\n"),
     "SceneMultiplayer": """
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not), mirroring the desktop helper.
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
@@ -1074,6 +1066,13 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
 SHARED_COMPANION_MEMBER_SECTIONS = {
+    "Material": """
+        // Downcast a Resource to Material (null if not); the desktop hand file's factory helper
+        // (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun fromResource(value: Resource?): Material? =
+            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
+""".strip("\n"),
     "Sprite2D": """
         @JvmStatic
         fun create(): Sprite2D =
