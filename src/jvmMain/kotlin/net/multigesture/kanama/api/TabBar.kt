@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -219,7 +220,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.set_tab_icon
      */
     fun setTabIcon(tabIdx: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setTabIconBind, segment, tabIdx, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -261,7 +262,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
             setTabButtonIconBind,
             segment,
             tabIdx,
-            icon?.requireOpenHandle() ?: MemorySegment.NULL,
+            icon?.requireOpenHandle() ?: NULL_SEGMENT,
         )
     }
 
@@ -340,7 +341,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TabBar.add_tab
      */
     fun addTab(title: String = "", icon: Texture2D? = null) {
-        ObjectCalls.ptrcallWithStringAndObjectArg(addTabBind, segment, title, icon?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithStringAndObjectArg(addTabBind, segment, title, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -572,7 +573,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): TabBar? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): TabBar? =
+        internal fun wrap(handle: RawSegment): TabBar? =
             if (handle.address() == 0L) null else TabBar(GodotHandle(handle))
 
         private const val INT_VOID_HASH = 1286410249L

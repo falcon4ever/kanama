@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
-import java.lang.foreign.MemorySegment
 
 /**
  * Library of meshes.
@@ -39,7 +40,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemMesh(id: Int, mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -69,7 +70,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -111,7 +112,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun setItemPreview(id: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -267,7 +268,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
         fun create(): MeshLibrary =
             MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary")))
 
-        internal fun wrap(handle: MemorySegment): MeshLibrary? =
+        internal fun wrap(handle: RawSegment): MeshLibrary? =
             if (handle.address() == 0L) null else MeshLibrary(GodotHandle(handle))
 
         private const val CREATE_ITEM_HASH = 1286410249L

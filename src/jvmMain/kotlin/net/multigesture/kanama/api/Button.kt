@@ -1,7 +1,8 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -208,7 +209,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
         ObjectCalls.ptrcallWithObjectArgs(
             setButtonIconBind,
             segment,
-            listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL),
+            listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT),
         )
     }
 
@@ -343,7 +344,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
         fun fromHandle(handle: GodotHandle): Button? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Button? =
+        internal fun wrap(handle: RawSegment): Button? =
             if (handle.address() == 0L) null else Button(GodotHandle(handle))
 
         private const val STRING_VOID_HASH = 83702148L

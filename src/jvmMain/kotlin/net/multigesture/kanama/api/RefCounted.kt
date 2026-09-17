@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 
 /**
  * Base class for reference-counted objects.
@@ -29,7 +29,7 @@ open class RefCounted internal constructor(
         check(!closed) { "RefCounted handle is closed" }
     }
 
-    internal fun requireOpenHandle(): MemorySegment {
+    internal fun requireOpenHandle(): RawSegment {
         checkOpen()
         return segment
     }
@@ -40,7 +40,7 @@ open class RefCounted internal constructor(
      * retained by `ScriptBridge`). Balanced by [close]. Lifted here from the former standalone
      * `Resource` root so both `RefCounted` and `Resource` share one lifetime policy.
      */
-    internal fun retainForKotlinWrapper(): MemorySegment {
+    internal fun retainForKotlinWrapper(): RawSegment {
         checkOpen()
         ObjectCalls.ptrcallNoArgsRetBool(referenceBind, segment)
         wrapperReferenceReleased = false
@@ -92,12 +92,12 @@ open class RefCounted internal constructor(
          * for freshly instantiated RefCounted values. Returns true when this was the
          * first reference (refcount went 0 -> 1).
          */
-        internal fun retainHandle(handle: MemorySegment): Boolean {
+        internal fun retainHandle(handle: RawSegment): Boolean {
             if (handle.address() == 0L) return false
             return ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
         }
 
-        internal fun releaseHandle(handle: MemorySegment) {
+        internal fun releaseHandle(handle: RawSegment) {
             if (handle.address() != 0L) {
                 if (ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)) {
                     ObjectCalls.destroyObject(handle)

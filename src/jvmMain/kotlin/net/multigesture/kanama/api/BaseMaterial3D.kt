@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
@@ -1604,7 +1605,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun setTexture(param: Long, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, param, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -2723,7 +2724,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         fun fromMaterial(value: Material): BaseMaterial3D? =
             if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null
 
-        internal fun wrap(handle: MemorySegment): BaseMaterial3D? =
+        internal fun wrap(handle: RawSegment): BaseMaterial3D? =
             if (handle.address() == 0L) null else BaseMaterial3D(GodotHandle(handle))
 
         private const val SET_ALBEDO_HASH = 2920490490L
