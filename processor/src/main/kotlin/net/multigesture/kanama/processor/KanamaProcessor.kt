@@ -954,7 +954,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     )
   }
 
-  // Generated wrappers are non-owning views (a public handle constructor that never retains) — subclassing one
+  // Generated wrappers are non-owning views (a public handle constructor that never retains) —
+  // subclassing one
   // would drift the wrapper surface from the script surface (issue #36). Without this check
   // the user only sees Kotlin's "cannot access '<init>': it is internal" error, which does
   // not name the supported pattern.
