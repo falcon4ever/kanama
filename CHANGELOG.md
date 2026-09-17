@@ -21,6 +21,13 @@ versioning once public releases begin.
 - No int width changed: `pack` still returns `Long` and `instantiate(editState: Long = 0L)` keeps its
   `Long` parameter and default (`0L` == `GEN_EDIT_STATE_DISABLED`).
 
+### Fixed — the API coverage page counts the shared tree (task 117 P1'(a))
+
+- `docs/reference/generated/api-coverage.md` counted method coverage only from the desktop directory, so every class
+  generated into `src/sharedApi` showed 0/N (Sprite2D, Node2D, Label, … and, after this change, Material/Mesh/PackedScene).
+  The scanner now reads the shared tree and companion files like the class scanner already did; the totals rise
+  accordingly and are the real numbers.
+
 ### Changed — wrapper classes generated once: `Mesh` (task 117 P1'(a))
 
 - `Mesh` is generated once into the shared wrapper tree instead of being hand-written on desktop and

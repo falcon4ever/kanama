@@ -222,14 +222,14 @@ Range | param-names | setPage | D2 desktop parameter names, except pack(node) (P
 RefCounted | companion-desktop-only | retainHandle | D5 same companion shape on both platforms (P1)
 RefCounted | companion-ios-only | fromHandle | D5 same companion shape on both platforms (P1)
 RefCounted | companion-ios-only | wrap | D5 same companion shape on both platforms (P1)
-RefCounted | constructor | <init> | D4 the expect constructor is internal for the five; iOS matches; no Long ctor (P1)
+RefCounted | constructor | <init> | D4/D10: internal constructor only for the expect/actual roots (RefCounted; Resource/StandardMaterial3D retire in P1(c)); no Long ctor
 RefCounted | desktop-only | retainForKotlinWrapper | D1 full parity, desktop canonical: add to iOS or rename (P1)
 RefCounted | ios-only | unreference | D1 full parity, desktop canonical: add to desktop or drop/rename (P1)
 RefCounted | modifiers | requireOpenHandle | D2 requireOpenHandle on GodotObject as internal open, RefCounted overrides (P1)
 RefCounted | return | getReferenceCount | D2 Long wins over Int / follow the generator's Object nullability (P1)
 Resource | companion-desktop-only | create | D5 same companion shape on both platforms (P1)
 Resource | companion-desktop-only | fromObject | D5 same companion shape on both platforms (P1)
-Resource | constructor | <init> | D4 the expect constructor is internal for the five; iOS matches; no Long ctor (P1)
+Resource | constructor | <init> | D4/D10: internal constructor only for the expect/actual roots (RefCounted; Resource/StandardMaterial3D retire in P1(c)); no Long ctor
 Resource | desktop-only | asObject | D1 full parity, desktop canonical: add to iOS or rename (P1)
 Resource | ios-only | copyFromResource | D1 full parity, desktop canonical: add to desktop or drop/rename (P1)
 Resource | ios-only | resourceLocalToScene | D1 full parity, desktop canonical: add to desktop or drop/rename (P1)
@@ -247,7 +247,7 @@ Slider | companion-ios-only | wrap | D5 same companion shape on both platforms (
 Slider | desktop-only | ticks | D1 full parity, desktop canonical: add to iOS or rename (P1)
 Slider | ios-only | tickCount | D1 full parity, desktop canonical: add to desktop or drop/rename (P1)
 Slider | nested-ios-only | Signals | D5 mirrored nested Signals object, parity-gated (P1)
-StandardMaterial3D | constructor | <init> | D4 the expect constructor is internal for the five; iOS matches; no Long ctor (P1)
+StandardMaterial3D | constructor | <init> | D4/D10: internal constructor only for the expect/actual roots (RefCounted; Resource/StandardMaterial3D retire in P1(c)); no Long ctor
 StaticBody3D | companion-desktop-only | fromHandle | D5 same companion shape on both platforms (P1)
 StaticBody3D | companion-desktop-only | wrap | D5 same companion shape on both platforms (P1)
 StaticBody3D | desktop-only | constantAngularVelocity | D1 full parity, desktop canonical: add to iOS or rename (P1)

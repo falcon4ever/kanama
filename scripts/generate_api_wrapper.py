@@ -2990,6 +2990,10 @@ COMMON_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
 # plain members on both platforms -- the shared api tree is platform-compiled source, so it calls
 # them exactly as before -- and `check_objectcalls_parity.py` carries them as its documented
 # exceptions; the parity gate reads this list back through render_objectcalls_expect(), so there is no second list to edit.
+# Kept out of the common `expect object ObjectCalls` because the common fragment cannot NAME these
+# classes: GodotCallable is a per-platform root; Material is generated once now (task 117 P1'(a)) but
+# lives in src/sharedApi, which is compiled PER PLATFORM, not in commonMain, until task 117 P4'. Do
+# not delete an entry because the class stopped being hand-written — delete it when it is common.
 PLATFORM_ONLY_SIGNATURE_TYPES = ("GodotCallable", "Material")
 
 # Referenced helpers with a DEFAULT ARGUMENT, which cannot be `expect` members. An `actual` may not
@@ -3238,8 +3242,8 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
     excluded_note = (
         "Excluded, and listed in the gate as such: "
         + ", ".join(f"`{name}`" for name in excluded)
-        + " -- their signatures name a hand-shaped per-platform wrapper class (which a common "
-        "declaration cannot see until task 117) or carry a default argument (which an `expect` "
+        + " -- their signatures name a wrapper class the common fragment cannot see (per-platform "
+        "or shared-tree, until task 117 moves the tree to commonMain) or carry a default argument (which an `expect` "
         "member cannot express on the Android lane)."
         if excluded
         else "No referenced helper is excluded."
