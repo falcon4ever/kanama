@@ -406,9 +406,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "OpenXRSpatialAnchorCapability": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "PackedScene": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "ParticleProcessMaterial": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
@@ -1063,6 +1060,13 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
 SHARED_COMPANION_MEMBER_SECTIONS = {
+    "PackedScene": """
+        // Instantiate an empty PackedScene (for pack() + ResourceSaver.save); the desktop hand
+        // file's factory helper (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun create(): PackedScene =
+            PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))
+""".strip("\n"),
     "Mesh": """
         // Downcast a GodotObject to Mesh (null if not); the desktop hand file's factory helper
         // (task 117 P1'(a)), now generated once for every platform.

@@ -1,29 +1,52 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * An abstraction of a serialized scene.
+ *
  * Generated from Godot docs: PackedScene
  */
 class PackedScene(handle: GodotHandle) : Resource(handle) {
+    /**
+     * Packs the `path` node, and all owned sub-nodes, into this `PackedScene`. Any existing data will
+     * be cleared. See `Node.owner`.
+     *
+     * Generated from Godot docs: PackedScene.pack
+     */
     fun pack(path: Node): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithObjectArgRetLong(packBind, segment, path.segment)
     }
 
+    /**
+     * Instantiates the scene's node hierarchy. Triggers child scene instantiation(s). Triggers a
+     * `Node.NOTIFICATION_SCENE_INSTANTIATED` notification on the root node.
+     *
+     * Generated from Godot docs: PackedScene.instantiate
+     */
     fun instantiate(editState: Long = 0L): Node? {
         checkOpen()
         return Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(instantiateBind, segment, editState))
     }
 
+    /**
+     * Returns `true` if the scene file has nodes.
+     *
+     * Generated from Godot docs: PackedScene.can_instantiate
+     */
     fun canInstantiate(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(canInstantiateBind, segment)
     }
 
+    /**
+     * Returns the `SceneState` representing the scene file contents.
+     *
+     * Generated from Godot docs: PackedScene.get_state
+     */
     fun getState(): SceneState? {
         checkOpen()
         return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, segment))
@@ -39,8 +62,14 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): PackedScene? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PackedScene? =
+        internal fun wrap(handle: RawSegment): PackedScene? =
             if (handle.address() == 0L) null else PackedScene(GodotHandle(handle))
+
+        // Instantiate an empty PackedScene (for pack() + ResourceSaver.save); the desktop hand
+        // file's factory helper (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun create(): PackedScene =
+            PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))
 
         private const val PACK_HASH = 2584678054L
         private val packBind by lazy {

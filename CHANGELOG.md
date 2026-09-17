@@ -7,6 +7,20 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `PackedScene` (task 117 P1'(a))
+
+- `PackedScene` is generated once into the shared wrapper tree instead of being hand-written on
+  desktop and generated on iOS. `PackedScene.create()` survives as a generated companion helper with
+  the same signature, so callers are unaffected.
+- `PackedScene.pack`'s parameter is named `path` (the Godot doc name the generator uses), not `node`.
+  Positional calls — every call site in the repo and the demos — are unaffected; a call that passed
+  the argument by name as `pack(node = ...)` must say `pack(path = ...)`.
+- `PackedScene`'s primary constructor is now **public** on desktop/Android (the hand file declared it
+  `internal`), matching the iOS copy and the rest of the shared tree. `PackedScene.create()` /
+  `fromHandle` remain the intended way to obtain one.
+- No int width changed: `pack` still returns `Long` and `instantiate(editState: Long = 0L)` keeps its
+  `Long` parameter and default (`0L` == `GEN_EDIT_STATE_DISABLED`).
+
 ### Changed — wrapper classes generated once: `Mesh` (task 117 P1'(a))
 
 - `Mesh` is generated once into the shared wrapper tree instead of being hand-written on desktop and
