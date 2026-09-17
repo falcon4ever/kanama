@@ -1,15 +1,17 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 
 /**
+ * A `Resource` that contains vertex array-based geometry.
+ *
  * Generated from Godot docs: Mesh
  */
 open class Mesh(handle: GodotHandle) : Resource(handle) {
@@ -19,51 +21,113 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         @JvmName("setLightmapSizeHintProperty")
         set(value) = setLightmapSizeHint(value)
 
+    /**
+     * Sets a hint to be used for lightmap resolution.
+     *
+     * Generated from Godot docs: Mesh.set_lightmap_size_hint
+     */
     fun setLightmapSizeHint(size: Vector2i) {
         checkOpen()
         ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, segment, size)
     }
 
+    /**
+     * Sets a hint to be used for lightmap resolution.
+     *
+     * Generated from Godot docs: Mesh.get_lightmap_size_hint
+     */
     fun getLightmapSizeHint(): Vector2i {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, segment)
     }
 
+    /**
+     * Returns the smallest `AABB` enclosing this mesh in local space. Not affected by `custom_aabb`.
+     * Note: This is only implemented for `ArrayMesh` and `PrimitiveMesh`.
+     *
+     * Generated from Godot docs: Mesh.get_aabb
+     */
     fun getAabb(): AABB {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetAABB(getAabbBind, segment)
     }
 
+    /**
+     * Returns all the vertices that make up the faces of the mesh. Each three vertices represent one
+     * triangle.
+     *
+     * Generated from Godot docs: Mesh.get_faces
+     */
     fun getFaces(): List<Vector3> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getFacesBind, segment)
     }
 
+    /**
+     * Returns the number of surfaces that the `Mesh` holds. This is equivalent to
+     * `MeshInstance3D.get_surface_override_material_count`.
+     *
+     * Generated from Godot docs: Mesh.get_surface_count
+     */
     fun getSurfaceCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, segment)
     }
 
+    /**
+     * Returns the arrays for the vertices, normals, UVs, etc. that make up the requested surface (see
+     * `ArrayMesh.add_surface_from_arrays`).
+     *
+     * Generated from Godot docs: Mesh.surface_get_arrays
+     */
     fun surfaceGetArrays(surfIdx: Int): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(surfaceGetArraysBind, segment, surfIdx)
     }
 
+    /**
+     * Returns the blend shape arrays for the requested surface.
+     *
+     * Generated from Godot docs: Mesh.surface_get_blend_shape_arrays
+     */
     fun surfaceGetBlendShapeArrays(surfIdx: Int): List<List<Any?>> {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArrayList(surfaceGetBlendShapeArraysBind, segment, surfIdx)
     }
 
+    /**
+     * Sets a `Material` for a given surface. Surface will be rendered using this material. Note: This
+     * assigns the material within the `Mesh` resource, not the `Material` associated to the
+     * `MeshInstance3D`'s Surface Material Override properties. To set the `Material` associated to the
+     * `MeshInstance3D`'s Surface Material Override properties, use
+     * `MeshInstance3D.set_surface_override_material` instead.
+     *
+     * Generated from Godot docs: Mesh.surface_set_material
+     */
     fun surfaceSetMaterial(surfIdx: Int, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(surfaceSetMaterialBind, segment, surfIdx, material?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(surfaceSetMaterialBind, segment, surfIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Returns a `Material` in a given surface. Surface is rendered using this material. Note: This
+     * returns the material within the `Mesh` resource, not the `Material` associated to the
+     * `MeshInstance3D`'s Surface Material Override properties. To get the `Material` associated to the
+     * `MeshInstance3D`'s Surface Material Override properties, use
+     * `MeshInstance3D.get_surface_override_material` instead.
+     *
+     * Generated from Godot docs: Mesh.surface_get_material
+     */
     fun surfaceGetMaterial(surfIdx: Int): Material? {
         checkOpen()
         return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(surfaceGetMaterialBind, segment, surfIdx))
     }
 
+    /**
+     * Creates a placeholder version of this resource (`PlaceholderMesh`).
+     *
+     * Generated from Godot docs: Mesh.create_placeholder
+     */
     fun createPlaceholder(): Resource? {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
@@ -74,16 +138,35 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         return Resource.wrap(ret)
     }
 
+    /**
+     * Calculate a `ConcavePolygonShape3D` from the mesh.
+     *
+     * Generated from Godot docs: Mesh.create_trimesh_shape
+     */
     fun createTrimeshShape(): ConcavePolygonShape3D? {
         checkOpen()
         return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTrimeshShapeBind, segment))
     }
 
+    /**
+     * Calculate a `ConvexPolygonShape3D` from the mesh. If `clean` is `true` (default), duplicate and
+     * interior vertices are removed automatically. You can set it to `false` to make the process
+     * faster if not needed. If `simplify` is `true`, the geometry can be further simplified to reduce
+     * the number of vertices. Disabled by default.
+     *
+     * Generated from Godot docs: Mesh.create_convex_shape
+     */
     fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
         checkOpen()
         return ConvexPolygonShape3D.wrap(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(createConvexShapeBind, segment, clean, simplify))
     }
 
+    /**
+     * Calculate an outline mesh at a defined offset (margin) from the original mesh. Note: This method
+     * typically returns the vertices in reverse order (e.g. clockwise to counterclockwise).
+     *
+     * Generated from Godot docs: Mesh.create_outline
+     */
     fun createOutline(margin: Double): Mesh? {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(createOutlineBind, segment, margin)
@@ -94,6 +177,12 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         return Mesh.wrap(ret)
     }
 
+    /**
+     * Generate a `TriangleMesh` from the mesh. Considers only surfaces using one of these primitive
+     * types: `PRIMITIVE_TRIANGLES`, `PRIMITIVE_TRIANGLE_STRIP`.
+     *
+     * Generated from Godot docs: Mesh.generate_triangle_mesh
+     */
     fun generateTriangleMesh(): TriangleMesh? {
         checkOpen()
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
@@ -162,8 +251,14 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Mesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Mesh? =
+        internal fun wrap(handle: RawSegment): Mesh? =
             if (handle.address() == 0L) null else Mesh(GodotHandle(handle))
+
+        // Downcast a GodotObject to Mesh (null if not); the desktop hand file's factory helper
+        // (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun fromObject(value: GodotObject): Mesh? =
+            if (value.isClass("Mesh")) Mesh(value.handle) else null
 
         private const val SET_LIGHTMAP_SIZE_HINT_HASH = 1130785943L
         private val setLightmapSizeHintBind by lazy {

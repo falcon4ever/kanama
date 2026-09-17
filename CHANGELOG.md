@@ -7,6 +7,21 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `Mesh` (task 117 P1'(a))
+
+- `Mesh` is generated once into the shared wrapper tree instead of being hand-written on desktop and
+  generated on iOS. `Mesh.fromObject` survives as a generated companion helper with the same
+  signature, so callers (Starter-Kit-City-Builder `Builder.kt`) are unaffected.
+- `Mesh`'s primary constructor is now **public** on desktop/Android (the hand file declared it
+  `internal`), matching the iOS copy and every other class in the shared tree. `Mesh.fromObject` /
+  `Mesh.fromHandle` remain the intended way to obtain one.
+- No int width changed: the desktop hand file already used `Int` for `getSurfaceCount()` and the
+  `surfIdx` parameters, and the `ARRAY_*` / `PRIMITIVE_*` / `BLEND_SHAPE_MODE_*` constants keep their
+  `Long` values.
+- `ObjectCalls.ptrcallWithIntArgRetArrayList` and `ObjectCalls.ptrcallWithTwoBoolArgsRetObject`
+  (used by `surfaceGetBlendShapeArrays` / `createConvexShape`) are now part of the common
+  `expect object ObjectCalls`, so both platforms declare them as `actual`.
+
 ### Changed — wrapper classes generated once: `Material` (task 117 P1'(a))
 
 - `Material` is no longer hand-written per platform: it is generated once into the shared wrapper

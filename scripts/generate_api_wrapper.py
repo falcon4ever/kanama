@@ -387,9 +387,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "emit"),
     "LineEdit": WrapperHome("hand", "generated",
         "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "Mesh": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -1066,6 +1063,13 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
 SHARED_COMPANION_MEMBER_SECTIONS = {
+    "Mesh": """
+        // Downcast a GodotObject to Mesh (null if not); the desktop hand file's factory helper
+        // (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun fromObject(value: GodotObject): Mesh? =
+            if (value.isClass("Mesh")) Mesh(value.handle) else null
+""".strip("\n"),
     "Material": """
         // Downcast a Resource to Material (null if not); the desktop hand file's factory helper
         // (task 117 P1'(a)), now generated once for every platform.
