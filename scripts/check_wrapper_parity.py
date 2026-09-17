@@ -364,7 +364,7 @@ def param_types(params_clean: str) -> str:
         p = re.sub(r"^(?:@[\w.]+(?:\([^)]*\))?\s*)+", "", p)
         p = re.sub(r"^(?:vararg\s+)", "", p)
         t = p.split(":", 1)[1] if ":" in p else p
-        types.append(re.sub(r"\s+", "", t))
+        types.append(norm(t))
     return ",".join(types)
 
 
@@ -451,8 +451,12 @@ def analyze(entry: dict) -> dict:
 
 
 def norm(t: str | None) -> str:
-    """Whitespace- and trailing-comma-insensitive (ktfmt writes `( handle: GodotHandle, )`)."""
-    return re.sub(r",\)", ")", re.sub(r"\s+", "", t or ""))
+    """Whitespace- and trailing-comma-insensitive (ktfmt writes `( handle: GodotHandle, )`), and
+    `RawSegment` == `MemorySegment` (the common seam is a typealias of the platform type; the
+    hand-written files say RawSegment since task 117 P0, generated files still say MemorySegment)."""
+    t = re.sub(r"\bMemorySegment\.NULL\b", "NULL_SEGMENT", t or "")
+    t = re.sub(r"\bMemorySegment\b", "RawSegment", t)
+    return re.sub(r",\)", ")", re.sub(r"\s+", "", t))
 
 
 MODIFIER_SET = ("open", "abstract", "override", "final", "const", "lateinit")

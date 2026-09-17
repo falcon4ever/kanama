@@ -1,11 +1,12 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -296,7 +297,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_world_2d
      */
     fun setWorld2d(world2d: World2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -847,7 +848,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.push_input
      */
     fun pushInput(event: InputEvent?, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, inLocalCoords)
     }
 
     /**
@@ -866,7 +867,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.push_unhandled_input
      */
     fun pushUnhandledInput(event: InputEvent?, inLocalCoords: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, segment, event?.requireOpenHandle() ?: MemorySegment.NULL, inLocalCoords)
+        ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, segment, event?.requireOpenHandle() ?: NULL_SEGMENT, inLocalCoords)
     }
 
     /**
@@ -1478,7 +1479,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_world_3d
      */
     fun setWorld3d(world3d: World3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1830,7 +1831,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.set_vrs_texture
      */
     fun setVrsTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1945,7 +1946,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): Viewport? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Viewport? =
+        internal fun wrap(handle: RawSegment): Viewport? =
             if (handle.address() == 0L) null else Viewport(GodotHandle(handle))
 
         private const val SET_WORLD_2D_HASH = 2736080068L

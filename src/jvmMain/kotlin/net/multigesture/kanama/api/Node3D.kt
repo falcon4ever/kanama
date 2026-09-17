@@ -1,12 +1,13 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -591,7 +592,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.add_gizmo
      */
     fun addGizmo(gizmo: Node3DGizmo?) {
-        ObjectCalls.ptrcallWithObjectArgs(addGizmoBind, segment, listOf(gizmo?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(addGizmoBind, segment, listOf(gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -620,7 +621,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.set_subgizmo_selection
      */
     fun setSubgizmoSelection(gizmo: Node3DGizmo?, id: Int, transform: Transform3D) {
-        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(setSubgizmoSelectionBind, segment, gizmo?.requireOpenHandle() ?: MemorySegment.NULL, id, transform)
+        ObjectCalls.ptrcallWithObjectIntTransform3DArgs(setSubgizmoSelectionBind, segment, gizmo?.requireOpenHandle() ?: NULL_SEGMENT, id, transform)
     }
 
     /**
@@ -939,7 +940,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): Node3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Node3D? =
+        internal fun wrap(handle: RawSegment): Node3D? =
             if (handle.address() == 0L) null else Node3D(GodotHandle(handle))
 
         private const val SET_TRANSFORM_HASH = 2952846383L

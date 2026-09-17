@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.RID
-import java.lang.foreign.MemorySegment
 
 /**
  * Base class for all scene objects.
@@ -426,9 +427,9 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     fun setOwner(owner: Node?) {
         // Godot's Node::set_owner cleans up the previous owner and returns when p_owner is null, so
         // null clears the owner (the engine itself calls child->set_owner(nullptr) while replacing
-        // nodes). Marshal null as MemorySegment.NULL. Task 52a / issue #60; audited in
+        // nodes). Marshal null as NULL_SEGMENT. Task 52a / issue #60; audited in
         // NULLABLE_OBJECT_PARAM_OVERRIDES in scripts/generate_api_wrapper.py.
-        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, segment, listOf(owner?.segment ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setOwnerBind, segment, listOf(owner?.segment ?: NULL_SEGMENT))
     }
 
     /**
@@ -1627,7 +1628,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: Node.print_orphan_nodes
          */
         fun printOrphanNodes() {
-            ObjectCalls.ptrcallNoArgs(printOrphanNodesBind, MemorySegment.NULL)
+            ObjectCalls.ptrcallNoArgs(printOrphanNodesBind, NULL_SEGMENT)
         }
 
         /**
@@ -1638,13 +1639,13 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
          * Generated from Godot docs: Node.get_orphan_node_ids
          */
         fun getOrphanNodeIds(): List<Long> =
-            ObjectCalls.ptrcallNoArgsRetLongList(getOrphanNodeIdsBind, MemorySegment.NULL)
+            ObjectCalls.ptrcallNoArgsRetLongList(getOrphanNodeIdsBind, NULL_SEGMENT)
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Node? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Node? =
+        internal fun wrap(handle: RawSegment): Node? =
             if (handle.address() == 0L) null else Node(GodotHandle(handle))
 
         const val NOTIFICATION_ENTER_TREE = 10L
@@ -1790,7 +1791,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         private const val RPC_ID_HASH = 361499283L
         private const val CALL_THREAD_GROUP_HASH = 3400424181L
 
-        private fun MemorySegment.toNodeOrNull(): Node? =
+        private fun RawSegment.toNodeOrNull(): Node? =
             if (address() == 0L) null else Node(GodotHandle(this))
 
         private val printOrphanNodesBind by lazy {

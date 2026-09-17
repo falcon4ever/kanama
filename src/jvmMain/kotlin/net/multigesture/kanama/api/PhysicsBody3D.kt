@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
 
 /**
  * Abstract base class for 3D game objects affected by physics.
@@ -45,7 +46,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.test_move
      */
     fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D?, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): Boolean {
-        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: MemorySegment.NULL, safeMargin, recoveryAsCollision, maxCollisions)
+        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: NULL_SEGMENT, safeMargin, recoveryAsCollision, maxCollisions)
     }
 
     /**
@@ -115,7 +116,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
         fun fromHandle(handle: GodotHandle): PhysicsBody3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PhysicsBody3D? =
+        internal fun wrap(handle: RawSegment): PhysicsBody3D? =
             if (handle.address() == 0L) null else PhysicsBody3D(GodotHandle(handle))
 
         private const val MOVE_AND_COLLIDE_HASH = 3208792678L

@@ -1,11 +1,11 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -425,7 +425,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Font? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Font? =
+        internal fun wrap(handle: RawSegment): Font? =
             if (handle.address() == 0L) null else Font(GodotHandle(handle))
 
         private const val SET_FALLBACKS_HASH = 381264803L

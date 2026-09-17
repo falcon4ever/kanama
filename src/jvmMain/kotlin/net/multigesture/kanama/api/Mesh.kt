@@ -1,10 +1,11 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -108,7 +109,7 @@ open class Mesh internal constructor(handle: GodotHandle) : Resource(handle) {
             surfaceSetMaterialBind,
             segment,
             surfIdx,
-            material?.requireOpenHandle() ?: MemorySegment.NULL,
+            material?.requireOpenHandle() ?: NULL_SEGMENT,
         )
     }
 
@@ -250,7 +251,7 @@ open class Mesh internal constructor(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Mesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Mesh? =
+        internal fun wrap(handle: RawSegment): Mesh? =
             if (handle.address() == 0L) null else Mesh(GodotHandle(handle))
 
         private const val SET_LIGHTMAP_SIZE_HINT_HASH = 1130785943L

@@ -1,7 +1,8 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 
 /**
  * Identifies a supported export platform, and internally provides the functionality of exporting
@@ -67,7 +68,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun savePack(preset: EditorExportPreset?, debug: Boolean, path: String, embed: Boolean = false): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(savePackBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, embed)
+        return ObjectCalls.ptrcallWithObjectBoolStringBoolArgsRetDictionary(savePackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, embed)
     }
 
     /**
@@ -79,7 +80,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveZip(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
     }
 
     /**
@@ -91,7 +92,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun savePackPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(savePackPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(savePackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
     }
 
     /**
@@ -103,7 +104,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path)
+        return ObjectCalls.ptrcallWithObjectBoolStringArgsRetDictionary(saveZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path)
     }
 
     /**
@@ -132,7 +133,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method)
+        return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method)
     }
 
     /**
@@ -143,7 +144,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L, notify: Boolean = true): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags, notify)
+        return ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags, notify)
     }
 
     /**
@@ -153,7 +154,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags)
     }
 
     /**
@@ -163,7 +164,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags)
     }
 
     /**
@@ -176,7 +177,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags)
     }
 
     /**
@@ -189,7 +190,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug, path, patches, flags)
+        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags)
     }
 
     /**
@@ -302,7 +303,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInternalExportFiles(preset: EditorExportPreset?, debug: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: MemorySegment.NULL, debug)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug)
     }
 
     companion object {
@@ -312,14 +313,14 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: EditorExportPlatform.get_forced_export_files
          */
         fun getForcedExportFiles(preset: EditorExportPreset?): List<String> {
-            return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getForcedExportFilesBind, MemorySegment.NULL, preset?.requireOpenHandle() ?: MemorySegment.NULL)
+            return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getForcedExportFilesBind, NULL_SEGMENT, preset?.requireOpenHandle() ?: NULL_SEGMENT)
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatform? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): EditorExportPlatform? =
+        internal fun wrap(handle: RawSegment): EditorExportPlatform? =
             if (handle.address() == 0L) null else EditorExportPlatform(GodotHandle(handle))
 
         private const val GET_OS_NAME_HASH = 201670096L
