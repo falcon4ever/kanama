@@ -17927,7 +17927,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoBoolArgsRetObject(
+  actual fun ptrcallWithTwoBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Boolean,
@@ -29531,7 +29531,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntArgRetArrayList(
+  actual fun ptrcallWithIntArgRetArrayList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,

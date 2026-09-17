@@ -56,7 +56,7 @@ See [Kotlin Style — `self` And `selfAs` Caching](style-guide.md#self-and-selfa
 
 `KanamaScript<T>` is the only Kanama API class meant for subclassing. Never
 extend a generated wrapper (`Node`, `Resource`, `AudioStream`, ...) — wrappers
-are non-owning views with internal constructors, and the build fails with a
+are non-owning views (their constructors take a raw handle and never retain), and the build fails with a
 pointer to the `@ScriptClass(attachTo = ...)` pattern. For custom resources
 specifically, see
 [Exports and Resources — Custom Resources](properties-resources.md#custom-resources).

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Hand-shaped wrapper parity gate (task 117, parcel P0).
 
-The 30 hand-shaped wrapper classes exist twice — `src/jvmMain/.../api/<Class>.kt` and
+The remaining hand-shaped wrapper classes (HAND_SHAPED below; the count shrinks as task 117 P1' retires them) exist twice — `src/jvmMain/.../api/<Class>.kt` and
 `src/iosMain/.../api/<Class>.kt` (three live inside `IosGodotApi.kt`) — and the generated wrapper
 tree extends them. Until task 117 turns them into `expect`/`actual` (which needs identical public
 shapes), this gate is the contract: it parses both copies and reports every difference in
@@ -39,17 +39,15 @@ IOS_API = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"
 ALLOWLIST = ROOT / "scripts/wrapper_parity_allowlist.txt"
 TAG = "[wrapper_parity]"
 
-# The 30 classes the generated tree (src/sharedApi) extends or calls that are NOT part of that
-# shared tree: each exists as a separate per-platform file. Provenance differs (P0 finding,
-# 2026-09-17): GodotObject/GodotCallable are hand-written roots outside the generator's table,
-# StandardMaterial3D is hand/hand, 23 are hand on desktop + GENERATED on iOS, Image/PlaneMesh are
-# generated on desktop + hand on iOS, StaticBody3D/Tweener generated on desktop + hand inside
-# IosGodotApi.kt. The gate compares the two committed files regardless of who wrote them; a
+# The classes the generated tree (src/sharedApi) extends or calls that are NOT part of that shared
+# tree: each exists as a separate per-platform file. Provenance is read from the generator's
+# PER_PLATFORM_WRAPPERS at run time and printed in the PASS line (GodotObject/GodotCallable are
+# hand-written roots outside the table). The gate compares the two committed files regardless of who wrote them; a
 # regenerated file that changes shape shows up here like any other change and P1 decides. Every
 # name except the two roots must appear in the generator's PER_PLATFORM_WRAPPERS (checked below).
 HAND_SHAPED = [
-    "GodotObject", "Node", "RefCounted", "Resource", "GodotCallable", "Material", "Image", "Font",
-    "Mesh", "Node3D", "Button", "ArrayMesh", "EditorExportPlatform", "PackedScene", "Light3D",
+    "GodotObject", "Node", "RefCounted", "Resource", "GodotCallable", "Image", "Font",
+    "Node3D", "Button", "ArrayMesh", "EditorExportPlatform", "Light3D",
     "LineEdit", "Range", "PhysicsBody3D", "MeshLibrary", "Camera3D", "ButtonGroup", "Tweener",
     "StandardMaterial3D", "Viewport", "TabBar", "Slider", "AnimationPlayer", "StaticBody3D",
     "PlaneMesh", "BaseMaterial3D",
@@ -566,11 +564,19 @@ def main() -> int:
     except ParseError as e:
         print(f"{TAG} FAIL parser: {e}")
         return 1
-    generator_table = (ROOT / "scripts/generate_api_wrapper.py").read_text(encoding="utf-8")
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from generate_api_wrapper import PER_PLATFORM_WRAPPERS  # the provenance table, not a regex over its source
+
     findings: list[tuple[str, str, str, str]] = []
+    provenance = collections.Counter()
     for cls in HAND_SHAPED:
-        if cls not in ("GodotObject", "GodotCallable") and not re.search(rf'^\s*"{cls}": WrapperHome\(', generator_table, re.M):
-            findings.append((cls, "not-in-generator-table", "*", "HAND_SHAPED names a class PER_PLATFORM_WRAPPERS does not know"))
+        if cls in ("GodotObject", "GodotCallable"):
+            provenance["hand/hand (root)"] += 1
+        elif cls not in PER_PLATFORM_WRAPPERS:
+            findings.append((cls, "not-in-generator-table", "*", "HAND_SHAPED names a class PER_PLATFORM_WRAPPERS does not know (retired? drop it here too)"))
+        else:
+            home = PER_PLATFORM_WRAPPERS[cls]
+            provenance[f"{home.desktop}/{home.ios}"] += 1
         if cls not in jvm or cls not in ios:
             missing = [p for p, idx in (("desktop", jvm), ("ios", ios)) if cls not in idx]
             findings.append((cls, "missing-on-platform", "*", ", ".join(missing)))
@@ -596,7 +602,7 @@ def main() -> int:
             "kind": "D2 same declaration kind on both platforms (P1)",
             "arity": "D2 same arity on both platforms (P1)",
             "supertype": "D3 StaticBody3D : PhysicsBody3D on iOS too (P1)",
-            "constructor": "D4 the expect constructor is internal for the five; iOS matches; no Long ctor (P1)",
+            "constructor": "D4/D10: internal constructor only for the expect/actual roots (RefCounted; Resource/StandardMaterial3D retire in P1(c)); no Long ctor",
             "companion-desktop-only": "D5 same companion shape on both platforms (P1)",
             "companion-ios-only": "D5 same companion shape on both platforms (P1)",
             "companion-object": "D5 every class gets a companion with wrap/fromHandle (P1)",
@@ -651,7 +657,8 @@ def main() -> int:
     if unallowed or stale:
         return 1
     print(
-        f"{TAG} PASS {len(HAND_SHAPED)} classes, {len(findings)} known divergence(s) all allowlisted "
+        f"{TAG} PASS {len(HAND_SHAPED)} classes ({', '.join(f'{k} {v}' for k, v in sorted(provenance.items()))}), "
+        f"{len(findings)} known divergence(s) all allowlisted "
         f"({', '.join(f'{k}={v}' for k, v in sorted(by_cat.items()))})"
     )
     return 0

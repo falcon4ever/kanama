@@ -7,6 +7,51 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `PackedScene` (task 117 P1'(a))
+
+- `PackedScene` is generated once into the shared wrapper tree instead of being hand-written on
+  desktop and generated on iOS. `PackedScene.create()` survives as a generated companion helper with
+  the same signature, so callers are unaffected.
+- `PackedScene.pack`'s parameter is named `path` (the Godot doc name the generator uses), not `node`.
+  Positional calls — every call site in the repo and the demos — are unaffected; a call that passed
+  the argument by name as `pack(node = ...)` must say `pack(path = ...)`.
+- `PackedScene`'s primary constructor is now **public** on desktop/Android (the hand file declared it
+  `internal`), matching the iOS copy and the rest of the shared tree. `PackedScene.create()` /
+  `fromHandle` remain the intended way to obtain one.
+- No int width changed: `pack` still returns `Long` and `instantiate(editState: Long = 0L)` keeps its
+  `Long` parameter and default (`0L` == `GEN_EDIT_STATE_DISABLED`).
+
+### Fixed — the API coverage page counts the shared tree (task 117 P1'(a))
+
+- `docs/reference/generated/api-coverage.md` counted method coverage only from the desktop directory, so every class
+  generated into `src/sharedApi` showed 0/N (Sprite2D, Node2D, Label, … and, after this change, Material/Mesh/PackedScene).
+  The scanner now reads the shared tree and companion files like the class scanner already did; the totals rise
+  accordingly and are the real numbers.
+
+### Changed — wrapper classes generated once: `Mesh` (task 117 P1'(a))
+
+- `Mesh` is generated once into the shared wrapper tree instead of being hand-written on desktop and
+  generated on iOS. `Mesh.fromObject` survives as a generated companion helper with the same
+  signature, so callers (Starter-Kit-City-Builder `Builder.kt`) are unaffected.
+- `Mesh`'s primary constructor is now **public** on desktop/Android (the hand file declared it
+  `internal`), matching the iOS copy and every other class in the shared tree. `Mesh.fromObject` /
+  `Mesh.fromHandle` remain the intended way to obtain one.
+- No int width changed: the desktop hand file already used `Int` for `getSurfaceCount()` and the
+  `surfIdx` parameters, and the `ARRAY_*` / `PRIMITIVE_*` / `BLEND_SHAPE_MODE_*` constants keep their
+  `Long` values.
+- `ObjectCalls.ptrcallWithIntArgRetArrayList` and `ObjectCalls.ptrcallWithTwoBoolArgsRetObject`
+  (used by `surfaceGetBlendShapeArrays` / `createConvexShape`) are now part of the common
+  `expect object ObjectCalls`, so both platforms declare them as `actual`.
+
+### Changed — wrapper classes generated once: `Material` (task 117 P1'(a))
+
+- `Material` is no longer hand-written per platform: it is generated once into the shared wrapper
+  tree, so desktop/Android and iOS get the same class from the same renderer. `Material.fromResource`
+  survives as a generated companion helper with the same signature, so callers are unaffected.
+- Behaviour gained on desktop/Android: `getNextPass()` and `createPlaceholder()` now use the shared
+  tree's self-return collapse (a call that returns this object releases the extra reference and
+  returns `this` instead of minting a second wrapper).
+
 ### Fixed — iOS: container arguments and `PackedVector4Array` (task 122)
 
 - `Object.set` / `call` / `set_deferred` with a `List<String>`, `List<Double>`, `List<Vector2>`, a `Map` or a nested

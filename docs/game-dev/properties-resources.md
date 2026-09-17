@@ -357,7 +357,7 @@ or the class cannot be mapped back to its script file and stays out of the
 global class list — the build warns when they diverge.
 
 Generated wrappers (`net.multigesture.kanama.api.Resource`, `AudioStream`,
-...) are non-owning views with internal constructors and **cannot be
+...) are non-owning views (constructors take a raw handle and never retain) and **cannot be
 subclassed** — attempting it fails the build with a pointer to the pattern
 above. The wrapper surface would otherwise drift from the script surface;
 `KanamaScript<T>` is the only supported base class.
