@@ -1,6 +1,6 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.RawSegment
 import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
@@ -99,7 +99,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         fun fromHandle(handle: GodotHandle): PlaneMesh? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PlaneMesh? =
+        internal fun wrap(handle: RawSegment): PlaneMesh? =
             if (handle.address() == 0L) null else PlaneMesh(GodotHandle(handle))
 
         // KANAMA-IOS-SUGAR: [glue] downcast a Resource (null if not), mirroring the desktop

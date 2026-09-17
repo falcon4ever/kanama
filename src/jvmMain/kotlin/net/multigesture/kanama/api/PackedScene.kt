@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 
 /**
  * An abstraction of a serialized scene.
@@ -90,7 +90,7 @@ class PackedScene internal constructor(
         fun fromHandle(handle: GodotHandle): PackedScene? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): PackedScene? =
+        internal fun wrap(handle: RawSegment): PackedScene? =
             if (handle.address() == 0L) null else PackedScene(GodotHandle(handle))
     }
 }

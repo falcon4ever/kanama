@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 
 /**
  * A PBR (Physically Based Rendering) material to be used on 3D objects.
@@ -18,7 +18,7 @@ class StandardMaterial3D internal constructor(handle: GodotHandle) : BaseMateria
         fun fromHandle(handle: GodotHandle): StandardMaterial3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): StandardMaterial3D? =
+        internal fun wrap(handle: RawSegment): StandardMaterial3D? =
             if (handle.address() == 0L) null else StandardMaterial3D(GodotHandle(handle))
     }
 }

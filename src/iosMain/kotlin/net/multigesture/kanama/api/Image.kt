@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.*
 import net.multigesture.kanama.types.Color
@@ -237,7 +238,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
     fun copyFrom(src: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, segment, listOf(src?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, segment, listOf(src?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getPixelv(point: Vector2i): Color {
@@ -272,7 +273,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun create(width: Int, height: Int, useMipmaps: Boolean, format: Long): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, MemorySegment.NULL, width, height, useMipmaps, format))
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, NULL_SEGMENT, width, height, useMipmaps, format))
         }
 
         // KANAMA-IOS-SUGAR: [runtime] create_from_data is STATIC + PackedByteArray — both
@@ -296,11 +297,11 @@ class Image(handle: GodotHandle) : Resource(handle) {
         }
 
         fun createEmpty(width: Int, height: Int, useMipmaps: Boolean, format: Long): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, MemorySegment.NULL, width, height, useMipmaps, format))
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format))
         }
 
         fun loadFromFile(path: String): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, MemorySegment.NULL, path))
+            return Image.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         const val MAX_WIDTH: Long = 16777216L
@@ -382,7 +383,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Image? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Image? =
+        internal fun wrap(handle: RawSegment): Image? =
             if (handle.address() == 0L) null else Image(GodotHandle(handle))
 
         private const val GET_WIDTH_HASH = 3905245786L

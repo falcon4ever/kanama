@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.RID
-import java.lang.foreign.MemorySegment
 
 /**
  * Base class for serializable objects.
@@ -319,7 +320,7 @@ open class Resource internal constructor(
          */
         @JvmStatic
         fun generateSceneUniqueId(): String =
-            ObjectCalls.ptrcallNoArgsRetString(generateSceneUniqueIdBind, MemorySegment.NULL)
+            ObjectCalls.ptrcallNoArgsRetString(generateSceneUniqueIdBind, NULL_SEGMENT)
 
         private const val GET_PATH_HASH = 201670096L
         private const val GET_STRING_HASH = 201670096L
@@ -419,7 +420,7 @@ open class Resource internal constructor(
             ObjectCalls.getMethodBind("Resource", "duplicate_deep", DUPLICATE_DEEP_HASH)
         }
 
-        internal fun wrap(handle: MemorySegment): Resource? =
+        internal fun wrap(handle: RawSegment): Resource? =
             if (handle.address() == 0L) null else Resource(GodotHandle(handle))
 
         /**

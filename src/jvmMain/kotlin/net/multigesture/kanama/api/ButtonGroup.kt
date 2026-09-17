@@ -1,7 +1,7 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -70,7 +70,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): ButtonGroup? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ButtonGroup? =
+        internal fun wrap(handle: RawSegment): ButtonGroup? =
             if (handle.address() == 0L) null else ButtonGroup(GodotHandle(handle))
 
         private const val GET_PRESSED_BUTTON_HASH = 3886434893L

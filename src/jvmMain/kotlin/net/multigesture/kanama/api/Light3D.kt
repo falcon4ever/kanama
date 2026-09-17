@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Color
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -389,7 +390,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.set_projector
      */
     fun setProjector(projector: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProjectorBind, segment, listOf(projector?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setProjectorBind, segment, listOf(projector?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -473,7 +474,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         fun fromHandle(handle: GodotHandle): Light3D? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Light3D? =
+        internal fun wrap(handle: RawSegment): Light3D? =
             if (handle.address() == 0L) null else Light3D(GodotHandle(handle))
 
         private const val SET_EDITOR_ONLY_HASH = 2586408642L

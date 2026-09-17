@@ -1,7 +1,8 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -33,7 +34,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
      */
     fun setNextPass(nextPass: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNextPassBind, segment, listOf(nextPass?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setNextPassBind, segment, listOf(nextPass?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -116,7 +117,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
         fun fromResource(value: Resource?): Material? =
             value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
 
-        internal fun wrap(handle: MemorySegment): Material? =
+        internal fun wrap(handle: RawSegment): Material? =
             if (handle.address() == 0L) null else Material(GodotHandle(handle))
 
         private const val SET_NEXT_PASS_HASH = 2757459619L

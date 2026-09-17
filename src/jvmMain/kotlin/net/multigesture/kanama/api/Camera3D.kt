@@ -1,5 +1,7 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Projection
@@ -7,7 +9,6 @@ import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -483,7 +484,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_environment
      */
     fun setEnvironment(env: Environment?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setEnvironmentBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -501,7 +502,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_attributes
      */
     fun setAttributes(env: CameraAttributes?) {
-        ObjectCalls.ptrcallWithObjectArgs(setAttributesBind, segment, listOf(env?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setAttributesBind, segment, listOf(env?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -519,7 +520,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.set_compositor
      */
     fun setCompositor(compositor: Compositor?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setCompositorBind, segment, listOf(compositor?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -654,7 +655,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         fun create(): Camera3D =
             Camera3D(GodotHandle(ObjectCalls.constructObject("Camera3D")))
 
-        internal fun wrap(handle: MemorySegment): Camera3D? =
+        internal fun wrap(handle: RawSegment): Camera3D? =
             if (handle.address() == 0L) null else Camera3D(GodotHandle(handle))
 
         private const val PROJECT_RAY_NORMAL_HASH = 1718073306L

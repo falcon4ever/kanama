@@ -1,10 +1,11 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.ScriptBridge
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.Signals as RuntimeSignals
 import net.multigesture.kanama.types.NodePath
-import java.lang.foreign.MemorySegment
 
 /**
  * Non-owning wrapper around a Godot Object pointer.
@@ -23,7 +24,7 @@ open class GodotObject(val handle: GodotHandle) {
      * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam. Internal: game code
      * passes [handle] around and never unwraps it.
      */
-    internal val segment: MemorySegment get() = handle.segment
+    internal val segment: RawSegment get() = handle.segment
 
     /** Returns true when both wrappers refer to the same Godot object instance. */
     fun isSameInstance(other: GodotObject): Boolean = segment.address() == other.segment.address()
@@ -266,7 +267,7 @@ open class GodotObject(val handle: GodotHandle) {
     }
 
     fun setScript(script: Resource?) {
-        ScriptBridge.noteSetScript(segment, script?.segment ?: MemorySegment.NULL)
+        ScriptBridge.noteSetScript(segment, script?.segment ?: NULL_SEGMENT)
         ObjectCalls.ptrcallWithVariantArg(setScriptBind, segment, script)
     }
 
@@ -306,7 +307,7 @@ open class GodotObject(val handle: GodotHandle) {
         const val CONNECT_REFERENCE_COUNTED = 8L
         const val CONNECT_APPEND_SOURCE_OBJECT = 16L
 
-        internal fun wrap(handle: MemorySegment): GodotObject? =
+        internal fun wrap(handle: RawSegment): GodotObject? =
             if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
 
         private const val NOARGS_STRING_HASH = 201670096L

@@ -1,7 +1,8 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -1027,7 +1028,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         ObjectCalls.ptrcallWithObjectArgs(
             setRightIconBind,
             segment,
-            listOf(icon?.requireOpenHandle() ?: MemorySegment.NULL),
+            listOf(icon?.requireOpenHandle() ?: NULL_SEGMENT),
         )
     }
 
@@ -1113,7 +1114,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         fun fromHandle(handle: GodotHandle): LineEdit? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): LineEdit? =
+        internal fun wrap(handle: RawSegment): LineEdit? =
             if (handle.address() == 0L) null else LineEdit(GodotHandle(handle))
 
         private const val NOARGS_VOID_HASH = 3218959716L

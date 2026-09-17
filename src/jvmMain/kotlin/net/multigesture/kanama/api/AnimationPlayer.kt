@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.NodePath
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -664,7 +664,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         fun fromHandle(handle: GodotHandle): AnimationPlayer? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): AnimationPlayer? =
+        internal fun wrap(handle: RawSegment): AnimationPlayer? =
             if (handle.address() == 0L) null else AnimationPlayer(GodotHandle(handle))
 
         private const val ANIMATION_SET_NEXT_HASH = 3740211285L

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Transform3D
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 
 /**
@@ -329,7 +330,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setShadowMesh(mesh: ArrayMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setShadowMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -355,7 +356,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
         fun fromResource(value: Resource): ArrayMesh? =
             if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
 
-        internal fun wrap(handle: MemorySegment): ArrayMesh? =
+        internal fun wrap(handle: RawSegment): ArrayMesh? =
             if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
 
         private const val ADD_BLEND_SHAPE_HASH = 3304788590L

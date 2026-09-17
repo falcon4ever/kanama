@@ -2,6 +2,7 @@
 
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.RawSegment
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.* // generated ObjectCalls.* extension helpers
@@ -193,13 +194,13 @@ object MainThread {
 open class GodotObject(
     val handle: GodotHandle,
 ) {
-    constructor(handle: Long) : this(GodotHandle(MemorySegment.ofAddress(handle)))
+    constructor(handle: Long) : this(GodotHandle(RawSegment.ofAddress(handle)))
 
     /**
      * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam. Internal: game code
      * passes [handle] around and never unwraps it.
      */
-    internal val segment: MemorySegment get() = handle.segment
+    internal val segment: RawSegment get() = handle.segment
 
     /**
      * The engine instance id, captured once at construction (0 for a NULL handle). Never
@@ -215,7 +216,7 @@ open class GodotObject(
     // Argument-position handle check. Non-owning wrappers have nothing to refuse; the generated
     // RefCounted overrides this with its closed-handle check (task 98 desktop mirror). Internal:
     // it hands out the raw engine pointer, which is never part of a wrapper signature (task 104).
-    internal open fun requireOpenHandle(): MemorySegment = segment
+    internal open fun requireOpenHandle(): RawSegment = segment
 
     fun isClass(className: String): Boolean =
         className.isNotBlank() && IosGodot.objectIsClass(segment.address(), className)
@@ -341,7 +342,7 @@ open class GodotObject(
 
         fun fromHandle(handle: GodotHandle): GodotObject? = wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): GodotObject? =
+        internal fun wrap(handle: RawSegment): GodotObject? =
             if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
     }
 }
