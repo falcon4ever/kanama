@@ -7,6 +7,18 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS: container arguments, `PackedVector4Array`, owning RefCounted container elements (task 122)
+
+- `Object.set` / `call` / `set_deferred` with a `List<String>`, `List<Double>`, `List<Vector2>`, a `Map` or a nested
+  container argument threw on iOS ("unsupported List element type"); desktop boxed them. The argument encoder now lays
+  containers out with the same blob builders the return path uses, nested containers included, so the iOS arg encoder
+  accepts what desktop accepts (a value with no Variant shape still throws, as before).
+- `PackedVector4Array` results decode to `List<Vector4>` on iOS (it had no type entry at all).
+- A RefCounted element inside a returned Array / Dictionary comes back as an owning `RefCounted` wrapper: the C
+  encoder takes one reference and flags the record, so an element whose only reference lived in the container no
+  longer dangles after the return Variant is destroyed (`close()` releases it; non-RefCounted elements stay
+  borrowed, as on desktop).
+
 ### Fixed — iOS: container results of `Object.call` / `Object.get` reach Kotlin (task 121)
 
 - `Object.get` of a `List<String>` `@ScriptProperty` (and a `call(...)` whose result is an Array, a

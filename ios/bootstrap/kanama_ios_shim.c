@@ -480,6 +480,13 @@ static GDExtensionPtrDestructor g_packed_vector3_array_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_packed_vector3_array_size_method = NULL;
 static GDExtensionInterfacePackedVector3ArrayOperatorIndexConst
     g_packed_vector3_array_operator_index_const = NULL;
+// task 122 — PackedVector4Array (Variant type 38): decode-only rows (size / index / destructor);
+// no constructor/push_back because nothing builds one from Kotlin yet.
+static GDExtensionPtrDestructor g_packed_vector4_array_destructor = NULL;
+static GDExtensionPtrBuiltInMethod g_packed_vector4_array_size_method = NULL;
+static GDExtensionInterfacePackedVector4ArrayOperatorIndexConst
+    g_packed_vector4_array_operator_index_const = NULL;
+static GDExtensionTypeFromVariantConstructorFunc g_variant_to_packed_vector4_array = NULL;
 // task 29 — Variant boxing for the packed/array return families (lazily resolved; the
 // mandatory init gate is unchanged).
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_packed_byte_array = NULL;
@@ -776,6 +783,7 @@ enum {
     KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY = 35,
     KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY = 36,
     KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY = 37,
+    KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY = 38,
     KANAMA_IOS_OBJECT_NOTIFICATION_HASH = 4023243586U,
     KANAMA_IOS_ENGINE_GET_MAIN_LOOP_HASH = 1016888095U,
     KANAMA_IOS_ENGINE_REGISTER_SCRIPT_LANGUAGE_HASH = 1850254898U,
@@ -869,6 +877,7 @@ enum {
     KANAMA_IOS_PACKED_INT64_ARRAY_SIZE_HASH = 3173160232U,
     KANAMA_IOS_PACKED_FLOAT64_ARRAY_SIZE_HASH = 3173160232U,
     KANAMA_IOS_PACKED_VECTOR3_ARRAY_SIZE_HASH = 3173160232U,
+    KANAMA_IOS_PACKED_VECTOR4_ARRAY_SIZE_HASH = 3173160232U,
     KANAMA_IOS_NOTIFICATION_POSTINITIALIZE = 0,
     KANAMA_IOS_NOTIFICATION_ENTER_TREE = 10,
     KANAMA_IOS_NOTIFICATION_EXIT_TREE = 11,
@@ -1698,6 +1707,9 @@ static void kanama_ios_cache_packed_byte_methods(void);
 // blob builder, defined after the dispatch.
 static void kanama_ios_build_packed_string_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
 static void kanama_ios_cache_packed_string_methods(void);
+static void kanama_ios_cache_packed_vector4_methods(void);
+int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name);
+static GDExtensionMethodBindPtr kanama_ios_get_method_bind_cached(GDExtensionMethodBindPtr *cache, const char *class_name, const char *method_name, int64_t hash);
 // Dictionary builders (task 29 virtual-return path uses them before their definitions).
 static void kanama_ios_init_empty_dictionary(GDExtensionTypePtr out);
 static void kanama_ios_dictionary_set_variant(
@@ -2926,6 +2938,32 @@ static void kanama_ios_cache_packed_vector3_methods(void) {
     }
 }
 
+static void kanama_ios_cache_packed_vector4_methods(void) {
+    if (g_packed_vector4_array_destructor == NULL && g_variant_get_ptr_destructor != NULL) {
+        g_packed_vector4_array_destructor =
+            g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY);
+    }
+    if (g_packed_vector4_array_size_method == NULL && g_variant_get_ptr_builtin_method != NULL) {
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, "size");
+        g_packed_vector4_array_size_method = g_variant_get_ptr_builtin_method(
+            KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY,
+            (GDExtensionConstStringNamePtr)&name_storage,
+            (GDExtensionInt)KANAMA_IOS_PACKED_VECTOR4_ARRAY_SIZE_HASH
+        );
+        kanama_ios_destroy_string_name(&name_storage);
+    }
+    if (g_packed_vector4_array_operator_index_const == NULL) {
+        g_packed_vector4_array_operator_index_const =
+            (GDExtensionInterfacePackedVector4ArrayOperatorIndexConst)kanama_ios_lookup(
+                "packed_vector4_array_operator_index_const");
+    }
+    if (g_variant_to_packed_vector4_array == NULL && g_get_variant_to_type_constructor != NULL) {
+        g_variant_to_packed_vector4_array =
+            g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY);
+    }
+}
+
 // Build a packed array from a KanamaIosPackedArgDesc into cell (a >=16-byte opaque storage).
 // Originally the BUILD-tagged arg path for Vector2/Color (flat float32 element buffers); task 29
 // extends it to the remaining fixed-element families for virtual RETURNS, which reuse the same
@@ -3720,6 +3758,23 @@ static void kanama_ios_blob_encode_variant(KanamaIosBlob *b, uint8_t *variant, i
             if (g_variant_to_object != NULL) g_variant_to_object(&o, variant);
             int64_t h = (int64_t)(intptr_t)o;
             kanama_ios_blob_put(b, &h, 8);
+            // task 122 — a RefCounted element gets one reference taken HERE and a flag byte 1;
+            // Kotlin wraps it as an OWNING RefCounted (close() releases). Without this an element
+            // whose only reference lived in the returned container dangled once the return Variant
+            // was destroyed (desktop's readArrayScalars has the same borrowed shape; iOS is now
+            // strictly safer). Non-RefCounted objects stay borrowed (flag 0).
+            uint8_t retained = 0;
+            if (o != NULL && kanama_ios_godot_object_is_class(h, "RefCounted")) {
+                GDExtensionMethodBindPtr reference_bind = kanama_ios_get_method_bind_cached(
+                    &g_ref_counted_reference_bind, "RefCounted", "reference",
+                    KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
+                if (reference_bind != NULL) {
+                    GDExtensionBool referenced = 0;
+                    g_object_method_bind_ptrcall(reference_bind, o, NULL, &referenced);
+                    retained = 1;
+                }
+            }
+            kanama_ios_blob_put(b, &retained, 1);
             break;
         }
         case KANAMA_IOS_VARIANT_TYPE_STRING: {
@@ -3809,6 +3864,7 @@ static void kanama_ios_blob_encode_variant(KanamaIosBlob *b, uint8_t *variant, i
         case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY:
             kanama_ios_blob_encode_packed(b, vtype, variant);
             break;
@@ -6739,6 +6795,7 @@ static int32_t kanama_ios_decode_variant_scalar(
         case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR2_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR3_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY: {
             // task 121 — container returns (Object.get of a List<String> @ScriptProperty, call()
             // of a method returning Array/Dictionary/Packed*Array): one self-describing record
@@ -6838,6 +6895,14 @@ static int kanama_ios_packed_kind(int32_t packed_kind, KanamaIosPackedKind *out)
             out->size_method = g_packed_vector3_array_size_method;
             out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_vector3_array_operator_index_const;
             out->elem_bytes = 3 * (int64_t)sizeof(float);   // 3x real_t
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY:
+            kanama_ios_cache_packed_vector4_methods();
+            out->to_packed = g_variant_to_packed_vector4_array;
+            out->destructor = g_packed_vector4_array_destructor;
+            out->size_method = g_packed_vector4_array_size_method;
+            out->index_const = (const void *(*)(GDExtensionConstTypePtr, GDExtensionInt))g_packed_vector4_array_operator_index_const;
+            out->elem_bytes = 4 * (int64_t)sizeof(float);   // 4x real_t (task 122)
             break;
         case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
             kanama_ios_cache_packed_color_methods();

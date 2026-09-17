@@ -139,6 +139,7 @@ actual object ObjectCalls {
   internal const val VT_PACKED_VECTOR2_ARRAY = 35
   internal const val VT_PACKED_VECTOR3_ARRAY = 36
   internal const val VT_PACKED_COLOR_ARRAY = 37
+  internal const val VT_PACKED_VECTOR4_ARRAY = 38
   // Variant.Type ids array_set_typed takes for typed-Array ARGUMENTS (task 100, parcel 8); VT_INT
   // (2) is the existing constant below.
   internal const val VT_STRING_TYPE = 4
@@ -865,8 +866,18 @@ actual object ObjectCalls {
           VT_NODE_PATH -> NodePath(b.decodeToString(start, end))
           // Object elements decode to a GodotObject wrapper, as desktop's variantToAny does (task
           // 115); callers used to receive the raw handle here and re-wrap it per call site.
+          // Object elements: 8-byte handle + (task 122) a flag byte — 1 means the C encoder took a
+          // reference on a RefCounted element, so it comes back OWNING (close() releases); 0 is a
+          // borrowed non-RefCounted handle, wrapped like desktop's variantToAny.
           VT_OBJECT ->
-            if (len >= 8) GodotObject.wrap(MemorySegment.ofAddress(i64At(start))) else null
+            if (len >= 8) {
+              val seg = MemorySegment.ofAddress(i64At(start))
+              when {
+                seg.address() == 0L -> null
+                len >= 9 && b[start + 8].toInt() != 0 -> RefCounted(GodotHandle(seg))
+                else -> GodotObject(GodotHandle(seg))
+              }
+            } else null
           VT_VECTOR2 ->
             if (len >= 8)
               Vector2(GodotReal.fromFloat(f32At(start)), GodotReal.fromFloat(f32At(start + 4)))
@@ -919,6 +930,16 @@ actual object ObjectCalls {
             List(len / 16) {
               val o = start + it * 16
               Color(f32At(o), f32At(o + 4), f32At(o + 8), f32At(o + 12))
+            }
+          VT_PACKED_VECTOR4_ARRAY ->
+            List(len / 16) {
+              val o = start + it * 16
+              Vector4(
+                GodotReal.fromFloat(f32At(o)),
+                GodotReal.fromFloat(f32At(o + 4)),
+                GodotReal.fromFloat(f32At(o + 8)),
+                GodotReal.fromFloat(f32At(o + 12)),
+              )
             }
           // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
           VT_PACKED_BYTE_ARRAY -> b.copyOfRange(start, end)
@@ -3192,6 +3213,7 @@ actual object ObjectCalls {
       VT_PACKED_VECTOR2_ARRAY,
       VT_PACKED_VECTOR3_ARRAY,
       VT_PACKED_COLOR_ARRAY,
+      VT_PACKED_VECTOR4_ARRAY,
       VT_PACKED_STRING_ARRAY_TYPE -> {
         val len = outStrLen.value
         val bytes =
@@ -3246,44 +3268,12 @@ actual object ObjectCalls {
   // null (nil / an un-decoded return such as Transform). A String or blob longer than the 1 KiB
   // inline buffer is parked C-side and drained whole (task 100) — the value is captured once,
   // the call is not re-issued.
-  // Build the tagged-entry blob consumed by the C shim's PT_ARRAY boxer. Object.set uses this
-  // path for List<Enum> values after callers map the enum entries to integer ordinals. Keep this
-  // deliberately narrow: other List element families need their own audited Variant encoding.
-  private fun MemScope.encodeIntegerArrayArg(values: List<*>): CPointer<ByteVar> {
-    val entries =
-      values.map { value ->
-        when (value) {
-          null -> Pair(PT_VOID, null)
-          is Int -> Pair(PT_INT64, value.toLong())
-          is Long -> Pair(PT_INT64, value)
-          else ->
-            error(
-              "encodeVariantArgs: unsupported List element type " +
-                (value::class.simpleName ?: "<anonymous>")
-            )
-        }
-      }
-    val byteCount = 4 + entries.sumOf { (_, value) -> 8 + if (value == null) 0 else 8 }
-    val blob = allocArray<ByteVar>(byteCount)
-    var offset = 0
-    fun putInt32(value: Int) {
-      for (byteIndex in 0 until 4) {
-        blob[offset + byteIndex] = ((value ushr (byteIndex * 8)) and 0xFF).toByte()
-      }
-      offset += 4
-    }
-    fun putInt64(value: Long) {
-      for (byteIndex in 0 until 8) {
-        blob[offset + byteIndex] = ((value ushr (byteIndex * 8)) and 0xFF).toByte()
-      }
-      offset += 8
-    }
-    putInt32(entries.size)
-    for ((tag, value) in entries) {
-      putInt32(tag)
-      putInt32(if (value == null) 0 else 8)
-      if (value != null) putInt64(value)
-    }
+  // Copy a container blob (IosReturnContainerScratch's layout — the one the C shim's PT_ARRAY /
+  // PT_DICTIONARY boxers read, nested containers included) into this MemScope so several
+  // container args in one call do not share the runtime's single scratch buffer (task 122).
+  private fun MemScope.containerArgBlob(bytes: ByteArray): CPointer<ByteVar> {
+    val blob = allocArray<ByteVar>(if (bytes.isEmpty()) 1 else bytes.size)
+    for (i in bytes.indices) blob[i] = bytes[i]
     return blob
   }
 
@@ -3378,9 +3368,20 @@ actual object ObjectCalls {
           tags[i] = PT_OBJECT
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
+        // task 122 — containers box like desktop's initVariantFromAny (List -> Array, Map ->
+        // Dictionary): the return-side blob builders lay them out, strict mode throws on a value
+        // type no Variant can hold, nested containers recurse.
         is List<*> -> {
           tags[i] = PT_ARRAY
-          ptrs[i] = encodeIntegerArrayArg(a).reinterpret<CPointed>()
+          ptrs[i] =
+            containerArgBlob(IosReturnContainerScratch.encodeArrayBytes(a, strict = true))
+              .reinterpret<CPointed>()
+        }
+        is Map<*, *> -> {
+          tags[i] = PT_DICTIONARY
+          ptrs[i] =
+            containerArgBlob(IosReturnContainerScratch.encodeDictionaryBytes(a, strict = true))
+              .reinterpret<CPointed>()
         }
         else ->
           error("encodeVariantArgs: unsupported arg type " + (a::class.simpleName ?: "<anonymous>"))
@@ -49831,6 +49832,70 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "variant-call-ret-packed-strings(Engine.get_singleton_list contains Engine)",
     singletonNames is List<*> && singletonNames.contains("Engine"),
   )
+  // task 122 — container ARGUMENTS: List<String>, List<Double>, List<Vector2>, a Dictionary and a
+  // nested container round-trip set_meta/get_meta (the arg encoder used to throw on all of them).
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kstrs", listOf("a", "bb")),
+  )
+  check(
+    "variant-call-arg-array-strings(set_meta/get_meta [a,bb])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kstrs")) ==
+      listOf("a", "bb"),
+  )
+  ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("set_meta", "kdbl", listOf(1.5, 2.5)))
+  check(
+    "variant-call-arg-array-doubles(set_meta/get_meta [1.5,2.5])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kdbl")) ==
+      listOf(1.5, 2.5),
+  )
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kvec", listOf(Vector2(1.0, 2.0), Vector2(3.0, 4.0))),
+  )
+  check(
+    "variant-call-arg-array-vector2(set_meta/get_meta)",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kvec")) ==
+      listOf(Vector2(1.0, 2.0), Vector2(3.0, 4.0)),
+  )
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kdict", mapOf("k" to 1L, "s" to "v")),
+  )
+  check(
+    "variant-call-arg-dictionary(set_meta/get_meta {k:1,s:v})",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kdict")) ==
+      mapOf("k" to 1L, "s" to "v"),
+  )
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "knest", listOf(listOf(1L, 2L), mapOf("a" to "b"))),
+  )
+  check(
+    "variant-call-arg-nested(set_meta/get_meta [[1,2],{a:b}])",
+    ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "knest")) ==
+      listOf(listOf(1L, 2L), mapOf("a" to "b")),
+  )
+  // task 122 — a RefCounted element of a returned container comes back OWNING: the encoder took a
+  // reference, the wrapper is a RefCounted, close() releases it.
+  val refElem = ObjectCalls.constructObject("RefCounted")
+  ObjectCalls.callWithVariantArgs(
+    callBind,
+    callNode,
+    listOf("set_meta", "kref", listOf(GodotObject(GodotHandle(refElem)))),
+  )
+  val refBack =
+    (ObjectCalls.callWithVariantArgs(callBind, callNode, listOf("get_meta", "kref")) as? List<*>)
+      ?.firstOrNull()
+  check(
+    "variant-call-ret-array-refcounted-element(owning RefCounted wrapper)",
+    refBack is RefCounted && refBack.segment.address() == refElem.address(),
+  )
+  (refBack as? RefCounted)?.close()
 
   // Value-type builtin method (BuiltinCalls) via variant_get_ptr_builtin_method + builtin_call.
   // Basis.inverse() is a TRUE inverse: diag(2,4,8) -> diag(0.5,0.25,0.125) (powers of 2, exact

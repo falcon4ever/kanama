@@ -1513,8 +1513,9 @@ internal object IosReturnContainerScratch {
 
   /**
    * PT tag + payload bytes for one audited container value; unaudited -> PT_VOID/nil. With [strict]
-   * (the argument direction, task 100 parcel 7) an unaudited value — a nested Map / List or any
-   * other Kotlin object — throws instead, so a caller never silently passes nil.
+   * (the argument direction, task 100 parcel 7) an unaudited value — any Kotlin object without a
+   * Variant shape — throws instead, so a caller never silently passes nil. Nested List / Map
+   * recurse (task 122).
    */
   internal fun taggedValue(value: Any?, strict: Boolean = false): Pair<Int, ByteArray> =
     when (value) {
@@ -1547,13 +1548,18 @@ internal object IosReturnContainerScratch {
       // task 100 parcel 10: a PackedByteArray value (OggPacketSequence packet data inside an
       // Array[Array]) travels as its raw bytes; the C boxer rebuilds the packed array.
       is ByteArray -> Pair(IOS_PT_PACKED_BYTE_ARRAY, value)
+      is NodePath -> Pair(IOS_PT_NODE_PATH, value.path.encodeToByteArray())
+      // task 122 — nested containers recurse (the C boxer's PT_ARRAY / PT_DICTIONARY element cases
+      // rebuild them), so Object.set / call take the same List / Map shapes desktop boxes.
+      is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, strict))
+      is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, strict))
       else ->
         if (strict) {
           error(
             "iOS: unsupported value type ${value::class.simpleName ?: "<anonymous>"} inside a " +
-              "Dictionary / Array argument (one container level with scalars, ByteArrays and " +
-              "object handles inside is marshalled; deeper nesting is not — task 100 " +
-              "parcels 7 and 10)"
+              "Dictionary / Array argument (scalars, strings, NodePath, small vectors, Color, RID, " +
+              "ByteArray, object handles and nested List / Map are marshalled — task 100 parcels " +
+              "7 and 10, task 122)"
           )
         } else {
           Pair(IOS_PT_VOID, ByteArray(0))
