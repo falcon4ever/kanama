@@ -1517,7 +1517,15 @@ internal object IosReturnContainerScratch {
    * Variant shape — throws instead, so a caller never silently passes nil. Nested List / Map
    * recurse (task 122).
    */
-  internal fun taggedValue(value: Any?, strict: Boolean = false): Pair<Int, ByteArray> =
+  // Nested containers recurse at most this deep (the C boxer recurses without its own bound; a
+  // self-containing List would otherwise overflow the Kotlin/Native stack — no StackOverflowError).
+  internal const val MAX_CONTAINER_DEPTH = 8
+
+  internal fun taggedValue(
+    value: Any?,
+    strict: Boolean = false,
+    depth: Int = 0,
+  ): Pair<Int, ByteArray> =
     when (value) {
       null -> Pair(IOS_PT_VOID, ByteArray(0))
       is Boolean -> Pair(IOS_PT_BOOL, byteArrayOf(if (value) 1 else 0))
@@ -1551,8 +1559,8 @@ internal object IosReturnContainerScratch {
       is NodePath -> Pair(IOS_PT_NODE_PATH, value.path.encodeToByteArray())
       // task 122 — nested containers recurse (the C boxer's PT_ARRAY / PT_DICTIONARY element cases
       // rebuild them), so Object.set / call take the same List / Map shapes desktop boxes.
-      is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, strict))
-      is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, strict))
+      is List<*> -> Pair(IOS_PT_ARRAY, encodeArrayBytes(value, strict, depth + 1))
+      is Map<*, *> -> Pair(IOS_PT_DICTIONARY, encodeDictionaryBytes(value, strict, depth + 1))
       else ->
         if (strict) {
           error(
@@ -1588,10 +1596,24 @@ internal object IosReturnContainerScratch {
    * written into the outer record as a whole nested blob, so the encoder has to hand the bytes back
    * rather than a scratch pointer.
    */
-  fun encodeDictionaryBytes(map: Map<*, *>, strict: Boolean = false): ByteArray {
+  fun encodeDictionaryBytes(map: Map<*, *>, strict: Boolean = false, depth: Int = 0): ByteArray {
+    if (depth > MAX_CONTAINER_DEPTH) {
+      error("iOS: container argument nested deeper than $MAX_CONTAINER_DEPTH levels (cyclic?)")
+    }
     val entries =
       map.entries.map { (k, v) ->
-        Pair((k as? String ?: k.toString()).encodeToByteArray(), taggedValue(v, strict))
+        // Desktop's variantFromDictionaryInto rejects non-String keys; strict (the argument
+        // direction) does the same instead of silently stringifying (task 122 review).
+        val key =
+          k as? String
+            ?: if (strict) {
+              error(
+                "iOS: Dictionary argument key must be a String, got ${k?.let { it::class.simpleName }}"
+              )
+            } else {
+              k.toString()
+            }
+        Pair(key.encodeToByteArray(), taggedValue(v, strict, depth))
       }
     var needed = 4
     for ((key, tagged) in entries) needed += 4 + key.size + 8 + tagged.second.size
@@ -1616,8 +1638,11 @@ internal object IosReturnContainerScratch {
     return out
   }
 
-  fun encodeArrayBytes(values: List<*>, strict: Boolean = false): ByteArray {
-    val elements = values.map { taggedValue(it, strict) }
+  fun encodeArrayBytes(values: List<*>, strict: Boolean = false, depth: Int = 0): ByteArray {
+    if (depth > MAX_CONTAINER_DEPTH) {
+      error("iOS: container argument nested deeper than $MAX_CONTAINER_DEPTH levels (cyclic?)")
+    }
+    val elements = values.map { taggedValue(it, strict, depth) }
     var needed = 4
     for (tagged in elements) needed += 8 + tagged.second.size
     val out = ByteArray(needed)

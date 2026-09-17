@@ -7,17 +7,18 @@ versioning once public releases begin.
 
 ## Unreleased
 
-### Fixed — iOS: container arguments, `PackedVector4Array`, owning RefCounted container elements (task 122)
+### Fixed — iOS: container arguments and `PackedVector4Array` (task 122)
 
 - `Object.set` / `call` / `set_deferred` with a `List<String>`, `List<Double>`, `List<Vector2>`, a `Map` or a nested
   container argument threw on iOS ("unsupported List element type"); desktop boxed them. The argument encoder now lays
   containers out with the same blob builders the return path uses, nested containers included, so the iOS arg encoder
   accepts what desktop accepts (a value with no Variant shape still throws, as before).
 - `PackedVector4Array` results decode to `List<Vector4>` on iOS (it had no type entry at all).
-- A RefCounted element inside a returned Array / Dictionary comes back as an owning `RefCounted` wrapper: the C
-  encoder takes one reference and flags the record, so an element whose only reference lived in the container no
-  longer dangles after the return Variant is destroyed (`close()` releases it; non-RefCounted elements stay
-  borrowed, as on desktop).
+- A `List<String>` set through `Object.set` on a `List<String>` `@ScriptProperty` now reaches the property (the
+  property dispatch routed a Godot Array only to the int-list and object-list bridges). Top-level `NodePath` and
+  `RID` arguments are accepted (they were accepted only inside containers).
+- Not changed: object elements of a returned container stay borrowed on both platforms; the owning design is
+  recorded in task 122.
 
 ### Fixed — iOS: container results of `Object.call` / `Object.get` reach Kotlin (task 121)
 
@@ -27,8 +28,8 @@ versioning once public releases begin.
   container ptrcalls use) and Kotlin decodes it: Array → `List<Any?>`, Dictionary → `Map<String,
   Any?>`, `Packed{Byte,Int32,Int64,Float32,Float64,Vector2,Vector3,Color,String}Array` → the desktop
   list types. Packed kinds other than bytes also decode as Array/Dictionary elements now.
-  Not covered: `PackedVector4Array` (desktop decodes it, iOS has no type entry for it yet), and
-  RefCounted elements of a container result are borrowed on both platforms.
+  `PackedVector4Array` followed in task 122 (entry above); RefCounted elements of a container result
+  are borrowed on both platforms.
 - Found by the third-person demo's iPhone smoke reading a BeetlebotSkin `_force_loop` export; its
   starter-probe twin (`probe_tags`, `smoke_modes`) is now asserted instead of "requested".
 
