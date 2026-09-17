@@ -39,9 +39,14 @@ IOS_API = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"
 ALLOWLIST = ROOT / "scripts/wrapper_parity_allowlist.txt"
 TAG = "[wrapper_parity]"
 
-# The 30 classes the generated tree extends or calls that are hand-written on BOTH platforms
-# (measured 2026-09-15, kanama-tasks/tools/task117-measurements.md). When a class stops being
-# hand-shaped on either side, remove it here AND from the generator's PER_PLATFORM_WRAPPERS.
+# The 30 classes the generated tree (src/sharedApi) extends or calls that are NOT part of that
+# shared tree: each exists as a separate per-platform file. Provenance differs (P0 finding,
+# 2026-09-17): GodotObject/GodotCallable are hand-written roots outside the generator's table,
+# StandardMaterial3D is hand/hand, 23 are hand on desktop + GENERATED on iOS, Image/PlaneMesh are
+# generated on desktop + hand on iOS, StaticBody3D/Tweener generated on desktop + hand inside
+# IosGodotApi.kt. The gate compares the two committed files regardless of who wrote them; a
+# regenerated file that changes shape shows up here like any other change and P1 decides. Every
+# name except the two roots must appear in the generator's PER_PLATFORM_WRAPPERS (checked below).
 HAND_SHAPED = [
     "GodotObject", "Node", "RefCounted", "Resource", "GodotCallable", "Material", "Image", "Font",
     "Mesh", "Node3D", "Button", "ArrayMesh", "EditorExportPlatform", "PackedScene", "Light3D",
@@ -112,16 +117,45 @@ def strip_noise(src: str) -> str:
     return "".join(out)
 
 
+class ParseError(Exception):
+    """The textual parser lost its footing; reported as a `parse-error` finding, never as silence."""
+
+
 def match_close(clean: str, start: int, open_ch: str = "{", close_ch: str = "}") -> int:
     depth = 0
     for i in range(start, len(clean)):
-        if clean[i] == open_ch:
+        ch = clean[i]
+        if ch == open_ch:
             depth += 1
-        elif clean[i] == close_ch:
+        elif ch == close_ch:
+            if close_ch == ">" and i > 0 and clean[i - 1] == "-":
+                continue  # the `->` of a function type is not a closing angle bracket
             depth -= 1
             if depth == 0:
                 return i
-    return -1
+    raise ParseError(f"unbalanced {open_ch}{close_ch} from offset {start}")
+
+
+def split_top_level(s: str) -> list[str]:
+    """Split on top-level commas; `->` does not close an angle bracket."""
+    parts: list[str] = []
+    depth = 0
+    cur = ""
+    prev = ""
+    for ch in s:
+        if ch in "([<{":
+            depth += 1
+        elif ch in ")]>}" and not (ch == ">" and prev == "-"):
+            depth -= 1
+        if ch == "," and depth == 0:
+            parts.append(cur)
+            cur = ""
+        else:
+            cur += ch
+        prev = ch
+    if cur.strip():
+        parts.append(cur)
+    return parts
 
 
 TYPE_MODS = r"(?:public|private|internal|protected|open|abstract|sealed|final|data|value|enum|annotation|expect|actual|inner|fun)"
@@ -165,6 +199,14 @@ def find_types(clean: str, src: str) -> list[dict]:
                 continue
             j += 1
         header_end = body_start if body_start != -1 else min(j, len(clean))
+        if body_start == -1:
+            # Body-less declarations (`data class GodotCallable(val target: GodotObject, ...)`) are
+            # legal; a header whose continuation the scan did not follow is not. If a `{` appears
+            # before the next column-0 declaration, the layout beat the parser: say so.
+            nxt = re.compile(r"(?m)^\S").search(clean, header_end + 1)
+            tail = clean[header_end : nxt.start() if nxt else len(clean)]
+            if "{" in tail:
+                raise ParseError(f"header layout not understood for `{name}`: `{re.sub(r'\s+', ' ', src[m.start():header_end])[:80]}`")
         body_end = match_close(clean, body_start) if body_start != -1 else -1
         res.append(
             dict(
@@ -299,6 +341,8 @@ def parse_members(clean: str, src: str, body_start: int, body_end: int) -> list[
                 continue
         pos += 1
         line_start = False
+    if depth != 0:
+        raise ParseError(f"class body ended at bracket depth {depth} (a string template or comment desynced the scan)")
     return members
 
 
@@ -308,23 +352,8 @@ def param_names(params_clean: str) -> list[str]:
     s = params_clean.strip()
     if s.startswith("("):
         s = s[1:-1]
-    parts = []
-    depth = 0
-    cur = ""
-    for ch in s:
-        if ch in "([<{":
-            depth += 1
-        elif ch in ")]>}":
-            depth -= 1
-        if ch == "," and depth == 0:
-            parts.append(cur)
-            cur = ""
-        else:
-            cur += ch
-    if cur.strip():
-        parts.append(cur)
     out = []
-    for p in parts:
+    for p in split_top_level(s):
         p = p.strip()
         if not p:
             continue
@@ -343,23 +372,8 @@ def param_types(params_clean: str) -> str:
     s = params_clean.strip()
     if s.startswith("("):
         s = s[1:-1]
-    parts = []
-    depth = 0
-    cur = ""
-    for ch in s:
-        if ch in "([<{":
-            depth += 1
-        elif ch in ")]>}":
-            depth -= 1
-        if ch == "," and depth == 0:
-            parts.append(cur)
-            cur = ""
-        else:
-            cur += ch
-    if cur.strip():
-        parts.append(cur)
     types = []
-    for p in parts:
+    for p in split_top_level(s):
         p = re.sub(r"=.*$", "", p.strip())
         p = re.sub(r"^(?:@[\w.]+(?:\([^)]*\))?\s*)+", "", p)
         p = re.sub(r"^(?:vararg\s+)", "", p)
@@ -397,20 +411,7 @@ def header_parse(header: str) -> tuple[str | None, str, list[str]]:
     supers: list[str] = []
     si = tail2.find(":")
     if si != -1:
-        depth = 0
-        cur = ""
-        for ch in tail2[si + 1 :]:
-            if ch in "(<[":
-                depth += 1
-            elif ch in ")>]":
-                depth -= 1
-            if ch == "," and depth == 0:
-                supers.append(cur.strip())
-                cur = ""
-            else:
-                cur += ch
-        if cur.strip():
-            supers.append(cur.strip())
+        supers = [x.strip() for x in split_top_level(tail2[si + 1 :])]
     return ctor, ctorvis, [re.sub(r"\(.*", "", s).strip() for s in supers]
 
 
@@ -432,15 +433,11 @@ def analyze(entry: dict) -> dict:
     res = dict(path=entry["path"].relative_to(ROOT).as_posix(), mods=t["mods"], ctor=ctor, ctorvis=ctorvis, supers=supers)
     members: list[dict] = []
     companion: list[dict] = []
-    if t["body_start"] != -1:
-        for m in parse_members(clean, src, t["body_start"], t["body_end"]):
-            if m.get("nested") and m["name"] == "Companion" and "companion_body" in m:
-                cb, ce = m["companion_body"]
-                companion.extend(parse_members(clean, src, cb, ce))
-            members.append(m)
-        span = clean[t["start"] : t["body_end"] if t["body_end"] != -1 else len(clean)]
-        res["jvm_name_count"] = len(re.findall(r"@(?:\w+:)?JvmName\b", span))
-        res["jvm_static_count"] = len(re.findall(r"@(?:\w+:)?JvmStatic\b", span))
+    for m in (parse_members(clean, src, t["body_start"], t["body_end"]) if t["body_start"] != -1 else []):
+        if m.get("nested") and m["name"] == "Companion" and "companion_body" in m:
+            cb, ce = m["companion_body"]
+            companion.extend(parse_members(clean, src, cb, ce))
+        members.append(m)
     res["members"] = members
     res["companion"] = companion
     return res
@@ -465,10 +462,9 @@ MODIFIER_SET = ("open", "abstract", "override", "final", "const", "lateinit")
 def compare(cls: str, j: dict, i: dict) -> list[tuple[str, str, str]]:
     """Findings as (category, member, detail) for one class."""
     out: list[tuple[str, str, str]] = []
-    js = j["supers"][0] if j["supers"] else "(none)"
-    isup = i["supers"][0] if i["supers"] else "(none)"
+    js, isup = sorted(j["supers"]), sorted(i["supers"])
     if js != isup:
-        out.append(("supertype", "*", f"desktop `: {js}` vs ios `: {isup}`"))
+        out.append(("supertype", "*", f"desktop `: {', '.join(js) or '(none)'}` vs ios `: {', '.join(isup) or '(none)'}`"))
     jm = sorted(x for x in j["mods"] if x in ("open", "abstract", "sealed", "final", "data", "value"))
     im = sorted(x for x in i["mods"] if x in ("open", "abstract", "sealed", "final", "data", "value"))
     if jm != im:
@@ -479,10 +475,12 @@ def compare(cls: str, j: dict, i: dict) -> list[tuple[str, str, str]]:
         out.append(("constructor", "<init>", f"params desktop `{j['ctor']}` vs ios `{i['ctor']}`"))
 
     def body(rec: dict) -> dict[str, list[dict]]:
+        # Keyed by `Receiver.name` so member extension functions are compared too.
         d: dict[str, list[dict]] = collections.defaultdict(list)
         for m in rec["members"]:
-            if m["kw"] in ("fun", "val", "var", "constructor") and not m.get("receiver"):
-                d[m["name"]].append(m)
+            if m["kw"] in ("fun", "val", "var", "constructor"):
+                key = f"{m['receiver']}.{m['name']}" if m.get("receiver") else m["name"]
+                d[key].append(m)
         return d
 
     jb, ib = body(j), body(i)
@@ -507,6 +505,8 @@ def compare(cls: str, j: dict, i: dict) -> list[tuple[str, str, str]]:
             mb = sorted(x for x in b["mods"] if x in MODIFIER_SET)
             if ma != mb:
                 out.append(("modifiers", name, f"desktop {ma} vs ios {mb}"))
+            if sorted(a.get("annotations", [])) != sorted(b.get("annotations", [])):
+                out.append(("annotations", name, f"desktop {sorted(a.get('annotations', []))} vs ios {sorted(b.get('annotations', []))}"))
             if a["kw"] == "fun":
                 pa, pb = param_names(a.get("params_clean", "")), param_names(b.get("params_clean", ""))
                 if len(pa) != len(pb):
@@ -532,15 +532,6 @@ def compare(cls: str, j: dict, i: dict) -> list[tuple[str, str, str]]:
         out.append(("nested-ios-only", name, ""))
     if ("Companion" in {m["name"] for m in j["members"]}) != ("Companion" in {m["name"] for m in i["members"]}):
         out.append(("companion-object", "*", "declared on one platform only"))
-    if j.get("jvm_name_count", 0) != i.get("jvm_name_count", 0) or j.get("jvm_static_count", 0) != i.get("jvm_static_count", 0):
-        out.append(
-            (
-                "annotations",
-                "*",
-                f"@JvmName desktop {j.get('jvm_name_count', 0)} vs ios {i.get('jvm_name_count', 0)}; "
-                f"@JvmStatic desktop {j.get('jvm_static_count', 0)} vs ios {i.get('jvm_static_count', 0)}",
-            )
-        )
     return out
 
 
@@ -570,15 +561,25 @@ def main() -> int:
     ap.add_argument("--verbose", action="store_true", help="print every finding, allowlisted or not")
     args = ap.parse_args()
 
-    jvm, ios = scan(JVM_API), scan(IOS_API)
+    try:
+        jvm, ios = scan(JVM_API), scan(IOS_API)
+    except ParseError as e:
+        print(f"{TAG} FAIL parser: {e}")
+        return 1
+    generator_table = (ROOT / "scripts/generate_api_wrapper.py").read_text(encoding="utf-8")
     findings: list[tuple[str, str, str, str]] = []
     for cls in HAND_SHAPED:
+        if cls not in ("GodotObject", "GodotCallable") and not re.search(rf'^\s*"{cls}": WrapperHome\(', generator_table, re.M):
+            findings.append((cls, "not-in-generator-table", "*", "HAND_SHAPED names a class PER_PLATFORM_WRAPPERS does not know"))
         if cls not in jvm or cls not in ios:
             missing = [p for p, idx in (("desktop", jvm), ("ios", ios)) if cls not in idx]
             findings.append((cls, "missing-on-platform", "*", ", ".join(missing)))
             continue
-        for cat, member, detail in compare(cls, analyze(jvm[cls]), analyze(ios[cls])):
-            findings.append((cls, cat, member, detail))
+        try:
+            for cat, member, detail in compare(cls, analyze(jvm[cls]), analyze(ios[cls])):
+                findings.append((cls, cat, member, detail))
+        except ParseError as e:
+            findings.append((cls, "parse-error", "*", str(e)))
 
     allow = load_allowlist(args.allowlist)
     if args.write_allowlist:
@@ -602,6 +603,9 @@ def main() -> int:
             "nested-desktop-only": "D5 mirrored nested Signals object, parity-gated (P1)",
             "nested-ios-only": "D5 mirrored nested Signals object, parity-gated (P1)",
             "annotations": "D6 @JvmName/@JvmStatic live on the expect declaration only (P2)",
+            "modality": "D2 same modality on both platforms (P1)",
+            "parse-error": "NEVER allowlist: fix the parser or the source layout",
+            "not-in-generator-table": "NEVER allowlist: fix HAND_SHAPED or PER_PLATFORM_WRAPPERS",
             "missing-on-platform": "class must exist on both platforms (P1)",
         }
         keys = sorted({(c, cat, m) for c, cat, m, _ in findings})

@@ -2508,10 +2508,7 @@ internal enum class TypeMapping(
       BASIS ->
         "net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 3), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 4), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 5), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 8)))"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($s))"
-      // A bare GodotObject-typed slot: wrap the address as a handle (the fallback for OBJECT with
-      // no objectWrapperFqName; every resolvable wrapper goes through the fromHandle path above).
-      OBJECT ->
-        "net.multigesture.kanama.api.GodotObject(net.multigesture.kanama.api.GodotHandle($s.get(ADDRESS, 0)))"
+      OBJECT -> "net.multigesture.kanama.api.GodotObject($s.get(ADDRESS, 0))"
       in VARIANT_ONLY_RETURN_SHAPES -> kotlinLiteralZero
       else -> "$s.get($valueLayout, 0)"
     }
@@ -2533,7 +2530,7 @@ internal enum class TypeMapping(
       BASIS ->
         "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString($s, $v.path)"
-      OBJECT -> "$s.set(ADDRESS, 0, $v.handle.segment)"
+      OBJECT -> "$s.set(ADDRESS, 0, $v.handle)"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
       else -> "$s.set($valueLayout, 0, $v)"
     }
@@ -2588,7 +2585,7 @@ internal enum class TypeMapping(
       BASIS ->
         "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
-      OBJECT -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, $v.handle.segment)"
+      OBJECT -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, $v.handle)"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
       else -> "rRet.reinterpret($ptrcallSizeBytesExpr).set($valueLayout, 0, $v)"
     }
