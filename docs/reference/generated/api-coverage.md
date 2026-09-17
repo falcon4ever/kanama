@@ -28,14 +28,14 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1036 / 1036 `████████████` 100.0%
-- Methods: 1834 / 15385 `█░░░░░░░░░░░` 11.9% (callable methods; engine virtuals excluded — see below)
+- Methods: 1810 / 15385 `█░░░░░░░░░░░` 11.8% (callable methods; engine virtuals excluded — see below)
 
 ### Per-Platform Class Sets
 
 One generated tree, held to the single-tree drift gate (`check_single_tree`: committed == fresh regen for every generated file; see wrapper-maintenance.md).
 
-- Shared tree (`src/sharedApi/kotlin/.../api`): 979 classes compiled by desktop, Android and iOS. 3 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
-- Per-platform (`PER_PLATFORM_WRAPPERS`, 56 classes): desktop generates 9 and hand-shapes 47; iOS generates 34, hand-shapes 8, hand-writes 12 collision classes, and does not host `DirAccess`, `MethodTweener`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
+- Shared tree (`src/sharedApi/kotlin/.../api`): 982 classes compiled by desktop, Android and iOS. 3 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
+- Per-platform (`PER_PLATFORM_WRAPPERS`, 53 classes): desktop generates 9 and hand-shapes 44; iOS generates 31, hand-shapes 8, hand-writes 12 collision classes, and does not host `DirAccess`, `MethodTweener`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
 
 ## Virtual Methods
 
@@ -47,7 +47,7 @@ One generated tree, held to the single-tree drift gate (`check_single_tree`: com
 | --- | ---: | --- | ---: | --- |
 | Core | 226/226 | `████████████` 100.0% | 358/2970 | `█░░░░░░░░░░░` 12.1% |
 | Scene | 26/26 | `████████████` 100.0% | 352/923 | `█████░░░░░░░` 38.1% |
-| Resources | 306/306 | `████████████` 100.0% | 375/2891 | `██░░░░░░░░░░` 13.0% |
+| Resources | 306/306 | `████████████` 100.0% | 351/2891 | `█░░░░░░░░░░░` 12.1% |
 | Input | 20/20 | `████████████` 100.0% | 41/238 | `██░░░░░░░░░░` 17.2% |
 | UI | 69/69 | `████████████` 100.0% | 217/1741 | `█░░░░░░░░░░░` 12.5% |
 | 2D | 112/112 | `████████████` 100.0% | 26/2030 | `░░░░░░░░░░░░` 1.3% |
@@ -496,10 +496,10 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `Marker2D` | 2D | 0/2 | `░░░░░░░░` 0.0% |
 | `Marker3D` | 3D | 0/2 | `░░░░░░░░` 0.0% |
 | `Marshalls` | Core | 0/6 | `░░░░░░░░` 0.0% |
-| `Material` | Resources | 6/6 | `████████` 100.0% |
+| `Material` | Resources | 0/6 | `░░░░░░░░` 0.0% |
 | `MenuBar` | UI | 0/24 | `░░░░░░░░` 0.0% |
 | `MenuButton` | UI | 0/7 | `░░░░░░░░` 0.0% |
-| `Mesh` | Resources | 14/14 | `████████` 100.0% |
+| `Mesh` | Resources | 0/14 | `░░░░░░░░` 0.0% |
 | `MeshConvexDecompositionSettings` | Rendering | 0/26 | `░░░░░░░░` 0.0% |
 | `MeshDataTool` | Rendering | 38/38 | `████████` 100.0% |
 | `MeshInstance2D` | 2D | 0/4 | `░░░░░░░░` 0.0% |
@@ -630,7 +630,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `PCKPacker` | Core | 0/5 | `░░░░░░░░` 0.0% |
 | `PackedDataContainer` | Resources | 0/2 | `░░░░░░░░` 0.0% |
 | `PackedDataContainerRef` | Core | 0/1 | `░░░░░░░░` 0.0% |
-| `PackedScene` | Resources | 4/4 | `████████` 100.0% |
+| `PackedScene` | Resources | 0/4 | `░░░░░░░░` 0.0% |
 | `PacketPeer` | Core | 0/8 | `░░░░░░░░` 0.0% |
 | `PacketPeerDTLS` | Core | 0/4 | `░░░░░░░░` 0.0% |
 | `PacketPeerExtension` | Core | 0/0 | inherited only |
