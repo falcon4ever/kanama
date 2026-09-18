@@ -63,6 +63,7 @@ from generate_api_wrapper import (  # noqa: E402
     IOS_GENERATED_BEGIN,
     IOS_GENERATED_END,
     IOS_PT_TAG_VALUES,
+    ios_generated_region,
 )
 
 C_SHIM = ROOT / "ios/bootstrap/kanama_ios_shim.c"
@@ -72,16 +73,25 @@ IOS_RUNTIME = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosRu
 BUILTIN_TAGS = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinTags.kt"
 
 C_PREFIX = "KANAMA_IOS_PT_"
+# Both Kotlin patterns open with this, so a declaration they both match starts at the SAME offset
+# and the reader can be re-applied at a declaration's own position (see `parse_kotlin`). `const` is
+# optional: a plain `private val IOS_PT_X = 99` is still a tag declaration the shim would dispatch
+# on, and matching only `const val` made it invisible to both patterns at once -- no reading, and
+# no complaint either.
+KOTLIN_TAG_DECL_HEAD = r"\b(?:const\s+)?val\s+"
 # The READER: a tag declaration whose value this gate can evaluate. Covers every spelling the three
 # Kotlin copies use and the near ones they could grow --
 #   `const val PT_X = 1`, `private const val IOS_PT_X = 1`, `internal const val IOS_PT_VARIANT = 38`,
 #   `const val PT_X: Int = 41`, `const val PT_X = 0x29`, `const val PT_X = 1_000`
-# -- so visibility is not part of the match and the type annotation is optional. Anything this
-# does NOT match is caught by the pattern below and fails; it is never dropped.
+# -- so visibility is not part of the match and the type annotation is optional. The literal must be
+# the WHOLE initializer: the trailing lookahead allows only blanks (a comment is already blanked),
+# `;` or the end of the line, so `= 38 + 1`, `= 1 shl 3` and `= 0x10 or 1` do not parse as a prefix
+# of themselves (38, 1, 16) -- they fail the reader and are reported by the pattern below.
 KOTLIN_TAG_RE = re.compile(
-    r"\bconst\s+val\s+(?:IOS_)?PT_(?P<name>[A-Za-z0-9_]+)"
+    KOTLIN_TAG_DECL_HEAD + r"(?:IOS_)?PT_(?P<name>[A-Za-z0-9_]+)"
     r"(?:\s*:\s*[A-Za-z_][A-Za-z0-9_.]*)?"
-    r"\s*=\s*(?P<value>[+-]?(?:0[xX])?[0-9A-Fa-f_]+)\b"
+    r"\s*=\s*(?P<value>[+-]?(?:0[xX])?[0-9A-Fa-f_]+)"
+    r"(?=[ \t]*(?:;|\r?\n|\Z))"
 )
 # The COMPLETENESS CHECK, not a parser: every tag DECLARATION, whatever its right-hand side. A
 # declaration this finds that the reader above did not parse is a parse-error naming the tag.
@@ -90,7 +100,7 @@ KOTLIN_TAG_RE = re.compile(
 # all and the gate reports PASS over a tag that is live in Kotlin and unread here (task 118 -- a
 # gate that swallows a failure produces green evidence for a red state). The C side already holds
 # this standard: a non-literal enumerator is a parse-error, not a skipped row.
-KOTLIN_TAG_DECL_RE = re.compile(r"\bconst\s+val\s+(?P<decl>(?:IOS_)?PT_[A-Za-z0-9_]+)")
+KOTLIN_TAG_DECL_RE = re.compile(KOTLIN_TAG_DECL_HEAD + r"(?P<decl>(?:IOS_)?PT_[A-Za-z0-9_]+)")
 # An `enum` block, with or without a tag name. The shim has several; the PT one is picked by body.
 C_ENUM_RE = re.compile(r"\benum\b(?:\s+[A-Za-z_][A-Za-z0-9_]*)?\s*\{")
 
@@ -111,10 +121,22 @@ def strip_c_noise(src: str) -> str:
     while i < n:
         ch = src[i]
         if ch == "/" and i + 1 < n and src[i + 1] == "/":
+            # C line splicing: a `//` comment whose line ends in a backslash continues onto the
+            # next line, so the enumerator after it is commented out as far as the compiler is
+            # concerned. Ending at the first newline would have counted it -- and an enumerator
+            # counted that the shim does not have shifts every implicit value after it.
             j = src.find("\n", i)
             j = n if j == -1 else j
+            while j < n:
+                end = j - 1 if j > i and src[j - 1] == "\r" else j
+                if end > i and src[end - 1] == "\\":
+                    nxt = src.find("\n", j + 1)
+                    j = n if nxt == -1 else nxt
+                    continue
+                break
             for k in range(i, j):
-                out[k] = " "
+                if out[k] != "\n":  # keep the newlines a spliced comment spans
+                    out[k] = " "
             i = j
         elif ch == "/" and i + 1 < n and src[i + 1] == "*":
             j = src.find("*/", i + 2)
@@ -257,68 +279,78 @@ def parse_kotlin_int(text: str) -> int:
     raise ValueError(f"{text!r} is not a decimal or hex integer literal")
 
 
-def parse_kotlin(path: Path, *, region: tuple[str, str] | None = None) -> dict[str, int]:
-    """`const val (IOS_)?PT_X = N` declarations of a Kotlin file -> bare tag name -> value.
+def objectcalls_region_span(raw: str) -> tuple[int, int]:
+    """Offsets of the GENERATED MEMBERS region in a raw iOS `ObjectCalls.kt`.
+
+    The marker rule is the GENERATOR's, not this gate's: `ios_generated_region` refuses any count
+    but exactly one BEGIN and one END and refuses an END before its BEGIN, so a stray pasted marker
+    cannot silently move the region (`str.find` would have taken the first occurrence). It returns
+    the text, and a parse-error must report file-absolute line numbers, so the markers it validated
+    are located again here.
+    """
+    try:
+        ios_generated_region(raw)
+    except SystemExit as exc:  # the generator's own refusal; re-reported as this gate's finding
+        raise ParseError(f"{exc}") from exc
+    return raw.index(IOS_GENERATED_BEGIN) + len(IOS_GENERATED_BEGIN), raw.index(IOS_GENERATED_END)
+
+
+def parse_kotlin(path: Path, *, generated_region: bool = False) -> dict[str, int]:
+    """`[const] val (IOS_)?PT_X = N` declarations of a Kotlin file -> bare tag name -> value.
 
     EVERY such declaration is either read or reported: the value must be a decimal or hex integer
-    literal, and a declaration whose value is anything else (another constant, an expression, a
-    `Long` suffix) is a parse-error naming the tag. Dropping it instead would be invisible --
-    copies 4 and 5 are subsets by design, so an unread tag produces no finding at all.
+    literal that is the whole initializer, and a declaration whose value is anything else (another
+    constant, an expression, a `Long` suffix) is a parse-error naming the tag. Dropping it instead
+    would be invisible -- copies 4 and 5 are subsets by design, so an unread tag produces no finding
+    at all.
 
-    [region] restricts the scan to the text between two markers (the generated region of the iOS
-    `ObjectCalls.kt`), so a hand-written tag above the BEGIN marker cannot be mistaken for part of
-    the rendering of the generator's dict.
+    [generated_region] restricts the scan to the generated region of the iOS `ObjectCalls.kt`, so a
+    hand-written tag above the BEGIN marker cannot be mistaken for part of the rendering of the
+    generator's dict.
     """
-    src = strip_noise(path.read_text(encoding="utf-8"))
+    raw = path.read_text(encoding="utf-8")
+    src = strip_noise(raw)
     first_line = 1  # line number of src[0] in the file, so a slice still reports file line numbers
-    if region is not None:
-        begin, end = region
+    if generated_region:
         # The markers live in comments, which `strip_noise` blanked -- locate them in the raw text
         # and slice the blanked copy at the same offsets (strip_noise preserves length).
-        raw = path.read_text(encoding="utf-8")
-        start = raw.find(begin)
-        stop = raw.find(end)
-        if start == -1 or stop == -1 or stop < start:
-            raise ParseError(f"generated region markers {begin!r} / {end!r} not found in order")
+        start, stop = objectcalls_region_span(raw)
         first_line += src.count("\n", 0, start)
         src = src[start:stop]
+
+    # ONE pass: every declaration, then the reader re-applied at that declaration's own offset.
+    # Both patterns open with KOTLIN_TAG_DECL_HEAD, so a declaration the reader understands matches
+    # exactly there -- and a declaration it does not is a parse-error, never a skipped row.
     tags: dict[str, int] = {}
-    read: set[int] = set()  # offsets of the `const` keywords the reader parsed, for the check below
-    for match in KOTLIN_TAG_RE.finditer(src):
+    for decl in KOTLIN_TAG_DECL_RE.finditer(src):
+        line = first_line + src.count("\n", 0, decl.start())
+        match = KOTLIN_TAG_RE.match(src, decl.start())
+        if match is None:
+            raise ParseError(
+                f"line {line}: `val {decl.group('decl')}` has a value this gate cannot read (the "
+                "whole initializer must be one decimal or hex integer literal); a tag it cannot "
+                "read is a tag it is not guarding"
+            )
         name = match.group("name")
         try:
             value = parse_kotlin_int(match.group("value"))
         except ValueError as exc:
-            raise ParseError(f"tag PT_{name}: {exc}") from exc
+            raise ParseError(f"line {line}: tag PT_{name}: {exc}") from exc
         if name in tags and tags[name] != value:
-            raise ParseError(f"tag PT_{name} is declared twice with different values")
+            raise ParseError(f"line {line}: tag PT_{name} is declared twice with different values")
         tags[name] = value
-        read.add(match.start())
 
-    # Every declaration the reader did not parse, by the OFFSET of its `const` keyword -- both
-    # patterns anchor there, so the offsets coincide exactly for a declaration both match. Comparing
-    # offsets rather than names also catches the case where one tag is declared twice and only the
-    # second spelling is unreadable.
-    for match in KOTLIN_TAG_DECL_RE.finditer(src):
-        if match.start() not in read:
-            line = first_line + src.count("\n", 0, match.start())
-            raise ParseError(
-                f"line {line}: `const val {match.group('decl')}` has a value this gate cannot read "
-                "(only a decimal or hex integer literal is accepted); a tag it cannot read is a tag "
-                "it is not guarding"
-            )
     if not tags:
-        raise ParseError("no `const val PT_*` declarations found")
+        raise ParseError("no `val PT_*` tag declarations found")
     return tags
 
 
 def load_tables() -> tuple[dict[str, dict[str, int]], list[str]]:
     """Parse all five copies. Returns (label -> table, parse-error findings)."""
-    begin, end = objectcalls_region_markers()
     loaders = {
         "C enum": (C_SHIM, lambda: parse_c_enum(C_SHIM)),
         "generator": (GENERATOR, parse_generator),
-        "ObjectCalls": (OBJECT_CALLS, lambda: parse_kotlin(OBJECT_CALLS, region=(begin, end))),
+        "ObjectCalls": (OBJECT_CALLS, lambda: parse_kotlin(OBJECT_CALLS, generated_region=True)),
         "KanamaIosRuntime": (IOS_RUNTIME, lambda: parse_kotlin(IOS_RUNTIME)),
         "BuiltinTags": (BUILTIN_TAGS, lambda: parse_kotlin(BUILTIN_TAGS)),
     }
@@ -335,15 +367,6 @@ def load_tables() -> tuple[dict[str, dict[str, int]], list[str]]:
         except OSError as exc:
             findings.append(f"parse-error {label} ({rel(path)}): {exc}")
     return tables, findings
-
-
-def objectcalls_region_markers() -> tuple[str, str]:
-    """The generator's own BEGIN/END markers for the generated region of the iOS ObjectCalls.kt.
-
-    Read from the generator (not spelled out here) so the marker text cannot drift between the
-    writer and this reader.
-    """
-    return IOS_GENERATED_BEGIN, IOS_GENERATED_END
 
 
 def rel(path: Path) -> str:
@@ -382,6 +405,7 @@ def compare(tables: dict[str, dict[str, int]]) -> list[str]:
 
     # 2. A tag name whose number differs between any two copies. One line per name, listing every
     #    copy that declares it with its file, so the fix has both ends in front of it.
+    value_mismatched: set[str] = set()
     every_name = sorted({name for table in tables.values() for name in table})
     for name in every_name:
         declared = [(label, tables[label][name]) for label in ORDER if name in tables.get(label, {})]
@@ -389,6 +413,7 @@ def compare(tables: dict[str, dict[str, int]]) -> list[str]:
         if len(values) > 1:
             where = ", ".join(f"{label}={value} ({rel(PATHS[label])})" for label, value in declared)
             findings.append(f"value-mismatch {name}: {where}")
+            value_mismatched.add(name)
 
     # 3. A Kotlin or Python copy naming a tag the C enum does not declare: the shim has no case for
     #    it, so the call would be dispatched as an unknown tag on device.
@@ -417,7 +442,11 @@ def compare(tables: dict[str, dict[str, int]]) -> list[str]:
                 f"generated-region-drift PT_{name}: in the generated region ({rel(OBJECT_CALLS)}) = "
                 f"{region[name]}, missing from IOS_PT_TAG_VALUES ({rel(GENERATOR)})"
             )
-        for name in sorted(set(region) & set(generator)):
+        # The value half only for names step 2 did not already report. Step 2 sees the generator and
+        # the region as two of the five copies, so today it always gets there first and this loop is
+        # the residual path; without the filter the same one-number edit printed twice and the
+        # finding count said 2 for one defect.
+        for name in sorted((set(region) & set(generator)) - value_mismatched):
             if region[name] != generator[name]:
                 findings.append(
                     f"generated-region-drift PT_{name}: IOS_PT_TAG_VALUES ({rel(GENERATOR)}) = "
@@ -432,8 +461,10 @@ def main() -> int:
     args = parser.parse_args()
 
     tables, findings = load_tables()
-    if len(tables) == len(ORDER):
-        findings += compare(tables)
+    # Always compare, even when a copy failed to parse: `compare` works from whatever parsed, and
+    # gating it on all five made one unreadable file hide every real disagreement among the other
+    # four -- one defect masking the rest is how a five-way table stays broken for a week.
+    findings += compare(tables)
 
     if args.json:
         print(
@@ -468,7 +499,12 @@ def main() -> int:
         return 1
 
     sizes = ", ".join(f"{label} {len(tables[label])}" for label in ORDER[1:])
-    print(f"{TAG} PASS {len(ORDER)} copies, C enum {len(tables['C enum'])} tags, {sizes}")
+    # Under --json, stdout is the JSON document and nothing else, so it can be piped into a parser;
+    # the human PASS line joins the FAIL lines on stderr.
+    print(
+        f"{TAG} PASS {len(ORDER)} copies, C enum {len(tables['C enum'])} tags, {sizes}",
+        file=sys.stderr if args.json else sys.stdout,
+    )
     return 0
 
 
