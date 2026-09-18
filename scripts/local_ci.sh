@@ -353,6 +353,13 @@ python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 stage "ObjectCalls member/name parity (desktop vs iOS)"
 python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
 
+stage "iOS PT tag table parity (five copies, task 119 item 30)"
+# The ptrcall type tags are the wire protocol of the iOS seam and exist five times (C enum,
+# generator dict, generated ObjectCalls region, KanamaIosRuntime, BuiltinTags). The drift gate
+# compares the generated region by member NAMES only, so a renumber compiles everywhere and fails
+# only at the shim's tag dispatch on a phone. This gate is the comparison.
+python3 "$ROOT_DIR/scripts/check_pt_tag_tables.py"
+
 stage "hand-shaped wrapper parity (desktop vs iOS, task 117)"
 # The remaining hand-shaped classes (the gate prints the count) must keep identical public shapes before they can become
 # expect/actual; every known divergence is listed with its decision in the allowlist, which can
