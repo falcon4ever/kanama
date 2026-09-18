@@ -32,19 +32,19 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 226 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 216 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
  * Excluded, and listed in the gate as such: `callWithVariantArgs`, `ptrcallNoArgsRetCallable`,
  * `ptrcallWithIntArgRetCallable`, `ptrcallWithRIDArgRetCallable`,
  * `ptrcallWithRIDIntArgsRetCallable`, `ptrcallWithStringIntArgsRetCallable`,
- * `ptrcallWithTypedMaterialListArg` -- their signatures name a hand-shaped per-platform wrapper
- * class (which a common declaration cannot see until task 117) or carry a default argument (which
- * an `expect` member cannot express on the Android lane). The `ptrcallWithIntArgRetVector3`
- * overload taking `value: Long` is desktop-only and stays platform-only for the same reason. The
- * `ptrcallWithNodePathArgRetBool` overload taking `path: String` is desktop-only and stays
- * platform-only for the same reason.
+ * `ptrcallWithTypedMaterialListArg` -- their signatures name a wrapper class the common fragment
+ * cannot see (per-platform or shared-tree, until task 117 moves the tree to commonMain) or carry a
+ * default argument (which an `expect` member cannot express on the Android lane). The
+ * `ptrcallWithIntArgRetVector3` overload taking `value: Long` is desktop-only and stays
+ * platform-only for the same reason. The `ptrcallWithNodePathArgRetBool` overload taking `path:
+ * String` is desktop-only and stays platform-only for the same reason.
  */
 expect object ObjectCalls {
   fun <T : Any> ptrcallNoArgsRetTypedObjectList(
@@ -607,6 +607,22 @@ expect object ObjectCalls {
     dictionary: Map<String, Any?>,
     dictionaries: List<Map<String, Any?>>,
   ): Map<String, Any?>
+
+  fun ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    values: Map<String, Any?>,
+    intValue: Int,
+    firstDouble: Double,
+    transformValue: Transform2D,
+    secondInt: Int,
+    thirdInt: Int,
+    fourthInt: Int,
+    fifthInt: Int,
+    secondDouble: Double,
+    longValue: Long,
+    colors: List<Color>,
+  ): RID
 
   fun ptrcallWithDictionaryListArg(
     methodBind: RawSegment,
@@ -2295,6 +2311,12 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: Long,
   ): RawSegment
+
+  fun ptrcallWithLongArgRetPackedColorList(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Long,
+  ): List<Color>
 
   fun ptrcallWithLongArgRetPackedInt32List(
     methodBind: RawSegment,
@@ -5985,6 +6007,88 @@ expect object ObjectCalls {
     doubleValue: Double,
   )
 
+  fun ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+    position: Vector2,
+    text: String,
+    alignment: Long,
+    width: Double,
+    fontSize: Int,
+    color: Color,
+    justification: Long,
+    direction: Long,
+    orientation: Long,
+    oversampling: Double,
+  )
+
+  fun ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+    position: Vector2,
+    text: String,
+    alignment: Long,
+    width: Double,
+    fontSize: Int,
+    maxLines: Int,
+    outlineSize: Int,
+    color: Color,
+    breakFlags: Long,
+    justification: Long,
+    direction: Long,
+    orientation: Long,
+    oversampling: Double,
+  )
+
+  fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+    position: Vector2,
+    text: String,
+    alignment: Long,
+    width: Double,
+    fontSize: Int,
+    maxLines: Int,
+    color: Color,
+    breakFlags: Long,
+    justification: Long,
+    direction: Long,
+    orientation: Long,
+    oversampling: Double,
+  )
+
+  fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+    position: Vector2,
+    text: String,
+    alignment: Long,
+    width: Double,
+    fontSize: Int,
+    outlineSize: Int,
+    color: Color,
+    justification: Long,
+    direction: Long,
+    orientation: Long,
+    oversampling: Double,
+  )
+
+  fun ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+    position: Vector2,
+    char: Int,
+    fontSize: Int,
+    outlineSize: Int,
+    color: Color,
+    oversampling: Double,
+  ): Double
+
   fun ptrcallWithRIDVector2TwoColorDoubleArgs(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -6016,6 +6120,17 @@ expect object ObjectCalls {
     color: Color,
     doubleValue: Double,
   )
+
+  fun ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+    position: Vector2,
+    char: Int,
+    fontSize: Int,
+    color: Color,
+    oversampling: Double,
+  ): Double
 
   fun ptrcallWithRIDVector2TwoRIDArgs(
     methodBind: RawSegment,
@@ -6737,6 +6852,32 @@ expect object ObjectCalls {
     value: Long,
     enabled: Boolean,
   )
+
+  fun ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    text: String,
+    alignment: Long,
+    width: Double,
+    fontSize: Int,
+    justification: Long,
+    direction: Long,
+    orientation: Long,
+  ): Vector2
+
+  fun ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    text: String,
+    alignment: Long,
+    width: Double,
+    fontSize: Int,
+    maxLines: Int,
+    breakFlags: Long,
+    justification: Long,
+    direction: Long,
+    orientation: Long,
+  ): Vector2
 
   fun ptrcallWithStringLongObjectTwoBoolArgs(
     methodBind: RawSegment,

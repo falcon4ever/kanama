@@ -362,9 +362,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "iOS: hand-written static facade + FileAccessHandle glue in FileAccess.kt (static-method dispatch "
         "subset); the generated draft would clash and still references the desktop hand-shaped "
         "FileAccessHandle surface"),
-    "Font": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "Image": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),

@@ -5506,7 +5506,7 @@ actual object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(
+  actual fun ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -12933,7 +12933,7 @@ actual object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithLongArgRetPackedColorList(
+  actual fun ptrcallWithLongArgRetPackedColorList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -28711,7 +28711,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28786,7 +28786,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28876,7 +28876,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -28961,7 +28961,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29041,7 +29041,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(
+  actual fun ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -29253,7 +29253,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(
+  actual fun ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -32263,7 +32263,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(
+  actual fun ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -32315,7 +32315,7 @@ actual object ObjectCalls {
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
-  fun ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(
+  actual fun ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,

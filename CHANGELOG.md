@@ -7,6 +7,30 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `Font` (task 117 P1'(a))
+
+- `Font` is generated once into the shared wrapper tree instead of being hand-written on desktop and
+  generated on iOS. Every member keeps the name, signature, default arguments and body it had in the
+  desktop hand file — `getSpacing`, `findVariation`, `getStringSize`, the `draw*` family and the
+  `Font.wrap` / `Font.fromHandle` companion helpers the shared tree calls (Control, Theme, Window,
+  TextMesh, …) are unchanged, so callers are unaffected. The desktop companion carried no sugar to
+  move, so no `SHARED_COMPANION_MEMBER_SECTIONS` entry was needed.
+- Gained on desktop/Android: `getPaletteCount()`, `getPaletteName(index)` and
+  `getPaletteColors(index)` — three Godot 4.7 methods the hand file omitted, which the generator
+  emits on both platforms. iOS already had them; they were the three `Font | ios-only` lines of the
+  wrapper parity allowlist, which are now gone.
+- No int width changed: `findVariation`'s `faceIndex`/`spacing*` parameters stay `Int`,
+  `paletteIndex` stays `Long`, `getSpacing(spacing: Long): Int`, `getFontWeight`/`getFontStretch`
+  stay `Int` and `getFontStyle` stays `Long` — the desktop hand file already used the generator's
+  width mapping. `Font`'s primary constructor was already public on both platforms, so nothing moved
+  there either.
+- `ObjectCalls` gained ten `expect`/`actual` helpers that only `Font` calls
+  (`ptrcallWithLongArgRetPackedColorList`,
+  `ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID`, the four
+  `ptrcallWithRIDVector2String…` draw helpers, the two `…ColorDoubleArgsRetDouble` char helpers and
+  the two `ptrcallWithStringLongDouble…RetVector2` string-size helpers): they existed on both
+  backends already and are now declared in the common `expect object ObjectCalls`.
+
 ### Added — gate: the five iOS PT tag tables must agree (task 119 item 30)
 
 - The iOS ptrcall type tags (`PT_*`) are the wire protocol of the iOS seam — the C shim's dispatch
