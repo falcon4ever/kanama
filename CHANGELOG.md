@@ -7,6 +7,26 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Added — gate: the five iOS PT tag tables must agree (task 119 item 30)
+
+- The iOS ptrcall type tags (`PT_*`) are the wire protocol of the iOS seam — the C shim's dispatch
+  switches on those numbers — and the table exists **five times**: the `KANAMA_IOS_PT_*` enum in
+  `ios/bootstrap/kanama_ios_shim.c` (the authority), `IOS_PT_TAG_VALUES` in
+  `scripts/generate_api_wrapper.py`, the `private const val PT_*` block inside the generated region
+  of the iOS `ObjectCalls.kt`, the hand-written `IOS_PT_*` subset in `KanamaIosRuntime.kt`, and the
+  common `PT_*` in `BuiltinTags.kt`. Nothing compared any two of them: the drift gate compares the
+  generated region by member NAMES only, so a renumber in any one copy compiled everywhere, passed
+  every gate, and failed only at the shim's tag dispatch on a phone.
+- `scripts/check_pt_tag_tables.py` parses all five (the C enum by walking the enumerators with C's
+  implicit-value rule, the generator by importing the dict rather than by regex, the three Kotlin
+  copies by regex over comment/string-blanked source) and fails naming the tag and the files on a
+  value mismatch, a Kotlin/Python tag the C enum does not declare, two C enumerators resolving to
+  the same number, any difference between the generated region and the generator's dict, or a copy
+  that does not parse. A tag present only in C is not a failure — `KanamaIosRuntime.kt` and
+  `BuiltinTags.kt` are subsets by design — so the PASS line prints all five sizes instead.
+- Runs as the `iOS PT tag table parity (five copies, task 119 item 30)` stage of
+  `scripts/local_ci.sh`, so it gates every PR through `ci.yml`'s `gate` job.
+
 ### Changed — wrapper classes generated once: `PackedScene` (task 117 P1'(a))
 
 - `PackedScene` is generated once into the shared wrapper tree instead of being hand-written on
