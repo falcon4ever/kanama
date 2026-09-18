@@ -310,9 +310,6 @@ class WrapperHome:
 PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "AnimationPlayer": WrapperHome("hand", "generated",
         "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "ArrayMesh": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "AudioStreamPlayer": WrapperHome("hand", "collision",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit; iOS: hand-written cinterop-glue Node subclass in IosGodotApi.kt"),
@@ -988,11 +985,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         fun create(): MeshDataTool =
             MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))))
 """.strip("\n"),
-    "ArrayMesh": """
-        // Downcast a Resource/Mesh to ArrayMesh (null if not), mirroring the desktop helper.
-        fun fromResource(value: Resource): ArrayMesh? =
-            if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
-""".strip("\n"),
     "PhysicsBody3D": """
         // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
         // (used by set_axis_lock). Values are @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags.
@@ -1077,6 +1069,13 @@ SHARED_COMPANION_MEMBER_SECTIONS = {
         @JvmStatic
         fun fromResource(value: Resource?): Material? =
             value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
+""".strip("\n"),
+    "ArrayMesh": """
+        // Downcast a Resource/Mesh to ArrayMesh (null if not); the desktop hand file's factory
+        // helper (task 117 P1'(a)), now generated once for every platform.
+        @JvmStatic
+        fun fromResource(value: Resource): ArrayMesh? =
+            if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
 """.strip("\n"),
     "Sprite2D": """
         @JvmStatic

@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 216 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 213 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -2359,6 +2359,16 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: Long,
   ): Vector3
+
+  fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    primitive: Long,
+    arrays: List<Any?>,
+    blendShapes: List<List<Any?>>,
+    lods: Map<String, Any?>,
+    flags: Long,
+  )
 
   fun ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(
     methodBind: RawSegment,
@@ -7960,6 +7970,13 @@ expect object ObjectCalls {
     indices: List<Int>,
   )
 
+  fun ptrcallWithTransform3DAndDoubleArgRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    transformValue: Transform3D,
+    doubleValue: Double,
+  ): Long
+
   fun ptrcallWithTransform3DAndLongArgsRetTransform3D(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -8107,6 +8124,14 @@ expect object ObjectCalls {
     first: Int,
     second: Int,
     boolArg: Boolean,
+  )
+
+  fun ptrcallWithTwoIntAndByteArrayArg(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: Int,
+    second: Int,
+    bytes: ByteArray,
   )
 
   fun ptrcallWithTwoIntAndColorArg(

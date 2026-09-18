@@ -2977,7 +2977,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (int32, int32, PackedByteArray) and no return value. */
-  fun ptrcallWithTwoIntAndByteArrayArg(
+  actual fun ptrcallWithTwoIntAndByteArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -25425,7 +25425,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTransform3DAndDoubleArgRetLong(
+  actual fun ptrcallWithTransform3DAndDoubleArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -28479,7 +28479,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
+  actual fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     primitive: Long,

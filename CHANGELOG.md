@@ -7,6 +7,29 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `ArrayMesh` (task 117 P1'(a))
+
+- `ArrayMesh` is generated once into the shared wrapper tree instead of being hand-written on desktop
+  and generated on iOS. `ArrayMesh.fromResource(value: Resource): ArrayMesh?` survives as a generated
+  `@JvmStatic` companion helper with the same signature, so callers
+  (`godot-4-3d-third-person-controller`'s `GrassScatter.kt`, `example_project`'s
+  `WrapperConvenienceProbe.kt`) are unaffected. The iOS-only copy of that helper was deleted from the
+  generator's `IOS_COMPANION_MEMBER_SECTIONS` — one shared entry now feeds both platforms, and iOS
+  gains the `@JvmStatic` annotation (inert there).
+- Behaviour gained on desktop/Android: `getShadowMesh()` now uses the shared tree's self-return
+  collapse — when the engine hands back this same object it releases the extra reference and returns
+  `this` instead of minting a second wrapper. `addSurfaceFromArrays()` now calls `checkOpen()` first,
+  like every other member, so calling it through a closed handle raises
+  `IllegalStateException("RefCounted handle is closed")` instead of calling through a freed handle.
+- No int width changed and no signature changed: all 29 members (`getSurfaceCount`,
+  `surfaceGetArrayLen`, `lightmapUnwrap`, the `ARRAY_*` / `PRIMITIVE_*` / `BLEND_SHAPE_MODE_*`
+  constants, …) keep the exact types, parameter names and defaults the desktop hand file had.
+  `ArrayMesh`'s primary constructor was already public on both platforms.
+- `ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs` (used by `addSurfaceFromArrays`),
+  `ptrcallWithTransform3DAndDoubleArgRetLong` (`lightmapUnwrap`) and `ptrcallWithTwoIntAndByteArrayArg`
+  (`surfaceUpdate*Region`) are now part of the common `expect object ObjectCalls`, so both platforms
+  declare them as `actual`.
+
 ### Changed — wrapper classes generated once: `Font` (task 117 P1'(a))
 
 - `Font` is generated once into the shared wrapper tree instead of being hand-written on desktop and

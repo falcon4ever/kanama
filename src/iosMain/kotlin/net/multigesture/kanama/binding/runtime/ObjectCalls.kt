@@ -13131,7 +13131,7 @@ actual object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
+  actual fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     primitive: Long,
@@ -37113,7 +37113,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTransform3DAndDoubleArgRetLong(
+  actual fun ptrcallWithTransform3DAndDoubleArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -37933,7 +37933,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoIntAndByteArrayArg(
+  actual fun ptrcallWithTwoIntAndByteArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
