@@ -347,9 +347,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ENetMultiplayerPeer": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "EditorExportPlatform": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "Engine": WrapperHome("hand", "collision",
         "desktop: hand-written singleton: registerSingleton keeps a RefCounted-rejection lifetime guard "
         "(audit_singleton_refcounted_policy); iOS: hand-written singleton (get_main_loop -> MainLoop, no "

@@ -7,6 +7,28 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `EditorExportPlatform` (task 117 P1'(a))
+
+- `EditorExportPlatform` is generated once into the shared wrapper tree instead of being hand-written
+  on desktop and generated on iOS. All 26 members keep their names, signatures, default arguments and
+  bodies — `exportProject`, `exportPack`/`exportZip`(`Patch`), `savePack`/`saveZip`(`Patch`),
+  `sshRunOnRemote`(`NoWait`), the message accessors and the companion's
+  `getForcedExportFiles(preset)` (a Godot static, emitted on both platforms) — so callers are
+  unaffected. The desktop companion had no hand sugar to move.
+- Gained on desktop/Android: the nine companion constants the hand file omitted —
+  `EXPORT_MESSAGE_NONE`/`INFO`/`WARNING`/`ERROR` and `DEBUG_FLAG_DUMB_CLIENT`/`REMOTE_DEBUG`/
+  `REMOTE_DEBUG_LOCALHOST`/`VIEW_COLLISIONS`/`VIEW_NAVIGATION`, all `Long`. iOS already had them;
+  they were the nine `EditorExportPlatform | companion-ios-only` lines of the wrapper parity
+  allowlist, which are now gone. `sshRunOnRemote()` also gained the `checkOpen()` guard every other
+  member has, so calling it through a closed handle raises
+  `IllegalStateException("RefCounted handle is closed")` instead of calling through a freed handle.
+- No int width changed and the primary constructor was already public on both platforms, so there is
+  no source break.
+- Eleven `ObjectCalls` helpers that only this class calls (the `ptrcallWithObjectBoolString…`
+  export/save family, `ptrcallWithObjectAndBoolArgRetDictionary`, `ptrcallWithLongAndTwoStringArgs`
+  and the three `ptrcallWithTwoStringPackedStringList…` ssh helpers) are now part of the common
+  `expect object ObjectCalls`, so both platforms declare them as `actual`.
+
 ### Changed — wrapper classes generated once: `ArrayMesh` (task 117 P1'(a))
 
 - `ArrayMesh` is generated once into the shared wrapper tree instead of being hand-written on desktop

@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 213 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 202 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -2211,6 +2211,14 @@ expect object ObjectCalls {
     second: RawSegment,
   )
 
+  fun ptrcallWithLongAndTwoStringArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Long,
+    first: String,
+    second: String,
+  )
+
   fun ptrcallWithLongAndTwoStringNameAndVariantArg(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -2725,6 +2733,13 @@ expect object ObjectCalls {
     boolArg: Boolean,
   ): Boolean
 
+  fun ptrcallWithObjectAndBoolArgRetDictionary(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    boolArg: Boolean,
+  ): Map<String, Any?>
+
   fun ptrcallWithObjectAndBoolArgRetInt(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -2981,6 +2996,63 @@ expect object ObjectCalls {
     instance: RawSegment,
     objectArgs: List<RawSegment>,
   )
+
+  fun ptrcallWithObjectBoolStringArgsRetDictionary(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    boolArg: Boolean,
+    text: String,
+  ): Map<String, Any?>
+
+  fun ptrcallWithObjectBoolStringBoolArgsRetDictionary(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    boolArg: Boolean,
+    text: String,
+    secondBoolArg: Boolean,
+  ): Map<String, Any?>
+
+  fun ptrcallWithObjectBoolStringLongArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    boolArg: Boolean,
+    text: String,
+    longArg: Long,
+  ): Long
+
+  fun ptrcallWithObjectBoolStringLongBoolArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    firstFlag: Boolean,
+    text: String,
+    longValue: Long,
+    secondFlag: Boolean,
+  ): Long
+
+  fun ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    boolArg: Boolean,
+    text: String,
+    values: List<String>,
+    longArg: Long,
+  ): Long
+
+  fun ptrcallWithObjectBoolTwoCallableArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    value: Boolean,
+    firstCallableObject: RawSegment,
+    firstCallableMethod: String,
+    secondCallableObject: RawSegment,
+    secondCallableMethod: String,
+  ): Long
 
   fun ptrcallWithObjectCallableArgs(
     methodBind: RawSegment,
@@ -9289,6 +9361,16 @@ expect object ObjectCalls {
     index: Long,
   ): Vector2i
 
+  fun ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    values: List<String>,
+    third: String,
+    fourth: String,
+  ): Long
+
   fun ptrcallWithTwoStringPackedStringListCallableArgsRetLong(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -9297,6 +9379,27 @@ expect object ObjectCalls {
     values: List<String>,
     callableObject: RawSegment,
     callableMethod: String,
+  ): Long
+
+  fun ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    arguments: List<String>,
+    third: String,
+    output: List<Any?>,
+    port: Int,
+  ): Long
+
+  fun ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    values: List<String>,
+    third: String,
+    index: Int,
   ): Long
 
   fun ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(
