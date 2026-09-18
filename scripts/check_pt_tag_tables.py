@@ -72,9 +72,25 @@ IOS_RUNTIME = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosRu
 BUILTIN_TAGS = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinTags.kt"
 
 C_PREFIX = "KANAMA_IOS_PT_"
-# `const val PT_X = 1` / `private const val IOS_PT_X = 1` / `internal const val IOS_PT_VARIANT = 38`
-# (visibility varies across the three Kotlin copies, so it is not part of the match).
-KOTLIN_TAG_RE = re.compile(r"\bconst\s+val\s+(?:IOS_)?PT_(?P<name>[A-Za-z0-9_]+)\s*=\s*(?P<value>-?\d+)\b")
+# The READER: a tag declaration whose value this gate can evaluate. Covers every spelling the three
+# Kotlin copies use and the near ones they could grow --
+#   `const val PT_X = 1`, `private const val IOS_PT_X = 1`, `internal const val IOS_PT_VARIANT = 38`,
+#   `const val PT_X: Int = 41`, `const val PT_X = 0x29`, `const val PT_X = 1_000`
+# -- so visibility is not part of the match and the type annotation is optional. Anything this
+# does NOT match is caught by the pattern below and fails; it is never dropped.
+KOTLIN_TAG_RE = re.compile(
+    r"\bconst\s+val\s+(?:IOS_)?PT_(?P<name>[A-Za-z0-9_]+)"
+    r"(?:\s*:\s*[A-Za-z_][A-Za-z0-9_.]*)?"
+    r"\s*=\s*(?P<value>[+-]?(?:0[xX])?[0-9A-Fa-f_]+)\b"
+)
+# The COMPLETENESS CHECK, not a parser: every tag DECLARATION, whatever its right-hand side. A
+# declaration this finds that the reader above did not parse is a parse-error naming the tag.
+# Without it the reader's misses are silent, and silent is the whole failure mode this gate exists
+# to remove: copies 4 and 5 are subsets by design, so a dropped declaration produces NO finding at
+# all and the gate reports PASS over a tag that is live in Kotlin and unread here (task 118 -- a
+# gate that swallows a failure produces green evidence for a red state). The C side already holds
+# this standard: a non-literal enumerator is a parse-error, not a skipped row.
+KOTLIN_TAG_DECL_RE = re.compile(r"\bconst\s+val\s+(?P<decl>(?:IOS_)?PT_[A-Za-z0-9_]+)")
 # An `enum` block, with or without a tag name. The shim has several; the PT one is picked by body.
 C_ENUM_RE = re.compile(r"\benum\b(?:\s+[A-Za-z_][A-Za-z0-9_]*)?\s*\{")
 
@@ -227,14 +243,34 @@ def parse_generator() -> dict[str, int]:
     return tags
 
 
+def parse_kotlin_int(text: str) -> int:
+    """A Kotlin integer literal -> int. Raises ValueError on anything else.
+
+    Decimal or hex; `_` digit separators are allowed. Not `int(text, 0)`: Python reads a leading
+    zero as an octal prefix and rejects `010`, which Kotlin (no octal literals) reads as 10.
+    """
+    cleaned = text.replace("_", "")
+    if re.fullmatch(r"[+-]?0[xX][0-9A-Fa-f]+", cleaned):
+        return int(cleaned, 16)
+    if re.fullmatch(r"[+-]?[0-9]+", cleaned):
+        return int(cleaned, 10)
+    raise ValueError(f"{text!r} is not a decimal or hex integer literal")
+
+
 def parse_kotlin(path: Path, *, region: tuple[str, str] | None = None) -> dict[str, int]:
     """`const val (IOS_)?PT_X = N` declarations of a Kotlin file -> bare tag name -> value.
+
+    EVERY such declaration is either read or reported: the value must be a decimal or hex integer
+    literal, and a declaration whose value is anything else (another constant, an expression, a
+    `Long` suffix) is a parse-error naming the tag. Dropping it instead would be invisible --
+    copies 4 and 5 are subsets by design, so an unread tag produces no finding at all.
 
     [region] restricts the scan to the text between two markers (the generated region of the iOS
     `ObjectCalls.kt`), so a hand-written tag above the BEGIN marker cannot be mistaken for part of
     the rendering of the generator's dict.
     """
     src = strip_noise(path.read_text(encoding="utf-8"))
+    first_line = 1  # line number of src[0] in the file, so a slice still reports file line numbers
     if region is not None:
         begin, end = region
         # The markers live in comments, which `strip_noise` blanked -- locate them in the raw text
@@ -244,14 +280,33 @@ def parse_kotlin(path: Path, *, region: tuple[str, str] | None = None) -> dict[s
         stop = raw.find(end)
         if start == -1 or stop == -1 or stop < start:
             raise ParseError(f"generated region markers {begin!r} / {end!r} not found in order")
+        first_line += src.count("\n", 0, start)
         src = src[start:stop]
     tags: dict[str, int] = {}
+    read: set[int] = set()  # offsets of the `const` keywords the reader parsed, for the check below
     for match in KOTLIN_TAG_RE.finditer(src):
         name = match.group("name")
-        value = int(match.group("value"))
+        try:
+            value = parse_kotlin_int(match.group("value"))
+        except ValueError as exc:
+            raise ParseError(f"tag PT_{name}: {exc}") from exc
         if name in tags and tags[name] != value:
             raise ParseError(f"tag PT_{name} is declared twice with different values")
         tags[name] = value
+        read.add(match.start())
+
+    # Every declaration the reader did not parse, by the OFFSET of its `const` keyword -- both
+    # patterns anchor there, so the offsets coincide exactly for a declaration both match. Comparing
+    # offsets rather than names also catches the case where one tag is declared twice and only the
+    # second spelling is unreadable.
+    for match in KOTLIN_TAG_DECL_RE.finditer(src):
+        if match.start() not in read:
+            line = first_line + src.count("\n", 0, match.start())
+            raise ParseError(
+                f"line {line}: `const val {match.group('decl')}` has a value this gate cannot read "
+                "(only a decimal or hex integer literal is accepted); a tag it cannot read is a tag "
+                "it is not guarding"
+            )
     if not tags:
         raise ParseError("no `const val PT_*` declarations found")
     return tags
