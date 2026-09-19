@@ -7,6 +7,22 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — generator: factory/downcast companion helpers are table-driven (task 119 item 33)
+
+- The wrapper generator's `create()` and `from*` downcast companion helpers are rows in one
+  `FACTORY_HELPERS` table rendered by `render_factory_helpers`, instead of Kotlin pasted per class
+  into `SHARED_COMPANION_MEMBER_SECTIONS` / `IOS_COMPANION_MEMBER_SECTIONS` /
+  `DESKTOP_COMPANION_MEMBER_SECTIONS`. All 23 classes that had one moved (8 shared, 12 iOS-only, 3
+  desktop-only), so the first two tables are now empty and the iOS one holds only non-factory
+  content: `RefCounted`'s `releaseHandle`, `InputEventKey`'s Key constants, `PhysicsBody3D`'s
+  BodyAxis flags. A P1'(a) retirement adds a row instead of copying a helper body.
+- **No API change.** Every generated signature, annotation and body is byte-identical; the only
+  change in the generated files is the one-line comment above each helper — the renderer's uniform
+  wording, replacing per-class prose where there was some and added where there was none.
+- `check_section_tables` gained `check_factory_helpers`: a `FACTORY_HELPERS` key must be a class the
+  generator actually renders, and a companion section that still pastes a helper the table renders is
+  a hard error, so the same helper cannot be emitted twice.
+
 ### Changed — iOS exports require iOS 15.0; the gate fixture and docs follow Godot 4.7.2's default (task 123)
 
 - The iOS visual-smoke fixture (`scripts/ios_visual_smoke.sh`) exported with `application/min_ios_version="14.0"`, a

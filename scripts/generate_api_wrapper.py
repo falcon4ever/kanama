@@ -803,23 +803,9 @@ DESKTOP_MEMBER_SECTIONS = {
         (value as? Map<*, *>)?.entries?.associate { (key, mapValue) -> key.toString() to mapValue } ?: defaultValue
 """.strip("\n"),
 }
-DESKTOP_COMPANION_MEMBER_SECTIONS = {
-    "ParticleProcessMaterial": """
-        @JvmStatic
-        fun fromResource(value: Resource): ParticleProcessMaterial? =
-            if (value.isClass("ParticleProcessMaterial")) ParticleProcessMaterial(value.handle) else null
-""".strip("\n"),
-    "PlaneMesh": """
-        @JvmStatic
-        fun fromResource(value: Resource): PlaneMesh? =
-            if (value.isClass("PlaneMesh")) PlaneMesh(value.handle) else null
-""".strip("\n"),
-    "ProceduralSkyMaterial": """
-        @JvmStatic
-        fun fromResource(value: Resource): ProceduralSkyMaterial? =
-            if (value.isClass("ProceduralSkyMaterial")) ProceduralSkyMaterial(value.handle) else null
-""".strip("\n"),
-}
+# Empty since task 119 item 33: every entry this table held was a `from*` downcast helper, and
+# those are rows in FACTORY_HELPERS now. Non-factory desktop companion members belong here.
+DESKTOP_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
 
 # iOS-only hand-written body members emitted into the generated wrapper as a stable
 # custom-section (Phase 4.2). These are Kanama ergonomics that can't come from
@@ -958,29 +944,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         const val KEY_R = 82L
         const val KEY_S = 83L
         const val KEY_W = 87L
-
-        // Instantiate a blank InputEventKey (for synthesizing input events / InputMap actions).
-        fun create(): InputEventKey =
-            InputEventKey(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))))
-
-        // Cast a generic event to InputEventKey (null if not), mirroring the desktop helper.
-        fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) InputEventKey(value.handle) else null
-""".strip("\n"),
-    "Camera3D": """
-        // Instantiate a Camera3D (e.g. the debug free-camera).
-        fun create(): Camera3D =
-            Camera3D(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("Camera3D"))))
-""".strip("\n"),
-    "SurfaceTool": """
-        // Instantiate a SurfaceTool (RefCounted; used to build meshes procedurally).
-        fun create(): SurfaceTool =
-            SurfaceTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))))
-""".strip("\n"),
-    "MeshDataTool": """
-        // Instantiate a MeshDataTool (RefCounted; used to read mesh vertex/face data).
-        fun create(): MeshDataTool =
-            MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))))
 """.strip("\n"),
     "PhysicsBody3D": """
         // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
@@ -991,46 +954,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         const val BODY_AXIS_ANGULAR_X = 8L
         const val BODY_AXIS_ANGULAR_Y = 16L
         const val BODY_AXIS_ANGULAR_Z = 32L
-""".strip("\n"),
-    "InputEventMouseMotion": """
-        // Cast a generic event to InputEventMouseMotion (null if not), mirroring the desktop helper.
-        fun from(value: GodotObject): InputEventMouseMotion? =
-            if (value.isClass("InputEventMouseMotion")) InputEventMouseMotion(value.handle) else null
-""".strip("\n"),
-    "BaseMaterial3D": """
-        // Downcast a Material to BaseMaterial3D (null if not), mirroring the desktop helper.
-        fun fromMaterial(value: Material): BaseMaterial3D? =
-            if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null
-""".strip("\n"),
-    "LightmapGI": """
-        // Instantiate a LightmapGI node.
-        fun create(): LightmapGI =
-            LightmapGI(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI"))))
-""".strip("\n"),
-    "SceneMultiplayer": """
-        // Downcast a MultiplayerAPI to SceneMultiplayer (null if not), mirroring the desktop helper.
-        fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
-            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { SceneMultiplayer(it.handle) }
-""".strip("\n"),
-    "ConfigFile": """
-        // Instantiate a ConfigFile (RefCounted key/value store).
-        fun create(): ConfigFile =
-            ConfigFile(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))))
-""".strip("\n"),
-    "ENetMultiplayerPeer": """
-        // Instantiate an ENetMultiplayerPeer.
-        fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer"))))
-""".strip("\n"),
-    "ButtonGroup": """
-        // Instantiate a ButtonGroup (RefCounted radio-button grouping).
-        fun create(): ButtonGroup =
-            ButtonGroup(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup"))))
-""".strip("\n"),
-    "ShaderMaterial": """
-        // Downcast a Resource to ShaderMaterial (null if not), mirroring the desktop helper.
-        fun fromResource(value: Resource?): ShaderMaterial? =
-            value?.takeIf { it.isClass("ShaderMaterial") }?.let { ShaderMaterial(it.handle) }
 """.strip("\n"),
 }
 
@@ -1045,59 +968,75 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
-SHARED_COMPANION_MEMBER_SECTIONS = {
-    "PackedScene": """
-        // Instantiate an empty PackedScene (for pack() + ResourceSaver.save); the desktop hand
-        // file's factory helper (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun create(): PackedScene =
-            PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))
-""".strip("\n"),
-    "Mesh": """
-        // Downcast a GodotObject to Mesh (null if not); the desktop hand file's factory helper
-        // (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun fromObject(value: GodotObject): Mesh? =
-            if (value.isClass("Mesh")) Mesh(value.handle) else null
-""".strip("\n"),
-    "Material": """
-        // Downcast a Resource to Material (null if not); the desktop hand file's factory helper
-        // (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun fromResource(value: Resource?): Material? =
-            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
-""".strip("\n"),
-    "ArrayMesh": """
-        // Downcast a Resource/Mesh to ArrayMesh (null if not); the desktop hand file's factory
-        // helper (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun fromResource(value: Resource): ArrayMesh? =
-            if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
-""".strip("\n"),
-    "Sprite2D": """
-        @JvmStatic
-        fun create(): Sprite2D =
-            Sprite2D(GodotHandle(ObjectCalls.constructObject("Sprite2D")))
-""".strip("\n"),
-    "FastNoiseLite": """
-        @JvmStatic
-        fun create(): FastNoiseLite =
-            FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite")))
+# Empty since task 119 item 33: every entry this table held was a `create()` / `from*` helper,
+# and those are rows in FACTORY_HELPERS now. Non-factory shared companion members belong here.
+SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
 
-        @JvmStatic
-        fun fromResource(value: Resource): FastNoiseLite? =
-            if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
-""".strip("\n"),
-    "OfflineMultiplayerPeer": """
-        @JvmStatic
-        fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer")))
-""".strip("\n"),
-    "SphereMesh": """
-        @JvmStatic
-        fun fromResource(value: Resource): SphereMesh? =
-            if (value.isClass("SphereMesh")) SphereMesh(value.handle) else null
-""".strip("\n"),
+
+@dataclass(frozen=True)
+class Downcast:
+    """A `from*` companion helper that narrows `value` to the owning class, or null.
+
+    `param_name` exists only because `SceneMultiplayer.fromApi(api: MultiplayerAPI?)` spells its
+    parameter `api`; every other helper uses `value`, so the field defaults to that. Renaming it
+    would change a public parameter name (Kotlin named arguments), which this parcel does not do.
+    """
+
+    name: str
+    param_type: str
+    nullable: bool
+    param_name: str = "value"
+
+
+@dataclass(frozen=True)
+class FactorySpec:
+    """The factory/downcast companion helpers one wrapper class gets."""
+
+    create: bool
+    downcasts: tuple[Downcast, ...] = ()
+
+
+# Factory / downcast companion helpers, one row per class, rendered by `render_factory_helpers`
+# (task 119 item 33). Before this table every `create()` and every `from*` downcast was pasted by
+# hand into one of the three `*_COMPANION_MEMBER_SECTIONS` tables, in one of two bodies each;
+# a row here says WHICH helpers a class gets and the renderer owns the body, so a P1'(a)
+# retirement adds a row instead of copying Kotlin.
+#
+# A key must be a class the generator renders, and the mode it is rendered in picks the body:
+# a shared-tree class gets `ObjectCalls.constructObject`, an iOS-only generated class gets
+# `MemorySegment.ofAddress(IosGodot.constructObject(...))`. `check_section_tables` enforces both
+# that (the key must be in one of the class universes) and that no section still pastes the
+# helper the row now renders.
+FACTORY_HELPERS: dict[str, FactorySpec] = {
+    # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
+    # every platform.
+    "ArrayMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
+    "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
+    "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
+    "OfflineMultiplayerPeer": FactorySpec(True),
+    "PackedScene": FactorySpec(True),
+    "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "Sprite2D": FactorySpec(True),
+    # Desktop-only generated classes.
+    "ParticleProcessMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "ProceduralSkyMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    # iOS-only generated classes. `from(value: GodotObject)` is here too: the name is just a field,
+    # and leaving the two of them pasted would reorder InputEventKey's companion, whose hand-written
+    # Key constants (still a section) sit above its factories.
+    "BaseMaterial3D": FactorySpec(False, (Downcast("fromMaterial", "Material", False),)),
+    "ButtonGroup": FactorySpec(True),
+    "Camera3D": FactorySpec(True),
+    "ConfigFile": FactorySpec(True),
+    "ENetMultiplayerPeer": FactorySpec(True),
+    "InputEventKey": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
+    "InputEventMouseMotion": FactorySpec(False, (Downcast("from", "GodotObject", False),)),
+    "LightmapGI": FactorySpec(True),
+    "MeshDataTool": FactorySpec(True),
+    "SceneMultiplayer": FactorySpec(False, (Downcast("fromApi", "MultiplayerAPI", True, "api"),)),
+    "ShaderMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
+    "SurfaceTool": FactorySpec(True),
 }
 
 # Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`.
@@ -1230,8 +1169,48 @@ def check_section_tables(shared_classes: set[str]) -> None:
         for key in table:
             if key not in allowed:
                 problems.append(f"{table_name}[{key!r}]: not a class this table may host")
+    problems.extend(check_factory_helpers(shared_classes))
     if problems:
         raise SystemExit("[generate_api_wrapper] custom-section table misuse:\n  " + "\n  ".join(problems))
+
+
+# A companion section that still declares a helper `FACTORY_HELPERS` renders for the same class
+# would emit it twice into one companion object. Matching on the declaration keyword keeps prose
+# ("Cast a generic event ...") and member names ending in `from` out of it; any annotations and a
+# visibility modifier before `fun` are allowed, because a `private fun create()` collides just the
+# same. `from\w*` is deliberately wide: a `fun fromSeconds(` in a row class's section is flagged
+# too, and the message names it, so the false positive diagnoses itself.
+_PASTED_FACTORY_RE = re.compile(
+    r"^\s*(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:private|internal|public|protected)\s+)?fun\s+(create\s*\(\)|from\w*\s*\()",
+    re.MULTILINE,
+)
+
+
+def check_factory_helpers(shared_classes: set[str]) -> list[str]:
+    """Validate `FACTORY_HELPERS`: every key renders somewhere, and nothing renders it twice."""
+    problems = []
+    for class_name in FACTORY_HELPERS:
+        # The two per-platform sets are disjoint (asserted where they are declared) and the shared
+        # set excludes PER_PLATFORM_WRAPPERS, so a key is in at most one universe; here only "in none"
+        # can go wrong.
+        if not any(class_name in classes for classes in (shared_classes, DESKTOP_ONLY_GENERATED, IOS_ONLY_GENERATED)):
+            problems.append(
+                f"FACTORY_HELPERS[{class_name!r}]: not a class the generator renders "
+                "(neither shared, nor a per-platform generated wrapper)",
+            )
+        for table_name, table in (
+            ("SHARED_COMPANION_MEMBER_SECTIONS", SHARED_COMPANION_MEMBER_SECTIONS),
+            ("DESKTOP_COMPANION_MEMBER_SECTIONS", DESKTOP_COMPANION_MEMBER_SECTIONS),
+            ("IOS_COMPANION_MEMBER_SECTIONS", IOS_COMPANION_MEMBER_SECTIONS),
+        ):
+            pasted = _PASTED_FACTORY_RE.search(table.get(class_name, ""))
+            if pasted:
+                problems.append(
+                    f"FACTORY_HELPERS[{class_name!r}]: {table_name}[{class_name!r}] still pastes "
+                    f"`fun {pasted.group(1).rstrip('(').strip()}` — the table renders it, so the "
+                    "companion would declare it twice",
+                )
+    return problems
 
 
 def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
@@ -2663,6 +2642,90 @@ def render_wrap_helpers(class_name: str) -> str:
     return "\n".join(lines)
 
 
+def _factory_jvm_static() -> bool:
+    """Whether a factory helper carries `@JvmStatic`.
+
+    `_jvm_static()` is unconditional because every wrapper's `fromHandle` is part of the desktop
+    SURFACE the shared tree reproduces. The factory helpers of the iOS-ONLY generated classes are
+    the exception: those files live in `src/iosMain` alone, no JVM compiler ever sees them, and the
+    hand-pasted sections they replace never carried the annotation. Rendering it there would change
+    generated bytes for no effect on any platform.
+    """
+    return _jvm_static() and RENDER_TARGET != "ios"
+
+
+def _article(name: str) -> str:
+    """`a` / `an` for a class name, so the rendered comment reads as English."""
+    return "an" if name[:1] in set("AEIOU") else "a"
+
+
+def _construct_object(class_name: str) -> str:
+    """The engine-side `constructObject` call, in the spelling the render target compiles."""
+    if RENDER_TARGET == "ios":
+        return f'MemorySegment.ofAddress(IosGodot.constructObject("{class_name}"))'
+    return f'ObjectCalls.constructObject("{class_name}")'
+
+
+def _factory_class_universe(class_name: str) -> bool:
+    """Whether [class_name] is rendered by the CURRENT target, so its row applies here.
+
+    The three universes are disjoint (`tree_universe` subtracts `PER_PLATFORM_WRAPPERS` from the
+    shared set), so one row is emitted by exactly one target. The gate matters for the audit-only
+    `--ios-emit-class` path, which renders shared classes in iOS mode: there a shared class's row
+    stays unrendered, exactly as its `SHARED_COMPANION_MEMBER_SECTIONS` entry did. The shared branch
+    is "not per-platform" rather than a membership test because the shared set lives in
+    `tree_universe`, not at module level; that is safe because `render_draft` only runs for classes
+    the tree renders and `check_factory_helpers` rejects a key outside every universe at `--write-tree`.
+    """
+    if RENDER_TARGET == "ios":
+        return class_name in IOS_ONLY_GENERATED
+    if RENDER_TARGET == "desktop":
+        return class_name in DESKTOP_ONLY_GENERATED
+    return class_name not in IOS_ONLY_GENERATED and class_name not in DESKTOP_ONLY_GENERATED
+
+
+def render_factory_helpers(class_name: str) -> str | None:
+    """The `create()` / `from*` companion helpers [class_name] declares in `FACTORY_HELPERS`."""
+    spec = FACTORY_HELPERS.get(class_name)
+    if spec is None or not _factory_class_universe(class_name):
+        return None
+    annotation = ["        @JvmStatic"] if _factory_jvm_static() else []
+    blocks: list[str] = []
+    if spec.create:
+        blocks.append(
+            "\n".join(
+                [
+                    f"        // Instantiate {_article(class_name)} {class_name}.",
+                    *annotation,
+                    f"        fun create(): {class_name} =",
+                    f"            {class_name}(GodotHandle({_construct_object(class_name)}))",
+                ],
+            ),
+        )
+    for downcast in spec.downcasts:
+        param = downcast.param_name
+        if downcast.nullable:
+            body = [
+                f"        fun {downcast.name}({param}: {downcast.param_type}?): {class_name}? =",
+                f'            {param}?.takeIf {{ it.isClass("{class_name}") }}?.let {{ {class_name}(it.handle) }}',
+            ]
+        else:
+            body = [
+                f"        fun {downcast.name}({param}: {downcast.param_type}): {class_name}? =",
+                f'            if ({param}.isClass("{class_name}")) {class_name}({param}.handle) else null',
+            ]
+        blocks.append(
+            "\n".join(
+                [
+                    f"        // Downcast {_article(downcast.param_type)} {downcast.param_type} to {class_name} (null if not).",
+                    *annotation,
+                    *body,
+                ],
+            ),
+        )
+    return "\n\n".join(blocks) if blocks else None
+
+
 def render_singleton_wrap_helpers(class_name: str) -> str:
     lines = ["    @JvmStatic"] if _jvm_static() else []
     lines.extend(
@@ -2915,6 +2978,12 @@ def render_draft(
         custom_companion_members = _companion_section(cls.name)
         if custom_companion_members:
             companion_sections.append(custom_companion_members)
+        # After the custom section, not before it: the one class that has both (iOS `InputEventKey`)
+        # declares its hand-written Key constants in the section and its factories below them, and
+        # the table must not reorder the companion it took the helpers out of.
+        factory_helpers = render_factory_helpers(cls.name)
+        if factory_helpers:
+            companion_sections.append(factory_helpers)
         companion_sections.append("\n\n".join(binds) if binds else "        // No MethodBinds emitted yet.")
         content = "\n".join(
             [

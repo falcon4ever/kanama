@@ -382,10 +382,12 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         internal fun wrap(handle: RawSegment): FastNoiseLite? =
             if (handle.address() == 0L) null else FastNoiseLite(GodotHandle(handle))
 
+        // Instantiate a FastNoiseLite.
         @JvmStatic
         fun create(): FastNoiseLite =
             FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite")))
 
+        // Downcast a Resource to FastNoiseLite (null if not).
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
             if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null

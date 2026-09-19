@@ -2152,6 +2152,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         internal fun wrap(handle: MemorySegment): ParticleProcessMaterial? =
             if (handle.address() == 0L) null else ParticleProcessMaterial(GodotHandle(handle))
 
+        // Downcast a Resource to ParticleProcessMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ParticleProcessMaterial? =
             if (value.isClass("ParticleProcessMaterial")) ParticleProcessMaterial(value.handle) else null

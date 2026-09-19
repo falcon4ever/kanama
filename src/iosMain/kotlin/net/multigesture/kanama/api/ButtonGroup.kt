@@ -48,7 +48,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         internal fun wrap(handle: MemorySegment): ButtonGroup? =
             if (handle.address() == 0L) null else ButtonGroup(GodotHandle(handle))
 
-        // Instantiate a ButtonGroup (RefCounted radio-button grouping).
+        // Instantiate a ButtonGroup.
         fun create(): ButtonGroup =
             ButtonGroup(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup"))))
 

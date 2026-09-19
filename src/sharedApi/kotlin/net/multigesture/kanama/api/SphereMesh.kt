@@ -151,6 +151,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         internal fun wrap(handle: RawSegment): SphereMesh? =
             if (handle.address() == 0L) null else SphereMesh(GodotHandle(handle))
 
+        // Downcast a Resource to SphereMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): SphereMesh? =
             if (value.isClass("SphereMesh")) SphereMesh(value.handle) else null

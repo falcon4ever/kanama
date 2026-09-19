@@ -1708,7 +1708,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         internal fun wrap(handle: MemorySegment): BaseMaterial3D? =
             if (handle.address() == 0L) null else BaseMaterial3D(GodotHandle(handle))
 
-        // Downcast a Material to BaseMaterial3D (null if not), mirroring the desktop helper.
+        // Downcast a Material to BaseMaterial3D (null if not).
         fun fromMaterial(value: Material): BaseMaterial3D? =
             if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null
 

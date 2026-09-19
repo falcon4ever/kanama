@@ -181,7 +181,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         internal fun wrap(handle: MemorySegment): SceneMultiplayer? =
             if (handle.address() == 0L) null else SceneMultiplayer(GodotHandle(handle))
 
-        // Downcast a MultiplayerAPI to SceneMultiplayer (null if not), mirroring the desktop helper.
+        // Downcast a MultiplayerAPI to SceneMultiplayer (null if not).
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
             api?.takeIf { it.isClass("SceneMultiplayer") }?.let { SceneMultiplayer(it.handle) }
 

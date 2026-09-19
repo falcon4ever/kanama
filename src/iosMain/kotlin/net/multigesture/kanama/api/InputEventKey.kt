@@ -159,11 +159,11 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
         const val KEY_S = 83L
         const val KEY_W = 87L
 
-        // Instantiate a blank InputEventKey (for synthesizing input events / InputMap actions).
+        // Instantiate an InputEventKey.
         fun create(): InputEventKey =
             InputEventKey(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))))
 
-        // Cast a generic event to InputEventKey (null if not), mirroring the desktop helper.
+        // Downcast a GodotObject to InputEventKey (null if not).
         fun from(value: GodotObject): InputEventKey? =
             if (value.isClass("InputEventKey")) InputEventKey(value.handle) else null
 
