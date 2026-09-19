@@ -803,23 +803,9 @@ DESKTOP_MEMBER_SECTIONS = {
         (value as? Map<*, *>)?.entries?.associate { (key, mapValue) -> key.toString() to mapValue } ?: defaultValue
 """.strip("\n"),
 }
-DESKTOP_COMPANION_MEMBER_SECTIONS = {
-    "ParticleProcessMaterial": """
-        @JvmStatic
-        fun fromResource(value: Resource): ParticleProcessMaterial? =
-            if (value.isClass("ParticleProcessMaterial")) ParticleProcessMaterial(value.handle) else null
-""".strip("\n"),
-    "PlaneMesh": """
-        @JvmStatic
-        fun fromResource(value: Resource): PlaneMesh? =
-            if (value.isClass("PlaneMesh")) PlaneMesh(value.handle) else null
-""".strip("\n"),
-    "ProceduralSkyMaterial": """
-        @JvmStatic
-        fun fromResource(value: Resource): ProceduralSkyMaterial? =
-            if (value.isClass("ProceduralSkyMaterial")) ProceduralSkyMaterial(value.handle) else null
-""".strip("\n"),
-}
+# Empty since task 119 item 33: every entry this table held was a `from*` downcast helper, and
+# those are rows in FACTORY_HELPERS now. Non-factory desktop companion members belong here.
+DESKTOP_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
 
 # iOS-only hand-written body members emitted into the generated wrapper as a stable
 # custom-section (Phase 4.2). These are Kanama ergonomics that can't come from
@@ -1032,6 +1018,10 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "PackedScene": FactorySpec(True),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Sprite2D": FactorySpec(True),
+    # Desktop-only generated classes.
+    "ParticleProcessMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "ProceduralSkyMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     # iOS-only generated classes. `from(value: GodotObject)` is here too: the name is just a field,
     # and leaving the two of them pasted would reorder InputEventKey's companion, whose hand-written
     # Key constants (still a section) sit above its factories.
