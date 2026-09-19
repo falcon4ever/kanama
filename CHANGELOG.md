@@ -7,6 +7,78 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `EditorExportPlatform` (task 117 P1'(a))
+
+- `EditorExportPlatform` is generated once into the shared wrapper tree instead of being hand-written
+  on desktop and generated on iOS. All 26 instance members keep their names, signatures, default
+  arguments and bodies — `exportProject`, `exportPack`/`exportZip`(`Patch`), `savePack`/`saveZip`(`Patch`),
+  `sshRunOnRemote`(`NoWait`), the message accessors — and so does the companion's
+  `getForcedExportFiles(preset)` (a Godot static, emitted on both platforms), so callers are
+  unaffected. The desktop companion had no hand sugar to move.
+- Gained on desktop/Android: the nine companion constants the hand file omitted —
+  `EXPORT_MESSAGE_NONE`/`INFO`/`WARNING`/`ERROR` and `DEBUG_FLAG_DUMB_CLIENT`/`REMOTE_DEBUG`/
+  `REMOTE_DEBUG_LOCALHOST`/`VIEW_COLLISIONS`/`VIEW_NAVIGATION`, all `Long`. iOS already had them;
+  they were the nine `EditorExportPlatform | companion-ios-only` lines of the wrapper parity
+  allowlist, which are now gone. `sshRunOnRemote()` also gained the `checkOpen()` guard every other
+  member has, so calling it through a closed handle raises
+  `IllegalStateException("RefCounted handle is closed")` instead of calling through a freed handle.
+- No int width changed and the primary constructor was already public on both platforms, so there is
+  no source break.
+- Eleven `ObjectCalls` helpers that only this class calls from the shared tree (the
+  `ptrcallWithObjectBoolString…` export/save family, `ptrcallWithObjectAndBoolArgRetDictionary` — also
+  used by the desktop-only `Image` — `ptrcallWithLongAndTwoStringArgs` and the three
+  `ptrcallWithTwoStringPackedStringList…` ssh helpers) are now part of the common
+  `expect object ObjectCalls`, so both platforms declare them as `actual`.
+
+### Changed — wrapper classes generated once: `ArrayMesh` (task 117 P1'(a))
+
+- `ArrayMesh` is generated once into the shared wrapper tree instead of being hand-written on desktop
+  and generated on iOS. `ArrayMesh.fromResource(value: Resource): ArrayMesh?` survives as a generated
+  `@JvmStatic` companion helper with the same signature, so callers
+  (`godot-4-3d-third-person-controller`'s `GrassScatter.kt`, `example_project`'s
+  `WrapperConvenienceProbe.kt`) are unaffected. The iOS-only copy of that helper was deleted from the
+  generator's `IOS_COMPANION_MEMBER_SECTIONS` — one shared entry now feeds both platforms, and iOS
+  gains the `@JvmStatic` annotation (inert there).
+- Behaviour gained on desktop/Android: `getShadowMesh()` now uses the shared tree's self-return
+  collapse — when the engine hands back this same object it releases the extra reference and returns
+  `this` instead of minting a second wrapper. `addSurfaceFromArrays()` now calls `checkOpen()` first,
+  like every other member, so calling it through a closed handle raises
+  `IllegalStateException("RefCounted handle is closed")` instead of calling through a freed handle.
+- No int width changed and no signature changed: all 29 members (the `blendShapeMode` / `customAabb` /
+  `shadowMesh` properties and the 26 functions from `addBlendShape` to `getShadowMesh`, e.g.
+  `surfaceGetArrayLen`, `lightmapUnwrap`, `surfaceUpdateVertexRegion`) keep the exact types, parameter
+  names and defaults the desktop hand file had. (`getSurfaceCount` and the `ARRAY_*` / `PRIMITIVE_*` /
+  `BLEND_SHAPE_MODE_*` constants are inherited from `Mesh`, generated once since chunk 1.)
+  `ArrayMesh`'s primary constructor was already public on both platforms.
+- `ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs` (used by `addSurfaceFromArrays`),
+  `ptrcallWithTransform3DAndDoubleArgRetLong` (`lightmapUnwrap`) and `ptrcallWithTwoIntAndByteArrayArg`
+  (`surfaceUpdate*Region`) are now part of the common `expect object ObjectCalls`, so both platforms
+  declare them as `actual`.
+
+### Changed — wrapper classes generated once: `Font` (task 117 P1'(a))
+
+- `Font` is generated once into the shared wrapper tree instead of being hand-written on desktop and
+  generated on iOS. Every member keeps the name, signature, default arguments and body it had in the
+  desktop hand file — `getSpacing`, `findVariation`, `getStringSize`, the `draw*` family and the
+  `Font.wrap` / `Font.fromHandle` companion helpers the shared tree calls (Control, Theme, Window,
+  TextMesh, …) are unchanged, so callers are unaffected. The desktop companion carried no sugar to
+  move, so no `SHARED_COMPANION_MEMBER_SECTIONS` entry was needed.
+- Gained on desktop/Android: `getPaletteCount()`, `getPaletteName(index)` and
+  `getPaletteColors(index)` — three Godot 4.7 methods the hand file omitted, which the generator
+  emits on both platforms. iOS already had them; they were the three `Font | ios-only` lines of the
+  wrapper parity allowlist, which are now gone.
+- No int width changed: `findVariation`'s `faceIndex`/`spacing*` parameters stay `Int`,
+  `paletteIndex` stays `Long`, `getSpacing(spacing: Long): Int`, `getFontWeight`/`getFontStretch`
+  stay `Int` and `getFontStyle` stays `Long` — the desktop hand file already used the generator's
+  width mapping. `Font`'s primary constructor was already public on both platforms, so nothing moved
+  there either.
+- `ObjectCalls` gained ten `expect`/`actual` helpers that only `Font` calls
+  (`ptrcallWithLongArgRetPackedColorList`,
+  `ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID`, the four
+  `ptrcallWithRIDVector2String…` draw helpers, the two `…ColorDoubleArgsRetDouble` char helpers and
+  the two `ptrcallWithStringLongDouble…RetVector2` string-size helpers): they existed on both
+  backends already and are now declared in the common `expect object ObjectCalls`.
+
 ### Added — gate: the five iOS PT tag tables must agree (task 119 item 30)
 
 - The iOS ptrcall type tags (`PT_*`) are the wire protocol of the iOS seam — the C shim's dispatch
