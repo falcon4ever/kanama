@@ -381,9 +381,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "MeshLibrary": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "MethodTweener": WrapperHome("generated", "unsupported",
         "iOS: generated setTrans/setEase clash with the hand-written iOS Tweener fluent glue "
         "(IosGodotApi.kt) the class must subclass"),
@@ -1013,6 +1010,7 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
     "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
     "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
+    "MeshLibrary": FactorySpec(True),
     "OfflineMultiplayerPeer": FactorySpec(True),
     "PackedScene": FactorySpec(True),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),

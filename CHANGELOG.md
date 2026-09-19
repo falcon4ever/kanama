@@ -7,6 +7,30 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `MeshLibrary` (task 117 P1'(a))
+
+- `MeshLibrary` is generated once into the shared wrapper tree instead of being hand-written on
+  desktop and generated on iOS. All 24 members the desktop hand file had keep their names,
+  signatures, default arguments and bodies — `createItem`, the `setItem*`/`getItem*` family
+  (`Name`, `Mesh`, `MeshTransform`, `MeshCastShadow`, `NavigationMesh`,
+  `NavigationMeshTransform`, `NavigationLayers`, `Shapes`, `Preview`), `removeItem`,
+  `findItemByName`, `clear`, `getItemList`, `getLastUnusedItemId` — and so do the companion's
+  `fromHandle`/`wrap` helpers, so callers are unaffected.
+- `MeshLibrary.create()` survives as a generated `@JvmStatic` companion helper with the same
+  signature and body (`MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary")))`). It is
+  a `FACTORY_HELPERS["MeshLibrary"] = FactorySpec(True)` row now, not pasted Kotlin, so one row
+  feeds both platforms; iOS gains `create()` (previously it had none) and `@JvmStatic` (inert
+  there). Callers — `Starter-Kit-City-Builder`'s `Builder.kt` and `example_project`'s
+  `WrapperConvenienceProbe.kt` — are unaffected; the returned wrapper is still owned, so
+  `close()`/`use` stays required.
+- Gained on desktop/Android: `getItemCount(): Int`, a Godot method the hand file omitted. iOS
+  already had it; it was the `MeshLibrary | ios-only | getItemCount` line of the wrapper parity
+  allowlist, which is now gone, along with `MeshLibrary | companion-desktop-only | create`.
+- No int width changed, no body changed and the primary constructor was already public on both
+  platforms, so there is no source break. `MeshLibrary` is `RefCounted`-derived and every member
+  already opened with `checkOpen()` on both sides, so no guard was added. No new `ObjectCalls`
+  helper was referenced (the common `expect object` stays at 1380 members).
+
 ### Changed — wrapper classes generated once: `PhysicsBody3D` (task 117 P1'(a))
 
 - `PhysicsBody3D` is generated once into the shared wrapper tree instead of being hand-written on
