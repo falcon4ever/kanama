@@ -254,8 +254,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         internal fun wrap(handle: RawSegment): Mesh? =
             if (handle.address() == 0L) null else Mesh(GodotHandle(handle))
 
-        // Downcast a GodotObject to Mesh (null if not); the desktop hand file's factory helper
-        // (task 117 P1'(a)), now generated once for every platform.
+        // Downcast a GodotObject to Mesh (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Mesh? =
             if (value.isClass("Mesh")) Mesh(value.handle) else null

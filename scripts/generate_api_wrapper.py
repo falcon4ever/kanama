@@ -1045,60 +1045,9 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
-SHARED_COMPANION_MEMBER_SECTIONS = {
-    "PackedScene": """
-        // Instantiate an empty PackedScene (for pack() + ResourceSaver.save); the desktop hand
-        // file's factory helper (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun create(): PackedScene =
-            PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))
-""".strip("\n"),
-    "Mesh": """
-        // Downcast a GodotObject to Mesh (null if not); the desktop hand file's factory helper
-        // (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun fromObject(value: GodotObject): Mesh? =
-            if (value.isClass("Mesh")) Mesh(value.handle) else null
-""".strip("\n"),
-    "Material": """
-        // Downcast a Resource to Material (null if not); the desktop hand file's factory helper
-        // (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun fromResource(value: Resource?): Material? =
-            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
-""".strip("\n"),
-    "ArrayMesh": """
-        // Downcast a Resource/Mesh to ArrayMesh (null if not); the desktop hand file's factory
-        // helper (task 117 P1'(a)), now generated once for every platform.
-        @JvmStatic
-        fun fromResource(value: Resource): ArrayMesh? =
-            if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
-""".strip("\n"),
-    "Sprite2D": """
-        @JvmStatic
-        fun create(): Sprite2D =
-            Sprite2D(GodotHandle(ObjectCalls.constructObject("Sprite2D")))
-""".strip("\n"),
-    "FastNoiseLite": """
-        @JvmStatic
-        fun create(): FastNoiseLite =
-            FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite")))
-
-        @JvmStatic
-        fun fromResource(value: Resource): FastNoiseLite? =
-            if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
-""".strip("\n"),
-    "OfflineMultiplayerPeer": """
-        @JvmStatic
-        fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer")))
-""".strip("\n"),
-    "SphereMesh": """
-        @JvmStatic
-        fun fromResource(value: Resource): SphereMesh? =
-            if (value.isClass("SphereMesh")) SphereMesh(value.handle) else null
-""".strip("\n"),
-}
+# Empty since task 119 item 33: every entry this table held was a `create()` / `from*` helper,
+# and those are rows in FACTORY_HELPERS now. Non-factory shared companion members belong here.
+SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
 
 
 @dataclass(frozen=True)
@@ -1135,7 +1084,18 @@ class FactorySpec:
 # `MemorySegment.ofAddress(IosGodot.constructObject(...))`. `check_section_tables` enforces both
 # that (the key must be in exactly one class universe) and that no section still pastes the
 # helper the row now renders.
-FACTORY_HELPERS: dict[str, FactorySpec] = {}
+FACTORY_HELPERS: dict[str, FactorySpec] = {
+    # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
+    # every platform.
+    "ArrayMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
+    "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
+    "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
+    "OfflineMultiplayerPeer": FactorySpec(True),
+    "PackedScene": FactorySpec(True),
+    "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "Sprite2D": FactorySpec(True),
+}
 
 # Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`.
 DESKTOP_EXTENSION_SECTIONS = {
