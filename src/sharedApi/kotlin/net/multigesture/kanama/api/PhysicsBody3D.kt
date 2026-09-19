@@ -1,8 +1,10 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
@@ -12,6 +14,42 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: PhysicsBody3D
  */
 open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
+    var axisLockLinearX: Boolean
+        @JvmName("axisLockLinearXProperty")
+        get() = getAxisLock(1L)
+        @JvmName("setAxisLockLinearXProperty")
+        set(value) = setAxisLock(1L, value)
+
+    var axisLockLinearY: Boolean
+        @JvmName("axisLockLinearYProperty")
+        get() = getAxisLock(2L)
+        @JvmName("setAxisLockLinearYProperty")
+        set(value) = setAxisLock(2L, value)
+
+    var axisLockLinearZ: Boolean
+        @JvmName("axisLockLinearZProperty")
+        get() = getAxisLock(4L)
+        @JvmName("setAxisLockLinearZProperty")
+        set(value) = setAxisLock(4L, value)
+
+    var axisLockAngularX: Boolean
+        @JvmName("axisLockAngularXProperty")
+        get() = getAxisLock(8L)
+        @JvmName("setAxisLockAngularXProperty")
+        set(value) = setAxisLock(8L, value)
+
+    var axisLockAngularY: Boolean
+        @JvmName("axisLockAngularYProperty")
+        get() = getAxisLock(16L)
+        @JvmName("setAxisLockAngularYProperty")
+        set(value) = setAxisLock(16L, value)
+
+    var axisLockAngularZ: Boolean
+        @JvmName("axisLockAngularZProperty")
+        get() = getAxisLock(32L)
+        @JvmName("setAxisLockAngularZProperty")
+        set(value) = setAxisLock(32L, value)
+
     /**
      * Moves the body along the vector `motion`. In order to be frame rate independent in
      * `Node._physics_process` or `Node._process`, `motion` should be computed using `delta`. The body
@@ -83,7 +121,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.get_collision_exceptions
      */
     fun getCollisionExceptions(): List<PhysicsBody3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedPhysicsBody3DList(getCollisionExceptionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, segment, PhysicsBody3D::wrap)
     }
 
     /**
@@ -105,19 +143,22 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
     }
 
     companion object {
-        const val BODY_AXIS_LINEAR_X: Long = PhysicsServer3D.BODY_AXIS_LINEAR_X
-        const val BODY_AXIS_LINEAR_Y: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Y
-        const val BODY_AXIS_LINEAR_Z: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Z
-        const val BODY_AXIS_ANGULAR_X: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_X
-        const val BODY_AXIS_ANGULAR_Y: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Y
-        const val BODY_AXIS_ANGULAR_Z: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Z
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsBody3D? =
             wrap(handle.segment)
 
         internal fun wrap(handle: RawSegment): PhysicsBody3D? =
             if (handle.address() == 0L) null else PhysicsBody3D(GodotHandle(handle))
+
+        // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
+        // (used by set_axis_lock). Aliases of the @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags,
+        // which the shared tree generates as `const val`s on PhysicsServer3D.
+        const val BODY_AXIS_LINEAR_X: Long = PhysicsServer3D.BODY_AXIS_LINEAR_X
+        const val BODY_AXIS_LINEAR_Y: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Y
+        const val BODY_AXIS_LINEAR_Z: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Z
+        const val BODY_AXIS_ANGULAR_X: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_X
+        const val BODY_AXIS_ANGULAR_Y: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Y
+        const val BODY_AXIS_ANGULAR_Z: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Z
 
         private const val MOVE_AND_COLLIDE_HASH = 3208792678L
         private val moveAndCollideBind by lazy {

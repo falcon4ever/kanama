@@ -1,15 +1,16 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Plane
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
-import kotlin.jvm.JvmName
 
 /**
  * Camera node, displays from a point of view.
@@ -651,12 +652,13 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         fun fromHandle(handle: GodotHandle): Camera3D? =
             wrap(handle.segment)
 
+        internal fun wrap(handle: RawSegment): Camera3D? =
+            if (handle.address() == 0L) null else Camera3D(GodotHandle(handle))
+
+        // Instantiate a Camera3D.
         @JvmStatic
         fun create(): Camera3D =
             Camera3D(GodotHandle(ObjectCalls.constructObject("Camera3D")))
-
-        internal fun wrap(handle: RawSegment): Camera3D? =
-            if (handle.address() == 0L) null else Camera3D(GodotHandle(handle))
 
         private const val PROJECT_RAY_NORMAL_HASH = 1718073306L
         private val projectRayNormalBind by lazy {

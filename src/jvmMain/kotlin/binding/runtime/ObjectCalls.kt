@@ -1306,7 +1306,10 @@ actual object ObjectCalls {
   ): List<NodePath> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL, BuiltinTypes::readArrayNodePaths)
 
-  fun ptrcallNoArgsRetPlaneList(methodBind: MemorySegment, instance: MemorySegment): List<Plane> =
+  actual fun ptrcallNoArgsRetPlaneList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): List<Plane> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL, BuiltinTypes::readArrayPlanes)
 
   actual fun ptrcallNoArgsRetRect2List(
@@ -12719,7 +12722,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with three scalar float args and no return value. */
-  fun ptrcallWithThreeDoubleArgs(
+  actual fun ptrcallWithThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -24904,7 +24907,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVector3ArgRetBool(
+  actual fun ptrcallWithVector3ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -24922,7 +24925,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVector3ArgRetVector2(
+  actual fun ptrcallWithVector3ArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -25002,7 +25005,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Vector3, bool, scalar float, bool, int32) and Object return value. */
-  fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
+  actual fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector3,
@@ -25358,7 +25361,7 @@ actual object ObjectCalls {
    * Calls [methodBind] with (Transform3D, Vector3, Object*, scalar float, bool, int32) and bool
    * return value.
    */
-  fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
+  actual fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -25895,7 +25898,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVector2ArgRetVector3(
+  actual fun ptrcallWithVector2ArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -25916,7 +25919,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVector2AndDoubleArgRetVector3(
+  actual fun ptrcallWithVector2AndDoubleArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -28770,7 +28773,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithDoubleVector2TwoDoubleArgs(
+  actual fun ptrcallWithDoubleVector2TwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstDouble: Double,

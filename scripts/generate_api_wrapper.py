@@ -334,9 +334,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "CallbackTweener": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Tween chaining glue in IosGodotApi.kt"),
-    "Camera3D": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "ConfigFile": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -381,9 +378,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "MeshLibrary": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "MethodTweener": WrapperHome("generated", "unsupported",
         "iOS: generated setTrans/setEase clash with the hand-written iOS Tweener fluent glue "
         "(IosGodotApi.kt) the class must subclass"),
@@ -400,9 +394,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ParticleProcessMaterial": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
-    "PhysicsBody3D": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "PlaneMesh": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
@@ -945,16 +936,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         const val KEY_S = 83L
         const val KEY_W = 87L
 """.strip("\n"),
-    "PhysicsBody3D": """
-        // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
-        // (used by set_axis_lock). Values are @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags.
-        const val BODY_AXIS_LINEAR_X = 1L
-        const val BODY_AXIS_LINEAR_Y = 2L
-        const val BODY_AXIS_LINEAR_Z = 4L
-        const val BODY_AXIS_ANGULAR_X = 8L
-        const val BODY_AXIS_ANGULAR_Y = 16L
-        const val BODY_AXIS_ANGULAR_Z = 32L
-""".strip("\n"),
 }
 
 
@@ -968,9 +949,21 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
-# Empty since task 119 item 33: every entry this table held was a `create()` / `from*` helper,
-# and those are rows in FACTORY_HELPERS now. Non-factory shared companion members belong here.
-SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
+# Every `create()` / `from*` helper this table held is a row in FACTORY_HELPERS since task 119
+# item 33. Non-factory shared companion members belong here.
+SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
+    "PhysicsBody3D": """
+        // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
+        // (used by set_axis_lock). Aliases of the @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags,
+        // which the shared tree generates as `const val`s on PhysicsServer3D.
+        const val BODY_AXIS_LINEAR_X: Long = PhysicsServer3D.BODY_AXIS_LINEAR_X
+        const val BODY_AXIS_LINEAR_Y: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Y
+        const val BODY_AXIS_LINEAR_Z: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Z
+        const val BODY_AXIS_ANGULAR_X: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_X
+        const val BODY_AXIS_ANGULAR_Y: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Y
+        const val BODY_AXIS_ANGULAR_Z: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Z
+""".strip("\n"),
+}
 
 
 @dataclass(frozen=True)
@@ -1011,9 +1004,11 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
     # every platform.
     "ArrayMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "Camera3D": FactorySpec(True),
     "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
     "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
     "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
+    "MeshLibrary": FactorySpec(True),
     "OfflineMultiplayerPeer": FactorySpec(True),
     "PackedScene": FactorySpec(True),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
@@ -1027,7 +1022,6 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Key constants (still a section) sit above its factories.
     "BaseMaterial3D": FactorySpec(False, (Downcast("fromMaterial", "Material", False),)),
     "ButtonGroup": FactorySpec(True),
-    "Camera3D": FactorySpec(True),
     "ConfigFile": FactorySpec(True),
     "ENetMultiplayerPeer": FactorySpec(True),
     "InputEventKey": FactorySpec(True, (Downcast("from", "GodotObject", False),)),

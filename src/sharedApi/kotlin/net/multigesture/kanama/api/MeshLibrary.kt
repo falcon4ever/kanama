@@ -1,135 +1,270 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Transform3D
 
 /**
+ * Library of meshes.
+ *
  * Generated from Godot docs: MeshLibrary
  */
 class MeshLibrary(handle: GodotHandle) : Resource(handle) {
+    /**
+     * Creates a new item in the library with the given ID. You can get an unused ID from
+     * `get_last_unused_item_id`.
+     *
+     * Generated from Godot docs: MeshLibrary.create_item
+     */
     fun createItem(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(createItemBind, segment, id)
     }
 
+    /**
+     * Sets the item's name. This name is shown in the editor. It can also be used to look up the item
+     * later using `find_item_by_name`.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_name
+     */
     fun setItemName(id: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringArg(setItemNameBind, segment, id, name)
     }
 
+    /**
+     * Sets the item's mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_mesh
+     */
     fun setItemMesh(id: Int, mesh: Mesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemMeshBind, segment, id, mesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Sets the transform to apply to the item's mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_mesh_transform
+     */
     fun setItemMeshTransform(id: Int, meshTransform: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemMeshTransformBind, segment, id, meshTransform)
     }
 
+    /**
+     * Sets the item's shadow casting mode to `shadow_casting_setting`.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_mesh_cast_shadow
+     */
     fun setItemMeshCastShadow(id: Int, shadowCastingSetting: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, segment, id, shadowCastingSetting)
     }
 
+    /**
+     * Sets the item's navigation mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_navigation_mesh
+     */
     fun setItemNavigationMesh(id: Int, navigationMesh: NavigationMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemNavigationMeshBind, segment, id, navigationMesh?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Sets the transform to apply to the item's navigation mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_navigation_mesh_transform
+     */
     fun setItemNavigationMeshTransform(id: Int, navigationMesh: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(setItemNavigationMeshTransformBind, segment, id, navigationMesh)
     }
 
+    /**
+     * Sets the item's navigation layers bitmask.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_navigation_layers
+     */
     fun setItemNavigationLayers(id: Int, navigationLayers: Long) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndUInt32Args(setItemNavigationLayersBind, segment, id, navigationLayers)
     }
 
+    /**
+     * Sets an item's collision shapes. The array should consist of `Shape3D` objects, each followed by
+     * a `Transform3D` that will be applied to it. For shapes that should not have a transform, use
+     * `Transform3D.IDENTITY`.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_shapes
+     */
     fun setItemShapes(id: Int, shapes: List<Any?>) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndArrayArg(setItemShapesBind, segment, id, shapes)
     }
 
+    /**
+     * Sets a texture to use as the item's preview icon in the editor.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_preview
+     */
     fun setItemPreview(id: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(setItemPreviewBind, segment, id, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Returns the item's name.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_name
+     */
     fun getItemName(id: Int): String {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetString(getItemNameBind, segment, id)
     }
 
+    /**
+     * Returns the item's mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_mesh
+     */
     fun getItemMesh(id: Int): Mesh? {
         checkOpen()
         return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, segment, id))
     }
 
+    /**
+     * Returns the transform applied to the item's mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_mesh_transform
+     */
     fun getItemMeshTransform(id: Int): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemMeshTransformBind, segment, id)
     }
 
+    /**
+     * Returns the item's shadow casting mode.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_mesh_cast_shadow
+     */
     fun getItemMeshCastShadow(id: Int): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, segment, id)
     }
 
+    /**
+     * Returns the item's navigation mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_navigation_mesh
+     */
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
         checkOpen()
         return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, segment, id))
     }
 
+    /**
+     * Returns the transform applied to the item's navigation mesh.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_navigation_mesh_transform
+     */
     fun getItemNavigationMeshTransform(id: Int): Transform3D {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetTransform3D(getItemNavigationMeshTransformBind, segment, id)
     }
 
+    /**
+     * Returns the item's navigation layers bitmask.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_navigation_layers
+     */
     fun getItemNavigationLayers(id: Int): Long {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetUInt32(getItemNavigationLayersBind, segment, id)
     }
 
+    /**
+     * Returns an item's collision shapes. The array consists of each `Shape3D` followed by its
+     * `Transform3D`.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_shapes
+     */
     fun getItemShapes(id: Int): List<Any?> {
         checkOpen()
         return ObjectCalls.ptrcallWithIntArgRetArray(getItemShapesBind, segment, id)
     }
 
+    /**
+     * When running in the editor, returns a generated item preview (a 3D rendering in isometric
+     * perspective). When used in a running project, returns the manually-defined item preview which
+     * can be set using `set_item_preview`. Returns an empty `Texture2D` if no preview was manually set
+     * in a running project.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_preview
+     */
     fun getItemPreview(id: Int): Texture2D? {
         checkOpen()
         return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, segment, id))
     }
 
+    /**
+     * Removes the item.
+     *
+     * Generated from Godot docs: MeshLibrary.remove_item
+     */
     fun removeItem(id: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, id)
     }
 
+    /**
+     * Returns the first item with the given name, or `-1` if no item is found.
+     *
+     * Generated from Godot docs: MeshLibrary.find_item_by_name
+     */
     fun findItemByName(name: String): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithStringArgRetInt(findItemByNameBind, segment, name)
     }
 
+    /**
+     * Clears the library.
+     *
+     * Generated from Godot docs: MeshLibrary.clear
+     */
     fun clear() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
+    /**
+     * Returns the list of item IDs in use.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_list
+     */
     fun getItemList(): List<Int> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getItemListBind, segment)
     }
 
+    /**
+     * Returns the number of items present in the library.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_count
+     */
     fun getItemCount(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
+    /**
+     * Gets an unused ID for a new item.
+     *
+     * Generated from Godot docs: MeshLibrary.get_last_unused_item_id
+     */
     fun getLastUnusedItemId(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getLastUnusedItemIdBind, segment)
@@ -140,8 +275,13 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): MeshLibrary? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MeshLibrary? =
+        internal fun wrap(handle: RawSegment): MeshLibrary? =
             if (handle.address() == 0L) null else MeshLibrary(GodotHandle(handle))
+
+        // Instantiate a MeshLibrary.
+        @JvmStatic
+        fun create(): MeshLibrary =
+            MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary")))
 
         private const val CREATE_ITEM_HASH = 1286410249L
         private val createItemBind by lazy {
