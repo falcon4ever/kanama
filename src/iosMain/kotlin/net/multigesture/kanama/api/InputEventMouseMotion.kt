@@ -131,7 +131,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
         internal fun wrap(handle: MemorySegment): InputEventMouseMotion? =
             if (handle.address() == 0L) null else InputEventMouseMotion(GodotHandle(handle))
 
-        // Cast a generic event to InputEventMouseMotion (null if not), mirroring the desktop helper.
+        // Downcast a GodotObject to InputEventMouseMotion (null if not).
         fun from(value: GodotObject): InputEventMouseMotion? =
             if (value.isClass("InputEventMouseMotion")) InputEventMouseMotion(value.handle) else null
 

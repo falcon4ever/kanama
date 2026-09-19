@@ -127,8 +127,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
         internal fun wrap(handle: RawSegment): Material? =
             if (handle.address() == 0L) null else Material(GodotHandle(handle))
 
-        // Downcast a Resource to Material (null if not); the desktop hand file's factory helper
-        // (task 117 P1'(a)), now generated once for every platform.
+        // Downcast a Resource to Material (null if not).
         @JvmStatic
         fun fromResource(value: Resource?): Material? =
             value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }

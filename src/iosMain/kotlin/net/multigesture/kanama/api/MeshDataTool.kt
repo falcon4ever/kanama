@@ -211,7 +211,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrap(handle: MemorySegment): MeshDataTool? =
             if (handle.address() == 0L) null else MeshDataTool(GodotHandle(handle))
 
-        // Instantiate a MeshDataTool (RefCounted; used to read mesh vertex/face data).
+        // Instantiate a MeshDataTool.
         fun create(): MeshDataTool =
             MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))))
 

@@ -353,7 +353,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         internal fun wrap(handle: MemorySegment): LightmapGI? =
             if (handle.address() == 0L) null else LightmapGI(GodotHandle(handle))
 
-        // Instantiate a LightmapGI node.
+        // Instantiate a LightmapGI.
         fun create(): LightmapGI =
             LightmapGI(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI"))))
 

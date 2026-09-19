@@ -362,8 +362,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
         internal fun wrap(handle: RawSegment): ArrayMesh? =
             if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
 
-        // Downcast a Resource/Mesh to ArrayMesh (null if not); the desktop hand file's factory
-        // helper (task 117 P1'(a)), now generated once for every platform.
+        // Downcast a Resource to ArrayMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ArrayMesh? =
             if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null

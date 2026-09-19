@@ -398,6 +398,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         internal fun wrap(handle: MemorySegment): ProceduralSkyMaterial? =
             if (handle.address() == 0L) null else ProceduralSkyMaterial(GodotHandle(handle))
 
+        // Downcast a Resource to ProceduralSkyMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ProceduralSkyMaterial? =
             if (value.isClass("ProceduralSkyMaterial")) ProceduralSkyMaterial(value.handle) else null

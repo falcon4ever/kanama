@@ -319,7 +319,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         internal fun wrap(handle: MemorySegment): Camera3D? =
             if (handle.address() == 0L) null else Camera3D(GodotHandle(handle))
 
-        // Instantiate a Camera3D (e.g. the debug free-camera).
+        // Instantiate a Camera3D.
         fun create(): Camera3D =
             Camera3D(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("Camera3D"))))
 

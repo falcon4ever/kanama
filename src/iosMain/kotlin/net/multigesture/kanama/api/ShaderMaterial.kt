@@ -44,7 +44,7 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
         internal fun wrap(handle: MemorySegment): ShaderMaterial? =
             if (handle.address() == 0L) null else ShaderMaterial(GodotHandle(handle))
 
-        // Downcast a Resource to ShaderMaterial (null if not), mirroring the desktop helper.
+        // Downcast a Resource to ShaderMaterial (null if not).
         fun fromResource(value: Resource?): ShaderMaterial? =
             value?.takeIf { it.isClass("ShaderMaterial") }?.let { ShaderMaterial(it.handle) }
 

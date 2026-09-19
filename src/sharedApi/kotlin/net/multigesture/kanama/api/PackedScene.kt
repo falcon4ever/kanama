@@ -65,8 +65,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
         internal fun wrap(handle: RawSegment): PackedScene? =
             if (handle.address() == 0L) null else PackedScene(GodotHandle(handle))
 
-        // Instantiate an empty PackedScene (for pack() + ResourceSaver.save); the desktop hand
-        // file's factory helper (task 117 P1'(a)), now generated once for every platform.
+        // Instantiate a PackedScene.
         @JvmStatic
         fun create(): PackedScene =
             PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))

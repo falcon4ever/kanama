@@ -204,7 +204,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrap(handle: MemorySegment): SurfaceTool? =
             if (handle.address() == 0L) null else SurfaceTool(GodotHandle(handle))
 
-        // Instantiate a SurfaceTool (RefCounted; used to build meshes procedurally).
+        // Instantiate a SurfaceTool.
         fun create(): SurfaceTool =
             SurfaceTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))))
 

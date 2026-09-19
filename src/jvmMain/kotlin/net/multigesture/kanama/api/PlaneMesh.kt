@@ -155,6 +155,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         internal fun wrap(handle: MemorySegment): PlaneMesh? =
             if (handle.address() == 0L) null else PlaneMesh(GodotHandle(handle))
 
+        // Downcast a Resource to PlaneMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): PlaneMesh? =
             if (value.isClass("PlaneMesh")) PlaneMesh(value.handle) else null
