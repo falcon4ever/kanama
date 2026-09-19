@@ -22,10 +22,10 @@ the iOS tool versions:
 
 | Tool | Version / Setting |
 |---|---|
-| Xcode | 26.5 or newer enough to provide the installed iOS SDK |
+| Xcode | 26.5 or newer enough to provide the installed iOS SDK (27.0 validated for the runtime build; it refuses any deployment target below 15.0) |
 | iOS runtime | Kotlin/Native static library inside an `.xcframework` |
 | Device architecture | `arm64` |
-| Minimum iOS version | 14.0 by default |
+| Minimum iOS version | 15.0 — Godot 4.7.2's exporter default (`application/min_ios_version`); Xcode 27 rejects a lower pin |
 
 Install the Godot iOS export templates for the same Godot version that opens or
 exports the project. If `xcode-select` points at Command Line Tools, set
