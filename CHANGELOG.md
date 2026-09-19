@@ -24,19 +24,20 @@ versioning once public releases begin.
   `@JvmStatic` (inert there) and the desktop body `ObjectCalls.constructObject("Camera3D")` in place
   of `IosGodot.constructObject`. Callers — `godot-4-3d-third-person-controller`'s `CameraMode.kt`
   and `example_project`'s `WrapperConvenienceProbe.kt` — are unaffected.
-- No member arrived or left, no int width changed, no body changed and the primary constructor was
-  already public on both platforms, so there is no source break and no wrapper-parity allowlist line
+- No member arrived or left, no int width changed, no desktop body changed (the one iOS body change
+  is `create()`'s construct call above) and the primary constructor was already public on both
+  platforms, so there is no source break and no wrapper-parity allowlist line
   disappears (`Camera3D` had none). `Camera3D` is not `RefCounted`-derived, so no `checkOpen()`
   guard was added.
 - Seven `ObjectCalls` helpers that only this class calls from the shared tree
   (`ptrcallNoArgsRetPlaneList` for `getFrustum`, `ptrcallWithThreeDoubleArgs` for `setPerspective`/
   `setOrthogonal`, `ptrcallWithDoubleVector2TwoDoubleArgs` for `setFrustum`,
   `ptrcallWithVector2ArgRetVector3` and `ptrcallWithVector2AndDoubleArgRetVector3` for the ray/
-  position projections, `ptrcallWithVector3ArgRetBool` for `isPositionBehind` and
+  position projections, `ptrcallWithVector3ArgRetBool` for `isPositionBehind`/`isPositionInFrustum` and
   `ptrcallWithVector3ArgRetVector2` for `unprojectPosition`) are now part of the common
   `expect object ObjectCalls` (1380 → 1387 members), so both platforms declare them as `actual`.
-  `ptrcallNoArgsRetPlaneList` lives outside the generated region on both backends, so its `actual`
-  is hand-written on each.
+  `ptrcallNoArgsRetPlaneList` is hand-written on both backends (the desktop file has no generated
+  region; on iOS it sits above the region), so its `actual` is hand-added on each.
 
 ### Changed — wrapper classes generated once: `MeshLibrary` (task 117 P1'(a))
 
