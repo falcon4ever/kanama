@@ -7,6 +7,37 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `PhysicsBody3D` (task 117 P1'(a))
+
+- `PhysicsBody3D` is generated once into the shared wrapper tree instead of being hand-written on
+  desktop and generated on iOS. All eight members the desktop hand file had keep their names,
+  signatures, default arguments and bodies — `moveAndCollide`, `testMove`, `getGravity`,
+  `setAxisLock`/`getAxisLock`, `getCollisionExceptions`,
+  `addCollisionExceptionWith`/`removeCollisionExceptionWith` — and so do the companion's
+  `fromHandle`/`wrap` helpers, so callers are unaffected.
+- The six `BODY_AXIS_*` companion constants moved from the generator's
+  `IOS_COMPANION_MEMBER_SECTIONS` into a new `SHARED_COMPANION_MEMBER_SECTIONS["PhysicsBody3D"]`
+  entry — one section now feeds both platforms. Desktop keeps the spelling it had
+  (`const val BODY_AXIS_LINEAR_X: Long = PhysicsServer3D.BODY_AXIS_LINEAR_X`, and so on for
+  `LINEAR_Y`/`LINEAR_Z`/`ANGULAR_X`/`ANGULAR_Y`/`ANGULAR_Z`): `PhysicsServer3D` is itself part of the
+  shared tree, so the aliases resolve on iOS too and the iOS copy's literals (`1L`…`32L`) become the
+  same aliases of the same values. `PhysicsBody3D.BODY_AXIS_ANGULAR_X`/`_Y`/`_Z`
+  (`godot-4-3d-third-person-controller`'s `BeetleBot.kt`, `example_project`'s
+  `WrapperConvenienceProbe.kt`) keep their `Long` type and values.
+- Gained on desktop/Android: the six `axisLock{Linear,Angular}{X,Y,Z}: Boolean` properties the hand
+  file omitted, generated as `getAxisLock`/`setAxisLock` pairs with the matching bit flag. iOS
+  already had them; they were the six `PhysicsBody3D | ios-only` lines of the wrapper parity
+  allowlist, which are now gone.
+- No int width changed, no body changed and the primary constructor was already public on both
+  platforms, so there is no source break. `getCollisionExceptions()` now calls the generic
+  `ObjectCalls.ptrcallNoArgsRetTypedObjectList(bind, segment, PhysicsBody3D::wrap)` instead of the
+  desktop-only `ptrcallNoArgsRetTypedPhysicsBody3DList`; the two have identical bodies
+  (`callArrayReturn` + `BuiltinTypes.readArrayObjects`), so the returned `List<PhysicsBody3D>` is the
+  same. `PhysicsBody3D` is not `RefCounted`-derived, so no `checkOpen()` guard was added.
+- `ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool` (`testMove`) and
+  `ptrcallWithVector3BoolFloatBoolIntArgsRetObject` (`moveAndCollide`) are now part of the common
+  `expect object ObjectCalls` (1378 → 1380 members), so both platforms declare them as `actual`.
+
 ### Changed — generator: factory/downcast companion helpers are table-driven (task 119 item 33)
 
 - The wrapper generator's `create()` and `from*` downcast companion helpers are rows in one

@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 202 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 200 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -8072,6 +8072,17 @@ expect object ObjectCalls {
     indices: List<Int>,
   )
 
+  fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    transformValue: Transform3D,
+    vectorValue: Vector3,
+    objectArg: RawSegment,
+    margin: Double,
+    recoveryAsCollision: Boolean,
+    maxCollisions: Int,
+  ): Boolean
+
   fun ptrcallWithTransform3DVector3TwoColorUInt32Args(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -10349,6 +10360,16 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: Vector3,
   ): Vector3i
+
+  fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    vector: Vector3,
+    firstBool: Boolean,
+    floatValue: Double,
+    secondBool: Boolean,
+    intValue: Int,
+  ): RawSegment
 
   fun ptrcallWithVector3iAndIntArgRetVector3iList(
     methodBind: RawSegment,

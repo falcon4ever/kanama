@@ -37344,7 +37344,7 @@ actual object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
+  actual fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -47221,7 +47221,7 @@ actual object ObjectCalls {
     Vector3i(ret[0], ret[1], ret[2])
   }
 
-  fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
+  actual fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector3,

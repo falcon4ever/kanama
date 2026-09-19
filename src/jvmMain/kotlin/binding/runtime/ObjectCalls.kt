@@ -25002,7 +25002,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Vector3, bool, scalar float, bool, int32) and Object return value. */
-  fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
+  actual fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector3,
@@ -25358,7 +25358,7 @@ actual object ObjectCalls {
    * Calls [methodBind] with (Transform3D, Vector3, Object*, scalar float, bool, int32) and bool
    * return value.
    */
-  fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
+  actual fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,

@@ -400,9 +400,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ParticleProcessMaterial": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
-    "PhysicsBody3D": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "PlaneMesh": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
@@ -945,16 +942,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         const val KEY_S = 83L
         const val KEY_W = 87L
 """.strip("\n"),
-    "PhysicsBody3D": """
-        // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
-        // (used by set_axis_lock). Values are @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags.
-        const val BODY_AXIS_LINEAR_X = 1L
-        const val BODY_AXIS_LINEAR_Y = 2L
-        const val BODY_AXIS_LINEAR_Z = 4L
-        const val BODY_AXIS_ANGULAR_X = 8L
-        const val BODY_AXIS_ANGULAR_Y = 16L
-        const val BODY_AXIS_ANGULAR_Z = 32L
-""".strip("\n"),
 }
 
 
@@ -968,9 +955,21 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {}
-# Empty since task 119 item 33: every entry this table held was a `create()` / `from*` helper,
-# and those are rows in FACTORY_HELPERS now. Non-factory shared companion members belong here.
-SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
+# Every `create()` / `from*` helper this table held is a row in FACTORY_HELPERS since task 119
+# item 33. Non-factory shared companion members belong here.
+SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
+    "PhysicsBody3D": """
+        // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
+        // (used by set_axis_lock). Aliases of the @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags,
+        // which the shared tree generates as `const val`s on PhysicsServer3D.
+        const val BODY_AXIS_LINEAR_X: Long = PhysicsServer3D.BODY_AXIS_LINEAR_X
+        const val BODY_AXIS_LINEAR_Y: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Y
+        const val BODY_AXIS_LINEAR_Z: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Z
+        const val BODY_AXIS_ANGULAR_X: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_X
+        const val BODY_AXIS_ANGULAR_Y: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Y
+        const val BODY_AXIS_ANGULAR_Z: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Z
+""".strip("\n"),
+}
 
 
 @dataclass(frozen=True)
