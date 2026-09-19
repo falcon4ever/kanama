@@ -7,6 +7,37 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `Camera3D` (task 117 P1'(a))
+
+- `Camera3D` is generated once into the shared wrapper tree instead of being hand-written on desktop
+  and generated on iOS. The two copies already had the same 64 members, and every one keeps its
+  name, signature, default arguments and body — the `projectRay*`/`projectPosition`/
+  `unprojectPosition` family, `isPositionBehind`, `getCameraTransform`/`getCameraProjection`,
+  `getFrustum`, `makeCurrent`/`clearCurrent`, `setPerspective`/`setOrthogonal`/`setFrustum`, the
+  `fov`/`near`/`far`/`size`/`projection`/`current`/`cullMask`/`environment`/`attributes`/
+  `compositor`/`dopplerTracking`/`keepAspect`/`hOffset`/`vOffset`/`frustumOffset` properties,
+  `setCullMaskValue`/`getCullMaskValue`, and the companion's eight `PROJECTION_*`/`KEEP_*`/
+  `DOPPLER_TRACKING_*` constants plus `fromHandle`/`wrap` — so callers are unaffected.
+- `Camera3D.create()` survives as a generated `@JvmStatic` companion helper with the same signature
+  and body. Since kanama#269 it is a `FACTORY_HELPERS["Camera3D"] = FactorySpec(True)` row, and the
+  row simply moves from the iOS-only universe to the shared one: iOS keeps `create()` and gains
+  `@JvmStatic` (inert there) and the desktop body `ObjectCalls.constructObject("Camera3D")` in place
+  of `IosGodot.constructObject`. Callers — `godot-4-3d-third-person-controller`'s `CameraMode.kt`
+  and `example_project`'s `WrapperConvenienceProbe.kt` — are unaffected.
+- No member arrived or left, no int width changed, no body changed and the primary constructor was
+  already public on both platforms, so there is no source break and no wrapper-parity allowlist line
+  disappears (`Camera3D` had none). `Camera3D` is not `RefCounted`-derived, so no `checkOpen()`
+  guard was added.
+- Seven `ObjectCalls` helpers that only this class calls from the shared tree
+  (`ptrcallNoArgsRetPlaneList` for `getFrustum`, `ptrcallWithThreeDoubleArgs` for `setPerspective`/
+  `setOrthogonal`, `ptrcallWithDoubleVector2TwoDoubleArgs` for `setFrustum`,
+  `ptrcallWithVector2ArgRetVector3` and `ptrcallWithVector2AndDoubleArgRetVector3` for the ray/
+  position projections, `ptrcallWithVector3ArgRetBool` for `isPositionBehind` and
+  `ptrcallWithVector3ArgRetVector2` for `unprojectPosition`) are now part of the common
+  `expect object ObjectCalls` (1380 → 1387 members), so both platforms declare them as `actual`.
+  `ptrcallNoArgsRetPlaneList` lives outside the generated region on both backends, so its `actual`
+  is hand-written on each.
+
 ### Changed — wrapper classes generated once: `MeshLibrary` (task 117 P1'(a))
 
 - `MeshLibrary` is generated once into the shared wrapper tree instead of being hand-written on

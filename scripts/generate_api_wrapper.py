@@ -334,9 +334,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "CallbackTweener": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Tween chaining glue in IosGodotApi.kt"),
-    "Camera3D": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "ConfigFile": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -1007,6 +1004,7 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
     # every platform.
     "ArrayMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "Camera3D": FactorySpec(True),
     "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
     "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
     "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
@@ -1024,7 +1022,6 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Key constants (still a section) sit above its factories.
     "BaseMaterial3D": FactorySpec(False, (Downcast("fromMaterial", "Material", False),)),
     "ButtonGroup": FactorySpec(True),
-    "Camera3D": FactorySpec(True),
     "ConfigFile": FactorySpec(True),
     "ENetMultiplayerPeer": FactorySpec(True),
     "InputEventKey": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
