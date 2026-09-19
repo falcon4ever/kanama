@@ -103,8 +103,12 @@ render target compiles; each `Downcast(name, param_type, nullable)` emits
 `fun <name>(value: <param_type>): C?` — the `isClass` form for a non-null parameter,
 the `?.takeIf { … }?.let { … }` form for a nullable one (a fourth field renames the
 parameter, which only `SceneMultiplayer.fromApi(api:)` needs). `render_factory_helpers`
-owns the body and the comment; `check_factory_helpers` fails the run if the key is not
-a class the generator renders, or if a section still pastes the same helper.
+owns the body and the comment; the block is appended to the companion object after the
+class's custom section (so iOS `InputEventKey` keeps its Key constants above its
+factories) and before the MethodBinds, and rows of iOS-only generated classes carry no
+`@JvmStatic` (those files compile for iOS alone). `check_factory_helpers` fails the run
+if the key is not a class the generator renders, or if a section still pastes the same
+helper (any visibility or annotation).
 
 The classes that are not shared are listed once, platform-tagged, in
 `PER_PLATFORM_WRAPPERS` (`scripts/generate_api_wrapper.py`): for each, what desktop

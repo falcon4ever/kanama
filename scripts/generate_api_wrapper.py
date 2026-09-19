@@ -1005,7 +1005,7 @@ class FactorySpec:
 # A key must be a class the generator renders, and the mode it is rendered in picks the body:
 # a shared-tree class gets `ObjectCalls.constructObject`, an iOS-only generated class gets
 # `MemorySegment.ofAddress(IosGodot.constructObject(...))`. `check_section_tables` enforces both
-# that (the key must be in exactly one class universe) and that no section still pastes the
+# that (the key must be in one of the class universes) and that no section still pastes the
 # helper the row now renders.
 FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
@@ -1176,24 +1176,24 @@ def check_section_tables(shared_classes: set[str]) -> None:
 
 # A companion section that still declares a helper `FACTORY_HELPERS` renders for the same class
 # would emit it twice into one companion object. Matching on the declaration keyword keeps prose
-# ("Cast a generic event ...") and member names ending in `from` out of it.
-_PASTED_FACTORY_RE = re.compile(r"^\s*(?:@JvmStatic\s+)?fun\s+(create\(\)|from\w*\s*\()", re.MULTILINE)
+# ("Cast a generic event ...") and member names ending in `from` out of it; any annotations and a
+# visibility modifier before `fun` are allowed, because a `private fun create()` collides just the
+# same. `from\w*` is deliberately wide: a `fun fromSeconds(` in a row class's section is flagged
+# too, and the message names it, so the false positive diagnoses itself.
+_PASTED_FACTORY_RE = re.compile(
+    r"^\s*(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:private|internal|public|protected)\s+)?fun\s+(create\s*\(\)|from\w*\s*\()",
+    re.MULTILINE,
+)
 
 
 def check_factory_helpers(shared_classes: set[str]) -> list[str]:
     """Validate `FACTORY_HELPERS`: every key renders somewhere, and nothing renders it twice."""
     problems = []
     for class_name in FACTORY_HELPERS:
-        universes = [
-            name
-            for name, classes in (
-                ("shared", shared_classes),
-                ("desktop-only", DESKTOP_ONLY_GENERATED),
-                ("iOS-only", IOS_ONLY_GENERATED),
-            )
-            if class_name in classes
-        ]
-        if not universes:
+        # The two per-platform sets are disjoint (asserted where they are declared) and the shared
+        # set excludes PER_PLATFORM_WRAPPERS, so a key is in at most one universe; here only "in none"
+        # can go wrong.
+        if not any(class_name in classes for classes in (shared_classes, DESKTOP_ONLY_GENERATED, IOS_ONLY_GENERATED)):
             problems.append(
                 f"FACTORY_HELPERS[{class_name!r}]: not a class the generator renders "
                 "(neither shared, nor a per-platform generated wrapper)",
@@ -2672,7 +2672,10 @@ def _factory_class_universe(class_name: str) -> bool:
     The three universes are disjoint (`tree_universe` subtracts `PER_PLATFORM_WRAPPERS` from the
     shared set), so one row is emitted by exactly one target. The gate matters for the audit-only
     `--ios-emit-class` path, which renders shared classes in iOS mode: there a shared class's row
-    stays unrendered, exactly as its `SHARED_COMPANION_MEMBER_SECTIONS` entry did.
+    stays unrendered, exactly as its `SHARED_COMPANION_MEMBER_SECTIONS` entry did. The shared branch
+    is "not per-platform" rather than a membership test because the shared set lives in
+    `tree_universe`, not at module level; that is safe because `render_draft` only runs for classes
+    the tree renders and `check_factory_helpers` rejects a key outside every universe at `--write-tree`.
     """
     if RENDER_TARGET == "ios":
         return class_name in IOS_ONLY_GENERATED

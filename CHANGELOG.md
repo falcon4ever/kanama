@@ -17,8 +17,8 @@ versioning once public releases begin.
   content: `RefCounted`'s `releaseHandle`, `InputEventKey`'s Key constants, `PhysicsBody3D`'s
   BodyAxis flags. A P1'(a) retirement adds a row instead of copying a helper body.
 - **No API change.** Every generated signature, annotation and body is byte-identical; the only
-  change in the generated files is the one-line comment above each helper, which is now the
-  renderer's uniform wording instead of per-class prose.
+  change in the generated files is the one-line comment above each helper — the renderer's uniform
+  wording, replacing per-class prose where there was some and added where there was none.
 - `check_section_tables` gained `check_factory_helpers`: a `FACTORY_HELPERS` key must be a class the
   generator actually renders, and a companion section that still pastes a helper the table renders is
   a hard error, so the same helper cannot be emitted twice.
