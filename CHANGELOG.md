@@ -7,6 +7,15 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — iOS exports require iOS 15.0; the gate fixture and docs follow Godot 4.7.2's default (task 123)
+
+- The iOS visual-smoke fixture (`scripts/ios_visual_smoke.sh`) exported with `application/min_ios_version="14.0"`, a
+  pin carried over from an older Godot, and the docs said 14.0 was the default. Godot 4.7.2's exporter defaults to
+  **15.0**, and Xcode 27.0 refuses to build a project whose deployment target is below 15.0 ("range of supported
+  deployment target versions is 15.0 to 27.0.x"), so on the current Xcode the device gate could not build at all. The
+  fixture now pins 15.0 and the iOS toolchain table says so; the demo corpus makes the same change in its presets. No
+  validated device runs anything older than iOS 26, so nothing shipped is affected.
+
 ### Changed — wrapper classes generated once: `EditorExportPlatform` (task 117 P1'(a))
 
 - `EditorExportPlatform` is generated once into the shared wrapper tree instead of being hand-written
