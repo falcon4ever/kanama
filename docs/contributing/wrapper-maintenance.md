@@ -82,6 +82,30 @@ one needs the member imported by name (`import net.multigesture.kanama.api.<memb
 the class import. iOS-only sugar on a shared class (`IOS_EXTENSION_SECTIONS`) is
 generated the same way into `src/iosMain/.../api/<Class>.ios.kt`.
 
+Hand-written members a generated wrapper must carry live in the **custom-section
+tables** of `scripts/generate_api_wrapper.py`, keyed by class: `SHARED_MEMBER_SECTIONS`
+/ `SHARED_COMPANION_MEMBER_SECTIONS` for shared classes (their text may only use what
+both platforms resolve), `DESKTOP_*`/`IOS_*_MEMBER_SECTIONS` and
+`*_COMPANION_MEMBER_SECTIONS` for the per-platform generated ones, and the
+`*_EXTENSION_SECTIONS` above for platform sugar on a shared class.
+`check_section_tables` refuses a key in the wrong table. The **factory helpers** are
+not sections: a `create()` or a `from*` downcast is a row in `FACTORY_HELPERS` instead
+(task 119 item 33), because every one of them was the same two shapes pasted by hand.
+Add a row, not Kotlin:
+
+```python
+"SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+"FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
+```
+
+`create=True` emits `fun create(): C` over `constructObject` in the spelling the
+render target compiles; each `Downcast(name, param_type, nullable)` emits
+`fun <name>(value: <param_type>): C?` — the `isClass` form for a non-null parameter,
+the `?.takeIf { … }?.let { … }` form for a nullable one (a fourth field renames the
+parameter, which only `SceneMultiplayer.fromApi(api:)` needs). `render_factory_helpers`
+owns the body and the comment; `check_factory_helpers` fails the run if the key is not
+a class the generator renders, or if a section still pastes the same helper.
+
 The classes that are not shared are listed once, platform-tagged, in
 `PER_PLATFORM_WRAPPERS` (`scripts/generate_api_wrapper.py`): for each, what desktop
 does (`generated` into `src/jvmMain/kotlin/.../api`, or `hand`) and what iOS does
