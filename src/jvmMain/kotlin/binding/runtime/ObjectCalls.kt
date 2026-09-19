@@ -568,7 +568,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectAndBoolArgRetDictionary(
+  actual fun ptrcallWithObjectAndBoolArgRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -2977,7 +2977,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (int32, int32, PackedByteArray) and no return value. */
-  fun ptrcallWithTwoIntAndByteArrayArg(
+  actual fun ptrcallWithTwoIntAndByteArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -6467,7 +6467,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(
+  actual fun ptrcallWithRIDVector2TwoIntColorDoubleArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -6506,7 +6506,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(
+  actual fun ptrcallWithRIDVector2ThreeIntColorDoubleArgsRetDouble(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -6549,7 +6549,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -6610,7 +6610,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -6675,7 +6675,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -6744,7 +6744,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(
+  actual fun ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -8014,7 +8014,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(
+  actual fun ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -8061,7 +8061,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(
+  actual fun ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -8697,7 +8697,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectBoolStringArgsRetDictionary(
+  actual fun ptrcallWithObjectBoolStringArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -8729,7 +8729,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectBoolStringBoolArgsRetDictionary(
+  actual fun ptrcallWithObjectBoolStringBoolArgsRetDictionary(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -8765,7 +8765,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectBoolStringLongArgsRetLong(
+  actual fun ptrcallWithObjectBoolStringLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -8797,7 +8797,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(
+  actual fun ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -11383,7 +11383,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectBoolStringLongBoolArgsRetLong(
+  actual fun ptrcallWithObjectBoolStringLongBoolArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -11419,7 +11419,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(
+  actual fun ptrcallWithDictionaryIntDoubleTransform2DFourIntDoubleLongPackedColorListArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: Map<String, Any?>,
@@ -23162,7 +23162,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectBoolTwoCallableArgsRetLong(
+  actual fun ptrcallWithObjectBoolTwoCallableArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -25425,7 +25425,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTransform3DAndDoubleArgRetLong(
+  actual fun ptrcallWithTransform3DAndDoubleArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -27090,7 +27090,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithLongArgRetPackedColorList(
+  actual fun ptrcallWithLongArgRetPackedColorList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -28479,7 +28479,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
+  actual fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     primitive: Long,
@@ -30918,7 +30918,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(
+  actual fun ptrcallWithTwoStringPackedStringListStringIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -30957,7 +30957,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(
+  actual fun ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -34889,7 +34889,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithLongAndTwoStringArgs(
+  actual fun ptrcallWithLongAndTwoStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Long,
@@ -38333,7 +38333,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(
+  actual fun ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,

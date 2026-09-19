@@ -1,12 +1,13 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
-import kotlin.jvm.JvmName
 
 /**
  * Abstract base class for fonts and font variations.
@@ -187,6 +188,40 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     fun getFontStretch(): Int {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getFontStretchBind, segment)
+    }
+
+    /**
+     * Returns the number of predefined color palettes. Palette contains all colors used to render font
+     * glyphs. Each palette has the same number of colors.
+     *
+     * Generated from Godot docs: Font.get_palette_count
+     */
+    fun getPaletteCount(): Long {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetLong(getPaletteCountBind, segment)
+    }
+
+    /**
+     * Returns the name of the predefined color palette at `index`. Palette contains all colors used to
+     * render font glyphs. Each palette has the same number of colors.
+     *
+     * Generated from Godot docs: Font.get_palette_name
+     */
+    fun getPaletteName(index: Long): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetString(getPaletteNameBind, segment, index)
+    }
+
+    /**
+     * Returns the array in the predefined color palette at `index`. Palette contains all colors used
+     * to render font glyphs. Each palette has the same number of colors. Colors can be overridden
+     * using `FontVariation`.
+     *
+     * Generated from Godot docs: Font.get_palette_colors
+     */
+    fun getPaletteColors(index: Long): List<Color> {
+        checkOpen()
+        return ObjectCalls.ptrcallWithLongArgRetPackedColorList(getPaletteColorsBind, segment, index)
     }
 
     /**
@@ -501,6 +536,21 @@ open class Font(handle: GodotHandle) : Resource(handle) {
         private const val GET_FONT_STRETCH_HASH = 3905245786L
         private val getFontStretchBind by lazy {
             ObjectCalls.getMethodBind("Font", "get_font_stretch", GET_FONT_STRETCH_HASH)
+        }
+
+        private const val GET_PALETTE_COUNT_HASH = 3905245786L
+        private val getPaletteCountBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_palette_count", GET_PALETTE_COUNT_HASH)
+        }
+
+        private const val GET_PALETTE_NAME_HASH = 844755477L
+        private val getPaletteNameBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_palette_name", GET_PALETTE_NAME_HASH)
+        }
+
+        private const val GET_PALETTE_COLORS_HASH = 2552048864L
+        private val getPaletteColorsBind by lazy {
+            ObjectCalls.getMethodBind("Font", "get_palette_colors", GET_PALETTE_COLORS_HASH)
         }
 
         private const val GET_SPACING_HASH = 1310880908L

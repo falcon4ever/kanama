@@ -1,11 +1,12 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Transform3D
-import kotlin.jvm.JvmName
 
 /**
  * `Mesh` type that provides utility for constructing a surface from arrays.
@@ -131,6 +132,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      * Generated from Godot docs: ArrayMesh.add_surface_from_arrays
      */
     fun addSurfaceFromArrays(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Long = 0L) {
+        checkOpen()
         ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, segment, primitive, arrays, blendShapes, lods, flags)
     }
 
@@ -344,7 +346,12 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getShadowMesh(): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, segment))
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(getShadowMeshBind, segment)
+        if (ret.address() == segment.address()) {
+            RefCounted.releaseHandle(ret)
+            return this
+        }
+        return ArrayMesh.wrap(ret)
     }
 
     companion object {
@@ -352,12 +359,14 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
         fun fromHandle(handle: GodotHandle): ArrayMesh? =
             wrap(handle.segment)
 
+        internal fun wrap(handle: RawSegment): ArrayMesh? =
+            if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
+
+        // Downcast a Resource/Mesh to ArrayMesh (null if not); the desktop hand file's factory
+        // helper (task 117 P1'(a)), now generated once for every platform.
         @JvmStatic
         fun fromResource(value: Resource): ArrayMesh? =
             if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
-
-        internal fun wrap(handle: RawSegment): ArrayMesh? =
-            if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
 
         private const val ADD_BLEND_SHAPE_HASH = 3304788590L
         private val addBlendShapeBind by lazy {

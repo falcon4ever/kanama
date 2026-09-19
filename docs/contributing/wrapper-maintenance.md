@@ -385,11 +385,15 @@ non-virtual skips and the skipped properties found:
       builds Signal(Object, StringName) for the call and destroys it after; the
       engine keeps its own ObjectID-based copy, so no Kotlin state is retained.
       Runtime-validated in `runtime_smoke` (await resolves on real emission).
-    - **Hand-shaped-class landings**: `EditorExportPlatform.export_project`,
-      `OpenXRSpatialAnchorCapability.create_new_anchor`/`do_entity_update`, and
-      `Font.find_variation` are hand-hosted on their `DESKTOP_HANDSHAPED` wrappers
-      in the exact generated form (draft-verified) — the committed copies had
-      drifted to pre-4.7 signatures on compatibility hashes and now target the
+    - **Hand-shaped-class landings**:
+      `OpenXRSpatialAnchorCapability.create_new_anchor`/`do_entity_update` are
+      hand-hosted on their `DESKTOP_HANDSHAPED` wrapper in the exact generated
+      form (draft-verified) — the committed copies had drifted to pre-4.7
+      signatures on compatibility hashes and now target the current 4.7 binds.
+      `EditorExportPlatform.export_project` and `Font.find_variation` were on
+      that list until task 117 P1'(a): both classes left `PER_PLATFORM_WRAPPERS`,
+      so the generator now emits those methods itself into
+      `src/sharedApi/.../EditorExportPlatform.kt` and `.../Font.kt` on the same
       current 4.7 binds.
 
     After task 28, the generator report's non-virtual skips are **only** the
