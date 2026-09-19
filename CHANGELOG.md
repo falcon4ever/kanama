@@ -10,10 +10,10 @@ versioning once public releases begin.
 ### Changed — wrapper classes generated once: `EditorExportPlatform` (task 117 P1'(a))
 
 - `EditorExportPlatform` is generated once into the shared wrapper tree instead of being hand-written
-  on desktop and generated on iOS. All 26 members keep their names, signatures, default arguments and
-  bodies — `exportProject`, `exportPack`/`exportZip`(`Patch`), `savePack`/`saveZip`(`Patch`),
-  `sshRunOnRemote`(`NoWait`), the message accessors and the companion's
-  `getForcedExportFiles(preset)` (a Godot static, emitted on both platforms) — so callers are
+  on desktop and generated on iOS. All 26 instance members keep their names, signatures, default
+  arguments and bodies — `exportProject`, `exportPack`/`exportZip`(`Patch`), `savePack`/`saveZip`(`Patch`),
+  `sshRunOnRemote`(`NoWait`), the message accessors — and so does the companion's
+  `getForcedExportFiles(preset)` (a Godot static, emitted on both platforms), so callers are
   unaffected. The desktop companion had no hand sugar to move.
 - Gained on desktop/Android: the nine companion constants the hand file omitted —
   `EXPORT_MESSAGE_NONE`/`INFO`/`WARNING`/`ERROR` and `DEBUG_FLAG_DUMB_CLIENT`/`REMOTE_DEBUG`/
@@ -24,9 +24,10 @@ versioning once public releases begin.
   `IllegalStateException("RefCounted handle is closed")` instead of calling through a freed handle.
 - No int width changed and the primary constructor was already public on both platforms, so there is
   no source break.
-- Eleven `ObjectCalls` helpers that only this class calls (the `ptrcallWithObjectBoolString…`
-  export/save family, `ptrcallWithObjectAndBoolArgRetDictionary`, `ptrcallWithLongAndTwoStringArgs`
-  and the three `ptrcallWithTwoStringPackedStringList…` ssh helpers) are now part of the common
+- Eleven `ObjectCalls` helpers that only this class calls from the shared tree (the
+  `ptrcallWithObjectBoolString…` export/save family, `ptrcallWithObjectAndBoolArgRetDictionary` — also
+  used by the desktop-only `Image` — `ptrcallWithLongAndTwoStringArgs` and the three
+  `ptrcallWithTwoStringPackedStringList…` ssh helpers) are now part of the common
   `expect object ObjectCalls`, so both platforms declare them as `actual`.
 
 ### Changed — wrapper classes generated once: `ArrayMesh` (task 117 P1'(a))
@@ -43,9 +44,11 @@ versioning once public releases begin.
   `this` instead of minting a second wrapper. `addSurfaceFromArrays()` now calls `checkOpen()` first,
   like every other member, so calling it through a closed handle raises
   `IllegalStateException("RefCounted handle is closed")` instead of calling through a freed handle.
-- No int width changed and no signature changed: all 29 members (`getSurfaceCount`,
-  `surfaceGetArrayLen`, `lightmapUnwrap`, the `ARRAY_*` / `PRIMITIVE_*` / `BLEND_SHAPE_MODE_*`
-  constants, …) keep the exact types, parameter names and defaults the desktop hand file had.
+- No int width changed and no signature changed: all 29 members (the `blendShapeMode` / `customAabb` /
+  `shadowMesh` properties and the 26 functions from `addBlendShape` to `getShadowMesh`, e.g.
+  `surfaceGetArrayLen`, `lightmapUnwrap`, `surfaceUpdateVertexRegion`) keep the exact types, parameter
+  names and defaults the desktop hand file had. (`getSurfaceCount` and the `ARRAY_*` / `PRIMITIVE_*` /
+  `BLEND_SHAPE_MODE_*` constants are inherited from `Mesh`, generated once since chunk 1.)
   `ArrayMesh`'s primary constructor was already public on both platforms.
 - `ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs` (used by `addSurfaceFromArrays`),
   `ptrcallWithTransform3DAndDoubleArgRetLong` (`lightmapUnwrap`) and `ptrcallWithTwoIntAndByteArrayArg`
