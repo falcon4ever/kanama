@@ -958,29 +958,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         const val KEY_R = 82L
         const val KEY_S = 83L
         const val KEY_W = 87L
-
-        // Instantiate a blank InputEventKey (for synthesizing input events / InputMap actions).
-        fun create(): InputEventKey =
-            InputEventKey(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))))
-
-        // Cast a generic event to InputEventKey (null if not), mirroring the desktop helper.
-        fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) InputEventKey(value.handle) else null
-""".strip("\n"),
-    "Camera3D": """
-        // Instantiate a Camera3D (e.g. the debug free-camera).
-        fun create(): Camera3D =
-            Camera3D(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("Camera3D"))))
-""".strip("\n"),
-    "SurfaceTool": """
-        // Instantiate a SurfaceTool (RefCounted; used to build meshes procedurally).
-        fun create(): SurfaceTool =
-            SurfaceTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))))
-""".strip("\n"),
-    "MeshDataTool": """
-        // Instantiate a MeshDataTool (RefCounted; used to read mesh vertex/face data).
-        fun create(): MeshDataTool =
-            MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))))
 """.strip("\n"),
     "PhysicsBody3D": """
         // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
@@ -991,46 +968,6 @@ IOS_COMPANION_MEMBER_SECTIONS = {
         const val BODY_AXIS_ANGULAR_X = 8L
         const val BODY_AXIS_ANGULAR_Y = 16L
         const val BODY_AXIS_ANGULAR_Z = 32L
-""".strip("\n"),
-    "InputEventMouseMotion": """
-        // Cast a generic event to InputEventMouseMotion (null if not), mirroring the desktop helper.
-        fun from(value: GodotObject): InputEventMouseMotion? =
-            if (value.isClass("InputEventMouseMotion")) InputEventMouseMotion(value.handle) else null
-""".strip("\n"),
-    "BaseMaterial3D": """
-        // Downcast a Material to BaseMaterial3D (null if not), mirroring the desktop helper.
-        fun fromMaterial(value: Material): BaseMaterial3D? =
-            if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null
-""".strip("\n"),
-    "LightmapGI": """
-        // Instantiate a LightmapGI node.
-        fun create(): LightmapGI =
-            LightmapGI(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("LightmapGI"))))
-""".strip("\n"),
-    "SceneMultiplayer": """
-        // Downcast a MultiplayerAPI to SceneMultiplayer (null if not), mirroring the desktop helper.
-        fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
-            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { SceneMultiplayer(it.handle) }
-""".strip("\n"),
-    "ConfigFile": """
-        // Instantiate a ConfigFile (RefCounted key/value store).
-        fun create(): ConfigFile =
-            ConfigFile(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))))
-""".strip("\n"),
-    "ENetMultiplayerPeer": """
-        // Instantiate an ENetMultiplayerPeer.
-        fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer"))))
-""".strip("\n"),
-    "ButtonGroup": """
-        // Instantiate a ButtonGroup (RefCounted radio-button grouping).
-        fun create(): ButtonGroup =
-            ButtonGroup(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup"))))
-""".strip("\n"),
-    "ShaderMaterial": """
-        // Downcast a Resource to ShaderMaterial (null if not), mirroring the desktop helper.
-        fun fromResource(value: Resource?): ShaderMaterial? =
-            value?.takeIf { it.isClass("ShaderMaterial") }?.let { ShaderMaterial(it.handle) }
 """.strip("\n"),
 }
 
@@ -1095,6 +1032,21 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "PackedScene": FactorySpec(True),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Sprite2D": FactorySpec(True),
+    # iOS-only generated classes. `from(value: GodotObject)` is here too: the name is just a field,
+    # and leaving the two of them pasted would reorder InputEventKey's companion, whose hand-written
+    # Key constants (still a section) sit above its factories.
+    "BaseMaterial3D": FactorySpec(False, (Downcast("fromMaterial", "Material", False),)),
+    "ButtonGroup": FactorySpec(True),
+    "Camera3D": FactorySpec(True),
+    "ConfigFile": FactorySpec(True),
+    "ENetMultiplayerPeer": FactorySpec(True),
+    "InputEventKey": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
+    "InputEventMouseMotion": FactorySpec(False, (Downcast("from", "GodotObject", False),)),
+    "LightmapGI": FactorySpec(True),
+    "MeshDataTool": FactorySpec(True),
+    "SceneMultiplayer": FactorySpec(False, (Downcast("fromApi", "MultiplayerAPI", True, "api"),)),
+    "ShaderMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
+    "SurfaceTool": FactorySpec(True),
 }
 
 # Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`.
@@ -2712,6 +2664,11 @@ def _factory_jvm_static() -> bool:
     return _jvm_static() and RENDER_TARGET != "ios"
 
 
+def _article(name: str) -> str:
+    """`a` / `an` for a class name, so the rendered comment reads as English."""
+    return "an" if name[:1] in set("AEIOU") else "a"
+
+
 def _construct_object(class_name: str) -> str:
     """The engine-side `constructObject` call, in the spelling the render target compiles."""
     if RENDER_TARGET == "ios":
@@ -2745,7 +2702,7 @@ def render_factory_helpers(class_name: str) -> str | None:
         blocks.append(
             "\n".join(
                 [
-                    f"        // Instantiate a {class_name}.",
+                    f"        // Instantiate {_article(class_name)} {class_name}.",
                     *annotation,
                     f"        fun create(): {class_name} =",
                     f"            {class_name}(GodotHandle({_construct_object(class_name)}))",
@@ -2767,7 +2724,7 @@ def render_factory_helpers(class_name: str) -> str | None:
         blocks.append(
             "\n".join(
                 [
-                    f"        // Downcast a {downcast.param_type} to {class_name} (null if not).",
+                    f"        // Downcast {_article(downcast.param_type)} {downcast.param_type} to {class_name} (null if not).",
                     *annotation,
                     *body,
                 ],

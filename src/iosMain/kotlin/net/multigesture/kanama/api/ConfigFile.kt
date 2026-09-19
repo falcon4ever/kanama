@@ -102,7 +102,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
         internal fun wrap(handle: MemorySegment): ConfigFile? =
             if (handle.address() == 0L) null else ConfigFile(GodotHandle(handle))
 
-        // Instantiate a ConfigFile (RefCounted key/value store).
+        // Instantiate a ConfigFile.
         fun create(): ConfigFile =
             ConfigFile(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))))
 

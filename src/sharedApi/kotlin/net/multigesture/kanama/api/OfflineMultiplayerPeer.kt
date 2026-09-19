@@ -18,7 +18,7 @@ class OfflineMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         internal fun wrap(handle: RawSegment): OfflineMultiplayerPeer? =
             if (handle.address() == 0L) null else OfflineMultiplayerPeer(GodotHandle(handle))
 
-        // Instantiate a OfflineMultiplayerPeer.
+        // Instantiate an OfflineMultiplayerPeer.
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
             OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer")))
