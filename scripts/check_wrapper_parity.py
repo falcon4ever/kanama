@@ -50,7 +50,7 @@ HAND_SHAPED = [
     "Node3D", "Button", "Light3D",
     "LineEdit", "Range", "Tweener",
     "StandardMaterial3D", "Viewport", "TabBar", "Slider", "AnimationPlayer", "StaticBody3D",
-    "PlaneMesh", "BaseMaterial3D",
+    "PlaneMesh",
 ]
 
 # ---------------------------------------------------------------------------------------------
