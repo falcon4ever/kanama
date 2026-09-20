@@ -48,7 +48,7 @@ TAG = "[wrapper_parity]"
 HAND_SHAPED = [
     "GodotObject", "Node", "RefCounted", "Resource", "GodotCallable", "Image",
     "Node3D", "Button", "Light3D",
-    "LineEdit", "Range", "ButtonGroup", "Tweener",
+    "LineEdit", "Range", "Tweener",
     "StandardMaterial3D", "Viewport", "TabBar", "Slider", "AnimationPlayer", "StaticBody3D",
     "PlaneMesh", "BaseMaterial3D",
 ]

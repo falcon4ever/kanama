@@ -7,6 +7,39 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `ButtonGroup` (task 117 P1'(a))
+
+- `ButtonGroup` is generated once into the shared wrapper tree
+  (`src/sharedApi/.../api/ButtonGroup.kt`) instead of being hand-written on desktop
+  (`src/jvmMain/.../api/ButtonGroup.kt`) and generated on iOS (`src/iosMain/.../api/ButtonGroup.kt`);
+  its `PER_PLATFORM_WRAPPERS` entry is gone. The two copies already had the same five members, and
+  every one keeps its name, signature, default arguments and body — `getPressedButton`,
+  `getButtons`, `setAllowUnpress`/`isAllowUnpress`, the `allowUnpress: Boolean` property with its
+  `@JvmName("allowUnpressProperty")`/`@JvmName("setAllowUnpressProperty")` accessors — and so do the
+  nested `object Signals { const val pressed }` and the companion's `fromHandle`/`wrap` helpers, so
+  callers are unaffected.
+- `ButtonGroup.create()` survives as a generated `@JvmStatic` companion helper with the same
+  signature and body (`ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup")))`). Since
+  kanama#269 it is a `FACTORY_HELPERS["ButtonGroup"] = FactorySpec(True)` row, and the row simply
+  moves from the iOS-only universe to the shared one: iOS keeps `create()`, gains `@JvmStatic`
+  (inert on Kotlin/Native) and swaps its `MemorySegment.ofAddress(IosGodot.constructObject(...))`
+  body for the desktop `ObjectCalls.constructObject("ButtonGroup")` one. The caller —
+  `tps-demo-kanama`'s `TpsScenes.kt` (`fun buttonGroup(): ButtonGroup = ButtonGroup.create()`) — is
+  unaffected.
+- No member arrived or left, no int width changed (all five members are `Boolean`/object-typed; the
+  class declares no `Long` or `Int`), the primary constructor was already public on both platforms,
+  and the nested/companion shapes match, so there is no source break and no wrapper-parity allowlist
+  line disappears (`ButtonGroup` had none). `ButtonGroup` is `RefCounted`-derived and every member
+  already opened with `checkOpen()` on both sides, so no guard was added.
+- `getButtons()` now calls the generic
+  `ObjectCalls.ptrcallNoArgsRetTypedObjectList(bind, segment, BaseButton::wrap)` on desktop too,
+  instead of the desktop-only `ptrcallNoArgsRetTypedBaseButtonList`; the two have identical bodies
+  (`callArrayReturn` + `BuiltinTypes.readArrayObjects`), so the returned `List<BaseButton>` is the
+  same. iOS already used the generic helper. No new `ObjectCalls` helper is referenced, so the
+  common `expect object ObjectCalls` stays at 1387 members.
+- The wrapper parity gate no longer lists `ButtonGroup` (20 classes, 265 allowlisted divergences —
+  unchanged, because the class contributed none).
+
 ### Changed — wrapper classes generated once: `Camera3D` (task 117 P1'(a))
 
 - `Camera3D` is generated once into the shared wrapper tree instead of being hand-written on desktop

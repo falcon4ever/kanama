@@ -12,7 +12,7 @@ next regen moves the member back into the shared file and it disappears from thi
 Members desktop keeps desktop-only on purpose are listed separately with their reason
 (`IOS_DESKTOP_ONLY_BY_DESIGN`) and are not counted as waiting.
 
-**Gap:** 0 of 988 shared classes carry a desktop companion with members waiting on a helper; 0 desktop-only members waiting; 0 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 0 properties read-only in the shared tree because only their setter is desktop-only; 3 desktop-only members by design.
+**Gap:** 0 of 989 shared classes carry a desktop companion with members waiting on a helper; 0 desktop-only members waiting; 0 distinct `ObjectCalls` helpers and 0 wrapper types waited on; 0 properties read-only in the shared tree because only their setter is desktop-only; 3 desktop-only members by design.
 
 | Class | Desktop-only members | Read-only in shared | Waits on |
 |---|---|---|---|
