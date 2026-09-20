@@ -7,6 +7,93 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `Camera3D` (task 117 P1'(a))
+
+- `Camera3D` is generated once into the shared wrapper tree instead of being hand-written on desktop
+  and generated on iOS. The two copies already had the same 64 members, and every one keeps its
+  name, signature, default arguments and body — the `projectRay*`/`projectPosition`/
+  `unprojectPosition` family, `isPositionBehind`, `getCameraTransform`/`getCameraProjection`,
+  `getFrustum`, `makeCurrent`/`clearCurrent`, `setPerspective`/`setOrthogonal`/`setFrustum`, the
+  `fov`/`near`/`far`/`size`/`projection`/`current`/`cullMask`/`environment`/`attributes`/
+  `compositor`/`dopplerTracking`/`keepAspect`/`hOffset`/`vOffset`/`frustumOffset` properties,
+  `setCullMaskValue`/`getCullMaskValue`, and the companion's eight `PROJECTION_*`/`KEEP_*`/
+  `DOPPLER_TRACKING_*` constants plus `fromHandle`/`wrap` — so callers are unaffected.
+- `Camera3D.create()` survives as a generated `@JvmStatic` companion helper with the same signature
+  and body. Since kanama#269 it is a `FACTORY_HELPERS["Camera3D"] = FactorySpec(True)` row, and the
+  row simply moves from the iOS-only universe to the shared one: iOS keeps `create()` and gains
+  `@JvmStatic` (inert there) and the desktop body `ObjectCalls.constructObject("Camera3D")` in place
+  of `IosGodot.constructObject`. Callers — `godot-4-3d-third-person-controller`'s `CameraMode.kt`
+  and `example_project`'s `WrapperConvenienceProbe.kt` — are unaffected.
+- No member arrived or left, no int width changed, no desktop body changed (the one iOS body change
+  is `create()`'s construct call above) and the primary constructor was already public on both
+  platforms, so there is no source break and no wrapper-parity allowlist line
+  disappears (`Camera3D` had none). `Camera3D` is not `RefCounted`-derived, so no `checkOpen()`
+  guard was added.
+- Seven `ObjectCalls` helpers that only this class calls from the shared tree
+  (`ptrcallNoArgsRetPlaneList` for `getFrustum`, `ptrcallWithThreeDoubleArgs` for `setPerspective`/
+  `setOrthogonal`, `ptrcallWithDoubleVector2TwoDoubleArgs` for `setFrustum`,
+  `ptrcallWithVector2ArgRetVector3` and `ptrcallWithVector2AndDoubleArgRetVector3` for the ray/
+  position projections, `ptrcallWithVector3ArgRetBool` for `isPositionBehind`/`isPositionInFrustum` and
+  `ptrcallWithVector3ArgRetVector2` for `unprojectPosition`) are now part of the common
+  `expect object ObjectCalls` (1380 → 1387 members), so both platforms declare them as `actual`.
+  `ptrcallNoArgsRetPlaneList` is hand-written on both backends (the desktop file has no generated
+  region; on iOS it sits above the region), so its `actual` is hand-added on each.
+
+### Changed — wrapper classes generated once: `MeshLibrary` (task 117 P1'(a))
+
+- `MeshLibrary` is generated once into the shared wrapper tree instead of being hand-written on
+  desktop and generated on iOS. All 24 members the desktop hand file had keep their names,
+  signatures, default arguments and bodies — `createItem`, the `setItem*`/`getItem*` family
+  (`Name`, `Mesh`, `MeshTransform`, `MeshCastShadow`, `NavigationMesh`,
+  `NavigationMeshTransform`, `NavigationLayers`, `Shapes`, `Preview`), `removeItem`,
+  `findItemByName`, `clear`, `getItemList`, `getLastUnusedItemId` — and so do the companion's
+  `fromHandle`/`wrap` helpers, so callers are unaffected.
+- `MeshLibrary.create()` survives as a generated `@JvmStatic` companion helper with the same
+  signature and body (`MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary")))`). It is
+  a `FACTORY_HELPERS["MeshLibrary"] = FactorySpec(True)` row now, not pasted Kotlin, so one row
+  feeds both platforms; iOS gains `create()` (previously it had none) and `@JvmStatic` (inert
+  there). Callers — `Starter-Kit-City-Builder`'s `Builder.kt` and `example_project`'s
+  `WrapperConvenienceProbe.kt` — are unaffected; the returned wrapper is still owned, so
+  `close()`/`use` stays required.
+- Gained on desktop/Android: `getItemCount(): Int`, a Godot method the hand file omitted. iOS
+  already had it; it was the `MeshLibrary | ios-only | getItemCount` line of the wrapper parity
+  allowlist, which is now gone, along with `MeshLibrary | companion-desktop-only | create`.
+- No int width changed, no body changed and the primary constructor was already public on both
+  platforms, so there is no source break. `MeshLibrary` is `RefCounted`-derived and every member
+  already opened with `checkOpen()` on both sides, so no guard was added. No new `ObjectCalls`
+  helper was referenced (the common `expect object` stays at 1380 members).
+
+### Changed — wrapper classes generated once: `PhysicsBody3D` (task 117 P1'(a))
+
+- `PhysicsBody3D` is generated once into the shared wrapper tree instead of being hand-written on
+  desktop and generated on iOS. All eight members the desktop hand file had keep their names,
+  signatures, default arguments and bodies — `moveAndCollide`, `testMove`, `getGravity`,
+  `setAxisLock`/`getAxisLock`, `getCollisionExceptions`,
+  `addCollisionExceptionWith`/`removeCollisionExceptionWith` — and so do the companion's
+  `fromHandle`/`wrap` helpers, so callers are unaffected.
+- The six `BODY_AXIS_*` companion constants moved from the generator's
+  `IOS_COMPANION_MEMBER_SECTIONS` into a new `SHARED_COMPANION_MEMBER_SECTIONS["PhysicsBody3D"]`
+  entry — one section now feeds both platforms. Desktop keeps the spelling it had
+  (`const val BODY_AXIS_LINEAR_X: Long = PhysicsServer3D.BODY_AXIS_LINEAR_X`, and so on for
+  `LINEAR_Y`/`LINEAR_Z`/`ANGULAR_X`/`ANGULAR_Y`/`ANGULAR_Z`): `PhysicsServer3D` is itself part of the
+  shared tree, so the aliases resolve on iOS too and the iOS copy's literals (`1L`…`32L`) become the
+  same aliases of the same values. `PhysicsBody3D.BODY_AXIS_ANGULAR_X`/`_Y`/`_Z`
+  (`godot-4-3d-third-person-controller`'s `BeetleBot.kt`, `example_project`'s
+  `WrapperConvenienceProbe.kt`) keep their `Long` type and values.
+- Gained on desktop/Android: the six `axisLock{Linear,Angular}{X,Y,Z}: Boolean` properties the hand
+  file omitted, generated as `getAxisLock`/`setAxisLock` pairs with the matching bit flag. iOS
+  already had them; they were the six `PhysicsBody3D | ios-only` lines of the wrapper parity
+  allowlist, which are now gone.
+- No int width changed, no body changed and the primary constructor was already public on both
+  platforms, so there is no source break. `getCollisionExceptions()` now calls the generic
+  `ObjectCalls.ptrcallNoArgsRetTypedObjectList(bind, segment, PhysicsBody3D::wrap)` instead of the
+  desktop-only `ptrcallNoArgsRetTypedPhysicsBody3DList`; the two have identical bodies
+  (`callArrayReturn` + `BuiltinTypes.readArrayObjects`), so the returned `List<PhysicsBody3D>` is the
+  same. `PhysicsBody3D` is not `RefCounted`-derived, so no `checkOpen()` guard was added.
+- `ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool` (`testMove`) and
+  `ptrcallWithVector3BoolFloatBoolIntArgsRetObject` (`moveAndCollide`) are now part of the common
+  `expect object ObjectCalls` (1378 → 1380 members), so both platforms declare them as `actual`.
+
 ### Changed — generator: factory/downcast companion helpers are table-driven (task 119 item 33)
 
 - The wrapper generator's `create()` and `from*` downcast companion helpers are rows in one

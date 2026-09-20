@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 202 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 193 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -198,6 +198,8 @@ expect object ObjectCalls {
   fun ptrcallNoArgsRetPackedVector3List(methodBind: RawSegment, instance: RawSegment): List<Vector3>
 
   fun ptrcallNoArgsRetPlane(methodBind: RawSegment, instance: RawSegment): Plane
+
+  fun ptrcallNoArgsRetPlaneList(methodBind: RawSegment, instance: RawSegment): List<Plane>
 
   fun ptrcallNoArgsRetProjection(methodBind: RawSegment, instance: RawSegment): Projection
 
@@ -721,6 +723,15 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: Double,
   ): Vector3
+
+  fun ptrcallWithDoubleVector2TwoDoubleArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    firstDouble: Double,
+    vector: Vector2,
+    secondDouble: Double,
+    thirdDouble: Double,
+  )
 
   fun ptrcallWithFiveIntArgs(
     methodBind: RawSegment,
@@ -7719,6 +7730,14 @@ expect object ObjectCalls {
     thirdCallableMethod: String,
   )
 
+  fun ptrcallWithThreeDoubleArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: Double,
+    second: Double,
+    third: Double,
+  )
+
   fun ptrcallWithThreeDoubleArgsRetDouble(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -8071,6 +8090,17 @@ expect object ObjectCalls {
     points: List<Vector2>,
     indices: List<Int>,
   )
+
+  fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    transformValue: Transform3D,
+    vectorValue: Vector3,
+    objectArg: RawSegment,
+    margin: Double,
+    recoveryAsCollision: Boolean,
+    maxCollisions: Int,
+  ): Boolean
 
   fun ptrcallWithTransform3DVector3TwoColorUInt32Args(
     methodBind: RawSegment,
@@ -9977,6 +10007,13 @@ expect object ObjectCalls {
     value: Double,
   ): Map<String, Any?>
 
+  fun ptrcallWithVector2AndDoubleArgRetVector3(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    vector: Vector2,
+    value: Double,
+  ): Vector3
+
   fun ptrcallWithVector2AndIntArg(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -10029,6 +10066,12 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: Vector2,
   ): Vector2i
+
+  fun ptrcallWithVector2ArgRetVector3(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Vector2,
+  ): Vector3
 
   fun ptrcallWithVector2BoolFloatBoolArgsRetObject(
     methodBind: RawSegment,
@@ -10326,6 +10369,12 @@ expect object ObjectCalls {
 
   fun ptrcallWithVector3Arg(methodBind: RawSegment, instance: RawSegment, value: Vector3)
 
+  fun ptrcallWithVector3ArgRetBool(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Vector3,
+  ): Boolean
+
   fun ptrcallWithVector3ArgRetDouble(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -10338,6 +10387,12 @@ expect object ObjectCalls {
     value: Vector3,
   ): List<Plane>
 
+  fun ptrcallWithVector3ArgRetVector2(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Vector3,
+  ): Vector2
+
   fun ptrcallWithVector3ArgRetVector3(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -10349,6 +10404,16 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: Vector3,
   ): Vector3i
+
+  fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    vector: Vector3,
+    firstBool: Boolean,
+    floatValue: Double,
+    secondBool: Boolean,
+    intValue: Int,
+  ): RawSegment
 
   fun ptrcallWithVector3iAndIntArgRetVector3iList(
     methodBind: RawSegment,

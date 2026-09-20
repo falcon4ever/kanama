@@ -1919,7 +1919,10 @@ actual object ObjectCalls {
 
   // Array[Plane] -> List<Plane> (e.g. Camera3D.get_frustum). Each record is 4 float32 LE
   // (normal.x, normal.y, normal.z, d). Phase 2.7i.
-  fun ptrcallNoArgsRetPlaneList(methodBind: MemorySegment, instance: MemorySegment): List<Plane> =
+  actual fun ptrcallNoArgsRetPlaneList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): List<Plane> =
     retTypedArrayBlob(methodBind, instance, PT_PLANE) { b, o, _ ->
       Plane(Vector3(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
     }
@@ -6060,7 +6063,7 @@ actual object ObjectCalls {
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
-  fun ptrcallWithDoubleVector2TwoDoubleArgs(
+  actual fun ptrcallWithDoubleVector2TwoDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstDouble: Double,
@@ -35416,7 +35419,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeDoubleArgs(
+  actual fun ptrcallWithThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Double,
@@ -37344,7 +37347,7 @@ actual object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
+  actual fun ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -45489,7 +45492,7 @@ actual object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithVector2AndDoubleArgRetVector3(
+  actual fun ptrcallWithVector2AndDoubleArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2,
@@ -45724,7 +45727,7 @@ actual object ObjectCalls {
     Vector2i(ret[0], ret[1])
   }
 
-  fun ptrcallWithVector2ArgRetVector3(
+  actual fun ptrcallWithVector2ArgRetVector3(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector2,
@@ -47075,7 +47078,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithVector3ArgRetBool(
+  actual fun ptrcallWithVector3ArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -47143,7 +47146,7 @@ actual object ObjectCalls {
     ptrcallRetTypedPlaneList(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithVector3ArgRetVector2(
+  actual fun ptrcallWithVector3ArgRetVector2(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -47221,7 +47224,7 @@ actual object ObjectCalls {
     Vector3i(ret[0], ret[1], ret[2])
   }
 
-  fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
+  actual fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector3,

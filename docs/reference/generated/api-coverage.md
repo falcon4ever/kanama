@@ -28,14 +28,14 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1036 / 1036 `████████████` 100.0%
-- Methods: 15374 / 15385 `████████████` 99.9% (callable methods; engine virtuals excluded — see below)
+- Methods: 15375 / 15385 `████████████` 99.9% (callable methods; engine virtuals excluded — see below)
 
 ### Per-Platform Class Sets
 
 One generated tree, held to the single-tree drift gate (`check_single_tree`: committed == fresh regen for every generated file; see wrapper-maintenance.md).
 
-- Shared tree (`src/sharedApi/kotlin/.../api`): 985 classes compiled by desktop, Android and iOS. 3 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
-- Per-platform (`PER_PLATFORM_WRAPPERS`, 50 classes): desktop generates 9 and hand-shapes 41; iOS generates 28, hand-shapes 8, hand-writes 12 collision classes, and does not host `DirAccess`, `MethodTweener`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
+- Shared tree (`src/sharedApi/kotlin/.../api`): 988 classes compiled by desktop, Android and iOS. 3 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
+- Per-platform (`PER_PLATFORM_WRAPPERS`, 47 classes): desktop generates 9 and hand-shapes 38; iOS generates 25, hand-shapes 8, hand-writes 12 collision classes, and does not host `DirAccess`, `MethodTweener`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
 
 ## Virtual Methods
 
@@ -47,7 +47,7 @@ One generated tree, held to the single-tree drift gate (`check_single_tree`: com
 | --- | ---: | --- | ---: | --- |
 | Core | 226/226 | `████████████` 100.0% | 2960/2970 | `████████████` 99.7% |
 | Scene | 26/26 | `████████████` 100.0% | 923/923 | `████████████` 100.0% |
-| Resources | 306/306 | `████████████` 100.0% | 2889/2891 | `████████████` 99.9% |
+| Resources | 306/306 | `████████████` 100.0% | 2890/2891 | `████████████` 100.0% |
 | Input | 20/20 | `████████████` 100.0% | 238/238 | `████████████` 100.0% |
 | UI | 69/69 | `████████████` 100.0% | 1742/1741 | `████████████` 100.1% |
 | 2D | 112/112 | `████████████` 100.0% | 2030/2030 | `████████████` 100.0% |
@@ -504,7 +504,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `MeshDataTool` | Rendering | 38/38 | `████████` 100.0% |
 | `MeshInstance2D` | 2D | 4/4 | `████████` 100.0% |
 | `MeshInstance3D` | 3D | 21/21 | `████████` 100.0% |
-| `MeshLibrary` | Resources | 24/25 | `████████` 96.0% |
+| `MeshLibrary` | Resources | 25/25 | `████████` 100.0% |
 | `MeshTexture` | 2D | 6/6 | `████████` 100.0% |
 | `MethodTweener` | Core | 3/3 | `████████` 100.0% |
 | `MissingNode` | Scene | 8/8 | `████████` 100.0% |
