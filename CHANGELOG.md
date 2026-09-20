@@ -7,6 +7,83 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `BaseMaterial3D` (task 117 P1'(a))
+
+- `BaseMaterial3D` is generated once into the shared wrapper tree
+  (`src/sharedApi/.../api/BaseMaterial3D.kt`) instead of being hand-written on desktop
+  (`src/jvmMain/.../api/BaseMaterial3D.kt`) and generated on iOS
+  (`src/iosMain/.../api/BaseMaterial3D.kt`); its `PER_PLATFORM_WRAPPERS` entry is gone. The two
+  copies already had the same 285 members, and every one keeps its name, signature, default
+  arguments and body — the whole `set*`/`get*` surface (`setAlbedo`/`getAlbedo`,
+  `setTexture`/`getTexture`, `setFeature`/`getFeature`, `setFlag`/`getFlag`,
+  `setTransparency`/`getTransparency`, `setShadingMode`/`getShadingMode`,
+  `setCullMode`/`getCullMode`, `setTextureFilter`/`getTextureFilter`, the emission, rim, clearcoat,
+  anisotropy, subsurface-scattering, backlight, refraction, detail, UV, billboard, grow,
+  proximity-fade, distance-fade and MSDF families) and the 131 generated properties
+  (`albedoColor`, `metallic`, `roughness`, `emission`, `transparency`, `shadingMode`, `cullMode`,
+  `textureFilter`, …), plus the companion's `TEXTURE_*`, `TEXTURE_FILTER_*`, `DETAIL_UV_*`,
+  `TRANSPARENCY_*`, `SHADING_MODE_*`, `FEATURE_*`, `BLEND_MODE_*`, `ALPHA_ANTIALIASING_*`,
+  `DEPTH_DRAW_*`, `CULL_*`, `FLAG_*`, `DIFFUSE_*`, `SPECULAR_*`, `BILLBOARD_*`, `TEXTURE_CHANNEL_*`,
+  `EMISSION_OP_*` and `DISTANCE_FADE_*` constants and `fromHandle`/`wrap` — so callers are
+  unaffected. `example_project/HelloScript.kt`'s `BaseMaterial3D.SHADING_MODE_UNSHADED`,
+  `BaseMaterial3D.TRANSPARENCY_ALPHA` and `BaseMaterial3D.CULL_DISABLED` keep their `Long` type and
+  values.
+- `BaseMaterial3D.fromMaterial(value: Material): BaseMaterial3D?` survives as a generated
+  `@JvmStatic` companion helper with the same signature, parameter name and body
+  (`if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null`). Since kanama#269
+  it is a `FACTORY_HELPERS["BaseMaterial3D"] = FactorySpec(False, (Downcast("fromMaterial",
+  "Material", False),))` row, and the row simply moves from the iOS-only universe to the shared one:
+  iOS keeps `fromMaterial` and gains `@JvmStatic` (inert on Kotlin/Native). Callers —
+  `example_project/WrapperConvenienceProbe.kt` and `godot-4-3d-character-controller-tutorial`'s
+  `SophiaSkin.kt` — are unaffected.
+- No member arrived or left, no body changed, and no int width changed: all 285 declarations are
+  byte-identical across the desktop hand file, the iOS copy and the shared render (69 `Long` and 18
+  `Int` occurrences in the signature lines on all three), so `setFeature(feature: Long, …)`,
+  `setFlag(flag: Long, …)`, `setTextureFilter(mode: Long)` and their getters keep `Long`. The
+  primary constructor was already `open class BaseMaterial3D(handle: GodotHandle) : Material(handle)`
+  on both platforms, so there is no source break and no wrapper-parity allowlist line disappears
+  (`BaseMaterial3D` had none). `BaseMaterial3D` is `RefCounted`-derived and every member already
+  opened with `checkOpen()` on both sides, so no guard was added. No new `ObjectCalls` helper is
+  referenced, so the common `expect object ObjectCalls` stays at 1387 members.
+- `StandardMaterial3D` stays per-platform (hand/hand, until task 117 P1'(c)) and now extends the
+  shared `BaseMaterial3D`; both copies still compile unchanged — each only uses the public primary
+  constructor, `handle.segment` and `ObjectCalls.constructObject`.
+- The wrapper parity gate no longer lists `BaseMaterial3D` (19 classes, 265 allowlisted divergences —
+  unchanged, because the class contributed none).
+
+### Changed — wrapper classes generated once: `ButtonGroup` (task 117 P1'(a))
+
+- `ButtonGroup` is generated once into the shared wrapper tree
+  (`src/sharedApi/.../api/ButtonGroup.kt`) instead of being hand-written on desktop
+  (`src/jvmMain/.../api/ButtonGroup.kt`) and generated on iOS (`src/iosMain/.../api/ButtonGroup.kt`);
+  its `PER_PLATFORM_WRAPPERS` entry is gone. The two copies already had the same five members, and
+  every one keeps its name, signature, default arguments and body — `getPressedButton`,
+  `getButtons`, `setAllowUnpress`/`isAllowUnpress`, the `allowUnpress: Boolean` property with its
+  `@JvmName("allowUnpressProperty")`/`@JvmName("setAllowUnpressProperty")` accessors — and so do the
+  nested `object Signals { const val pressed }` and the companion's `fromHandle`/`wrap` helpers, so
+  callers are unaffected.
+- `ButtonGroup.create()` survives as a generated `@JvmStatic` companion helper with the same
+  signature and body (`ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup")))`). Since
+  kanama#269 it is a `FACTORY_HELPERS["ButtonGroup"] = FactorySpec(True)` row, and the row simply
+  moves from the iOS-only universe to the shared one: iOS keeps `create()`, gains `@JvmStatic`
+  (inert on Kotlin/Native) and swaps its `MemorySegment.ofAddress(IosGodot.constructObject(...))`
+  body for the desktop `ObjectCalls.constructObject("ButtonGroup")` one. The caller —
+  `tps-demo-kanama`'s `TpsScenes.kt` (`fun buttonGroup(): ButtonGroup = ButtonGroup.create()`) — is
+  unaffected.
+- No member arrived or left, no int width changed (all five members are `Boolean`/object-typed; the
+  class declares no `Long` or `Int`), the primary constructor was already public on both platforms,
+  and the nested/companion shapes match, so there is no source break and no wrapper-parity allowlist
+  line disappears (`ButtonGroup` had none). `ButtonGroup` is `RefCounted`-derived and every member
+  already opened with `checkOpen()` on both sides, so no guard was added.
+- `getButtons()` now calls the generic
+  `ObjectCalls.ptrcallNoArgsRetTypedObjectList(bind, segment, BaseButton::wrap)` on desktop too,
+  instead of the desktop-only `ptrcallNoArgsRetTypedBaseButtonList`; the two have identical bodies
+  (`callArrayReturn` + `BuiltinTypes.readArrayObjects`), so the returned `List<BaseButton>` is the
+  same. iOS already used the generic helper. No new `ObjectCalls` helper is referenced, so the
+  common `expect object ObjectCalls` stays at 1387 members.
+- The wrapper parity gate no longer lists `ButtonGroup` (19 classes, 265 allowlisted divergences —
+  unchanged, because the class contributed none).
+
 ### Changed — wrapper classes generated once: `Camera3D` (task 117 P1'(a))
 
 - `Camera3D` is generated once into the shared wrapper tree instead of being hand-written on desktop

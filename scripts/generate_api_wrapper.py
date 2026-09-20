@@ -313,9 +313,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "AudioStreamPlayer": WrapperHome("hand", "collision",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit; iOS: hand-written cinterop-glue Node subclass in IosGodotApi.kt"),
-    "BaseMaterial3D": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "BoxMesh": WrapperHome("hand", "hand",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
@@ -328,9 +325,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "validated 114/114)"),
     "Button": WrapperHome("hand", "generated",
         "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "ButtonGroup": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
     "CallbackTweener": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Tween chaining glue in IosGodotApi.kt"),
@@ -1004,6 +998,8 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
     # every platform.
     "ArrayMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
+    "BaseMaterial3D": FactorySpec(False, (Downcast("fromMaterial", "Material", False),)),
+    "ButtonGroup": FactorySpec(True),
     "Camera3D": FactorySpec(True),
     "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
     "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
@@ -1020,8 +1016,6 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # iOS-only generated classes. `from(value: GodotObject)` is here too: the name is just a field,
     # and leaving the two of them pasted would reorder InputEventKey's companion, whose hand-written
     # Key constants (still a section) sit above its factories.
-    "BaseMaterial3D": FactorySpec(False, (Downcast("fromMaterial", "Material", False),)),
-    "ButtonGroup": FactorySpec(True),
     "ConfigFile": FactorySpec(True),
     "ENetMultiplayerPeer": FactorySpec(True),
     "InputEventKey": FactorySpec(True, (Downcast("from", "GodotObject", False),)),

@@ -1,12 +1,13 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * A group of buttons that doesn't allow more than one button to be pressed at a time.
+ *
  * Generated from Godot docs: ButtonGroup
  */
 class ButtonGroup(handle: GodotHandle) : Resource(handle) {
@@ -16,21 +17,42 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         @JvmName("setAllowUnpressProperty")
         set(value) = setAllowUnpress(value)
 
+    /**
+     * Returns the current pressed button.
+     *
+     * Generated from Godot docs: ButtonGroup.get_pressed_button
+     */
     fun getPressedButton(): BaseButton? {
         checkOpen()
         return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPressedButtonBind, segment))
     }
 
+    /**
+     * Returns an `Array` of `Button`s who have this as their `ButtonGroup` (see
+     * `BaseButton.button_group`).
+     *
+     * Generated from Godot docs: ButtonGroup.get_buttons
+     */
     fun getButtons(): List<BaseButton> {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getButtonsBind, segment, BaseButton::wrap)
     }
 
+    /**
+     * If `true`, it is possible to unpress all buttons in this `ButtonGroup`.
+     *
+     * Generated from Godot docs: ButtonGroup.set_allow_unpress
+     */
     fun setAllowUnpress(enabled: Boolean) {
         checkOpen()
         ObjectCalls.ptrcallWithBoolArg(setAllowUnpressBind, segment, enabled)
     }
 
+    /**
+     * If `true`, it is possible to unpress all buttons in this `ButtonGroup`.
+     *
+     * Generated from Godot docs: ButtonGroup.is_allow_unpress
+     */
     fun isAllowUnpress(): Boolean {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowUnpressBind, segment)
@@ -45,12 +67,13 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): ButtonGroup? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ButtonGroup? =
+        internal fun wrap(handle: RawSegment): ButtonGroup? =
             if (handle.address() == 0L) null else ButtonGroup(GodotHandle(handle))
 
         // Instantiate a ButtonGroup.
+        @JvmStatic
         fun create(): ButtonGroup =
-            ButtonGroup(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ButtonGroup"))))
+            ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup")))
 
         private const val GET_PRESSED_BUTTON_HASH = 3886434893L
         private val getPressedButtonBind by lazy {
