@@ -81,7 +81,7 @@ versioning once public releases begin.
   (`callArrayReturn` + `BuiltinTypes.readArrayObjects`), so the returned `List<BaseButton>` is the
   same. iOS already used the generic helper. No new `ObjectCalls` helper is referenced, so the
   common `expect object ObjectCalls` stays at 1387 members.
-- The wrapper parity gate no longer lists `ButtonGroup` (20 classes, 265 allowlisted divergences —
+- The wrapper parity gate no longer lists `ButtonGroup` (19 classes, 265 allowlisted divergences —
   unchanged, because the class contributed none).
 
 ### Changed — wrapper classes generated once: `Camera3D` (task 117 P1'(a))
