@@ -7,6 +7,50 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — `Image` and `PlaneMesh` generated once — iOS gains 21 `Image` members (task 117 P2', 1/3)
+
+- The first two group-B classes are generated once into the shared wrapper tree
+  (`src/sharedApi/.../api/Image.kt`, `.../PlaneMesh.kt`); all four per-platform copies are deleted and
+  `PER_PLATFORM_WRAPPERS` loses both entries. Group B is the OTHER direction from group A: desktop was
+  already generated and the **iOS** copy was the hand-written one, so every change below lands on iOS —
+  the shared draft is signature-identical to the deleted desktop file (only the `internal wrap` parameter
+  goes `MemorySegment` → the `RawSegment` alias, which is `MemorySegment` on the JVM). **No desktop
+  source change, no int width change, on either class.**
+- **`Image` gains 21 members on iOS** — the shapes the 2026-07 iOS renderer could not emit and task 100's
+  `Packed*Array` / `Rect2i` / `Vector2i` marshalling since can: `blitRect`, `blitRectMask`, `blendRect`,
+  `blendRectMask`, `fillRect`, `getRegion`, `setData`, `computeImageMetrics`, the nine
+  `load{Bmp,Dds,Exr,Jpg,Ktx,Svg,Tga,Webp}FromBuffer` readers (`loadPngFromBuffer` was already hand-wired)
+  and the five `save{Dds,Exr,Jpg,Png,Webp}ToBuffer` writers. The iOS shape gap is unchanged at **3
+  desktop-only members waiting** across 2 classes — no `Image` member was refused, so no `Image.jvm.kt`
+  companion exists.
+- **`Image`'s four companion factories are unchanged on both platforms**: `create(width, height,
+  useMipmaps, format)`, `createEmpty(...)`, `createFromData(..., data: ByteArray)` and
+  `loadFromFile(path)` keep the exact signatures the iOS hand copy declared — they are Godot statics the
+  generator emits itself, so the hand `KANAMA-IOS-SUGAR` re-add note retires with the file.
+- `Image.getData()` on iOS no longer passes a `getDataSize()` size hint to
+  `ObjectCalls.ptrcallNoArgsRetByteArray`; it calls the two-argument form, whose iOS `actual` delegates
+  with `-1L` (size read from the returned `PackedByteArray`). Same bytes, one fewer engine call.
+- **`PlaneMesh.fromResource(value: Resource)` takes a non-null `Resource` on iOS** (the hand copy declared
+  `Resource?` and returned `null` for it; desktop always required non-null). It is a
+  `FACTORY_HELPERS["PlaneMesh"]` row now, generated identically for every platform. Zero callers in the
+  repo or the demos. The rest of `PlaneMesh` is 15 members on both sides before and after.
+- `ObjectCalls`: the shared tree reaches 16 more helpers, all already present and audited on both
+  platforms and now `actual` on both — `ptrcallWithRect2iAndColorArg`, `ptrcallWithVector2iAndColorArg`,
+  `ptrcallWithObjectRect2iAndVector2iArgs`, `ptrcallWithTwoObjectRect2iAndVector2iArgs`,
+  `ptrcallWithTwoIntBoolLongArgsRetObject`, `ptrcallWithTwoIntBoolLongByteArrayArgs`,
+  `ptrcallWithTwoIntBoolLongByteArrayArgsRetObject`, `ptrcallWithByteArrayAndDoubleArgRetLong`,
+  `ptrcallWithDoubleArgRetByteArray`, `ptrcallWithBoolAndDoubleArgRetByteArray`,
+  `ptrcallWithTwoBoolAndDoubleArgRetByteArray`, `ptrcallWithBoolAndLongArgs`,
+  `ptrcallWithStringAndDoubleArgRetLong`, `ptrcallWithStringBoolDoubleArgsRetLong`,
+  `ptrcallWithStringTwoBoolAndDoubleArgRetLong`, `ptrcallWithThreeLongArgsRetLong`. The common
+  `expect object ObjectCalls` grows 1415 → 1431. No new native path.
+- The wrapper parity gate drops both classes from `HAND_SHAPED` (7 → **5 classes**) and their 21 allowlist
+  lines go (103 → **82**) — all 21 are `Image | desktop-only | …`; `PlaneMesh` had none. The shared tree
+  grows 1003 → **1005** classes and `PER_PLATFORM_WRAPPERS` shrinks 32 → 30.
+- `docs/reference/generated/ios-backend-handwritten.md` is regenerated and drops four stale rows (two
+  `Image` sugar sites, one `PlaneMesh`, and one for `iosMain/.../StandardMaterial3D.kt`, a file P1'(c)
+  already deleted): 20 → 16 marked sites, SUGAR 9 → 5.
+
 ### Changed — `Viewport` and `Resource` generated once — group A complete (task 117 P1'(c), 3/3) — **desktop source break**
 
 - The last two group-A classes are generated once into the shared wrapper tree

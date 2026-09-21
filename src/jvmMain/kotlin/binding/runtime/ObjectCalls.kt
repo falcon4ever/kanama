@@ -871,7 +871,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectRect2iAndVector2iArgs(
+  actual fun ptrcallWithObjectRect2iAndVector2iArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -897,7 +897,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoObjectRect2iAndVector2iArgs(
+  actual fun ptrcallWithTwoObjectRect2iAndVector2iArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     firstObjectArg: MemorySegment,
@@ -9932,7 +9932,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with one String arg, one scalar float arg, and int64 return value. */
-  fun ptrcallWithStringAndDoubleArgRetLong(
+  actual fun ptrcallWithStringAndDoubleArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -10506,7 +10506,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (PackedByteArray, scalar float) args and int64/enum return value. */
-  fun ptrcallWithByteArrayAndDoubleArgRetLong(
+  actual fun ptrcallWithByteArrayAndDoubleArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: ByteArray,
@@ -14960,7 +14960,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRect2iAndColorArg(
+  actual fun ptrcallWithRect2iAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rectValue: Rect2i,
@@ -15580,7 +15580,7 @@ actual object ObjectCalls {
    * Calls [methodBind] with (int32, int32, bool, int64/enum, PackedByteArray) args and no return
    * value.
    */
-  fun ptrcallWithTwoIntBoolLongByteArrayArgs(
+  actual fun ptrcallWithTwoIntBoolLongByteArrayArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -16483,7 +16483,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoIntBoolLongArgsRetObject(
+  actual fun ptrcallWithTwoIntBoolLongArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -17829,7 +17829,7 @@ actual object ObjectCalls {
   /**
    * Calls [methodBind] with one bool arg, one scalar float arg, and decodes PackedByteArray return.
    */
-  fun ptrcallWithBoolAndDoubleArgRetByteArray(
+  actual fun ptrcallWithBoolAndDoubleArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -17990,7 +17990,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithThreeLongArgsRetLong(
+  actual fun ptrcallWithThreeLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -29007,7 +29007,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithDoubleArgRetByteArray(
+  actual fun ptrcallWithDoubleArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -32519,7 +32519,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithBoolAndLongArgs(
+  actual fun ptrcallWithBoolAndLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     enabled: Boolean,
@@ -32537,7 +32537,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringBoolDoubleArgsRetLong(
+  actual fun ptrcallWithStringBoolDoubleArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -32565,7 +32565,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVector2iAndColorArg(
+  actual fun ptrcallWithVector2iAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vector: Vector2i,
@@ -35049,7 +35049,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(
+  actual fun ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -39486,7 +39486,7 @@ actual object ObjectCalls {
    * Calls [methodBind] with (String, bool, bool, float) args and Long return. Used for e.g.
    * Image.save_exr.
    */
-  fun ptrcallWithStringTwoBoolAndDoubleArgRetLong(
+  actual fun ptrcallWithStringTwoBoolAndDoubleArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -39522,7 +39522,7 @@ actual object ObjectCalls {
    * Calls [methodBind] with (bool, bool, float) args and PackedByteArray return. Used for e.g.
    * Image.save_exr_to_buffer.
    */
-  fun ptrcallWithTwoBoolAndDoubleArgRetByteArray(
+  actual fun ptrcallWithTwoBoolAndDoubleArgRetByteArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Boolean,

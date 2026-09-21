@@ -353,9 +353,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "iOS: hand-written static facade + FileAccessHandle glue in FileAccess.kt (static-method dispatch "
         "subset); the generated draft would clash and still references the desktop hand-shaped "
         "FileAccessHandle surface"),
-    "Image": WrapperHome("generated", "hand",
-        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
-        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
     "ImageTexture": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
@@ -384,9 +381,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
     "ParticleProcessMaterial": WrapperHome("generated", "hand",
-        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
-        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
-    "PlaneMesh": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
     "ProceduralSkyMaterial": WrapperHome("generated", "hand",
@@ -1316,6 +1310,9 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "MeshLibrary": FactorySpec(True),
     "OfflineMultiplayerPeer": FactorySpec(True),
     "PackedScene": FactorySpec(True),
+    # Task 117 P2': the retired iOS hand copy's only companion sugar (a Resource downcast); the
+    # rest of the class is generated on both platforms now.
+    "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Resource": FactorySpec(True, (Downcast("fromObject", "GodotObject", False),)),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Sprite2D": FactorySpec(True),
@@ -1324,7 +1321,6 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "StandardMaterial3D": FactorySpec(True),
     # Desktop-only generated classes.
     "ParticleProcessMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "ProceduralSkyMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     # iOS-only generated classes. `from(value: GodotObject)` is here too: the name is just a field,
     # and leaving the two of them pasted would reorder InputEventKey's companion, whose hand-written
