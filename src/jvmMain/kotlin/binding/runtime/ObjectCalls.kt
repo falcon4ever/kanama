@@ -1549,7 +1549,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun <T : Any> ptrcallWithBoolArgRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithBoolArgRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     boolArg: Boolean,
@@ -1786,14 +1786,15 @@ actual object ObjectCalls {
       )
       .mapNotNull { wrapper(it.segment) }
 
-  fun ptrcallWithTwoStringAndTwoBoolArgsRetTypedNodeList(
+  actual fun <T : Any> ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
     second: String,
     firstBool: Boolean,
     secondBool: Boolean,
-  ): List<Node> {
+    wrapper: (MemorySegment) -> T?,
+  ): List<T> {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 8L)
       val arg1 = arena.allocate(8L, 8L)
@@ -1810,7 +1811,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, arg2)
         args.setAtIndex(ADDRESS, 3, arg3)
         return callArrayReturn(methodBind, instance, args) { ret ->
-          BuiltinTypes.readArrayObjects(ret, Node::wrap)
+          BuiltinTypes.readArrayObjects(ret, wrapper)
         }
       } finally {
         GodotStrings.destroyString(arg0)
@@ -1818,6 +1819,27 @@ actual object ObjectCalls {
       }
     }
   }
+
+  // The Node-typed form of the helper above. The shared tree calls the generic one (iOS hosts no
+  // api-layer wrapper factories, so every typed-object-list return there passes `X::wrap`); this
+  // one stays for the desktop-only callers that predate task 117.
+  fun ptrcallWithTwoStringAndTwoBoolArgsRetTypedNodeList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+    firstBool: Boolean,
+    secondBool: Boolean,
+  ): List<Node> =
+    ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(
+      methodBind,
+      instance,
+      first,
+      second,
+      firstBool,
+      secondBool,
+      Node::wrap,
+    )
 
   /** Calls [methodBind] with (StringName, Variant) and no return value. */
   actual fun ptrcallWithStringNameAndVariantArg(
@@ -8674,7 +8696,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Object*, bool, int64) args and no return value. */
-  fun ptrcallWithObjectBoolLongArgs(
+  actual fun ptrcallWithObjectBoolLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -11669,7 +11691,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNameArrayBoolArgs(
+  actual fun ptrcallWithStringNameArrayBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -11765,7 +11787,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithNodePathArgRetArray(
+  actual fun ptrcallWithNodePathArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -30397,7 +30419,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntAndBoolArgsRetObject(
+  actual fun ptrcallWithIntAndBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -30417,7 +30439,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringAndTwoBoolArgsRetObject(
+  actual fun ptrcallWithStringAndTwoBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     pattern: String,
@@ -36052,7 +36074,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringStringNameIntStringNameArgsRetString(
+  actual fun ptrcallWithStringStringNameIntStringNameArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -36129,7 +36151,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringAndStringNameArgRetString(
+  actual fun ptrcallWithStringAndStringNameArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,

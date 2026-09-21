@@ -374,24 +374,28 @@ def check_ios_policies(output_dir: Path) -> int:
 
     1. bare-`Object` returns are emitted on iOS (GodotObject wrap policy) — else regen
        silently drops get_collider()-style methods.
-    2. Node.createTween() is generated `open` so the hand-written SceneTree subclass can
-       override it (the FPS F2 fix) — else regen re-breaks the SIGSEGV path.
+    2. Node.create_tween stays reachable on iOS. It was an `open` member of the hand-written
+       iOS Node (so the hand-written SceneTree subclass could override it — the FPS F2 fix);
+       since task 117 P1'(b2) Node is generated once into the shared tree, which cannot host a
+       Tween return on iOS, so the call lives in IOS_EXTENSION_SECTIONS['Node'] and is emitted
+       into Node.ios.kt — else iOS scripts lose createTween() entirely.
     3. a hand-written class (SceneTree) requested for emission is reported as a collision and
        NOT written — else a duplicate-class file breaks the compile.
     """
     policy_dir = output_dir / "ios-policies"
     policy_dir.mkdir(parents=True, exist_ok=True)
 
-    _gen_ios(policy_dir, "KinematicCollision2D", "Node")
+    _gen_ios(policy_dir, "KinematicCollision2D")
     kc = (policy_dir / "KinematicCollision2D.kt").read_text(encoding="utf-8")
     if "fun getCollider(): GodotObject?" not in kc:
         print("[wrapper_generator] FAIL bare-Object return getCollider() dropped on iOS "
               "(GodotObject wrap policy regressed)", file=sys.stderr)
         return 1
-    node = (policy_dir / "Node.kt").read_text(encoding="utf-8")
-    if "open fun createTween(): Tween?" not in node:
-        print("[wrapper_generator] FAIL Node.createTween() is not generated `open` "
-              "(subclass-override policy regressed — breaks the SceneTree F2 fix)", file=sys.stderr)
+    from generate_api_wrapper import IOS_EXTENSION_SECTIONS  # the section table, not a regex over its source
+
+    if "fun Node.createTween(): Tween?" not in IOS_EXTENSION_SECTIONS.get("Node", ((), ""))[1]:
+        print("[wrapper_generator] FAIL IOS_EXTENSION_SECTIONS['Node'] no longer carries "
+              "createTween() — iOS scripts lose Node.create_tween (task 117 P1'(b2))", file=sys.stderr)
         return 1
 
     # Composite default-value override: Node3D.lookAt(up = Vector3.UP) — demos call the 1-arg

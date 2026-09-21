@@ -46,7 +46,7 @@ TAG = "[wrapper_parity]"
 # regenerated file that changes shape shows up here like any other change and P1 decides. Every
 # name except the two roots must appear in the generator's PER_PLATFORM_WRAPPERS (checked below).
 HAND_SHAPED = [
-    "GodotObject", "Node", "RefCounted", "Resource", "GodotCallable", "Image",
+    "GodotObject", "RefCounted", "Resource", "GodotCallable", "Image",
     "Button", "Light3D",
     "LineEdit", "Range", "Tweener",
     "StandardMaterial3D", "Viewport", "TabBar", "Slider", "AnimationPlayer", "StaticBody3D",

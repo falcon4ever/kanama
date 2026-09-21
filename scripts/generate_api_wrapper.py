@@ -43,14 +43,11 @@ OWNERSHIP_SENSITIVE_METHODS = {
 # only when rendering in iOS MODE for the iOS target (`IOS_AUDIT_ONLY` is also set during the
 # shared-tree pass, so the lookup is additionally guarded on RENDER_TARGET — a shared class must never
 # lose a method to an iOS section); the reason lands in the skip report.
-IOS_SECTION_REPLACED_METHODS = {
-    ("Node", "get_tree"): (
-        "replaced by IOS_MEMBER_SECTIONS['Node']: getTree() is declared NON-NULL there "
-        "(`SceneTree`, not the generated `SceneTree?`) so the demo call sites that write "
-        "self.getTree().quit() keep compiling; both hand-shaped Node files carry the non-null "
-        "shape until Node itself retires (task 117 P1'(b1), D15)"
-    ),
-}
+# Empty since task 117 P1'(b2): its one entry belonged to the hand-shaped iOS `Node`, whose section
+# declared getTree() NON-NULL; `Node` is generated once now and every caller sees the generated
+# `SceneTree?` (D15). The table stays because the mechanism is the documented escape hatch for the
+# next iOS section that shadows a generated method.
+IOS_SECTION_REPLACED_METHODS: dict[tuple[str, str], str] = {}
 # Per-method by-design skips with their recorded rationale (task 28). These are NOT missing
 # shapes: each was reviewed and deliberately left ungenerated; the reason lands verbatim in
 # the generator report so the skip stays self-documenting. Cross-referenced in
@@ -388,8 +385,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "MethodTweener": WrapperHome("generated", "unsupported",
         "iOS: generated setTrans/setEase clash with the hand-written iOS Tweener fluent glue "
         "(IosGodotApi.kt) the class must subclass"),
-    "Node": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "NoiseTexture2D": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -842,62 +837,6 @@ IOS_MEMBER_SECTIONS = {
         }
     }
 """.strip("\n"),
-    "Node": """
-    // ── Kanama iOS sugar (generator custom-section, not from Godot docs) ───────
-    // getViewport() is generated above (Rect2 kind widening made Viewport an emitted
-    // return type), so it is intentionally not duplicated here.
-
-    fun getTree(): SceneTree =
-        requireNotNull(SceneTree.wrap(MemorySegment.ofAddress(IosGodot.nodeGetTree(segment.address())))) {
-            "Node.getTree(): not inside a SceneTree"
-        }
-
-    fun getNodeOrNull(path: String): Node? =
-        IosGodot.nodeGetNodeOrNull(segment.address(), path).takeIf { it != 0L }?.let {
-            Node(GodotHandle(MemorySegment.ofAddress(it)))
-        }
-
-    fun <T : Node> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
-        getNodeOrNull(path)?.let { ctor(it.handle) }
-
-    fun <T : Node> getAsOrNull(path: NodePath, ctor: (GodotHandle) -> T): T? =
-        getAsOrNull(path.path, ctor)
-
-    fun <T : Node> requireAs(path: String, ctor: (GodotHandle) -> T): T =
-        getAsOrNull(path, ctor) ?: error("Required node '$path' was not found")
-
-    fun <T : Node> requireAs(path: NodePath, ctor: (GodotHandle) -> T): T =
-        requireAs(path.path, ctor)
-
-    fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (GodotHandle) -> T): T? =
-        getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
-
-    // `open` since task 103, when the hand-written SceneTree subclass (IosGodotApi.kt) overrode
-    // createTween() with the correct SceneTree.create_tween bind — the FPS F2 fix. Since task 117
-    // P1'(b1) SceneTree is a generated `MainLoop` (its create_tween sugar lives in SceneTree.ios.kt)
-    // and nothing in the repo overrides this, but the openness stays so a script subclass still can,
-    // and so the two hand-shaped Node files carry ONE openness.
-    open fun createTween(): Tween? =
-        IosGodot.nodeCreateTween(segment.address()).takeIf { it != 0L }?.let {
-            Tween(GodotHandle(MemorySegment.ofAddress(it)))
-        }
-
-    // String overloads for the NodePath-typed accessors (desktop exposes both), so demo code can
-    // pass a plain path literal.
-    fun hasNode(path: String): Boolean = hasNode(NodePath(path))
-
-    fun getNode(path: String): Node? = getNode(NodePath(path))
-
-    fun hasNodeAndResource(path: String): Boolean = hasNodeAndResource(NodePath(path))
-
-    // Node.callLocalRpc — send the RPC and also run it locally if the send was a no-op (matches
-    // desktop; used by the generated <Class>Rpcs.callLocal* helpers).
-    fun callLocalRpc(method: String, vararg extraArgs: Any?) {
-        if (rpc(method, *extraArgs) != 0L) {
-            call(method, *extraArgs)
-        }
-    }
-""".strip("\n"),
     "SurfaceTool": """
     // No-arg commit() — the generated commit(existing, flags) doesn't default the nullable `existing`
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
@@ -955,6 +894,150 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {
+    "Node": """
+    // ── Kanama Node ergonomics (generator custom-section, not from Godot docs) ────────────────
+    // These lived twice until task 117 P1'(b2): on the hand-written desktop `Node`, and (a subset,
+    // with `IosGodot.*` bodies) in IOS_MEMBER_SECTIONS['Node']. `Node` is one generated class now,
+    // so they live here once, keeping the DESKTOP names, overloads and signatures (D1/D11) — every
+    // `requireNodeAs` / `getNodeAsOrNull` / `requireAs` / `getAsOrNull` / `callLocalRpc` call site
+    // in the demos and the examples keeps compiling, on both platforms. Every body uses only seams
+    // both platforms resolve: the generated NodePath accessors, `isClass`, `call`, `handle`.
+
+    // String-path overloads of the generated `NodePath` accessors, so a script can pass a plain
+    // path literal (`self.getNodeOrNull("Hud/Label")`). Plain comments, not KDoc: these five names
+    // are Godot methods, so sync_kdoc_from_godot_docs.py owns their doc block.
+    fun getNodeOrNull(path: String): Node? = getNodeOrNull(NodePath(path))
+
+    fun getNode(path: String): Node? = getNode(NodePath(path))
+
+    fun hasNode(path: String): Boolean = hasNode(NodePath(path))
+
+    fun hasNodeAndResource(path: String): Boolean = hasNodeAndResource(NodePath(path))
+
+    fun getNodeAndResource(path: String): List<Any?> = getNodeAndResource(NodePath(path))
+
+    /**
+     * Returns the node at `path` as `wrapper` when Godot reports that it is an
+     * instance of `expectedClass`, or `null` when the path is missing or the
+     * class check fails.
+     *
+     * This is the stricter typed form of GDScript's `get_node(path) as Type`.
+     * It is useful when the child must be a specific built-in Godot class.
+     * For instanced scene roots whose script type may not satisfy
+     * `Object.is_class(...)`, prefer [getAsOrNull].
+     */
+    fun <T : Node> getNodeAsOrNull(
+        path: String,
+        expectedClass: String,
+        wrapper: (GodotHandle) -> T,
+    ): T? {
+        val node = getNodeOrNull(path) ?: return null
+        return if (node.isClass(expectedClass)) wrapper(node.handle) else null
+    }
+
+    fun <T : Node> getNodeAsOrNull(
+        path: NodePath,
+        expectedClass: String,
+        wrapper: (GodotHandle) -> T,
+    ): T? = getNodeAsOrNull(path.path, expectedClass, wrapper)
+
+    /**
+     * Returns the node at `path` wrapped as `T`, or `null` when the path is
+     * missing.
+     *
+     * This is Kanama's lightweight typed equivalent of GDScript's
+     * `get_node(path)` for cases where the scene structure already guarantees
+     * the node type:
+     *
+     * ```
+     * val mobSpawnLocation = self.getAsOrNull("SpawnPath/SpawnLocation", ::PathFollow3D)
+     * ```
+     *
+     * Unlike [getNodeAsOrNull], this helper does not call `Object.is_class`.
+     * That makes it work for child scene roots and Kanama script instances
+     * where the expected Kotlin wrapper is known from the scene, while still
+     * returning a non-owning wrapper around the same Godot node.
+     */
+    fun <T : Node> getAsOrNull(
+        path: String,
+        wrapper: (GodotHandle) -> T,
+    ): T? = getNodeOrNull(path)?.let { wrapper(it.handle) }
+
+    fun <T : Node> getAsOrNull(
+        path: NodePath,
+        wrapper: (GodotHandle) -> T,
+    ): T? = getAsOrNull(path.path, wrapper)
+
+    /**
+     * Returns the node at `path` wrapped as `T`, or throws a descriptive error
+     * if the node is missing.
+     *
+     * This is the common Kanama replacement for GDScript's required
+     * `get_node(path)` calls:
+     *
+     * ```
+     * var mob_spawn_location = get_node(^"SpawnPath/MobSpawnLocation")
+     * ```
+     *
+     * becomes:
+     *
+     * ```
+     * val mobSpawnLocation = self.requireAs("SpawnPath/MobSpawnLocation", ::PathFollow2D)
+     * ```
+     *
+     * The returned wrapper is non-owning; Godot still owns the node. Use this
+     * when the scene requires the child to exist. Use [getAsOrNull] when a
+     * missing child is valid.
+     */
+    fun <T : Node> requireAs(
+        path: String,
+        wrapper: (GodotHandle) -> T,
+    ): T = getAsOrNull(path, wrapper)
+        ?: error("Required node '$path' was not found under ${describeForErrors()}")
+
+    fun <T : Node> requireAs(
+        path: NodePath,
+        wrapper: (GodotHandle) -> T,
+    ): T = requireAs(path.path, wrapper)
+
+    /**
+     * Strict required form of [getNodeAsOrNull]. Throws if `path` is missing or
+     * the resolved node is not reported by Godot as `expectedClass`.
+     */
+    fun <T : Node> requireNodeAs(
+        path: String,
+        expectedClass: String,
+        wrapper: (GodotHandle) -> T,
+    ): T = getNodeAsOrNull(path, expectedClass, wrapper)
+        ?: error("Required node '$path' was not found under ${describeForErrors()} or is not a $expectedClass")
+
+    fun <T : Node> requireNodeAs(
+        path: NodePath,
+        expectedClass: String,
+        wrapper: (GodotHandle) -> T,
+    ): T = requireNodeAs(path.path, expectedClass, wrapper)
+
+    /**
+     * Sends an RPC and falls back to a local method call if Godot reports that the RPC could not be sent.
+     *
+     * This is useful for `@Rpc(callLocal = true)` gameplay events that should also work while the node
+     * uses an offline or not-yet-connected multiplayer peer.
+     *
+     * The generated `<Class>Rpcs.callLocal*` helpers and the KSP processor emit calls to this member
+     * (KanamaProcessor.kt / IosScriptCodeEmitter.kt), so its name and signature are load-bearing.
+     */
+    fun callLocalRpc(method: String, vararg extraArgs: Any?) {
+        if (rpc(method, *extraArgs) != 0L) {
+            call(method, *extraArgs)
+        }
+    }
+
+    // Receiver description for the requireAs/requireNodeAs failure messages. The desktop hand file
+    // used GodotObject.getClassName(), which is desktop-only (P3' owns the roots), so the class name
+    // comes through the Variant `call` seam both platforms implement — an error path, called once
+    // before a throw.
+    private fun describeForErrors(): String = "${call("get_class")}#${getInstanceId()}"
+""".strip("\n"),
     "SceneTree": """
     // ── Kanama SceneTree ergonomics (generator custom-section, not from Godot docs) ───────────
     // setPaused is the desktop/Android spelling of Godot's set_pause. The retired desktop
@@ -1312,6 +1395,21 @@ fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMach
 # (extra imports, text); ObjectCalls, MemorySegment and the binding.runtime helpers are imported
 # by the companion header.
 IOS_EXTENSION_SECTIONS: dict[str, tuple[tuple[str, ...], str]] = {
+    "Node": ((), """
+// Node.create_tween — the shared tree cannot host it (iOS has no Tween.wrap, the same gap the
+// generated desktop `Node.createTween` extension in Node.jvm.kt documents), and the retired
+// hand-written iOS `Node` carried it as a member, so iOS keeps it as an extension: every
+// `self.createTween()` / `node.createTween()` call site resolves on both platforms
+// (task 117 P1'(b2); mirrors the SceneTree entry above).
+fun Node.createTween(): Tween? =
+    ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
+        .takeIf { it.address() != 0L }
+        ?.let { Tween(GodotHandle(it)) }
+
+private val nodeCreateTweenBind by lazy {
+    ObjectCalls.getMethodBind("Node", "create_tween", 3426978995L)
+}
+""".strip("\n")),
     "SceneTree": ((), """
 // SceneTree.create_tween through the TREE's own bind. Carried over from the retired hand-written
 // iOS `class SceneTree : Node`, whose `override fun createTween()` existed because Node.create_tween
