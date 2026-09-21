@@ -1970,7 +1970,7 @@ actual object ObjectCalls {
       Triple<CPointer<IntVar>?, CPointer<COpaquePointerVar>?, Int>(null, null, 0)
     }
 
-  fun ptrcallWithNodePathArgRetArray(
+  actual fun ptrcallWithNodePathArgRetArray(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -2682,15 +2682,15 @@ actual object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> = retTypedObjectList(methodBind, instance, wrapper) { Triple(null, null, 0) }
 
-  fun <T> ptrcallWithBoolArgRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithBoolArgRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    value: Boolean,
-    fromHandle: (MemorySegment) -> T?,
+    boolArg: Boolean,
+    wrapper: (MemorySegment) -> T?,
   ): List<T> =
-    retTypedObjectList(methodBind, instance, fromHandle) {
+    retTypedObjectList(methodBind, instance, wrapper) {
       val cell = alloc<ByteVar>()
-      cell.value = if (value) 1 else 0
+      cell.value = if (boolArg) 1 else 0
       val types = allocArray<IntVar>(1)
       types[0] = PT_BOOL
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -2704,16 +2704,16 @@ actual object ObjectCalls {
   // Godot String from it. PT_BOOL args are uint8 cells. Both string cells stay scope-valid across
   // the
   // call because layoutArgs runs once inside retTypedObjectList's memScoped block.
-  fun <T> ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(
+  actual fun <T : Any> ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
     second: String,
     firstBool: Boolean,
     secondBool: Boolean,
-    fromHandle: (MemorySegment) -> T?,
+    wrapper: (MemorySegment) -> T?,
   ): List<T> =
-    retTypedObjectList(methodBind, instance, fromHandle) {
+    retTypedObjectList(methodBind, instance, wrapper) {
       val b0 = alloc<ByteVar>()
       b0.value = if (firstBool) 1 else 0
       val b1 = alloc<ByteVar>()
@@ -3562,14 +3562,14 @@ actual object ObjectCalls {
     value: String,
   ): String = callWithVariantArgs(methodBind, instance, listOf(value)) as? String ?: ""
 
-  fun ptrcallWithStringAndStringNameArgRetString(
+  actual fun ptrcallWithStringAndStringNameArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
     name: String,
   ): String = callWithVariantArgs(methodBind, instance, listOf(text, name)) as? String ?: ""
 
-  fun ptrcallWithStringStringNameIntStringNameArgsRetString(
+  actual fun ptrcallWithStringStringNameIntStringNameArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -7017,7 +7017,7 @@ actual object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithIntAndBoolArgsRetObject(
+  actual fun ptrcallWithIntAndBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -15670,7 +15670,7 @@ actual object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectBoolLongArgs(
+  actual fun ptrcallWithObjectBoolLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -31143,7 +31143,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringAndTwoBoolArgsRetObject(
+  actual fun ptrcallWithStringAndTwoBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     pattern: String,
@@ -33275,7 +33275,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameArrayBoolArgs(
+  actual fun ptrcallWithStringNameArrayBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
