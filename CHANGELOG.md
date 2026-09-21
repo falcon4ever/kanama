@@ -21,28 +21,39 @@ versioning once public releases begin.
   3). Recount the blast radius with
   `grep -rc "Bind, NULL_SEGMENT" src/sharedApi/kotlin/net/multigesture/kanama/api/ | grep -v ':0'`:
   **72 static call sites across 36 shared classes**.
-- **The fix is one dispatcher in the iOS `ObjectCalls`** — not the C shim, not the shared tree.
-  `ptrcallDispatch(...)`, hand-written above the `BEGIN GENERATED MEMBERS` marker in
+- **The fix is a dispatcher per guarded C entry point, in the iOS `ObjectCalls`** — never in the shared
+  tree. `ptrcallDispatch(...)`, hand-written above the `BEGIN GENERATED MEMBERS` marker in
   `src/iosMain/.../binding/runtime/ObjectCalls.kt`, routes a zero instance to
-  `kanama_ios_godot_ptrcall_static` and everything else to `kanama_ios_godot_ptrcall`. All **1172** call
-  sites in that file go through it, the generated region included: the generator emits `ptrcallDispatch`
-  now, so a regen keeps the fix. `ios/bootstrap/kanama_ios_shim.c`, the existing `ptrcallStatic*` helpers
-  and their hand users (`FileAccess`, `ImageTexture`) are untouched, and desktop needs no change — its
-  ptrcall path carries no null-instance guard (the one in `src/jvmMain/.../ObjectCalls.kt` is inside
+  `kanama_ios_godot_ptrcall_static` and everything else to `kanama_ios_godot_ptrcall`. All **1172**
+  plain-ptrcall call sites in that file go through it, the generated region included: the generator
+  emits `ptrcallDispatch` now, so a regen keeps the fix. Desktop needs no change — its ptrcall path
+  carries no null-instance guard (the one in `src/jvmMain/.../ObjectCalls.kt` is inside
   `notifyPostinitialize`).
-- This repairs **59 of the 72** sites: the ones whose helper marshals through the generic dispatch. The
-  remaining **13** (in `EditorExportPlatform`, `FileDialog`, `GLTFDocument`, `JSON`, `MultiplayerAPI`,
-  `Node`, `Resource` and `ShaderIncludeDB`) return through specialized C entry points —
-  `..._no_args_ret_string`, `..._no_args_ret_string_name`, `..._no_args_ret_packed_string_array`,
+- **`kanama_ios_godot_ptrcall` was not the only guarded entry point.** Thirteen of the 72 sites (in
+  `EditorExportPlatform`, `FileDialog`, `GLTFDocument`, `JSON`, `MultiplayerAPI`, `Node`, `Resource`
+  and `ShaderIncludeDB`) return through a specialised C entry — `..._no_args_ret_string`,
+  `..._no_args_ret_string_name`, `..._no_args_ret_packed_string_array`,
   `..._no_args_ret_typed_array_blob`, `..._ret_array_blob`, `..._ret_utf8`, `..._ret_variant_scalar`
-  and `kanama_ios_godot_object_call` — each of which keeps its own null-instance guard and has no
-  `_static` counterpart yet. Those still no-op on iOS and need the shim work the dispatcher deliberately
-  avoids.
-- **The iOS `OBJECTCALLS SELFTEST` goes from 205 to 212 checks.** Seven new rows drive the shared-tree
-  static path through the public wrapper API rather than the `ptrcallStatic*` helpers:
+  and `kanama_ios_godot_object_call` — each carrying the same `instance == 0` guard. **All 22 such
+  entry points in `ios/bootstrap/kanama_ios_shim.c` now follow the `30c949a1` pattern**: the body moves
+  into an unguarded `static ..._dispatch(...)`, the existing symbol keeps its guard and calls it, and a
+  new `<symbol>_static(...)` sibling (declared in `ios/include/kanama_ios.h` for cinterop) calls it with
+  a null instance. No existing guard was removed and no existing signature changed. **72 of 72 static
+  call sites now reach Godot on iOS.** The existing `ptrcallStatic*` helpers and their hand users
+  (`FileAccess`, `ImageTexture`) are untouched.
+- **New gate `scripts/check_ios_static_dispatch.py`** (a `local_ci.sh` stage beside
+  `check_objectcalls_parity`) makes this structural instead of remembered: it parses the shim for every
+  exported `kanama_ios_godot_*` entry point that early-returns on a zero instance, and fails if
+  `ObjectCalls.kt` names one anywhere except inside a private `*Dispatch` function that also calls its
+  `_static` sibling. It prints the entry-point → dispatcher table on PASS, so the next static the
+  generator renders through any shape is covered by construction.
+- **The iOS `OBJECTCALLS SELFTEST` goes from 205 to 218 checks.** Thirteen new rows drive the
+  shared-tree static path through the public wrapper API rather than the `ptrcallStatic*` helpers:
   `Image.createFromData(2, 2, false, FORMAT_RGBA8, ByteArray(16))` (non-null, width 2, height 2),
-  `Image.create(4, 3, false, FORMAT_RGBA8)` (non-null, width 4), `Thread.isMainThread()` and
-  `RegEx.createFromString("a+b", false)`.
+  `Image.create(4, 3, false, FORMAT_RGBA8)` (non-null, width 4), `Thread.isMainThread()`,
+  `RegEx.createFromString("a+b", false)`, a `JSON.stringify`/`JSON.parseString` round-trip,
+  `ShaderIncludeDB.listBuiltInIncludeFiles()` and `getBuiltInIncludeFile(...)`,
+  `Resource.generateSceneUniqueId()` and `MultiplayerAPI.getDefaultInterface()`.
 
 ### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
 

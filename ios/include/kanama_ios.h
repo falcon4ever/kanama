@@ -99,6 +99,17 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_string(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_string: the same body
+ * with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The
+ * entry point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_string_static(
+    int64_t method_bind,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
  * No-arg ptrcall returning a Godot StringName, marshalled to UTF-8.
  *
  * GDExtension has no StringName->utf8, so the returned StringName is converted to a
@@ -113,6 +124,17 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_string_name: the same
+ * body with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT).
+ * The entry point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name_static(
+    int64_t method_bind,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
  * No-arg ptrcall returning a Godot NodePath, marshalled to UTF-8.
  *
  * GDExtension has no NodePath->utf8, so the returned NodePath is converted to a String
@@ -122,6 +144,17 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name(
 int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
     int64_t method_bind,
     int64_t instance,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_node_path: the same
+ * body with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT).
+ * The entry point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path_static(
+    int64_t method_bind,
     char *out_buf,
     int64_t buf_size
 );
@@ -144,6 +177,21 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
 int64_t kanama_ios_godot_ptrcall_ret_utf8(
     int64_t method_bind,
     int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_type,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_utf8: the same body with a
+ * NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The entry
+ * point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_utf8_static(
+    int64_t method_bind,
     const int32_t *arg_types,
     const void *const *arg_ptrs,
     int32_t arg_count,
@@ -185,6 +233,21 @@ int64_t kanama_ios_godot_ptrcall_ret_callable(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_callable: the same body with a
+ * NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The entry
+ * point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_callable_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_object_handle,
+    char *out_method,
+    int64_t out_method_size
+);
+
+/*
  * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a Variant,
  * decoded as a scalar the way kanama_ios_godot_object_call decodes its return (task 100,
  * parcel 2): bool/int/Object handle -> out_int, float -> out_double, String/StringName/NodePath
@@ -209,6 +272,23 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_variant_scalar: the same body
+ * with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The
+ * entry point above rejects instance == 0, so statics must come through here.
+ */
+int32_t kanama_ios_godot_ptrcall_ret_variant_scalar_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len
+);
+
+/*
  * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a Packed*Array
  * of one of the eight numeric / vector kinds, selected by packed_kind (the Variant type:
  * KANAMA_IOS_VARIANT_TYPE_PACKED_{BYTE,INT32,INT64,FLOAT32,FLOAT64,VECTOR2,VECTOR3,COLOR}_ARRAY).
@@ -222,6 +302,21 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
 int64_t kanama_ios_godot_ptrcall_ret_packed(
     int64_t method_bind,
     int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t packed_kind,
+    void *out_buf,
+    int64_t buf_cap
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_packed: the same body with a
+ * NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The entry
+ * point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_packed_static(
+    int64_t method_bind,
     const int32_t *arg_types,
     const void *const *arg_ptrs,
     int32_t arg_count,
@@ -260,6 +355,21 @@ int64_t kanama_ios_godot_take_pending_packed(
 int64_t kanama_ios_godot_ptrcall_ret_container_blob(
     int64_t method_bind,
     int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t container_kind,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_container_blob: the same body
+ * with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The
+ * entry point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_container_blob_static(
+    int64_t method_bind,
     const int32_t *arg_types,
     const void *const *arg_ptrs,
     int32_t arg_count,
@@ -311,6 +421,22 @@ int64_t kanama_ios_godot_ptrcall_ret_array_blob(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_array_blob: the same body with
+ * a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The entry
+ * point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_array_blob_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t blob_kind,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
  * Drain the blob parked by kanama_ios_godot_ptrcall_ret_array_blob into out_buf (up to buf_size
  * bytes), free it and return its full size. Returns -1 when nothing is pending. Single slot:
  * drain before the next array-returning call.
@@ -337,6 +463,18 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array:
+ * the same body with a NULL instance, for Godot statics (the generated wrappers'
+ * NULL_SEGMENT). The entry point above rejects instance == 0, so statics must come
+ * through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_static(
+    int64_t method_bind,
+    int32_t *out_buf,
+    int64_t buf_cap
+);
+
+/*
  * No-arg ptrcall returning a Godot PackedFloat32Array, read into float32 elements.
  * Same buffer/length contract as the PackedInt32Array variant (buf_cap is an ELEMENT
  * count); element type is float32.
@@ -344,6 +482,18 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
 int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
     int64_t method_bind,
     int64_t instance,
+    float *out_buf,
+    int64_t buf_cap
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array:
+ * the same body with a NULL instance, for Godot statics (the generated wrappers'
+ * NULL_SEGMENT). The entry point above rejects instance == 0, so statics must come
+ * through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_static(
+    int64_t method_bind,
     float *out_buf,
     int64_t buf_cap
 );
@@ -359,9 +509,33 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
     float *out_buf,
     int64_t buf_cap
 );
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array:
+ * the same body with a NULL instance, for Godot statics (the generated wrappers'
+ * NULL_SEGMENT). The entry point above rejects instance == 0, so statics must come
+ * through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_static(
+    int64_t method_bind,
+    float *out_buf,
+    int64_t buf_cap
+);
 int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
     int64_t method_bind,
     int64_t instance,
+    float *out_buf,
+    int64_t buf_cap
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_color_array:
+ * the same body with a NULL instance, for Godot statics (the generated wrappers'
+ * NULL_SEGMENT). The entry point above rejects instance == 0, so statics must come
+ * through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_static(
+    int64_t method_bind,
     float *out_buf,
     int64_t buf_cap
 );
@@ -395,6 +569,17 @@ void kanama_ios_godot_ptrcall_with_packed_float32_arg(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_with_packed_float32_arg: the same
+ * body with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT).
+ * The entry point above rejects instance == 0, so statics must come through here.
+ */
+void kanama_ios_godot_ptrcall_with_packed_float32_arg_static(
+    int64_t method_bind,
+    const float *elems,
+    int64_t count
+);
+
+/*
  * No-arg ptrcall returning a Godot PackedStringArray, serialized into out_buf as a length-
  * prefixed blob: [count:int32][len0:int32][utf8_0][len1:int32][utf8_1]...  Two-call protocol:
  * pass out_buf=NULL to learn the total byte size, then call again with a buffer of that size.
@@ -403,6 +588,18 @@ void kanama_ios_godot_ptrcall_with_packed_float32_arg(
 int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
     int64_t method_bind,
     int64_t instance,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_string_array:
+ * the same body with a NULL instance, for Godot statics (the generated wrappers'
+ * NULL_SEGMENT). The entry point above rejects instance == 0, so statics must come
+ * through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_static(
+    int64_t method_bind,
     char *out_buf,
     int64_t buf_size
 );
@@ -422,6 +619,19 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob: the
+ * same body with a NULL instance, for Godot statics (the generated wrappers'
+ * NULL_SEGMENT). The entry point above rejects instance == 0, so statics must come
+ * through here.
+ */
+int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_static(
+    int64_t method_bind,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
  * ptrcall (with PT-tagged args) -> a generic Array, serialized to a self-describing blob
  * [int32 count]([int32 variant_type][int32 byteLen][bytes])*. Scalar elements
  * (bool/int/float/object-handle/String|StringName|NodePath utf8) are decoded; non-scalar
@@ -430,6 +640,20 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
 int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob(
     int64_t method_bind,
     int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_variant_array_blob: the same
+ * body with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT).
+ * The entry point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob_static(
+    int64_t method_bind,
     const int32_t *arg_types,
     const void *const *arg_ptrs,
     int32_t arg_count,
@@ -454,12 +678,37 @@ int64_t kanama_ios_godot_ptrcall_ret_raycast_dict(
 );
 
 /*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_raycast_dict: the same body
+ * with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The
+ * entry point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_raycast_dict_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    char *out_buf,
+    int64_t buf_size
+);
+
+/*
  * Build a Godot Array of RIDs (each a uint64 id) and pass it as the single ptrcall argument, e.g.
  * PhysicsRayQueryParameters3D.set_exclude. Best-effort: no-op if the Array/RID primitives are missing.
  */
 void kanama_ios_godot_ptrcall_with_rid_array_arg(
     int64_t method_bind,
     int64_t instance,
+    const int64_t *rids,
+    int32_t count
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_with_rid_array_arg: the same body
+ * with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The
+ * entry point above rejects instance == 0, so statics must come through here.
+ */
+void kanama_ios_godot_ptrcall_with_rid_array_arg_static(
+    int64_t method_bind,
     const int64_t *rids,
     int32_t count
 );
@@ -472,6 +721,18 @@ void kanama_ios_godot_ptrcall_with_rid_array_arg(
 int64_t kanama_ios_godot_ptrcall_load_status_with_progress(
     int64_t method_bind,
     int64_t instance,
+    const char *path,
+    double *out_progress
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_load_status_with_progress: the
+ * same body with a NULL instance, for Godot statics (the generated wrappers'
+ * NULL_SEGMENT). The entry point above rejects instance == 0, so statics must come
+ * through here.
+ */
+int64_t kanama_ios_godot_ptrcall_load_status_with_progress_static(
+    int64_t method_bind,
     const char *path,
     double *out_progress
 );
@@ -563,6 +824,20 @@ int64_t kanama_ios_godot_ptrcall_ret_object_array(
 int64_t kanama_ios_godot_ptrcall_ret_object_handles(
     int64_t method_bind,
     int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_handles,
+    int64_t cap
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_ptrcall_ret_object_handles: the same body
+ * with a NULL instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The
+ * entry point above rejects instance == 0, so statics must come through here.
+ */
+int64_t kanama_ios_godot_ptrcall_ret_object_handles_static(
+    int64_t method_bind,
     const int32_t *arg_types,
     const void *const *arg_ptrs,
     int32_t arg_count,
@@ -770,6 +1045,24 @@ int32_t kanama_ios_godot_object_disconnect_callable(
 int32_t kanama_ios_godot_object_call(
     int64_t method_bind,
     int64_t instance,
+    const int32_t *arg_tags,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+);
+
+/*
+ * Static-method sibling of kanama_ios_godot_object_call: the same body with a NULL
+ * instance, for Godot statics (the generated wrappers' NULL_SEGMENT). The entry point
+ * above rejects instance == 0, so statics must come through here.
+ */
+int32_t kanama_ios_godot_object_call_static(
+    int64_t method_bind,
     const int32_t *arg_tags,
     const void *const *arg_ptrs,
     int32_t arg_count,

@@ -40,7 +40,10 @@ team IDs, provisioning profile names, or private maintainer notes.
 
 Godot's iOS export loads the C shim, which bridges to the Kotlin/Native runtime;
 the generated wrappers call Godot through `ObjectCalls` over a generic `ptrcall`
-dispatch in the shim. The component diagram, the dispatch contract, and the
+dispatch in the shim. Each shim entry point that takes an instance comes in two
+flavours — the guarded instance entry and a `_static` sibling for Godot's static
+methods, which ptrcall with a null object — and the iOS `ObjectCalls` picks between
+them per call. The component diagram, the dispatch contract, and the
 generator rules are in
 [iOS Backend Architecture](../contributing/backends/ios.md); see
 [Architecture: iOS](../contributing/architecture.md#ios) for how this maps onto

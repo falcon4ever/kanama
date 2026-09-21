@@ -2114,13 +2114,17 @@ void kanama_ios_godot_ptrcall_string_arg(
     kanama_ios_destroy_string(&string_storage);
 }
 
-int64_t kanama_ios_godot_ptrcall_no_args_ret_string(
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_string, shared by the guarded instance
+// entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall /
+// _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method marker
+// and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_string_dispatch(
     int64_t method_bind,
     int64_t instance,
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
@@ -2150,13 +2154,41 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_string(
     return length;
 }
 
-int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name(
+int64_t kanama_ios_godot_ptrcall_no_args_ret_string(
     int64_t method_bind,
     int64_t instance,
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_string_dispatch(
+        method_bind, instance, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_string: the same body with a
+// NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_string_static(
+    int64_t method_bind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_string_dispatch(method_bind, 0, out_buf, buf_size);
+}
+
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_string_name, shared by the guarded
+// instance entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall
+// / _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method
+// marker and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name_dispatch(
+    int64_t method_bind,
+    int64_t instance,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL ||
@@ -2193,13 +2225,42 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name(
     return length;
 }
 
-int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
+int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name(
     int64_t method_bind,
     int64_t instance,
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_string_name_dispatch(
+        method_bind, instance, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_string_name: the same body with
+// a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name_static(
+    int64_t method_bind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_string_name_dispatch(
+        method_bind, 0, out_buf, buf_size);
+}
+
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_node_path, shared by the guarded
+// instance entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall
+// / _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method
+// marker and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path_dispatch(
+    int64_t method_bind,
+    int64_t instance,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL ||
@@ -2236,6 +2297,31 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
     return length;
 }
 
+int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
+    int64_t method_bind,
+    int64_t instance,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_node_path_dispatch(
+        method_bind, instance, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_node_path: the same body with a
+// NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path_static(
+    int64_t method_bind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_node_path_dispatch(
+        method_bind, 0, out_buf, buf_size);
+}
+
 // task 100 (parcel 1) — String / StringName / NodePath returns on every audited arg shape.
 // The generated ObjectCalls helpers lay out the arg cells exactly as for kanama_ios_godot_ptrcall;
 // the return rides its own 8-byte cell (all three builtins are a single pointer on 64-bit), is
@@ -2255,7 +2341,11 @@ static void kanama_ios_drop_pending_utf8(void) {
     }
 }
 
-int64_t kanama_ios_godot_ptrcall_ret_utf8(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_utf8, shared by the guarded instance entry
+// point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall / _dispatch /
+// _static (commit 30c949a1): a zero instance is the generator's static-method marker and Godot
+// ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_utf8_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -2265,7 +2355,7 @@ int64_t kanama_ios_godot_ptrcall_ret_utf8(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
@@ -2319,6 +2409,39 @@ int64_t kanama_ios_godot_ptrcall_ret_utf8(
         g_pending_utf8_valid = 1;
     }
     return length;
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_utf8(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_type,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_utf8_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, ret_type, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_utf8: the same body with a NULL
+// instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the instance
+// path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_utf8_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_type,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_ret_utf8_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, ret_type, out_buf, buf_size);
 }
 
 int64_t kanama_ios_godot_take_pending_utf8(
@@ -2382,13 +2505,18 @@ static void kanama_ios_cache_packed_int32_methods(void) {
 // length protocol like the String/NodePath helpers: Kotlin calls once with out_buf=NULL
 // to learn the count, allocates, then calls again to fill. Returns the FULL element count
 // (negative on resolution failure).
-int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array, shared by the
+// guarded instance entry point below and by its _static sibling. Same split as
+// kanama_ios_godot_ptrcall / _dispatch / _static (commit 30c949a1): a zero instance is the
+// generator's static-method marker and Godot ptrcalls a static bind with a null object, so the
+// body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_dispatch(
     int64_t method_bind,
     int64_t instance,
     int32_t *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -2427,6 +2555,31 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
         g_packed_int32_array_destructor(array_storage);
     }
     return count;
+}
+
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
+    int64_t method_bind,
+    int64_t instance,
+    int32_t *out_buf,
+    int64_t buf_cap
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_dispatch(
+        method_bind, instance, out_buf, buf_cap);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array: the same
+// body with a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point
+// so the instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_static(
+    int64_t method_bind,
+    int32_t *out_buf,
+    int64_t buf_cap
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_dispatch(
+        method_bind, 0, out_buf, buf_cap);
 }
 
 // Lazily resolve the PackedFloat32Array read-back trio. Mirror of the int32 variant.
@@ -2470,13 +2623,18 @@ static void kanama_ios_cache_packed_float32_methods(void) {
 // PackedFloat32Array no-arg getter return — element type float32. Same protocol and 16-byte
 // storage as the int32 variant (Packed*Array opaque size is 16 on 64-bit). Returns the FULL
 // element count (negative on resolution failure).
-int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array, shared by the
+// guarded instance entry point below and by its _static sibling. Same split as
+// kanama_ios_godot_ptrcall / _dispatch / _static (commit 30c949a1): a zero instance is the
+// generator's static-method marker and Godot ptrcalls a static bind with a null object, so the
+// body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_dispatch(
     int64_t method_bind,
     int64_t instance,
     float *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -2512,6 +2670,31 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
         g_packed_float32_array_destructor(array_storage);
     }
     return count;
+}
+
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
+    int64_t method_bind,
+    int64_t instance,
+    float *out_buf,
+    int64_t buf_cap
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_dispatch(
+        method_bind, instance, out_buf, buf_cap);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array: the same
+// body with a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point
+// so the instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_static(
+    int64_t method_bind,
+    float *out_buf,
+    int64_t buf_cap
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_dispatch(
+        method_bind, 0, out_buf, buf_cap);
 }
 
 // PackedByteArray return with optional PT-tagged args and an optional-static instance:
@@ -2573,13 +2756,17 @@ int64_t kanama_ios_godot_ptrcall_ret_packed_byte_array(
 // PackedFloat32Array ARG (build-from-list): construct an empty array, push_back each element
 // from the caller's flat float buffer, ptrcall the (single-arg, void) method with it, then
 // destruct. 16-byte storage (Packed*Array opaque size). This is the inverse of the read-back.
-void kanama_ios_godot_ptrcall_with_packed_float32_arg(
+// Unguarded body of kanama_ios_godot_ptrcall_with_packed_float32_arg, shared by the guarded
+// instance entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall
+// / _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method
+// marker and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static void kanama_ios_godot_ptrcall_with_packed_float32_arg_dispatch(
     int64_t method_bind,
     int64_t instance,
     const float *elems,
     int64_t count
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -2616,6 +2803,29 @@ void kanama_ios_godot_ptrcall_with_packed_float32_arg(
     if (g_packed_float32_array_destructor != NULL) {
         g_packed_float32_array_destructor(array_storage);
     }
+}
+
+void kanama_ios_godot_ptrcall_with_packed_float32_arg(
+    int64_t method_bind,
+    int64_t instance,
+    const float *elems,
+    int64_t count
+) {
+    if (instance == 0) {
+        return;
+    }
+    kanama_ios_godot_ptrcall_with_packed_float32_arg_dispatch(method_bind, instance, elems, count);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_with_packed_float32_arg: the same body with
+// a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+void kanama_ios_godot_ptrcall_with_packed_float32_arg_static(
+    int64_t method_bind,
+    const float *elems,
+    int64_t count
+) {
+    kanama_ios_godot_ptrcall_with_packed_float32_arg_dispatch(method_bind, 0, elems, count);
 }
 
 // Lazily resolve the PackedVector2Array read-back trio.
@@ -2658,13 +2868,18 @@ static void kanama_ios_cache_packed_vector2_methods(void) {
 // PackedVector2Array no-arg getter return. Each element is a Vector2 (2 float32 on iOS);
 // out_buf receives count*2 floats (buf_cap is an ELEMENT count). 16-byte storage. Returns
 // the FULL element count (negative on resolution failure).
-int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array, shared by the
+// guarded instance entry point below and by its _static sibling. Same split as
+// kanama_ios_godot_ptrcall / _dispatch / _static (commit 30c949a1): a zero instance is the
+// generator's static-method marker and Godot ptrcalls a static bind with a null object, so the
+// body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_dispatch(
     int64_t method_bind,
     int64_t instance,
     float *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -2701,6 +2916,31 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
         g_packed_vector2_array_destructor(array_storage);
     }
     return count;
+}
+
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
+    int64_t method_bind,
+    int64_t instance,
+    float *out_buf,
+    int64_t buf_cap
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_dispatch(
+        method_bind, instance, out_buf, buf_cap);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array: the same
+// body with a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point
+// so the instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_static(
+    int64_t method_bind,
+    float *out_buf,
+    int64_t buf_cap
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_dispatch(
+        method_bind, 0, out_buf, buf_cap);
 }
 
 // Lazily resolve the PackedColorArray read-back trio.
@@ -2743,13 +2983,18 @@ static void kanama_ios_cache_packed_color_methods(void) {
 // PackedColorArray no-arg getter return. Each element is a Color (4 float32 RGBA); out_buf
 // receives count*4 floats (buf_cap is an ELEMENT count). 16-byte storage. Returns the FULL
 // element count (negative on resolution failure).
-int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_packed_color_array, shared by the
+// guarded instance entry point below and by its _static sibling. Same split as
+// kanama_ios_godot_ptrcall / _dispatch / _static (commit 30c949a1): a zero instance is the
+// generator's static-method marker and Godot ptrcalls a static bind with a null object, so the
+// body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_dispatch(
     int64_t method_bind,
     int64_t instance,
     float *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -2787,6 +3032,31 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
         g_packed_color_array_destructor(array_storage);
     }
     return count;
+}
+
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
+    int64_t method_bind,
+    int64_t instance,
+    float *out_buf,
+    int64_t buf_cap
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_dispatch(
+        method_bind, instance, out_buf, buf_cap);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_color_array: the same
+// body with a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point
+// so the instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_static(
+    int64_t method_bind,
+    float *out_buf,
+    int64_t buf_cap
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_dispatch(
+        method_bind, 0, out_buf, buf_cap);
 }
 
 // Build a BUILD-tagged Packed*Array arg (Vector2/Color) into a 16-byte cell from a flat float
@@ -3458,7 +3728,11 @@ static void kanama_ios_drop_pending_blob(void) {
     g_pending_blob_len = 0;
 }
 
-int64_t kanama_ios_godot_ptrcall_ret_array_blob(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_array_blob, shared by the guarded instance
+// entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall /
+// _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method marker
+// and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -3469,7 +3743,7 @@ int64_t kanama_ios_godot_ptrcall_ret_array_blob(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL || g_string_to_utf8_chars == NULL) {
@@ -3534,6 +3808,42 @@ int64_t kanama_ios_godot_ptrcall_ret_array_blob(
     return total;
 }
 
+int64_t kanama_ios_godot_ptrcall_ret_array_blob(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t blob_kind,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, blob_kind, elem_kind, out_buf,
+        buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_array_blob: the same body with a NULL
+// instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the instance
+// path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_array_blob_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t blob_kind,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, blob_kind, elem_kind, out_buf, buf_size);
+}
+
 int64_t kanama_ios_godot_take_pending_blob(
     char *out_buf,
     int64_t buf_size
@@ -3555,13 +3865,18 @@ int64_t kanama_ios_godot_take_pending_blob(
 // protocol: Kotlin calls once with out_buf=NULL to learn the total byte size, allocates, then
 // calls again to fill. Returns the FULL byte size (negative on resolution failure). Per element
 // operator_index_const yields the String ptr, then string_to_utf8_chars encodes it.
-int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_packed_string_array, shared by the
+// guarded instance entry point below and by its _static sibling. Same split as
+// kanama_ios_godot_ptrcall / _dispatch / _static (commit 30c949a1): a zero instance is the
+// generator's static-method marker and Godot ptrcalls a static bind with a null object, so the
+// body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_dispatch(
     int64_t method_bind,
     int64_t instance,
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL || g_string_to_utf8_chars == NULL) {
@@ -3589,6 +3904,31 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
     return total;
 }
 
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
+    int64_t method_bind,
+    int64_t instance,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_dispatch(
+        method_bind, instance, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_packed_string_array: the same
+// body with a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point
+// so the instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_static(
+    int64_t method_bind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_dispatch(
+        method_bind, 0, out_buf, buf_size);
+}
+
 // Resolves the generic Array size/get/destructor builtins; defined later in the file.
 static void kanama_ios_cache_array_methods(void);
 
@@ -3598,14 +3938,18 @@ static void kanama_ios_cache_array_methods(void);
 // NODE_PATH -> the element's utf8 (StringName/NodePath go via String(from: ...)). Two-call length
 // protocol like the Packed* helpers: out_buf=NULL/buf_size=0 measures the total byte count first.
 // Returns the total bytes (>= 4), or -1 on error. Uses the generic Array size/get builtins.
-int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
+// Unguarded body of kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob, shared by the guarded
+// instance entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall
+// / _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method
+// marker and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_dispatch(
     int64_t method_bind,
     int64_t instance,
     int32_t elem_kind,
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -3631,6 +3975,33 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
         g_array_destructor(&array_storage);
     }
     return total;
+}
+
+int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
+    int64_t method_bind,
+    int64_t instance,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_dispatch(
+        method_bind, instance, elem_kind, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob: the same body
+// with a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so
+// the instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_static(
+    int64_t method_bind,
+    int32_t elem_kind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_dispatch(
+        method_bind, 0, elem_kind, out_buf, buf_size);
 }
 
 // ---- task 100 (parcel 6): Dictionary / Array returns as one self-describing blob -------------
@@ -4028,7 +4399,11 @@ static int64_t kanama_ios_blob_deliver_or_park(KanamaIosBlob *b, char *out_buf, 
     return len;
 }
 
-int64_t kanama_ios_godot_ptrcall_ret_container_blob(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_container_blob, shared by the guarded instance
+// entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall /
+// _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method marker
+// and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_container_blob_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -4038,7 +4413,7 @@ int64_t kanama_ios_godot_ptrcall_ret_container_blob(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -4052,6 +4427,39 @@ int64_t kanama_ios_godot_ptrcall_ret_container_blob(
         return -1;
     }
     return kanama_ios_blob_deliver_or_park(&b, out_buf, buf_size);
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_container_blob(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t container_kind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_container_blob_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, container_kind, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_container_blob: the same body with a
+// NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_container_blob_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t container_kind,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_ret_container_blob_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, container_kind, out_buf, buf_size);
 }
 
 int64_t kanama_ios_godot_take_pending_container_blob(
@@ -4076,7 +4484,11 @@ int64_t kanama_ios_godot_take_pending_container_blob(
 // STRING|STRING_NAME|NODE_PATH(utf8). Non-scalar elements (Dictionary, nested Array, ...) keep their
 // type tag with byteLen 0 so Kotlin surfaces null (the scalar-decode philosophy). Two-call length
 // protocol (out_buf=NULL/buf_size=0 measures). Args are PT-tagged like the other arg-bearing helpers.
-int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_variant_array_blob, shared by the guarded
+// instance entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall
+// / _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method
+// marker and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -4088,7 +4500,7 @@ int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob(
     // Thin wrapper over the parcel-6 container encoder (task 100): same blob layout, nested
     // Dictionary/Array elements now carry their nested blob instead of byteLen 0. The two-call
     // length protocol of its hand-written callers is unchanged (the method runs per call).
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -4108,6 +4520,37 @@ int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob(
     int64_t total = b.len;
     free(b.buf);
     return total;
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_variant_array_blob_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_variant_array_blob: the same body with a
+// NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_ret_variant_array_blob_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, out_buf, buf_size);
 }
 
 // Keyed-get the Variant value for [key] from the raw Dictionary [dict_storage] into [out_value]
@@ -4151,7 +4594,11 @@ static int32_t kanama_ios_raycast_dict_get(
  * getter. Returns the byte count written (4 for no hit, 52 for a hit), or -1 on error. out_buf
  * must hold >= 52 bytes.
  */
-int64_t kanama_ios_godot_ptrcall_ret_raycast_dict(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_raycast_dict, shared by the guarded instance
+// entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall /
+// _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method marker
+// and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -4160,7 +4607,7 @@ int64_t kanama_ios_godot_ptrcall_ret_raycast_dict(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (out_buf == NULL || buf_size < 4) {
@@ -4240,19 +4687,54 @@ int64_t kanama_ios_godot_ptrcall_ret_raycast_dict(
     return total;
 }
 
+int64_t kanama_ios_godot_ptrcall_ret_raycast_dict(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    char *out_buf,
+    int64_t buf_size
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, out_buf, buf_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_raycast_dict: the same body with a NULL
+// instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the instance
+// path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_raycast_dict_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    char *out_buf,
+    int64_t buf_size
+) {
+    return kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, out_buf, buf_size);
+}
+
 /*
  * Build a Godot Array of RIDs from [rids]/[count] and pass it as the single ptrcall argument
  * (PhysicsRayQueryParameters3D.set_exclude, a TypedArray<RID> that is a plain Array at ptrcall).
  * Each RID is a uint64 id. Best-effort: if the Array/RID primitives are unavailable the exclude
  * is simply not applied.
  */
-void kanama_ios_godot_ptrcall_with_rid_array_arg(
+// Unguarded body of kanama_ios_godot_ptrcall_with_rid_array_arg, shared by the guarded instance
+// entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall /
+// _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method marker
+// and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static void kanama_ios_godot_ptrcall_with_rid_array_arg_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int64_t *rids,
     int32_t count
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return;
     }
     kanama_ios_cache_array_methods();  // resolves g_array_destructor
@@ -4294,13 +4776,40 @@ void kanama_ios_godot_ptrcall_with_rid_array_arg(
     g_array_destructor(&array_storage);
 }
 
+void kanama_ios_godot_ptrcall_with_rid_array_arg(
+    int64_t method_bind,
+    int64_t instance,
+    const int64_t *rids,
+    int32_t count
+) {
+    if (instance == 0) {
+        return;
+    }
+    kanama_ios_godot_ptrcall_with_rid_array_arg_dispatch(method_bind, instance, rids, count);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_with_rid_array_arg: the same body with a
+// NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+void kanama_ios_godot_ptrcall_with_rid_array_arg_static(
+    int64_t method_bind,
+    const int64_t *rids,
+    int32_t count
+) {
+    kanama_ios_godot_ptrcall_with_rid_array_arg_dispatch(method_bind, 0, rids, count);
+}
+
 /*
  * ResourceLoader.load_threaded_get_status(path, progress) ptrcall with the optional progress
  * out-Array actually supplied (ptrcall passes all args; the engine appends a float in [0,1] to
  * the Array). Element 0 is written to *out_progress when present. Returns the ThreadLoadStatus
  * enum, or -1 on error / unresolved primitives (caller treats -1 as no-progress-available).
  */
-int64_t kanama_ios_godot_ptrcall_load_status_with_progress(
+// Unguarded body of kanama_ios_godot_ptrcall_load_status_with_progress, shared by the guarded
+// instance entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall
+// / _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method
+// marker and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_load_status_with_progress_dispatch(
     int64_t method_bind,
     int64_t instance,
     const char *path,
@@ -4309,7 +4818,7 @@ int64_t kanama_ios_godot_ptrcall_load_status_with_progress(
     if (out_progress != NULL) {
         *out_progress = 0.0;
     }
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0 || path == NULL) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || path == NULL) {
         return -1;
     }
     kanama_ios_cache_array_methods();
@@ -4351,6 +4860,37 @@ int64_t kanama_ios_godot_ptrcall_load_status_with_progress(
     kanama_ios_destroy_string(&path_string);
     g_array_destructor(&array_storage);
     return status;
+}
+
+int64_t kanama_ios_godot_ptrcall_load_status_with_progress(
+    int64_t method_bind,
+    int64_t instance,
+    const char *path,
+    double *out_progress
+) {
+    // Null-instance rejection, kept verbatim from before the _dispatch split: the
+    // out-parameter preamble is repeated here because callers decode the out-parameters
+    // without consulting the returned status.
+    if (instance == 0) {
+        if (out_progress != NULL) {
+            *out_progress = 0.0;
+        }
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_load_status_with_progress_dispatch(
+        method_bind, instance, path, out_progress);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_load_status_with_progress: the same body
+// with a NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so
+// the instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_load_status_with_progress_static(
+    int64_t method_bind,
+    const char *path,
+    double *out_progress
+) {
+    return kanama_ios_godot_ptrcall_load_status_with_progress_dispatch(
+        method_bind, 0, path, out_progress);
 }
 
 static GDExtensionMethodBindPtr kanama_ios_get_method_bind_cached(
@@ -6581,7 +7121,11 @@ static void kanama_ios_cache_callable_methods(void) {
 // the shared UTF-8 emitter (inline buffer or the single pending slot), destroy everything we built.
 // The target handle is borrowed: the engine keeps its own reference through the Callable's owner,
 // and desktop reads it the same way (GodotObject(handle) over the raw pointer).
-int64_t kanama_ios_godot_ptrcall_ret_callable(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_callable, shared by the guarded instance entry
+// point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall / _dispatch /
+// _static (commit 30c949a1): a zero instance is the generator's static-method marker and Godot
+// ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_callable_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -6594,7 +7138,7 @@ int64_t kanama_ios_godot_ptrcall_ret_callable(
     if (out_object_handle != NULL) {
         *out_object_handle = 0;
     }
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     kanama_ios_cache_callable_methods();
@@ -6632,6 +7176,47 @@ int64_t kanama_ios_godot_ptrcall_ret_callable(
     int64_t length = 0;
     kanama_ios_emit_utf8_return(&string_storage, out_method, out_method_size, &length);
     return length;
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_callable(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_object_handle,
+    char *out_method,
+    int64_t out_method_size
+) {
+    // Null-instance rejection, kept verbatim from before the _dispatch split: the
+    // out-parameter preamble is repeated here because callers decode the out-parameters
+    // without consulting the returned status.
+    if (instance == 0) {
+        if (out_object_handle != NULL) {
+            *out_object_handle = 0;
+        }
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_callable_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, out_object_handle, out_method,
+        out_method_size);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_callable: the same body with a NULL
+// instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the instance
+// path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_callable_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_object_handle,
+    char *out_method,
+    int64_t out_method_size
+) {
+    return kanama_ios_godot_ptrcall_ret_callable_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, out_object_handle, out_method,
+        out_method_size);
 }
 
 // Decode a return Variant's scalar payload into the (out_int, out_double, out_str) triple the
@@ -6979,7 +7564,11 @@ static void kanama_ios_drop_pending_packed(void) {
     }
 }
 
-int64_t kanama_ios_godot_ptrcall_ret_packed(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_packed, shared by the guarded instance entry
+// point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall / _dispatch /
+// _static (commit 30c949a1): a zero instance is the generator's static-method marker and Godot
+// ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_packed_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -6989,7 +7578,7 @@ int64_t kanama_ios_godot_ptrcall_ret_packed(
     void *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
@@ -7014,6 +7603,39 @@ int64_t kanama_ios_godot_ptrcall_ret_packed(
         g_pending_packed_valid = 1;
     }
     return count;
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_packed(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t packed_kind,
+    void *out_buf,
+    int64_t buf_cap
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_packed_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, packed_kind, out_buf, buf_cap);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_packed: the same body with a NULL
+// instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the instance
+// path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_packed_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t packed_kind,
+    void *out_buf,
+    int64_t buf_cap
+) {
+    return kanama_ios_godot_ptrcall_ret_packed_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, packed_kind, out_buf, buf_cap);
 }
 
 int64_t kanama_ios_godot_take_pending_packed(
@@ -7044,7 +7666,11 @@ enum { KANAMA_IOS_RET_VARIANT_CELL = -1 };
 // cell, the scalar payload is decoded exactly as for kanama_ios_godot_object_call (borrowed Object
 // decode, like desktop's RetVariantScalar), and the Variant is destroyed. Returns the Variant
 // type, or -1 on a null method/instance or an unavailable API.
-int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_variant_scalar, shared by the guarded instance
+// entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall /
+// _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method marker
+// and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int32_t kanama_ios_godot_ptrcall_ret_variant_scalar_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -7059,7 +7685,7 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
     if (out_int != NULL) *out_int = 0;
     if (out_double != NULL) *out_double = 0.0;
     if (out_str_len != NULL) *out_str_len = 0;
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL || g_variant_get_type == NULL || g_variant_destroy == NULL) {
@@ -7075,6 +7701,51 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
     return ret_type;
 }
 
+int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len
+) {
+    // Null-instance rejection, kept verbatim from before the _dispatch split: the
+    // out-parameter preamble is repeated here because callers decode the out-parameters
+    // without consulting the returned status.
+    if (instance == 0) {
+        if (out_int != NULL) *out_int = 0;
+        if (out_double != NULL) *out_double = 0.0;
+        if (out_str_len != NULL) *out_str_len = 0;
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_variant_scalar_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, out_int, out_double, out_str,
+        out_str_size, out_str_len);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_variant_scalar: the same body with a
+// NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+int32_t kanama_ios_godot_ptrcall_ret_variant_scalar_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len
+) {
+    return kanama_ios_godot_ptrcall_ret_variant_scalar_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, out_int, out_double, out_str, out_str_size,
+        out_str_len);
+}
+
 // Generic Variant Object.call dispatch. Boxes each PT-tagged arg into a Variant,
 // invokes method_bind via object_method_bind_call (the Variant path, for varargs /
 // dynamic dispatch the ptrcall path can't express — Object::call, set_deferred,
@@ -7085,7 +7756,11 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
 // (KANAMA_IOS_VARIANT_TYPE_*), or -1 if the call did not dispatch. Marshalling is
 // concentrated here and guarded by check_call_error so the boxing bug class stays
 // in one place (see docs/contributing/backends/ios.md).
-int32_t kanama_ios_godot_object_call(
+// Unguarded body of kanama_ios_godot_object_call, shared by the guarded instance entry point
+// below and by its _static sibling. Same split as kanama_ios_godot_ptrcall / _dispatch / _static
+// (commit 30c949a1): a zero instance is the generator's static-method marker and Godot ptrcalls
+// a static bind with a null object, so the body must accept one.
+static int32_t kanama_ios_godot_object_call_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_tags,
@@ -7102,7 +7777,7 @@ int32_t kanama_ios_godot_object_call(
     if (out_double != NULL) *out_double = 0.0;
     if (out_str_len != NULL) *out_str_len = 0;
     if (out_is_refcounted != NULL) *out_is_refcounted = 0;
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     if (arg_count < 0) {
@@ -7163,6 +7838,54 @@ int32_t kanama_ios_godot_object_call(
         }
     }
     return call_ok ? ret_type : -1;
+}
+
+int32_t kanama_ios_godot_object_call(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_tags,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+) {
+    // Null-instance rejection, kept verbatim from before the _dispatch split: the
+    // out-parameter preamble is repeated here because callers decode the out-parameters
+    // without consulting the returned status.
+    if (instance == 0) {
+        if (out_int != NULL) *out_int = 0;
+        if (out_double != NULL) *out_double = 0.0;
+        if (out_str_len != NULL) *out_str_len = 0;
+        if (out_is_refcounted != NULL) *out_is_refcounted = 0;
+        return -1;
+    }
+    return kanama_ios_godot_object_call_dispatch(
+        method_bind, instance, arg_tags, arg_ptrs, arg_count, out_int, out_double, out_str,
+        out_str_size, out_str_len, out_is_refcounted);
+}
+
+// Static-method sibling of kanama_ios_godot_object_call: the same body with a NULL instance, for
+// the generator's `NULL_SEGMENT` statics. A separate entry point so the instance path above
+// keeps its null-instance guard.
+int32_t kanama_ios_godot_object_call_static(
+    int64_t method_bind,
+    const int32_t *arg_tags,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+) {
+    return kanama_ios_godot_object_call_dispatch(
+        method_bind, 0, arg_tags, arg_ptrs, arg_count, out_int, out_double, out_str, out_str_size,
+        out_str_len, out_is_refcounted);
 }
 
 // task 43 — ClassDB.instantiate: the return Variant holds the SOLE reference to the freshly
@@ -9472,7 +10195,11 @@ static void kanama_ios_drop_pending_object_handles(void) {
     g_pending_object_handle_count = 0;
 }
 
-int64_t kanama_ios_godot_ptrcall_ret_object_handles(
+// Unguarded body of kanama_ios_godot_ptrcall_ret_object_handles, shared by the guarded instance
+// entry point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall /
+// _dispatch / _static (commit 30c949a1): a zero instance is the generator's static-method marker
+// and Godot ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
     int64_t method_bind,
     int64_t instance,
     const int32_t *arg_types,
@@ -9481,7 +10208,7 @@ int64_t kanama_ios_godot_ptrcall_ret_object_handles(
     int64_t *out_handles,
     int64_t cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
         return -1;
     }
     kanama_ios_cache_array_methods();
@@ -9537,6 +10264,37 @@ int64_t kanama_ios_godot_ptrcall_ret_object_handles(
         g_array_destructor((GDExtensionTypePtr)&array_storage);
     }
     return result;
+}
+
+int64_t kanama_ios_godot_ptrcall_ret_object_handles(
+    int64_t method_bind,
+    int64_t instance,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_handles,
+    int64_t cap
+) {
+    if (instance == 0) {
+        return -1;
+    }
+    return kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
+        method_bind, instance, arg_types, arg_ptrs, arg_count, out_handles, cap);
+}
+
+// Static-method sibling of kanama_ios_godot_ptrcall_ret_object_handles: the same body with a
+// NULL instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the
+// instance path above keeps its null-instance guard.
+int64_t kanama_ios_godot_ptrcall_ret_object_handles_static(
+    int64_t method_bind,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int64_t *out_handles,
+    int64_t cap
+) {
+    return kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
+        method_bind, 0, arg_types, arg_ptrs, arg_count, out_handles, cap);
 }
 
 int64_t kanama_ios_godot_take_pending_object_handles(

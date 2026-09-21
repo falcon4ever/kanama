@@ -49,33 +49,55 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_singleton
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_call
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_call_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect_bound
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_destroy
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect_bound
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_load_status_with_progress
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_load_status_with_progress_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_node_path
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_node_path_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_color_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_string_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_name_static
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_string_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_array_blob_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_callable
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_callable_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_container_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_container_blob_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_handles
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_object_handles_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_byte_array
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_packed_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_raycast_dict_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_utf8_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_array_blob
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_array_blob_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_scalar
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_ret_variant_scalar_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_packed_float32_arg_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_with_rid_array_arg_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_container_blob
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_object_handles
@@ -196,7 +218,7 @@ actual object ObjectCalls {
   // The C shim keeps that guard and its separate `kanama_ios_godot_ptrcall_static` entry point;
   // this one dispatcher picks between them, once, for every hand-written and generated helper in
   // this object, so no helper has to know whether its caller is an instance or a static call.
-  private inline fun ptrcallDispatch(
+  private fun ptrcallDispatch(
     methodBind: Long,
     instance: Long,
     argTypes: CValuesRef<IntVar>?,
@@ -211,6 +233,525 @@ actual object ObjectCalls {
       kanama_ios_godot_ptrcall(methodBind, instance, argTypes, argPtrs, argCount, retType, retOut)
     }
   }
+
+  // The same split for every OTHER guarded C entry point this object calls (task 117 P2'
+  // follow-up 2). `kanama_ios_godot_ptrcall` was not the only entry with an `instance == 0`
+  // early return: thirteen of the shared tree's static call sites return through a specialised
+  // entry (packed/array-blob/utf8/variant-scalar/object-call), each with the same guard, so they
+  // stayed no-ops after the generic dispatcher landed. Every such entry now has an unguarded
+  // `_dispatch` body and a `<symbol>_static` sibling in ios/bootstrap/kanama_ios_shim.c, and the
+  // dispatchers below are the ONE place in this file that names the guarded symbol — enforced by
+  // scripts/check_ios_static_dispatch.py.
+
+  private fun ptrcallNoArgsRetStringDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_string_static(methodBind, outBuf, bufSize)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_string(methodBind, instance, outBuf, bufSize)
+    }
+
+  private fun ptrcallNoArgsRetStringNameDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_string_name_static(methodBind, outBuf, bufSize)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_string_name(methodBind, instance, outBuf, bufSize)
+    }
+
+  private fun ptrcallNoArgsRetNodePathDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_node_path_static(methodBind, outBuf, bufSize)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_node_path(methodBind, instance, outBuf, bufSize)
+    }
+
+  private fun ptrcallRetUtf8Dispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    retType: Int,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_utf8_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        retType,
+        outBuf,
+        bufSize,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_utf8(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        retType,
+        outBuf,
+        bufSize,
+      )
+    }
+
+  private fun ptrcallRetCallableDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    outObjectHandle: CValuesRef<LongVar>?,
+    outMethod: CValuesRef<ByteVar>?,
+    outMethodSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_callable_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        outObjectHandle,
+        outMethod,
+        outMethodSize,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_callable(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        outObjectHandle,
+        outMethod,
+        outMethodSize,
+      )
+    }
+
+  private fun ptrcallRetVariantScalarDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    outInt: CValuesRef<LongVar>?,
+    outDouble: CValuesRef<DoubleVar>?,
+    outStr: CValuesRef<ByteVar>?,
+    outStrSize: Long,
+    outStrLen: CValuesRef<LongVar>?,
+  ): Int =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_variant_scalar_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        outInt,
+        outDouble,
+        outStr,
+        outStrSize,
+        outStrLen,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_variant_scalar(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        outInt,
+        outDouble,
+        outStr,
+        outStrSize,
+        outStrLen,
+      )
+    }
+
+  private fun ptrcallRetPackedDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    packedKind: Int,
+    outBuf: CValuesRef<*>?,
+    bufCap: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_packed_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        packedKind,
+        outBuf,
+        bufCap,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_packed(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        packedKind,
+        outBuf,
+        bufCap,
+      )
+    }
+
+  private fun ptrcallRetContainerBlobDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    containerKind: Int,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_container_blob_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        containerKind,
+        outBuf,
+        bufSize,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_container_blob(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        containerKind,
+        outBuf,
+        bufSize,
+      )
+    }
+
+  private fun ptrcallRetArrayBlobDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    blobKind: Int,
+    elemKind: Int,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_array_blob_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        blobKind,
+        elemKind,
+        outBuf,
+        bufSize,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_array_blob(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        blobKind,
+        elemKind,
+        outBuf,
+        bufSize,
+      )
+    }
+
+  private fun ptrcallRetVariantArrayBlobDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_variant_array_blob_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        outBuf,
+        bufSize,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_variant_array_blob(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        outBuf,
+        bufSize,
+      )
+    }
+
+  private fun ptrcallRetRaycastDictDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_raycast_dict_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        outBuf,
+        bufSize,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_raycast_dict(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        outBuf,
+        bufSize,
+      )
+    }
+
+  private fun ptrcallRetObjectHandlesDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    outHandles: CValuesRef<LongVar>?,
+    cap: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_ret_object_handles_static(
+        methodBind,
+        argTypes,
+        argPtrs,
+        argCount,
+        outHandles,
+        cap,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_ret_object_handles(
+        methodBind,
+        instance,
+        argTypes,
+        argPtrs,
+        argCount,
+        outHandles,
+        cap,
+      )
+    }
+
+  private fun ptrcallNoArgsRetPackedInt32ArrayDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<IntVar>?,
+    bufCap: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_static(methodBind, outBuf, bufCap)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(methodBind, instance, outBuf, bufCap)
+    }
+
+  private fun ptrcallNoArgsRetPackedFloat32ArrayDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<FloatVar>?,
+    bufCap: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_static(methodBind, outBuf, bufCap)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
+        methodBind,
+        instance,
+        outBuf,
+        bufCap,
+      )
+    }
+
+  private fun ptrcallNoArgsRetPackedVector2ArrayDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<FloatVar>?,
+    bufCap: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_static(methodBind, outBuf, bufCap)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
+        methodBind,
+        instance,
+        outBuf,
+        bufCap,
+      )
+    }
+
+  private fun ptrcallNoArgsRetPackedColorArrayDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<FloatVar>?,
+    bufCap: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_static(methodBind, outBuf, bufCap)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(methodBind, instance, outBuf, bufCap)
+    }
+
+  private fun ptrcallNoArgsRetPackedStringArrayDispatch(
+    methodBind: Long,
+    instance: Long,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_static(methodBind, outBuf, bufSize)
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
+        methodBind,
+        instance,
+        outBuf,
+        bufSize,
+      )
+    }
+
+  private fun ptrcallNoArgsRetTypedArrayBlobDispatch(
+    methodBind: Long,
+    instance: Long,
+    elemKind: Int,
+    outBuf: CValuesRef<ByteVar>?,
+    bufSize: Long,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_static(
+        methodBind,
+        elemKind,
+        outBuf,
+        bufSize,
+      )
+    } else {
+      kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
+        methodBind,
+        instance,
+        elemKind,
+        outBuf,
+        bufSize,
+      )
+    }
+
+  private fun ptrcallWithPackedFloat32ArgDispatch(
+    methodBind: Long,
+    instance: Long,
+    elems: CValuesRef<FloatVar>?,
+    count: Long,
+  ) =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_with_packed_float32_arg_static(methodBind, elems, count)
+    } else {
+      kanama_ios_godot_ptrcall_with_packed_float32_arg(methodBind, instance, elems, count)
+    }
+
+  private fun ptrcallWithRidArrayArgDispatch(
+    methodBind: Long,
+    instance: Long,
+    rids: CValuesRef<LongVar>?,
+    count: Int,
+  ) =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_with_rid_array_arg_static(methodBind, rids, count)
+    } else {
+      kanama_ios_godot_ptrcall_with_rid_array_arg(methodBind, instance, rids, count)
+    }
+
+  private fun ptrcallLoadStatusWithProgressDispatch(
+    methodBind: Long,
+    instance: Long,
+    path: String?,
+    outProgress: CValuesRef<DoubleVar>?,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_load_status_with_progress_static(methodBind, path, outProgress)
+    } else {
+      kanama_ios_godot_ptrcall_load_status_with_progress(methodBind, instance, path, outProgress)
+    }
+
+  private fun objectCallDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTags: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    outInt: CValuesRef<LongVar>?,
+    outDouble: CValuesRef<DoubleVar>?,
+    outStr: CValuesRef<ByteVar>?,
+    outStrSize: Long,
+    outStrLen: CValuesRef<LongVar>?,
+    outIsRefcounted: CValuesRef<IntVar>?,
+  ): Int =
+    if (instance == 0L) {
+      kanama_ios_godot_object_call_static(
+        methodBind,
+        argTags,
+        argPtrs,
+        argCount,
+        outInt,
+        outDouble,
+        outStr,
+        outStrSize,
+        outStrLen,
+        outIsRefcounted,
+      )
+    } else {
+      kanama_ios_godot_object_call(
+        methodBind,
+        instance,
+        argTags,
+        argPtrs,
+        argCount,
+        outInt,
+        outDouble,
+        outStr,
+        outStrSize,
+        outStrLen,
+        outIsRefcounted,
+      )
+    }
 
   // ---- no-arg ----
   actual fun ptrcallNoArgs(methodBind: MemorySegment, instance: MemorySegment) {
@@ -376,23 +917,12 @@ actual object ObjectCalls {
   // writes no null terminator, so decode exactly `len` bytes.
   actual fun ptrcallNoArgsRetString(methodBind: MemorySegment, instance: MemorySegment): String =
     memScoped {
-      val len =
-        kanama_ios_godot_ptrcall_no_args_ret_string(
-          methodBind.address(),
-          instance.address(),
-          null,
-          0L,
-        )
+      val len = ptrcallNoArgsRetStringDispatch(methodBind.address(), instance.address(), null, 0L)
       if (len <= 0L) {
         ""
       } else {
         val buf = allocArray<ByteVar>(len)
-        kanama_ios_godot_ptrcall_no_args_ret_string(
-          methodBind.address(),
-          instance.address(),
-          buf,
-          len,
-        )
+        ptrcallNoArgsRetStringDispatch(methodBind.address(), instance.address(), buf, len)
         buf.readBytes(len.toInt()).decodeToString()
       }
     }
@@ -404,23 +934,12 @@ actual object ObjectCalls {
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): String = memScoped {
-    val len =
-      kanama_ios_godot_ptrcall_no_args_ret_string_name(
-        methodBind.address(),
-        instance.address(),
-        null,
-        0L,
-      )
+    val len = ptrcallNoArgsRetStringNameDispatch(methodBind.address(), instance.address(), null, 0L)
     if (len <= 0L) {
       ""
     } else {
       val buf = allocArray<ByteVar>(len)
-      kanama_ios_godot_ptrcall_no_args_ret_string_name(
-        methodBind.address(),
-        instance.address(),
-        buf,
-        len,
-      )
+      ptrcallNoArgsRetStringNameDispatch(methodBind.address(), instance.address(), buf, len)
       buf.readBytes(len.toInt()).decodeToString()
     }
   }
@@ -443,7 +962,7 @@ actual object ObjectCalls {
     val inlineCap = 1024L
     val inline = allocArray<ByteVar>(inlineCap)
     val len =
-      kanama_ios_godot_ptrcall_ret_utf8(
+      ptrcallRetUtf8Dispatch(
         methodBind.address(),
         instance.address(),
         argTypes,
@@ -482,7 +1001,7 @@ actual object ObjectCalls {
     val handle = alloc<LongVar>()
     handle.value = 0L
     val len =
-      kanama_ios_godot_ptrcall_ret_callable(
+      ptrcallRetCallableDispatch(
         methodBind.address(),
         instance.address(),
         argTypes,
@@ -523,7 +1042,7 @@ actual object ObjectCalls {
     val outStr = allocArray<ByteVar>(strBufSize)
     val outStrLen = alloc<LongVar>()
     val retType =
-      kanama_ios_godot_ptrcall_ret_variant_scalar(
+      ptrcallRetVariantScalarDispatch(
         methodBind.address(),
         instance.address(),
         argTypes,
@@ -557,7 +1076,7 @@ actual object ObjectCalls {
     val inlineCap = 256L
     val inline = allocArray<ByteVar>(inlineCap * elemBytes)
     val count =
-      kanama_ios_godot_ptrcall_ret_packed(
+      ptrcallRetPackedDispatch(
         methodBind.address(),
         instance.address(),
         argTypes,
@@ -903,7 +1422,7 @@ actual object ObjectCalls {
     val inlineCap = 4096L
     val inline = allocArray<ByteVar>(inlineCap)
     val total =
-      kanama_ios_godot_ptrcall_ret_container_blob(
+      ptrcallRetContainerBlobDispatch(
         methodBind.address(),
         instance.address(),
         argTypes,
@@ -993,7 +1512,7 @@ actual object ObjectCalls {
     val inlineCap = 4096L
     val inline = allocArray<ByteVar>(inlineCap)
     val total =
-      kanama_ios_godot_ptrcall_ret_array_blob(
+      ptrcallRetArrayBlobDispatch(
         methodBind.address(),
         instance.address(),
         argTypes,
@@ -1280,23 +1799,12 @@ actual object ObjectCalls {
     methodBind: MemorySegment,
     instance: MemorySegment,
   ): NodePath = memScoped {
-    val len =
-      kanama_ios_godot_ptrcall_no_args_ret_node_path(
-        methodBind.address(),
-        instance.address(),
-        null,
-        0L,
-      )
+    val len = ptrcallNoArgsRetNodePathDispatch(methodBind.address(), instance.address(), null, 0L)
     if (len <= 0L) {
       NodePath("")
     } else {
       val buf = allocArray<ByteVar>(len)
-      kanama_ios_godot_ptrcall_no_args_ret_node_path(
-        methodBind.address(),
-        instance.address(),
-        buf,
-        len,
-      )
+      ptrcallNoArgsRetNodePathDispatch(methodBind.address(), instance.address(), buf, len)
       NodePath(buf.readBytes(len.toInt()).decodeToString())
     }
   }
@@ -1310,22 +1818,12 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Int> = memScoped {
     val count =
-      kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
-        methodBind.address(),
-        instance.address(),
-        null,
-        0L,
-      )
+      ptrcallNoArgsRetPackedInt32ArrayDispatch(methodBind.address(), instance.address(), null, 0L)
     if (count <= 0L) {
       emptyList()
     } else {
       val buf = allocArray<IntVar>(count)
-      kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
-        methodBind.address(),
-        instance.address(),
-        buf,
-        count,
-      )
+      ptrcallNoArgsRetPackedInt32ArrayDispatch(methodBind.address(), instance.address(), buf, count)
       List(count.toInt()) { buf[it] }
     }
   }
@@ -1338,17 +1836,12 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<String> = memScoped {
     val total =
-      kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
-        methodBind.address(),
-        instance.address(),
-        null,
-        0L,
-      )
+      ptrcallNoArgsRetPackedStringArrayDispatch(methodBind.address(), instance.address(), null, 0L)
     if (total < 4L) {
       emptyList()
     } else {
       val buf = allocArray<ByteVar>(total)
-      kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
+      ptrcallNoArgsRetPackedStringArrayDispatch(
         methodBind.address(),
         instance.address(),
         buf,
@@ -1380,17 +1873,12 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Float> = memScoped {
     val count =
-      kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
-        methodBind.address(),
-        instance.address(),
-        null,
-        0L,
-      )
+      ptrcallNoArgsRetPackedFloat32ArrayDispatch(methodBind.address(), instance.address(), null, 0L)
     if (count <= 0L) {
       emptyList()
     } else {
       val buf = allocArray<FloatVar>(count)
-      kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
+      ptrcallNoArgsRetPackedFloat32ArrayDispatch(
         methodBind.address(),
         instance.address(),
         buf,
@@ -1410,12 +1898,7 @@ actual object ObjectCalls {
     val n = values.size
     val buf = allocArray<FloatVar>(if (n > 0) n else 1)
     for (i in 0 until n) buf[i] = values[i]
-    kanama_ios_godot_ptrcall_with_packed_float32_arg(
-      methodBind.address(),
-      instance.address(),
-      buf,
-      n.toLong(),
-    )
+    ptrcallWithPackedFloat32ArgDispatch(methodBind.address(), instance.address(), buf, n.toLong())
     Unit
   }
 
@@ -1764,7 +2247,7 @@ actual object ObjectCalls {
     parse: (ByteArray, Int, Int) -> T,
   ): List<T> = memScoped {
     val total =
-      kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
+      ptrcallNoArgsRetTypedArrayBlobDispatch(
         methodBind.address(),
         instance.address(),
         elemKind,
@@ -1775,7 +2258,7 @@ actual object ObjectCalls {
       emptyList()
     } else {
       val buf = allocArray<ByteVar>(total)
-      kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
+      ptrcallNoArgsRetTypedArrayBlobDispatch(
         methodBind.address(),
         instance.address(),
         elemKind,
@@ -1860,7 +2343,7 @@ actual object ObjectCalls {
   ): List<Any?> = memScoped {
     val (types, ptrs, argc) = layoutArgs()
     val total =
-      kanama_ios_godot_ptrcall_ret_variant_array_blob(
+      ptrcallRetVariantArrayBlobDispatch(
         methodBind.address(),
         instance.address(),
         types,
@@ -1873,7 +2356,7 @@ actual object ObjectCalls {
       emptyList()
     } else {
       val b = allocArray<ByteVar>(total)
-      kanama_ios_godot_ptrcall_ret_variant_array_blob(
+      ptrcallRetVariantArrayBlobDispatch(
         methodBind.address(),
         instance.address(),
         types,
@@ -2447,17 +2930,12 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Vector2> = memScoped {
     val count =
-      kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
-        methodBind.address(),
-        instance.address(),
-        null,
-        0L,
-      )
+      ptrcallNoArgsRetPackedVector2ArrayDispatch(methodBind.address(), instance.address(), null, 0L)
     if (count <= 0L) {
       emptyList()
     } else {
       val buf = allocArray<GodotRealVar>(count * 2)
-      kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
+      ptrcallNoArgsRetPackedVector2ArrayDispatch(
         methodBind.address(),
         instance.address(),
         buf,
@@ -2475,22 +2953,12 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Color> = memScoped {
     val count =
-      kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
-        methodBind.address(),
-        instance.address(),
-        null,
-        0L,
-      )
+      ptrcallNoArgsRetPackedColorArrayDispatch(methodBind.address(), instance.address(), null, 0L)
     if (count <= 0L) {
       emptyList()
     } else {
       val buf = allocArray<FloatVar>(count * 4)
-      kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
-        methodBind.address(),
-        instance.address(),
-        buf,
-        count,
-      )
+      ptrcallNoArgsRetPackedColorArrayDispatch(methodBind.address(), instance.address(), buf, count)
       List(count.toInt()) { Color(buf[it * 4], buf[it * 4 + 1], buf[it * 4 + 2], buf[it * 4 + 3]) }
     }
   }
@@ -2517,7 +2985,7 @@ actual object ObjectCalls {
     val (types, ptrs, argc) = layoutArgs()
     val inlineBuf = allocArray<LongVar>(TYPED_OBJECT_LIST_INLINE_CAP)
     val count =
-      kanama_ios_godot_ptrcall_ret_object_handles(
+      ptrcallRetObjectHandlesDispatch(
         methodBind.address(),
         instance.address(),
         types,
@@ -2849,7 +3317,7 @@ actual object ObjectCalls {
     ptrs[0] = cells.reinterpret<CPointed>()
     val buf = allocArray<ByteVar>(64)
     val total =
-      kanama_ios_godot_ptrcall_ret_raycast_dict(
+      ptrcallRetRaycastDictDispatch(
         methodBind.address(),
         instance.address(),
         types,
@@ -2900,7 +3368,7 @@ actual object ObjectCalls {
     val n = values.size
     val arr = allocArray<LongVar>(if (n > 0) n else 1)
     for (i in 0 until n) arr[i] = values[i].value
-    kanama_ios_godot_ptrcall_with_rid_array_arg(methodBind.address(), instance.address(), arr, n)
+    ptrcallWithRidArrayArgDispatch(methodBind.address(), instance.address(), arr, n)
     Unit
   }
 
@@ -2913,7 +3381,7 @@ actual object ObjectCalls {
   ): Pair<Long, Double> = memScoped {
     val progress = alloc<DoubleVar>()
     val status =
-      kanama_ios_godot_ptrcall_load_status_with_progress(
+      ptrcallLoadStatusWithProgressDispatch(
         methodBind.address(),
         instance.address(),
         path,
@@ -3229,7 +3697,7 @@ actual object ObjectCalls {
     // keeps the borrowed default, so only allocate/pass it when the caller asks.
     val outIsRefCounted = if (owned) alloc<IntVar>().also { it.value = 0 } else null
     val retType =
-      kanama_ios_godot_object_call(
+      objectCallDispatch(
         methodBind.address(),
         instance.address(),
         tags,
@@ -41106,6 +41574,59 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     val re = net.multigesture.kanama.api.RegEx.createFromString("a+b", false)
     check("shared-static(RegEx.createFromString -> valid)", re != null && re.isValid())
     re?.close()
+  }
+
+  // task 117 P2' follow-up 2 — the shared-tree statics that do NOT marshal through the generic
+  // ptrcall entry point. Their helpers end in a SPECIALISED C entry (ret_utf8, ret_variant_scalar,
+  // no_args_ret_packed_string_array, no_args_ret_string, no_args_ret_string_name, object_call),
+  // each of which kept its own null-instance guard, so these thirteen call sites stayed silent
+  // no-ops after the generic dispatcher landed. Every entry point below now has a `_dispatch`
+  // body and a `_static` sibling in the shim, reached through its private *Dispatch function
+  // here; a regression fails these rows on device rather than returning ""/empty/default.
+  run {
+    // JSON.stringify -> ptrcallWithVariantStringTwoBoolArgsRetString -> ..._ptrcall_ret_utf8,
+    // JSON.parseString -> ptrcallWithStringArgRetVariantScalar -> ..._ptrcall_ret_variant_scalar.
+    // A string value, not a number: Godot's JSON decodes an integer literal as int or float
+    // depending on the value, and this row is about the static dispatch, not number typing.
+    val encoded = net.multigesture.kanama.api.JSON.stringify(mapOf("k" to "v"))
+    check("shared-static(JSON.stringify -> encodes the key)", encoded.contains("\"k\""))
+    val decoded = net.multigesture.kanama.api.JSON.parseString(encoded)
+    check(
+      "shared-static(JSON.parseString round-trip k == v)",
+      (decoded as? Map<*, *>)?.get("k") == "v",
+    )
+
+    // ShaderIncludeDB.listBuiltInIncludeFiles -> ptrcallNoArgsRetPackedStringList ->
+    // ..._ptrcall_no_args_ret_packed_string_array. Godot always registers built-in includes.
+    val includes = net.multigesture.kanama.api.ShaderIncludeDB.listBuiltInIncludeFiles()
+    check(
+      "shared-static(ShaderIncludeDB.listBuiltInIncludeFiles -> non-empty)",
+      includes.isNotEmpty(),
+    )
+
+    // ShaderIncludeDB.getBuiltInIncludeFile -> ptrcallWithStringArgRetString ->
+    // callWithVariantArgs -> kanama_ios_godot_object_call, the last of the six entry points the
+    // thirteen sites reach. Keyed off the list above so it asserts nothing about a fixed name.
+    val firstInclude = includes.firstOrNull()
+    check(
+      "shared-static(ShaderIncludeDB.getBuiltInIncludeFile -> non-empty source)",
+      firstInclude != null &&
+        net.multigesture.kanama.api.ShaderIncludeDB.getBuiltInIncludeFile(firstInclude).isNotEmpty(),
+    )
+
+    // Resource.generateSceneUniqueId -> ptrcallNoArgsRetString -> ..._no_args_ret_string.
+    // Documented to be letters a-y and digits 0-8 only, so a non-empty result is the assertion.
+    check(
+      "shared-static(Resource.generateSceneUniqueId -> non-empty)",
+      net.multigesture.kanama.api.Resource.generateSceneUniqueId().isNotEmpty(),
+    )
+
+    // MultiplayerAPI.getDefaultInterface -> ptrcallNoArgsRetStringName ->
+    // ..._no_args_ret_string_name. SceneMultiplayer ships in every non-headless-server build.
+    check(
+      "shared-static(MultiplayerAPI.getDefaultInterface == SceneMultiplayer)",
+      net.multigesture.kanama.api.MultiplayerAPI.getDefaultInterface() == "SceneMultiplayer",
+    )
   }
 
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")

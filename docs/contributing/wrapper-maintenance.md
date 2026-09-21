@@ -65,6 +65,22 @@ null-instance guard, so the iOS `ObjectCalls` routes a zero instance to the sepa
 `ptrcallDispatch` helper, which every hand and generated ptrcall member in that file
 calls. Never "fix" a static call site by inventing a receiver, and never drop the
 dispatcher: without it every shared-tree static is a silent no-op on device.
+
+That guard is not unique to `kanama_ios_godot_ptrcall`. Over twenty
+`kanama_ios_godot_*` entry points — the packed-array, array-blob, UTF-8,
+Variant-scalar and object-call shapes an `ObjectCalls` helper reaches for a
+non-generic return — carry the same `instance == 0` early return, and the shared tree
+reaches statics through their helpers too. **The rule: every guarded entry point an
+`ObjectCalls` helper calls gets the `30c949a1` split** — the body in an unguarded
+`static <symbol>_dispatch(...)`, the existing symbol keeping its guard and calling it,
+and a `<symbol>_static(...)` sibling (declared in `ios/include/kanama_ios.h`, the
+cinterop header) calling it with a null instance — **and is named exactly once in
+`ObjectCalls.kt`, inside a private `<entry>Dispatch` function that picks the `_static`
+sibling when the instance is zero.** Never remove an existing guard and never change an
+existing signature to make a static work. `scripts/check_ios_static_dispatch.py` (a
+`local_ci.sh` stage) enforces this: it derives the guarded set from the shim itself and
+fails on any raw call, so the next static the generator renders through a new shape is
+covered without anyone remembering this paragraph.
 The per-platform generated files keep the JDK/shim spelling, and a genuine
 `const void*` argument still renders as `MemorySegment`: the three desktop-only
 helpers `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
