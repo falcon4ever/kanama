@@ -118,7 +118,7 @@
         Unit
     }
 
-  fun ptrcallWithThreeVector3AndBoolArgs(methodBind: MemorySegment, instance: MemorySegment, first: Vector3, second: Vector3, third: Vector3, boolArg: Boolean) =
+  actual fun ptrcallWithThreeVector3AndBoolArgs(methodBind: MemorySegment, instance: MemorySegment, first: Vector3, second: Vector3, third: Vector3, boolArg: Boolean) =
     memScoped {
         val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(first.x); c0[1] = GodotReal.toC(first.y); c0[2] = GodotReal.toC(first.z)
         val c1 = allocArray<GodotRealVar>(3); c1[0] = GodotReal.toC(second.x); c1[1] = GodotReal.toC(second.y); c1[2] = GodotReal.toC(second.z)
@@ -139,7 +139,7 @@
         Unit
     }
 
-  fun ptrcallWithTwoVector3AndBoolArgs(methodBind: MemorySegment, instance: MemorySegment, first: Vector3, second: Vector3, boolArg: Boolean) =
+  actual fun ptrcallWithTwoVector3AndBoolArgs(methodBind: MemorySegment, instance: MemorySegment, first: Vector3, second: Vector3, boolArg: Boolean) =
     memScoped {
         val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(first.x); c0[1] = GodotReal.toC(first.y); c0[2] = GodotReal.toC(first.z)
         val c1 = allocArray<GodotRealVar>(3); c1[0] = GodotReal.toC(second.x); c1[1] = GodotReal.toC(second.y); c1[2] = GodotReal.toC(second.z)
@@ -150,7 +150,7 @@
         Unit
     }
 
-  fun ptrcallWithVector3AndDoubleArg(methodBind: MemorySegment, instance: MemorySegment, value: Vector3, amount: Double) =
+  actual fun ptrcallWithVector3AndDoubleArg(methodBind: MemorySegment, instance: MemorySegment, value: Vector3, amount: Double) =
     memScoped {
         val c0 = allocArray<GodotRealVar>(3); c0[0] = GodotReal.toC(value.x); c0[1] = GodotReal.toC(value.y); c0[2] = GodotReal.toC(value.z)
         val c1 = alloc<DoubleVar>(); c1.value = amount

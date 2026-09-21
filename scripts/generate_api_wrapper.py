@@ -377,8 +377,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "(IosGodotApi.kt) the class must subclass"),
     "Node": WrapperHome("hand", "generated",
         "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "Node3D": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "NoiseTexture2D": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),

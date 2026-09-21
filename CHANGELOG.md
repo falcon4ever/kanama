@@ -7,6 +7,43 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — wrapper classes generated once: `Node3D` (task 117 P1'(b1))
+
+- `Node3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node3D.kt`)
+  instead of being hand-written on desktop (`src/jvmMain/.../api/Node3D.kt`) and generated on iOS
+  (`src/iosMain/.../api/Node3D.kt`); its `PER_PLATFORM_WRAPPERS` entry is gone. The two copies
+  already had the same 88 members, and every declaration line is byte-identical to the shared
+  render — the whole transform surface (`setTransform`/`getTransform`, `setPosition`/`getPosition`,
+  `setRotation`/`getRotation`, `setRotationDegrees`, `setScale`/`getScale`, `setQuaternion`,
+  `setBasis`, `setGlobalTransform`/`getGlobalTransform`, `getParentNode3d`, `lookAt`,
+  `lookAtFromPosition`, `translate`/`translateObjectLocal`, `rotate`/`rotateX`/`rotateY`/`rotateZ`,
+  `rotateObjectLocal`, `scaleObjectLocal`, `globalRotate`/`globalScale`/`globalTranslate`,
+  `toLocal`/`toGlobal`, `orthonormalize`, `setIdentity`, the visibility family
+  (`show`/`hide`/`setVisible`/`isVisible`/`isVisibleInTree`), `setNotifyTransform`,
+  `setAsTopLevel`, `forceUpdateTransform`, `setDisableScale`, the gizmo helpers and the
+  `setRotationEditMode`/`setRotationOrder` pair) and all 20 generated properties (`transform`,
+  `globalTransform`, `position`, `rotation`, `rotationDegrees`, `quaternion`, `basis`, `scale`,
+  `globalPosition`, `globalBasis`, `globalRotation`, `globalRotationDegrees`, `topLevel`,
+  `visible`, `visibilityParent`, `rotationEditMode`, `rotationOrder`, …), the nested
+  `object Signals { visibilityChanged }`, the `NOTIFICATION_*` constants and the companion's
+  `fromHandle`/`wrap` — so callers such as `example_project/WrapperConvenienceProbe.kt`
+  (`node3dConveniences(node: Node3D)`) and `example_project/SelfSmoke.kt` are unaffected.
+- No member arrived or left, no body changed, no default argument changed and no int width changed:
+  desktop, iOS and the shared render each carry the same 18 `Long` occurrences and the same
+  `up: Vector3 = Vector3.UP` / `useModelFront: Boolean = false` defaults on `lookAt` and
+  `lookAtFromPosition`. The primary constructor was already
+  `open class Node3D(handle: GodotHandle) : Node(handle)` on both platforms, so there is no source
+  break. The iOS copy gains the KDoc it never carried and loses its wildcard
+  `net.multigesture.kanama.binding.runtime.*` import; desktop gains the inert `@JvmStatic`/`@JvmName`
+  imports the shared render uses.
+- Because the shared tree now calls them, four desktop `ObjectCalls` helpers gained the `actual`
+  marker — `ptrcallWithObjectIntTransform3DArgs`, `ptrcallWithThreeVector3AndBoolArgs`,
+  `ptrcallWithTwoVector3AndBoolArgs`, `ptrcallWithVector3AndDoubleArg` — and the common
+  `expect object ObjectCalls` grew from 1387 to 1391 members. No new native call path: all four were
+  already implemented on both platforms.
+- The wrapper parity gate no longer lists `Node3D` (19 → 18 classes, 265 allowlisted divergences —
+  unchanged, because the class contributed none).
+
 ### Changed — wrapper classes generated once: `BaseMaterial3D` (task 117 P1'(a))
 
 - `BaseMaterial3D` is generated once into the shared wrapper tree

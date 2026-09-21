@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 193 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 189 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -3142,6 +3142,14 @@ expect object ObjectCalls {
     objectArg: RawSegment,
     intArg: Int,
     boolArg: Boolean,
+  )
+
+  fun ptrcallWithObjectIntTransform3DArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    intArg: Int,
+    transformArg: Transform3D,
   )
 
   fun ptrcallWithObjectIntTwoBoolArgs(
@@ -7958,6 +7966,15 @@ expect object ObjectCalls {
     third: Vector2i,
   )
 
+  fun ptrcallWithThreeVector3AndBoolArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: Vector3,
+    second: Vector3,
+    third: Vector3,
+    boolArg: Boolean,
+  )
+
   fun ptrcallWithThreeVector3AndIntArg(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -9588,6 +9605,14 @@ expect object ObjectCalls {
     fourth: Vector2i,
   ): Boolean
 
+  fun ptrcallWithTwoVector3AndBoolArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: Vector3,
+    second: Vector3,
+    boolArg: Boolean,
+  )
+
   fun ptrcallWithTwoVector3Args(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -10366,6 +10391,13 @@ expect object ObjectCalls {
     value: Vector3,
     boolArg: Boolean,
   ): Long
+
+  fun ptrcallWithVector3AndDoubleArg(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Vector3,
+    amount: Double,
+  )
 
   fun ptrcallWithVector3Arg(methodBind: RawSegment, instance: RawSegment, value: Vector3)
 

@@ -16247,7 +16247,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectIntTransform3DArgs(
+  actual fun ptrcallWithObjectIntTransform3DArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -36537,7 +36537,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithThreeVector3AndBoolArgs(
+  actual fun ptrcallWithThreeVector3AndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -43580,7 +43580,7 @@ actual object ObjectCalls {
     ret.value.toInt() != 0
   }
 
-  fun ptrcallWithTwoVector3AndBoolArgs(
+  actual fun ptrcallWithTwoVector3AndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -47048,7 +47048,7 @@ actual object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithVector3AndDoubleArg(
+  actual fun ptrcallWithVector3AndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,

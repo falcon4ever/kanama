@@ -9541,7 +9541,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectIntTransform3DArgs(
+  actual fun ptrcallWithObjectIntTransform3DArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -24961,7 +24961,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVector3AndDoubleArg(
+  actual fun ptrcallWithVector3AndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -25489,7 +25489,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Vector3, Vector3, bool) args and no return value. */
-  fun ptrcallWithTwoVector3AndBoolArgs(
+  actual fun ptrcallWithTwoVector3AndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -25519,7 +25519,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Vector3, Vector3, Vector3, bool) args and no return value. */
-  fun ptrcallWithThreeVector3AndBoolArgs(
+  actual fun ptrcallWithThreeVector3AndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
