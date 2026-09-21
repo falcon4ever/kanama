@@ -174,12 +174,17 @@ The wrapper convention on desktop/Android:
   and returns `this` instead of minting a second owning wrapper (chained calls
   such as `tweenAwait(...)?.setTimeout(...)` stay reference-neutral). The
   generator emits this pattern whenever the receiver class conforms to the
-  method's return class; it is the same policy the hand-shaped Tween/Tweener
-  classes use (`wrapOrThis`).
+  method's return class; it is the same policy the hand-shaped `Tween` still
+  uses (`wrapOrThis`). The generated form returns the **nullable** self type
+  (`setTrans(...): PropertyTweener?`), like every other generated object return,
+  so chains take `?.`; `wrapOrThis` returned the non-null self and hid a null
+  engine return. The whole `Tweener` family is generated since task 117 P2'.
 - Wrappers minted from **Variant-path** returns or `fromHandle` casts borrow;
-  a release there underflows. Hand-shaped self-collapse helpers must therefore
+  a release there underflows. Self-collapse must therefore
   sit on a ptrcall object-return helper, never on `callWithVariantArgs`
-  (`PropertyTweener.from` regressed exactly this way once).
+  (`PropertyTweener.from` regressed exactly this way once; its generated form
+  goes through `ptrcallWithVariantArgRetObject`, a
+  `METHOD_CALL_SHAPE_OVERRIDES` entry, for the same reason).
 
 The iOS island mirrors the same convention (task 30): the C-shim exposes
 `object_destroy` (`kanama_ios_godot_object_destroy`), `ObjectCalls.destroyObject`
@@ -318,8 +323,9 @@ in `scripts/check_wrapper_generator.py`:
   `IOS_UNSUPPORTED_CLASSES` view) list the classes whose
   generated draft cannot compile on iOS, each with its reason: `DirAccess` (its draft
   references the hand-authored `DirAccessHandle` desktop policy class iOS does not
-  carry) and `MethodTweener` (its generated fluent methods clash with the
-  hand-written iOS `Tweener` glue). `--ios-emit-class <that class>` logs an
+  carry) is the only one left — `MethodTweener` sat here until task 117 P2' retired the
+  hand-written iOS `Tweener` glue its fluent methods clashed with.
+  `--ios-emit-class <that class>` logs an
   `unsupported:` line and skips it. Together with the collision registry these are the only
   by-design exceptions to iOS class-set parity with desktop (task 30); retire an entry by
   porting the desktop policy surface it depends on.

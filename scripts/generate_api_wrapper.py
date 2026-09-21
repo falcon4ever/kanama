@@ -331,9 +331,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
         "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
         "validated 114/114)"),
-    "CallbackTweener": WrapperHome("hand", "collision",
-        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
-        "written Tween chaining glue in IosGodotApi.kt"),
     "ConfigFile": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -371,9 +368,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "MethodTweener": WrapperHome("generated", "unsupported",
-        "iOS: generated setTrans/setEase clash with the hand-written iOS Tweener fluent glue "
-        "(IosGodotApi.kt) the class must subclass"),
     "NoiseTexture2D": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -388,9 +382,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
     "ProjectSettings": WrapperHome("generated", "collision",
         "iOS: hand-written singleton (getSettingDouble Variant->Double coercion) in ProjectSettings.kt"),
-    "PropertyTweener": WrapperHome("hand", "collision",
-        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
-        "written Tween chaining glue in IosGodotApi.kt"),
     "RefCounted": WrapperHome("hand", "generated",
         "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit"),
     "ResourceLoader": WrapperHome("hand", "collision",
@@ -408,8 +399,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "Tween": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Variant tween_property runtime in IosGodotApi.kt"),
-    "Tweener": WrapperHome("generated", "collision",
-        "iOS: hand-written Tween chaining glue in IosGodotApi.kt"),
 }
 
 DESKTOP_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.desktop == "hand")

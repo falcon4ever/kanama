@@ -89,9 +89,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_propert
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_property_vector2
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_callback
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_method
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_property_tweener_from_color
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_ease
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tweener_set_trans
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_viewport_get_visible_rect
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
@@ -474,37 +471,11 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
     }
 }
 
-// KANAMA-IOS-HANDWRITTEN: [runtime] Tweener/PropertyTweener/Tween use the Variant tween_property path
-// (final-value is a Variant), not generatable via the audited ptrcall set. Bespoke by design.
-open class Tweener(handle: GodotHandle) : RefCounted(handle) {
-    fun setTrans(value: Long): Tweener {
-        releaseIosFluentSelf(segment, IosGodot.tweenerSetTrans(segment.address(), value))
-        return this
-    }
-
-    fun setEase(value: Long): Tweener {
-        releaseIosFluentSelf(segment, IosGodot.tweenerSetEase(segment.address(), value))
-        return this
-    }
-}
-
-class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
-    // PropertyTweener.from(value) — sets the tween's starting value. The demos only use a Color
-    // (modulate) start; routed through the C shim (Variant arg). Returns this for chaining.
-    fun from(value: Color): PropertyTweener {
-        releaseIosFluentSelf(
-            segment,
-            IosGodot.propertyTweenerFromColor(
-                segment.address(),
-                value.r.toDouble(), value.g.toDouble(), value.b.toDouble(), value.a.toDouble(),
-            ),
-        )
-        return this
-    }
-}
-
-class CallbackTweener(handle: GodotHandle) : Tweener(handle)
-
+// KANAMA-IOS-HANDWRITTEN: [runtime] Tween uses the Variant tween_property path (final-value is a
+// Variant), not generatable via the audited ptrcall set. Bespoke by design. Its Tweener return
+// types are the generated shared classes (task 117 P2'): Tweener, PropertyTweener, MethodTweener
+// and CallbackTweener are one generated class each now, carrying their own fluent
+// setTrans/setEase/setDelay/from with the generator's self-return collapse.
 class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun setParallel(parallel: Boolean): Tween {
         releaseIosFluentSelf(
@@ -541,10 +512,10 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
 
     // Tween.tween_method(Callable(target, method), from, to, duration) — animates [from]->[to] over
     // [duration], calling target.method(value) each frame. Callable arg → routed through the C shim.
-    fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): Tweener? =
+    fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): MethodTweener? =
         IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
             .takeIf { it != 0L }
-            ?.let { Tweener(GodotHandle(MemorySegment.ofAddress(it))) }
+            ?.let { MethodTweener(GodotHandle(MemorySegment.ofAddress(it))) }
 
     fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener? {
         val addr = segment.address()
@@ -1112,18 +1083,9 @@ internal object IosGodot {
     fun tweenTweenMethod(tween: Long, target: Long, method: String, from: Double, to: Double, duration: Double): Long =
         kanama_ios_godot_tween_tween_method(tween, target, method, from, to, duration)
 
-    fun propertyTweenerFromColor(tweener: Long, r: Double, g: Double, b: Double, a: Double): Long =
-        kanama_ios_godot_property_tweener_from_color(tweener, r, g, b, a)
-
     fun tweenKill(tween: Long) {
         kanama_ios_godot_tween_kill(tween)
     }
-
-    fun tweenerSetTrans(tweener: Long, trans: Long): Long =
-        kanama_ios_godot_tweener_set_trans(tweener, trans)
-
-    fun tweenerSetEase(tweener: Long, ease: Long): Long =
-        kanama_ios_godot_tweener_set_ease(tweener, ease)
 
     fun viewportGetVisibleRect(viewport: Long): Rect2 =
         memScoped {

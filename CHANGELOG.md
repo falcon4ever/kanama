@@ -7,6 +7,57 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
+
+- `Tweener`, `PropertyTweener`, `CallbackTweener` and `MethodTweener` retire together into the shared
+  wrapper tree (`src/sharedApi/.../api/<Class>.kt`). They had to go as a set: the iOS hand cluster in
+  `IosGodotApi.kt` put `setTrans`/`setEase` on the *base* `Tweener` (Godot declares them on the
+  subclasses) precisely because the generated subclass members would have clashed with it — which is
+  also why `MethodTweener` was the `unsupported` cell iOS did not host at all. All four
+  `PER_PLATFORM_WRAPPERS` entries are gone (29 → 25), and `IntervalTweener`, `AwaitTweener` and
+  `SubtweenTweener` were already shared. **`Tween` itself stays hand-written on both platforms** (its
+  iOS Variant `tween_property` runtime is outside task 117).
+- **The fluent setters return the NULLABLE self type.** The desktop hand copies returned the non-null
+  self through a private `wrapOrThis` that turned a null engine return into `this`; the generated
+  self-return collapse keeps the reference-neutral part (`if (ret.address() == segment.address()) {
+  RefCounted.releaseHandle(ret); return this }`) but ends in `wrap(ret)`, which is nullable, like
+  every other generated object return. So on **desktop**:
+  `PropertyTweener.from`, `fromCurrent`, `asRelative`, `setTrans`, `setEase`, `setCustomInterpolator`,
+  `setDelay` are `PropertyTweener?`, and `CallbackTweener.setDelay` is `CallbackTweener?`. Chained
+  calls need `?.`:
+  `tweener.setTrans(Tween.TRANS_BACK)?.setEase(Tween.EASE_OUT)`. `wrapOrThis` itself is gone — after
+  the inline collapse it had no callers. (`Tween`'s own `wrapOrThis` is untouched: `Tween` is still
+  hand-written and its 12 fluent methods still return a non-null `Tween`.)
+- **iOS gains the whole family.** `MethodTweener` arrives as a class iOS did not host (`setDelay`,
+  `setTrans`, `setEase`); `PropertyTweener` goes from one hand method (`from(value: Color)`) to the
+  generated seven, with `from(value: Any?)` covering the Color case through the iOS Variant argument
+  encoder (`packVariantDesc` boxes a `Color` as `PT_COLOR`); `CallbackTweener` gains `setDelay`; the
+  base `Tweener` gains `Signals.finished` and the companion `fromHandle`/`wrap`.
+- **iOS: `Tweener.setTrans` / `Tweener.setEase` move to the subclasses.** The hand base class carried
+  them for every tweener; Godot declares them on `PropertyTweener` and `MethodTweener` only, and that
+  is where the generated tree puts them. Every tween chain in the demos and `example_project` starts
+  from `tweenProperty(...)`, so they still resolve; `tweenCallback(...)` and `tweenInterval(...)` never
+  had a transition to set.
+- **iOS `Tween.tweenMethod(...)` returns `MethodTweener?`** (it was declared `Tweener?` because no
+  `MethodTweener` existed), matching desktop. That is the one hand edit the iOS `Tween` class needed;
+  the rest of it compiles unchanged against the generated classes, whose primary constructors are
+  public.
+- **`PropertyTweener` and `CallbackTweener` primary constructors are public** (they were `internal` on
+  desktop) — the generator's shape for every retiring class, as `Mesh`, `PackedScene` and `Resource`
+  took before (D4 as amended by D10). Both also gain `@JvmStatic fun fromHandle(handle: GodotHandle)`.
+- `Tweener` and `MethodTweener` are byte-identical to their deleted desktop copies apart from the
+  `internal wrap` parameter (`MemorySegment` → the `RawSegment` alias).
+- The iOS hand glue retires with the cluster: `IosGodot.tweenerSetTrans`, `IosGodot.tweenerSetEase`
+  and `IosGodot.propertyTweenerFromColor` are deleted along with their three cinterop imports. The C
+  shim functions (`kanama_ios_godot_tweener_set_trans` / `_set_ease` /
+  `kanama_ios_godot_property_tweener_from_color`) and their three static method binds stay in
+  `ios/bootstrap/kanama_ios_shim.c` for a later cleanup.
+- **Task 117 P2' is complete.** The wrapper parity gate is down to its permanent contract: `HAND_SHAPED`
+  is **3 classes** — `GodotObject`, `RefCounted`, `GodotCallable`, the three roots P3' turns into
+  `expect`/`actual` — and the allowlist is 68 → **62** (the six `Tweener` lines). The shared tree grows
+  1006 → **1010** classes, `PER_PLATFORM_WRAPPERS` 29 → **25**, and `IOS_UNSUPPORTED_CLASSES` is down to
+  `DirAccess` alone.
+
 ### Fixed — `StaticBody3D` sits on the real physics chain on iOS (task 117 P2', 2/3)
 
 - `StaticBody3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/StaticBody3D.kt`);

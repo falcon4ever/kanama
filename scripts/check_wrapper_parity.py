@@ -47,7 +47,6 @@ TAG = "[wrapper_parity]"
 # name except the two roots must appear in the generator's PER_PLATFORM_WRAPPERS (checked below).
 HAND_SHAPED = [
     "GodotObject", "RefCounted", "GodotCallable",
-    "Tweener",
 ]
 
 # ---------------------------------------------------------------------------------------------
