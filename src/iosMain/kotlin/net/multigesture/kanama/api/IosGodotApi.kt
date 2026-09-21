@@ -23,7 +23,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_hide
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_local_mouse_position
@@ -453,114 +452,6 @@ open class StaticBody3D(handle: GodotHandle) : Node3D(handle) {
         private val getCollisionMaskBind by lazy {
             ObjectCalls.getMethodBind("CollisionObject3D", "get_collision_mask", 3905245786L)
         }
-    }
-}
-
-class SceneTree(handle: GodotHandle) : Node(handle) {
-    fun quit(exitCode: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(quitBind, segment, exitCode)
-    }
-
-    // Desktop SceneTree.quit takes a Long exit code; the overload keeps shared game code portable.
-    fun quit(exitCode: Long) = quit(exitCode.toInt())
-
-    fun changeSceneToFile(path: String): Long =
-        ObjectCalls.ptrcallWithStringArgRetLong(changeSceneToFileBind, segment, path)
-
-    fun reloadCurrentScene(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(reloadCurrentSceneBind, segment)
-
-    // SceneTree.call_group(group, method, ...args) via the Variant call path (it is a varargs
-    // method, which the audited ptrcall set can't express — matches desktop SceneTree.callGroup).
-    fun callGroup(group: String, method: String, vararg args: Any?) {
-        call("call_group", group, method, *args)
-    }
-
-    // Instance form so demo code can write `getTree().delaySeconds(...)` (Android/desktop model
-    // SceneTree as a singleton object where the same call resolves; the companion form below also
-    // works). Pure coroutine delay, no engine call.
-    suspend fun delaySeconds(seconds: Double) {
-        delay((seconds * 1000.0).toLong().coerceAtLeast(0L))
-    }
-
-    // SceneTree.create_timer — a one-shot SceneTreeTimer that emits `timeout` after timeSec. Demo
-    // code awaits it: getTree().createTimer(t)?.signal(Timer.Signals.timeout)?.await(self).
-    fun createTimer(
-        timeSec: Double,
-        processAlways: Boolean = true,
-        processInPhysics: Boolean = false,
-        ignoreTimeScale: Boolean = false,
-    ): SceneTreeTimer? = SceneTreeTimer.wrap(
-        ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(
-            createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale,
-        ),
-    )
-
-    // SceneTree.root — the root Window (Viewport). Always present in a running tree.
-    val root: Window
-        get() = Window(getRoot())
-
-    fun setPaused(paused: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPausedBind, segment, paused)
-    }
-
-    fun unloadCurrentScene() {
-        ObjectCalls.ptrcallNoArgs(unloadCurrentSceneBind, segment)
-    }
-
-    fun isPaused(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, segment)
-
-    override fun createTween(): Tween? =
-        ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)
-            .takeIf { it.address() != 0L }
-            ?.let { Tween(GodotHandle(it)) }
-
-    // SceneTree.get_nodes_in_group(group) -> Array[Node]. The (StringName)->typed-object-array ptrcall
-    // shape isn't wired, so this goes through the Variant call path; the Array return decodes to a
-    // List of GodotObject wrappers (task 121), wrapped back to Node here. A non-array result
-    // yields empty (only the F10 free-camera HUD toggle uses it).
-    fun getNodesInGroup(group: String): List<Node> =
-        (call("get_nodes_in_group", group) as? List<*>)?.mapNotNull { element ->
-            (element as? GodotObject)?.let { Node(it.handle) }
-        } ?: emptyList()
-
-    // The root Window handle (an Object); wrap with Window(...) or Node(...) at the call site,
-    // matching desktop SceneTree.getRoot(): GodotHandle.
-    fun getRoot(): GodotHandle =
-        GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment))
-
-    companion object {
-        private val quitBind by lazy { ObjectCalls.getMethodBind("SceneTree", "quit", 1995695955L) }
-        private val changeSceneToFileBind by lazy {
-            ObjectCalls.getMethodBind("SceneTree", "change_scene_to_file", 166001499L)
-        }
-        private val createTimerBind by lazy { ObjectCalls.getMethodBind("SceneTree", "create_timer", 2709170273L) }
-        private val reloadCurrentSceneBind by lazy {
-            ObjectCalls.getMethodBind("SceneTree", "reload_current_scene", 166280745L)
-        }
-        private val setPausedBind by lazy { ObjectCalls.getMethodBind("SceneTree", "set_pause", 2586408642L) }
-        private val unloadCurrentSceneBind by lazy {
-            ObjectCalls.getMethodBind("SceneTree", "unload_current_scene", 3218959716L)
-        }
-        private val isPausedBind by lazy { ObjectCalls.getMethodBind("SceneTree", "is_paused", 36873697L) }
-        private val createTweenBind by lazy {
-            ObjectCalls.getMethodBind("SceneTree", "create_tween", 3426978995L)
-        }
-        private val getRootBind by lazy { ObjectCalls.getMethodBind("SceneTree", "get_root", 1757182445L) }
-
-        suspend fun delaySeconds(seconds: Double) {
-            delay((seconds * 1000.0).toLong().coerceAtLeast(0L))
-        }
-
-        // Static-call forms: demos written against desktop/Android (where SceneTree is reachable
-        // statically) call `SceneTree.quit()` / `SceneTree.unloadCurrentScene()`. Resolve the active
-        // tree via Engine.get_main_loop() and delegate to the instance method.
-        private fun active(): SceneTree = SceneTree(Engine.getMainLoop())
-
-        fun quit(exitCode: Int = 0) = active().quit(exitCode)
-
-        fun unloadCurrentScene() = active().unloadCurrentScene()
     }
 }
 
