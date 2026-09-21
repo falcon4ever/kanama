@@ -130,8 +130,8 @@ typed Kotlin instance:
 ```kotlin
 val script = ResourceLoader.load("res://kotlin-src/DataMap.kt") ?: error("missing script")
 val owner = Resource.create()
-owner.asObject().setScript(script)
-val map = owner.asObject().kotlinScriptInstance<DataMap>() ?: error("missing DataMap")
+owner.setScript(script)
+val map = owner.kotlinScriptInstance<DataMap>() ?: error("missing DataMap")
 ```
 
 Treat Kanama `.kt` scripts as trusted executable project code. This is the

@@ -1,9 +1,10 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.types.NodePath
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.NodePath
 
 /**
  * A node used for animation playback.
@@ -241,7 +242,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.play_section_with_markers
      */
-    fun playSectionWithMarkers(name: String, startMarker: String, endMarker: String, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
+    fun playSectionWithMarkers(name: String = "", startMarker: String = "", endMarker: String = "", customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
         ObjectCalls.ptrcallWithThreeStringNameTwoDoubleBoolArgs(playSectionWithMarkersBind, segment, name, startMarker, endMarker, customBlend, customSpeed, fromEnd)
     }
 
@@ -254,7 +255,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.play_section
      */
-    fun playSection(name: String, startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
+    fun playSection(name: String = "", startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false) {
         ObjectCalls.ptrcallWithStringNameFourDoubleBoolArgs(playSectionBind, segment, name, startTime, endTime, customBlend, customSpeed, fromEnd)
     }
 
@@ -264,7 +265,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.play_backwards
      */
-    fun playBackwards(name: String, customBlend: Double = -1.0) {
+    fun playBackwards(name: String = "", customBlend: Double = -1.0) {
         ObjectCalls.ptrcallWithStringNameAndDoubleArg(playBackwardsBind, segment, name, customBlend)
     }
 
@@ -275,7 +276,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.play_section_with_markers_backwards
      */
-    fun playSectionWithMarkersBackwards(name: String, startMarker: String, endMarker: String, customBlend: Double = -1.0) {
+    fun playSectionWithMarkersBackwards(name: String = "", startMarker: String = "", endMarker: String = "", customBlend: Double = -1.0) {
         ObjectCalls.ptrcallWithThreeStringNameAndDoubleArg(playSectionWithMarkersBackwardsBind, segment, name, startMarker, endMarker, customBlend)
     }
 
@@ -286,7 +287,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.play_section_backwards
      */
-    fun playSectionBackwards(name: String, startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0) {
+    fun playSectionBackwards(name: String = "", startTime: Double = -1.0, endTime: Double = -1.0, customBlend: Double = -1.0) {
         ObjectCalls.ptrcallWithStringNameAndThreeDoubleArgs(playSectionBackwardsBind, segment, name, startTime, endTime, customBlend)
     }
 
@@ -297,7 +298,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.play_with_capture
      */
-    fun playWithCapture(name: String, duration: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false, transType: Long = 0L, easeType: Long = 0L) {
+    fun playWithCapture(name: String = "", duration: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false, transType: Long = 0L, easeType: Long = 0L) {
         ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, segment, name, duration, customBlend, customSpeed, fromEnd, transType, easeType)
     }
 
@@ -529,7 +530,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.set_section_with_markers
      */
-    fun setSectionWithMarkers(startMarker: String, endMarker: String) {
+    fun setSectionWithMarkers(startMarker: String = "", endMarker: String = "") {
         ObjectCalls.ptrcallWithTwoStringNameArgs(setSectionWithMarkersBind, segment, startMarker, endMarker)
     }
 
@@ -650,7 +651,6 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
     object Signals {
         const val currentAnimationChanged: String = "current_animation_changed"
         const val animationChanged: String = "animation_changed"
-        const val animationFinished: String = "animation_finished"
     }
 
     companion object {

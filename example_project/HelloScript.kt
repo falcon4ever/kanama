@@ -1328,7 +1328,7 @@ class HelloScript(godotObject: GodotHandle) :
     val smokeTabBar = selfNode.getNodeAsOrNull("../UiRoot/SmokeTabBar", "TabBar", ::TabBar)
     if (smokeTabBar != null) {
       smokeTabBar.clearTabs()
-      smokeTabBar.addTab("Alpha")
+      smokeTabBar.addTab("Alpha", null)
       smokeTabBar.setTabMetadata(0, "tab-meta")
     }
     val tabCount = smokeTabBar?.getTabCount() ?: -1

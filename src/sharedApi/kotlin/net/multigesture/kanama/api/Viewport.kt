@@ -1,16 +1,18 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
 
 /**
+ * Abstract base class for viewports. Encapsulates drawing and interaction with a game world.
+ *
  * Generated from Godot docs: Viewport
  */
 open class Viewport(handle: GodotHandle) : Node(handle) {
@@ -314,528 +316,1561 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setOversamplingOverrideProperty")
         set(value) = setOversamplingOverride(value)
 
+    /**
+     * The custom `World2D` which can be used as 2D environment source.
+     *
+     * Generated from Godot docs: Viewport.set_world_2d
+     */
     fun setWorld2d(world2d: World2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld2dBind, segment, listOf(world2d?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The custom `World2D` which can be used as 2D environment source.
+     *
+     * Generated from Godot docs: Viewport.get_world_2d
+     */
     fun getWorld2d(): World2D? {
         return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
     }
 
+    /**
+     * Returns the first valid `World2D` for this viewport, searching the `world_2d` property of itself
+     * and any Viewport ancestor.
+     *
+     * Generated from Godot docs: Viewport.find_world_2d
+     */
     fun findWorld2d(): World2D? {
         return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, segment))
     }
 
+    /**
+     * The canvas transform of the viewport, useful for changing the on-screen positions of all child
+     * `CanvasItem`s. This is relative to the global canvas transform of the viewport.
+     *
+     * Generated from Godot docs: Viewport.set_canvas_transform
+     */
     fun setCanvasTransform(xform: Transform2D) {
         ObjectCalls.ptrcallWithTransform2DArg(setCanvasTransformBind, segment, xform)
     }
 
+    /**
+     * The canvas transform of the viewport, useful for changing the on-screen positions of all child
+     * `CanvasItem`s. This is relative to the global canvas transform of the viewport.
+     *
+     * Generated from Godot docs: Viewport.get_canvas_transform
+     */
     fun getCanvasTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, segment)
     }
 
+    /**
+     * The global canvas transform of the viewport. The canvas transform is relative to this.
+     *
+     * Generated from Godot docs: Viewport.set_global_canvas_transform
+     */
     fun setGlobalCanvasTransform(xform: Transform2D) {
         ObjectCalls.ptrcallWithTransform2DArg(setGlobalCanvasTransformBind, segment, xform)
     }
 
+    /**
+     * The global canvas transform of the viewport. The canvas transform is relative to this.
+     *
+     * Generated from Godot docs: Viewport.get_global_canvas_transform
+     */
     fun getGlobalCanvasTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalCanvasTransformBind, segment)
     }
 
+    /**
+     * Returns the automatically computed 2D stretch transform, taking the `Viewport`'s stretch
+     * settings into account. The final value is multiplied by `Window.content_scale_factor`, but only
+     * for the root viewport. If this method is called on a `SubViewport` (e.g., in a scene tree with
+     * `SubViewportContainer` and `SubViewport`), the scale factor of the root window will not be
+     * applied. Using `Transform2D.get_scale` on the returned value, this can be used to compensate for
+     * scaling when zooming a `Camera2D` node, or to scale down a `TextureRect` to be pixel-perfect
+     * regardless of the automatically computed scale factor. Note: Due to how pixel scaling works, the
+     * returned transform's X and Y scale may differ slightly, even when `Window.content_scale_aspect`
+     * is set to a mode that preserves the pixels' aspect ratio. If `Window.content_scale_aspect` is
+     * `Window.CONTENT_SCALE_ASPECT_IGNORE`, the X and Y scale may differ significantly.
+     *
+     * Generated from Godot docs: Viewport.get_stretch_transform
+     */
     fun getStretchTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getStretchTransformBind, segment)
     }
 
+    /**
+     * Returns the transform from the viewport's coordinate system to the embedder's coordinate system.
+     *
+     * Generated from Godot docs: Viewport.get_final_transform
+     */
     fun getFinalTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getFinalTransformBind, segment)
     }
 
+    /**
+     * Returns the transform from the Viewport's coordinates to the screen coordinates of the
+     * containing window manager window.
+     *
+     * Generated from Godot docs: Viewport.get_screen_transform
+     */
     fun getScreenTransform(): Transform2D {
         return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, segment)
     }
 
+    /**
+     * Returns the visible rectangle in global screen coordinates.
+     *
+     * Generated from Godot docs: Viewport.get_visible_rect
+     */
     fun getVisibleRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getVisibleRectBind, segment)
     }
 
+    /**
+     * If `true`, the viewport should render its background as transparent. Note: Due to technical
+     * limitations, certain rendering features are disabled when a viewport has a transparent
+     * background. This currently applies to screen-space reflections, subsurface scattering, and depth
+     * of field.
+     *
+     * Generated from Godot docs: Viewport.set_transparent_background
+     */
     fun setTransparentBackground(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTransparentBackgroundBind, segment, enable)
     }
 
+    /**
+     * If `true`, the viewport should render its background as transparent. Note: Due to technical
+     * limitations, certain rendering features are disabled when a viewport has a transparent
+     * background. This currently applies to screen-space reflections, subsurface scattering, and depth
+     * of field.
+     *
+     * Generated from Godot docs: Viewport.has_transparent_background
+     */
     fun hasTransparentBackground(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(hasTransparentBackgroundBind, segment)
     }
 
+    /**
+     * If `true`, 2D rendering will use a high dynamic range (HDR) `RGBA16` format framebuffer.
+     * Additionally, 2D rendering will be performed on linear values and will be converted using the
+     * appropriate transfer function immediately before blitting to the screen (if the Viewport is
+     * attached to the screen). Practically speaking, this means that the end result of the Viewport
+     * will not be clamped to the `0-1` range and can be used in 3D rendering without color encoding
+     * adjustments. This allows 2D rendering to take advantage of effects requiring high dynamic range
+     * (e.g. 2D glow) as well as substantially improves the appearance of effects requiring highly
+     * detailed gradients.
+     *
+     * Generated from Godot docs: Viewport.set_use_hdr_2d
+     */
     fun setUseHdr2d(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseHdr2dBind, segment, enable)
     }
 
+    /**
+     * If `true`, 2D rendering will use a high dynamic range (HDR) `RGBA16` format framebuffer.
+     * Additionally, 2D rendering will be performed on linear values and will be converted using the
+     * appropriate transfer function immediately before blitting to the screen (if the Viewport is
+     * attached to the screen). Practically speaking, this means that the end result of the Viewport
+     * will not be clamped to the `0-1` range and can be used in 3D rendering without color encoding
+     * adjustments. This allows 2D rendering to take advantage of effects requiring high dynamic range
+     * (e.g. 2D glow) as well as substantially improves the appearance of effects requiring highly
+     * detailed gradients.
+     *
+     * Generated from Godot docs: Viewport.is_using_hdr_2d
+     */
     fun isUsingHdr2d(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingHdr2dBind, segment)
     }
 
+    /**
+     * The multisample antialiasing mode for 2D/Canvas rendering. A higher number results in smoother
+     * edges at the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or
+     * `Viewport.MSAA_4X` is best unless targeting very high-end systems. This has no effect on
+     * shader-induced aliasing or texture aliasing. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/msaa_2d` and
+     * `RenderingServer.viewport_set_msaa_2d`.
+     *
+     * Generated from Godot docs: Viewport.set_msaa_2d
+     */
     fun setMsaa2d(msaa: Long) {
         ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, segment, msaa)
     }
 
+    /**
+     * The multisample antialiasing mode for 2D/Canvas rendering. A higher number results in smoother
+     * edges at the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or
+     * `Viewport.MSAA_4X` is best unless targeting very high-end systems. This has no effect on
+     * shader-induced aliasing or texture aliasing. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/msaa_2d` and
+     * `RenderingServer.viewport_set_msaa_2d`.
+     *
+     * Generated from Godot docs: Viewport.get_msaa_2d
+     */
     fun getMsaa2d(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, segment)
     }
 
+    /**
+     * The multisample antialiasing mode for 3D rendering. A higher number results in smoother edges at
+     * the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or `Viewport.MSAA_4X`
+     * is best unless targeting very high-end systems. See also bilinear scaling 3D `scaling_3d_mode`
+     * for supersampling, which provides higher quality but is much more expensive. This has no effect
+     * on shader-induced aliasing or texture aliasing. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/msaa_3d` and
+     * `RenderingServer.viewport_set_msaa_3d`.
+     *
+     * Generated from Godot docs: Viewport.set_msaa_3d
+     */
     fun setMsaa3d(msaa: Long) {
         ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa)
     }
 
+    /**
+     * The multisample antialiasing mode for 3D rendering. A higher number results in smoother edges at
+     * the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or `Viewport.MSAA_4X`
+     * is best unless targeting very high-end systems. See also bilinear scaling 3D `scaling_3d_mode`
+     * for supersampling, which provides higher quality but is much more expensive. This has no effect
+     * on shader-induced aliasing or texture aliasing. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/msaa_3d` and
+     * `RenderingServer.viewport_set_msaa_3d`.
+     *
+     * Generated from Godot docs: Viewport.get_msaa_3d
+     */
     fun getMsaa3d(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
     }
 
+    /**
+     * Sets the screen-space antialiasing method used. Screen-space antialiasing works by selectively
+     * blurring edges in a post-process shader. It differs from MSAA which takes multiple coverage
+     * samples while rendering objects. Screen-space AA methods are typically faster than MSAA and will
+     * smooth out specular aliasing, but tend to make scenes appear blurry. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/screen_space_aa` and
+     * `RenderingServer.viewport_set_screen_space_aa`.
+     *
+     * Generated from Godot docs: Viewport.set_screen_space_aa
+     */
     fun setScreenSpaceAa(screenSpaceAa: Long) {
         ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa)
     }
 
+    /**
+     * Sets the screen-space antialiasing method used. Screen-space antialiasing works by selectively
+     * blurring edges in a post-process shader. It differs from MSAA which takes multiple coverage
+     * samples while rendering objects. Screen-space AA methods are typically faster than MSAA and will
+     * smooth out specular aliasing, but tend to make scenes appear blurry. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/screen_space_aa` and
+     * `RenderingServer.viewport_set_screen_space_aa`.
+     *
+     * Generated from Godot docs: Viewport.get_screen_space_aa
+     */
     fun getScreenSpaceAa(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
     }
 
+    /**
+     * Enables temporal antialiasing for this viewport. TAA works by jittering the camera and
+     * accumulating the images of the last rendered frames, motion vector rendering is used to account
+     * for camera and object motion. Note: The implementation is not complete yet, some visual
+     * instances such as particles and skinned meshes may show artifacts. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/use_taa` and
+     * `RenderingServer.viewport_set_use_taa`.
+     *
+     * Generated from Godot docs: Viewport.set_use_taa
+     */
     fun setUseTaa(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseTaaBind, segment, enable)
     }
 
+    /**
+     * Enables temporal antialiasing for this viewport. TAA works by jittering the camera and
+     * accumulating the images of the last rendered frames, motion vector rendering is used to account
+     * for camera and object motion. Note: The implementation is not complete yet, some visual
+     * instances such as particles and skinned meshes may show artifacts. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/use_taa` and
+     * `RenderingServer.viewport_set_use_taa`.
+     *
+     * Generated from Godot docs: Viewport.is_using_taa
+     */
     fun isUsingTaa(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingTaaBind, segment)
     }
 
+    /**
+     * When using the Mobile or Forward+ renderers, set `use_debanding` to enable or disable the
+     * debanding feature of this `Viewport`. If `use_hdr_2d` is `false`, 2D rendering is not affected
+     * by debanding unless the `Environment.background_mode` is `Environment.BG_CANVAS`. If
+     * `use_hdr_2d` is `true`, debanding will only be applied if this is the root `Viewport` and will
+     * affect all 2D and 3D rendering, including canvas items. `use_debanding` has no effect when using
+     * the Compatibility rendering method. The Mobile renderer can also use material debanding, which
+     * can be set with `RenderingServer.material_set_use_debanding` or configured with
+     * `ProjectSettings.rendering/anti_aliasing/quality/use_debanding`. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/use_debanding`,
+     * `RenderingServer.material_set_use_debanding`, and `RenderingServer.viewport_set_use_debanding`.
+     *
+     * Generated from Godot docs: Viewport.set_use_debanding
+     */
     fun setUseDebanding(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseDebandingBind, segment, enable)
     }
 
+    /**
+     * When using the Mobile or Forward+ renderers, set `use_debanding` to enable or disable the
+     * debanding feature of this `Viewport`. If `use_hdr_2d` is `false`, 2D rendering is not affected
+     * by debanding unless the `Environment.background_mode` is `Environment.BG_CANVAS`. If
+     * `use_hdr_2d` is `true`, debanding will only be applied if this is the root `Viewport` and will
+     * affect all 2D and 3D rendering, including canvas items. `use_debanding` has no effect when using
+     * the Compatibility rendering method. The Mobile renderer can also use material debanding, which
+     * can be set with `RenderingServer.material_set_use_debanding` or configured with
+     * `ProjectSettings.rendering/anti_aliasing/quality/use_debanding`. See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/use_debanding`,
+     * `RenderingServer.material_set_use_debanding`, and `RenderingServer.viewport_set_use_debanding`.
+     *
+     * Generated from Godot docs: Viewport.is_using_debanding
+     */
     fun isUsingDebanding(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingDebandingBind, segment)
     }
 
+    /**
+     * If `true`, `OccluderInstance3D` nodes will be usable for occlusion culling in 3D for this
+     * viewport. For the root viewport,
+     * `ProjectSettings.rendering/occlusion_culling/use_occlusion_culling` must be set to `true`
+     * instead. Note: Enabling occlusion culling has a cost on the CPU. Only enable occlusion culling
+     * if you actually plan to use it, and think whether your scene can actually benefit from occlusion
+     * culling. Large, open scenes with few or no objects blocking the view will generally not benefit
+     * much from occlusion culling. Large open scenes generally benefit more from mesh LOD and
+     * visibility ranges (`GeometryInstance3D.visibility_range_begin` and
+     * `GeometryInstance3D.visibility_range_end`) compared to occlusion culling. Note: Due to memory
+     * constraints, occlusion culling is not supported by default in Web export templates. It can be
+     * enabled by compiling custom Web export templates with `module_raycast_enabled=yes`.
+     *
+     * Generated from Godot docs: Viewport.set_use_occlusion_culling
+     */
     fun setUseOcclusionCulling(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseOcclusionCullingBind, segment, enable)
     }
 
+    /**
+     * If `true`, `OccluderInstance3D` nodes will be usable for occlusion culling in 3D for this
+     * viewport. For the root viewport,
+     * `ProjectSettings.rendering/occlusion_culling/use_occlusion_culling` must be set to `true`
+     * instead. Note: Enabling occlusion culling has a cost on the CPU. Only enable occlusion culling
+     * if you actually plan to use it, and think whether your scene can actually benefit from occlusion
+     * culling. Large, open scenes with few or no objects blocking the view will generally not benefit
+     * much from occlusion culling. Large open scenes generally benefit more from mesh LOD and
+     * visibility ranges (`GeometryInstance3D.visibility_range_begin` and
+     * `GeometryInstance3D.visibility_range_end`) compared to occlusion culling. Note: Due to memory
+     * constraints, occlusion culling is not supported by default in Web export templates. It can be
+     * enabled by compiling custom Web export templates with `module_raycast_enabled=yes`.
+     *
+     * Generated from Godot docs: Viewport.is_using_occlusion_culling
+     */
     fun isUsingOcclusionCulling(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingOcclusionCullingBind, segment)
     }
 
+    /**
+     * The overlay mode for test rendered geometry in debug purposes.
+     *
+     * Generated from Godot docs: Viewport.set_debug_draw
+     */
     fun setDebugDraw(debugDraw: Long) {
         ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, segment, debugDraw)
     }
 
+    /**
+     * The overlay mode for test rendered geometry in debug purposes.
+     *
+     * Generated from Godot docs: Viewport.get_debug_draw
+     */
     fun getDebugDraw(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, segment)
     }
 
+    /**
+     * If `true` and one of the following conditions are true: `SubViewport.size_2d_override_stretch`
+     * and `SubViewport.size_2d_override` are set, `Window.content_scale_factor` is set and scaling is
+     * enabled, `oversampling_override` is set, font and `DPITexture` oversampling are enabled.
+     *
+     * Generated from Godot docs: Viewport.set_use_oversampling
+     */
     fun setUseOversampling(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseOversamplingBind, segment, enable)
     }
 
+    /**
+     * If `true` and one of the following conditions are true: `SubViewport.size_2d_override_stretch`
+     * and `SubViewport.size_2d_override` are set, `Window.content_scale_factor` is set and scaling is
+     * enabled, `oversampling_override` is set, font and `DPITexture` oversampling are enabled.
+     *
+     * Generated from Godot docs: Viewport.is_using_oversampling
+     */
     fun isUsingOversampling(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingOversamplingBind, segment)
     }
 
+    /**
+     * If greater than zero, this value is used as the font oversampling factor, otherwise oversampling
+     * is equal to viewport scale.
+     *
+     * Generated from Godot docs: Viewport.set_oversampling_override
+     */
     fun setOversamplingOverride(oversampling: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setOversamplingOverrideBind, segment, oversampling)
     }
 
+    /**
+     * If greater than zero, this value is used as the font oversampling factor, otherwise oversampling
+     * is equal to viewport scale.
+     *
+     * Generated from Godot docs: Viewport.get_oversampling_override
+     */
     fun getOversamplingOverride(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingOverrideBind, segment)
     }
 
+    /**
+     * Returns viewport oversampling factor.
+     *
+     * Generated from Godot docs: Viewport.get_oversampling
+     */
     fun getOversampling(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
     }
 
+    /**
+     * Returns rendering statistics of the given type.
+     *
+     * Generated from Godot docs: Viewport.get_render_info
+     */
     fun getRenderInfo(type: Long, info: Long): Int {
         return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, segment, type, info)
     }
 
+    /**
+     * Returns the viewport's texture. Note: When trying to store the current texture (e.g. in a file),
+     * it might be completely black or outdated if used too early, especially when used in e.g.
+     * `Node._ready`. To make sure the texture you get is correct, you can await
+     * `RenderingServer.frame_post_draw` signal.
+     *
+     * Generated from Godot docs: Viewport.get_texture
+     */
     fun getTexture(): ViewportTexture? {
         return ViewportTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
+    /**
+     * If `true`, the objects rendered by viewport become subjects of mouse picking process. Note: The
+     * number of simultaneously pickable objects is limited to 64 and they are selected in a
+     * non-deterministic order, which can be different in each picking process.
+     *
+     * Generated from Godot docs: Viewport.set_physics_object_picking
+     */
     fun setPhysicsObjectPicking(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingBind, segment, enable)
     }
 
+    /**
+     * If `true`, the objects rendered by viewport become subjects of mouse picking process. Note: The
+     * number of simultaneously pickable objects is limited to 64 and they are selected in a
+     * non-deterministic order, which can be different in each picking process.
+     *
+     * Generated from Godot docs: Viewport.get_physics_object_picking
+     */
     fun getPhysicsObjectPicking(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingBind, segment)
     }
 
+    /**
+     * If `true`, objects receive mouse picking events sorted primarily by their `CanvasItem.z_index`
+     * and secondarily by their position in the scene tree. If `false`, the order is undetermined.
+     * Note: This setting is disabled by default because of its potential expensive computational cost.
+     * Note: Sorting happens after selecting the pickable objects. Because of the limitation of 64
+     * simultaneously pickable objects, it is not guaranteed that the object with the highest
+     * `CanvasItem.z_index` receives the picking event.
+     *
+     * Generated from Godot docs: Viewport.set_physics_object_picking_sort
+     */
     fun setPhysicsObjectPickingSort(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingSortBind, segment, enable)
     }
 
+    /**
+     * If `true`, objects receive mouse picking events sorted primarily by their `CanvasItem.z_index`
+     * and secondarily by their position in the scene tree. If `false`, the order is undetermined.
+     * Note: This setting is disabled by default because of its potential expensive computational cost.
+     * Note: Sorting happens after selecting the pickable objects. Because of the limitation of 64
+     * simultaneously pickable objects, it is not guaranteed that the object with the highest
+     * `CanvasItem.z_index` receives the picking event.
+     *
+     * Generated from Godot docs: Viewport.get_physics_object_picking_sort
+     */
     fun getPhysicsObjectPickingSort(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingSortBind, segment)
     }
 
+    /**
+     * If `true`, the input_event signal will only be sent to one physics object in the mouse picking
+     * process. If you want to get the top object only, you must also enable
+     * `physics_object_picking_sort`. If `false`, an input_event signal will be sent to all physics
+     * objects in the mouse picking process. This applies to 2D CanvasItem object picking only.
+     *
+     * Generated from Godot docs: Viewport.set_physics_object_picking_first_only
+     */
     fun setPhysicsObjectPickingFirstOnly(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPhysicsObjectPickingFirstOnlyBind, segment, enable)
     }
 
+    /**
+     * If `true`, the input_event signal will only be sent to one physics object in the mouse picking
+     * process. If you want to get the top object only, you must also enable
+     * `physics_object_picking_sort`. If `false`, an input_event signal will be sent to all physics
+     * objects in the mouse picking process. This applies to 2D CanvasItem object picking only.
+     *
+     * Generated from Godot docs: Viewport.get_physics_object_picking_first_only
+     */
     fun getPhysicsObjectPickingFirstOnly(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPhysicsObjectPickingFirstOnlyBind, segment)
     }
 
+    /**
+     * Returns the viewport's RID from the `RenderingServer`.
+     *
+     * Generated from Godot docs: Viewport.get_viewport_rid
+     */
     fun getViewportRid(): RID {
         return ObjectCalls.ptrcallNoArgsRetRID(getViewportRidBind, segment)
     }
 
+    /**
+     * Helper method which calls the `set_text()` method on the currently focused `Control`, provided
+     * that it is defined (e.g. if the focused Control is `Button` or `LineEdit`).
+     *
+     * Generated from Godot docs: Viewport.push_text_input
+     */
     fun pushTextInput(text: String) {
         ObjectCalls.ptrcallWithStringArg(pushTextInputBind, segment, text)
     }
 
+    /**
+     * Triggers the given `event` in this `Viewport`. This can be used to pass an `InputEvent` between
+     * viewports, or to locally apply inputs that were sent over the network or saved to a file. If
+     * `in_local_coords` is `false`, the event's position is in the embedder's coordinates and will be
+     * converted to viewport coordinates. If `in_local_coords` is `true`, the event's position is in
+     * viewport coordinates. While this method serves a similar purpose as `Input.parse_input_event`,
+     * it does not remap the specified `event` based on project settings like
+     * `ProjectSettings.input_devices/pointing/emulate_touch_from_mouse`. Calling this method will
+     * propagate calls to child nodes for following methods in the given order: - `Node._input` -
+     * `Control._gui_input` for `Control` nodes - `Node._shortcut_input` - `Node._unhandled_key_input`
+     * - `Node._unhandled_input` If an earlier method marks the input as handled via
+     * `set_input_as_handled`, any later method in this list will not be called. If none of the methods
+     * handle the event and `physics_object_picking` is `true`, the event is used for physics object
+     * picking.
+     *
+     * Generated from Godot docs: Viewport.push_input
+     */
     fun pushInput(event: InputEvent, inLocalCoords: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(pushInputBind, segment, event.requireOpenHandle(), inLocalCoords)
     }
 
+    /**
+     * Triggers the given `event` in this `Viewport`. This can be used to pass an `InputEvent` between
+     * viewports, or to locally apply inputs that were sent over the network or saved to a file. If
+     * `in_local_coords` is `false`, the event's position is in the embedder's coordinates and will be
+     * converted to viewport coordinates. If `in_local_coords` is `true`, the event's position is in
+     * viewport coordinates. Calling this method will propagate calls to child nodes for following
+     * methods in the given order: - `Node._shortcut_input` - `Node._unhandled_key_input` -
+     * `Node._unhandled_input` If an earlier method marks the input as handled via
+     * `set_input_as_handled`, any later method in this list will not be called. If none of the methods
+     * handle the event and `physics_object_picking` is `true`, the event is used for physics object
+     * picking. Note: This method doesn't propagate input events to embedded `Window`s or
+     * `SubViewport`s.
+     *
+     * Generated from Godot docs: Viewport.push_unhandled_input
+     */
     fun pushUnhandledInput(event: InputEvent, inLocalCoords: Boolean = false) {
         ObjectCalls.ptrcallWithObjectAndBoolArg(pushUnhandledInputBind, segment, event.requireOpenHandle(), inLocalCoords)
     }
 
+    /**
+     * Inform the Viewport that the mouse has entered its area. Use this function before sending an
+     * `InputEventMouseButton` or `InputEventMouseMotion` to the `Viewport` with `Viewport.push_input`.
+     * See also `notify_mouse_exited`. Note: In most cases, it is not necessary to call this function
+     * because `SubViewport` nodes that are children of `SubViewportContainer` are notified
+     * automatically. This is only necessary when interacting with viewports in non-default ways, for
+     * example as textures in `TextureRect` or with an `Area3D` that forwards input events.
+     *
+     * Generated from Godot docs: Viewport.notify_mouse_entered
+     */
     fun notifyMouseEntered() {
         ObjectCalls.ptrcallNoArgs(notifyMouseEnteredBind, segment)
     }
 
+    /**
+     * Inform the Viewport that the mouse has left its area. Use this function when the node that
+     * displays the viewport notices the mouse has left the area of the displayed viewport. See also
+     * `notify_mouse_entered`. Note: In most cases, it is not necessary to call this function because
+     * `SubViewport` nodes that are children of `SubViewportContainer` are notified automatically. This
+     * is only necessary when interacting with viewports in non-default ways, for example as textures
+     * in `TextureRect` or with an `Area3D` that forwards input events.
+     *
+     * Generated from Godot docs: Viewport.notify_mouse_exited
+     */
     fun notifyMouseExited() {
         ObjectCalls.ptrcallNoArgs(notifyMouseExitedBind, segment)
     }
 
+    /**
+     * Returns the mouse's position in this `Viewport` using the coordinate system of this `Viewport`.
+     *
+     * Generated from Godot docs: Viewport.get_mouse_position
+     */
     fun getMousePosition(): Vector2 {
         return ObjectCalls.ptrcallNoArgsRetVector2(getMousePositionBind, segment)
     }
 
+    /**
+     * Moves the mouse pointer to the specified position in this `Viewport` using the coordinate system
+     * of this `Viewport`. Note: `warp_mouse` is only supported on Windows, macOS and Linux. It has no
+     * effect on Android, iOS and Web.
+     *
+     * Generated from Godot docs: Viewport.warp_mouse
+     */
     fun warpMouse(position: Vector2) {
         ObjectCalls.ptrcallWithVector2Arg(warpMouseBind, segment, position)
     }
 
+    /**
+     * Force instantly updating the display based on the current mouse cursor position. This includes
+     * updating the mouse cursor shape and sending necessary `Control.mouse_entered`,
+     * `CollisionObject2D.mouse_entered`, `CollisionObject3D.mouse_entered` and `Window.mouse_entered`
+     * signals and their respective `mouse_exited` counterparts.
+     *
+     * Generated from Godot docs: Viewport.update_mouse_cursor_state
+     */
     fun updateMouseCursorState() {
         ObjectCalls.ptrcallNoArgs(updateMouseCursorStateBind, segment)
     }
 
+    /**
+     * Cancels the drag operation that was previously started through `Control._get_drag_data` or
+     * forced with `Control.force_drag`.
+     *
+     * Generated from Godot docs: Viewport.gui_cancel_drag
+     */
     fun guiCancelDrag() {
         ObjectCalls.ptrcallNoArgs(guiCancelDragBind, segment)
     }
 
+    /**
+     * Returns the drag data from the GUI, that was previously returned by `Control._get_drag_data`.
+     *
+     * Generated from Godot docs: Viewport.gui_get_drag_data
+     */
     fun guiGetDragData(): Any? {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(guiGetDragDataBind, segment)
     }
 
+    /**
+     * Returns the human-readable description of the drag data, used for assistive apps.
+     *
+     * Generated from Godot docs: Viewport.gui_get_drag_description
+     */
     fun guiGetDragDescription(): String {
         return ObjectCalls.ptrcallNoArgsRetString(guiGetDragDescriptionBind, segment)
     }
 
+    /**
+     * Sets the human-readable description of the drag data to `description`, used for assistive apps.
+     *
+     * Generated from Godot docs: Viewport.gui_set_drag_description
+     */
     fun guiSetDragDescription(description: String) {
         ObjectCalls.ptrcallWithStringArg(guiSetDragDescriptionBind, segment, description)
     }
 
+    /**
+     * Returns `true` if a drag operation is currently ongoing and where the drop action could happen
+     * in this viewport. Alternative to `Node.NOTIFICATION_DRAG_BEGIN` and `Node.NOTIFICATION_DRAG_END`
+     * when you prefer polling the value.
+     *
+     * Generated from Godot docs: Viewport.gui_is_dragging
+     */
     fun guiIsDragging(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(guiIsDraggingBind, segment)
     }
 
+    /**
+     * Returns `true` if the drag operation is successful.
+     *
+     * Generated from Godot docs: Viewport.gui_is_drag_successful
+     */
     fun guiIsDragSuccessful(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(guiIsDragSuccessfulBind, segment)
     }
 
+    /**
+     * Removes the focus from the currently focused `Control` within this viewport. If no `Control` has
+     * the focus, does nothing.
+     *
+     * Generated from Godot docs: Viewport.gui_release_focus
+     */
     fun guiReleaseFocus() {
         ObjectCalls.ptrcallNoArgs(guiReleaseFocusBind, segment)
     }
 
+    /**
+     * Returns the currently focused `Control` within this viewport. If no `Control` is focused,
+     * returns `null`.
+     *
+     * Generated from Godot docs: Viewport.gui_get_focus_owner
+     */
     fun guiGetFocusOwner(): Control? {
         return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetFocusOwnerBind, segment))
     }
 
+    /**
+     * Returns the `Control` that the mouse is currently hovering over in this viewport. If no
+     * `Control` has the cursor, returns `null`. Typically the leaf `Control` node or deepest level of
+     * the subtree which claims hover. This is very useful when used together with
+     * `Node.is_ancestor_of` to find if the mouse is within a control tree.
+     *
+     * Generated from Godot docs: Viewport.gui_get_hovered_control
+     */
     fun guiGetHoveredControl(): Control? {
         return Control.wrap(ObjectCalls.ptrcallNoArgsRetObject(guiGetHoveredControlBind, segment))
     }
 
+    /**
+     * If `true`, the viewport will not receive input events.
+     *
+     * Generated from Godot docs: Viewport.set_disable_input
+     */
     fun setDisableInput(disable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisableInputBind, segment, disable)
     }
 
+    /**
+     * If `true`, the viewport will not receive input events.
+     *
+     * Generated from Godot docs: Viewport.is_input_disabled
+     */
     fun isInputDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isInputDisabledBind, segment)
     }
 
+    /**
+     * The shadow atlas' resolution (used for omni and spot lights). The value is rounded up to the
+     * nearest power of 2. Note: If this is set to `0`, no positional shadows will be visible at all.
+     * This can improve performance significantly on low-end systems by reducing both the CPU and GPU
+     * load (as fewer draw calls are needed to draw the scene without shadows).
+     *
+     * Generated from Godot docs: Viewport.set_positional_shadow_atlas_size
+     */
     fun setPositionalShadowAtlasSize(size: Int) {
         ObjectCalls.ptrcallWithIntArg(setPositionalShadowAtlasSizeBind, segment, size)
     }
 
+    /**
+     * The shadow atlas' resolution (used for omni and spot lights). The value is rounded up to the
+     * nearest power of 2. Note: If this is set to `0`, no positional shadows will be visible at all.
+     * This can improve performance significantly on low-end systems by reducing both the CPU and GPU
+     * load (as fewer draw calls are needed to draw the scene without shadows).
+     *
+     * Generated from Godot docs: Viewport.get_positional_shadow_atlas_size
+     */
     fun getPositionalShadowAtlasSize(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getPositionalShadowAtlasSizeBind, segment)
     }
 
+    /**
+     * Use 16 bits for the omni/spot shadow depth map. Enabling this results in shadows having less
+     * precision and may result in shadow acne, but can lead to performance improvements on some
+     * devices.
+     *
+     * Generated from Godot docs: Viewport.set_positional_shadow_atlas_16_bits
+     */
     fun setPositionalShadowAtlas16Bits(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setPositionalShadowAtlas16BitsBind, segment, enable)
     }
 
+    /**
+     * Use 16 bits for the omni/spot shadow depth map. Enabling this results in shadows having less
+     * precision and may result in shadow acne, but can lead to performance improvements on some
+     * devices.
+     *
+     * Generated from Godot docs: Viewport.get_positional_shadow_atlas_16_bits
+     */
     fun getPositionalShadowAtlas16Bits(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getPositionalShadowAtlas16BitsBind, segment)
     }
 
+    /**
+     * If `true`, the GUI controls on the viewport will lay pixel perfectly.
+     *
+     * Generated from Godot docs: Viewport.set_snap_controls_to_pixels
+     */
     fun setSnapControlsToPixels(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSnapControlsToPixelsBind, segment, enabled)
     }
 
+    /**
+     * If `true`, the GUI controls on the viewport will lay pixel perfectly.
+     *
+     * Generated from Godot docs: Viewport.is_snap_controls_to_pixels_enabled
+     */
     fun isSnapControlsToPixelsEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSnapControlsToPixelsEnabledBind, segment)
     }
 
+    /**
+     * If `true`, `CanvasItem` nodes will internally snap to full pixels. Their position can still be
+     * sub-pixel, but the decimals will not have effect. This can lead to a crisper appearance at the
+     * cost of less smooth movement, especially when `Camera2D` smoothing is enabled.
+     *
+     * Generated from Godot docs: Viewport.set_snap_2d_transforms_to_pixel
+     */
     fun setSnap2dTransformsToPixel(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSnap2dTransformsToPixelBind, segment, enabled)
     }
 
+    /**
+     * If `true`, `CanvasItem` nodes will internally snap to full pixels. Their position can still be
+     * sub-pixel, but the decimals will not have effect. This can lead to a crisper appearance at the
+     * cost of less smooth movement, especially when `Camera2D` smoothing is enabled.
+     *
+     * Generated from Godot docs: Viewport.is_snap_2d_transforms_to_pixel_enabled
+     */
     fun isSnap2dTransformsToPixelEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dTransformsToPixelEnabledBind, segment)
     }
 
+    /**
+     * If `true`, vertices of `CanvasItem` nodes will snap to full pixels. Only affects the final
+     * vertex positions, not the transforms. This can lead to a crisper appearance at the cost of less
+     * smooth movement, especially when `Camera2D` smoothing is enabled.
+     *
+     * Generated from Godot docs: Viewport.set_snap_2d_vertices_to_pixel
+     */
     fun setSnap2dVerticesToPixel(enabled: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setSnap2dVerticesToPixelBind, segment, enabled)
     }
 
+    /**
+     * If `true`, vertices of `CanvasItem` nodes will snap to full pixels. Only affects the final
+     * vertex positions, not the transforms. This can lead to a crisper appearance at the cost of less
+     * smooth movement, especially when `Camera2D` smoothing is enabled.
+     *
+     * Generated from Godot docs: Viewport.is_snap_2d_vertices_to_pixel_enabled
+     */
     fun isSnap2dVerticesToPixelEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSnap2dVerticesToPixelEnabledBind, segment)
     }
 
+    /**
+     * The subdivision amount of the fourth quadrant on the shadow atlas.
+     *
+     * Generated from Godot docs: Viewport.set_positional_shadow_atlas_quadrant_subdiv
+     */
     fun setPositionalShadowAtlasQuadrantSubdiv(quadrant: Int, subdiv: Long) {
         ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant, subdiv)
     }
 
+    /**
+     * The subdivision amount of the fourth quadrant on the shadow atlas.
+     *
+     * Generated from Godot docs: Viewport.get_positional_shadow_atlas_quadrant_subdiv
+     */
     fun getPositionalShadowAtlasQuadrantSubdiv(quadrant: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant)
     }
 
+    /**
+     * Stops the input from propagating further up the `SceneTree`. Note: This does not affect the
+     * methods in `Input`, only the way events are propagated.
+     *
+     * Generated from Godot docs: Viewport.set_input_as_handled
+     */
     fun setInputAsHandled() {
         ObjectCalls.ptrcallNoArgs(setInputAsHandledBind, segment)
     }
 
+    /**
+     * Returns whether the current `InputEvent` has been handled. Input events are not handled until
+     * `set_input_as_handled` has been called during the lifetime of an `InputEvent`. This is usually
+     * done as part of input handling methods like `Node._input`, `Control._gui_input` or others, as
+     * well as in corresponding signal handlers. If `handle_input_locally` is set to `false`, this
+     * method will try finding the first parent viewport that is set to handle input locally, and
+     * return its value for `is_input_handled` instead.
+     *
+     * Generated from Godot docs: Viewport.is_input_handled
+     */
     fun isInputHandled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isInputHandledBind, segment)
     }
 
+    /**
+     * If `true`, this viewport will mark incoming input events as handled by itself. If `false`, this
+     * is instead done by the first parent viewport that is set to handle input locally. A
+     * `SubViewportContainer` will automatically set this property to `false` for the `Viewport`
+     * contained inside of it. See also `set_input_as_handled` and `is_input_handled`.
+     *
+     * Generated from Godot docs: Viewport.set_handle_input_locally
+     */
     fun setHandleInputLocally(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setHandleInputLocallyBind, segment, enable)
     }
 
+    /**
+     * If `true`, this viewport will mark incoming input events as handled by itself. If `false`, this
+     * is instead done by the first parent viewport that is set to handle input locally. A
+     * `SubViewportContainer` will automatically set this property to `false` for the `Viewport`
+     * contained inside of it. See also `set_input_as_handled` and `is_input_handled`.
+     *
+     * Generated from Godot docs: Viewport.is_handling_input_locally
+     */
     fun isHandlingInputLocally(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isHandlingInputLocallyBind, segment)
     }
 
+    /**
+     * The default filter mode used by `CanvasItem` nodes in this viewport.
+     *
+     * Generated from Godot docs: Viewport.set_default_canvas_item_texture_filter
+     */
     fun setDefaultCanvasItemTextureFilter(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, segment, mode)
     }
 
+    /**
+     * The default filter mode used by `CanvasItem` nodes in this viewport.
+     *
+     * Generated from Godot docs: Viewport.get_default_canvas_item_texture_filter
+     */
     fun getDefaultCanvasItemTextureFilter(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, segment)
     }
 
+    /**
+     * If `true`, sub-windows (popups and dialogs) will be embedded inside application window as
+     * control-like nodes. If `false`, they will appear as separate windows handled by the operating
+     * system.
+     *
+     * Generated from Godot docs: Viewport.set_embedding_subwindows
+     */
     fun setEmbeddingSubwindows(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEmbeddingSubwindowsBind, segment, enable)
     }
 
+    /**
+     * If `true`, sub-windows (popups and dialogs) will be embedded inside application window as
+     * control-like nodes. If `false`, they will appear as separate windows handled by the operating
+     * system.
+     *
+     * Generated from Godot docs: Viewport.is_embedding_subwindows
+     */
     fun isEmbeddingSubwindows(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmbeddingSubwindowsBind, segment)
     }
 
+    /**
+     * Returns a list of the visible embedded `Window`s inside the viewport. Note: `Window`s inside
+     * other viewports will not be listed.
+     *
+     * Generated from Godot docs: Viewport.get_embedded_subwindows
+     */
     fun getEmbeddedSubwindows(): List<Window> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getEmbeddedSubwindowsBind, segment, Window::wrap)
     }
 
+    /**
+     * The minimum distance the mouse cursor must move while pressed before a drag operation begins.
+     *
+     * Generated from Godot docs: Viewport.set_drag_threshold
+     */
     fun setDragThreshold(threshold: Int) {
         ObjectCalls.ptrcallWithIntArg(setDragThresholdBind, segment, threshold)
     }
 
+    /**
+     * The minimum distance the mouse cursor must move while pressed before a drag operation begins.
+     *
+     * Generated from Godot docs: Viewport.get_drag_threshold
+     */
     fun getDragThreshold(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getDragThresholdBind, segment)
     }
 
+    /**
+     * The rendering layers in which this `Viewport` renders `CanvasItem` nodes. Note: A `CanvasItem`
+     * does not inherit its parents' visibility layers. See `CanvasItem.visibility_layer`'s description
+     * for details.
+     *
+     * Generated from Godot docs: Viewport.set_canvas_cull_mask
+     */
     fun setCanvasCullMask(mask: Long) {
         ObjectCalls.ptrcallWithUInt32Arg(setCanvasCullMaskBind, segment, mask)
     }
 
+    /**
+     * The rendering layers in which this `Viewport` renders `CanvasItem` nodes. Note: A `CanvasItem`
+     * does not inherit its parents' visibility layers. See `CanvasItem.visibility_layer`'s description
+     * for details.
+     *
+     * Generated from Godot docs: Viewport.get_canvas_cull_mask
+     */
     fun getCanvasCullMask(): Long {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCanvasCullMaskBind, segment)
     }
 
+    /**
+     * Set/clear individual bits on the rendering layer mask. This simplifies editing this `Viewport`'s
+     * layers.
+     *
+     * Generated from Godot docs: Viewport.set_canvas_cull_mask_bit
+     */
     fun setCanvasCullMaskBit(layer: Long, enable: Boolean) {
         ObjectCalls.ptrcallWithUInt32AndBoolArgs(setCanvasCullMaskBitBind, segment, layer, enable)
     }
 
+    /**
+     * Returns an individual bit on the rendering layer mask.
+     *
+     * Generated from Godot docs: Viewport.get_canvas_cull_mask_bit
+     */
     fun getCanvasCullMaskBit(layer: Long): Boolean {
         return ObjectCalls.ptrcallWithUInt32ArgRetBool(getCanvasCullMaskBitBind, segment, layer)
     }
 
+    /**
+     * The default repeat mode used by `CanvasItem` nodes in this viewport.
+     *
+     * Generated from Godot docs: Viewport.set_default_canvas_item_texture_repeat
+     */
     fun setDefaultCanvasItemTextureRepeat(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, segment, mode)
     }
 
+    /**
+     * The default repeat mode used by `CanvasItem` nodes in this viewport.
+     *
+     * Generated from Godot docs: Viewport.get_default_canvas_item_texture_repeat
+     */
     fun getDefaultCanvasItemTextureRepeat(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, segment)
     }
 
+    /**
+     * Controls how much of the original viewport's size should be covered by the 2D signed distance
+     * field. This SDF can be sampled in `CanvasItem` shaders and is also used for `GPUParticles2D`
+     * collision. Higher values allow portions of occluders located outside the viewport to still be
+     * taken into account in the generated signed distance field, at the cost of performance. If you
+     * notice particles falling through `LightOccluder2D`s as the occluders leave the viewport,
+     * increase this setting. The percentage is added on each axis and on both sides. For example, with
+     * the default `SDF_OVERSIZE_120_PERCENT`, the signed distance field will cover 20% of the
+     * viewport's size outside the viewport on each side (top, right, bottom, left).
+     *
+     * Generated from Godot docs: Viewport.set_sdf_oversize
+     */
     fun setSdfOversize(oversize: Long) {
         ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, segment, oversize)
     }
 
+    /**
+     * Controls how much of the original viewport's size should be covered by the 2D signed distance
+     * field. This SDF can be sampled in `CanvasItem` shaders and is also used for `GPUParticles2D`
+     * collision. Higher values allow portions of occluders located outside the viewport to still be
+     * taken into account in the generated signed distance field, at the cost of performance. If you
+     * notice particles falling through `LightOccluder2D`s as the occluders leave the viewport,
+     * increase this setting. The percentage is added on each axis and on both sides. For example, with
+     * the default `SDF_OVERSIZE_120_PERCENT`, the signed distance field will cover 20% of the
+     * viewport's size outside the viewport on each side (top, right, bottom, left).
+     *
+     * Generated from Godot docs: Viewport.get_sdf_oversize
+     */
     fun getSdfOversize(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, segment)
     }
 
+    /**
+     * The resolution scale to use for the 2D signed distance field. Higher values lead to a more
+     * precise and more stable signed distance field as the camera moves, at the cost of performance.
+     *
+     * Generated from Godot docs: Viewport.set_sdf_scale
+     */
     fun setSdfScale(scale: Long) {
         ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, segment, scale)
     }
 
+    /**
+     * The resolution scale to use for the 2D signed distance field. Higher values lead to a more
+     * precise and more stable signed distance field as the camera moves, at the cost of performance.
+     *
+     * Generated from Godot docs: Viewport.get_sdf_scale
+     */
     fun getSdfScale(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, segment)
     }
 
+    /**
+     * The automatic LOD bias to use for meshes rendered within the `Viewport` (this is analogous to
+     * `ReflectionProbe.mesh_lod_threshold`). Higher values will use less detailed versions of meshes
+     * that have LOD variations generated. If set to `0.0`, automatic LOD is disabled. Increase
+     * `mesh_lod_threshold` to improve performance at the cost of geometry detail. To control this
+     * property on the root viewport, set the
+     * `ProjectSettings.rendering/mesh_lod/lod_change/threshold_pixels` project setting. Note:
+     * Depending on the mesh's attributes (vertex colors, blend shapes, ...), a mesh may have fewer
+     * levels of LOD generated to avoid visible distortion of the mesh once it is affected by vertex
+     * colors or blend shapes. Meshes with a very low vertex count will also not have any LODs
+     * generated, which means this setting will not affect them at all. In general, this setting makes
+     * the largest impact on static meshes with a high vertex count. Note: `mesh_lod_threshold` does
+     * not affect `GeometryInstance3D` visibility ranges (also known as "manual" LOD or hierarchical
+     * LOD).
+     *
+     * Generated from Godot docs: Viewport.set_mesh_lod_threshold
+     */
     fun setMeshLodThreshold(pixels: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setMeshLodThresholdBind, segment, pixels)
     }
 
+    /**
+     * The automatic LOD bias to use for meshes rendered within the `Viewport` (this is analogous to
+     * `ReflectionProbe.mesh_lod_threshold`). Higher values will use less detailed versions of meshes
+     * that have LOD variations generated. If set to `0.0`, automatic LOD is disabled. Increase
+     * `mesh_lod_threshold` to improve performance at the cost of geometry detail. To control this
+     * property on the root viewport, set the
+     * `ProjectSettings.rendering/mesh_lod/lod_change/threshold_pixels` project setting. Note:
+     * Depending on the mesh's attributes (vertex colors, blend shapes, ...), a mesh may have fewer
+     * levels of LOD generated to avoid visible distortion of the mesh once it is affected by vertex
+     * colors or blend shapes. Meshes with a very low vertex count will also not have any LODs
+     * generated, which means this setting will not affect them at all. In general, this setting makes
+     * the largest impact on static meshes with a high vertex count. Note: `mesh_lod_threshold` does
+     * not affect `GeometryInstance3D` visibility ranges (also known as "manual" LOD or hierarchical
+     * LOD).
+     *
+     * Generated from Godot docs: Viewport.get_mesh_lod_threshold
+     */
     fun getMeshLodThreshold(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getMeshLodThresholdBind, segment)
     }
 
+    /**
+     * If `true`, the viewport will process 2D audio streams.
+     *
+     * Generated from Godot docs: Viewport.set_as_audio_listener_2d
+     */
     fun setAsAudioListener2d(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAsAudioListener2dBind, segment, enable)
     }
 
+    /**
+     * If `true`, the viewport will process 2D audio streams.
+     *
+     * Generated from Godot docs: Viewport.is_audio_listener_2d
+     */
     fun isAudioListener2d(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener2dBind, segment)
     }
 
+    /**
+     * Returns the currently active 2D audio listener. Returns `null` if there are no active 2D audio
+     * listeners, in which case the active 2D camera will be treated as listener.
+     *
+     * Generated from Godot docs: Viewport.get_audio_listener_2d
+     */
     fun getAudioListener2d(): AudioListener2D? {
         return AudioListener2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener2dBind, segment))
     }
 
+    /**
+     * Returns the currently active 2D camera. Returns `null` if there are no active cameras. Note: If
+     * called while the Camera Override system is active in editor, this will return the internally
+     * managed override camera. It is therefore advised to avoid caching the return value, or to check
+     * that the cached value is still a valid instance and is the current camera before use. See
+     * `@GlobalScope.is_instance_valid` and `Camera2D.is_current`.
+     *
+     * Generated from Godot docs: Viewport.get_camera_2d
+     */
     fun getCamera2d(): Camera2D? {
         return Camera2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera2dBind, segment))
     }
 
+    /**
+     * The custom `World3D` which can be used as 3D environment source.
+     *
+     * Generated from Godot docs: Viewport.set_world_3d
+     */
     fun setWorld3d(world3d: World3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setWorld3dBind, segment, listOf(world3d?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * The custom `World3D` which can be used as 3D environment source.
+     *
+     * Generated from Godot docs: Viewport.get_world_3d
+     */
     fun getWorld3d(): World3D? {
         return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
     }
 
+    /**
+     * Returns the first valid `World3D` for this viewport, searching the `world_3d` property of itself
+     * and any Viewport ancestor.
+     *
+     * Generated from Godot docs: Viewport.find_world_3d
+     */
     fun findWorld3d(): World3D? {
         return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, segment))
     }
 
+    /**
+     * If `true`, the viewport will use a unique copy of the `World3D` defined in `world_3d`.
+     *
+     * Generated from Godot docs: Viewport.set_use_own_world_3d
+     */
     fun setUseOwnWorld3d(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseOwnWorld3dBind, segment, enable)
     }
 
+    /**
+     * If `true`, the viewport will use a unique copy of the `World3D` defined in `world_3d`.
+     *
+     * Generated from Godot docs: Viewport.is_using_own_world_3d
+     */
     fun isUsingOwnWorld3d(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingOwnWorld3dBind, segment)
     }
 
+    /**
+     * Returns the currently active 3D audio listener. Returns `null` if there are no active 3D audio
+     * listeners, in which case the active 3D camera will be treated as listener.
+     *
+     * Generated from Godot docs: Viewport.get_audio_listener_3d
+     */
     fun getAudioListener3d(): AudioListener3D? {
         return AudioListener3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAudioListener3dBind, segment))
     }
 
+    /**
+     * Returns the currently active 3D camera. Returns `null` if there are no active cameras. Note: If
+     * called while the Camera Override system is active in editor, this will return the internally
+     * managed override camera. It is therefore advised to avoid caching the return value, or to check
+     * that the cached value is a valid instance and is the current camera before use. See
+     * `@GlobalScope.is_instance_valid` and `Camera3D.current`.
+     *
+     * Generated from Godot docs: Viewport.get_camera_3d
+     */
     fun getCamera3d(): Camera3D? {
         return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCamera3dBind, segment))
     }
 
+    /**
+     * If `true`, the viewport will process 3D audio streams.
+     *
+     * Generated from Godot docs: Viewport.set_as_audio_listener_3d
+     */
     fun setAsAudioListener3d(enable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setAsAudioListener3dBind, segment, enable)
     }
 
+    /**
+     * If `true`, the viewport will process 3D audio streams.
+     *
+     * Generated from Godot docs: Viewport.is_audio_listener_3d
+     */
     fun isAudioListener3d(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isAudioListener3dBind, segment)
     }
 
+    /**
+     * Disable 3D rendering (but keep 2D rendering).
+     *
+     * Generated from Godot docs: Viewport.set_disable_3d
+     */
     fun setDisable3d(disable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setDisable3dBind, segment, disable)
     }
 
+    /**
+     * Disable 3D rendering (but keep 2D rendering).
+     *
+     * Generated from Godot docs: Viewport.is_3d_disabled
+     */
     fun is3dDisabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(is3dDisabledBind, segment)
     }
 
+    /**
+     * If `true`, the viewport will use the primary XR interface to render XR output. When applicable
+     * this can result in a stereoscopic image and the resulting render being output to a headset.
+     *
+     * Generated from Godot docs: Viewport.set_use_xr
+     */
     fun setUseXr(use: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setUseXrBind, segment, use)
     }
 
+    /**
+     * If `true`, the viewport will use the primary XR interface to render XR output. When applicable
+     * this can result in a stereoscopic image and the resulting render being output to a headset.
+     *
+     * Generated from Godot docs: Viewport.is_using_xr
+     */
     fun isUsingXr(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isUsingXrBind, segment)
     }
 
+    /**
+     * Sets scaling 3D mode. Bilinear scaling renders at different resolution to either undersample or
+     * supersample the viewport. FidelityFX Super Resolution 1.0, abbreviated to FSR, is an upscaling
+     * technology that produces high quality images at fast framerates by using a spatially aware
+     * upscaling algorithm. FSR is slightly more expensive than bilinear, but it produces significantly
+     * higher image quality. FSR should be used where possible. To control this property on the root
+     * viewport, set the `ProjectSettings.rendering/scaling_3d/mode` project setting.
+     *
+     * Generated from Godot docs: Viewport.set_scaling_3d_mode
+     */
     fun setScaling3dMode(scaling3dMode: Long) {
         ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode)
     }
 
+    /**
+     * Sets scaling 3D mode. Bilinear scaling renders at different resolution to either undersample or
+     * supersample the viewport. FidelityFX Super Resolution 1.0, abbreviated to FSR, is an upscaling
+     * technology that produces high quality images at fast framerates by using a spatially aware
+     * upscaling algorithm. FSR is slightly more expensive than bilinear, but it produces significantly
+     * higher image quality. FSR should be used where possible. To control this property on the root
+     * viewport, set the `ProjectSettings.rendering/scaling_3d/mode` project setting.
+     *
+     * Generated from Godot docs: Viewport.get_scaling_3d_mode
+     */
     fun getScaling3dMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
     }
 
+    /**
+     * Scales the 3D render buffer based on the viewport size uses an image filter specified in
+     * `ProjectSettings.rendering/scaling_3d/mode` to scale the output image to the full viewport size.
+     * Values lower than `1.0` can be used to speed up 3D rendering at the cost of quality
+     * (undersampling). Values greater than `1.0` are only valid for bilinear mode and can be used to
+     * improve 3D rendering quality at a high performance cost (supersampling). See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/msaa_3d` for multi-sample antialiasing, which
+     * is significantly cheaper but only smooths the edges of polygons. When using FSR upscaling, AMD
+     * recommends exposing the following values as preset options to users "Ultra Quality: 0.77",
+     * "Quality: 0.67", "Balanced: 0.59", "Performance: 0.5" instead of exposing the entire scale. To
+     * control this property on the root viewport, set the `ProjectSettings.rendering/scaling_3d/scale`
+     * project setting.
+     *
+     * Generated from Godot docs: Viewport.set_scaling_3d_scale
+     */
     fun setScaling3dScale(scale: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setScaling3dScaleBind, segment, scale)
     }
 
+    /**
+     * Scales the 3D render buffer based on the viewport size uses an image filter specified in
+     * `ProjectSettings.rendering/scaling_3d/mode` to scale the output image to the full viewport size.
+     * Values lower than `1.0` can be used to speed up 3D rendering at the cost of quality
+     * (undersampling). Values greater than `1.0` are only valid for bilinear mode and can be used to
+     * improve 3D rendering quality at a high performance cost (supersampling). See also
+     * `ProjectSettings.rendering/anti_aliasing/quality/msaa_3d` for multi-sample antialiasing, which
+     * is significantly cheaper but only smooths the edges of polygons. When using FSR upscaling, AMD
+     * recommends exposing the following values as preset options to users "Ultra Quality: 0.77",
+     * "Quality: 0.67", "Balanced: 0.59", "Performance: 0.5" instead of exposing the entire scale. To
+     * control this property on the root viewport, set the `ProjectSettings.rendering/scaling_3d/scale`
+     * project setting.
+     *
+     * Generated from Godot docs: Viewport.get_scaling_3d_scale
+     */
     fun getScaling3dScale(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getScaling3dScaleBind, segment)
     }
 
+    /**
+     * Determines how sharp the upscaled image will be when using the FSR upscaling mode. Sharpness
+     * halves with every whole number. Values go from 0.0 (sharpest) to 2.0. Values above 2.0 won't
+     * make a visible difference. To control this property on the root viewport, set the
+     * `ProjectSettings.rendering/scaling_3d/fsr_sharpness` project setting.
+     *
+     * Generated from Godot docs: Viewport.set_fsr_sharpness
+     */
     fun setFsrSharpness(fsrSharpness: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setFsrSharpnessBind, segment, fsrSharpness)
     }
 
+    /**
+     * Determines how sharp the upscaled image will be when using the FSR upscaling mode. Sharpness
+     * halves with every whole number. Values go from 0.0 (sharpest) to 2.0. Values above 2.0 won't
+     * make a visible difference. To control this property on the root viewport, set the
+     * `ProjectSettings.rendering/scaling_3d/fsr_sharpness` project setting.
+     *
+     * Generated from Godot docs: Viewport.get_fsr_sharpness
+     */
     fun getFsrSharpness(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFsrSharpnessBind, segment)
     }
 
+    /**
+     * Affects the final texture sharpness by reading from a lower or higher mipmap (also called
+     * "texture LOD bias"). Negative values make mipmapped textures sharper but grainier when viewed at
+     * a distance, while positive values make mipmapped textures blurrier (even when up close).
+     * Enabling temporal antialiasing (`use_taa`) will automatically apply a `-0.5` offset to this
+     * value, while enabling FXAA (`screen_space_aa`) will automatically apply a `-0.25` offset to this
+     * value. If both TAA and FXAA are enabled at the same time, an offset of `-0.75` is applied to
+     * this value. To control this property on the root viewport, set the
+     * `ProjectSettings.rendering/textures/default_filters/texture_mipmap_bias` project setting. Note:
+     * If `scaling_3d_scale` is lower than `1.0` (exclusive), `texture_mipmap_bias` is used to adjust
+     * the automatic mipmap bias which is calculated internally based on the scale factor. The formula
+     * for this is `log2(scaling_3d_scale) + mipmap_bias`. Note: This property is only supported in the
+     * Forward+ and Mobile renderers, not Compatibility. In Compatibility, this property is always
+     * treated as if it was set to `0.0`.
+     *
+     * Generated from Godot docs: Viewport.set_texture_mipmap_bias
+     */
     fun setTextureMipmapBias(textureMipmapBias: Double) {
         ObjectCalls.ptrcallWithDoubleArg(setTextureMipmapBiasBind, segment, textureMipmapBias)
     }
 
+    /**
+     * Affects the final texture sharpness by reading from a lower or higher mipmap (also called
+     * "texture LOD bias"). Negative values make mipmapped textures sharper but grainier when viewed at
+     * a distance, while positive values make mipmapped textures blurrier (even when up close).
+     * Enabling temporal antialiasing (`use_taa`) will automatically apply a `-0.5` offset to this
+     * value, while enabling FXAA (`screen_space_aa`) will automatically apply a `-0.25` offset to this
+     * value. If both TAA and FXAA are enabled at the same time, an offset of `-0.75` is applied to
+     * this value. To control this property on the root viewport, set the
+     * `ProjectSettings.rendering/textures/default_filters/texture_mipmap_bias` project setting. Note:
+     * If `scaling_3d_scale` is lower than `1.0` (exclusive), `texture_mipmap_bias` is used to adjust
+     * the automatic mipmap bias which is calculated internally based on the scale factor. The formula
+     * for this is `log2(scaling_3d_scale) + mipmap_bias`. Note: This property is only supported in the
+     * Forward+ and Mobile renderers, not Compatibility. In Compatibility, this property is always
+     * treated as if it was set to `0.0`.
+     *
+     * Generated from Godot docs: Viewport.get_texture_mipmap_bias
+     */
     fun getTextureMipmapBias(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getTextureMipmapBiasBind, segment)
     }
 
+    /**
+     * Sets the maximum number of samples to take when using anisotropic filtering on textures (as a
+     * power of two). A higher sample count will result in sharper textures at oblique angles, but is
+     * more expensive to compute. A value of `0` forcibly disables anisotropic filtering, even on
+     * materials where it is enabled. The anisotropic filtering level also affects decals and light
+     * projectors if they are configured to use anisotropic filtering. See
+     * `ProjectSettings.rendering/textures/decals/filter` and
+     * `ProjectSettings.rendering/textures/light_projectors/filter`. Note: In 3D, for this setting to
+     * have an effect, set `BaseMaterial3D.texture_filter` to
+     * `BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
+     * this setting to have an effect, set `CanvasItem.texture_filter` to
+     * `CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
+     * the texture (or in `CanvasTexture`). However, anisotropic filtering is rarely useful in 2D, so
+     * only enable it for textures in 2D if it makes a meaningful visual difference.
+     *
+     * Generated from Godot docs: Viewport.set_anisotropic_filtering_level
+     */
     fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
         ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel)
     }
 
+    /**
+     * Sets the maximum number of samples to take when using anisotropic filtering on textures (as a
+     * power of two). A higher sample count will result in sharper textures at oblique angles, but is
+     * more expensive to compute. A value of `0` forcibly disables anisotropic filtering, even on
+     * materials where it is enabled. The anisotropic filtering level also affects decals and light
+     * projectors if they are configured to use anisotropic filtering. See
+     * `ProjectSettings.rendering/textures/decals/filter` and
+     * `ProjectSettings.rendering/textures/light_projectors/filter`. Note: In 3D, for this setting to
+     * have an effect, set `BaseMaterial3D.texture_filter` to
+     * `BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
+     * this setting to have an effect, set `CanvasItem.texture_filter` to
+     * `CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
+     * the texture (or in `CanvasTexture`). However, anisotropic filtering is rarely useful in 2D, so
+     * only enable it for textures in 2D if it makes a meaningful visual difference.
+     *
+     * Generated from Godot docs: Viewport.get_anisotropic_filtering_level
+     */
     fun getAnisotropicFilteringLevel(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment)
     }
 
+    /**
+     * The Variable Rate Shading (VRS) mode that is used for this viewport. Note, if hardware does not
+     * support VRS this property is ignored.
+     *
+     * Generated from Godot docs: Viewport.set_vrs_mode
+     */
     fun setVrsMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setVrsModeBind, segment, mode)
     }
 
+    /**
+     * The Variable Rate Shading (VRS) mode that is used for this viewport. Note, if hardware does not
+     * support VRS this property is ignored.
+     *
+     * Generated from Godot docs: Viewport.get_vrs_mode
+     */
     fun getVrsMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, segment)
     }
 
+    /**
+     * Sets the update mode for Variable Rate Shading (VRS) for the viewport. VRS requires the input
+     * texture to be converted to the format usable by the VRS method supported by the hardware. The
+     * update mode defines how often this happens. If the GPU does not support VRS, or VRS is not
+     * enabled, this property is ignored.
+     *
+     * Generated from Godot docs: Viewport.set_vrs_update_mode
+     */
     fun setVrsUpdateMode(mode: Long) {
         ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, segment, mode)
     }
 
+    /**
+     * Sets the update mode for Variable Rate Shading (VRS) for the viewport. VRS requires the input
+     * texture to be converted to the format usable by the VRS method supported by the hardware. The
+     * update mode defines how often this happens. If the GPU does not support VRS, or VRS is not
+     * enabled, this property is ignored.
+     *
+     * Generated from Godot docs: Viewport.get_vrs_update_mode
+     */
     fun getVrsUpdateMode(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, segment)
     }
 
+    /**
+     * Texture to use when `vrs_mode` is set to `Viewport.VRS_TEXTURE`. The texture must use a lossless
+     * compression format so that colors can be matched precisely. The following VRS densities are
+     * mapped to various colors, with brighter colors representing a lower level of shading precision:
+     *
+     * Generated from Godot docs: Viewport.set_vrs_texture
+     */
     fun setVrsTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(setVrsTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /**
+     * Texture to use when `vrs_mode` is set to `Viewport.VRS_TEXTURE`. The texture must use a lossless
+     * compression format so that colors can be matched precisely. The following VRS densities are
+     * mapped to various colors, with brighter colors representing a lower level of shading precision:
+     *
+     * Generated from Godot docs: Viewport.get_vrs_texture
+     */
     fun getVrsTexture(): Texture2D? {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, segment))
     }
 
-    // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d);
-    // match the Android aliases so shared demo code resolves on both backends.
+    // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d).
+    // They lived twice until task 117 P1'(c): on the hand-written desktop `Viewport` (getCamera3D
+    // only) and in IOS_MEMBER_SECTIONS['Viewport'] (both). `Viewport` is one generated class now,
+    // so the aliases are shared members and every demo call site resolves on both backends.
     fun getCamera3D(): Camera3D? = getCamera3d()
 
     fun getCamera2D(): Camera2D? = getCamera2d()
@@ -946,7 +1981,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         fun fromHandle(handle: GodotHandle): Viewport? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Viewport? =
+        internal fun wrap(handle: RawSegment): Viewport? =
             if (handle.address() == 0L) null else Viewport(GodotHandle(handle))
 
         private const val SET_WORLD_2D_HASH = 2736080068L
