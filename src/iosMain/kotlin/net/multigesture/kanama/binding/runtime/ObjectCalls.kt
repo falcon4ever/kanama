@@ -186,23 +186,41 @@ actual object ObjectCalls {
     kanama_ios_godot_object_destroy(instance.address())
   }
 
+  // Static-method dispatch (task 117 P2' follow-up). A ZERO instance is the generator's
+  // static-method marker: `_null_segment()` in scripts/generate_api_wrapper.py renders
+  // `NULL_SEGMENT` as the instance for every `is_static` method, and the shared wrapper tree
+  // reaches Godot statics that way on BOTH platforms. Desktop hands MemorySegment.NULL straight
+  // to object_method_bind_ptrcall, which Godot accepts for a static bind; the iOS C instance
+  // entry point `kanama_ios_godot_ptrcall` deliberately early-returns on a null instance
+  // (commit 30c949a1), which silently turned every shared-tree static call into a no-op.
+  // The C shim keeps that guard and its separate `kanama_ios_godot_ptrcall_static` entry point;
+  // this one dispatcher picks between them, once, for every hand-written and generated helper in
+  // this object, so no helper has to know whether its caller is an instance or a static call.
+  private inline fun ptrcallDispatch(
+    methodBind: Long,
+    instance: Long,
+    argTypes: CValuesRef<IntVar>?,
+    argPtrs: CValuesRef<COpaquePointerVar>?,
+    argCount: Int,
+    retType: Int,
+    retOut: CValuesRef<*>?,
+  ) {
+    if (instance == 0L) {
+      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)
+    } else {
+      kanama_ios_godot_ptrcall(methodBind, instance, argTypes, argPtrs, argCount, retType, retOut)
+    }
+  }
+
   // ---- no-arg ----
   actual fun ptrcallNoArgs(methodBind: MemorySegment, instance: MemorySegment) {
-    kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), null, null, 0, PT_VOID, null)
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VOID, null)
   }
 
   actual fun ptrcallNoArgsRetBool(methodBind: MemorySegment, instance: MemorySegment): Boolean =
     memScoped {
       val ret = alloc<ByteVar>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_BOOL,
-        ret.ptr,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_BOOL, ret.ptr)
       ret.value.toInt() != 0
     }
 
@@ -211,15 +229,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int =
     memScoped {
       val ret = alloc<LongVar>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_INT64,
-        ret.ptr,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT64, ret.ptr)
       ret.value.toInt()
     }
 
@@ -269,15 +279,7 @@ actual object ObjectCalls {
         ptrs[0] = c0.ptr.reinterpret<CPointed>()
         ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
         ptrs[2] = c2.ptr.reinterpret<CPointed>()
-        kanama_ios_godot_ptrcall(
-          methodBind.address(),
-          instance.address(),
-          types,
-          ptrs,
-          3,
-          PT_INT64,
-          ret.ptr,
-        )
+        ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
         ret.value
       }
     } finally {
@@ -290,30 +292,14 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetLong(methodBind: MemorySegment, instance: MemorySegment): Long =
     memScoped {
       val ret = alloc<LongVar>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_INT64,
-        ret.ptr,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT64, ret.ptr)
       ret.value
     }
 
   actual fun ptrcallNoArgsRetDouble(methodBind: MemorySegment, instance: MemorySegment): Double =
     memScoped {
       val ret = alloc<DoubleVar>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_FLOAT64,
-        ret.ptr,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_FLOAT64, ret.ptr)
       ret.value
     }
 
@@ -323,45 +309,21 @@ actual object ObjectCalls {
   ): MemorySegment = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
   actual fun ptrcallNoArgsRetVector2(methodBind: MemorySegment, instance: MemorySegment): Vector2 =
     memScoped {
       val ret = allocArray<GodotRealVar>(2)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_VECTOR2,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR2, ret)
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
     }
 
   actual fun ptrcallNoArgsRetVector3(methodBind: MemorySegment, instance: MemorySegment): Vector3 =
     memScoped {
       val ret = allocArray<GodotRealVar>(3)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_VECTOR3,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR3, ret)
       Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
     }
 
@@ -372,15 +334,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Vector2i = memScoped {
     val ret = allocArray<IntVar>(2)
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -390,15 +344,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Vector3i = memScoped {
     val ret = allocArray<IntVar>(3)
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_VECTOR3I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR3I, ret)
     Vector3i(ret[0], ret[1], ret[2])
   }
 
@@ -407,15 +353,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetColor(methodBind: MemorySegment, instance: MemorySegment): Color =
     memScoped {
       val ret = allocArray<FloatVar>(4)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_COLOR,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_COLOR, ret)
       Color(ret[0], ret[1], ret[2], ret[3])
     }
 
@@ -424,15 +362,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetRect2(methodBind: MemorySegment, instance: MemorySegment): Rect2 =
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_RECT2,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RECT2, ret)
       Rect2(
         Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
         Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -1725,15 +1655,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_BYTE_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = packByteDesc(value).reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -2004,15 +1926,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_VECTOR2_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = desc.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2037,15 +1951,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_COLOR_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = desc.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2442,15 +2348,7 @@ actual object ObjectCalls {
     ptrs[1] = colorPtr.reinterpret<CPointed>()
     ptrs[2] = widthCell.ptr.reinterpret<CPointed>()
     ptrs[3] = boolCell.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -2480,15 +2378,7 @@ actual object ObjectCalls {
     ptrs[1] = colorsDesc.reinterpret<CPointed>()
     ptrs[2] = widthCell.ptr.reinterpret<CPointed>()
     ptrs[3] = boolCell.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -2518,15 +2408,7 @@ actual object ObjectCalls {
     ptrs[1] = colorsDesc.reinterpret<CPointed>()
     ptrs[2] = uvsDesc.reinterpret<CPointed>()
     ptrs[3] = objCell.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -2555,15 +2437,7 @@ actual object ObjectCalls {
     ptrs[1] = colorPtr.reinterpret<CPointed>()
     ptrs[2] = uvsDesc.reinterpret<CPointed>()
     ptrs[3] = objCell.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -2743,15 +2617,7 @@ actual object ObjectCalls {
     types[0] = PT_BOOL
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = cell.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2764,15 +2630,7 @@ actual object ObjectCalls {
       types[0] = PT_INT64
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = cell.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -2784,15 +2642,7 @@ actual object ObjectCalls {
       types[0] = PT_INT64
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = cell.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -2808,15 +2658,7 @@ actual object ObjectCalls {
     types[0] = PT_FLOAT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = cell.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2851,15 +2693,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -2875,15 +2709,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = cell.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2900,15 +2726,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = cell.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2924,15 +2742,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = cell.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2949,15 +2759,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = cell.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -2972,15 +2774,7 @@ actual object ObjectCalls {
       types[0] = PT_COLOR
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = cell.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -2995,15 +2789,7 @@ actual object ObjectCalls {
       types[0] = PT_RECT2
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = cell.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -3024,15 +2810,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -3050,15 +2828,7 @@ actual object ObjectCalls {
       types[i] = PT_OBJECT
       ptrs[i] = (cells + i)!!.reinterpret<CPointed>()
     }
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      n,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, n, PT_VOID, null)
     Unit
   }
 
@@ -3686,15 +3456,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetAABB(methodBind: MemorySegment, instance: MemorySegment): AABB =
     memScoped {
       val ret = allocArray<GodotRealVar>(6)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_AABB,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_AABB, ret)
       AABB(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
         Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
@@ -3709,15 +3471,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetBasis(methodBind: MemorySegment, instance: MemorySegment): Basis =
     memScoped {
       val ret = allocArray<GodotRealVar>(9)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_BASIS,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_BASIS, ret)
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
         Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
@@ -3781,15 +3535,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetPlane(methodBind: MemorySegment, instance: MemorySegment): Plane =
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_PLANE,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_PLANE, ret)
       Plane(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
         GodotReal.fromC(ret[3]),
@@ -3801,15 +3547,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Projection = memScoped {
     val ret = allocArray<GodotRealVar>(16)
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_PROJECTION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_PROJECTION, ret)
     Projection(
       Vector4(
         GodotReal.fromC(ret[0]),
@@ -3843,15 +3581,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Quaternion = memScoped {
     val ret = allocArray<GodotRealVar>(4)
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_QUATERNION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_QUATERNION, ret)
     Quaternion(
       GodotReal.fromC(ret[0]),
       GodotReal.fromC(ret[1]),
@@ -3864,15 +3594,7 @@ actual object ObjectCalls {
     memScoped {
       val ret = alloc<LongVar>()
       ret.value = 0
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_RID,
-        ret.ptr,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RID, ret.ptr)
       RID(ret.value)
     }
 
@@ -3889,15 +3611,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetRect2i(methodBind: MemorySegment, instance: MemorySegment): Rect2i =
     memScoped {
       val ret = allocArray<IntVar>(4)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_RECT2I,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RECT2I, ret)
       Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
     }
 
@@ -3906,15 +3620,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Transform2D = memScoped {
     val ret = allocArray<GodotRealVar>(6)
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_TRANSFORM2D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_TRANSFORM2D, ret)
     Transform2D(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -3927,15 +3633,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Transform3D = memScoped {
     val ret = allocArray<GodotRealVar>(12)
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      null,
-      null,
-      0,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -3961,15 +3659,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetUInt32(methodBind: MemorySegment, instance: MemorySegment): Long =
     memScoped {
       val ret = alloc<LongVar>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_INT64,
-        ret.ptr,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_INT64, ret.ptr)
       ret.value
     }
 
@@ -3986,15 +3676,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetVector4(methodBind: MemorySegment, instance: MemorySegment): Vector4 =
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        null,
-        null,
-        0,
-        PT_VECTOR4,
-        ret,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR4, ret)
       Vector4(
         GodotReal.fromC(ret[0]),
         GodotReal.fromC(ret[1]),
@@ -4016,15 +3698,7 @@ actual object ObjectCalls {
       types[0] = PT_AABB
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = c0.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -4081,15 +3755,7 @@ actual object ObjectCalls {
     types[0] = PT_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -4104,15 +3770,7 @@ actual object ObjectCalls {
     types[0] = PT_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -4126,15 +3784,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -4153,15 +3803,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -4219,15 +3861,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -4247,15 +3881,7 @@ actual object ObjectCalls {
       types[0] = PT_BASIS
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = c0.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -4279,15 +3905,7 @@ actual object ObjectCalls {
     types[0] = PT_BASIS
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -4326,15 +3944,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -4354,15 +3964,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -4383,15 +3985,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -4412,15 +4006,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -4440,15 +4026,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -4467,15 +4045,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -4505,15 +4075,7 @@ actual object ObjectCalls {
     types[0] = PT_BOOL
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -4543,15 +4105,7 @@ actual object ObjectCalls {
     types[0] = PT_BOOL
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -4567,15 +4121,7 @@ actual object ObjectCalls {
     types[0] = PT_BOOL
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -4592,15 +4138,7 @@ actual object ObjectCalls {
     types[0] = PT_BOOL
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -4631,15 +4169,7 @@ actual object ObjectCalls {
     types[0] = PT_BOOL
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -4689,15 +4219,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -4722,15 +4244,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -4750,15 +4264,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -4778,15 +4284,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -4806,15 +4304,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -4834,15 +4324,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -4863,15 +4345,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -4885,15 +4359,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_BYTE_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -4935,15 +4401,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_BYTE_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -4986,15 +4444,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -5008,15 +4458,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -5036,15 +4478,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -5061,15 +4495,7 @@ actual object ObjectCalls {
     types[0] = PT_CALLABLE
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -5087,15 +4513,7 @@ actual object ObjectCalls {
     types[0] = PT_CALLABLE
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -5114,15 +4532,7 @@ actual object ObjectCalls {
     types[0] = PT_CALLABLE
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -5148,15 +4558,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -5178,15 +4580,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -5209,15 +4603,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -5238,15 +4624,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -5272,15 +4650,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -5310,15 +4680,7 @@ actual object ObjectCalls {
     ptrs[2] = firstString.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = secondString.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -5354,15 +4716,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -5394,15 +4748,7 @@ actual object ObjectCalls {
     types[0] = PT_DICTIONARY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -5430,15 +4776,7 @@ actual object ObjectCalls {
     types[0] = PT_DICTIONARY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -5454,15 +4792,7 @@ actual object ObjectCalls {
     types[0] = PT_DICTIONARY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -5575,15 +4905,7 @@ actual object ObjectCalls {
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      11,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 11, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -5597,15 +4919,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -5626,15 +4940,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -5655,15 +4961,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_TRANSFORM2D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM2D, ret)
     Transform2D(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -5688,15 +4986,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -5717,15 +5007,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -5745,15 +5027,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -5776,15 +5050,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -5804,15 +5070,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -5875,15 +5133,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -5909,15 +5159,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -5954,15 +5196,7 @@ actual object ObjectCalls {
     types[0] = PT_FLOAT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -5978,15 +5212,7 @@ actual object ObjectCalls {
     types[0] = PT_FLOAT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -6003,15 +5229,7 @@ actual object ObjectCalls {
     types[0] = PT_FLOAT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -6027,15 +5245,7 @@ actual object ObjectCalls {
     types[0] = PT_FLOAT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -6051,15 +5261,7 @@ actual object ObjectCalls {
     types[0] = PT_FLOAT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -6090,15 +5292,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -6133,15 +5327,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -6177,15 +5363,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -6245,15 +5423,7 @@ actual object ObjectCalls {
     types[0] = PT_FLOAT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -6297,15 +5467,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -6340,15 +5502,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -6378,15 +5532,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -6446,15 +5592,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -6516,15 +5654,7 @@ actual object ObjectCalls {
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      10,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 10, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -6577,15 +5707,7 @@ actual object ObjectCalls {
     ptrs[7] = c7.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      10,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 10, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -6613,15 +5735,7 @@ actual object ObjectCalls {
     ptrs[2] = negativeY.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = positiveY.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -6692,15 +5806,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -6842,15 +5948,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -6869,15 +5967,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -6897,15 +5987,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -6945,15 +6027,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -6976,15 +6050,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7005,15 +6071,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -7035,15 +6093,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -7063,15 +6113,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -7094,15 +6136,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7121,15 +6155,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7149,15 +6175,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -7177,15 +6195,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7206,15 +6216,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -7235,15 +6237,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -7302,15 +6296,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -7331,15 +6317,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -7359,15 +6337,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7388,15 +6358,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -7417,15 +6379,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -7446,15 +6400,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -7476,15 +6422,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -7502,15 +6440,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7530,15 +6460,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7559,15 +6481,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -7586,15 +6500,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7613,15 +6519,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7640,15 +6538,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7667,15 +6557,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7698,15 +6580,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7729,15 +6603,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7757,15 +6623,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7788,15 +6646,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7819,15 +6669,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7845,15 +6687,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = stringValue.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7872,15 +6706,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = stringValue.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -7899,15 +6725,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = stringValue.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -7926,15 +6744,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -7952,15 +6762,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -7979,15 +6781,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -8036,15 +6830,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -8074,15 +6860,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -8107,15 +6885,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -8146,15 +6916,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -8180,15 +6942,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -8211,15 +6965,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -8239,15 +6985,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -8266,15 +7004,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -8294,15 +7024,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -8326,15 +7048,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -8355,15 +7069,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -8385,15 +7091,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -8415,15 +7113,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -8444,15 +7134,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -8474,15 +7156,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -8526,15 +7200,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BASIS,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BASIS, ret)
     Basis(
       Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
       Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
@@ -8554,15 +7220,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -8606,15 +7264,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -8644,15 +7294,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -8668,15 +7310,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -8692,15 +7326,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -8731,15 +7357,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -8811,15 +7429,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_PLANE,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_PLANE, ret)
     Plane(
       Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
       GodotReal.fromC(ret[3]),
@@ -8838,15 +7448,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_QUATERNION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_QUATERNION, ret)
     Quaternion(
       GodotReal.fromC(ret[0]),
       GodotReal.fromC(ret[1]),
@@ -8868,15 +7470,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -8892,15 +7486,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -8919,15 +7505,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RECT2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2I, ret)
     Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
   }
 
@@ -8985,15 +7563,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM2D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -9013,15 +7583,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -9044,15 +7606,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -9082,15 +7636,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -9106,15 +7652,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -9144,15 +7682,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -9168,15 +7698,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3I, ret)
     Vector3i(ret[0], ret[1], ret[2])
   }
 
@@ -9215,15 +7737,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -9253,15 +7767,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -9327,15 +7833,7 @@ actual object ObjectCalls {
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      10,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 10, PT_VOID, null)
     Unit
   }
 
@@ -9363,15 +7861,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -9401,15 +7891,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -9433,15 +7915,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -9466,15 +7940,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -9496,15 +7962,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -9528,15 +7986,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -9564,15 +8014,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -9598,15 +8040,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -9632,15 +8066,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_QUATERNION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_QUATERNION, ret)
     Quaternion(
       GodotReal.fromC(ret[0]),
       GodotReal.fromC(ret[1]),
@@ -9695,15 +8121,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -9739,15 +8157,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -9783,15 +8193,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -9820,15 +8222,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -9852,15 +8246,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -9911,15 +8297,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -9949,15 +8327,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -9985,15 +8355,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -10021,15 +8383,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -10057,15 +8411,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -10090,15 +8436,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10123,15 +8461,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10156,15 +8486,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10200,15 +8522,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = tooltip.cstr.ptr.reinterpret<CPointed>()
     ptrs[5] = description.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -10231,15 +8545,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10267,15 +8573,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = method.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -10300,15 +8598,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -10339,15 +8629,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10371,15 +8653,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -10401,15 +8675,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10433,15 +8699,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -10497,15 +8755,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -10540,15 +8790,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -10589,15 +8831,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -10632,15 +8866,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -10678,15 +8904,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -10711,15 +8929,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10746,15 +8956,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -10781,15 +8983,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -10817,15 +9011,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -10852,15 +9038,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -10886,15 +9064,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -10945,15 +9115,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -11045,15 +9207,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -11080,15 +9234,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -11116,15 +9262,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -11176,15 +9314,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -11214,15 +9344,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -11253,15 +9375,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -11291,15 +9405,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -11333,15 +9439,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -11373,15 +9471,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -11413,15 +9503,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -11458,15 +9540,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -11500,15 +9574,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -11539,15 +9605,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -11589,15 +9647,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -11620,15 +9670,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -11667,15 +9709,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -11694,15 +9728,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -11722,15 +9748,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -11753,15 +9771,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -11781,15 +9791,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -11824,15 +9826,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -11868,15 +9862,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -11912,15 +9898,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -11940,15 +9918,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -11969,15 +9939,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -11998,15 +9960,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -12027,15 +9981,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -12057,15 +10003,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -12086,15 +10024,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -12115,15 +10045,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -12141,15 +10063,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -12169,15 +10083,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -12197,15 +10103,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -12223,15 +10121,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -12272,15 +10162,7 @@ actual object ObjectCalls {
     ptrs[1] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = third.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -12310,15 +10192,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -12349,15 +10223,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -12403,15 +10269,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -12436,15 +10294,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -12470,15 +10320,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -12503,15 +10345,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -12532,15 +10366,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -12565,15 +10391,7 @@ actual object ObjectCalls {
     ptrs[1] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -12594,15 +10412,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -12624,15 +10434,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -12673,15 +10475,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -12702,15 +10496,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -12731,15 +10517,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -12761,15 +10539,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -12785,15 +10555,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -12851,15 +10613,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -12875,15 +10629,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -12899,15 +10645,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -12924,15 +10662,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -13005,15 +10735,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -13043,15 +10765,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -13074,15 +10788,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -13098,15 +10804,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -13122,15 +10820,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -13162,15 +10852,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -13210,15 +10892,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -13279,15 +10953,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -13312,15 +10978,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -13360,15 +11018,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -13398,15 +11048,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -13453,15 +11095,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -13483,15 +11117,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -13515,15 +11141,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -13553,15 +11171,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -13584,15 +11194,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -13618,15 +11220,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -13657,15 +11251,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -13690,15 +11276,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -13724,15 +11302,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -13755,15 +11325,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -13786,15 +11348,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = format.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -13821,15 +11375,7 @@ actual object ObjectCalls {
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -13855,15 +11401,7 @@ actual object ObjectCalls {
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = body.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -13898,15 +11436,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = secondText.cstr.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -13946,15 +11476,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -13995,15 +11517,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -14032,15 +11546,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -14070,15 +11576,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -14121,15 +11619,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -14169,15 +11659,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -14203,15 +11685,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -14238,15 +11712,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -14264,15 +11730,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14290,15 +11748,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14316,15 +11766,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14343,15 +11785,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -14368,15 +11802,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14389,15 +11815,7 @@ actual object ObjectCalls {
     types[0] = PT_NODE_PATH
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -14411,15 +11829,7 @@ actual object ObjectCalls {
     types[0] = PT_NODE_PATH
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -14433,15 +11843,7 @@ actual object ObjectCalls {
     types[0] = PT_NODE_PATH
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -14455,15 +11857,7 @@ actual object ObjectCalls {
     types[0] = PT_NODE_PATH
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -14478,15 +11872,7 @@ actual object ObjectCalls {
     types[0] = PT_NODE_PATH
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -14500,15 +11886,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -14539,15 +11917,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -14563,15 +11933,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14591,15 +11953,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14620,15 +11974,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -14668,15 +12014,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -14698,15 +12036,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -14743,15 +12073,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14771,15 +12093,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14799,15 +12113,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -14847,15 +12153,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -14876,15 +12174,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -14906,15 +12196,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -14973,15 +12255,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15003,15 +12277,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -15029,15 +12295,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15058,15 +12316,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -15089,15 +12339,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15120,15 +12362,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15146,15 +12380,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15190,15 +12416,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15216,15 +12434,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15287,15 +12497,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15320,15 +12522,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -15354,15 +12548,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -15385,15 +12571,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15414,15 +12592,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15438,15 +12608,7 @@ actual object ObjectCalls {
     types[0] = PT_OBJECT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -15490,15 +12652,7 @@ actual object ObjectCalls {
     types[0] = PT_OBJECT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -15514,15 +12668,7 @@ actual object ObjectCalls {
     types[0] = PT_OBJECT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15539,15 +12685,7 @@ actual object ObjectCalls {
     types[0] = PT_OBJECT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -15592,15 +12730,7 @@ actual object ObjectCalls {
     types[0] = PT_OBJECT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -15630,15 +12760,7 @@ actual object ObjectCalls {
     types[0] = PT_OBJECT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM2D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -15658,15 +12780,7 @@ actual object ObjectCalls {
     types[0] = PT_OBJECT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15691,15 +12805,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -15777,15 +12883,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15819,15 +12917,7 @@ actual object ObjectCalls {
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15860,15 +12950,7 @@ actual object ObjectCalls {
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15903,15 +12985,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -15933,15 +13007,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -15970,15 +13036,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -16003,15 +13061,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -16044,15 +13094,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -16085,15 +13127,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -16121,15 +13155,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -16157,15 +13183,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -16197,15 +13215,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -16230,15 +13240,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -16261,15 +13263,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -16305,15 +13299,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -16343,15 +13329,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -16365,15 +13343,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -16388,15 +13358,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -16437,15 +13399,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -16473,15 +13427,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -16507,15 +13453,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -16540,15 +13478,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -16568,15 +13498,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -16602,15 +13524,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -16640,15 +13554,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -16691,15 +13597,7 @@ actual object ObjectCalls {
     ptrs[4] = secondText.cstr.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -16729,15 +13627,7 @@ actual object ObjectCalls {
     ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -16767,15 +13657,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -16810,15 +13692,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -16840,15 +13714,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -16877,15 +13743,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -16927,15 +13785,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -16976,15 +13826,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -17013,15 +13855,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -17044,15 +13878,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -17076,15 +13902,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -17106,15 +13924,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -17134,15 +13944,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -17162,15 +13964,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -17193,15 +13987,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -17227,15 +14013,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -17263,15 +14041,7 @@ actual object ObjectCalls {
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -17295,15 +14065,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = action.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -17325,15 +14087,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -17356,15 +14110,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -17406,15 +14152,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -17453,15 +14191,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -17487,15 +14217,7 @@ actual object ObjectCalls {
     ptrs[1] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = third.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -17520,15 +14242,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -17599,15 +14313,7 @@ actual object ObjectCalls {
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
     ptrs[11] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      12,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 12, PT_VOID, null)
     Unit
   }
 
@@ -17633,15 +14339,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -17671,15 +14369,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -17718,15 +14408,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -17780,15 +14462,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -17837,15 +14511,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -17874,15 +14540,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -17911,15 +14569,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -17961,15 +14611,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -18036,15 +14678,7 @@ actual object ObjectCalls {
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      11,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 11, PT_VOID, null)
     Unit
   }
 
@@ -18126,15 +14760,7 @@ actual object ObjectCalls {
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
     ptrs[12] = c12.ptr.reinterpret<CPointed>()
     ptrs[13] = c13.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      14,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 14, PT_VOID, null)
     Unit
   }
 
@@ -18211,15 +14837,7 @@ actual object ObjectCalls {
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
     ptrs[12] = c12.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      13,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 13, PT_VOID, null)
     Unit
   }
 
@@ -18291,15 +14909,7 @@ actual object ObjectCalls {
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      12,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 12, PT_VOID, null)
     Unit
   }
 
@@ -18346,15 +14956,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -18380,15 +14982,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -18416,15 +15010,7 @@ actual object ObjectCalls {
     ptrs[1] = path.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -18444,15 +15030,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -18470,15 +15048,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -18493,15 +15063,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_FLOAT32_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -18516,15 +15078,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_FLOAT32_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -18538,15 +15092,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_FLOAT64_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -18560,15 +15106,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_INT32_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -18582,15 +15120,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_INT64_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -18604,15 +15134,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_STRING_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -18640,15 +15162,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_STRING_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -18662,15 +15176,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -18689,15 +15195,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -18734,15 +15232,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -18760,15 +15250,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -18783,15 +15265,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_VECTOR2_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -18908,15 +15382,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -18952,15 +15418,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19011,15 +15469,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19033,15 +15483,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_VECTOR3_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -19056,15 +15498,7 @@ actual object ObjectCalls {
     types[0] = PT_PACKED_VECTOR3_ARRAY
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -19109,15 +15543,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -19150,15 +15576,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -19192,15 +15610,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -19229,15 +15639,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -19252,15 +15654,7 @@ actual object ObjectCalls {
       types[0] = PT_PLANE
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = c0.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -19309,15 +15703,7 @@ actual object ObjectCalls {
     types[0] = PT_QUATERNION
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -19342,15 +15728,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19369,15 +15747,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19405,15 +15775,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19433,15 +15795,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19462,15 +15816,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -19492,15 +15838,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -19519,15 +15857,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19550,15 +15880,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19577,15 +15899,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19605,15 +15919,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19634,15 +15940,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -19662,15 +15960,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -19729,15 +16019,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -19758,15 +16040,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -19806,15 +16080,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -19835,15 +16101,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -19865,15 +16123,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -19895,15 +16145,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -19943,15 +16185,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_TRANSFORM2D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM2D, ret)
     Transform2D(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -19976,15 +16210,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -20031,15 +16257,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -20060,15 +16278,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -20088,15 +16298,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20117,15 +16319,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -20184,15 +16378,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -20213,15 +16399,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -20242,15 +16420,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -20367,15 +16537,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -20434,15 +16596,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -20463,15 +16617,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -20510,15 +16656,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20537,15 +16675,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20565,15 +16695,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -20592,15 +16714,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20619,15 +16733,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20647,15 +16753,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -20674,15 +16772,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20701,15 +16791,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20728,15 +16810,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20759,15 +16833,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20785,15 +16851,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -20812,15 +16870,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -20839,15 +16889,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -20894,15 +16936,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -20932,15 +16966,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -20970,15 +16996,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -21009,15 +17027,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -21042,15 +17052,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -21081,15 +17083,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -21108,15 +17102,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -21141,15 +17127,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -21174,15 +17152,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -21208,15 +17178,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -21241,15 +17203,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -21299,15 +17253,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -21333,15 +17279,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -21416,15 +17354,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -21450,15 +17380,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -21484,15 +17406,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -21515,15 +17429,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -21573,15 +17479,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -21608,15 +17506,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -21643,15 +17533,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -21680,15 +17562,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -21708,15 +17582,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -21737,15 +17603,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -21785,15 +17643,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -21815,15 +17665,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -21863,15 +17705,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -21897,15 +17731,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -21925,15 +17751,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -21953,15 +17771,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -21981,15 +17791,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -22009,15 +17811,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -22040,15 +17834,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -22069,15 +17855,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -22099,15 +17877,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -22130,15 +17900,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -22160,15 +17922,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -22189,15 +17943,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -22219,15 +17965,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -22269,15 +18007,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -22300,15 +18030,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -22332,15 +18054,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -22363,15 +18077,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -22383,15 +18089,7 @@ actual object ObjectCalls {
       types[0] = PT_RID
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = c0.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -22407,7 +18105,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), types, ptrs, 1, PT_AABB, ret)
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_AABB, ret)
     AABB(
       Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
       Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
@@ -22440,15 +18138,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -22520,15 +18210,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -22544,15 +18226,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -22568,15 +18242,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -22593,15 +18259,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -22702,15 +18360,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -22740,15 +18390,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -22781,15 +18423,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM2D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -22809,15 +18443,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -22856,15 +18482,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -22894,15 +18512,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -22918,15 +18528,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -22956,15 +18558,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -22980,15 +18574,7 @@ actual object ObjectCalls {
     types[0] = PT_RID
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3I, ret)
     Vector3i(ret[0], ret[1], ret[2])
   }
 
@@ -23056,15 +18642,7 @@ actual object ObjectCalls {
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      11,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 11, PT_VOID, null)
     Unit
   }
 
@@ -23089,15 +18667,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -23157,15 +18727,7 @@ actual object ObjectCalls {
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      10,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 10, PT_VOID, null)
     Unit
   }
 
@@ -23251,15 +18813,7 @@ actual object ObjectCalls {
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
     ptrs[12] = c12.ptr.reinterpret<CPointed>()
     ptrs[13] = c13.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      14,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 14, PT_VOID, null)
     Unit
   }
 
@@ -23299,15 +18853,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -23372,15 +18918,7 @@ actual object ObjectCalls {
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      11,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 11, PT_VOID, null)
     Unit
   }
 
@@ -23420,15 +18958,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -23502,15 +19032,7 @@ actual object ObjectCalls {
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
     ptrs[12] = c12.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      13,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 13, PT_VOID, null)
     Unit
   }
 
@@ -23538,15 +19060,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -23588,15 +19102,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -23631,15 +19137,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -23684,15 +19182,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -23722,15 +19212,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -23780,15 +19262,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_VOID, null)
     Unit
   }
 
@@ -23816,15 +19290,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -23846,15 +19312,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -23887,15 +19345,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -23921,15 +19371,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -23957,15 +19399,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24009,15 +19443,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -24060,15 +19486,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -24093,15 +19511,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24127,15 +19537,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -24160,15 +19562,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24201,15 +19595,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -24274,15 +19660,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -24317,15 +19695,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -24365,15 +19735,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -24398,15 +19760,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24434,15 +19788,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24467,15 +19813,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24500,15 +19838,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24531,15 +19861,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24569,15 +19891,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24613,15 +19927,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24645,15 +19951,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24680,15 +19978,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24743,15 +20033,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -24778,15 +20060,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24811,15 +20085,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24848,15 +20114,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -24881,15 +20139,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -24929,15 +20179,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -24963,15 +20205,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -25001,15 +20235,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -25034,15 +20260,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -25086,15 +20304,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -25119,15 +20329,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -25152,15 +20354,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -25185,15 +20379,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -25217,15 +20403,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -25252,15 +20430,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -25300,15 +20470,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -25335,15 +20497,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -25391,15 +20545,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -25432,15 +20578,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -25477,15 +20615,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -25515,15 +20645,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -25553,15 +20675,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -25600,15 +20714,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -25640,15 +20746,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -25674,15 +20772,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -25709,15 +20799,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -25742,15 +20824,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -25771,15 +20845,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -25804,15 +20870,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -25845,15 +20903,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -25882,15 +20932,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -25928,15 +20970,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -25988,15 +21022,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -26078,15 +21104,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_VOID, null)
     Unit
   }
 
@@ -26119,15 +21137,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -26151,15 +21161,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -26192,15 +21194,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -26232,15 +21226,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -26271,15 +21257,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -26302,15 +21280,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -26340,15 +21310,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -26431,15 +21393,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -26480,15 +21434,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -26524,15 +21470,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -26560,15 +21498,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -26614,15 +21544,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -26666,15 +21588,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -26733,15 +21647,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_VOID, null)
     Unit
   }
 
@@ -26795,15 +21701,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -26875,15 +21773,7 @@ actual object ObjectCalls {
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      11,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 11, PT_VOID, null)
     Unit
   }
 
@@ -26906,15 +21796,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = value.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -26939,15 +21821,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -26969,15 +21843,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -27005,15 +21871,7 @@ actual object ObjectCalls {
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -27052,15 +21910,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = language.cstr.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -27093,15 +21943,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -27148,15 +21990,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -27213,15 +22047,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -27259,15 +22085,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -27333,15 +22151,7 @@ actual object ObjectCalls {
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      11,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 11, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -27384,15 +22194,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -27456,15 +22258,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.reinterpret<CPointed>()
     ptrs[7] = c7.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_VOID, null)
     Unit
   }
 
@@ -27523,15 +22317,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -27560,15 +22346,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -27599,15 +22377,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -27633,15 +22403,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -27667,15 +22429,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -27705,15 +22459,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -27743,15 +22489,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -27800,15 +22538,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -27879,15 +22609,7 @@ actual object ObjectCalls {
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      10,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 10, PT_VOID, null)
     Unit
   }
 
@@ -27917,15 +22639,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -28006,15 +22720,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -28051,15 +22757,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -28094,15 +22792,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -28166,15 +22856,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -28200,15 +22882,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -28233,15 +22907,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -28269,15 +22935,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -28368,15 +23026,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -28412,15 +23062,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -28461,15 +23103,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -28503,15 +23137,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -28545,15 +23171,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -28592,15 +23210,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -28626,15 +23236,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -28673,15 +23275,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -28728,15 +23322,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -28803,15 +23389,7 @@ actual object ObjectCalls {
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      11,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 11, PT_VOID, null)
     Unit
   }
 
@@ -28893,15 +23471,7 @@ actual object ObjectCalls {
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
     ptrs[12] = c12.ptr.reinterpret<CPointed>()
     ptrs[13] = c13.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      14,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 14, PT_VOID, null)
     Unit
   }
 
@@ -28978,15 +23548,7 @@ actual object ObjectCalls {
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
     ptrs[12] = c12.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      13,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 13, PT_VOID, null)
     Unit
   }
 
@@ -29058,15 +23620,7 @@ actual object ObjectCalls {
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      12,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 12, PT_VOID, null)
     Unit
   }
 
@@ -29116,15 +23670,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -29166,15 +23712,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -29218,15 +23756,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -29270,15 +23800,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -29323,15 +23845,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -29362,15 +23876,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -29396,15 +23902,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -29431,15 +23929,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -29467,15 +23957,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -29528,15 +24010,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -29563,15 +24037,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -29601,15 +24067,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -29640,15 +24098,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -29678,15 +24128,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -29720,15 +24162,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -29760,15 +24194,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -29799,15 +24225,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -29843,15 +24261,7 @@ actual object ObjectCalls {
     types[0] = PT_RECT2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -29892,15 +24302,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -29923,15 +24325,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -29957,15 +24351,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -29988,15 +24374,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -30036,15 +24414,7 @@ actual object ObjectCalls {
     types[0] = PT_RECT2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -30081,15 +24451,7 @@ actual object ObjectCalls {
     types[0] = PT_RECT2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -30130,15 +24492,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -30182,15 +24536,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -30207,15 +24553,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -30233,15 +24571,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -30260,15 +24590,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -30321,15 +24643,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -30348,15 +24662,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -30376,15 +24682,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -30455,15 +24753,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -30484,15 +24774,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -30511,15 +24793,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -30538,15 +24812,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -30585,15 +24851,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -30611,15 +24869,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -30638,15 +24888,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -30665,15 +24907,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -30692,15 +24926,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -30720,15 +24946,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -30781,15 +24999,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -30808,15 +25018,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -30835,15 +25037,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -30895,15 +25089,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -30922,15 +25108,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -30949,15 +25127,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -30977,15 +25147,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -31002,15 +25164,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -31028,15 +25182,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -31056,15 +25202,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -31094,15 +25232,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -31131,15 +25261,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -31164,15 +25286,7 @@ actual object ObjectCalls {
     ptrs[0] = pattern.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -31197,15 +25311,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -31228,15 +25334,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -31273,15 +25371,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -31315,15 +25405,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -31336,15 +25418,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -31358,15 +25432,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -31392,15 +25458,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -31426,15 +25484,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -31448,15 +25498,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -31471,15 +25513,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -31525,15 +25559,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -31557,15 +25583,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -31588,15 +25606,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -31619,15 +25629,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = text2.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -31650,15 +25652,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -31680,15 +25674,7 @@ actual object ObjectCalls {
     ptrs[0] = path.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -31708,15 +25694,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -31738,15 +25716,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -31771,15 +25741,7 @@ actual object ObjectCalls {
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -31815,15 +25777,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -31848,15 +25802,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = customImporter.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -31889,15 +25835,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -31920,15 +25858,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -31951,15 +25881,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -31982,15 +25904,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32013,15 +25927,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32042,15 +25948,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = stringValue.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32072,15 +25970,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32119,15 +26009,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32152,15 +26034,7 @@ actual object ObjectCalls {
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32184,15 +26058,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -32214,15 +26080,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = other.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -32249,15 +26107,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -32280,15 +26130,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32332,15 +26174,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -32394,15 +26228,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -32435,15 +26261,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -32464,15 +26282,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -32490,15 +26300,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -32534,15 +26336,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -32596,15 +26390,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -32625,15 +26411,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -32651,15 +26429,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -32677,15 +26447,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -32704,15 +26466,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -32731,15 +26485,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -32759,15 +26505,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -32785,15 +26523,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -32811,15 +26541,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -32838,15 +26560,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -32865,15 +26579,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -32916,15 +26622,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -32948,15 +26646,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -32973,15 +26663,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -33000,15 +26682,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -33021,15 +26695,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -33043,15 +26709,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -33065,15 +26723,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -33099,15 +26749,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -33121,15 +26763,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -33143,15 +26777,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -33166,15 +26792,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -33238,15 +26856,7 @@ actual object ObjectCalls {
     types[0] = PT_STRING_NAME
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -33263,15 +26873,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -33293,15 +26895,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -33323,15 +26917,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -33360,15 +26946,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -33391,15 +26969,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -33427,15 +26997,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -33463,15 +27025,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -33509,15 +27063,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -33538,15 +27084,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -33574,15 +27112,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -33608,15 +27138,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -33643,15 +27165,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -33683,15 +27197,7 @@ actual object ObjectCalls {
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -33722,15 +27228,7 @@ actual object ObjectCalls {
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -33744,15 +27242,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -33774,15 +27264,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -33806,15 +27288,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -33838,15 +27312,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -33874,15 +27340,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -33936,15 +27394,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -33967,15 +27417,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -33995,15 +27437,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = context.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -34023,15 +27457,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -34074,15 +27500,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -34130,15 +27548,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -34181,15 +27591,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -34211,15 +27613,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -34244,15 +27638,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = secondName.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -34276,15 +27662,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -34315,15 +27693,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -34349,15 +27719,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = suffix.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -34380,15 +27742,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -34440,15 +27794,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -34483,15 +27829,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = language.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -34522,15 +27860,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = language.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -34555,15 +27885,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -34613,15 +27935,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -34648,15 +27962,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = secondText.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -34678,15 +27984,7 @@ actual object ObjectCalls {
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -34708,15 +28006,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -34736,15 +28026,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -34776,15 +28058,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -34828,15 +28102,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -34863,15 +28129,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -34897,15 +28155,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = body.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -34946,15 +28196,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -34990,15 +28232,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -35028,15 +28262,7 @@ actual object ObjectCalls {
     ptrs[3] = fourth.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = fifth.cstr.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -35069,15 +28295,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -35106,15 +28324,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -35141,15 +28351,7 @@ actual object ObjectCalls {
     ptrs[0] = value.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -35178,15 +28380,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -35270,15 +28464,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -35301,15 +28487,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -35355,15 +28533,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -35392,15 +28562,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -35422,15 +28584,7 @@ actual object ObjectCalls {
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -35461,15 +28615,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -35494,15 +28640,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -35528,15 +28666,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -35567,15 +28697,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -35606,15 +28728,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -35639,15 +28753,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -35673,15 +28779,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -35708,15 +28806,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -35742,15 +28832,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -35776,15 +28858,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -35887,15 +28961,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -35947,15 +29013,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -36001,15 +29059,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -36041,15 +29091,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -36078,15 +29120,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -36111,15 +29145,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -36144,15 +29170,7 @@ actual object ObjectCalls {
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = third.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -36171,15 +29189,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = third.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -36225,15 +29235,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -36260,15 +29262,7 @@ actual object ObjectCalls {
     ptrs[1] = secondString.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = thirdString.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -36292,15 +29286,7 @@ actual object ObjectCalls {
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = third.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -36319,15 +29305,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = third.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -36353,15 +29331,7 @@ actual object ObjectCalls {
     ptrs[1] = secondName.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = thirdName.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -36395,15 +29365,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -36464,15 +29426,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -36501,15 +29455,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -36543,15 +29489,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -36579,15 +29517,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -36623,15 +29553,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -36667,15 +29589,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -36707,15 +29621,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -36770,15 +29676,7 @@ actual object ObjectCalls {
     types[0] = PT_TRANSFORM2D
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -36814,15 +29712,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -36884,15 +29774,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -36934,15 +29816,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -36990,15 +29864,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -37091,15 +29957,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -37158,15 +30016,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -37198,15 +30048,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -37238,15 +30080,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -37279,15 +30113,7 @@ actual object ObjectCalls {
     types[0] = PT_TRANSFORM3D
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -37301,15 +30127,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -37343,15 +30161,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -37389,15 +30199,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -37451,15 +30253,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -37513,15 +30307,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -37565,15 +30351,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -37595,15 +30373,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -37660,15 +30430,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -37692,15 +30454,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -37726,15 +30480,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -37759,15 +30505,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -37793,15 +30531,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -37821,15 +30551,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -37850,15 +30572,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -37882,15 +30596,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -37978,15 +30684,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38010,15 +30708,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38046,15 +30736,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38079,15 +30761,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38112,15 +30786,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38143,15 +30809,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = path.path.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38176,15 +30834,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38208,15 +30858,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38244,15 +30886,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38275,15 +30909,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38306,15 +30932,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = name.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38351,15 +30969,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -38383,15 +30993,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38417,15 +31019,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38452,15 +31046,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -38480,15 +31066,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -38528,15 +31106,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -38557,15 +31127,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -38586,15 +31148,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -38615,15 +31169,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -38644,15 +31190,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -38693,15 +31231,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -38760,15 +31290,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_QUATERNION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_QUATERNION, ret)
     Quaternion(
       GodotReal.fromC(ret[0]),
       GodotReal.fromC(ret[1]),
@@ -38794,15 +31316,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RECT2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2I, ret)
     Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
   }
 
@@ -38880,15 +31394,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -38909,15 +31415,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -38957,15 +31455,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -38997,15 +31487,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -39039,15 +31521,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -39083,15 +31557,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -39134,15 +31600,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -39169,15 +31627,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -39215,15 +31665,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -39263,15 +31705,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -39295,15 +31729,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = value.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -39358,15 +31784,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_VOID, null)
     Unit
   }
 
@@ -39397,15 +31815,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -39447,15 +31857,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -39487,15 +31889,7 @@ actual object ObjectCalls {
     ptrs[2] = firstString.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = secondString.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -39551,15 +31945,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -39616,15 +32002,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -39656,15 +32034,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -39689,15 +32059,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -39723,15 +32085,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -39828,15 +32182,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -39856,15 +32202,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -39885,15 +32223,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -39914,15 +32244,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -39943,15 +32265,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -39972,15 +32286,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -40001,15 +32307,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_QUATERNION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_QUATERNION, ret)
     Quaternion(
       GodotReal.fromC(ret[0]),
       GodotReal.fromC(ret[1]),
@@ -40036,15 +32334,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -40065,15 +32355,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -40094,15 +32376,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -40125,15 +32399,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -40170,15 +32436,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -40211,15 +32469,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -40239,15 +32489,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -40268,15 +32510,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -40298,15 +32532,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -40332,15 +32558,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -40367,15 +32585,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -40401,15 +32611,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -40433,15 +32635,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -40475,15 +32669,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -40510,15 +32696,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -40556,15 +32734,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -40605,15 +32775,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -40639,15 +32801,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -40665,15 +32819,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -40720,15 +32866,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -40754,15 +32892,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -40782,15 +32912,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -40811,15 +32933,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -40840,15 +32954,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -40870,15 +32976,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -40903,15 +33001,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -40948,15 +33038,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -40991,15 +33073,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -41048,15 +33122,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -41089,15 +33155,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -41133,15 +33191,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -41203,15 +33253,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -41246,15 +33288,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -41297,15 +33331,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -41346,15 +33372,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -41384,15 +33402,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -41446,15 +33456,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_VOID, null)
     Unit
   }
 
@@ -41503,15 +33505,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -41565,15 +33559,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_VOID, null)
     Unit
   }
 
@@ -41612,15 +33598,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -41641,15 +33619,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -41670,15 +33640,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -41724,15 +33686,7 @@ actual object ObjectCalls {
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -41752,15 +33706,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -41795,15 +33741,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -41820,15 +33758,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -41860,15 +33790,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -41885,15 +33807,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -41945,15 +33859,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -42009,15 +33915,7 @@ actual object ObjectCalls {
     ptrs[1] = secondString.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = thirdString.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -42046,15 +33944,7 @@ actual object ObjectCalls {
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -42095,15 +33985,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -42124,15 +34006,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -42154,15 +34028,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -42184,15 +34050,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -42256,15 +34114,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -42285,15 +34135,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -42314,15 +34156,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -42343,15 +34177,7 @@ actual object ObjectCalls {
     ptrs[0] = firstName.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = secondName.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -42367,15 +34193,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -42392,15 +34210,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -42417,15 +34227,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -42457,15 +34259,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -42482,15 +34276,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -42507,15 +34293,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -42533,15 +34311,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -42559,15 +34329,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -42635,15 +34397,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -42686,15 +34440,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -42776,15 +34522,7 @@ actual object ObjectCalls {
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrs[9] = c9.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      10,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 10, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -42817,15 +34555,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -42847,15 +34577,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -42882,15 +34604,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = third.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = fourth.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -42918,15 +34632,7 @@ actual object ObjectCalls {
     ptrs[1] = secondString.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -42959,15 +34665,7 @@ actual object ObjectCalls {
     ptrs[3] = third.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -42996,15 +34694,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = third.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -43049,15 +34739,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -43112,15 +34794,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -43146,15 +34820,7 @@ actual object ObjectCalls {
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -43179,15 +34845,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -43226,15 +34884,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -43295,15 +34945,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VOID, null)
     Unit
   }
 
@@ -43353,15 +34995,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -43389,15 +35023,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -43430,15 +35056,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -43518,15 +35136,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -43548,15 +35158,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -43622,15 +35224,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -43659,15 +35253,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -43691,15 +35277,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -43747,15 +35325,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -43878,15 +35448,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -43910,15 +35472,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -43932,15 +35486,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -43954,15 +35500,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -43976,15 +35514,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -44006,15 +35536,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -44034,15 +35556,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -44062,15 +35576,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -44090,15 +35596,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -44119,15 +35617,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -44149,15 +35639,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -44179,15 +35661,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -44207,15 +35681,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -44240,15 +35706,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -44279,15 +35737,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -44308,15 +35758,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -44328,15 +35770,7 @@ actual object ObjectCalls {
       types[0] = PT_INT64
       val ptrs = allocArray<COpaquePointerVar>(1)
       ptrs[0] = c0.ptr.reinterpret<CPointed>()
-      kanama_ios_godot_ptrcall(
-        methodBind.address(),
-        instance.address(),
-        types,
-        ptrs,
-        1,
-        PT_VOID,
-        null,
-      )
+      ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
       Unit
     }
 
@@ -44352,15 +35786,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -44376,15 +35802,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -44400,15 +35818,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -44424,15 +35834,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -44449,15 +35851,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -44487,15 +35881,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_PROJECTION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_PROJECTION, ret)
     Projection(
       Vector4(
         GodotReal.fromC(ret[0]),
@@ -44550,15 +35936,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM2D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -44578,15 +35956,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -44609,15 +35979,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -44633,15 +35995,7 @@ actual object ObjectCalls {
     types[0] = PT_INT64
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -44667,15 +36021,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -44701,15 +36047,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -44745,15 +36083,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -44783,15 +36113,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -44822,15 +36144,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -44853,15 +36167,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -44886,15 +36192,7 @@ actual object ObjectCalls {
     ptrs[1] = group.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = method.cstr.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -44925,15 +36223,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_PROJECTION,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_PROJECTION, ret)
     Projection(
       Vector4(
         GodotReal.fromC(ret[0]),
@@ -44990,15 +36280,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_TRANSFORM3D,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
         Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
@@ -45024,15 +36306,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -45052,15 +36326,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -45115,15 +36381,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -45137,15 +36395,7 @@ actual object ObjectCalls {
     types[0] = PT_VARIANT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -45160,15 +36410,7 @@ actual object ObjectCalls {
     types[0] = PT_VARIANT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -45183,15 +36425,7 @@ actual object ObjectCalls {
     types[0] = PT_VARIANT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -45206,15 +36440,7 @@ actual object ObjectCalls {
     types[0] = PT_VARIANT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -45230,15 +36456,7 @@ actual object ObjectCalls {
     types[0] = PT_VARIANT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -45253,15 +36471,7 @@ actual object ObjectCalls {
     types[0] = PT_VARIANT
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_RECT2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2, ret)
     Rect2(
       Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
       Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
@@ -45350,15 +36560,7 @@ actual object ObjectCalls {
     ptrs[9] = tooltip.cstr.ptr.reinterpret<CPointed>()
     ptrs[10] = c10.ptr.reinterpret<CPointed>()
     ptrs[11] = c11.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      12,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 12, PT_VOID, null)
     Unit
   }
 
@@ -45380,15 +36582,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = text.cstr.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -45445,15 +36639,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -45489,15 +36675,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -45518,15 +36696,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -45548,15 +36718,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -45578,15 +36740,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -45628,15 +36782,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -45657,15 +36803,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -45682,15 +36820,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -45707,15 +36837,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -45732,15 +36854,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -45757,15 +36871,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -45783,15 +36889,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -45808,15 +36906,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -45833,15 +36923,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -45858,15 +36940,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -45899,15 +36973,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -45951,15 +37017,7 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      6,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
   }
 
@@ -45986,15 +37044,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -46053,15 +37103,7 @@ actual object ObjectCalls {
     ptrs[6] = c6.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      9,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_VOID, null)
     Unit
   }
 
@@ -46082,15 +37124,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -46112,15 +37146,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -46145,15 +37171,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -46207,15 +37225,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      8,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 8, PT_VOID, null)
     Unit
   }
 
@@ -46264,15 +37274,7 @@ actual object ObjectCalls {
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      7,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VOID, null)
     Unit
   }
 
@@ -46309,15 +37311,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -46338,15 +37332,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -46370,15 +37356,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -46399,15 +37377,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -46428,15 +37398,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -46458,15 +37420,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -46488,15 +37442,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -46518,15 +37464,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -46549,15 +37487,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -46579,15 +37509,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_RECT2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2I, ret)
     Rect2i(Vector2i(ret[0], ret[1]), Vector2i(ret[2], ret[3]))
   }
 
@@ -46608,15 +37530,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -46638,15 +37552,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -46667,15 +37573,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -46702,15 +37600,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -46736,15 +37626,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -46761,15 +37643,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -46786,15 +37660,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_COLOR,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
     Color(ret[0], ret[1], ret[2], ret[3])
   }
 
@@ -46811,15 +37677,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -46836,15 +37694,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -46861,15 +37711,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -46887,15 +37729,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -46912,15 +37746,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -46937,15 +37763,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR2I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
   }
 
@@ -46986,15 +37804,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -47026,15 +37836,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -47050,15 +37852,7 @@ actual object ObjectCalls {
     types[0] = PT_TYPED_ARRAY_BLOB
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -47087,15 +37881,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      4,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VOID, null)
     Unit
   }
 
@@ -47123,15 +37909,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_RID,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RID, ret.ptr)
     RID(ret.value)
   }
 
@@ -47154,15 +37932,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -47184,15 +37954,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(2)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      2,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
   }
 
@@ -47210,15 +37972,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BOOL,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
     ret.value.toInt() != 0
   }
 
@@ -47236,15 +37990,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_FLOAT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_FLOAT64, ret.ptr)
     ret.value
   }
 
@@ -47278,15 +38024,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR2,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
     Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
   }
 
@@ -47304,15 +38042,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -47330,15 +38060,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3I, ret)
     Vector3i(ret[0], ret[1], ret[2])
   }
 
@@ -47377,15 +38099,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      5,
-      PT_OBJECT,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
   }
 
@@ -47424,15 +38138,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_BASIS,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BASIS, ret)
     Basis(
       Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
       Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
@@ -47454,15 +38160,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_INT64,
-      ret.ptr,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_INT64, ret.ptr)
     ret.value.toInt()
   }
 
@@ -47480,15 +38178,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
     Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
   }
 
@@ -47506,15 +38196,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR3I
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VECTOR3I,
-      ret,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3I, ret)
     Vector3i(ret[0], ret[1], ret[2])
   }
 
@@ -47557,15 +38239,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      3,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }
 
@@ -47583,15 +38257,7 @@ actual object ObjectCalls {
     types[0] = PT_VECTOR4
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
-    kanama_ios_godot_ptrcall(
-      methodBind.address(),
-      instance.address(),
-      types,
-      ptrs,
-      1,
-      PT_VOID,
-      null,
-    )
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VOID, null)
     Unit
   }
 
@@ -50394,6 +41060,52 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         RID(0L),
       )
     check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
+  }
+
+  // task 117 P2' follow-up — SHARED-TREE STATIC dispatch (the ptrcallDispatch fix above). These
+  // rows call the generated wrapper API, NOT the hand-written ptrcallStatic* helpers: every
+  // `is_static` method in src/sharedApi renders `NULL_SEGMENT` as the instance, and before the fix
+  // the iOS C instance entry point early-returned on a null instance, so all 72 such call sites
+  // across 36 shared classes were silent no-ops (null / 0 / default) on device while passing on
+  // desktop. A regression that drops the dispatcher fails every row here.
+  run {
+    // Image.create_from_data: 2x2 RGBA8 needs exactly 2*2*4 = 16 bytes.
+    val fromData =
+      net.multigesture.kanama.api.Image.createFromData(
+        2,
+        2,
+        false,
+        net.multigesture.kanama.api.Image.FORMAT_RGBA8,
+        ByteArray(16),
+      )
+    check("shared-static(Image.createFromData -> non-null)", fromData != null)
+    check("shared-static(Image.createFromData width == 2)", fromData?.getWidth() == 2)
+    check("shared-static(Image.createFromData height == 2)", fromData?.getHeight() == 2)
+    fromData?.close()
+
+    val created =
+      net.multigesture.kanama.api.Image.create(
+        4,
+        3,
+        false,
+        net.multigesture.kanama.api.Image.FORMAT_RGBA8,
+      )
+    check("shared-static(Image.create -> non-null)", created != null)
+    check("shared-static(Image.create width == 4)", created?.getWidth() == 4)
+    created?.close()
+
+    // A non-Image shared static on a primitive return shape: the self-test runs from the C
+    // scene-init hook on Godot's main thread, so this is deterministically true. Pre-fix the
+    // ret_out cell was never written and the zeroed byte decoded as `false`.
+    check(
+      "shared-static(Thread.isMainThread -> true)",
+      net.multigesture.kanama.api.Thread.isMainThread(),
+    )
+
+    // A non-Image shared static returning an Object, with an observable result.
+    val re = net.multigesture.kanama.api.RegEx.createFromString("a+b", false)
+    check("shared-static(RegEx.createFromString -> valid)", re != null && re.isValid())
+    re?.close()
   }
 
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")

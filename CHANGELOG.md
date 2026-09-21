@@ -7,6 +7,43 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS: Godot **static** methods called through the shared wrapper tree were silent no-ops
+
+- **Every `is_static` Godot method reached through `src/sharedApi` did nothing on iOS.** The generator
+  renders `NULL_SEGMENT` as the instance for a static method (`_null_segment()` in
+  `scripts/generate_api_wrapper.py`). Desktop hands that `MemorySegment.NULL` straight to
+  `object_method_bind_ptrcall`, which Godot accepts for a static bind. On iOS the same helpers all ended
+  in the C entry point `kanama_ios_godot_ptrcall`, which deliberately early-returns when `instance == 0`
+  — the guard commit `30c949a1` kept when it added the separate `kanama_ios_godot_ptrcall_static` entry
+  point. The per-platform iOS hand copies used the `ptrcallStatic*` helpers and were fine; the shared
+  tree never did, so its static calls returned `null` / `0` / the default on device while passing on
+  desktop. Present since the shared tree first rendered statics (`7a43afcf`, 2026-09-15, task 104 step
+  3). Recount the blast radius with
+  `grep -rc "Bind, NULL_SEGMENT" src/sharedApi/kotlin/net/multigesture/kanama/api/ | grep -v ':0'`:
+  **72 static call sites across 36 shared classes**.
+- **The fix is one dispatcher in the iOS `ObjectCalls`** — not the C shim, not the shared tree.
+  `ptrcallDispatch(...)`, hand-written above the `BEGIN GENERATED MEMBERS` marker in
+  `src/iosMain/.../binding/runtime/ObjectCalls.kt`, routes a zero instance to
+  `kanama_ios_godot_ptrcall_static` and everything else to `kanama_ios_godot_ptrcall`. All **1172** call
+  sites in that file go through it, the generated region included: the generator emits `ptrcallDispatch`
+  now, so a regen keeps the fix. `ios/bootstrap/kanama_ios_shim.c`, the existing `ptrcallStatic*` helpers
+  and their hand users (`FileAccess`, `ImageTexture`) are untouched, and desktop needs no change — its
+  ptrcall path carries no null-instance guard (the one in `src/jvmMain/.../ObjectCalls.kt` is inside
+  `notifyPostinitialize`).
+- This repairs **59 of the 72** sites: the ones whose helper marshals through the generic dispatch. The
+  remaining **13** (in `EditorExportPlatform`, `FileDialog`, `GLTFDocument`, `JSON`, `MultiplayerAPI`,
+  `Node`, `Resource` and `ShaderIncludeDB`) return through specialized C entry points —
+  `..._no_args_ret_string`, `..._no_args_ret_string_name`, `..._no_args_ret_packed_string_array`,
+  `..._no_args_ret_typed_array_blob`, `..._ret_array_blob`, `..._ret_utf8`, `..._ret_variant_scalar`
+  and `kanama_ios_godot_object_call` — each of which keeps its own null-instance guard and has no
+  `_static` counterpart yet. Those still no-op on iOS and need the shim work the dispatcher deliberately
+  avoids.
+- **The iOS `OBJECTCALLS SELFTEST` goes from 205 to 212 checks.** Seven new rows drive the shared-tree
+  static path through the public wrapper API rather than the `ptrcallStatic*` helpers:
+  `Image.createFromData(2, 2, false, FORMAT_RGBA8, ByteArray(16))` (non-null, width 2, height 2),
+  `Image.create(4, 3, false, FORMAT_RGBA8)` (non-null, width 4), `Thread.isMainThread()` and
+  `RegEx.createFromString("a+b", false)`.
+
 ### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
 
 - `Tweener`, `PropertyTweener`, `CallbackTweener` and `MethodTweener` retire together into the shared
@@ -99,10 +136,15 @@ versioning once public releases begin.
   and the five `save{Dds,Exr,Jpg,Png,Webp}ToBuffer` writers. The iOS shape gap is unchanged at **3
   desktop-only members waiting** across 2 classes — no `Image` member was refused, so no `Image.jvm.kt`
   companion exists.
-- **`Image`'s four companion factories are unchanged on both platforms**: `create(width, height,
-  useMipmaps, format)`, `createEmpty(...)`, `createFromData(..., data: ByteArray)` and
-  `loadFromFile(path)` keep the exact signatures the iOS hand copy declared — they are Godot statics the
-  generator emits itself, so the hand `KANAMA-IOS-SUGAR` re-add note retires with the file.
+- **`Image`'s four companion factories keep their signatures on both platforms**: `create(width,
+  height, useMipmaps, format)`, `createEmpty(...)`, `createFromData(..., data: ByteArray)` and
+  `loadFromFile(path)` are declared exactly as the iOS hand copy declared them — they are Godot statics
+  the generator emits itself, so the hand `KANAMA-IOS-SUGAR` re-add note retires with the file. Their
+  iOS **dispatch** did change: the hand copy called `createFromData` through the static entry point
+  (`ObjectCalls.ptrcallStaticWithTwoLongBoolLongByteArrayArgsRetObject`), while the shared file renders
+  the generator's `NULL_SEGMENT` static marker on the ordinary instance helper
+  (`ptrcallWithTwoIntBoolLongByteArrayArgsRetObject`). That path was a silent no-op on iOS until the
+  `ptrcallDispatch` fix recorded under **Fixed** above; with it, all four factories work on iOS again.
 - `Image.getData()` on iOS no longer passes a `getDataSize()` size hint to
   `ObjectCalls.ptrcallNoArgsRetByteArray`; it calls the two-argument form, whose iOS `actual` delegates
   with `-1L` (size read from the returned `PackedByteArray`). Same bytes, one fewer engine call.

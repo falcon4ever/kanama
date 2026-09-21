@@ -4291,8 +4291,10 @@ IOS_OBJECTCALLS_HEADER = """\
    * Each helper is a member of `object ObjectCalls` and carries the DESKTOP file's parameter
    * names, so the generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls -- including
    * named arguments -- resolve identically on both platforms and can become one `expect object`
-   * (task 104 step 3). Every helper marshals through the single generic C dispatch
-   * `kanama_ios_godot_ptrcall`, applying the authoritative ptrcall width table (scalar
+   * (task 104 step 3). Every helper marshals through the single generic dispatch
+   * `ptrcallDispatch` (hand-written above the BEGIN marker: `kanama_ios_godot_ptrcall` for an
+   * instance call, `kanama_ios_godot_ptrcall_static` when the instance is the generator's
+   * NULL_SEGMENT static marker), applying the authoritative ptrcall width table (scalar
    * float->double/8B, scalar int->int64/8B, Vector components->GodotReal, Object->8B handle,
    * StringName built C-side). String / StringName / NodePath returns hand the same arg cells to
    * `ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8 read-back, no
@@ -4965,7 +4967,7 @@ def render_ios_helper(
         )
     else:
         body.append(
-            f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "
+            f"ptrcallDispatch(methodBind.address(), instance.address(), "
             f"{types_arg}, {ptrs_arg}, {n}, {ret_tag}, {ret_ptr})"
         )
         body.append("Unit" if read_expr is None else read_expr)

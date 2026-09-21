@@ -54,6 +54,17 @@ Kotlin/Native shim — so
 freely. The generator emits it in the only three shared-tree shapes that name the
 pointer at all: `internal fun wrap(handle: RawSegment)`, `NULL_SEGMENT` for a static
 receiver or a null object argument, and `private val singleton: RawSegment by lazy`.
+
+`NULL_SEGMENT` in the *receiver* position is the tree's static-method marker
+(`_null_segment()` for an `is_static` method), and the two backends read it
+differently. Desktop/Android pass the null pointer straight to
+`object_method_bind_ptrcall`, which is exactly what Godot expects for a static bind.
+iOS cannot: its C instance entry point `kanama_ios_godot_ptrcall` keeps a deliberate
+null-instance guard, so the iOS `ObjectCalls` routes a zero instance to the separate
+`kanama_ios_godot_ptrcall_static` entry point through the hand-written
+`ptrcallDispatch` helper, which every hand and generated ptrcall member in that file
+calls. Never "fix" a static call site by inventing a receiver, and never drop the
+dispatcher: without it every shared-tree static is a silent no-op on device.
 The per-platform generated files keep the JDK/shim spelling, and a genuine
 `const void*` argument still renders as `MemorySegment`: the three desktop-only
 helpers `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
@@ -183,8 +194,14 @@ The wrapper convention on desktop/Android:
   a release there underflows. Self-collapse must therefore
   sit on a ptrcall object-return helper, never on `callWithVariantArgs`
   (`PropertyTweener.from` regressed exactly this way once; its generated form
-  goes through `ptrcallWithVariantArgRetObject`, a
-  `METHOD_CALL_SHAPE_OVERRIDES` entry, for the same reason).
+  goes through `ptrcallWithVariantArgRetObject` for the same reason). That helper
+  is **not** a `METHOD_CALL_SHAPE_OVERRIDES` entry — that table holds only the two
+  `ClassDB` rows. It comes from a return-type-keyed special case in
+  `_candidate_for_impl` (`scripts/generate_api_wrapper.py`): an `Object` return over
+  a single `Variant` argument picks the ptrcall helper instead of the Variant path
+  when the declared `return_type` is one of `Node` / `PropertyTweener`. Adding a
+  class to that set is how a new self-collapsing `(Variant) -> Object` method gets
+  the ptrcall shape.
 
 The iOS island mirrors the same convention (task 30): the C-shim exposes
 `object_destroy` (`kanama_ios_godot_object_destroy`), `ObjectCalls.destroyObject`
