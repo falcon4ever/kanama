@@ -7,6 +7,172 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — `Viewport` and `Resource` generated once — group A complete (task 117 P1'(c), 3/3) — **desktop source break**
+
+- The last two group-A classes are generated once into the shared wrapper tree
+  (`src/sharedApi/.../api/Viewport.kt`, `.../Resource.kt`); both per-platform copies of each are
+  deleted and `PER_PLATFORM_WRAPPERS` loses both entries. As in 1/3 and 2/3 the shared draft is
+  signature-identical to the committed iOS copy, so every change below lands on desktop — except that
+  iOS GAINS `Resource.create()` and `Resource.fromObject()` (they were desktop-only companion helpers).
+- One desktop body changed without a signature change: `Viewport.isUsingXr()` was bound to Godot's
+  deprecated compatibility bind (hash 2240911060, `_is_using_xr_115799`); the generated form uses the live
+  `is_using_xr` bind (36873697), as the iOS copy already did. No caller in the repo or the demos.
+- **`Viewport.getCamera3D()` and `getCamera2D()` survive as shared members.** The camelCase aliases
+  over the generator's `getCamera3d()` / `getCamera2d()` lived twice — on the desktop hand copy
+  (`getCamera3D` only) and in `IOS_MEMBER_SECTIONS["Viewport"]` (both) — and are now one
+  `SHARED_MEMBER_SECTIONS["Viewport"]` entry, so the four demo call sites and
+  `example_project/WrapperConvenienceProbe.kt` keep compiling on desktop, Android and iOS, and
+  **desktop gains `getCamera2D()`**.
+- **`Viewport.pushInput` / `pushUnhandledInput` take a non-null `InputEvent`.** The desktop hand copy
+  declared `event: InputEvent?` and passed `NULL_SEGMENT` for null; the generated form is
+  `pushInput(event: InputEvent, inLocalCoords: Boolean = false)` — passing `null` no longer compiles
+  (0 callers in the repo or the demos). The `inLocalCoords` default is unchanged.
+- **Four `Viewport` properties arrive on desktop**: `positionalShadowAtlasQuad0`…`Quad3`
+  (`var …: Long` over the `get*`/`set*` pair desktop already had), plus five companion constants —
+  `DEBUG_DRAW_AREA_LIGHT_ATLAS`, `DEBUG_DRAW_CLUSTER_AREA_LIGHTS`,
+  `DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_PARENT_NODE`, `DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_PARENT_NODE`,
+  `SCALING_3D_MODE_NEAREST`.
+- **`Resource`'s primary constructor is public** (it was `internal` on desktop, public on iOS) — the
+  generator's shape for every retiring class, as `Mesh` and `PackedScene` took in P1'(a) (D4 as
+  amended by D10). `Resource` is not an `expect`/`actual` root, so D4's `internal` rule no longer
+  applies to it; the ownership guidance is unchanged (a wrapper you mint around a handle you already
+  hold is a borrowed view — never `close()` it).
+- **`Resource.create()` and `Resource.fromObject(value: GodotObject)` keep working**: they are a
+  `FACTORY_HELPERS["Resource"] = FactorySpec(True, (Downcast("fromObject", "GodotObject", False),))`
+  row now, generated for every platform with the same bodies, so `example_project/HelloScript.kt`
+  and the demos' `Resource.fromObject(...)` call sites are unaffected. `fromHandle` keeps its
+  non-null `Resource` return.
+- **`Resource.asObject()` is dropped** (desktop-only, 0 callers). It was already documented as a
+  compatibility alias: `Resource` inherits `GodotObject`'s surface directly, so call
+  `setMeta`/`connect`/`callDeferred` on the resource, or `GodotObject(resource.handle)` if you really
+  need the base wrapper.
+- **The two `duplicate` parameter names follow the generator** (named-argument call sites only):
+  `duplicate(deep: Boolean = false)` (was `subresources`) and
+  `duplicateDeep(deepSubresourcesMode: Long = 1L)` (was `mode: Long = DEEP_DUPLICATE_INTERNAL` — the
+  same value; the `DEEP_DUPLICATE_NONE`/`INTERNAL`/`ALL` constants stay). Both also gain the standard
+  generated **self-return collapse**: when the engine hands back the same object, the +1 return-slot
+  reference is released through `RefCounted.releaseHandle` and `this` is returned instead of a second
+  wrapper — the lifetime fix every other generated `RefCounted` return already had.
+- **`copyFromResource(resource: Resource?): Long` and four `resource*` properties arrive on desktop**:
+  `resourcePath`, `resourceName`, `resourceLocalToScene`, `resourceSceneUniqueId` — each over the
+  `get*`/`set*`/`is*` pair desktop already had. The coverage page's `Resource` row goes from `21/22`
+  to `22/22`.
+- **`Resource.generateSceneUniqueId()` loses `@JvmStatic`**, which the whole shared tree does for
+  Godot statics (see `GLTFDocument`). Kotlin call sites are unchanged; a Java caller writes
+  `Resource.Companion.generateSceneUniqueId()`.
+- **The lifetime policy is unchanged.** Every `Resource` method still opens with `checkOpen()` and
+  every nullable Object argument still goes through `requireOpenHandle()` — the generator emits both
+  for `RefCounted`-derived classes (480 shared files already do), so retiring the hand file loses no
+  guard. The refcount policy itself still comes from the per-platform `RefCounted` root, which stays
+  hand-shaped until P3'.
+- `ObjectCalls`: the shared tree reaches one more helper, `ptrcallWithTwoLongArgsRetInt` (behind
+  `Viewport.getRenderInfo`), already present on both platforms and now
+  `actual` on both; the common `expect object ObjectCalls` grows 1414 → 1415. No new native path.
+- **Group A of task 117 P1' is complete.** The wrapper parity gate drops both classes from
+  `HAND_SHAPED` (9 → **7 classes**) and their 23 allowlist lines go (126 → **103**): Viewport 12,
+  Resource 11. The seven left are the group-B four (`Image`, `PlaneMesh`, `Tweener`, `StaticBody3D`)
+  and the three roots (`GodotObject`, `RefCounted`, `GodotCallable`). The shared tree grows
+  1001 → 1003 classes and `PER_PLATFORM_WRAPPERS` shrinks 34 → 32.
+
+### Changed — `Button`, `LineEdit`, `Range`, `Slider` generated once (task 117 P1'(c), 2/3) — **desktop source break**
+
+- Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`);
+  both per-platform copies are deleted and `PER_PLATFORM_WRAPPERS` loses all four entries. For each of
+  the four the shared draft is signature-identical to the committed iOS copy, so **iOS sees no change**
+  and everything below lands on desktop scripts.
+- **Twelve properties take the generator's names (D17).** The desktop hand copies had spelled them
+  after the Kotlin accessor; the generator names them after the Godot property, which is what the iOS
+  copies already used. `rg` over `kanama-demos`, `example_project` and `templates` found **zero** callers
+  of the old spellings, so there are no aliases — the old names are simply gone. Old desktop name →
+  generated name, with the accessor pair that proves the pairing:
+
+  | class | old desktop name | now (both platforms) | accessors |
+  |---|---|---|---|
+  | `Button` | `buttonIcon: Texture2D?` | `icon: Texture2D?` | `getButtonIcon` / `setButtonIcon` |
+  | `Button` | `textAlignment: Long` | `alignment: Long` | `getTextAlignment` / `setTextAlignment` |
+  | `LineEdit` | `horizontalAlignment: Long` | `alignment: Long` | `getHorizontalAlignment` / `setHorizontalAlignment` |
+  | `LineEdit` | `placeholder: String` | `placeholderText: String` | `getPlaceholder` / `setPlaceholder` |
+  | `LineEdit` | `expandToTextLengthEnabled: Boolean` | `expandToTextLength: Boolean` | `isExpandToTextLengthEnabled` / `setExpandToTextLengthEnabled` |
+  | `LineEdit` | `caretBlinkEnabled: Boolean` | `caretBlink: Boolean` | `isCaretBlinkEnabled` / `setCaretBlinkEnabled` |
+  | `LineEdit` | `caretMidGraphemeEnabled: Boolean` | `caretMidGrapheme: Boolean` | `isCaretMidGraphemeEnabled` / `setCaretMidGraphemeEnabled` |
+  | `Range` | `min: Double` | `minValue: Double` | `getMin` / `setMin` |
+  | `Range` | `max: Double` | `maxValue: Double` | `getMax` / `setMax` |
+  | `Range` | `useRoundedValues: Boolean` | `rounded: Boolean` | `isUsingRoundedValues` / `setUseRoundedValues` |
+  | `Range` | `expRatio: Boolean` | `expEdit: Boolean` | `isRatioExp` / `setExpRatio` |
+  | `Slider` | `ticks: Int` | `tickCount: Int` | `getTicks` / `setTicks` |
+
+  Every pair keeps its type (no int-width change anywhere in this group), and the underlying `get*`/`set*`
+  methods are untouched — a script that called the methods instead of the property needs no edit.
+- **`Range.valueChanged(newValue: Double)` is dropped.** Despite the name it was not the `value_changed`
+  signal and not a rename of anything: the desktop hand copy bound Godot's **private** `Range._value_changed`
+  virtual, which the generator does not emit for any class. Nothing in the repo or the demos called it,
+  and `Range.Signals.valueChanged` (the signal name constant, `"value_changed"`) is unchanged. Its removal
+  is why the coverage page's `Range` row goes from `24/23` (104.3%) to `23/23`.
+- **`Range.ratio` arrives** — `var ratio: Double` over the `getAsRatio()` / `setAsRatio()` pair desktop
+  already had — and `Range.setPage`'s parameter is the generator's `pagesize` (was `pageSize`), which
+  matters only to a named-argument call site.
+- **`LineEdit.getMenu()` returns `PopupMenu?`** (was non-null `PopupMenu` on desktop) — the generator's
+  nullability for every Object return, as D2 anticipated. 0 callers in the repo or the demos.
+- **Companion constants and nested `Signals` arrive on desktop**, all previously iOS-only: `LineEdit` gains
+  its nested `object Signals` (`textChanged`, `textChangeRejected`, `textSubmitted`, `editingToggled`) and
+  43 companion constants (`MENU_*`, `KEYBOARD_TYPE_*`, `EXPAND_MODE_*`); `Slider` gains its nested
+  `object Signals` (`dragStarted`, `dragEnded`) and four `TICK_POSITION_*` constants; `Button` gains
+  nothing beyond the two renames. `Range` and `Slider` also gain the standard
+  `fromHandle` / `wrap` companion pair every generated class has.
+- The wrapper parity gate drops all four from `HAND_SHAPED` (13 → 9 classes) and their 81 allowlist lines
+  go (207 → 126): LineEdit 55, Range 13, Slider 9, Button 4. The shared tree grows 997 → 1001 classes and
+  `PER_PLATFORM_WRAPPERS` shrinks 38 → 34. No new `ObjectCalls` helper is referenced (the common
+  `expect object` stays at 1414) and no new native path.
+
+### Changed — `TabBar`, `AnimationPlayer`, `Light3D`, `StandardMaterial3D` generated once (task 117 P1'(c), 1/3) — **desktop source break**
+
+- Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`)
+  instead of living as two per-platform copies; both copies are deleted and `PER_PLATFORM_WRAPPERS`
+  loses all four entries. The generated shape wins on both platforms (D9/D12/D17). iOS sees no
+  signature change at all — for every one of the four the shared draft was byte-for-signature
+  identical to the committed iOS copy. Everything below is therefore a **desktop** change.
+- `StandardMaterial3D` has no class-body members of its own (they are all inherited from
+  `BaseMaterial3D`), so retiring it needed only a `FACTORY_HELPERS["StandardMaterial3D"] =
+  FactorySpec(True)` row: `StandardMaterial3D.create()` is generated for every platform now and keeps
+  compiling. Neither hand copy carried a downcast, so none is rendered. Its **primary constructor is
+  public** (it was `internal` on desktop, public on iOS) — the generator's shape for every retiring
+  class, as `Mesh`/`PackedScene` took in P1'(a) (D4 as amended by D10).
+- **`TabBar.addTab` loses the `icon` default on desktop.** The generated form is
+  `addTab(title: String = "", icon: Texture2D?)` — the desktop hand copy had `icon: Texture2D? = null`,
+  the iOS copy never did. `tabBar.addTab("Alpha")` no longer compiles: pass the icon explicitly,
+  `tabBar.addTab("Alpha", null)`. `example_project/HelloScript.kt` is the in-repo canary and is fixed
+  that way. Desktop also **gains** `TabBar.Signals.tabButtonPressed` (`"tab_button_pressed"`) and eight
+  companion constants: `ALIGNMENT_LEFT`/`CENTER`/`RIGHT`/`MAX`, `CLOSE_BUTTON_SHOW_NEVER`/
+  `SHOW_ACTIVE_ONLY`/`SHOW_ALWAYS`/`MAX`.
+- **`AnimationPlayer.Signals.animationFinished` is dropped.** `animation_finished` is declared on
+  `AnimationMixer`, not on `AnimationPlayer`, so the generator emits it on the shared
+  `AnimationMixer` — which `AnimationPlayer` extends — and the desktop hand copy's duplicate goes.
+  Write `AnimationMixer.Signals.animationFinished` (the spelling every demo already uses); the string
+  value is unchanged. Desktop also gains defaults the generator reads from the Godot docs, all
+  additive: `playBackwards`, `playSection`, `playSectionBackwards`, `playSectionWithMarkers`,
+  `playSectionWithMarkersBackwards`, `playWithCapture` and `setSectionWithMarkers` now default their
+  `name` / `startMarker` / `endMarker` parameters to `""`.
+- **Twelve `Light3D` properties arrive on desktop** (they existed only on the iOS copy, hence twelve
+  allowlist lines): `lightAngularDistance`, `lightIndirectEnergy`, `lightIntensityLumens`,
+  `lightIntensityLux`, `lightSize`, `lightSpecular`, `lightVolumetricFogEnergy`, `shadowBias`,
+  `shadowBlur`, `shadowNormalBias`, `shadowOpacity`, `shadowTransmittanceBias`. Each is
+  `var …: Double` over the `get*`/`set*` pair desktop already had, so no new native path.
+- **No int-width change and no ergonomic sugar in this group.** The four classes' member sets are
+  74/74/74 (TabBar), 66/66/66 (AnimationPlayer), 46 desktop / 58 iOS / 58 draft (Light3D) and
+  0/0/0 (StandardMaterial3D) — the twelve Light3D properties are the only member-set delta, and a
+  signature-level diff of the draft against both committed copies shows no return or parameter type
+  changing width anywhere in the four. No `SHARED_MEMBER_SECTIONS` entry was needed.
+- `ObjectCalls`: the shared tree reaches eight more helpers (1413 → 1421 referenced), all of them
+  already present on both platforms and now `actual` on both — `ptrcallWithDoubleAndTwoBoolArgs`,
+  `ptrcallWithStringNameAndThreeDoubleArgs`, `ptrcallWithStringNameDoubleDoubleBoolArgs`,
+  `ptrcallWithStringNameFourDoubleBoolArgs`, `ptrcallWithStringNameThreeDoubleBoolTwoLongArgs`,
+  `ptrcallWithThreeStringNameAndDoubleArg`, `ptrcallWithThreeStringNameTwoDoubleBoolArgs`,
+  `ptrcallWithTwoStringNameAndDoubleArg`. The common `expect object ObjectCalls` grows 1406 → 1414.
+  No new native path.
+- The wrapper parity gate drops all four from `HAND_SHAPED` (17 → 13 classes) and their 21 allowlist
+  lines go (228 → 207): TabBar 8, Light3D 12, StandardMaterial3D 1, AnimationPlayer 0. The shared tree
+  grows 993 → 997 classes and `PER_PLATFORM_WRAPPERS` shrinks 42 → 38.
+
 ### Changed — `Node` generated once (task 117 P1'(b2)) — **desktop source break**
 
 - `Node` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node.kt`) instead of

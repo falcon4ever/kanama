@@ -318,8 +318,6 @@ class WrapperHome:
 
 
 PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
-    "AnimationPlayer": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "AudioStreamPlayer": WrapperHome("hand", "collision",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit; iOS: hand-written cinterop-glue Node subclass in IosGodotApi.kt"),
@@ -333,8 +331,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
         "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
         "validated 114/114)"),
-    "Button": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "CallbackTweener": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Tween chaining glue in IosGodotApi.kt"),
@@ -372,13 +368,9 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "InputEventMouseMotion": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "Light3D": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "LightmapGI": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "LineEdit": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -405,13 +397,8 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "PropertyTweener": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Tween chaining glue in IosGodotApi.kt"),
-    "Range": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "RefCounted": WrapperHome("hand", "generated",
         "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit"),
-    "Resource": WrapperHome("hand", "generated",
-        "desktop: hand create/fromObject/asObject helpers; the refcount lifetime is inherited from "
-        "RefCounted (task 51)"),
     "ResourceLoader": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written typed-loader glue (loadTexture2D/AudioStream/PackedScene) in IosGodotApi.kt"),
@@ -421,27 +408,16 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ShaderMaterial": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "Slider": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "StandardMaterial3D": WrapperHome("hand", "hand",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
-        "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
-        "validated 114/114)"),
     "StaticBody3D": WrapperHome("generated", "collision",
         "iOS: hand-written thin Node3D subclass in IosGodotApi.kt"),
     "SurfaceTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "TabBar": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "Tween": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Variant tween_property runtime in IosGodotApi.kt"),
     "Tweener": WrapperHome("generated", "collision",
         "iOS: hand-written Tween chaining glue in IosGodotApi.kt"),
-    "Viewport": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
 }
 
 DESKTOP_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.desktop == "hand")
@@ -842,13 +818,6 @@ IOS_MEMBER_SECTIONS = {
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
     fun commit(): ArrayMesh? = commit(null)
 """.strip("\n"),
-    "Viewport": """
-    // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d);
-    // match the Android aliases so shared demo code resolves on both backends.
-    fun getCamera3D(): Camera3D? = getCamera3d()
-
-    fun getCamera2D(): Camera2D? = getCamera2d()
-""".strip("\n"),
 }
 
 # iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
@@ -894,6 +863,15 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {
+    "Viewport": """
+    // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d).
+    // They lived twice until task 117 P1'(c): on the hand-written desktop `Viewport` (getCamera3D
+    // only) and in IOS_MEMBER_SECTIONS['Viewport'] (both). `Viewport` is one generated class now,
+    // so the aliases are shared members and every demo call site resolves on both backends.
+    fun getCamera3D(): Camera3D? = getCamera3d()
+
+    fun getCamera2D(): Camera2D? = getCamera2d()
+""".strip("\n"),
     "Node": """
     // ── Kanama Node ergonomics (generator custom-section, not from Godot docs) ────────────────
     // These lived twice until task 117 P1'(b2): on the hand-written desktop `Node`, and (a subset,
@@ -1338,8 +1316,12 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "MeshLibrary": FactorySpec(True),
     "OfflineMultiplayerPeer": FactorySpec(True),
     "PackedScene": FactorySpec(True),
+    "Resource": FactorySpec(True, (Downcast("fromObject", "GodotObject", False),)),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Sprite2D": FactorySpec(True),
+    # Task 117 P1'(c): the hand copies' only companion sugar (both carried create(), neither a
+    # downcast), so the whole class body is generated and the row is all that retirement needs.
+    "StandardMaterial3D": FactorySpec(True),
     # Desktop-only generated classes.
     "ParticleProcessMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),

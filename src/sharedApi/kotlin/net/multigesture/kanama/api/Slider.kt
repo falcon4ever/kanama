@@ -1,12 +1,13 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.*
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
+ * Abstract base class for sliders.
+ *
  * Generated from Godot docs: Slider
  */
 open class Slider(handle: GodotHandle) : Range(handle) {
@@ -40,42 +41,94 @@ open class Slider(handle: GodotHandle) : Range(handle) {
         @JvmName("setTicksPositionProperty")
         set(value) = setTicksPosition(value)
 
+    /**
+     * Number of ticks displayed on the slider, including border ticks. Ticks are uniformly-distributed
+     * value markers.
+     *
+     * Generated from Godot docs: Slider.set_ticks
+     */
     fun setTicks(count: Int) {
         ObjectCalls.ptrcallWithIntArg(setTicksBind, segment, count)
     }
 
+    /**
+     * Number of ticks displayed on the slider, including border ticks. Ticks are uniformly-distributed
+     * value markers.
+     *
+     * Generated from Godot docs: Slider.get_ticks
+     */
     fun getTicks(): Int {
         return ObjectCalls.ptrcallNoArgsRetInt(getTicksBind, segment)
     }
 
+    /**
+     * If `true`, the slider will display ticks for minimum and maximum values.
+     *
+     * Generated from Godot docs: Slider.get_ticks_on_borders
+     */
     fun getTicksOnBorders(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(getTicksOnBordersBind, segment)
     }
 
+    /**
+     * If `true`, the slider will display ticks for minimum and maximum values.
+     *
+     * Generated from Godot docs: Slider.set_ticks_on_borders
+     */
     fun setTicksOnBorders(ticksOnBorder: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setTicksOnBordersBind, segment, ticksOnBorder)
     }
 
+    /**
+     * Sets the position of the ticks. See `TickPosition` for details.
+     *
+     * Generated from Godot docs: Slider.get_ticks_position
+     */
     fun getTicksPosition(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, segment)
     }
 
+    /**
+     * Sets the position of the ticks. See `TickPosition` for details.
+     *
+     * Generated from Godot docs: Slider.set_ticks_position
+     */
     fun setTicksPosition(ticksOnBorder: Long) {
         ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, segment, ticksOnBorder)
     }
 
+    /**
+     * If `true`, the slider can be interacted with. If `false`, the value can be changed only by code.
+     *
+     * Generated from Godot docs: Slider.set_editable
+     */
     fun setEditable(editable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, editable)
     }
 
+    /**
+     * If `true`, the slider can be interacted with. If `false`, the value can be changed only by code.
+     *
+     * Generated from Godot docs: Slider.is_editable
+     */
     fun isEditable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     }
 
+    /**
+     * If `true`, the value can be changed using the mouse wheel.
+     *
+     * Generated from Godot docs: Slider.set_scrollable
+     */
     fun setScrollable(scrollable: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(setScrollableBind, segment, scrollable)
     }
 
+    /**
+     * If `true`, the value can be changed using the mouse wheel.
+     *
+     * Generated from Godot docs: Slider.is_scrollable
+     */
     fun isScrollable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollableBind, segment)
     }
@@ -95,7 +148,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
         fun fromHandle(handle: GodotHandle): Slider? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Slider? =
+        internal fun wrap(handle: RawSegment): Slider? =
             if (handle.address() == 0L) null else Slider(GodotHandle(handle))
 
         private const val SET_TICKS_HASH = 1286410249L
