@@ -7,6 +7,56 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — `Button`, `LineEdit`, `Range`, `Slider` generated once (task 117 P1'(c), 2/3) — **desktop source break**
+
+- Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`);
+  both per-platform copies are deleted and `PER_PLATFORM_WRAPPERS` loses all four entries. For each of
+  the four the shared draft is signature-identical to the committed iOS copy, so **iOS sees no change**
+  and everything below lands on desktop scripts.
+- **Twelve properties take the generator's names (D17).** The desktop hand copies had spelled them
+  after the Kotlin accessor; the generator names them after the Godot property, which is what the iOS
+  copies already used. `rg` over `kanama-demos`, `example_project` and `templates` found **zero** callers
+  of the old spellings, so there are no aliases — the old names are simply gone. Old desktop name →
+  generated name, with the accessor pair that proves the pairing:
+
+  | class | old desktop name | now (both platforms) | accessors |
+  |---|---|---|---|
+  | `Button` | `buttonIcon: Texture2D?` | `icon: Texture2D?` | `getButtonIcon` / `setButtonIcon` |
+  | `Button` | `textAlignment: Long` | `alignment: Long` | `getTextAlignment` / `setTextAlignment` |
+  | `LineEdit` | `horizontalAlignment: Long` | `alignment: Long` | `getHorizontalAlignment` / `setHorizontalAlignment` |
+  | `LineEdit` | `placeholder: String` | `placeholderText: String` | `getPlaceholder` / `setPlaceholder` |
+  | `LineEdit` | `expandToTextLengthEnabled: Boolean` | `expandToTextLength: Boolean` | `isExpandToTextLengthEnabled` / `setExpandToTextLengthEnabled` |
+  | `LineEdit` | `caretBlinkEnabled: Boolean` | `caretBlink: Boolean` | `isCaretBlinkEnabled` / `setCaretBlinkEnabled` |
+  | `LineEdit` | `caretMidGraphemeEnabled: Boolean` | `caretMidGrapheme: Boolean` | `isCaretMidGraphemeEnabled` / `setCaretMidGraphemeEnabled` |
+  | `Range` | `min: Double` | `minValue: Double` | `getMin` / `setMin` |
+  | `Range` | `max: Double` | `maxValue: Double` | `getMax` / `setMax` |
+  | `Range` | `useRoundedValues: Boolean` | `rounded: Boolean` | `isUsingRoundedValues` / `setUseRoundedValues` |
+  | `Range` | `expRatio: Boolean` | `expEdit: Boolean` | `isRatioExp` / `setExpRatio` |
+  | `Slider` | `ticks: Int` | `tickCount: Int` | `getTicks` / `setTicks` |
+
+  Every pair keeps its type (no int-width change anywhere in this group), and the underlying `get*`/`set*`
+  methods are untouched — a script that called the methods instead of the property needs no edit.
+- **`Range.valueChanged(newValue: Double)` is dropped.** Despite the name it was not the `value_changed`
+  signal and not a rename of anything: the desktop hand copy bound Godot's **private** `Range._value_changed`
+  virtual, which the generator does not emit for any class. Nothing in the repo or the demos called it,
+  and `Range.Signals.valueChanged` (the signal name constant, `"value_changed"`) is unchanged. Its removal
+  is why the coverage page's `Range` row goes from `24/23` (104.3%) to `23/23`.
+- **`Range.ratio` arrives** — `var ratio: Double` over the `getAsRatio()` / `setAsRatio()` pair desktop
+  already had — and `Range.setPage`'s parameter is the generator's `pagesize` (was `pageSize`), which
+  matters only to a named-argument call site.
+- **`LineEdit.getMenu()` returns `PopupMenu?`** (was non-null `PopupMenu` on desktop) — the generator's
+  nullability for every Object return, as D2 anticipated. 0 callers in the repo or the demos.
+- **Companion constants and nested `Signals` arrive on desktop**, all previously iOS-only: `LineEdit` gains
+  its nested `object Signals` (`textChanged`, `textChangeRejected`, `textSubmitted`, `editingToggled`) and
+  43 companion constants (`MENU_*`, `KEYBOARD_TYPE_*`, `EXPAND_MODE_*`); `Slider` gains its nested
+  `object Signals` (`dragStarted`, `dragEnded`) and four `TICK_POSITION_*` constants; `Button` gains
+  nothing beyond the two renames. `Range` and `Slider` also gain the standard
+  `fromHandle` / `wrap` companion pair every generated class has.
+- The wrapper parity gate drops all four from `HAND_SHAPED` (13 → 9 classes) and their 81 allowlist lines
+  go (207 → 126): LineEdit 55, Range 13, Slider 9, Button 4. The shared tree grows 997 → 1001 classes and
+  `PER_PLATFORM_WRAPPERS` shrinks 38 → 34. No new `ObjectCalls` helper is referenced (the common
+  `expect object` stays at 1414) and no new native path.
+
 ### Changed — `TabBar`, `AnimationPlayer`, `Light3D`, `StandardMaterial3D` generated once (task 117 P1'(c), 1/3)
 
 - Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`)

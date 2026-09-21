@@ -331,8 +331,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
         "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
         "validated 114/114)"),
-    "Button": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "CallbackTweener": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Tween chaining glue in IosGodotApi.kt"),
@@ -373,8 +371,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "LightmapGI": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "LineEdit": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -401,8 +397,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "PropertyTweener": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Tween chaining glue in IosGodotApi.kt"),
-    "Range": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "RefCounted": WrapperHome("hand", "generated",
         "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit"),
     "Resource": WrapperHome("hand", "generated",
@@ -417,8 +411,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ShaderMaterial": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "Slider": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "StaticBody3D": WrapperHome("generated", "collision",
         "iOS: hand-written thin Node3D subclass in IosGodotApi.kt"),
     "SurfaceTool": WrapperHome("hand", "generated",
