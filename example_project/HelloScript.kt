@@ -491,7 +491,7 @@ class HelloScript(godotObject: GodotHandle) :
     val packedSceneCanInstantiate = packedScene.canInstantiate()
     val packedSceneInstance = packedScene.instantiate()
     val packedSceneInstanceIsBody = packedSceneInstance?.isClass("CharacterBody3D") ?: false
-    val packedSceneInstanceChildren = packedSceneInstance?.getChildCount() ?: -1L
+    val packedSceneInstanceChildren = packedSceneInstance?.getChildCount() ?: -1
     if (packedSceneInstance != null) {
       selfNode.addChild(packedSceneInstance)
       packedSceneInstance.queueFree()
@@ -1072,7 +1072,7 @@ class HelloScript(godotObject: GodotHandle) :
     val selfIndex = selfNode.getIndex()
     val selfSceneFilePath = selfNode.getSceneFilePath()
     val selfTreeString = selfNode.getTreeString()
-    val selfTreeNodeCount = selfNode.getTree().getNodeCount()
+    val selfTreeNodeCount = selfNode.getTree()?.getNodeCount() ?: -1
     val selfCanProcess = selfNode.canProcess()
     val selfProcessing = selfNode.isProcessing()
     val selfPhysicsProcessing = selfNode.isPhysicsProcessing()
@@ -1305,7 +1305,7 @@ class HelloScript(godotObject: GodotHandle) :
     val dynamicButtonText = dynamicButton?.text.orEmpty()
     val dynamicLabelPosition = dynamicLabel?.position ?: Vector2.ZERO
     val dynamicButtonPosition = dynamicButton?.position ?: Vector2.ZERO
-    val dynamicUiChildCount = uiRoot?.getChildCount() ?: -1L
+    val dynamicUiChildCount = uiRoot?.getChildCount() ?: -1
     if (dynamicButton != null) {
       uiRoot.removeChild(dynamicButton)
       dynamicButton.queueFree()
