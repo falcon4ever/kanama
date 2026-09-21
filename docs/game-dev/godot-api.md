@@ -268,10 +268,12 @@ For gameplay animation, prefer `node.createTween()` over
 created this way to the node, so they stop processing when the node leaves the
 tree and are killed when the node is freed. Use `SceneTree.createTween()` only
 for tweens that intentionally outlive any particular node, or bind them
-explicitly with `Tween.bindNode(node)`. `SceneTree.createTween()` and
-`SceneTree.getProcessedTweens()` are desktop/Android-only extensions (iOS hosts
-no `Tween` wrapper the shared tree can return), so a script that calls them needs
-the member imported by name: `import net.multigesture.kanama.api.createTween`.
+explicitly with `Tween.bindNode(node)`. Both forms are extensions, not members
+(iOS hosts no `Tween` wrapper the shared tree can return), so a script that calls
+either needs the extension imported by name — `import
+net.multigesture.kanama.api.createTween` — on every platform; `node.createTween()`
+resolves on desktop, Android and iOS, while `SceneTree.createTween()` and
+`SceneTree.getProcessedTweens()` exist on desktop/Android only.
 
 For `@ScriptProperty` fields, Kanama-generated registrars release closeable
 property wrappers when Godot frees the script instance. Mutable script

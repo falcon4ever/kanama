@@ -77,7 +77,10 @@ versioning once public releases begin.
   `Required node 'x' was not found under Node#12345`, but the class name is read through the Variant
   `call("get_class")` seam instead of desktop's `GodotObject.getClassName()`, which iOS does not
   have (the roots stay per-platform until P3'). Error path only.
-- `ObjectCalls`: the shared tree calls two more helpers, so
+- `getTree()` on iOS also changes transport: the retired iOS section called the `IosGodot.nodeGetTree` C shim,
+  the generated form is the `Node.get_tree` ptrcall every other Object-returning method uses (device-proven by
+  the Match3 + third-person smokes, which call `getTree()` on every quit).
+- `ObjectCalls`: the shared tree calls nine more helpers (all newly referenced because `Node` moved in), so
   `ptrcallWithBoolArgRetTypedObjectList` and `ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList`
   (behind `getChildren` and `findChildren`) are `actual` on both platforms now — the desktop file
   gained the generic `…RetTypedObjectList` form (its `…RetTypedNodeList` twin delegates to it) and

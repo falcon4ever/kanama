@@ -285,7 +285,8 @@ in `scripts/check_wrapper_generator.py`:
   regen drops every bare-`Object`-return method (a silent coverage loss), even though the
   `ptrcallNoArgsRetObject` helper is fully wired (Node returns use it).
 
-- **Subclass-override openness.** Where a hand-written iOS subclass overrides a generated
+- **Subclass-override openness** *(no live probe since task 117 P1'(b2); kept as the rule for the
+  next real case)*. Where a hand-written iOS subclass overrides a generated
   method, the base method must be generated `open` — otherwise a regen drops the keyword and
   the override stops compiling. The standing example was `Node.createTween()`, opened for the
   hand-written iOS `SceneTree`, which overrode it with the correct `SceneTree.create_tween` bind
