@@ -12,7 +12,11 @@ versioning once public releases begin.
 - The last two group-A classes are generated once into the shared wrapper tree
   (`src/sharedApi/.../api/Viewport.kt`, `.../Resource.kt`); both per-platform copies of each are
   deleted and `PER_PLATFORM_WRAPPERS` loses both entries. As in 1/3 and 2/3 the shared draft is
-  signature-identical to the committed iOS copy, so every change below lands on desktop.
+  signature-identical to the committed iOS copy, so every change below lands on desktop — except that
+  iOS GAINS `Resource.create()` and `Resource.fromObject()` (they were desktop-only companion helpers).
+- One desktop body changed without a signature change: `Viewport.isUsingXr()` was bound to Godot's
+  deprecated compatibility bind (hash 2240911060, `_is_using_xr_115799`); the generated form uses the live
+  `is_using_xr` bind (36873697), as the iOS copy already did. No caller in the repo or the demos.
 - **`Viewport.getCamera3D()` and `getCamera2D()` survive as shared members.** The camelCase aliases
   over the generator's `getCamera3d()` / `getCamera2d()` lived twice — on the desktop hand copy
   (`getCamera3D` only) and in `IOS_MEMBER_SECTIONS["Viewport"]` (both) — and are now one
@@ -62,7 +66,7 @@ versioning once public releases begin.
   guard. The refcount policy itself still comes from the per-platform `RefCounted` root, which stays
   hand-shaped until P3'.
 - `ObjectCalls`: the shared tree reaches one more helper, `ptrcallWithTwoLongArgsRetInt` (behind
-  `Viewport.getPositionalShadowAtlasQuadrantSubdiv`), already present on both platforms and now
+  `Viewport.getRenderInfo`), already present on both platforms and now
   `actual` on both; the common `expect object ObjectCalls` grows 1414 → 1415. No new native path.
 - **Group A of task 117 P1' is complete.** The wrapper parity gate drops both classes from
   `HAND_SHAPED` (9 → **7 classes**) and their 23 allowlist lines go (126 → **103**): Viewport 12,
@@ -120,7 +124,7 @@ versioning once public releases begin.
   `PER_PLATFORM_WRAPPERS` shrinks 38 → 34. No new `ObjectCalls` helper is referenced (the common
   `expect object` stays at 1414) and no new native path.
 
-### Changed — `TabBar`, `AnimationPlayer`, `Light3D`, `StandardMaterial3D` generated once (task 117 P1'(c), 1/3)
+### Changed — `TabBar`, `AnimationPlayer`, `Light3D`, `StandardMaterial3D` generated once (task 117 P1'(c), 1/3) — **desktop source break**
 
 - Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`)
   instead of living as two per-platform copies; both copies are deleted and `PER_PLATFORM_WRAPPERS`
