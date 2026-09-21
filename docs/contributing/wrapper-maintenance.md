@@ -36,7 +36,7 @@ generation. `Callable` stays blocked unless a helper has a bounded ownership
 shape; `DirAccess` and `FileAccess` use dedicated handle aliases
 where factory methods return nullable object handles. (`SceneTree` had one,
 `SceneTreeHandle`, until task 117 P1'(b1) generated `SceneTree` itself into the
-shared tree as `SceneTree : MainLoop`; `Node.getTree()` names it directly now.)
+shared tree as `SceneTree : MainLoop`; `Node.getTree(): SceneTree?` names it directly now.)
 
 **The raw engine pointer in the shared sources is `RawSegment`, never a
 `java.lang.foreign` type** (task 104 step 3). It is declared ONCE, in the root
@@ -285,24 +285,25 @@ in `scripts/check_wrapper_generator.py`:
   regen drops every bare-`Object`-return method (a silent coverage loss), even though the
   `ptrcallNoArgsRetObject` helper is fully wired (Node returns use it).
 
-- **Subclass-override openness.** Where a hand-written iOS subclass overrides a generated
+- **Subclass-override openness** *(no live probe since task 117 P1'(b2); kept as the rule for the
+  next real case)*. Where a hand-written iOS subclass overrides a generated
   method, the base method must be generated `open` — otherwise a regen drops the keyword and
-  the override stops compiling. `Node.createTween()` is emitted `open` (via the Node
-  `IOS_MEMBER_SECTIONS` entry; the desktop hand-shaped `Node.kt` is `open` too, so both
-  platforms read the same). It was opened for the hand-written iOS `SceneTree`, which overrode
-  it with the correct `SceneTree.create_tween` bind (the FPS F2 fix); since task 117 P1'(b1)
-  `SceneTree` is generated as a `MainLoop` and nothing in the repo overrides `createTween`, but
-  the openness stays so a script subclass still can. Add such cases to the class's
-  `IOS_MEMBER_SECTIONS` entry (or `IOS_EXTENSION_SECTIONS` for a shared class), not by
-  hand-editing the generated file.
+  the override stops compiling. The standing example was `Node.createTween()`, opened for the
+  hand-written iOS `SceneTree`, which overrode it with the correct `SceneTree.create_tween` bind
+  (the FPS F2 fix). Both halves are gone now: `SceneTree` is a generated `MainLoop` since task 117
+  P1'(b1), and `Node` is generated into the shared tree since P1'(b2), where `createTween` is not a
+  member at all — iOS cannot host a `Tween` return, so it is an extension in `Node.jvm.kt` /
+  `Node.ios.kt` and nothing can override it. Add a real case to the class's `IOS_MEMBER_SECTIONS`
+  entry (or `IOS_EXTENSION_SECTIONS` for a shared class), not by hand-editing the generated file.
 
 - **A custom section that REPLACES a generated member.** A section normally adds members the
   generator cannot emit; when it declares the same Kotlin name AND parameter list as a generated
   one (a different return type, say), the two collide as conflicting overloads. Record the pair in
   `IOS_SECTION_REPLACED_METHODS` with its reason — the generated form is then skipped on the iOS
-  render target and the reason lands in the skip report. The one entry today is
-  `("Node", "get_tree")`: the section's `getTree(): SceneTree` is non-null, the generated form is
-  `SceneTree?`.
+  render target and the reason lands in the skip report. The table is **empty today**: its one
+  entry was `("Node", "get_tree")`, whose section declared `getTree(): SceneTree` non-null, and
+  `Node` is generated once into the shared tree since task 117 P1'(b2) — every caller sees the
+  generated `SceneTree?`.
 
 - **Explicit class collisions.** Real Godot classes that are deliberately hand-written on iOS
   (inside `IosGodotApi.kt` or a bespoke single-class file) are the `collision` cells of

@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 183 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 175 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -52,6 +52,13 @@ expect object ObjectCalls {
   fun <T : Any> ptrcallNoArgsRetTypedObjectList(
     methodBind: RawSegment,
     instance: RawSegment,
+    wrapper: (RawSegment) -> T?,
+  ): List<T>
+
+  fun <T : Any> ptrcallWithBoolArgRetTypedObjectList(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    boolArg: Boolean,
     wrapper: (RawSegment) -> T?,
   ): List<T>
 
@@ -121,6 +128,16 @@ expect object ObjectCalls {
     first: Int,
     second: Int,
     third: Int,
+    firstBool: Boolean,
+    secondBool: Boolean,
+    wrapper: (RawSegment) -> T?,
+  ): List<T>
+
+  fun <T : Any> ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
     firstBool: Boolean,
     secondBool: Boolean,
     wrapper: (RawSegment) -> T?,
@@ -961,6 +978,13 @@ expect object ObjectCalls {
     intValue: Int,
     boolValue: Boolean,
   ): Boolean
+
+  fun ptrcallWithIntAndBoolArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Int,
+    includeInternal: Boolean,
+  ): RawSegment
 
   fun ptrcallWithIntAndColorArg(
     methodBind: RawSegment,
@@ -2701,6 +2725,12 @@ expect object ObjectCalls {
 
   fun ptrcallWithNodePathArg(methodBind: RawSegment, instance: RawSegment, path: NodePath)
 
+  fun ptrcallWithNodePathArgRetArray(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    path: NodePath,
+  ): List<Any?>
+
   fun ptrcallWithNodePathArgRetBool(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -3030,6 +3060,14 @@ expect object ObjectCalls {
     methodBind: RawSegment,
     instance: RawSegment,
     objectArgs: List<RawSegment>,
+  )
+
+  fun ptrcallWithObjectBoolLongArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    boolArg: Boolean,
+    longArg: Long,
   )
 
   fun ptrcallWithObjectBoolStringArgsRetDictionary(
@@ -6671,6 +6709,13 @@ expect object ObjectCalls {
     rid: RID,
   ): RID
 
+  fun ptrcallWithStringAndStringNameArgRetString(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    text: String,
+    name: String,
+  ): String
+
   fun ptrcallWithStringAndThreeIntArgsRetObject(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -6686,6 +6731,14 @@ expect object ObjectCalls {
     text: String,
     transform: Transform3D,
   )
+
+  fun ptrcallWithStringAndTwoBoolArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    pattern: String,
+    recursive: Boolean,
+    owned: Boolean,
+  ): RawSegment
 
   fun ptrcallWithStringAndTwoIntArgsRetObject(
     methodBind: RawSegment,
@@ -7264,6 +7317,14 @@ expect object ObjectCalls {
     values: List<Any?>,
   )
 
+  fun ptrcallWithStringNameArrayBoolArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    name: String,
+    values: List<Any?>,
+    enabled: Boolean,
+  )
+
   fun ptrcallWithStringNameBoolArrayArgs(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -7658,6 +7719,15 @@ expect object ObjectCalls {
     third: Double,
     fourth: Double,
   )
+
+  fun ptrcallWithStringStringNameIntStringNameArgsRetString(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    text: String,
+    firstName: String,
+    index: Int,
+    secondName: String,
+  ): String
 
   fun ptrcallWithStringStringStringStringStringLongArgs(
     methodBind: RawSegment,
