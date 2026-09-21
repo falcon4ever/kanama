@@ -1859,7 +1859,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNameStringAndVariantArg(
+  actual fun ptrcallWithStringNameStringAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -1883,7 +1883,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithUInt32StringNameStringVariantArgs(
+  actual fun ptrcallWithUInt32StringNameStringVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     flags: Long,
@@ -9541,7 +9541,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectIntTransform3DArgs(
+  actual fun ptrcallWithObjectIntTransform3DArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -19033,7 +19033,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (float, bool, bool, bool) and Object return value. */
-  fun ptrcallWithDoubleAndThreeBoolArgsRetObject(
+  actual fun ptrcallWithDoubleAndThreeBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -19895,7 +19895,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithNodePathArgRetObject(
+  actual fun ptrcallWithNodePathArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -20332,11 +20332,11 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with one Object* arg and one NodePath arg. */
-  fun ptrcallWithObjectAndNodePathArg(
+  actual fun ptrcallWithObjectAndNodePathArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
-    path: String,
+    path: NodePath,
   ) {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
@@ -20345,7 +20345,7 @@ actual object ObjectCalls {
       val nodePath = arena.allocate(8L, 8L)
       val pathString = arena.allocate(8L, 8L)
       try {
-        GodotStrings.initString(pathString, path)
+        GodotStrings.initString(pathString, path.path)
         BuiltinTypes.construct(
           type = VariantType.NODE_PATH,
           dest = nodePath,
@@ -21883,7 +21883,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (uint32, StringName, int32) and no return value. */
-  fun ptrcallWithUInt32StringNameAndIntArgs(
+  actual fun ptrcallWithUInt32StringNameAndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
@@ -24961,7 +24961,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithVector3AndDoubleArg(
+  actual fun ptrcallWithVector3AndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Vector3,
@@ -25489,7 +25489,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Vector3, Vector3, bool) args and no return value. */
-  fun ptrcallWithTwoVector3AndBoolArgs(
+  actual fun ptrcallWithTwoVector3AndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,
@@ -25519,7 +25519,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Vector3, Vector3, Vector3, bool) args and no return value. */
-  fun ptrcallWithThreeVector3AndBoolArgs(
+  actual fun ptrcallWithThreeVector3AndBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Vector3,

@@ -446,13 +446,18 @@ def check_ios_policies(output_dir: Path) -> int:
               "(receiver-side use-after-close guard regressed)", file=sys.stderr)
         return 1
 
-    collision = _gen_ios(policy_dir, "SceneTree")
-    if (policy_dir / "SceneTree.kt").exists():
-        print("[wrapper_generator] FAIL SceneTree.kt emitted despite being hand-written "
+    # The collision probe: a class PER_PLATFORM_WRAPPERS marks `collision` on iOS (hand-written
+    # inside IosGodotApi.kt or a bespoke file) must NOT be emitted by the iOS renderer, and the
+    # refusal must be reported. ResourceLoader carries the hand-written typed-loader glue
+    # (loadTexture2D/AudioStream/PackedScene). It replaced SceneTree here when SceneTree stopped
+    # being a collision class (task 117 P1'(b1) generates it once into the shared tree).
+    collision = _gen_ios(policy_dir, "ResourceLoader")
+    if (policy_dir / "ResourceLoader.kt").exists():
+        print("[wrapper_generator] FAIL ResourceLoader.kt emitted despite being hand-written "
               "(collision policy regressed)", file=sys.stderr)
         return 1
-    if "collision: SceneTree is hand-written" not in collision.stderr:
-        print("[wrapper_generator] FAIL SceneTree collision not reported "
+    if "collision: ResourceLoader is hand-written" not in collision.stderr:
+        print("[wrapper_generator] FAIL ResourceLoader collision not reported "
               "(collision policy regressed)", file=sys.stderr)
         return 1
     return 0

@@ -32,11 +32,24 @@ OWNERSHIP_SENSITIVE_OBJECT_TYPES = {"Callable"}
 SPECIAL_OBJECT_WRAPPER_TYPES = {
     "DirAccess": "DirAccessHandle",
     "FileAccess": "FileAccessHandle",
-    "SceneTree": "SceneTreeHandle",
 }
 OWNERSHIP_SENSITIVE_METHODS = {
     ("RefCounted", "init_ref"),
     ("RefCounted", "reference"),
+}
+# Godot methods whose generated form is deliberately REPLACED (not overloaded) by the class's
+# IOS_MEMBER_SECTIONS text: the section declares the same Kotlin name and parameter list with a
+# different return type, so emitting both would be a conflicting-overloads compile error. Consulted
+# only when rendering in iOS MODE for the iOS target (`IOS_AUDIT_ONLY` is also set during the
+# shared-tree pass, so the lookup is additionally guarded on RENDER_TARGET — a shared class must never
+# lose a method to an iOS section); the reason lands in the skip report.
+IOS_SECTION_REPLACED_METHODS = {
+    ("Node", "get_tree"): (
+        "replaced by IOS_MEMBER_SECTIONS['Node']: getTree() is declared NON-NULL there "
+        "(`SceneTree`, not the generated `SceneTree?`) so the demo call sites that write "
+        "self.getTree().quit() keep compiling; both hand-shaped Node files carry the non-null "
+        "shape until Node itself retires (task 117 P1'(b1), D15)"
+    ),
 }
 # Per-method by-design skips with their recorded rationale (task 28). These are NOT missing
 # shapes: each was reviewed and deliberately left ungenerated; the reason lands verbatim in
@@ -377,8 +390,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "(IosGodotApi.kt) the class must subclass"),
     "Node": WrapperHome("hand", "generated",
         "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
-    "Node3D": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
     "NoiseTexture2D": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -412,9 +423,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "SceneMultiplayer": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "SceneTree": WrapperHome("hand", "collision",
-        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
-        "written Node subclass (createTween F2 fix + coroutine/companion glue) in IosGodotApi.kt"),
     "ShaderMaterial": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -840,7 +848,9 @@ IOS_MEMBER_SECTIONS = {
     // return type), so it is intentionally not duplicated here.
 
     fun getTree(): SceneTree =
-        SceneTree(GodotHandle(MemorySegment.ofAddress(IosGodot.nodeGetTree(segment.address()))))
+        requireNotNull(SceneTree.wrap(MemorySegment.ofAddress(IosGodot.nodeGetTree(segment.address())))) {
+            "Node.getTree(): not inside a SceneTree"
+        }
 
     fun getNodeOrNull(path: String): Node? =
         IosGodot.nodeGetNodeOrNull(segment.address(), path).takeIf { it != 0L }?.let {
@@ -862,9 +872,11 @@ IOS_MEMBER_SECTIONS = {
     fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (GodotHandle) -> T): T? =
         getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
 
-    // `open` so the hand-written SceneTree subclass (IosGodotApi.kt) can override createTween() with
-    // the correct SceneTree.create_tween bind — the FPS F2 fix. Generated here so a regen preserves
-    // the openness instead of silently dropping it (which would re-break the SIGSEGV path).
+    // `open` since task 103, when the hand-written SceneTree subclass (IosGodotApi.kt) overrode
+    // createTween() with the correct SceneTree.create_tween bind — the FPS F2 fix. Since task 117
+    // P1'(b1) SceneTree is a generated `MainLoop` (its create_tween sugar lives in SceneTree.ios.kt)
+    // and nothing in the repo overrides this, but the openness stays so a script subclass still can,
+    // and so the two hand-shaped Node files carry ONE openness.
     open fun createTween(): Tween? =
         IosGodot.nodeCreateTween(segment.address()).takeIf { it != 0L }?.let {
             Tween(GodotHandle(MemorySegment.ofAddress(it)))
@@ -942,10 +954,246 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #     DESKTOP_*/IOS_* apply to the classes generated for that platform only.
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
-SHARED_MEMBER_SECTIONS: dict[str, str] = {}
+SHARED_MEMBER_SECTIONS: dict[str, str] = {
+    "SceneTree": """
+    // ── Kanama SceneTree ergonomics (generator custom-section, not from Godot docs) ───────────
+    // setPaused is the desktop/Android spelling of Godot's set_pause. The retired desktop
+    // `object SceneTree` and the retired iOS hand class both exposed it, and demo scripts call
+    // getTree().setPaused(...), so it stays a member on both platforms (task 117 P1'(b1)).
+    fun setPaused(value: Boolean) {
+        setPause(value)
+    }
+
+    // Frame-driven delay: wait [timeSec] seconds of TREE time by pumping the engine frame loop
+    // (MainThread.awaitNextFrame, which both backends resume once per frame) instead of sleeping on
+    // the wall clock, so the wait survives a variable frame rate and honours `paused` and
+    // Engine.time_scale. Body carried over verbatim from the desktop `object SceneTree`
+    // (task 117 P1'(b1)); iOS previously used a wall-clock coroutine delay.
+    // `processInPhysics` is accepted for signature parity with createTimer and is not read.
+    suspend fun delaySeconds(
+        timeSec: Double,
+        processAlways: Boolean = true,
+        processInPhysics: Boolean = false,
+        ignoreTimeScale: Boolean = false,
+    ) {
+        if (timeSec <= 0.0) return
+
+        var elapsedSeconds = 0.0
+        var lastUsec = Time.getTicksUsec()
+
+        while (elapsedSeconds < timeSec) {
+            MainThread.awaitNextFrame()
+
+            val nowUsec = Time.getTicksUsec()
+            var frameSeconds = (nowUsec - lastUsec).coerceAtLeast(0L) / 1_000_000.0
+            lastUsec = nowUsec
+
+            if (!processAlways && isPaused()) {
+                frameSeconds = 0.0
+            } else if (!ignoreTimeScale) {
+                frameSeconds *= engineTimeScale().coerceAtLeast(0.0)
+            }
+
+            elapsedSeconds += frameSeconds
+        }
+    }
+""".strip("\n"),
+}
 # Every `create()` / `from*` helper this table held is a row in FACTORY_HELPERS since task 119
 # item 33. Non-factory shared companion members belong here.
 SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
+    "SceneTree": """
+        // ── The live SceneTree, and the desktop/Android static entry points ──────────────────
+        // Until task 117 P1'(b1) desktop modelled SceneTree as an `object` whose every method
+        // resolved the running tree through Engine.get_main_loop(), and the iOS hand-written class
+        // carried the same static forms on its companion. SceneTree is one generated class now, so
+        // those entry points live here: same names, delegating to active(), typed like the instance
+        // member each one calls (see the CHANGELOG for the signatures whose types changed).
+        // They carry NO @JvmStatic: a @JvmStatic companion member compiles to a static method on
+        // SceneTree itself, which would clash with the instance method of the same JVM signature.
+        // A Kotlin caller writes SceneTree.quit() either way; only active() and the two legacy
+        // *Handle helpers, which have no instance twin, can stay @JvmStatic.
+        private const val GET_MAIN_LOOP_HASH = 1016888095L
+        private const val GET_TIME_SCALE_HASH = 191475506L
+        private const val CREATE_TWEEN_HASH = 3426978995L
+
+        private val engineSingleton: RawSegment by lazy {
+            ObjectCalls.getSingleton("Engine")
+        }
+
+        private val getMainLoopBind by lazy {
+            ObjectCalls.getMethodBind("Engine", "get_main_loop", GET_MAIN_LOOP_HASH)
+        }
+
+        private val getTimeScaleBind by lazy {
+            ObjectCalls.getMethodBind("Engine", "get_time_scale", GET_TIME_SCALE_HASH)
+        }
+
+        private val createTweenHandleBind by lazy {
+            ObjectCalls.getMethodBind("SceneTree", "create_tween", CREATE_TWEEN_HASH)
+        }
+
+        // Engine.get_time_scale through the singleton above: the desktop `Engine` wrapper has
+        // getTimeScale(), the iOS one does not, and delaySeconds needs it on both.
+        internal fun engineTimeScale(): Double =
+            ObjectCalls.ptrcallNoArgsRetDouble(getTimeScaleBind, engineSingleton)
+
+        /**
+         * The SceneTree the engine is running, resolved through `Engine.get_main_loop()`.
+         *
+         * Throws if there is no main loop, or if the main loop is some other `MainLoop`.
+         */
+        @JvmStatic
+        fun active(): SceneTree {
+            val tree = checkNotNull(wrap(ObjectCalls.ptrcallNoArgsRetObject(getMainLoopBind, engineSingleton))) {
+                "SceneTree.active(): Engine.get_main_loop() returned null - no main loop is running"
+            }
+            check(tree.isClass("SceneTree")) {
+                "SceneTree.active(): the running main loop is not a SceneTree"
+            }
+            return tree
+        }
+
+        /** The root `Window` of the running tree. Non-null: a running tree always has one. */
+        // @JvmName as the generated properties use: without it the getter would be getRoot(), which
+        // collides with the getRoot() twin two lines down.
+        val root: Window
+            @JvmName("rootProperty")
+            get() = checkNotNull(active().getRoot()) { "SceneTree.root: the running tree has no root Window" }
+
+        fun isPaused(): Boolean = active().isPaused()
+
+        fun setPaused(value: Boolean) = active().setPaused(value)
+
+        fun getNodeCount(): Int = active().getNodeCount()
+
+        fun getFrame(): Long = active().getFrame()
+
+        fun quit(exitCode: Int = 0) = active().quit(exitCode)
+
+        fun changeSceneToFile(path: String): Long = active().changeSceneToFile(path)
+
+        fun reloadCurrentScene(): Long = active().reloadCurrentScene()
+
+        fun unloadCurrentScene() = active().unloadCurrentScene()
+
+        fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath = NodePath("")) =
+            active().setMultiplayer(multiplayer, rootPath)
+
+        fun getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI? = active().getMultiplayer(forPath)
+
+        fun isMultiplayerPollEnabled(): Boolean = active().isMultiplayerPollEnabled()
+
+        fun setMultiplayerPollEnabled(enabled: Boolean) = active().setMultiplayerPollEnabled(enabled)
+
+        fun hasGroup(name: String): Boolean = active().hasGroup(name)
+
+        fun getNodeCountInGroup(name: String): Int = active().getNodeCountInGroup(name)
+
+        fun getRoot(): Window? = active().getRoot()
+
+        fun getCurrentScene(): Node? = active().getCurrentScene()
+
+        fun setCurrentScene(childNode: Node) = active().setCurrentScene(childNode)
+
+        fun getFirstNodeInGroup(name: String): Node? = active().getFirstNodeInGroup(name)
+
+        fun getNodesInGroup(name: String): List<Node> = active().getNodesInGroup(name)
+
+        fun queueDelete(obj: GodotObject) = active().queueDelete(obj)
+
+        fun changeSceneToPacked(packedScene: PackedScene): Long = active().changeSceneToPacked(packedScene)
+
+        fun changeSceneToNode(node: Node): Long = active().changeSceneToNode(node)
+
+        fun getEditedSceneRoot(): Node? = active().getEditedSceneRoot()
+
+        fun setEditedSceneRoot(scene: Node) = active().setEditedSceneRoot(scene)
+
+        fun callGroup(groupName: String, methodName: String, vararg args: Any?) =
+            active().callGroup(groupName, methodName, *args)
+
+        fun notifyGroup(groupName: String, notification: Int) = active().notifyGroup(groupName, notification)
+
+        fun callGroupFlags(flags: Long, groupName: String, methodName: String, vararg args: Any?) =
+            active().callGroupFlags(flags, groupName, methodName, *args)
+
+        fun notifyGroupFlags(flags: Long, groupName: String, notification: Int) =
+            active().notifyGroupFlags(flags, groupName, notification)
+
+        fun setGroupFlags(flags: Long, groupName: String, property: String, value: Any?) =
+            active().setGroupFlags(flags, groupName, property, value)
+
+        fun setGroup(groupName: String, property: String, value: Any?) = active().setGroup(groupName, property, value)
+
+        fun createTimer(
+            timeSec: Double,
+            processAlways: Boolean = true,
+            processInPhysics: Boolean = false,
+            ignoreTimeScale: Boolean = false,
+        ): SceneTreeTimer? = active().createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
+
+        // legacy handle-returning form: the retired desktop `object SceneTree` exposed the raw
+        // GodotHandle next to the wrapper-returning call. Kept so callers keep compiling; prefer
+        // createTimer(...) / SceneTree.createTween().
+        @JvmStatic
+        fun createTimerHandle(
+            timeSec: Double,
+            processAlways: Boolean = true,
+            processInPhysics: Boolean = false,
+            ignoreTimeScale: Boolean = false,
+        ): GodotHandle = GodotHandle(
+            ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(
+                createTimerBind,
+                active().segment,
+                timeSec,
+                processAlways,
+                processInPhysics,
+                ignoreTimeScale,
+            ),
+        )
+
+        // legacy handle-returning form (see createTimerHandle). SceneTree.create_tween, not
+        // Node.create_tween: the tree is a MainLoop, not a Node.
+        @JvmStatic
+        fun createTweenHandle(): GodotHandle =
+            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenHandleBind, active().segment))
+
+        suspend fun delaySeconds(
+            timeSec: Double,
+            processAlways: Boolean = true,
+            processInPhysics: Boolean = false,
+            ignoreTimeScale: Boolean = false,
+        ) = active().delaySeconds(timeSec, processAlways, processInPhysics, ignoreTimeScale)
+
+        fun isAccessibilityEnabled(): Boolean = active().isAccessibilityEnabled()
+
+        fun isAccessibilitySupported(): Boolean = active().isAccessibilitySupported()
+
+        fun isAutoAcceptQuit(): Boolean = active().isAutoAcceptQuit()
+
+        fun setAutoAcceptQuit(enabled: Boolean) = active().setAutoAcceptQuit(enabled)
+
+        fun isQuitOnGoBack(): Boolean = active().isQuitOnGoBack()
+
+        fun setQuitOnGoBack(enabled: Boolean) = active().setQuitOnGoBack(enabled)
+
+        fun setDebugCollisionsHint(enabled: Boolean) = active().setDebugCollisionsHint(enabled)
+
+        fun isDebuggingCollisionsHint(): Boolean = active().isDebuggingCollisionsHint()
+
+        fun setDebugPathsHint(enabled: Boolean) = active().setDebugPathsHint(enabled)
+
+        fun isDebuggingPathsHint(): Boolean = active().isDebuggingPathsHint()
+
+        fun setDebugNavigationHint(enabled: Boolean) = active().setDebugNavigationHint(enabled)
+
+        fun isDebuggingNavigationHint(): Boolean = active().isDebuggingNavigationHint()
+
+        fun setPhysicsInterpolationEnabled(enabled: Boolean) = active().setPhysicsInterpolationEnabled(enabled)
+
+        fun isPhysicsInterpolationEnabled(): Boolean = active().isPhysicsInterpolationEnabled()
+""".strip("\n"),
     "PhysicsBody3D": """
         // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
         // (used by set_axis_lock). Aliases of the @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags,
@@ -1029,6 +1277,17 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
 
 # Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`.
 DESKTOP_EXTENSION_SECTIONS = {
+    "SceneTree": """
+// The two static Tween entry points of the retired desktop `object SceneTree`. They live here, not
+// in the shared companion, because their instance forms are desktop-only too (SceneTree.jvm.kt: iOS
+// hosts no Tween wrapper with a `wrap` helper). Import them by name to call them:
+// `import net.multigesture.kanama.api.createTween`.
+fun SceneTree.Companion.createTween(): Tween? =
+    SceneTree.active().createTween()
+
+fun SceneTree.Companion.getProcessedTweens(): List<Tween> =
+    SceneTree.active().getProcessedTweens()
+""".strip("\n"),
     "AnimationMixer": """
 fun AnimationMixer.setParameter(path: String, value: Any?) {
     setIndexed(path, value)
@@ -1053,6 +1312,21 @@ fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMach
 # (extra imports, text); ObjectCalls, MemorySegment and the binding.runtime helpers are imported
 # by the companion header.
 IOS_EXTENSION_SECTIONS: dict[str, tuple[tuple[str, ...], str]] = {
+    "SceneTree": ((), """
+// SceneTree.create_tween through the TREE's own bind. Carried over from the retired hand-written
+// iOS `class SceneTree : Node`, whose `override fun createTween()` existed because Node.create_tween
+// on a tree handle SIGSEGVs (the task-103 "F2 fix"); SceneTree is a MainLoop now, so nothing is
+// inherited and this is plain sugar. Mirrors the generated desktop SceneTree.createTween extension
+// in SceneTree.jvm.kt — iOS hosts no Tween.wrap, so it cannot be a shared member.
+fun SceneTree.createTween(): Tween? =
+    ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
+        .takeIf { it.address() != 0L }
+        ?.let { Tween(GodotHandle(it)) }
+
+private val sceneTreeCreateTweenBind by lazy {
+    ObjectCalls.getMethodBind("SceneTree", "create_tween", 3426978995L)
+}
+""".strip("\n")),
     "AnimationMixer": ((), """
 // AnimationTree parameters are exposed as `parameters/...` engine properties, so route through
 // set()/get() (no NodePath set_indexed needed). Matches the desktop AnimationMixer helpers.
@@ -1934,6 +2208,10 @@ def unsupported_reason(
     by_design = BY_DESIGN_METHOD_SKIPS.get((class_name, method.name))
     if by_design:
         return by_design
+    if IOS_AUDIT_ONLY and RENDER_TARGET == "ios":
+        replaced = IOS_SECTION_REPLACED_METHODS.get((class_name, method.name))
+        if replaced:
+            return replaced
     if method.name.startswith("_"):
         return "internal/virtual callback methods are not emitted as public wrappers"
     if method.is_vararg and is_supported_vararg_method(method, object_types):
@@ -3066,6 +3344,7 @@ EXPECT_DEFAULT_ARG_EXCLUSIONS = {"callWithVariantArgs"}
 EXPECT_OVERLOAD_EXCLUSIONS = {
     "fun ptrcallWithIntArgRetVector3(methodBind: RawSegment, instance: RawSegment, value: Long): Vector3",
     "fun ptrcallWithNodePathArgRetBool(methodBind: RawSegment, instance: RawSegment, path: String): Boolean",
+    "fun ptrcallWithNodePathArgRetObject(methodBind: RawSegment, instance: RawSegment, path: String): RawSegment",
 }
 
 OBJECTCALLS_EXPECT_HEADER = '''package net.multigesture.kanama.binding.runtime

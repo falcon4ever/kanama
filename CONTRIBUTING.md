@@ -160,7 +160,7 @@ Generated candidates:
 - No special lifetime or ownership behavior
 
 Hand-authored candidates:
-- `FileAccess`, `DirAccess`, `SceneTree`, and similar managed objects
+- `FileAccess`, `DirAccess`, and similar managed objects
 - Singletons and engine-owned instances
 - Classes using unsupported `Array`, `Dictionary`, `Callable`, or ownership
   sensitive APIs

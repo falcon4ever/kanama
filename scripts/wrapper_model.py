@@ -568,7 +568,12 @@ def scan_wrappers(api_dir: Path) -> dict[str, set[str]]:
     wrapped: dict[str, set[str]] = {}
     for path in wrapper_source_files(api_dir, companions=True):
         content = path.read_text(encoding="utf-8")
+        # `<Class>.jvm.kt` / `<Class>.ios.kt` stems are "<Class>.jvm" / "<Class>.ios"; strip the
+        # platform suffix so a companion's method binds are credited to the class, not to a name
+        # no API class has (task 117 P1'(b1) put the first real gap members in SceneTree.jvm.kt).
         wrapper_class = path.stem
+        if is_companion_file(path):
+            wrapper_class = wrapper_class.rsplit(".", 1)[0]
         api_class = WRAPPER_CLASS_ALIASES.get(wrapper_class, wrapper_class)
         for class_name, method_name, _token in METHOD_BIND_RE.findall(content):
             if class_name != api_class:

@@ -567,7 +567,9 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     // return type), so it is intentionally not duplicated here.
 
     fun getTree(): SceneTree =
-        SceneTree(GodotHandle(MemorySegment.ofAddress(IosGodot.nodeGetTree(segment.address()))))
+        requireNotNull(SceneTree.wrap(MemorySegment.ofAddress(IosGodot.nodeGetTree(segment.address())))) {
+            "Node.getTree(): not inside a SceneTree"
+        }
 
     fun getNodeOrNull(path: String): Node? =
         IosGodot.nodeGetNodeOrNull(segment.address(), path).takeIf { it != 0L }?.let {
@@ -589,9 +591,11 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     fun <T : Node> getNodeAsOrNull(path: String, className: String, ctor: (GodotHandle) -> T): T? =
         getNodeOrNull(path)?.takeIf { it.isClass(className) }?.let { ctor(it.handle) }
 
-    // `open` so the hand-written SceneTree subclass (IosGodotApi.kt) can override createTween() with
-    // the correct SceneTree.create_tween bind — the FPS F2 fix. Generated here so a regen preserves
-    // the openness instead of silently dropping it (which would re-break the SIGSEGV path).
+    // `open` since task 103, when the hand-written SceneTree subclass (IosGodotApi.kt) overrode
+    // createTween() with the correct SceneTree.create_tween bind — the FPS F2 fix. Since task 117
+    // P1'(b1) SceneTree is a generated `MainLoop` (its create_tween sugar lives in SceneTree.ios.kt)
+    // and nothing in the repo overrides this, but the openness stays so a script subclass still can,
+    // and so the two hand-shaped Node files carry ONE openness.
     open fun createTween(): Tween? =
         IosGodot.nodeCreateTween(segment.address()).takeIf { it != 0L }?.let {
             Tween(GodotHandle(MemorySegment.ofAddress(it)))
