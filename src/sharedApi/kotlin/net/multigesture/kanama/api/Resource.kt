@@ -1,8 +1,10 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
 
 /**
@@ -10,9 +12,30 @@ import net.multigesture.kanama.types.RID
  *
  * Generated from Godot docs: Resource
  */
-open class Resource internal constructor(
-    handle: GodotHandle,
-) : RefCounted(handle) {
+open class Resource(handle: GodotHandle) : RefCounted(handle) {
+    var resourceLocalToScene: Boolean
+        @JvmName("resourceLocalToSceneProperty")
+        get() = isLocalToScene()
+        @JvmName("setResourceLocalToSceneProperty")
+        set(value) = setLocalToScene(value)
+
+    var resourcePath: String
+        @JvmName("resourcePathProperty")
+        get() = getPath()
+        @JvmName("setResourcePathProperty")
+        set(value) = setPath(value)
+
+    var resourceName: String
+        @JvmName("resourceNameProperty")
+        get() = getName()
+        @JvmName("setResourceNameProperty")
+        set(value) = setName(value)
+
+    var resourceSceneUniqueId: String
+        @JvmName("resourceSceneUniqueIdProperty")
+        get() = getSceneUniqueId()
+        @JvmName("setResourceSceneUniqueIdProperty")
+        set(value) = setSceneUniqueId(value)
 
     /**
      * The unique path to this resource. If it has been saved to disk, the value will be its filepath.
@@ -121,78 +144,6 @@ open class Resource internal constructor(
     }
 
     /**
-     * A unique identifier relative to this resource's scene. If left empty, the ID is automatically
-     * generated when this resource is saved inside a `PackedScene`. If the resource is not inside a
-     * scene, this property is empty by default. Note: When the `PackedScene` is saved, if multiple
-     * resources in the same scene use the same ID, only the earliest resource in the scene hierarchy
-     * keeps the original ID. The other resources are assigned new IDs from `generate_scene_unique_id`.
-     * Note: Setting this property does not emit the `changed` signal. Warning: When setting, the ID
-     * must only consist of letters, numbers, and underscores. Otherwise, it will fail and default to a
-     * randomly generated ID.
-     *
-     * Generated from Godot docs: Resource.get_scene_unique_id
-     */
-    fun getSceneUniqueId(): String {
-        checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, segment)
-    }
-
-    /**
-     * A unique identifier relative to this resource's scene. If left empty, the ID is automatically
-     * generated when this resource is saved inside a `PackedScene`. If the resource is not inside a
-     * scene, this property is empty by default. Note: When the `PackedScene` is saved, if multiple
-     * resources in the same scene use the same ID, only the earliest resource in the scene hierarchy
-     * keeps the original ID. The other resources are assigned new IDs from `generate_scene_unique_id`.
-     * Note: Setting this property does not emit the `changed` signal. Warning: When setting, the ID
-     * must only consist of letters, numbers, and underscores. Otherwise, it will fail and default to a
-     * randomly generated ID.
-     *
-     * Generated from Godot docs: Resource.set_scene_unique_id
-     */
-    fun setSceneUniqueId(id: String) {
-        checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, segment, id)
-    }
-
-    /**
-     * In the internal cache for scene-unique IDs, sets the ID of this resource to `id` for the scene
-     * at `path`. If `id` is empty, the cache entry for `path` is cleared. Useful to keep scene-unique
-     * IDs the same when implementing a VCS-friendly custom resource format by extending
-     * `ResourceFormatLoader` and `ResourceFormatSaver`. Note: This method is only implemented when
-     * running in an editor context.
-     *
-     * Generated from Godot docs: Resource.set_id_for_path
-     */
-    fun setIdForPath(path: String, id: String) {
-        checkOpen()
-        ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, segment, path, id)
-    }
-
-    /**
-     * From the internal cache for scene-unique IDs, returns the ID of this resource for the scene at
-     * `path`. If there is no entry, an empty string is returned. Useful to keep scene-unique IDs the
-     * same when implementing a VCS-friendly custom resource format by extending `ResourceFormatLoader`
-     * and `ResourceFormatSaver`. Note: This method is only implemented when running in an editor
-     * context. At runtime, it returns an empty string.
-     *
-     * Generated from Godot docs: Resource.get_id_for_path
-     */
-    fun getIdForPath(path: String): String {
-        checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, segment, path)
-    }
-
-    /**
-     * Returns `true` if the resource is saved on disk as a part of another resource's file.
-     *
-     * Generated from Godot docs: Resource.is_built_in
-     */
-    fun isBuiltIn(): Boolean {
-        checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, segment)
-    }
-
-    /**
      * If `true`, the resource is duplicated for each instance of all scenes using it. At run-time, the
      * resource can be modified in one scene without affecting other instances (see
      * `PackedScene.instantiate`). Note: Changing this property at run-time has no effect on already
@@ -242,6 +193,78 @@ open class Resource internal constructor(
     }
 
     /**
+     * In the internal cache for scene-unique IDs, sets the ID of this resource to `id` for the scene
+     * at `path`. If `id` is empty, the cache entry for `path` is cleared. Useful to keep scene-unique
+     * IDs the same when implementing a VCS-friendly custom resource format by extending
+     * `ResourceFormatLoader` and `ResourceFormatSaver`. Note: This method is only implemented when
+     * running in an editor context.
+     *
+     * Generated from Godot docs: Resource.set_id_for_path
+     */
+    fun setIdForPath(path: String, id: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoStringArgs(setIdForPathBind, segment, path, id)
+    }
+
+    /**
+     * From the internal cache for scene-unique IDs, returns the ID of this resource for the scene at
+     * `path`. If there is no entry, an empty string is returned. Useful to keep scene-unique IDs the
+     * same when implementing a VCS-friendly custom resource format by extending `ResourceFormatLoader`
+     * and `ResourceFormatSaver`. Note: This method is only implemented when running in an editor
+     * context. At runtime, it returns an empty string.
+     *
+     * Generated from Godot docs: Resource.get_id_for_path
+     */
+    fun getIdForPath(path: String): String {
+        checkOpen()
+        return ObjectCalls.ptrcallWithStringArgRetString(getIdForPathBind, segment, path)
+    }
+
+    /**
+     * Returns `true` if the resource is saved on disk as a part of another resource's file.
+     *
+     * Generated from Godot docs: Resource.is_built_in
+     */
+    fun isBuiltIn(): Boolean {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetBool(isBuiltInBind, segment)
+    }
+
+    /**
+     * A unique identifier relative to this resource's scene. If left empty, the ID is automatically
+     * generated when this resource is saved inside a `PackedScene`. If the resource is not inside a
+     * scene, this property is empty by default. Note: When the `PackedScene` is saved, if multiple
+     * resources in the same scene use the same ID, only the earliest resource in the scene hierarchy
+     * keeps the original ID. The other resources are assigned new IDs from `generate_scene_unique_id`.
+     * Note: Setting this property does not emit the `changed` signal. Warning: When setting, the ID
+     * must only consist of letters, numbers, and underscores. Otherwise, it will fail and default to a
+     * randomly generated ID.
+     *
+     * Generated from Godot docs: Resource.set_scene_unique_id
+     */
+    fun setSceneUniqueId(id: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringArg(setSceneUniqueIdBind, segment, id)
+    }
+
+    /**
+     * A unique identifier relative to this resource's scene. If left empty, the ID is automatically
+     * generated when this resource is saved inside a `PackedScene`. If the resource is not inside a
+     * scene, this property is empty by default. Note: When the `PackedScene` is saved, if multiple
+     * resources in the same scene use the same ID, only the earliest resource in the scene hierarchy
+     * keeps the original ID. The other resources are assigned new IDs from `generate_scene_unique_id`.
+     * Note: Setting this property does not emit the `changed` signal. Warning: When setting, the ID
+     * must only consist of letters, numbers, and underscores. Otherwise, it will fail and default to a
+     * randomly generated ID.
+     *
+     * Generated from Godot docs: Resource.get_scene_unique_id
+     */
+    fun getSceneUniqueId(): String {
+        checkOpen()
+        return ObjectCalls.ptrcallNoArgsRetString(getSceneUniqueIdBind, segment)
+    }
+
+    /**
      * Emits the `changed` signal. This method is called automatically for some built-in resources.
      * Note: For custom resources, it's recommended to call this method whenever a meaningful change
      * occurs, such as a modified property. This ensures that custom `Object`s depending on the
@@ -273,9 +296,14 @@ open class Resource internal constructor(
      *
      * Generated from Godot docs: Resource.duplicate
      */
-    fun duplicate(subresources: Boolean = false): Resource? {
+    fun duplicate(deep: Boolean = false): Resource? {
         checkOpen()
-        return wrap(ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, segment, subresources))
+        val ret = ObjectCalls.ptrcallWithBoolArgRetObject(duplicateBind, segment, deep)
+        if (ret.address() == segment.address()) {
+            RefCounted.releaseHandle(ret)
+            return this
+        }
+        return Resource.wrap(ret)
     }
 
     /**
@@ -284,21 +312,24 @@ open class Resource internal constructor(
      *
      * Generated from Godot docs: Resource.duplicate_deep
      */
-    fun duplicateDeep(mode: Long = DEEP_DUPLICATE_INTERNAL): Resource? {
+    fun duplicateDeep(deepSubresourcesMode: Long = 1L): Resource? {
         checkOpen()
-        return wrap(ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, mode))
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, deepSubresourcesMode)
+        if (ret.address() == segment.address()) {
+            RefCounted.releaseHandle(ret)
+            return this
+        }
+        return Resource.wrap(ret)
     }
 
     /**
-     * Returns a non-owning Object wrapper for this resource.
+     * Copies the data from `resource` into this resource. Both resources must share the same class.
      *
-     * Retained for source compatibility: `Resource` now inherits `GodotObject`'s surface directly
-     * (`setMeta`/`connect`/`callDeferred`/…), so this is largely a convenience alias for callers
-     * that already hold one (e.g. `docs/contributing/demo-porting-rules.md`).
+     * Generated from Godot docs: Resource.copy_from_resource
      */
-    fun asObject(): GodotObject {
+    fun copyFromResource(resource: Resource?): Long {
         checkOpen()
-        return GodotObject(handle)
+        return ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     object Signals {
@@ -307,10 +338,6 @@ open class Resource internal constructor(
     }
 
     companion object {
-        const val DEEP_DUPLICATE_NONE = 0L
-        const val DEEP_DUPLICATE_INTERNAL = 1L
-        const val DEEP_DUPLICATE_ALL = 2L
-
         /**
          * Generates a unique identifier for a resource to be contained inside a `PackedScene`, based on
          * the current date, time, and a random value. The returned string is only composed of letters (`a`
@@ -318,127 +345,139 @@ open class Resource internal constructor(
          *
          * Generated from Godot docs: Resource.generate_scene_unique_id
          */
-        @JvmStatic
-        fun generateSceneUniqueId(): String =
-            ObjectCalls.ptrcallNoArgsRetString(generateSceneUniqueIdBind, NULL_SEGMENT)
-
-        private const val GET_PATH_HASH = 201670096L
-        private const val GET_STRING_HASH = 201670096L
-        private const val SET_STRING_HASH = 83702148L
-        private const val GENERATE_SCENE_UNIQUE_ID_HASH = 2841200299L
-        private const val STRING_STRING_HASH = 3135753539L
-        private const val TWO_STRING_HASH = 3186203200L
-        private const val NOARGS_BOOL_HASH = 36873697L
-        private const val NOARGS_RID_HASH = 2944877500L
-        private const val GET_LOCAL_SCENE_HASH = 3160264692L
-        private const val SET_BOOL_HASH = 2586408642L
-        private const val NOARGS_VOID_HASH = 3218959716L
-        private const val DUPLICATE_HASH = 482882304L
-        private const val DUPLICATE_DEEP_HASH = 905779109L
-
-        private val getPathBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "get_path", GET_PATH_HASH)
+        fun generateSceneUniqueId(): String {
+            return ObjectCalls.ptrcallNoArgsRetString(generateSceneUniqueIdBind, NULL_SEGMENT)
         }
 
-        private val setPathBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "set_path", SET_STRING_HASH)
-        }
+        const val DEEP_DUPLICATE_NONE: Long = 0L
+        const val DEEP_DUPLICATE_INTERNAL: Long = 1L
+        const val DEEP_DUPLICATE_ALL: Long = 2L
 
-        private val takeOverPathBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "take_over_path", SET_STRING_HASH)
-        }
-
-        private val setPathCacheBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "set_path_cache", SET_STRING_HASH)
-        }
-
-        private val generateSceneUniqueIdBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "generate_scene_unique_id", GENERATE_SCENE_UNIQUE_ID_HASH)
-        }
-
-        private val setNameBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "set_name", SET_STRING_HASH)
-        }
-
-        private val getNameBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "get_name", GET_STRING_HASH)
-        }
-
-        private val getRidBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "get_rid", NOARGS_RID_HASH)
-        }
-
-        private val setLocalToSceneBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "set_local_to_scene", SET_BOOL_HASH)
-        }
-
-        private val getSceneUniqueIdBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "get_scene_unique_id", GET_STRING_HASH)
-        }
-
-        private val setSceneUniqueIdBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "set_scene_unique_id", SET_STRING_HASH)
-        }
-
-        private val getIdForPathBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "get_id_for_path", STRING_STRING_HASH)
-        }
-
-        private val setIdForPathBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "set_id_for_path", TWO_STRING_HASH)
-        }
-
-        private val isBuiltInBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "is_built_in", NOARGS_BOOL_HASH)
-        }
-
-        private val isLocalToSceneBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "is_local_to_scene", NOARGS_BOOL_HASH)
-        }
-
-        private val getLocalSceneBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "get_local_scene", GET_LOCAL_SCENE_HASH)
-        }
-
-        private val setupLocalToSceneBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "setup_local_to_scene", NOARGS_VOID_HASH)
-        }
-
-        private val resetStateBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "reset_state", NOARGS_VOID_HASH)
-        }
-
-        private val emitChangedBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "emit_changed", NOARGS_VOID_HASH)
-        }
-
-        private val duplicateBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "duplicate", DUPLICATE_HASH)
-        }
-
-        private val duplicateDeepBind by lazy {
-            ObjectCalls.getMethodBind("Resource", "duplicate_deep", DUPLICATE_DEEP_HASH)
-        }
-
-        internal fun wrap(handle: RawSegment): Resource? =
-            if (handle.address() == 0L) null else Resource(GodotHandle(handle))
-
-        /**
-         * Wraps an existing Godot `Resource` handle without taking ownership.
-         *
-         * This is primarily useful for custom resource scripts that extend
-         * `KanamaScript<Resource>` and need a public self factory.
-         */
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Resource =
             Resource(handle)
 
+        internal fun wrap(handle: RawSegment): Resource? =
+            if (handle.address() == 0L) null else Resource(GodotHandle(handle))
+
+        // Instantiate a Resource.
+        @JvmStatic
+        fun create(): Resource =
+            Resource(GodotHandle(ObjectCalls.constructObject("Resource")))
+
+        // Downcast a GodotObject to Resource (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Resource? =
             if (value.isClass("Resource")) Resource(value.handle) else null
 
-        @JvmStatic
-        fun create(): Resource =
-            Resource(GodotHandle(ObjectCalls.constructObject("Resource")))
+        private const val SET_PATH_HASH = 83702148L
+        private val setPathBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "set_path", SET_PATH_HASH)
+        }
+
+        private const val TAKE_OVER_PATH_HASH = 83702148L
+        private val takeOverPathBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "take_over_path", TAKE_OVER_PATH_HASH)
+        }
+
+        private const val GET_PATH_HASH = 201670096L
+        private val getPathBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "get_path", GET_PATH_HASH)
+        }
+
+        private const val SET_PATH_CACHE_HASH = 83702148L
+        private val setPathCacheBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "set_path_cache", SET_PATH_CACHE_HASH)
+        }
+
+        private const val SET_NAME_HASH = 83702148L
+        private val setNameBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "set_name", SET_NAME_HASH)
+        }
+
+        private const val GET_NAME_HASH = 201670096L
+        private val getNameBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "get_name", GET_NAME_HASH)
+        }
+
+        private const val GET_RID_HASH = 2944877500L
+        private val getRidBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "get_rid", GET_RID_HASH)
+        }
+
+        private const val SET_LOCAL_TO_SCENE_HASH = 2586408642L
+        private val setLocalToSceneBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "set_local_to_scene", SET_LOCAL_TO_SCENE_HASH)
+        }
+
+        private const val IS_LOCAL_TO_SCENE_HASH = 36873697L
+        private val isLocalToSceneBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "is_local_to_scene", IS_LOCAL_TO_SCENE_HASH)
+        }
+
+        private const val GET_LOCAL_SCENE_HASH = 3160264692L
+        private val getLocalSceneBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "get_local_scene", GET_LOCAL_SCENE_HASH)
+        }
+
+        private const val SETUP_LOCAL_TO_SCENE_HASH = 3218959716L
+        private val setupLocalToSceneBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "setup_local_to_scene", SETUP_LOCAL_TO_SCENE_HASH)
+        }
+
+        private const val RESET_STATE_HASH = 3218959716L
+        private val resetStateBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "reset_state", RESET_STATE_HASH)
+        }
+
+        private const val SET_ID_FOR_PATH_HASH = 3186203200L
+        private val setIdForPathBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "set_id_for_path", SET_ID_FOR_PATH_HASH)
+        }
+
+        private const val GET_ID_FOR_PATH_HASH = 3135753539L
+        private val getIdForPathBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "get_id_for_path", GET_ID_FOR_PATH_HASH)
+        }
+
+        private const val IS_BUILT_IN_HASH = 36873697L
+        private val isBuiltInBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "is_built_in", IS_BUILT_IN_HASH)
+        }
+
+        private const val GENERATE_SCENE_UNIQUE_ID_HASH = 2841200299L
+        private val generateSceneUniqueIdBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "generate_scene_unique_id", GENERATE_SCENE_UNIQUE_ID_HASH)
+        }
+
+        private const val SET_SCENE_UNIQUE_ID_HASH = 83702148L
+        private val setSceneUniqueIdBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "set_scene_unique_id", SET_SCENE_UNIQUE_ID_HASH)
+        }
+
+        private const val GET_SCENE_UNIQUE_ID_HASH = 201670096L
+        private val getSceneUniqueIdBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "get_scene_unique_id", GET_SCENE_UNIQUE_ID_HASH)
+        }
+
+        private const val EMIT_CHANGED_HASH = 3218959716L
+        private val emitChangedBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "emit_changed", EMIT_CHANGED_HASH)
+        }
+
+        private const val DUPLICATE_HASH = 482882304L
+        private val duplicateBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "duplicate", DUPLICATE_HASH)
+        }
+
+        private const val DUPLICATE_DEEP_HASH = 905779109L
+        private val duplicateDeepBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "duplicate_deep", DUPLICATE_DEEP_HASH)
+        }
+
+        private const val COPY_FROM_RESOURCE_HASH = 3338311164L
+        private val copyFromResourceBind by lazy {
+            ObjectCalls.getMethodBind("Resource", "copy_from_resource", COPY_FROM_RESOURCE_HASH)
+        }
     }
 }

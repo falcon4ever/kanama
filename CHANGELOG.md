@@ -7,6 +7,69 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — `Viewport` and `Resource` generated once — group A complete (task 117 P1'(c), 3/3) — **desktop source break**
+
+- The last two group-A classes are generated once into the shared wrapper tree
+  (`src/sharedApi/.../api/Viewport.kt`, `.../Resource.kt`); both per-platform copies of each are
+  deleted and `PER_PLATFORM_WRAPPERS` loses both entries. As in 1/3 and 2/3 the shared draft is
+  signature-identical to the committed iOS copy, so every change below lands on desktop.
+- **`Viewport.getCamera3D()` and `getCamera2D()` survive as shared members.** The camelCase aliases
+  over the generator's `getCamera3d()` / `getCamera2d()` lived twice — on the desktop hand copy
+  (`getCamera3D` only) and in `IOS_MEMBER_SECTIONS["Viewport"]` (both) — and are now one
+  `SHARED_MEMBER_SECTIONS["Viewport"]` entry, so the four demo call sites and
+  `example_project/WrapperConvenienceProbe.kt` keep compiling on desktop, Android and iOS, and
+  **desktop gains `getCamera2D()`**.
+- **`Viewport.pushInput` / `pushUnhandledInput` take a non-null `InputEvent`.** The desktop hand copy
+  declared `event: InputEvent?` and passed `NULL_SEGMENT` for null; the generated form is
+  `pushInput(event: InputEvent, inLocalCoords: Boolean = false)` — passing `null` no longer compiles
+  (0 callers in the repo or the demos). The `inLocalCoords` default is unchanged.
+- **Four `Viewport` properties arrive on desktop**: `positionalShadowAtlasQuad0`…`Quad3`
+  (`var …: Long` over the `get*`/`set*` pair desktop already had), plus five companion constants —
+  `DEBUG_DRAW_AREA_LIGHT_ATLAS`, `DEBUG_DRAW_CLUSTER_AREA_LIGHTS`,
+  `DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_PARENT_NODE`, `DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_PARENT_NODE`,
+  `SCALING_3D_MODE_NEAREST`.
+- **`Resource`'s primary constructor is public** (it was `internal` on desktop, public on iOS) — the
+  generator's shape for every retiring class, as `Mesh` and `PackedScene` took in P1'(a) (D4 as
+  amended by D10). `Resource` is not an `expect`/`actual` root, so D4's `internal` rule no longer
+  applies to it; the ownership guidance is unchanged (a wrapper you mint around a handle you already
+  hold is a borrowed view — never `close()` it).
+- **`Resource.create()` and `Resource.fromObject(value: GodotObject)` keep working**: they are a
+  `FACTORY_HELPERS["Resource"] = FactorySpec(True, (Downcast("fromObject", "GodotObject", False),))`
+  row now, generated for every platform with the same bodies, so `example_project/HelloScript.kt`
+  and the demos' `Resource.fromObject(...)` call sites are unaffected. `fromHandle` keeps its
+  non-null `Resource` return.
+- **`Resource.asObject()` is dropped** (desktop-only, 0 callers). It was already documented as a
+  compatibility alias: `Resource` inherits `GodotObject`'s surface directly, so call
+  `setMeta`/`connect`/`callDeferred` on the resource, or `GodotObject(resource.handle)` if you really
+  need the base wrapper.
+- **The two `duplicate` parameter names follow the generator** (named-argument call sites only):
+  `duplicate(deep: Boolean = false)` (was `subresources`) and
+  `duplicateDeep(deepSubresourcesMode: Long = 1L)` (was `mode: Long = DEEP_DUPLICATE_INTERNAL` — the
+  same value; the `DEEP_DUPLICATE_NONE`/`INTERNAL`/`ALL` constants stay). Both also gain the standard
+  generated **self-return collapse**: when the engine hands back the same object, the +1 return-slot
+  reference is released through `RefCounted.releaseHandle` and `this` is returned instead of a second
+  wrapper — the lifetime fix every other generated `RefCounted` return already had.
+- **`copyFromResource(resource: Resource?): Long` and four `resource*` properties arrive on desktop**:
+  `resourcePath`, `resourceName`, `resourceLocalToScene`, `resourceSceneUniqueId` — each over the
+  `get*`/`set*`/`is*` pair desktop already had. The coverage page's `Resource` row goes from `21/22`
+  to `22/22`.
+- **`Resource.generateSceneUniqueId()` loses `@JvmStatic`**, which the whole shared tree does for
+  Godot statics (see `GLTFDocument`). Kotlin call sites are unchanged; a Java caller writes
+  `Resource.Companion.generateSceneUniqueId()`.
+- **The lifetime policy is unchanged.** Every `Resource` method still opens with `checkOpen()` and
+  every nullable Object argument still goes through `requireOpenHandle()` — the generator emits both
+  for `RefCounted`-derived classes (480 shared files already do), so retiring the hand file loses no
+  guard. The refcount policy itself still comes from the per-platform `RefCounted` root, which stays
+  hand-shaped until P3'.
+- `ObjectCalls`: the shared tree reaches one more helper, `ptrcallWithTwoLongArgsRetInt` (behind
+  `Viewport.getPositionalShadowAtlasQuadrantSubdiv`), already present on both platforms and now
+  `actual` on both; the common `expect object ObjectCalls` grows 1414 → 1415. No new native path.
+- **Group A of task 117 P1' is complete.** The wrapper parity gate drops both classes from
+  `HAND_SHAPED` (9 → **7 classes**) and their 23 allowlist lines go (126 → **103**): Viewport 12,
+  Resource 11. The seven left are the group-B four (`Image`, `PlaneMesh`, `Tweener`, `StaticBody3D`)
+  and the three roots (`GodotObject`, `RefCounted`, `GodotCallable`). The shared tree grows
+  1001 → 1003 classes and `PER_PLATFORM_WRAPPERS` shrinks 34 → 32.
+
 ### Changed — `Button`, `LineEdit`, `Range`, `Slider` generated once (task 117 P1'(c), 2/3) — **desktop source break**
 
 - Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`);

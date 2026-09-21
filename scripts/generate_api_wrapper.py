@@ -399,9 +399,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "written Tween chaining glue in IosGodotApi.kt"),
     "RefCounted": WrapperHome("hand", "generated",
         "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit"),
-    "Resource": WrapperHome("hand", "generated",
-        "desktop: hand create/fromObject/asObject helpers; the refcount lifetime is inherited from "
-        "RefCounted (task 51)"),
     "ResourceLoader": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written typed-loader glue (loadTexture2D/AudioStream/PackedScene) in IosGodotApi.kt"),
@@ -421,8 +418,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "written Variant tween_property runtime in IosGodotApi.kt"),
     "Tweener": WrapperHome("generated", "collision",
         "iOS: hand-written Tween chaining glue in IosGodotApi.kt"),
-    "Viewport": WrapperHome("hand", "generated",
-        "desktop: generated base plus hand ergonomic helpers, aliases, or custom defaults"),
 }
 
 DESKTOP_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.desktop == "hand")
@@ -823,13 +818,6 @@ IOS_MEMBER_SECTIONS = {
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
     fun commit(): ArrayMesh? = commit(null)
 """.strip("\n"),
-    "Viewport": """
-    // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d);
-    // match the Android aliases so shared demo code resolves on both backends.
-    fun getCamera3D(): Camera3D? = getCamera3d()
-
-    fun getCamera2D(): Camera2D? = getCamera2d()
-""".strip("\n"),
 }
 
 # iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
@@ -875,6 +863,15 @@ IOS_COMPANION_MEMBER_SECTIONS = {
 #   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
 #     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
 SHARED_MEMBER_SECTIONS: dict[str, str] = {
+    "Viewport": """
+    // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d).
+    // They lived twice until task 117 P1'(c): on the hand-written desktop `Viewport` (getCamera3D
+    // only) and in IOS_MEMBER_SECTIONS['Viewport'] (both). `Viewport` is one generated class now,
+    // so the aliases are shared members and every demo call site resolves on both backends.
+    fun getCamera3D(): Camera3D? = getCamera3d()
+
+    fun getCamera2D(): Camera2D? = getCamera2d()
+""".strip("\n"),
     "Node": """
     // ── Kanama Node ergonomics (generator custom-section, not from Godot docs) ────────────────
     // These lived twice until task 117 P1'(b2): on the hand-written desktop `Node`, and (a subset,
@@ -1319,6 +1316,7 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "MeshLibrary": FactorySpec(True),
     "OfflineMultiplayerPeer": FactorySpec(True),
     "PackedScene": FactorySpec(True),
+    "Resource": FactorySpec(True, (Downcast("fromObject", "GodotObject", False),)),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Sprite2D": FactorySpec(True),
     # Task 117 P1'(c): the hand copies' only companion sugar (both carried create(), neither a

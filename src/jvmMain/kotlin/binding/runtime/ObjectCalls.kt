@@ -17892,7 +17892,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoLongArgsRetInt(
+  actual fun ptrcallWithTwoLongArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,

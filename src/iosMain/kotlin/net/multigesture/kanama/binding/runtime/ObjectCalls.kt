@@ -39926,7 +39926,7 @@ actual object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithTwoLongArgsRetInt(
+  actual fun ptrcallWithTwoLongArgsRetInt(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Long,
