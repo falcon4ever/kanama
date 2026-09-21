@@ -76,7 +76,7 @@ engine-wide constants from `extension_api.json`:
 ```kotlin
 audio?.call(MethodName.play, "res://sounds/jump.ogg")
 player.signal(SignalName.treeExited)
-self.getTree().setGroup("enemies", PropertyName.visible, false)
+self.getTree()?.setGroup("enemies", PropertyName.visible, false)
 ```
 
 Script-local generated names such as `PlayerNames.Methods.onBodyEntered` remain

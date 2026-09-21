@@ -7,6 +7,95 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — `Node` generated once (task 117 P1'(b2)) — **desktop source break**
+
+- `Node` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node.kt`) instead of
+  being hand-written on desktop (`src/jvmMain/.../api/Node.kt`, 2,285 lines) and generated on iOS
+  (`src/iosMain/.../api/Node.kt`, 1,321 lines). Both copies are deleted and `PER_PLATFORM_WRAPPERS`
+  loses its `Node` entry. **The generated shape wins** (D15): desktop scripts see the generator's
+  int widths, its parameter names and a nullable `getTree()`. iOS scripts see no signature change
+  except the two parameter renames below.
+- **The desktop ergonomic helpers are shared members now** (`SHARED_MEMBER_SECTIONS["Node"]`), with
+  desktop's names, overloads and signatures, so every call site keeps compiling on both platforms:
+  `getNodeAsOrNull(path, expectedClass, wrapper)`, `getAsOrNull(path, wrapper)`,
+  `requireAs(path, wrapper)`, `requireNodeAs(path, expectedClass, wrapper)` (each in a `String` and a
+  `NodePath` overload), `callLocalRpc(method, vararg extraArgs)`, and the string-path overloads
+  `getNodeOrNull(String)`, `getNode(String)`, `hasNode(String)`, `hasNodeAndResource(String)`,
+  `getNodeAndResource(String)` (each spelled `…(NodePath(path))` over the generated `NodePath` form).
+  **iOS gains** `requireNodeAs` (both overloads), the `NodePath` overloads of `getNodeAsOrNull`, and
+  `getNodeAndResource(String)`; **desktop keeps** everything it had.
+- **`Node.getTree()` returns `SceneTree?`** on both platforms — the b1 non-null shim
+  (`requireNotNull(SceneTree.wrap(...))`) and its `IOS_SECTION_REPLACED_METHODS` entry are gone, so
+  `get_tree()` is generated like every other Object return. `self.getTree().quit()` no longer
+  compiles: write `self.getTree()?.quit()`, or `SceneTree.quit()` (the companion entry point, which
+  resolves the live tree itself and throws a named error when there is none).
+- **Nine `Long` → `Int` width changes plus `duplicate(flags)`** — ten member signatures in all (the
+  shared tree maps Godot `int32` to `Int`; the hand-written desktop file used `Long` everywhere, the
+  iOS copy already had these):
+
+  | old desktop hand `Node` | now (both platforms) |
+  |---|---|
+  | `getChildCount(includeInternal: Boolean = false): Long` | `getChildCount(includeInternal: Boolean = false): Int` |
+  | `getIndex(includeInternal: Boolean = false): Long` | `getIndex(includeInternal: Boolean = false): Int` |
+  | `getMultiplayerAuthority(): Long` | `getMultiplayerAuthority(): Int` |
+  | `getPhysicsProcessPriority(): Long` | `getPhysicsProcessPriority(): Int` |
+  | `getProcessPriority(): Long` | `getProcessPriority(): Int` |
+  | `getProcessThreadGroupOrder(): Long` | `getProcessThreadGroupOrder(): Int` |
+  | `setPhysicsProcessPriority(priority: Long)` | `setPhysicsProcessPriority(priority: Int)` |
+  | `setProcessPriority(priority: Long)` | `setProcessPriority(priority: Int)` |
+  | `setProcessThreadGroupOrder(order: Long)` | `setProcessThreadGroupOrder(order: Int)` |
+  | `duplicate(flags: Long = DUPLICATE_DEFAULT): Node?` | `duplicate(flags: Int = 15): Node?` |
+
+  The `DUPLICATE_*` companion constants stay `Long` (they are `@GlobalScope`-style flag constants,
+  `const val DUPLICATE_DEFAULT: Long = 15L`), so **`duplicate(Node.DUPLICATE_SIGNALS or Node.DUPLICATE_GROUPS)`
+  no longer compiles** — use `duplicate()` for the default, or `.toInt()` on the flag expression.
+  A `Long`-typed counter fed from `getChildCount()` / `getIndex()` needs `.toLong()`, and `?: -1L`
+  fallbacks become `?: -1`.
+- **Dropped:** the desktop-only convenience overload `getChild(idx: Long, includeInternal: Boolean = false)`
+  — the generated `getChild(idx: Int, includeInternal: Boolean = false)` is the only form now (pass
+  an `Int`, or `.toInt()`).
+- **`Node.createTween()` is no longer a member, and no longer `open`.** The shared tree cannot host
+  it (iOS has no `Tween.wrap`), so it is a generated **extension** on both platforms:
+  `src/jvmMain/.../api/Node.jvm.kt` (the iOS-gap companion) on desktop/Android and
+  `src/iosMain/.../api/Node.ios.kt` (from a new `IOS_EXTENSION_SECTIONS["Node"]`) on iOS. Call sites
+  are unchanged apart from the import (`import net.multigesture.kanama.api.createTween`), but a
+  script subclass can no longer `override fun createTween()` — nothing in the repo did since
+  P1'(b1), when `SceneTree` stopped being a `Node`. The iOS Shape Gap page goes from 1 class / 2
+  waiting members to 2 classes / 3.
+- **Parameter names follow the generator** (they matter to named-argument call sites):
+  `addChild(node, forceReadableName, internalValue)` (was `internalMode`; its default changes from
+  the constant `INTERNAL_MODE_DISABLED` to the literal `0L` — the same value),
+  `setEditorDescription(editorDescription)` (was `description`). The iOS `ctor` parameter of
+  `getAsOrNull`/`requireAs` is now desktop's `wrapper`.
+- **Thirteen generated properties arrive on desktop** (they existed only on the iOS copy):
+  `autoTranslateMode`, `editorDescription`, `multiplayer`, `name`, `physicsInterpolationMode`,
+  `processMode`, `processPhysicsPriority`, `processPriority`, `processThreadGroup`,
+  `processThreadGroupOrder`, `processThreadMessages`, `sceneFilePath`, `uniqueNameInOwner` — plus
+  three companion constants: `NOTIFICATION_APPLICATION_PIP_MODE_ENTERED`,
+  `NOTIFICATION_APPLICATION_PIP_MODE_EXITED`, `NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED`.
+- One behaviour detail: the `requireAs` / `requireNodeAs` failure message still reads
+  `Required node 'x' was not found under Node#12345`, but the class name is read through the Variant
+  `call("get_class")` seam instead of desktop's `GodotObject.getClassName()`, which iOS does not
+  have (the roots stay per-platform until P3'). Error path only.
+- `ObjectCalls`: the shared tree calls two more helpers, so
+  `ptrcallWithBoolArgRetTypedObjectList` and `ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList`
+  (behind `getChildren` and `findChildren`) are `actual` on both platforms now — the desktop file
+  gained the generic `…RetTypedObjectList` form (its `…RetTypedNodeList` twin delegates to it) and
+  the two hand-written iOS helpers were renamed to desktop's canonical `boolArg` / `wrapper`
+  parameters. The common `expect object ObjectCalls` grows 1397 → 1406 members. No new native path.
+- The wrapper parity gate drops `Node` from `HAND_SHAPED` (18 → 17 classes) and its 35 allowlist
+  lines go (263 → 228 entries; the gate's divergence count 265 → 228, two more than the line count
+  because the `getAsOrNull` and `requireAs` parameter renames each produced two findings against one
+  line). The drift gate's `open fun createTween()` probe — which locked the task-103 "F2 fix" — now
+  asserts that `IOS_EXTENSION_SECTIONS['Node']` carries `createTween`, the invariant that actually
+  keeps `Node.create_tween` reachable on iOS.
+- `example_project/HelloScript.kt` is the in-repo canary: `getTree()?.getNodeCount() ?: -1` and two
+  `?: -1L` → `?: -1` fallbacks on `getChildCount()`. `templates/starter/HelloScript.kt` needed no
+  change (`getNodeAsOrNull` is unchanged). The KSP processor's hard-coded
+  `net.multigesture.kanama.api.Node(instance.godotObject).rpc/rpcId/callLocalRpc` emissions
+  (`KanamaProcessor.kt:2019,2024,2031`, `IosScriptCodeEmitter.kt:570,577,583`) are unaffected: the
+  generated class keeps the public `Node(handle: GodotHandle)` constructor and all three members.
+
 ### Changed — `SceneTree` generated once, `SceneTreeHandle` retired (task 117 P1'(b1))
 
 - `SceneTree` is generated once into the shared wrapper tree (`src/sharedApi/.../api/SceneTree.kt`)
