@@ -12,7 +12,7 @@ versioning once public releases begin.
 - `SceneTree` is generated once into the shared wrapper tree (`src/sharedApi/.../api/SceneTree.kt`)
   as `class SceneTree(handle: GodotHandle) : MainLoop(handle)` — Godot's real chain. It replaces
   **three** hand-written things: the desktop singleton `object SceneTree`
-  (`src/jvmMain/.../api/SceneTree.kt`, ~25 `@JvmStatic` entry points over the live main loop), the
+  (`src/jvmMain/.../api/SceneTree.kt`, 50 `@JvmStatic` entry points over the live main loop), the
   desktop placeholder `class SceneTreeHandle : MainLoop` the generator used to return from
   `Node.getTree()`, and the iOS `class SceneTree(handle) : Node(handle)` inside `IosGodotApi.kt`
   (the wrong chain). All three files/blocks are deleted and `PER_PLATFORM_WRAPPERS` loses its
@@ -63,8 +63,7 @@ versioning once public releases begin.
   `callGroup`, `callGroupFlags`, `setGroup`, `setGroupFlags`, `createTimer(...): SceneTreeTimer?`,
   `createTimerHandle(...): GodotHandle`, `createTweenHandle(): GodotHandle`, `isMultiplayerPollEnabled`,
   `setMultiplayerPollEnabled`, the accessibility/auto-accept-quit/quit-on-go-back/debug-hint pairs and
-  `is/setPhysicsInterpolationEnabled`. The `GROUP_CALL_*` constants and the `Signals` object are
-  generated with the same names and values.
+  `is/setPhysicsInterpolationEnabled`. The `GROUP_CALL_*` constants and the `Signals` object are NEW on both platforms (neither retired copy declared them; additive).
 - **`SceneTree.createTween()` and `SceneTree.getProcessedTweens()` are desktop/Android-only** and
   must now be imported by name (`import net.multigesture.kanama.api.createTween`). iOS hosts no
   `Tween` wrapper with a `wrap` helper, so the generator puts the instance forms in the
@@ -87,7 +86,14 @@ versioning once public releases begin.
 - `getTree().setPaused(b)` keeps working on both platforms: `setPaused` is shared sugar over the
   generated `setPause`. The iOS-only `quit(exitCode: Long)` overload is gone (`quit(Int)` remains,
   with its default); no call site passed a `Long`.
-- `ObjectCalls`: the shared tree now calls seven more helpers, which gained `actual` in the
+- Two changes worth knowing that are not visible in the signatures: every static entry point now resolves the live
+  tree through `SceneTree.active()` (a `get_main_loop` call, a wrapper construction that captures the instance id,
+  and an `is_class` check) instead of the retired object's single cached-segment call — per-frame callers of
+  `SceneTree.root` / `SceneTree.isPaused()` pay that; and `callGroup`/`callGroupFlags`/`setGroup`/`setGroupFlags` now go
+  through cached-methodbind Variant calls (`callWithVariantArgs` and two new iOS helpers) instead of a name-resolved
+  `Object.call("call_group", …)` — a new path on iOS for `getTree().callGroup(…)` (dodge-the-creeps), covered by the full
+  iPhone gate's dodge smoke rather than the two per-parcel smokes.
+- `ObjectCalls`: the shared tree now calls six more helpers, which gained `actual` in the
   hand-written desktop file (`ptrcallWithStringNameStringAndVariantArg`,
   `ptrcallWithUInt32StringNameStringVariantArgs`, `ptrcallWithDoubleAndThreeBoolArgsRetObject`,
   `ptrcallWithNodePathArgRetObject`, `ptrcallWithUInt32StringNameAndIntArgs`,
@@ -119,7 +125,7 @@ versioning once public releases begin.
 - `Node3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node3D.kt`)
   instead of being hand-written on desktop (`src/jvmMain/.../api/Node3D.kt`) and generated on iOS
   (`src/iosMain/.../api/Node3D.kt`); its `PER_PLATFORM_WRAPPERS` entry is gone. The two copies
-  already had the same 88 members, and every declaration line is byte-identical to the shared
+  already had the same 88 members, and every declaration is identical to the shared
   render — the whole transform surface (`setTransform`/`getTransform`, `setPosition`/`getPosition`,
   `setRotation`/`getRotation`, `setRotationDegrees`, `setScale`/`getScale`, `setQuaternion`,
   `setBasis`, `setGlobalTransform`/`getGlobalTransform`, `getParentNode3d`, `lookAt`,
@@ -128,7 +134,7 @@ versioning once public releases begin.
   `toLocal`/`toGlobal`, `orthonormalize`, `setIdentity`, the visibility family
   (`show`/`hide`/`setVisible`/`isVisible`/`isVisibleInTree`), `setNotifyTransform`,
   `setAsTopLevel`, `forceUpdateTransform`, `setDisableScale`, the gizmo helpers and the
-  `setRotationEditMode`/`setRotationOrder` pair) and all 20 generated properties (`transform`,
+  `setRotationEditMode`/`setRotationOrder` pair) and all 17 generated properties (`transform`,
   `globalTransform`, `position`, `rotation`, `rotationDegrees`, `quaternion`, `basis`, `scale`,
   `globalPosition`, `globalBasis`, `globalRotation`, `globalRotationDegrees`, `topLevel`,
   `visible`, `visibilityParent`, `rotationEditMode`, `rotationOrder`, …), the nested
@@ -141,7 +147,7 @@ versioning once public releases begin.
   `lookAtFromPosition`. The primary constructor was already
   `open class Node3D(handle: GodotHandle) : Node(handle)` on both platforms, so there is no source
   break. The iOS copy gains the KDoc it never carried and loses its wildcard
-  `net.multigesture.kanama.binding.runtime.*` import; desktop gains the inert `@JvmStatic`/`@JvmName`
+  `net.multigesture.kanama.binding.runtime.*` import; desktop's import block is reordered and gains `kotlin.jvm.JvmStatic` (for `fromHandle`); the `@JvmName`
   imports the shared render uses.
 - Because the shared tree now calls them, four desktop `ObjectCalls` helpers gained the `actual`
   marker — `ptrcallWithObjectIntTransform3DArgs`, `ptrcallWithThreeVector3AndBoolArgs`,

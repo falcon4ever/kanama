@@ -40,7 +40,9 @@ OWNERSHIP_SENSITIVE_METHODS = {
 # Godot methods whose generated form is deliberately REPLACED (not overloaded) by the class's
 # IOS_MEMBER_SECTIONS text: the section declares the same Kotlin name and parameter list with a
 # different return type, so emitting both would be a conflicting-overloads compile error. Consulted
-# only on the iOS render target, where those sections apply; the reason lands in the skip report.
+# only when rendering in iOS MODE for the iOS target (`IOS_AUDIT_ONLY` is also set during the
+# shared-tree pass, so the lookup is additionally guarded on RENDER_TARGET — a shared class must never
+# lose a method to an iOS section); the reason lands in the skip report.
 IOS_SECTION_REPLACED_METHODS = {
     ("Node", "get_tree"): (
         "replaced by IOS_MEMBER_SECTIONS['Node']: getTree() is declared NON-NULL there "
@@ -2206,7 +2208,7 @@ def unsupported_reason(
     by_design = BY_DESIGN_METHOD_SKIPS.get((class_name, method.name))
     if by_design:
         return by_design
-    if IOS_AUDIT_ONLY:
+    if IOS_AUDIT_ONLY and RENDER_TARGET == "ios":
         replaced = IOS_SECTION_REPLACED_METHODS.get((class_name, method.name))
         if replaced:
             return replaced
