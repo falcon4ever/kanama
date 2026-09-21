@@ -7,6 +7,113 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — `SceneTree` generated once, `SceneTreeHandle` retired (task 117 P1'(b1))
+
+- `SceneTree` is generated once into the shared wrapper tree (`src/sharedApi/.../api/SceneTree.kt`)
+  as `class SceneTree(handle: GodotHandle) : MainLoop(handle)` — Godot's real chain. It replaces
+  **three** hand-written things: the desktop singleton `object SceneTree`
+  (`src/jvmMain/.../api/SceneTree.kt`, ~25 `@JvmStatic` entry points over the live main loop), the
+  desktop placeholder `class SceneTreeHandle : MainLoop` the generator used to return from
+  `Node.getTree()`, and the iOS `class SceneTree(handle) : Node(handle)` inside `IosGodotApi.kt`
+  (the wrong chain). All three files/blocks are deleted and `PER_PLATFORM_WRAPPERS` loses its
+  `SceneTree` entry; `SPECIAL_OBJECT_WRAPPER_TYPES` loses the `SceneTree -> SceneTreeHandle` line, so
+  the generator types `get_tree()` as `SceneTree?` by itself.
+- **`Node.getTree()` returns the shared `SceneTree`, still non-null** on both platforms
+  (`requireNotNull(SceneTree.wrap(...)) { "Node.getTree(): not inside a SceneTree" }`), so
+  `self.getTree().quit()` and friends keep compiling. The two hand-shaped `Node` files are otherwise
+  untouched; `Node` itself retires in a later parcel.
+- **Every entry point of the desktop `object` survives as a companion member of the same name**,
+  delegating to `SceneTree.active()` — the running tree, resolved through `Engine.get_main_loop()`
+  via `ObjectCalls` and checked with `checkNotNull` + `isClass("SceneTree")`, so a missing or
+  non-`SceneTree` main loop throws with a message instead of faulting. `SceneTree.quit()`,
+  `SceneTree.unloadCurrentScene()`, `SceneTree.delaySeconds(...)`, `SceneTree.setGroup(...)` and the
+  rest read exactly as before from Kotlin. `val SceneTree.root: Window` stays **non-null** on the
+  companion (the generated *instance* property `root` is `Window?`, like every generated object
+  property).
+- **The companion twins carry no `@JvmStatic`.** A `@JvmStatic` companion member compiles to a
+  static method on `SceneTree` itself, which collides with the instance method of the same JVM
+  signature (`quit(I)V`, `isPaused()Z`, …). Kotlin call sites are unaffected — `SceneTree.quit()`
+  resolves to the companion member either way — but **a Java caller** now needs
+  `SceneTree.Companion.quit()`. `active()`, `createTimerHandle(...)` and `createTweenHandle()` have
+  no instance twin and stay `@JvmStatic`.
+- **Signatures whose types changed** (the companion twin is typed like the generated instance member
+  it delegates to, which is the generator's int-width mapping and its wrapper returns):
+
+  | old desktop `object SceneTree` | now (instance and companion) |
+  |---|---|
+  | `getNodeCount(): Long` | `getNodeCount(): Int` |
+  | `getNodeCountInGroup(name: String): Long` | `getNodeCountInGroup(name: String): Int` |
+  | `quit(exitCode: Long = 0)` | `quit(exitCode: Int = 0)` |
+  | `notifyGroup(groupName: String, notification: Long)` | `notifyGroup(groupName: String, notification: Int)` |
+  | `notifyGroupFlags(flags: Long, groupName: String, notification: Long)` | `notifyGroupFlags(flags: Long, groupName: String, notification: Int)` |
+  | `getRoot(): GodotHandle` | `getRoot(): Window?` |
+  | `getCurrentScene(): GodotHandle` | `getCurrentScene(): Node?` |
+  | `getFirstNodeInGroup(name: String): GodotHandle` | `getFirstNodeInGroup(name: String): Node?` |
+  | `getEditedSceneRoot(): GodotHandle` | `getEditedSceneRoot(): Node?` |
+  | `setCurrentScene(nodeObject: GodotHandle)` | `setCurrentScene(childNode: Node)` |
+  | `setEditedSceneRoot(nodeObject: GodotHandle)` | `setEditedSceneRoot(scene: Node)` |
+  | `queueDelete(nodeObject: GodotHandle)` | `queueDelete(obj: GodotObject)` |
+  | `changeSceneToPacked(packedSceneObject: GodotHandle): Long` | `changeSceneToPacked(packedScene: PackedScene): Long` |
+  | `changeSceneToNode(nodeObject: GodotHandle): Long` | `changeSceneToNode(node: Node): Long` |
+  | `setMultiplayer(multiplayerApiObject: GodotHandle, rootPath: String = "")` | `setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath = NodePath(""))` |
+  | `getMultiplayer(forPath: String = ""): GodotHandle` | `getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI?` |
+
+  Unchanged: `isPaused`, `setPaused`, `getFrame(): Long`, `changeSceneToFile(path): Long`,
+  `reloadCurrentScene(): Long`, `unloadCurrentScene()`, `hasGroup`, `getNodesInGroup(name): List<Node>`,
+  `callGroup`, `callGroupFlags`, `setGroup`, `setGroupFlags`, `createTimer(...): SceneTreeTimer?`,
+  `createTimerHandle(...): GodotHandle`, `createTweenHandle(): GodotHandle`, `isMultiplayerPollEnabled`,
+  `setMultiplayerPollEnabled`, the accessibility/auto-accept-quit/quit-on-go-back/debug-hint pairs and
+  `is/setPhysicsInterpolationEnabled`. The `GROUP_CALL_*` constants and the `Signals` object are
+  generated with the same names and values.
+- **`SceneTree.createTween()` and `SceneTree.getProcessedTweens()` are desktop/Android-only** and
+  must now be imported by name (`import net.multigesture.kanama.api.createTween`). iOS hosts no
+  `Tween` wrapper with a `wrap` helper, so the generator puts the instance forms in the
+  `src/jvmMain/.../api/SceneTree.jvm.kt` gap companion and the static forms come from
+  `DESKTOP_EXTENSION_SECTIONS`. The iOS Shape Gap page goes from 0 waiting members to 1 class / 2
+  members (`SceneTree` waits on `ptrcallNoArgsRetTypedObjectList` and a `Tween` wrapper). iOS keeps a
+  `SceneTree.createTween()` extension of its own in `src/iosMain/.../api/SceneTree.ios.kt`, carried
+  over from the retired class's `override fun createTween()` (the task-103 "F2 fix") — it uses
+  `SceneTree.create_tween`, never `Node.create_tween`. `Node.createTween()` stays `open` on both
+  platforms even though nothing overrides it any more.
+- **`SceneTree.delaySeconds(...)` is now the same frame-driven wait on both platforms.** The desktop
+  body — `MainThread.awaitNextFrame()` once per engine frame, `Time.getTicksUsec()` deltas, skipping
+  time while `paused` unless `processAlways`, scaling by `Engine.time_scale` unless
+  `ignoreTimeScale` — is a shared member, and the companion form delegates to it. **iOS behaviour
+  change:** iOS previously implemented `delaySeconds(seconds: Double)` as a wall-clock
+  `kotlinx.coroutines.delay(ms)`, which ignored both pause and time scale; it now waits in engine
+  frames like desktop (`KanamaIosRuntime.frame()` resumes the parked continuations every frame).
+  iOS also gains the three optional parameters. Proven by the iPhone 12 device smokes (Match3 and
+  third-person), both of which await `delaySeconds` before quitting.
+- `getTree().setPaused(b)` keeps working on both platforms: `setPaused` is shared sugar over the
+  generated `setPause`. The iOS-only `quit(exitCode: Long)` overload is gone (`quit(Int)` remains,
+  with its default); no call site passed a `Long`.
+- `ObjectCalls`: the shared tree now calls seven more helpers, which gained `actual` in the
+  hand-written desktop file (`ptrcallWithStringNameStringAndVariantArg`,
+  `ptrcallWithUInt32StringNameStringVariantArgs`, `ptrcallWithDoubleAndThreeBoolArgsRetObject`,
+  `ptrcallWithNodePathArgRetObject`, `ptrcallWithUInt32StringNameAndIntArgs`,
+  `ptrcallWithObjectAndNodePathArg`, plus the four Node3D ones above). Two hand-written helpers were
+  reconciled so the `expect` can declare them: desktop
+  `ptrcallWithObjectAndNodePathArg(..., path: String)` takes a `NodePath` now (its only caller was
+  the retired `object SceneTree`), and the iOS
+  `ptrcallWithDoubleAndThreeBoolArgsRetObject(..., a0, a1, a2, a3)` parameters are renamed to
+  desktop's canonical `value, first, second, third`. The desktop-only
+  `ptrcallWithNodePathArgRetObject(..., path: String)` overload, which the hand-shaped `Node` still
+  uses, is recorded in `EXPECT_OVERLOAD_EXCLUSIONS` beside the existing `…RetBool` one. The common
+  `expect object ObjectCalls` grows 1391 -> 1397 members.
+- Generator: `IOS_SECTION_REPLACED_METHODS` is new — a custom section that declares the same Kotlin
+  name AND parameter list as a generated member (here `Node.getTree()`, non-null in the section
+  versus `SceneTree?` generated) would otherwise collide as conflicting overloads; the pair is
+  recorded with its reason and the generated form is skipped on the iOS render target.
+- Tooling fixes the same change exposed: the drift gate's iOS collision probe moved from `SceneTree`
+  (no longer a collision class) to `ResourceLoader`, and `scan_wrappers` now strips the `.jvm` /
+  `.ios` suffix from a companion file's stem, so a `<Class>.jvm.kt` member is credited to its class
+  — `SceneTree` reads 47/47 on the generated coverage page, and `GDExtensionManager` (6/7 -> 7/7)
+  and `OpenXRAPIExtension` (49/51 -> 51/51) stop under-reporting their desktop-only-by-design
+  members.
+- `example_project/HelloScript.kt` imports `createTween` and `getProcessedTweens` by name; nothing
+  else in the repository changed shape. `SceneTree` was never in the wrapper parity gate's
+  `HAND_SHAPED` list, so the gate stays at 18 classes / 265 allowlisted divergences.
+
 ### Changed — wrapper classes generated once: `Node3D` (task 117 P1'(b1))
 
 - `Node3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node3D.kt`)

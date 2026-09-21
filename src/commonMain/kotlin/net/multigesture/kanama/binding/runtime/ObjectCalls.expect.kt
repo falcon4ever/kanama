@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 189 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 183 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -44,7 +44,9 @@ import net.multigesture.kanama.types.Vector4
  * default argument (which an `expect` member cannot express on the Android lane). The
  * `ptrcallWithIntArgRetVector3` overload taking `value: Long` is desktop-only and stays
  * platform-only for the same reason. The `ptrcallWithNodePathArgRetBool` overload taking `path:
- * String` is desktop-only and stays platform-only for the same reason.
+ * String` is desktop-only and stays platform-only for the same reason. The
+ * `ptrcallWithNodePathArgRetObject` overload taking `path: String` is desktop-only and stays
+ * platform-only for the same reason.
  */
 expect object ObjectCalls {
   fun <T : Any> ptrcallNoArgsRetTypedObjectList(
@@ -687,6 +689,15 @@ expect object ObjectCalls {
     doubleArg: Double,
     intArg: Int,
   ): List<Vector2>
+
+  fun ptrcallWithDoubleAndThreeBoolArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Double,
+    first: Boolean,
+    second: Boolean,
+    third: Boolean,
+  ): RawSegment
 
   fun ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(
     methodBind: RawSegment,
@@ -2708,6 +2719,12 @@ expect object ObjectCalls {
     path: NodePath,
   ): Long
 
+  fun ptrcallWithNodePathArgRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    path: NodePath,
+  ): RawSegment
+
   fun ptrcallWithNodePathListArg(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -2834,6 +2851,13 @@ expect object ObjectCalls {
     objectArg: RawSegment,
     count: Int,
   ): List<Vector3>
+
+  fun ptrcallWithObjectAndNodePathArg(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    path: NodePath,
+  )
 
   fun ptrcallWithObjectAndPackedStringListArgsRetObject(
     methodBind: RawSegment,
@@ -7399,6 +7423,14 @@ expect object ObjectCalls {
     context: String,
   )
 
+  fun ptrcallWithStringNameStringAndVariantArg(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    name: String,
+    text: String,
+    value: Any?,
+  )
+
   fun ptrcallWithStringNameTransform3DTwoVector3LongArgs(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -9869,6 +9901,23 @@ expect object ObjectCalls {
     usage: Long,
     creationBits: Long,
   ): RID
+
+  fun ptrcallWithUInt32StringNameAndIntArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: Long,
+    name: String,
+    second: Int,
+  )
+
+  fun ptrcallWithUInt32StringNameStringVariantArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    flags: Long,
+    group: String,
+    method: String,
+    value: Any?,
+  )
 
   fun ptrcallWithUInt32ThreeDoubleArgsRetProjection(
     methodBind: RawSegment,

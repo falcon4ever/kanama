@@ -2823,24 +2823,24 @@ actual object ObjectCalls {
   // (double, bool, bool, bool) -> Object. Hosts SceneTree.create_timer (SceneTree is a hand-written
   // collision class, so this shape isn't emitted by the generator; registered in
   // IOS_HANDWRITTEN_HELPERS so the generator won't also emit it).
-  fun ptrcallWithDoubleAndThreeBoolArgsRetObject(
+  actual fun ptrcallWithDoubleAndThreeBoolArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    a0: Double,
-    a1: Boolean,
-    a2: Boolean,
-    a3: Boolean,
+    value: Double,
+    first: Boolean,
+    second: Boolean,
+    third: Boolean,
   ): MemorySegment = memScoped {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = alloc<DoubleVar>()
-    c0.value = a0
+    c0.value = value
     val c1 = alloc<ByteVar>()
-    c1.value = if (a1) 1 else 0
+    c1.value = if (first) 1 else 0
     val c2 = alloc<ByteVar>()
-    c2.value = if (a2) 1 else 0
+    c2.value = if (second) 1 else 0
     val c3 = alloc<ByteVar>()
-    c3.value = if (a3) 1 else 0
+    c3.value = if (third) 1 else 0
     val types = allocArray<IntVar>(4)
     types[0] = PT_FLOAT64
     types[1] = PT_BOOL
@@ -14467,7 +14467,7 @@ actual object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithNodePathArgRetObject(
+  actual fun ptrcallWithNodePathArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -15013,6 +15013,32 @@ actual object ObjectCalls {
       ret.ptr,
     )
     MemorySegment.ofAddress(ret.value)
+  }
+
+  actual fun ptrcallWithObjectAndNodePathArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    objectArg: MemorySegment,
+    path: NodePath,
+  ) = memScoped {
+    val c0 = alloc<LongVar>()
+    c0.value = objectArg.address()
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_OBJECT
+    types[1] = PT_NODE_PATH
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      2,
+      PT_VOID,
+      null,
+    )
+    Unit
   }
 
   actual fun ptrcallWithObjectAndPackedStringListArgsRetObject(
@@ -33981,6 +34007,34 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithStringNameStringAndVariantArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    text: String,
+    value: Any?,
+  ) = memScoped {
+    val c2 = packVariantDesc(value)
+    val types = allocArray<IntVar>(3)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_STRING
+    types[2] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(3)
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = text.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      3,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
+
   fun ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -44778,6 +44832,70 @@ actual object ObjectCalls {
       ret.ptr,
     )
     RID(ret.value)
+  }
+
+  actual fun ptrcallWithUInt32StringNameAndIntArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: Long,
+    name: String,
+    second: Int,
+  ) = memScoped {
+    val c0 = alloc<LongVar>()
+    c0.value = first
+    val c2 = alloc<LongVar>()
+    c2.value = second.toLong()
+    val types = allocArray<IntVar>(3)
+    types[0] = PT_INT64
+    types[1] = PT_STRING_NAME
+    types[2] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(3)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = name.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      3,
+      PT_VOID,
+      null,
+    )
+    Unit
+  }
+
+  actual fun ptrcallWithUInt32StringNameStringVariantArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    flags: Long,
+    group: String,
+    method: String,
+    value: Any?,
+  ) = memScoped {
+    val c0 = alloc<LongVar>()
+    c0.value = flags
+    val c3 = packVariantDesc(value)
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_INT64
+    types[1] = PT_STRING_NAME
+    types[2] = PT_STRING
+    types[3] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = group.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = method.cstr.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.reinterpret<CPointed>()
+    kanama_ios_godot_ptrcall(
+      methodBind.address(),
+      instance.address(),
+      types,
+      ptrs,
+      4,
+      PT_VOID,
+      null,
+    )
+    Unit
   }
 
   actual fun ptrcallWithUInt32ThreeDoubleArgsRetProjection(

@@ -650,20 +650,21 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.get_tree
      */
-    fun getTree(): SceneTree {
-        check(ObjectCalls.ptrcallNoArgsRetObject(getTreeBind, segment).address() != 0L) {
-            "Node is not inside a SceneTree"
+    fun getTree(): SceneTree =
+        requireNotNull(SceneTree.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeBind, segment))) {
+            "Node.getTree(): not inside a SceneTree"
         }
-        return SceneTree
-    }
 
     /**
      * Creates a new `Tween` and binds it to this node. This is the equivalent of doing:
      *
      * Generated from Godot docs: Node.create_tween
      */
-    // `open` on every platform (task 103): the iOS SceneTree is a Node subclass that overrides this
-    // with the SceneTree.create_tween bind, and the two hand-shaped Node files carry one openness.
+    // `open` on every platform (task 103). It was opened because the hand-written iOS SceneTree was
+    // a Node subclass that overrode this with the SceneTree.create_tween bind; since task 117
+    // P1'(b1) SceneTree is a generated `MainLoop` and nothing in the repo overrides createTween, but
+    // the openness stays (removing it would break any script subclass that relies on it) and the two
+    // hand-shaped Node files still carry ONE openness.
     open fun createTween(): Tween? =
         Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment))
 
