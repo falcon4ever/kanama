@@ -32,7 +32,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 175 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 167 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -715,6 +715,14 @@ expect object ObjectCalls {
     second: Boolean,
     third: Boolean,
   ): RawSegment
+
+  fun ptrcallWithDoubleAndTwoBoolArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Double,
+    firstBool: Boolean,
+    secondBool: Boolean,
+  )
 
   fun ptrcallWithDoubleAndTwoBoolArgsRetTransform3D(
     methodBind: RawSegment,
@@ -7202,6 +7210,15 @@ expect object ObjectCalls {
     text: String,
   ): Any?
 
+  fun ptrcallWithStringNameAndThreeDoubleArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    name: String,
+    first: Double,
+    second: Double,
+    third: Double,
+  )
+
   fun ptrcallWithStringNameAndTwoBoolArgsRetBool(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -7351,6 +7368,15 @@ expect object ObjectCalls {
     boolArg: Boolean,
   )
 
+  fun ptrcallWithStringNameDoubleDoubleBoolArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    name: String,
+    firstFloat: Double,
+    secondFloat: Double,
+    boolArg: Boolean,
+  )
+
   fun ptrcallWithStringNameDoubleTwoLongArgs(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -7358,6 +7384,17 @@ expect object ObjectCalls {
     doubleArg: Double,
     firstLong: Long,
     secondLong: Long,
+  )
+
+  fun ptrcallWithStringNameFourDoubleBoolArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    name: String,
+    first: Double,
+    second: Double,
+    third: Double,
+    fourth: Double,
+    enabled: Boolean,
   )
 
   fun ptrcallWithStringNameIntAndStringNameArgs(
@@ -7490,6 +7527,18 @@ expect object ObjectCalls {
     name: String,
     text: String,
     value: Any?,
+  )
+
+  fun ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    name: String,
+    first: Double,
+    second: Double,
+    third: Double,
+    enabled: Boolean,
+    firstLong: Long,
+    secondLong: Long,
   )
 
   fun ptrcallWithStringNameTransform3DTwoVector3LongArgs(
@@ -8007,6 +8056,15 @@ expect object ObjectCalls {
     callableMethod: String,
   ): Long
 
+  fun ptrcallWithThreeStringNameAndDoubleArg(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    third: String,
+    value: Double,
+  )
+
   fun ptrcallWithThreeStringNameArgs(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -8023,6 +8081,17 @@ expect object ObjectCalls {
     thirdName: String,
     objectArg: RawSegment,
   ): RID
+
+  fun ptrcallWithThreeStringNameTwoDoubleBoolArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    third: String,
+    firstDouble: Double,
+    secondDouble: Double,
+    enabled: Boolean,
+  )
 
   fun ptrcallWithThreeStringTwoLongArgsRetDictionary(
     methodBind: RawSegment,
@@ -9350,6 +9419,14 @@ expect object ObjectCalls {
     first: String,
     second: String,
     color: Color,
+  )
+
+  fun ptrcallWithTwoStringNameAndDoubleArg(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    first: String,
+    second: String,
+    value: Double,
   )
 
   fun ptrcallWithTwoStringNameAndIntArg(

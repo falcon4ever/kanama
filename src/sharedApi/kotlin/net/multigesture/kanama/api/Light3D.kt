@@ -1,10 +1,11 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
-import kotlin.jvm.JvmName
 
 /**
  * Provides a base class for different kinds of light nodes.
@@ -12,6 +13,18 @@ import kotlin.jvm.JvmName
  * Generated from Godot docs: Light3D
  */
 open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
+    var lightIntensityLumens: Double
+        @JvmName("lightIntensityLumensProperty")
+        get() = getParam(20L)
+        @JvmName("setLightIntensityLumensProperty")
+        set(value) = setParam(20L, value)
+
+    var lightIntensityLux: Double
+        @JvmName("lightIntensityLuxProperty")
+        get() = getParam(20L)
+        @JvmName("setLightIntensityLuxProperty")
+        set(value) = setParam(20L, value)
+
     var lightTemperature: Double
         @JvmName("lightTemperatureProperty")
         get() = getTemperature()
@@ -26,9 +39,21 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
     var lightEnergy: Double
         @JvmName("lightEnergyProperty")
-        get() = getParam(PARAM_ENERGY)
+        get() = getParam(0L)
         @JvmName("setLightEnergyProperty")
-        set(value) = setParam(PARAM_ENERGY, value)
+        set(value) = setParam(0L, value)
+
+    var lightIndirectEnergy: Double
+        @JvmName("lightIndirectEnergyProperty")
+        get() = getParam(1L)
+        @JvmName("setLightIndirectEnergyProperty")
+        set(value) = setParam(1L, value)
+
+    var lightVolumetricFogEnergy: Double
+        @JvmName("lightVolumetricFogEnergyProperty")
+        get() = getParam(2L)
+        @JvmName("setLightVolumetricFogEnergyProperty")
+        set(value) = setParam(2L, value)
 
     var lightProjector: Texture2D?
         @JvmName("lightProjectorProperty")
@@ -36,11 +61,29 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setLightProjectorProperty")
         set(value) = setProjector(value)
 
+    var lightSize: Double
+        @JvmName("lightSizeProperty")
+        get() = getParam(5L)
+        @JvmName("setLightSizeProperty")
+        set(value) = setParam(5L, value)
+
+    var lightAngularDistance: Double
+        @JvmName("lightAngularDistanceProperty")
+        get() = getParam(5L)
+        @JvmName("setLightAngularDistanceProperty")
+        set(value) = setParam(5L, value)
+
     var lightNegative: Boolean
         @JvmName("lightNegativeProperty")
         get() = isNegative()
         @JvmName("setLightNegativeProperty")
         set(value) = setNegative(value)
+
+    var lightSpecular: Double
+        @JvmName("lightSpecularProperty")
+        get() = getParam(3L)
+        @JvmName("setLightSpecularProperty")
+        set(value) = setParam(3L, value)
 
     var lightBakeMode: Long
         @JvmName("lightBakeModeProperty")
@@ -60,11 +103,41 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setShadowEnabledProperty")
         set(value) = setShadow(value)
 
+    var shadowBias: Double
+        @JvmName("shadowBiasProperty")
+        get() = getParam(15L)
+        @JvmName("setShadowBiasProperty")
+        set(value) = setParam(15L, value)
+
+    var shadowNormalBias: Double
+        @JvmName("shadowNormalBiasProperty")
+        get() = getParam(14L)
+        @JvmName("setShadowNormalBiasProperty")
+        set(value) = setParam(14L, value)
+
     var shadowReverseCullFace: Boolean
         @JvmName("shadowReverseCullFaceProperty")
         get() = getShadowReverseCullFace()
         @JvmName("setShadowReverseCullFaceProperty")
         set(value) = setShadowReverseCullFace(value)
+
+    var shadowTransmittanceBias: Double
+        @JvmName("shadowTransmittanceBiasProperty")
+        get() = getParam(19L)
+        @JvmName("setShadowTransmittanceBiasProperty")
+        set(value) = setParam(19L, value)
+
+    var shadowOpacity: Double
+        @JvmName("shadowOpacityProperty")
+        get() = getParam(17L)
+        @JvmName("setShadowOpacityProperty")
+        set(value) = setParam(17L, value)
+
+    var shadowBlur: Double
+        @JvmName("shadowBlurProperty")
+        get() = getParam(18L)
+        @JvmName("setShadowBlurProperty")
+        set(value) = setParam(18L, value)
 
     var shadowCasterMask: Long
         @JvmName("shadowCasterMaskProperty")

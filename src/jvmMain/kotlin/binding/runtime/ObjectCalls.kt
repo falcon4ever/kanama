@@ -19140,7 +19140,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (StringName, float, float, bool) args. */
-  fun ptrcallWithStringNameDoubleDoubleBoolArgs(
+  actual fun ptrcallWithStringNameDoubleDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -24373,7 +24373,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoStringNameAndDoubleArg(
+  actual fun ptrcallWithTwoStringNameAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -28749,7 +28749,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithDoubleAndTwoBoolArgs(
+  actual fun ptrcallWithDoubleAndTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -33055,7 +33055,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithThreeStringNameAndDoubleArg(
+  actual fun ptrcallWithThreeStringNameAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -33075,7 +33075,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithThreeStringNameTwoDoubleBoolArgs(
+  actual fun ptrcallWithThreeStringNameTwoDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -33131,7 +33131,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNameAndThreeDoubleArgs(
+  actual fun ptrcallWithStringNameAndThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33155,7 +33155,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNameFourDoubleBoolArgs(
+  actual fun ptrcallWithStringNameFourDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33187,7 +33187,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(
+  actual fun ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,

@@ -7,6 +7,55 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — `TabBar`, `AnimationPlayer`, `Light3D`, `StandardMaterial3D` generated once (task 117 P1'(c), 1/3)
+
+- Four more classes are generated once into the shared wrapper tree (`src/sharedApi/.../api/<Class>.kt`)
+  instead of living as two per-platform copies; both copies are deleted and `PER_PLATFORM_WRAPPERS`
+  loses all four entries. The generated shape wins on both platforms (D9/D12/D17). iOS sees no
+  signature change at all — for every one of the four the shared draft was byte-for-signature
+  identical to the committed iOS copy. Everything below is therefore a **desktop** change.
+- `StandardMaterial3D` has no class-body members of its own (they are all inherited from
+  `BaseMaterial3D`), so retiring it needed only a `FACTORY_HELPERS["StandardMaterial3D"] =
+  FactorySpec(True)` row: `StandardMaterial3D.create()` is generated for every platform now and keeps
+  compiling. Neither hand copy carried a downcast, so none is rendered. Its **primary constructor is
+  public** (it was `internal` on desktop, public on iOS) — the generator's shape for every retiring
+  class, as `Mesh`/`PackedScene` took in P1'(a) (D4 as amended by D10).
+- **`TabBar.addTab` loses the `icon` default on desktop.** The generated form is
+  `addTab(title: String = "", icon: Texture2D?)` — the desktop hand copy had `icon: Texture2D? = null`,
+  the iOS copy never did. `tabBar.addTab("Alpha")` no longer compiles: pass the icon explicitly,
+  `tabBar.addTab("Alpha", null)`. `example_project/HelloScript.kt` is the in-repo canary and is fixed
+  that way. Desktop also **gains** `TabBar.Signals.tabButtonPressed` (`"tab_button_pressed"`) and eight
+  companion constants: `ALIGNMENT_LEFT`/`CENTER`/`RIGHT`/`MAX`, `CLOSE_BUTTON_SHOW_NEVER`/
+  `SHOW_ACTIVE_ONLY`/`SHOW_ALWAYS`/`MAX`.
+- **`AnimationPlayer.Signals.animationFinished` is dropped.** `animation_finished` is declared on
+  `AnimationMixer`, not on `AnimationPlayer`, so the generator emits it on the shared
+  `AnimationMixer` — which `AnimationPlayer` extends — and the desktop hand copy's duplicate goes.
+  Write `AnimationMixer.Signals.animationFinished` (the spelling every demo already uses); the string
+  value is unchanged. Desktop also gains defaults the generator reads from the Godot docs, all
+  additive: `playBackwards`, `playSection`, `playSectionBackwards`, `playSectionWithMarkers`,
+  `playSectionWithMarkersBackwards`, `playWithCapture` and `setSectionWithMarkers` now default their
+  `name` / `startMarker` / `endMarker` parameters to `""`.
+- **Twelve `Light3D` properties arrive on desktop** (they existed only on the iOS copy, hence twelve
+  allowlist lines): `lightAngularDistance`, `lightIndirectEnergy`, `lightIntensityLumens`,
+  `lightIntensityLux`, `lightSize`, `lightSpecular`, `lightVolumetricFogEnergy`, `shadowBias`,
+  `shadowBlur`, `shadowNormalBias`, `shadowOpacity`, `shadowTransmittanceBias`. Each is
+  `var …: Double` over the `get*`/`set*` pair desktop already had, so no new native path.
+- **No int-width change and no ergonomic sugar in this group.** The four classes' member sets are
+  74/74/74 (TabBar), 66/66/66 (AnimationPlayer), 46 desktop / 58 iOS / 58 draft (Light3D) and
+  0/0/0 (StandardMaterial3D) — the twelve Light3D properties are the only member-set delta, and a
+  signature-level diff of the draft against both committed copies shows no return or parameter type
+  changing width anywhere in the four. No `SHARED_MEMBER_SECTIONS` entry was needed.
+- `ObjectCalls`: the shared tree reaches eight more helpers (1413 → 1421 referenced), all of them
+  already present on both platforms and now `actual` on both — `ptrcallWithDoubleAndTwoBoolArgs`,
+  `ptrcallWithStringNameAndThreeDoubleArgs`, `ptrcallWithStringNameDoubleDoubleBoolArgs`,
+  `ptrcallWithStringNameFourDoubleBoolArgs`, `ptrcallWithStringNameThreeDoubleBoolTwoLongArgs`,
+  `ptrcallWithThreeStringNameAndDoubleArg`, `ptrcallWithThreeStringNameTwoDoubleBoolArgs`,
+  `ptrcallWithTwoStringNameAndDoubleArg`. The common `expect object ObjectCalls` grows 1406 → 1414.
+  No new native path.
+- The wrapper parity gate drops all four from `HAND_SHAPED` (17 → 13 classes) and their 21 allowlist
+  lines go (228 → 207): TabBar 8, Light3D 12, StandardMaterial3D 1, AnimationPlayer 0. The shared tree
+  grows 993 → 997 classes and `PER_PLATFORM_WRAPPERS` shrinks 42 → 38.
+
 ### Changed — `Node` generated once (task 117 P1'(b2)) — **desktop source break**
 
 - `Node` is generated once into the shared wrapper tree (`src/sharedApi/.../api/Node.kt`) instead of

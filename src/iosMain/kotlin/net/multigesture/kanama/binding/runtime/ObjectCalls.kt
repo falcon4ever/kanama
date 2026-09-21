@@ -5854,7 +5854,7 @@ actual object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithDoubleAndTwoBoolArgs(
+  actual fun ptrcallWithDoubleAndTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -32892,7 +32892,7 @@ actual object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringNameAndThreeDoubleArgs(
+  actual fun ptrcallWithStringNameAndThreeDoubleArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33403,7 +33403,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameDoubleDoubleBoolArgs(
+  actual fun ptrcallWithStringNameDoubleDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -33475,7 +33475,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameFourDoubleBoolArgs(
+  actual fun ptrcallWithStringNameFourDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -34035,7 +34035,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(
+  actual fun ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -36272,7 +36272,7 @@ actual object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithThreeStringNameAndDoubleArg(
+  actual fun ptrcallWithThreeStringNameAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -36365,7 +36365,7 @@ actual object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithThreeStringNameTwoDoubleBoolArgs(
+  actual fun ptrcallWithThreeStringNameTwoDoubleBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -42268,7 +42268,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringNameAndDoubleArg(
+  actual fun ptrcallWithTwoStringNameAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
