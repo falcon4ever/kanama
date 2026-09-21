@@ -402,8 +402,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ShaderMaterial": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "StaticBody3D": WrapperHome("generated", "collision",
-        "iOS: hand-written thin Node3D subclass in IosGodotApi.kt"),
     "SurfaceTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),

@@ -27,11 +27,11 @@ _Intentionally bespoke — not generatable from extension_api.json; correct as-i
 | `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:126` | [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json. |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:140` | [platform] MainThread.post is a no-op shim; on iOS main thread dispatch is handled by Godot's frame loop, not a JVM executor. |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:223` | [runtime] signal/connect/emitSignal/await use the custom GDExtension |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:503` | [runtime] Tweener/PropertyTweener/Tween use the Variant tween_property path |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:642` | [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility, |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:710` | [glue] ResourceLoader singleton. Not retired to the generated wrapper: |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:786` | [platform] GD global helpers (rand*, print) — Kotlin/native impls, bespoke. |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:875` | [glue] thin cinterop facade over the C shim helpers used by the bespoke |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:477` | [runtime] Tweener/PropertyTweener/Tween use the Variant tween_property path |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:616` | [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility, |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:684` | [glue] ResourceLoader singleton. Not retired to the generated wrapper: |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:760` | [platform] GD global helpers (rand*, print) — Kotlin/native impls, bespoke. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:849` | [glue] thin cinterop facade over the C shim helpers used by the bespoke |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ProjectSettings.kt:6` | [glue] ProjectSettings singleton. Not retired to the generated wrapper: |
 
 ## SUGAR

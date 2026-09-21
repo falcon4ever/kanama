@@ -429,32 +429,6 @@ class SignalConnection internal constructor(
     }
 }
 
-open class StaticBody3D(handle: GodotHandle) : Node3D(handle) {
-    // CollisionObject3D layer/mask (uint32 ptrcall cells), matching the desktop property shape.
-    var collisionLayer: Long
-        get() = ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
-        set(value) = ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, value)
-
-    var collisionMask: Long
-        get() = ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
-        set(value) = ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, value)
-
-    companion object {
-        private val setCollisionLayerBind by lazy {
-            ObjectCalls.getMethodBind("CollisionObject3D", "set_collision_layer", 1286410249L)
-        }
-        private val getCollisionLayerBind by lazy {
-            ObjectCalls.getMethodBind("CollisionObject3D", "get_collision_layer", 3905245786L)
-        }
-        private val setCollisionMaskBind by lazy {
-            ObjectCalls.getMethodBind("CollisionObject3D", "set_collision_mask", 1286410249L)
-        }
-        private val getCollisionMaskBind by lazy {
-            ObjectCalls.getMethodBind("CollisionObject3D", "get_collision_mask", 3905245786L)
-        }
-    }
-}
-
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
     fun setStreamFromPath(path: String) {
         ResourceLoader.loadAudioStream(path)?.use { stream ->

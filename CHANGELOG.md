@@ -7,6 +7,31 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — `StaticBody3D` sits on the real physics chain on iOS (task 117 P2', 2/3)
+
+- `StaticBody3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/StaticBody3D.kt`);
+  the generated desktop copy and the hand-written iOS class in `IosGodotApi.kt` are both deleted and
+  `PER_PLATFORM_WRAPPERS` loses the entry. The shared draft is signature-identical to the deleted desktop
+  file (only the `internal wrap` parameter goes `MemorySegment` → the `RawSegment` alias), so **no desktop
+  source change and no int width change**.
+- **iOS: `StaticBody3D : Node3D` becomes `StaticBody3D : PhysicsBody3D : CollisionObject3D : Node3D`** —
+  task 117's decision **D3**, satisfied by construction rather than by a hand edit. The hand class was a
+  thin `Node3D` subclass that re-declared just `collisionLayer` and `collisionMask` because the chain it
+  needed did not exist on iOS; both now come from `CollisionObject3D` with the same `Long` type, the same
+  `ptrcallNoArgsRetUInt32` / `ptrcallWithUInt32Arg` helpers and the same method-bind hashes
+  (`set_collision_layer` 1286410249, `get_collision_layer` 3905245786, and the mask pair), so nothing
+  changes at a `body.collisionLayer` call site.
+- **iOS gains `StaticBody3D`'s own 9 members** — `physicsMaterialOverride`, `constantLinearVelocity`,
+  `constantAngularVelocity` and their `get*`/`set*` pairs — plus the companion `fromHandle`/`wrap`, plus
+  everything the corrected chain brings: `PhysicsBody3D`'s 14 members and `CollisionObject3D`'s 38
+  (`shapeOwner*`, `inputRay*`, `collisionPriority`, `areaEntered`-style binds, …).
+- `AnimatableBody3D`, which the shared tree already declared as `: StaticBody3D`, inherits the corrected
+  chain on iOS with it.
+- The wrapper parity gate drops the class from `HAND_SHAPED` (5 → **4 classes**) and its 14 allowlist
+  lines go (82 → **68**), including the `StaticBody3D | supertype | *` line that carried D3 as a known
+  divergence since P0. The shared tree grows 1005 → **1006** classes, `PER_PLATFORM_WRAPPERS` shrinks
+  30 → 29, and iOS hand-writes 10 collision classes instead of 11.
+
 ### Changed — `Image` and `PlaneMesh` generated once — iOS gains 21 `Image` members (task 117 P2', 1/3)
 
 - The first two group-B classes are generated once into the shared wrapper tree

@@ -34,8 +34,8 @@ Rows marked `inherited only` are promoted wrappers whose Godot class declares no
 
 One generated tree, held to the single-tree drift gate (`check_single_tree`: committed == fresh regen for every generated file; see wrapper-maintenance.md).
 
-- Shared tree (`src/sharedApi/kotlin/.../api`): 1005 classes compiled by desktop, Android and iOS. 5 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
-- Per-platform (`PER_PLATFORM_WRAPPERS`, 30 classes): desktop generates 7 and hand-shapes 23; iOS generates 12, hand-shapes 5, hand-writes 11 collision classes, and does not host `DirAccess`, `MethodTweener`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
+- Shared tree (`src/sharedApi/kotlin/.../api`): 1006 classes compiled by desktop, Android and iOS. 5 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
+- Per-platform (`PER_PLATFORM_WRAPPERS`, 29 classes): desktop generates 6 and hand-shapes 23; iOS generates 12, hand-shapes 5, hand-writes 10 collision classes, and does not host `DirAccess`, `MethodTweener`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
 
 ## Virtual Methods
 
