@@ -99,7 +99,7 @@ versioning once public releases begin.
     exactly once, under `KANAMA_IOS_DEBUG_VARIANT_CHECKS`, when the frame counter first reaches 1,
     before `kanama_ios_runtime_frame()`. It prints
     `[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): N passed, M failed`; the scene-init summary
-    line is unchanged. **Totals: 236 at scene init, 2 on frame 1** (218 − the moved row − the
+    line is unchanged. Totals at this commit: 236 at scene init, 2 on frame 1 — **superseded by 236 and 4** after the probe-rule fixes further down (218 − the moved row − the
     now-redundant `input-singleton` row, + 12 `singleton-present(…)` + 8 `object-constructed(…)`
     checks) — **236 and 4** after the probe-rule fixes further down.
   - **Singleton lookups fail loudly on both platforms.** `ObjectCalls.getSingleton` prints
@@ -170,7 +170,7 @@ versioning once public releases begin.
     64-byte return buffer of the no-op path passed it. Its stated reason ("treeless camera
     projection values aren't deterministic") was also unverified and wrong:
     `Camera3D::get_camera_projection` opens with
-    `ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), ...)` (`scene/3d/camera_3d.cpp:300-303`)
+    `ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), ...)` (`scene/3d/camera_3d.cpp:299-302`)
     and `Projection` is `= default` over member initialisers spelling the **identity** matrix
     (`core/math/projection.h:55-60`). The row now asserts the identity — a 1.0 diagonal and a 0.0
     off-diagonal, which the zeroed buffer cannot produce.
@@ -179,11 +179,13 @@ versioning once public releases begin.
   rule and all are admissible: every one is an INSTANCE row whose instance `requireSingleton` /
   `requireObject` has already proven non-zero (so the static route is not taken and the default is a
   real answer), or it sits in a row that also asserts a non-default value through the same helper.
-  One is called out in place rather than fixed: `plane-array-ret(get_frustum finite)` is vacuously
-  true, because `Camera3D::get_frustum` returns an empty list outside the world tree
+  The last one, `plane-array-ret(get_frustum finite)`, was vacuously true (`all {}` on an empty
+  list): `Camera3D::get_frustum` returns an empty list outside the world tree
   (`scene/3d/camera_3d.cpp:792-798`) and a populated frustum needs a viewport that does not exist at
-  scene-level extension init. Its comment now says so, and names the non-default row that does carry
-  the Plane record decode (`array-ret(Geometry3D.build_box_planes has 6 planes)`).
+  scene-level extension init. It now asserts that documented empty answer
+  (`plane-array-ret(get_frustum off-world == empty)`), which is at least falsifiable, and its comment
+  names the non-default row that carries the Plane record decode
+  (`array-ret(Geometry3D.build_box_planes has 6 planes)`).
 
 ### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
 

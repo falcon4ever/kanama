@@ -183,7 +183,7 @@ actual object ObjectCalls {
     val segment = globalGetSingleton.invoke(GodotStrings.makeStringName(name)) as MemorySegment
     if (segment.address() == 0L) {
       System.err.println(
-        "[kanama:kt] ERROR: getSingleton(\"$name\") returned null — not registered at this initialization level"
+        "[kanama:kt] ERROR: getSingleton(\"$name\") returned null — not registered at this initialization level (expected only for editor/web-only singletons on this platform)"
       )
     }
     return segment

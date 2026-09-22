@@ -211,7 +211,7 @@ actual object ObjectCalls {
     val segment = MemorySegment.ofAddress(kanama_ios_godot_get_singleton(name))
     if (segment.address() == 0L) {
       println(
-        "[kanama][ios][kn] ERROR: getSingleton(\"$name\") returned null — not registered at this initialization level"
+        "[kanama][ios][kn] ERROR: getSingleton(\"$name\") returned null — not registered at this initialization level (expected only for editor/web-only singletons on this platform)"
       )
     }
     return segment
@@ -40786,7 +40786,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // zeroed 64-byte return buffer of the no-op path passed it, and it was not a probe (task 117
   // P2' follow-up 5). Its stated reason, "treeless camera projection values aren't deterministic
   // (no viewport aspect)", is also wrong: Camera3D::get_camera_projection opens with
-  // ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), ...) (scene/3d/camera_3d.cpp:300-303),
+  // ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), ...) (scene/3d/camera_3d.cpp:299-302),
   // and `Projection` is `= default` over member initialisers that spell the IDENTITY matrix
   // (core/math/projection.h:55-60, 159). A treeless camera therefore returns exactly the identity
   // — deterministic, and a diagonal of 1.0 with a 0.0 off-diagonal is a value the zeroed buffer
@@ -40825,10 +40825,9 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ObjectCalls.getMethodBind("Camera3D", "get_frustum", 3995934104L),
         frustumCam,
       )
-    check(
-      "plane-array-ret(get_frustum finite)",
-      frustum.all { it.d.isFinite() && it.normal.x.isFinite() && it.normal.y.isFinite() },
-    )
+    // Off-world the engine answers an EMPTY list (scene/3d/camera_3d.cpp:792-798), so that is the
+    // falsifiable expectation here; `all {}` on an empty list was vacuously true (review nit).
+    check("plane-array-ret(get_frustum off-world == empty)", frustum.isEmpty())
   } else check("plane-array-ret(Camera3D.get_frustum) (instance absent)", false)
 
   // Generic Array return (Phase 2.7j). parent + named child; parent.get_node_and_resource("Kid")
