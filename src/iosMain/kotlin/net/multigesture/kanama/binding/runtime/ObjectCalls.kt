@@ -38769,6 +38769,18 @@ actual object ObjectCalls {
 // Debug-gated self-test (called from the C scene-init self-test): validates the full
 // Kotlin->C->Godot path through ObjectCalls — Vector3 float32 component layout, bool,
 // int64 return, and scalar-float-as-double — against real Godot on device.
+//
+// THE PROBE RULE (task 117 P2' follow-up 5). A self-test probe must assert a value THE NO-OP PATH
+// CANNOT PRODUCE. A static routed with a zero instance used to hit the C guard and return null /
+// 0 / false / "" / an empty list / a zeroed struct, so a probe whose EXPECTED value is any of
+// those cannot tell the working call from the call that never happened: it is not a probe, it is a
+// row that keeps passing on the day the feature breaks. Two shipped that way and both are replaced
+// below — ShaderIncludeDB.listBuiltInIncludeFiles / getBuiltInIncludeFile expected a non-empty list
+// and a non-empty source, but Godot registers the built-in includes only from the RenderingDevice
+// renderer (servers/rendering/renderer_rd/renderer_scene_render_rd.cpp:1796-1798), so under the GL
+// Compatibility renderer the honest answer IS the empty list, which is also the no-op answer.
+// For an INSTANCE row the rule is satisfied by requireSingleton / requireObject below: they prove
+// the instance is non-zero, so the static route is not taken and a default return is a real answer.
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_objectcalls_selftest")
 fun kanamaIosRuntimeObjectCallsSelfTest() {
@@ -40767,13 +40779,19 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check("typed-array-ret(get_orphan_node_ids contains id)", orphanIds.contains(orphanId))
 
   // Projection POD return (Phase 2.7h). Camera3D.get_camera_projection() — 16 float32 (4
-  // column-major
-  // Vector4 columns), the same POD-return path as the device-proven Transform3D (12 floats).
-  // Treeless
-  // camera projection values aren't deterministic (no viewport aspect), so this is a smoke check:
-  // the
-  // 64-byte ret buffer reads back 16 finite floats without crashing. Camera3D is a Node3D (safe at
-  // init).
+  // column-major Vector4 columns), the same POD-return path as the device-proven Transform3D (12
+  // floats). Camera3D is a Node3D (safe at scene init).
+  //
+  // The old assertion was `isFinite()` on the four diagonal cells, which 0.0f satisfies — so the
+  // zeroed 64-byte return buffer of the no-op path passed it, and it was not a probe (task 117
+  // P2' follow-up 5). Its stated reason, "treeless camera projection values aren't deterministic
+  // (no viewport aspect)", is also wrong: Camera3D::get_camera_projection opens with
+  // ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), ...) (scene/3d/camera_3d.cpp:300-303),
+  // and `Projection` is `= default` over member initialisers that spell the IDENTITY matrix
+  // (core/math/projection.h:55-60, 159). A treeless camera therefore returns exactly the identity
+  // — deterministic, and a diagonal of 1.0 with a 0.0 off-diagonal is a value the zeroed buffer
+  // cannot produce. Godot also prints "Camera is not inside the scene tree." for this call; that
+  // is the expected engine error for the row, not a Kanama fault.
   val projCam = requireObject("Camera3D")
   if (projCam.address() != 0L) {
     val proj =
@@ -40782,15 +40800,24 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         projCam,
       )
     check(
-      "projection-ret(get_camera_projection finite)",
-      proj.x.x.isFinite() && proj.y.y.isFinite() && proj.z.z.isFinite() && proj.w.w.isFinite(),
+      "projection-ret(get_camera_projection == identity)",
+      proj.x.x.toDouble() == 1.0 &&
+        proj.y.y.toDouble() == 1.0 &&
+        proj.z.z.toDouble() == 1.0 &&
+        proj.w.w.toDouble() == 1.0 &&
+        proj.x.y.toDouble() == 0.0 &&
+        proj.w.z.toDouble() == 0.0,
     )
   } else check("projection-ret(Camera3D.get_camera_projection) (instance absent)", false)
 
-  // Array[Plane] return (Phase 2.7i). Camera3D.get_frustum() — a treeless camera has no viewport so
-  // this is typically empty (exercises the Array size=0 path + the Plane blob record layout); any
-  // returned planes must have finite components. The Plane decode shares the fixed-size-record blob
-  // machinery proven by the List<Long> path. Camera3D is a Node3D (safe at init).
+  // Array[Plane] return (Phase 2.7i). Camera3D.get_frustum() on a treeless camera returns an EMPTY
+  // list, deterministically: ERR_FAIL_COND_V(!is_inside_world(), Vector<Plane>())
+  // (scene/3d/camera_3d.cpp:792-798). This row therefore exercises the Array size=0 path only, and
+  // by the probe rule its `all { isFinite() }` is vacuously true — it is NOT on its own evidence
+  // that the Plane record decode works. That evidence is the non-default
+  // `array-ret(Geometry3D.build_box_planes has 6 planes)` row above, which drives the same
+  // fixed-size-record blob machinery. Kept for the size=0 path; a populated frustum needs a
+  // viewport, which does not exist at scene-level extension init.
   val frustumCam = requireObject("Camera3D")
   if (frustumCam.address() != 0L) {
     val frustum =
@@ -41598,18 +41625,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         backLong.target.segment.address() == spawner.address(),
     )
     ObjectCalls.destroyObject(spawner)
-    // A RID-argument shape on a singleton: NativeMenu has no popup for an invalid RID, so the
-    // returned Callable is empty -> null (the arg cells and the run-once entry are exercised).
-    val nativeMenu = requireSingleton("NativeMenu")
-    if (nativeMenu.address() != 0L) {
-      val noPopup =
-        ObjectCalls.ptrcallWithRIDArgRetCallable(
-          ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", 3170603026L),
-          nativeMenu,
-          RID(0L),
-        )
-      check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
-    } else check("ret-callable(NativeMenu.get_popup_open_callback) (singleton absent)", false)
+    // The RID-argument Callable shape on the NativeMenu singleton MOVED to the frame-1 phase
+    // (task 117 P2' follow-up 5). Engine gets its "NativeMenu" entry from
+    // register_server_singletons() (servers/register_server_types.cpp:400) — the same late step
+    // that registers RenderingServer, run at main/main.cpp:3864, long after
+    // initialize_extensions(INITIALIZATION_LEVEL_SCENE) at main/main.cpp:3793 — so at scene init
+    // the lookup returns 0 and the row was a second false pass (guard -> null callable == null).
   }
 
   // task 117 P2' follow-up — SHARED-TREE STATIC dispatch (the ptrcallDispatch fix above). These
@@ -41678,23 +41699,50 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       (decoded as? Map<*, *>)?.get("k") == "v",
     )
 
-    // ShaderIncludeDB.listBuiltInIncludeFiles -> ptrcallNoArgsRetPackedStringList ->
-    // ..._ptrcall_no_args_ret_packed_string_array. Godot always registers built-in includes.
-    val includes = net.multigesture.kanama.api.ShaderIncludeDB.listBuiltInIncludeFiles()
+    // GLTFDocument.getSupportedGltfExtensions -> ptrcallNoArgsRetPackedStringList ->
+    // ..._ptrcall_no_args_ret_packed_string_array. Same helper, same NULL_SEGMENT static marker as
+    // the ShaderIncludeDB.listBuiltInIncludeFiles row it replaces (task 117 P2' follow-up 5) — but
+    // a value the no-op path cannot produce. Godot hard-codes this set in
+    // GLTFDocument::get_supported_gltf_extensions_hashset (modules/gltf/gltf_document.cpp:6968),
+    // bound as a static method by initialize_gltf_module at MODULE_INITIALIZATION_LEVEL_SCENE,
+    // which main/main.cpp runs IMMEDIATELY BEFORE initialize_extensions(INITIALIZATION_LEVEL_SCENE)
+    // (main/main.cpp:3792-3793, and 834-835 on the other setup path). It does not depend on the
+    // renderer, which is exactly what the ShaderIncludeDB row did. Assert a NAMED element too, so a
+    // list that came back with the right length but the wrong bytes still fails.
+    val gltfExtensions = net.multigesture.kanama.api.GLTFDocument.getSupportedGltfExtensions()
     check(
-      "shared-static(ShaderIncludeDB.listBuiltInIncludeFiles -> non-empty)",
-      includes.isNotEmpty(),
+      "shared-static(GLTFDocument.getSupportedGltfExtensions -> non-empty)",
+      gltfExtensions.isNotEmpty(),
+    )
+    check(
+      "shared-static(GLTFDocument.getSupportedGltfExtensions contains KHR_lights_punctual)",
+      gltfExtensions.contains("KHR_lights_punctual"),
     )
 
-    // ShaderIncludeDB.getBuiltInIncludeFile -> ptrcallWithStringArgRetString ->
-    // callWithVariantArgs -> kanama_ios_godot_object_call, the last of the six entry points the
-    // thirteen sites reach. Keyed off the list above so it asserts nothing about a fixed name.
-    val firstInclude = includes.firstOrNull()
-    check(
-      "shared-static(ShaderIncludeDB.getBuiltInIncludeFile -> non-empty source)",
-      firstInclude != null &&
-        net.multigesture.kanama.api.ShaderIncludeDB.getBuiltInIncludeFile(firstInclude).isNotEmpty(),
-    )
+    // ptrcallWithStringArgRetString -> callWithVariantArgs -> kanama_ios_godot_object_call, the
+    // last of the six entry points the thirteen sites reach — driven HELPER-level with the static
+    // marker (NULL_SEGMENT) rather than through a shared wrapper, because FileAccess is
+    // per-platform on iOS and hosts no shared-tree static of this shape. The dispatch route is the
+    // identical one (objectCallDispatch -> kanama_ios_godot_object_call_static). It replaces
+    // ShaderIncludeDB.getBuiltInIncludeFile, whose "non-empty source" was the no-op answer under
+    // the GL Compatibility renderer. A SHA-256 is 64 lowercase hex characters; the no-op path
+    // yields "" (the `as? String ?: ""` fallback in ptrcallWithStringArgRetString), so the length
+    // and the alphabet are both evidence. res://project.binary exists in every exported project;
+    // if it is missing that is a recorded FAILURE, not a skip.
+    val sha256Path = "res://project.binary"
+    if (net.multigesture.kanama.api.FileAccess.fileExists(sha256Path)) {
+      val getSha256Bind = ObjectCalls.getMethodBind("FileAccess", "get_sha256", 1703090593L)
+      val sha256 =
+        ObjectCalls.ptrcallWithStringArgRetString(getSha256Bind, NULL_SEGMENT, sha256Path)
+      check("shared-static(FileAccess.get_sha256 -> 64 characters)", sha256.length == 64)
+      check(
+        "shared-static(FileAccess.get_sha256 -> lowercase hex)",
+        sha256.isNotEmpty() && sha256.all { it in '0'..'9' || it in 'a'..'f' },
+      )
+    } else {
+      check("shared-static(FileAccess.get_sha256) (res://project.binary missing)", false)
+      check("shared-static(FileAccess.get_sha256 alphabet) (res://project.binary missing)", false)
+    }
 
     // Resource.generateSceneUniqueId -> ptrcallNoArgsRetString -> ..._no_args_ret_string.
     // Documented to be letters a-y and digits 0-8 only, so a non-empty result is the assertion.
@@ -41718,9 +41766,10 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 // frame counter first reaches 1, before kanama_ios_runtime_frame()). It holds the rows whose
 // singleton the engine registers AFTER scene-level extension init, so they cannot run in
 // kanamaIosRuntimeObjectCallsSelfTest above: Godot 4.7.2 main/main.cpp calls
-// initialize_extensions(INITIALIZATION_LEVEL_SCENE) at line 835 and register_server_singletons()
-// — which adds the RenderingServer singleton (servers/register_server_types.cpp) — only at line
-// 3864. Until task 117 P2' follow-up 4 the RenderingServer row sat in the scene-init phase and
+// initialize_extensions(INITIALIZATION_LEVEL_SCENE) at line 835 (3793 on the setup2 path) and
+// register_server_singletons() — which adds the RenderingServer AND the NativeMenu singleton
+// entries (servers/register_server_types.cpp:400-401) — only at line 3864. Until task 117 P2'
+// follow-up 4 the RenderingServer row sat in the scene-init phase and
 // "passed" because getSingleton returned 0 and the C instance entry point's null-instance guard
 // turned the whole call into a no-op returning RID 0, which is exactly what it asserted. With
 // the D19 dispatcher a zero instance is routed to the STATIC entry point instead, so the call
@@ -41749,13 +41798,22 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
 
   // task 100 (parcel 10), moved here by task 117 P2' follow-up 4 — Array[Dictionary] ARGUMENT
   // through the GENERATED helper (packTypedDictionaryArrayDesc -> PT_TYPED_ARRAY_BLOB -> nested
-  // blobs the boxer rebuilds). The engine rejects an EMPTY surface list
-  // (ERR_FAIL_COND_V(p_surfaces.is_empty(), RID())), so the row still asserts the invalid RID —
-  // but now against a REAL RenderingServer instance: the typed Array[Dictionary] cell was built,
-  // set_typed, handed over and inspected by the engine, and the call returned. A broken cell
-  // would crash or hang, not answer. A non-empty Dictionary element cannot be exercised here
-  // without a Control or a full surface dictionary (AABB values), so the DICTIONARY boxer case
-  // rides on the ARRAY case the OggPacketSequence row in the scene-init phase proves.
+  // blobs the boxer rebuilds), against a REAL RenderingServer instance: the typed Array[Dictionary]
+  // cell is built, set_typed, handed over and inspected by the engine, and the call returns. A
+  // non-empty Dictionary element cannot be exercised here without a Control or a full surface
+  // dictionary (AABB values), so the DICTIONARY boxer case rides on the ARRAY case the
+  // OggPacketSequence row in the scene-init phase proves.
+  //
+  // The EXPECTATION is task 117 P2' follow-up 5's correction. Follow-up 4 kept `RID(0L)` on the
+  // claim that "the engine rejects an empty surface list with ERR_FAIL_COND_V" — that claim was
+  // never checked against 4.7.2 and is false. RenderingServer::_mesh_create_from_surfaces
+  // (servers/rendering/rendering_server.cpp:1996-2002) has NO guard: it converts each element and
+  // calls mesh_create_from_surfaces(surfaces), whose default implementation
+  // (servers/rendering/rendering_server_default.h:363) opens with mesh_allocate() —
+  // mesh_owner.allocate_rid() in the GL Compatibility mesh storage
+  // (drivers/gles3/storage/mesh_storage.cpp:65-67) — so an EMPTY list yields a VALID, EMPTY mesh.
+  // An invalid RID was also precisely the no-op answer, which is what made the old row unable to
+  // tell the fix from the defect. Assert the valid RID and free it again.
   val nestedRs = requireSingleton("RenderingServer")
   if (nestedRs.address() != 0L) {
     val nestedMesh =
@@ -41766,10 +41824,45 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
         0,
       )
     check(
-      "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> engine rejects it, invalid RID)",
-      nestedMesh == RID(0L),
+      "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> valid RID)",
+      nestedMesh != RID(0L),
     )
+    if (nestedMesh != RID(0L)) {
+      ObjectCalls.ptrcallWithRIDArg(
+        ObjectCalls.getMethodBind("RenderingServer", "free_rid", 2722037293L),
+        nestedRs,
+        nestedMesh,
+      )
+    }
   } else check("arg-nested(RenderingServer.mesh_create_from_surfaces) (singleton absent)", false)
+
+  // task 100 (parcel 11), moved here by task 117 P2' follow-up 5 — a RID-ARGUMENT shape on a
+  // singleton: NativeMenu has no popup for an invalid RID, so the returned Callable is empty ->
+  // null (the arg cells and the run-once entry are exercised). The row sat in the scene-init phase
+  // and was a false pass of exactly the RenderingServer kind: Engine gets its "NativeMenu" entry
+  // from register_server_singletons() (servers/register_server_types.cpp:400), run at
+  // main/main.cpp:3864 — the same late step as RenderingServer and long after
+  // initialize_extensions(INITIALIZATION_LEVEL_SCENE) at main/main.cpp:3793 — so the lookup
+  // returned 0 and the guard answered with the null Callable the row asserted. The NativeMenu
+  // OBJECT itself exists much earlier on iOS and the row can therefore MOVE rather than go:
+  // DisplayServerAppleEmbedded (the display server platform/ios inherits through
+  // drivers/apple_embedded) does `native_menu = memnew(NativeMenu)` in its constructor
+  // (drivers/apple_embedded/display_server_apple_embedded.mm:65) and NativeMenu's constructor sets
+  // its own singleton (servers/display/native_menu.h:154); DisplayServer::create runs at
+  // main/main.cpp:3368, before both. The expected null is a DEFAULT value, so per the probe rule it
+  // is evidence only because singleton-present(NativeMenu) proves the instance is non-zero (the
+  // static route is not taken) — and this phase carries a non-default assertion of its own in the
+  // RenderingServer RID above.
+  val nativeMenu = requireSingleton("NativeMenu")
+  if (nativeMenu.address() != 0L) {
+    val noPopup =
+      ObjectCalls.ptrcallWithRIDArgRetCallable(
+        ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", 3170603026L),
+        nativeMenu,
+        RID(0L),
+      )
+    check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
+  } else check("ret-callable(NativeMenu.get_popup_open_callback) (singleton absent)", false)
 
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed")
 }

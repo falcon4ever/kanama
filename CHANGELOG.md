@@ -76,8 +76,9 @@ versioning once public releases begin.
   `Image.createFromData(2, 2, false, FORMAT_RGBA8, ByteArray(16))` (non-null, width 2, height 2),
   `Image.create(4, 3, false, FORMAT_RGBA8)` (non-null, width 4), `Thread.isMainThread()`,
   `RegEx.createFromString("a+b", false)`, a `JSON.stringify`/`JSON.parseString` round-trip,
-  `ShaderIncludeDB.listBuiltInIncludeFiles()` and `getBuiltInIncludeFile(...)`,
-  `Resource.generateSceneUniqueId()` and `MultiplayerAPI.getDefaultInterface()`.
+  `ShaderIncludeDB.listBuiltInIncludeFiles()` and `getBuiltInIncludeFile(...)` — **both replaced
+  further down: they were not probes** — `Resource.generateSceneUniqueId()` and
+  `MultiplayerAPI.getDefaultInterface()`.
 - **The dispatcher exposed a self-test row that had only ever passed because of the guard.** On
   device the `RenderingServer.mesh_create_from_surfaces` row (added by task 100 parcel 10)
   SIGSEGV'd inside `RenderingServer::_mesh_create_from_surfaces` with a null `this`. Its comment
@@ -93,14 +94,14 @@ versioning once public releases begin.
   - **A first-frame self-test phase.** `kanamaIosRuntimeObjectCallsSelfTestFrame`
     (`@CName("kanama_ios_runtime_objectcalls_selftest_frame")`) sits beside the scene-init
     self-test with the same `check` machinery and holds the moved RenderingServer row, now run
-    against a real instance (the engine still rejects an empty surface list with
-    `ERR_FAIL_COND_V`, so `RID(0L)` remains the right expectation). `kanama_ios_frame` calls it
+    against a real instance. (The `RID(0L)` expectation this bullet kept is **wrong**, and is
+    corrected further down: 4.7.2 returns a valid, empty mesh.) `kanama_ios_frame` calls it
     exactly once, under `KANAMA_IOS_DEBUG_VARIANT_CHECKS`, when the frame counter first reaches 1,
     before `kanama_ios_runtime_frame()`. It prints
     `[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): N passed, M failed`; the scene-init summary
     line is unchanged. **Totals: 236 at scene init, 2 on frame 1** (218 − the moved row − the
     now-redundant `input-singleton` row, + 12 `singleton-present(…)` + 8 `object-constructed(…)`
-    checks).
+    checks) — **236 and 4** after the probe-rule fixes further down.
   - **Singleton lookups fail loudly on both platforms.** `ObjectCalls.getSingleton` prints
     `[kanama][ios][kn] ERROR: getSingleton("<name>") returned null — not registered at this
     initialization level` on iOS (Godot's own error print does not reach the device console
@@ -119,6 +120,70 @@ versioning once public releases begin.
   `AnimationPlayer.animation_get_next`, `GridMap.get_used_cells`,
   `Camera3D.get_camera_projection`, `Camera3D.get_frustum`, and the two lambda-Callable
   free-ordering rows.
+- **With the self-test honest, the phone failed four rows at scene init and one on frame 1 — and
+  three of the five could never have failed for the right reason.** The rule they broke, now
+  written into the self-test
+  header and `docs/contributing/backends/ios.md`: **a probe must assert a value the no-op path
+  cannot produce.** A static routed with a zero instance used to return `null` / `0` / `false` /
+  `""` / an empty list / a zeroed struct, so a probe whose *expected* value is one of those cannot
+  tell the working call from the call that never happened.
+  - **`NativeMenu` was the same false pass as `RenderingServer`.** Godot adds the Engine singleton
+    entry in `register_server_singletons()` (`servers/register_server_types.cpp:400`), the same late
+    step as `RenderingServer` — `main/main.cpp:3864`, long after
+    `initialize_extensions(INITIALIZATION_LEVEL_SCENE)` at `main/main.cpp:3793` — so the scene-init
+    lookup returned 0 and the guard answered with the null Callable the row asserted. The NativeMenu
+    *object* exists far earlier on iOS, so the row MOVED rather than went:
+    `DisplayServerAppleEmbedded` (which `platform/ios` inherits through `drivers/apple_embedded`)
+    constructs one at `drivers/apple_embedded/display_server_apple_embedded.mm:65`, and
+    `NativeMenu`'s constructor sets its own singleton (`servers/display/native_menu.h:154`);
+    `DisplayServer::create` runs at `main/main.cpp:3368`. Both rows are now in the frame-1 phase.
+  - **The two `ShaderIncludeDB` probes were indistinguishable on the GL Compatibility renderer, and
+    are deleted.** `listBuiltInIncludeFiles()` expected a non-empty list and `getBuiltInIncludeFile`
+    a non-empty source, but Godot registers the built-in includes only from the RenderingDevice
+    renderer (`servers/rendering/renderer_rd/renderer_scene_render_rd.cpp:1796-1798`). Match3 runs
+    GL Compatibility, so the honest answer is the empty list — which is also exactly what the old
+    no-op produced. Their two C entry points keep their coverage through replacements that assert a
+    value a no-op cannot fake: `GLTFDocument.getSupportedGltfExtensions()` (same shared-tree
+    `ptrcallNoArgsRetPackedStringList` helper, same `NULL_SEGMENT`) must be non-empty **and** contain
+    `KHR_lights_punctual` — a hard-coded set in
+    `modules/gltf/gltf_document.cpp:6968` registered by `initialize_gltf_module` at
+    `MODULE_INITIALIZATION_LEVEL_SCENE`, which `main/main.cpp` runs immediately *before* extension
+    SCENE init (`main/main.cpp:3792-3793`), independent of the renderer; and a helper-level
+    `ObjectCalls.ptrcallWithStringArgRetString(getSha256Bind, NULL_SEGMENT, "res://project.binary")`
+    must return 64 lowercase hex characters. That second one is helper-level on purpose:
+    `FileAccess` is per-platform on iOS and hosts no shared-tree static of that shape, but the route
+    (`objectCallDispatch` → `kanama_ios_godot_object_call_static`) is identical. It is guarded by a
+    new iOS `FileAccess.fileExists` — the desktop member's exact shape, static bind through
+    `NULL_SEGMENT` — and a missing `res://project.binary` is a recorded FAILURE, not a skip.
+  - **The `RenderingServer` expectation was wrong, and had never been checked against 4.7.2.**
+    Follow-up 4 kept `RID(0L)` on the claim that the engine rejects an empty surface list with
+    `ERR_FAIL_COND_V`. It does not: `RenderingServer::_mesh_create_from_surfaces`
+    (`servers/rendering/rendering_server.cpp:1996-2002`) has no guard at all, and
+    `mesh_create_from_surfaces` (`servers/rendering/rendering_server_default.h:363`) opens with
+    `mesh_allocate()` — `mesh_owner.allocate_rid()` in the GL Compatibility mesh storage
+    (`drivers/gles3/storage/mesh_storage.cpp:65-67`) — so an empty list yields a **valid, empty
+    mesh**. An invalid RID was also the no-op answer, which is what made the row unable to tell the
+    fix from the defect either way. The row now asserts a valid RID and frees it with
+    `RenderingServer.free_rid`, so the frame-1 phase carries a non-default assertion.
+  - **A fourth row failed the rule on review and is strengthened: `Camera3D.get_camera_projection`.**
+    It asserted `isFinite()` on the four diagonal cells, which `0.0f` satisfies — so the zeroed
+    64-byte return buffer of the no-op path passed it. Its stated reason ("treeless camera
+    projection values aren't deterministic") was also unverified and wrong:
+    `Camera3D::get_camera_projection` opens with
+    `ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), ...)` (`scene/3d/camera_3d.cpp:300-303`)
+    and `Projection` is `= default` over member initialisers spelling the **identity** matrix
+    (`core/math/projection.h:55-60`). The row now asserts the identity — a 1.0 diagonal and a 0.0
+    off-diagonal, which the zeroed buffer cannot produce.
+- **Self-test totals: 236 at scene init (unchanged — four rows out, four in) and 4 on frame 1**
+  (was 2), all expected to pass. The remaining default-valued assertions were audited against the
+  rule and all are admissible: every one is an INSTANCE row whose instance `requireSingleton` /
+  `requireObject` has already proven non-zero (so the static route is not taken and the default is a
+  real answer), or it sits in a row that also asserts a non-default value through the same helper.
+  One is called out in place rather than fixed: `plane-array-ret(get_frustum finite)` is vacuously
+  true, because `Camera3D::get_frustum` returns an empty list outside the world tree
+  (`scene/3d/camera_3d.cpp:792-798`) and a populated frustum needs a viewport that does not exist at
+  scene-level extension init. Its comment now says so, and names the non-default row that does carry
+  the Plane record decode (`array-ret(Geometry3D.build_box_planes has 6 planes)`).
 
 ### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
 
