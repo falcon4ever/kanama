@@ -1089,6 +1089,17 @@ int64_t kanama_ios_classdb_instantiate_owned(
     int32_t *out_is_refcounted
 );
 
+/*
+ * Static-method sibling of kanama_ios_classdb_instantiate_owned: the same body with a NULL
+ * instance, for the generator's `NULL_SEGMENT` statics. The entry point above rejects
+ * instance == 0, so a static must come through here.
+ */
+int64_t kanama_ios_classdb_instantiate_owned_static(
+    int64_t method_bind,
+    const char *class_name,
+    int32_t *out_is_refcounted
+);
+
 /* Object.disconnect(signal, Callable(target, method)) — symmetric to object_connect. */
 int32_t kanama_ios_godot_object_disconnect(
     int64_t object,

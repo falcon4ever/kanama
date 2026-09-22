@@ -78,9 +78,23 @@ cinterop header) calling it with a null instance — **and is named exactly once
 `ObjectCalls.kt`, inside a private `<entry>Dispatch` function that picks the `_static`
 sibling when the instance is zero.** Never remove an existing guard and never change an
 existing signature to make a static work. `scripts/check_ios_static_dispatch.py` (a
-`local_ci.sh` stage) enforces this: it derives the guarded set from the shim itself and
-fails on any raw call, so the next static the generator renders through a new shape is
-covered without anyone remembering this paragraph.
+`local_ci.sh` stage) enforces this: it derives the guarded set from the shim itself —
+by SIGNATURE (`kanama_ios_*` taking both an `int64_t method_bind` and an instance it
+early-returns on), not by name prefix, which is what finally brought
+`kanama_ios_classdb_instantiate_owned` into scope — and fails on any raw call, so the
+next static the generator renders through a new shape is covered without anyone
+remembering this paragraph.
+
+The gate also reads the **shim's own `_dispatch` bodies**, because the Kotlin rule is
+only half the property. A `_dispatch` body is the unguarded half of a split, so it is
+by definition reachable with a zero instance; if it then calls a guarded entry point
+instead of that entry's `_dispatch` body, the early return bites one frame below the
+Kotlin dispatcher and the `_static` sibling above it is a dead end — the result cell
+is never written and the call no-ops exactly as before. Two bodies shipped that way
+(`..._ret_raycast_dict_dispatch` and `..._ret_object_handles_dispatch`, both calling
+`kanama_ios_godot_ptrcall` instead of `kanama_ios_godot_ptrcall_dispatch`). Inside a
+`_dispatch` body, call the callee's `_dispatch` body.
+
 The per-platform generated files keep the JDK/shim spelling, and a genuine
 `const void*` argument still renders as `MemorySegment`: the three desktop-only
 helpers `GDExtensionManager.loadExtensionFromFunction(initFunc)`,

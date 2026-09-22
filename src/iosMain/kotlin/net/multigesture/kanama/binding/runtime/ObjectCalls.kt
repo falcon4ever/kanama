@@ -45,6 +45,7 @@ import net.multigesture.kanama.ios.cinterop.KanamaIosPackedArgDesc
 import net.multigesture.kanama.ios.cinterop.KanamaIosTypedArrayArgDesc
 import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned
+import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_singleton
@@ -751,6 +752,23 @@ actual object ObjectCalls {
         outStrLen,
         outIsRefcounted,
       )
+    }
+
+  // ClassDB.instantiate's owned decode (task 43) is a guarded entry point too: it takes a
+  // method_bind + an instance and rejects a zero instance, so a static rendered through
+  // ptrcallWithStringNameArgRetVariantScalarOwned would no-op the same way. Its one shared-tree
+  // caller passes the ClassDB singleton, so this is latent rather than live — which is exactly
+  // why it goes through a dispatcher: the property holds by construction, not by review.
+  private fun classdbInstantiateOwnedDispatch(
+    methodBind: Long,
+    instance: Long,
+    className: String?,
+    outIsRefcounted: CValuesRef<IntVar>?,
+  ): Long =
+    if (instance == 0L) {
+      kanama_ios_classdb_instantiate_owned_static(methodBind, className, outIsRefcounted)
+    } else {
+      kanama_ios_classdb_instantiate_owned(methodBind, instance, className, outIsRefcounted)
     }
 
   // ---- no-arg ----
@@ -3771,7 +3789,7 @@ actual object ObjectCalls {
     val isRefCounted = alloc<IntVar>()
     isRefCounted.value = 0
     val handle =
-      kanama_ios_classdb_instantiate_owned(
+      classdbInstantiateOwnedDispatch(
         methodBind.address(),
         instance.address(),
         name,

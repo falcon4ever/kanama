@@ -4623,7 +4623,7 @@ static int64_t kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch(
 
     // intersect_ray -> raw Dictionary (8-byte opaque). Generic dispatch marshals the query object arg.
     uint64_t dict_storage = 0;
-    kanama_ios_godot_ptrcall(
+    kanama_ios_godot_ptrcall_dispatch(
         method_bind, instance, arg_types, arg_ptrs, arg_count,
         KANAMA_IOS_PT_OBJECT /* non-void ret tag -> ret_out used */, &dict_storage);
 
@@ -7895,14 +7895,18 @@ int32_t kanama_ios_godot_object_call_static(
 // Variant and reports the retain through out_is_refcounted, so the Kotlin side hands
 // ownership to the RefCounted wrapper (close() releases — task-31 return-ownership).
 // Non-RefCounted results (Nodes) come back borrowed, unchanged. Returns 0 on failure.
-int64_t kanama_ios_classdb_instantiate_owned(
+// Unguarded body of kanama_ios_classdb_instantiate_owned, shared by the guarded instance entry
+// point below and by its _static sibling. Same split as kanama_ios_godot_ptrcall / _dispatch /
+// _static (commit 30c949a1): a zero instance is the generator's static-method marker and Godot
+// ptrcalls a static bind with a null object, so the body must accept one.
+static int64_t kanama_ios_classdb_instantiate_owned_dispatch(
     int64_t method_bind,
     int64_t instance,
     const char *class_name,
     int32_t *out_is_refcounted
 ) {
     if (out_is_refcounted != NULL) *out_is_refcounted = 0;
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0 || class_name == NULL) {
+    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || class_name == NULL) {
         return 0;
     }
 
@@ -7955,6 +7959,36 @@ int64_t kanama_ios_classdb_instantiate_owned(
         kanama_ios_destroy_string_name(&arg_cell);
     }
     return (int64_t)(intptr_t)obj;
+}
+
+int64_t kanama_ios_classdb_instantiate_owned(
+    int64_t method_bind,
+    int64_t instance,
+    const char *class_name,
+    int32_t *out_is_refcounted
+) {
+    // Null-instance rejection, kept verbatim from before the _dispatch split: callers read
+    // *out_is_refcounted without consulting the returned handle.
+    if (instance == 0) {
+        if (out_is_refcounted != NULL) *out_is_refcounted = 0;
+        return 0;
+    }
+    return kanama_ios_classdb_instantiate_owned_dispatch(
+        method_bind, instance, class_name, out_is_refcounted);
+}
+
+// Static-method sibling of kanama_ios_classdb_instantiate_owned: the same body with a NULL
+// instance, for the generator's `NULL_SEGMENT` statics. A separate entry point so the instance
+// path above keeps its null-instance guard. ClassDB.instantiate is called on the ClassDB
+// singleton today, so this sibling is the by-construction half of the property the gate
+// (scripts/check_ios_static_dispatch.py) enforces, not a live call path.
+int64_t kanama_ios_classdb_instantiate_owned_static(
+    int64_t method_bind,
+    const char *class_name,
+    int32_t *out_is_refcounted
+) {
+    return kanama_ios_classdb_instantiate_owned_dispatch(
+        method_bind, 0, class_name, out_is_refcounted);
 }
 
 // Object.disconnect(signal, Callable(target, method)) — the symmetric teardown of
@@ -10219,7 +10253,7 @@ static int64_t kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
 
     // Array opaque size is 8 bytes on 64-bit (OPAQUE_8_BYTE_TYPES) — a single uint64_t slot.
     uint64_t array_storage = 0;
-    kanama_ios_godot_ptrcall(
+    kanama_ios_godot_ptrcall_dispatch(
         method_bind, instance, arg_types, arg_ptrs, arg_count,
         KANAMA_IOS_PT_OBJECT /* any non-void ret tag → ret_out is used */, &array_storage);
 

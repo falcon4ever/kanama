@@ -34,19 +34,43 @@ versioning once public releases begin.
   and `ShaderIncludeDB`) return through a specialised C entry — `..._no_args_ret_string`,
   `..._no_args_ret_string_name`, `..._no_args_ret_packed_string_array`,
   `..._no_args_ret_typed_array_blob`, `..._ret_array_blob`, `..._ret_utf8`, `..._ret_variant_scalar`
-  and `kanama_ios_godot_object_call` — each carrying the same `instance == 0` guard. **All 22 such
-  entry points in `ios/bootstrap/kanama_ios_shim.c` now follow the `30c949a1` pattern**: the body moves
-  into an unguarded `static ..._dispatch(...)`, the existing symbol keeps its guard and calls it, and a
-  new `<symbol>_static(...)` sibling (declared in `ios/include/kanama_ios.h` for cinterop) calls it with
-  a null instance. No existing guard was removed and no existing signature changed. **72 of 72 static
-  call sites now reach Godot on iOS.** The existing `ptrcallStatic*` helpers and their hand users
+  and `kanama_ios_godot_object_call` — each carrying the same `instance == 0` guard. **All 23 guarded
+  entry points in `ios/bootstrap/kanama_ios_shim.c` that an `ObjectCalls` helper calls with an instance
+  now follow the `30c949a1` pattern**: the body moves into an unguarded `static ..._dispatch(...)`, the
+  existing symbol keeps its guard and calls it, and a new `<symbol>_static(...)` sibling (declared in
+  `ios/include/kanama_ios.h` for cinterop) calls it with a null instance. No existing guard was removed
+  and no existing signature changed. The existing `ptrcallStatic*` helpers and their hand users
   (`FileAccess`, `ImageTexture`) are untouched.
+  Entry points no helper reaches with the static marker — `kanama_ios_godot_ptrcall_string_arg`,
+  `kanama_ios_godot_ptrcall_ret_object_array` and the object-handle entries, whose zero check guards a
+  live engine handle — keep their single guarded form on purpose.
+- **Two `_static` siblings were dead ends until the split reached one level down.**
+  `kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch` and
+  `..._ret_object_handles_dispatch` — the *unguarded* halves of their own splits, so by definition
+  reached with a zero instance — themselves called `kanama_ios_godot_ptrcall` rather than
+  `kanama_ios_godot_ptrcall_dispatch`. The guard bit one frame below the Kotlin dispatcher and returned
+  before writing the result cell, so a static routed through the raycast-dictionary or
+  object-handle-list shapes still no-opped. Both now call the unguarded body, as
+  `kanama_ios_ptrcall_encode_container` already did. **With that, 72 of 72 static call sites reach
+  Godot on iOS.**
+- **A 24th guarded entry point was invisible to the gate: `kanama_ios_classdb_instantiate_owned`**
+  (task 43's owned `ClassDB.instantiate` decode). It takes a `method_bind` + an instance and rejects a
+  zero instance like the rest, but it is not spelled `kanama_ios_godot_*`, and the gate's regexes keyed
+  on that prefix. It now has the same `_dispatch` / guarded entry / `_static` split and a
+  `classdbInstantiateOwnedDispatch` in `ObjectCalls.kt`. Its one shared-tree caller (`ClassDB.kt`)
+  passes the singleton, so this was latent rather than live — which is the point: the property now holds
+  by construction.
 - **New gate `scripts/check_ios_static_dispatch.py`** (a `local_ci.sh` stage beside
-  `check_objectcalls_parity`) makes this structural instead of remembered: it parses the shim for every
-  exported `kanama_ios_godot_*` entry point that early-returns on a zero instance, and fails if
-  `ObjectCalls.kt` names one anywhere except inside a private `*Dispatch` function that also calls its
-  `_static` sibling. It prints the entry-point → dispatcher table on PASS, so the next static the
-  generator renders through any shape is covered by construction.
+  `check_objectcalls_parity`) makes this structural instead of remembered. It derives the guarded set
+  from the shim by **signature** — any `kanama_ios_*` definition taking both an `int64_t method_bind`
+  and an instance it *early-returns* on (an `if` whose condition tests the instance for zero and whose
+  block returns, not a zero comparison anywhere in the body) — and checks both sides of the boundary:
+  `ObjectCalls.kt` may name a guarded entry point only inside a private `*Dispatch` function that also
+  calls its `_static` sibling, and **no `_dispatch` body in the shim may name one at all** (it must
+  call the callee's `_dispatch` body). It prints the 26 guarded entry points, the 24 dispatched ones,
+  the count of `_dispatch` bodies scanned and the out-of-scope object-handle entries on PASS. Pointing
+  `--shim` / `--header` / `--objectcalls` at a scratch copy runs its negative tests without touching
+  the tree.
 - **The iOS `OBJECTCALLS SELFTEST` goes from 205 to 218 checks.** Thirteen new rows drive the
   shared-tree static path through the public wrapper API rather than the `ptrcallStatic*` helpers:
   `Image.createFromData(2, 2, false, FORMAT_RGBA8, ByteArray(16))` (non-null, width 2, height 2),
