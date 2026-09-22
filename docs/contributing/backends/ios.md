@@ -260,5 +260,19 @@ platformer):
   (use values where a wrong width fails — a small value can mask it, as the int bug
   showed). The matrix + ObjectCalls probe are the ptrcall path's only runtime check
   (`check_call_error`/`check_variant_arg` only cover the Variant path).
+- **The on-device self-test runs in two phases, and a row must sit in the right one.**
+  The C ptrcall matrix and the Kotlin `kanamaIosRuntimeObjectCallsSelfTest` both run at
+  SCENE-level extension init and print
+  `[kanama][ios][c] PTRCALL SELFTEST MATRIX: N passed, M failed` and
+  `[kanama][ios][kn] OBJECTCALLS SELFTEST: N passed, M failed`. A second Kotlin phase,
+  `kanamaIosRuntimeObjectCallsSelfTestFrame`, runs **once on the first frame** — called from
+  `kanama_ios_frame` when the frame counter first reaches 1, before `kanama_ios_runtime_frame()`
+  — and prints `[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): N passed, M failed`. Anything
+  needing a singleton Godot registers *after* `initialize_extensions(INITIALIZATION_LEVEL_SCENE)`
+  belongs in the frame-1 phase: the servers arrive only with `register_server_singletons()`, so at
+  scene init `getSingleton("RenderingServer")` returns 0. Resolve every singleton through the
+  phase's `requireSingleton` helper — it records `singleton-present(<name>)` as its own check and
+  the row then skips its dependent calls — because a zero instance is the shared tree's
+  static-method marker and now reaches Godot as a null `this` instead of no-opping.
 - **Validate on device.** Every change ends with an on-device run (0 SIGSEGV baseline,
   guardrail logs clean).

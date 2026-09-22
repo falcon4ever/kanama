@@ -66,6 +66,15 @@ null-instance guard, so the iOS `ObjectCalls` routes a zero instance to the sepa
 calls. Never "fix" a static call site by inventing a receiver, and never drop the
 dispatcher: without it every shared-tree static is a silent no-op on device.
 
+The generator's marker is not the only way a zero instance arises: **a failed singleton
+lookup yields one too, and it now reaches Godot on iOS exactly as it does on desktop** —
+as a null `this`, not as a no-op the C guard swallowed — so a lookup that can fail must be
+checked before its result is used as a receiver. Both `ObjectCalls.getSingleton`
+implementations therefore log loudly when the lookup returns null
+(`[kanama][ios][kn] ERROR: getSingleton("<name>") returned null …` and the `[kanama:kt]`
+equivalent on desktop; Godot's own error print for this does not reach the iOS device console
+capture). They still return the null pointer unchanged — the return shape is public behaviour.
+
 That guard is not unique to `kanama_ios_godot_ptrcall`. Over twenty
 `kanama_ios_godot_*` entry points — the packed-array, array-blob, UTF-8,
 Variant-scalar and object-call shapes an `ObjectCalls` helper reaches for a

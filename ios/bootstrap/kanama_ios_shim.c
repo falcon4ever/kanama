@@ -178,6 +178,10 @@ extern void kanama_ios_runtime_dispatch_callable(
 );
 extern void kanama_ios_runtime_release_callable(int64_t callback_id);
 extern void kanama_ios_runtime_objectcalls_selftest(void);
+// Second phase of the same self-test, run once on the first frame instead of at scene-level
+// extension init: it holds the rows whose singleton the engine registers later
+// (register_server_singletons() — the RenderingServer and friends).
+extern void kanama_ios_runtime_objectcalls_selftest_frame(void);
 
 typedef enum {
     KANAMA_IOS_CLASS_SCRIPT_LANGUAGE = 1,
@@ -10843,6 +10847,21 @@ static void kanama_ios_frame(void) {
     if (g_main_loop_callback_frame_count < INT_MAX) {
         g_main_loop_callback_frame_count++;
     }
+#if KANAMA_IOS_DEBUG_VARIANT_CHECKS
+    // First-frame phase of the Kotlin ObjectCalls self-test: the rows whose singleton does not
+    // exist yet at scene-level extension init (Godot adds the server singletons in
+    // register_server_singletons(), long after initialize_extensions(INITIALIZATION_LEVEL_SCENE)).
+    // Exactly once, on the first frame callback, before the Kotlin runtime frame, so its summary
+    // lands ahead of any gameplay output. The static flag survives a callback re-registration,
+    // which resets g_main_loop_callback_frame_count to 0.
+    {
+        static int g_objectcalls_selftest_frame_done = 0;
+        if (!g_objectcalls_selftest_frame_done && g_main_loop_callback_frame_count == 1) {
+            g_objectcalls_selftest_frame_done = 1;
+            kanama_ios_runtime_objectcalls_selftest_frame();
+        }
+    }
+#endif // KANAMA_IOS_DEBUG_VARIANT_CHECKS
     kanama_ios_runtime_frame();
 }
 

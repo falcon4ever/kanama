@@ -198,8 +198,24 @@ actual object ObjectCalls {
 
   // Resolve a Godot engine singleton (Input, Engine, …). Mirrors desktop ObjectCalls;
   // used by the bespoke Input glue (and generated singleton wrappers, longer term).
-  actual fun getSingleton(name: String): MemorySegment =
-    MemorySegment.ofAddress(kanama_ios_godot_get_singleton(name))
+  //
+  // A failed lookup is LOUD. Godot registers singletons in stages (the servers only in
+  // register_server_singletons(), long after initialize_extensions(INITIALIZATION_LEVEL_SCENE)),
+  // so a name that is legal later resolves to 0 here — and since task 117 P2' D19 a zero
+  // instance is the shared tree's static-method marker, so ptrcallDispatch routes the call to
+  // the static entry point and it reaches Godot with a null `this` instead of no-opping.
+  // Godot's own error print for a missing singleton does not reach the device console capture,
+  // hence this line. The null segment is returned unchanged — no throw: the return shape is
+  // public behaviour (task 124 decides that).
+  actual fun getSingleton(name: String): MemorySegment {
+    val segment = MemorySegment.ofAddress(kanama_ios_godot_get_singleton(name))
+    if (segment.address() == 0L) {
+      println(
+        "[kanama][ios][kn] ERROR: getSingleton(\"$name\") returned null — not registered at this initialization level"
+      )
+    }
+    return segment
+  }
 
   // Destroy an engine Object immediately (GDExtension object_destroy). Mirrors desktop
   // ObjectCalls.destroyObject; RefCounted.close()/releaseHandle call it only after
@@ -38767,6 +38783,30 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     }
   }
 
+  // Every singleton row goes through this. Godot registers singletons in stages, so a lookup
+  // can legitimately return 0 at the level this self-test runs at, and since task 117 P2' D19
+  // a zero instance is no longer a silent no-op: ObjectCalls routes it to the static entry
+  // point and Godot gets a null `this` (that is how the RenderingServer row below crashed the
+  // phone). Record the presence as its own check and let the row skip its dependent calls —
+  // recorded as FAILED with a reason, never silently passed, never executed with a zero
+  // instance.
+  fun requireSingleton(name: String): MemorySegment {
+    val segment = ObjectCalls.getSingleton(name)
+    check("singleton-present($name)", segment.address() != 0L)
+    return segment
+  }
+
+  // The same protection for a CONSTRUCTED instance, used by the rows whose own assertion is a
+  // DEFAULT value (an empty list, an empty string, a zero Rect2i, "no signal fired") and so
+  // cannot tell a working call from a call that never happened — the shape of the false pass the
+  // RenderingServer row shipped with. Every other row asserts a round-trip value a zero instance
+  // cannot produce, so its own check is the guard; see the audit in the commit message.
+  fun requireObject(className: String): MemorySegment {
+    val segment = ObjectCalls.constructObject(className)
+    check("object-constructed($className)", segment.address() != 0L)
+    return segment
+  }
+
   val n3 = ObjectCalls.constructObject("Node3D")
   ObjectCalls.ptrcallWithVector3Arg(
     ObjectCalls.getMethodBind("Node3D", "set_position", 3460891852L),
@@ -38879,24 +38919,25 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // are 0.0/false, but this validates getSingleton + the generated StringName-arg
   // helpers (ptrcallWithTwoStringNameArgsRetDouble / ptrcallWithStringNameAndBoolArgRetBool)
   // on device. The gameplay assertion (nonzero under input) is T3.4's full-demo run.
-  val inputSingleton = ObjectCalls.getSingleton("Input")
-  check("input-singleton", inputSingleton.address() != 0L)
-  val axis =
-    ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(
-      ObjectCalls.getMethodBind("Input", "get_axis", 1958752504L),
-      inputSingleton,
-      "ui_left",
-      "ui_right",
-    )
-  check("input-get_axis(no-input==0)", axis == 0.0)
-  val jumped =
-    ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(
-      ObjectCalls.getMethodBind("Input", "is_action_just_pressed", 1558498928L),
-      inputSingleton,
-      "ui_accept",
-      false,
-    )
-  check("input-is_action_just_pressed(no-input==false)", !jumped)
+  val inputSingleton = requireSingleton("Input")
+  if (inputSingleton.address() != 0L) {
+    val axis =
+      ObjectCalls.ptrcallWithTwoStringNameArgsRetDouble(
+        ObjectCalls.getMethodBind("Input", "get_axis", 1958752504L),
+        inputSingleton,
+        "ui_left",
+        "ui_right",
+      )
+    check("input-get_axis(no-input==0)", axis == 0.0)
+    val jumped =
+      ObjectCalls.ptrcallWithStringNameAndBoolArgRetBool(
+        ObjectCalls.getMethodBind("Input", "is_action_just_pressed", 1558498928L),
+        inputSingleton,
+        "ui_accept",
+        false,
+      )
+    check("input-is_action_just_pressed(no-input==false)", !jumped)
+  } else check("input-action-polling (singleton absent)", false)
 
   // Vector2i (2x int32, 8B): Sprite2D.set_frame_coords(Vector2i(3,7)) -> get_frame_coords()
   // Godot rejects frame_coords outside [0,hframes)x[0,vframes) (defaults 1x1) via
@@ -38985,17 +39026,19 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // Rect2i(0, 0, 0, 0) — deterministic, validation-free. Exercises the generated
   // ptrcallNoArgsRetRect2i read-back (the shape that unlocks
   // DisplayServer.get_display_safe_area for the mobile safe-area work, task 26).
-  val tilemap = ObjectCalls.constructObject("TileMap")
-  val r2i =
-    ObjectCalls.ptrcallNoArgsRetRect2i(
-      ObjectCalls.getMethodBind("TileMap", "get_used_rect", 410525958L),
-      tilemap,
+  val tilemap = requireObject("TileMap")
+  if (tilemap.address() != 0L) {
+    val r2i =
+      ObjectCalls.ptrcallNoArgsRetRect2i(
+        ObjectCalls.getMethodBind("TileMap", "get_used_rect", 410525958L),
+        tilemap,
+      )
+    check(
+      "rect2i-ret(used_rect==0,0,0,0)",
+      r2i.position.x == 0 && r2i.position.y == 0 && r2i.size.x == 0 && r2i.size.y == 0,
     )
-  check(
-    "rect2i-ret(used_rect==0,0,0,0)",
-    r2i.position.x == 0 && r2i.position.y == 0 && r2i.size.x == 0 && r2i.size.y == 0,
-  )
-  ObjectCalls.destroyObject(tilemap)
+    ObjectCalls.destroyObject(tilemap)
+  } else check("rect2i-ret(TileMap.get_used_rect) (instance absent)", false)
 
   // String-return (Object.get_class -> "Node2D"): exercises ptrcallNoArgsRetString
   // through the full Kotlin -> dedicated C helper -> Godot path (string_to_utf8_chars
@@ -39399,14 +39442,16 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // Arg-bearing StringName return (Phase 2.7f-2). A fresh AnimationPlayer has no next-animation
   // queued, so animation_get_next("none") == "" — exercises the new STRING_NAME return decode
   // (StringName arg -> Object-call -> String(from: StringName), empty path) without crashing.
-  val animPlayer = ObjectCalls.constructObject("AnimationPlayer")
-  val animNext =
-    ObjectCalls.ptrcallWithStringNameArgRetStringName(
-      ObjectCalls.getMethodBind("AnimationPlayer", "animation_get_next", 1965194235L),
-      animPlayer,
-      "none",
-    )
-  check("stringname-arg-ret(animation_get_next==\"\")", animNext == "")
+  val animPlayer = requireObject("AnimationPlayer")
+  if (animPlayer.address() != 0L) {
+    val animNext =
+      ObjectCalls.ptrcallWithStringNameArgRetStringName(
+        ObjectCalls.getMethodBind("AnimationPlayer", "animation_get_next", 1965194235L),
+        animPlayer,
+        "none",
+      )
+    check("stringname-arg-ret(animation_get_next==\"\")", animNext == "")
+  } else check("stringname-arg-ret(AnimationPlayer.animation_get_next) (instance absent)", false)
 
   // task 100 (parcel 1) — String / StringName / NodePath returns on arg-bearing shapes through the
   // generated UTF-8 read-back (ptrcallRetUtf8 over kanama_ios_godot_ptrcall_ret_utf8). One row per
@@ -39648,31 +39693,35 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // container blob (ptrcallRetDictionary / ptrcallRetArray / ptrcallRetDictionaryList over
   // kanama_ios_godot_ptrcall_ret_container_blob). Time / OS / ClassDB singletons and a
   // StreamPeerBuffer only — nothing that needs the scene tree or the render / physics servers.
-  val containerTime = ObjectCalls.getSingleton("Time")
-  val containerEpoch =
-    ObjectCalls.ptrcallWithLongArgRetDictionary(
-      ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_unix_time", 3485342025L),
-      containerTime,
-      0L,
+  val containerTime = requireSingleton("Time")
+  if (containerTime.address() != 0L) {
+    val containerEpoch =
+      ObjectCalls.ptrcallWithLongArgRetDictionary(
+        ObjectCalls.getMethodBind("Time", "get_datetime_dict_from_unix_time", 3485342025L),
+        containerTime,
+        0L,
+      )
+    check(
+      "container-ret(Time.get_datetime_dict_from_unix_time(0)==1970-01-01 00:00)",
+      containerEpoch["year"] == 1970L &&
+        containerEpoch["month"] == 1L &&
+        containerEpoch["day"] == 1L &&
+        containerEpoch["hour"] == 0L &&
+        containerEpoch["minute"] == 0L,
     )
-  check(
-    "container-ret(Time.get_datetime_dict_from_unix_time(0)==1970-01-01 00:00)",
-    containerEpoch["year"] == 1970L &&
-      containerEpoch["month"] == 1L &&
-      containerEpoch["day"] == 1L &&
-      containerEpoch["hour"] == 0L &&
-      containerEpoch["minute"] == 0L,
-  )
-  val containerOs = ObjectCalls.getSingleton("OS")
-  val containerMem =
-    ObjectCalls.ptrcallNoArgsRetDictionary(
-      ObjectCalls.getMethodBind("OS", "get_memory_info", 3102165223L),
-      containerOs,
+  } else check("container-ret(Time.get_datetime_dict_from_unix_time) (singleton absent)", false)
+  val containerOs = requireSingleton("OS")
+  if (containerOs.address() != 0L) {
+    val containerMem =
+      ObjectCalls.ptrcallNoArgsRetDictionary(
+        ObjectCalls.getMethodBind("OS", "get_memory_info", 3102165223L),
+        containerOs,
+      )
+    check(
+      "container-ret(OS.get_memory_info physical>0)",
+      (containerMem["physical"] as? Long ?: 0L) > 0L,
     )
-  check(
-    "container-ret(OS.get_memory_info physical>0)",
-    (containerMem["physical"] as? Long ?: 0L) > 0L,
-  )
+  } else check("container-ret(OS.get_memory_info) (singleton absent)", false)
 
   // Generic Array with an int arg: three bytes in, get_data(3) -> [OK, PackedByteArray]; the packed
   // element is not a blob scalar, so it surfaces null and the list keeps its two slots.
@@ -39703,38 +39752,41 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // Array[Dictionary] far larger than the 4 KiB inline buffer, with nested "args" Arrays and a
   // nested "return" Dictionary per method: proves the pending drain and the recursive records.
-  val containerClassDb = ObjectCalls.getSingleton("ClassDB")
-  val containerMethods =
-    ObjectCalls.ptrcallWithStringNameAndBoolArgRetDictionaryList(
-      ObjectCalls.getMethodBind("ClassDB", "class_get_method_list", 3504980660L),
-      containerClassDb,
-      "Node",
-      false,
+  val containerClassDb = requireSingleton("ClassDB")
+  if (containerClassDb.address() != 0L) {
+    val containerMethods =
+      ObjectCalls.ptrcallWithStringNameAndBoolArgRetDictionaryList(
+        ObjectCalls.getMethodBind("ClassDB", "class_get_method_list", 3504980660L),
+        containerClassDb,
+        "Node",
+        false,
+      )
+    val containerAddChild = containerMethods.firstOrNull { it["name"] == "add_child" }
+    check(
+      "container-ret(ClassDB.class_get_method_list(Node) add_child args+return, pending slot)",
+      containerMethods.size > 50 &&
+        containerAddChild != null &&
+        (containerAddChild["args"] as? List<*>)?.size == 3 &&
+        ((containerAddChild["args"] as List<*>)[0] as? Map<*, *>)?.get("name") == "node" &&
+        (containerAddChild["return"] as? Map<*, *>) != null,
     )
-  val containerAddChild = containerMethods.firstOrNull { it["name"] == "add_child" }
-  check(
-    "container-ret(ClassDB.class_get_method_list(Node) add_child args+return, pending slot)",
-    containerMethods.size > 50 &&
-      containerAddChild != null &&
-      (containerAddChild["args"] as? List<*>)?.size == 3 &&
-      ((containerAddChild["args"] as List<*>)[0] as? Map<*, *>)?.get("name") == "node" &&
-      (containerAddChild["return"] as? Map<*, *>) != null,
-  )
-  check(
-    "container-ret(pending container slot drained)",
-    kanama_ios_godot_take_pending_container_blob(null, 0L) == -1L,
-  )
-  val containerSignal =
-    ObjectCalls.ptrcallWithTwoStringNameArgsRetDictionary(
-      ObjectCalls.getMethodBind("ClassDB", "class_get_signal", 3061114238L),
-      containerClassDb,
-      "Node",
-      "ready",
+    check(
+      "container-ret(pending container slot drained)",
+      kanama_ios_godot_take_pending_container_blob(null, 0L) == -1L,
     )
-  check(
-    "container-ret(ClassDB.class_get_signal(Node, ready).name==ready)",
-    containerSignal["name"] == "ready",
-  )
+    val containerSignal =
+      ObjectCalls.ptrcallWithTwoStringNameArgsRetDictionary(
+        ObjectCalls.getMethodBind("ClassDB", "class_get_signal", 3061114238L),
+        containerClassDb,
+        "Node",
+        "ready",
+      )
+    check(
+      "container-ret(ClassDB.class_get_signal(Node, ready).name==ready)",
+      containerSignal["name"] == "ready",
+    )
+  } else
+    check("container-ret(ClassDB.class_get_method_list/class_get_signal) (singleton absent)", false)
 
   // task 100 (parcel 4) — Packed*Array ARGUMENTS through the generated BUILD-tagged descriptors
   // (ObjectCalls.pack<Kind>Desc -> kanama_ios_build_packed_arg -> ptrcall). Each row sets an array
@@ -39891,28 +39943,30 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // get_used_cells_by_id (Array[Vector2i], no-arg and int+Vector2i+int args); Skeleton3D bone meta
   // (Array[StringName] with an int arg); Geometry3D.build_box_planes (Array[Plane] with a Vector3
   // arg); GridMap.set_cell_item + get_used_cells (Array[Vector3i]).
-  val arrayClassDb = ObjectCalls.getSingleton("ClassDB")
-  val arrayNode2dHeirs =
-    ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(
-      ObjectCalls.getMethodBind("ClassDB", "get_inheriters_from_class", 1761182771L),
-      arrayClassDb,
-      "Node2D",
+  val arrayClassDb = requireSingleton("ClassDB")
+  if (arrayClassDb.address() != 0L) {
+    val arrayNode2dHeirs =
+      ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(
+        ObjectCalls.getMethodBind("ClassDB", "get_inheriters_from_class", 1761182771L),
+        arrayClassDb,
+        "Node2D",
+      )
+    check(
+      "array-ret(ClassDB.get_inheriters_from_class(Node2D) has Sprite2D)",
+      "Sprite2D" in arrayNode2dHeirs,
     )
-  check(
-    "array-ret(ClassDB.get_inheriters_from_class(Node2D) has Sprite2D)",
-    "Sprite2D" in arrayNode2dHeirs,
-  )
-  val arrayObjectHeirs =
-    ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(
-      ObjectCalls.getMethodBind("ClassDB", "get_inheriters_from_class", 1761182771L),
-      arrayClassDb,
-      "Object",
+    val arrayObjectHeirs =
+      ObjectCalls.ptrcallWithStringNameArgRetPackedStringList(
+        ObjectCalls.getMethodBind("ClassDB", "get_inheriters_from_class", 1761182771L),
+        arrayClassDb,
+        "Object",
+      )
+    check(
+      "array-ret(ClassDB.get_inheriters_from_class(Object) >500 names, pending blob)",
+      arrayObjectHeirs.size > 500 && "Node" in arrayObjectHeirs && "AStar2D" in arrayObjectHeirs,
     )
-  check(
-    "array-ret(ClassDB.get_inheriters_from_class(Object) >500 names, pending blob)",
-    arrayObjectHeirs.size > 500 && "Node" in arrayObjectHeirs && "AStar2D" in arrayObjectHeirs,
-  )
-  check("array-ret(pending blob drained)", kanama_ios_godot_take_pending_blob(null, 0L) == -1L)
+    check("array-ret(pending blob drained)", kanama_ios_godot_take_pending_blob(null, 0L) == -1L)
+  } else check("array-ret(ClassDB.get_inheriters_from_class) (singleton absent)", false)
 
   val arrayTiles = ObjectCalls.constructObject("TileMapLayer")
   ObjectCalls.callWithVariantArgs(
@@ -39960,13 +40014,16 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check("array-ret(Skeleton3D.get_bone_meta_list(0)==[kmeta])", arrayMeta == listOf("kmeta"))
   ObjectCalls.destroyObject(arraySkel)
 
-  val arrayPlanes =
-    ObjectCalls.ptrcallWithVector3ArgRetPlaneList(
-      ObjectCalls.getMethodBind("Geometry3D", "build_box_planes", 3622277145L),
-      ObjectCalls.getSingleton("Geometry3D"),
-      Vector3(1f, 2f, 3f),
-    )
-  check("array-ret(Geometry3D.build_box_planes has 6 planes)", arrayPlanes.size == 6)
+  val arrayGeo = requireSingleton("Geometry3D")
+  if (arrayGeo.address() != 0L) {
+    val arrayPlanes =
+      ObjectCalls.ptrcallWithVector3ArgRetPlaneList(
+        ObjectCalls.getMethodBind("Geometry3D", "build_box_planes", 3622277145L),
+        arrayGeo,
+        Vector3(1f, 2f, 3f),
+      )
+    check("array-ret(Geometry3D.build_box_planes has 6 planes)", arrayPlanes.size == 6)
+  } else check("array-ret(Geometry3D.build_box_planes) (singleton absent)", false)
 
   // GridMap is the only class returning Array[Vector3i] without an Array argument, but
   // set_cell_item creates the cell's octant with PhysicsServer3D bodies, and the physics servers
@@ -39974,24 +40031,26 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // GridMap::set_cell_item). Reads on an EMPTY GridMap create no octant: they exercise the
   // Array[Vector3i] encoder (count 0) and the Vector3i ARGUMENT cell without touching physics. The
   // Vector3i element decode itself is 3 x i32LE, the same stride logic as the Vector2i row above.
-  val arrayGrid = ObjectCalls.constructObject("GridMap")
-  val arrayCells =
-    ObjectCalls.ptrcallNoArgsRetVector3iList(
-      ObjectCalls.getMethodBind("GridMap", "get_used_cells", 3995934104L),
-      arrayGrid,
+  val arrayGrid = requireObject("GridMap")
+  if (arrayGrid.address() != 0L) {
+    val arrayCells =
+      ObjectCalls.ptrcallNoArgsRetVector3iList(
+        ObjectCalls.getMethodBind("GridMap", "get_used_cells", 3995934104L),
+        arrayGrid,
+      )
+    check("array-ret(empty GridMap.get_used_cells==[])", arrayCells.isEmpty())
+    val arrayOctantCells =
+      ObjectCalls.ptrcallWithVector3iArgRetVector3iList(
+        ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", 2658725580L),
+        arrayGrid,
+        Vector3i(0, 0, 0),
+      )
+    check(
+      "array-ret(empty GridMap.get_used_cells_in_octant((0,0,0))==[])",
+      arrayOctantCells.isEmpty(),
     )
-  check("array-ret(empty GridMap.get_used_cells==[])", arrayCells.isEmpty())
-  val arrayOctantCells =
-    ObjectCalls.ptrcallWithVector3iArgRetVector3iList(
-      ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", 2658725580L),
-      arrayGrid,
-      Vector3i(0, 0, 0),
-    )
-  check(
-    "array-ret(empty GridMap.get_used_cells_in_octant((0,0,0))==[])",
-    arrayOctantCells.isEmpty(),
-  )
-  ObjectCalls.destroyObject(arrayGrid)
+    ObjectCalls.destroyObject(arrayGrid)
+  } else check("array-ret(GridMap.get_used_cells) (instance absent)", false)
 
   // task 100 (parcel 7) — Variant / Dictionary / Array ARGUMENTS through the generated helpers
   // (packVariantDesc / packDictionaryBlob / packArrayBlob; the dispatch boxes or rebuilds the Godot
@@ -40089,21 +40148,23 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.destroyObject(argWav)
 
   // String + Variant on a singleton: ProjectSettings.set_setting then has_setting.
-  val argPs = ObjectCalls.getSingleton("ProjectSettings")
-  ObjectCalls.ptrcallWithStringAndVariantArg(
-    ObjectCalls.getMethodBind("ProjectSettings", "set_setting", 402577236L),
-    argPs,
-    "kanama/selftest_parcel7",
-    42L,
-  )
-  check(
-    "arg-variant(ProjectSettings.set_setting stored)",
-    ObjectCalls.callWithVariantArgs(
-      ObjectCalls.getMethodBind("ProjectSettings", "has_setting", 3927539163L),
+  val argPs = requireSingleton("ProjectSettings")
+  if (argPs.address() != 0L) {
+    ObjectCalls.ptrcallWithStringAndVariantArg(
+      ObjectCalls.getMethodBind("ProjectSettings", "set_setting", 402577236L),
       argPs,
-      listOf("kanama/selftest_parcel7"),
-    ) == true,
-  )
+      "kanama/selftest_parcel7",
+      42L,
+    )
+    check(
+      "arg-variant(ProjectSettings.set_setting stored)",
+      ObjectCalls.callWithVariantArgs(
+        ObjectCalls.getMethodBind("ProjectSettings", "has_setting", 3927539163L),
+        argPs,
+        listOf("kanama/selftest_parcel7"),
+      ) == true,
+    )
+  } else check("arg-variant(ProjectSettings.set_setting) (singleton absent)", false)
 
   // task 100 (parcel 8) — typed-Array / Rect2i / Vector4 ARGUMENTS through the GENERATED helpers
   // (packTyped<Kind>ArrayDesc -> PT_TYPED_ARRAY_BLOB -> array_set_typed + tagged elements in the
@@ -40208,26 +40269,28 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // Array[Plane]: the six planes of the unit cube -> Geometry3D.compute_convex_mesh_points gives
   // its 8 corners (Geometry3D is a core singleton, available at scene-init).
-  val typedGeo = ObjectCalls.getSingleton("Geometry3D")
-  val typedCube =
-    listOf(
-      Plane(Vector3(1f, 0f, 0f), 1f),
-      Plane(Vector3(-1f, 0f, 0f), 1f),
-      Plane(Vector3(0f, 1f, 0f), 1f),
-      Plane(Vector3(0f, -1f, 0f), 1f),
-      Plane(Vector3(0f, 0f, 1f), 1f),
-      Plane(Vector3(0f, 0f, -1f), 1f),
+  val typedGeo = requireSingleton("Geometry3D")
+  if (typedGeo.address() != 0L) {
+    val typedCube =
+      listOf(
+        Plane(Vector3(1f, 0f, 0f), 1f),
+        Plane(Vector3(-1f, 0f, 0f), 1f),
+        Plane(Vector3(0f, 1f, 0f), 1f),
+        Plane(Vector3(0f, -1f, 0f), 1f),
+        Plane(Vector3(0f, 0f, 1f), 1f),
+        Plane(Vector3(0f, 0f, -1f), 1f),
+      )
+    val typedCorners =
+      ObjectCalls.ptrcallWithPlaneListArgRetPackedVector3List(
+        ObjectCalls.getMethodBind("Geometry3D", "compute_convex_mesh_points", 1936902142L),
+        typedGeo,
+        typedCube,
+      )
+    check(
+      "arg-typed(Geometry3D.compute_convex_mesh_points unit cube -> 8 corners)",
+      typedCorners.size == 8,
     )
-  val typedCorners =
-    ObjectCalls.ptrcallWithPlaneListArgRetPackedVector3List(
-      ObjectCalls.getMethodBind("Geometry3D", "compute_convex_mesh_points", 1936902142L),
-      typedGeo,
-      typedCube,
-    )
-  check(
-    "arg-typed(Geometry3D.compute_convex_mesh_points unit cube -> 8 corners)",
-    typedCorners.size == 8,
-  )
+  } else check("arg-typed(Geometry3D.compute_convex_mesh_points) (singleton absent)", false)
 
   // Array[PackedVector2Array] (nested packed elements) on a NavigationMeshSourceGeometryData2D
   // (a data holder; nothing is baked, no NavigationServer call).
@@ -40339,77 +40402,67 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.destroyObject(p9Regex)
   // StringName arg on a singleton: InputMap.action_get_events returns the one event we added,
   // by handle identity.
-  val p9InputMap = ObjectCalls.getSingleton("InputMap")
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("InputMap", "add_action", 1195233573L),
-    p9InputMap,
-    listOf("kanama_selftest_p9", 0.5),
-  )
-  val p9Event = ObjectCalls.constructObject("InputEventKey")
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("InputMap", "action_add_event", 518302593L),
-    p9InputMap,
-    listOf("kanama_selftest_p9", p9Event),
-  )
-  val p9Events =
-    ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(
-      ObjectCalls.getMethodBind("InputMap", "action_get_events", 689397652L),
+  val p9InputMap = requireSingleton("InputMap")
+  if (p9InputMap.address() != 0L) {
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("InputMap", "add_action", 1195233573L),
       p9InputMap,
-      "kanama_selftest_p9",
-    ) {
-      it
-    }
-  check(
-    "ret-typed-object-list(InputMap.action_get_events by handle)",
-    p9Events.size == 1 && p9Events[0].address() == p9Event.address(),
-  )
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("InputMap", "erase_action", 3304788590L),
-    p9InputMap,
-    listOf("kanama_selftest_p9"),
-  )
-  ObjectCalls.destroyObject(p9Event)
+      listOf("kanama_selftest_p9", 0.5),
+    )
+    val p9Event = ObjectCalls.constructObject("InputEventKey")
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("InputMap", "action_add_event", 518302593L),
+      p9InputMap,
+      listOf("kanama_selftest_p9", p9Event),
+    )
+    val p9Events =
+      ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(
+        ObjectCalls.getMethodBind("InputMap", "action_get_events", 689397652L),
+        p9InputMap,
+        "kanama_selftest_p9",
+      ) {
+        it
+      }
+    check(
+      "ret-typed-object-list(InputMap.action_get_events by handle)",
+      p9Events.size == 1 && p9Events[0].address() == p9Event.address(),
+    )
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("InputMap", "erase_action", 3304788590L),
+      p9InputMap,
+      listOf("kanama_selftest_p9"),
+    )
+    ObjectCalls.destroyObject(p9Event)
+  } else check("ret-typed-object-list(InputMap.action_get_events) (singleton absent)", false)
   // (String, bool) arg on a singleton: an empty typed list is a valid round-trip (no translations
   // are loaded in the self-test project).
-  val p9Translations =
-    ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(
-      ObjectCalls.getMethodBind("TranslationServer", "find_translations", 2109650934L),
-      ObjectCalls.getSingleton("TranslationServer"),
-      "xx",
-      true,
-    ) {
-      it
-    }
-  check(
-    "ret-typed-object-list(TranslationServer.find_translations empty)",
-    p9Translations.isEmpty(),
-  )
+  val p9Translation = requireSingleton("TranslationServer")
+  if (p9Translation.address() != 0L) {
+    val p9Translations =
+      ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(
+        ObjectCalls.getMethodBind("TranslationServer", "find_translations", 2109650934L),
+        p9Translation,
+        "xx",
+        true,
+      ) {
+        it
+      }
+    check(
+      "ret-typed-object-list(TranslationServer.find_translations empty)",
+      p9Translations.isEmpty(),
+    )
+  } else
+    check("ret-typed-object-list(TranslationServer.find_translations) (singleton absent)", false)
 
   // task 100 (parcel 10) — typed arrays whose elements are containers / packed arrays, through
   // the GENERATED helpers (packTyped{Dictionary,Array,ByteArray,PackedStringList}ArrayDesc ->
-  // PT_TYPED_ARRAY_BLOB -> nested blobs the boxer rebuilds). Data holders and the RenderingServer
-  // only — nothing that needs a physics / navigation server, and no Control, at scene-init.
-  // Array[Dictionary]: RenderingServer.mesh_create_from_surfaces (the RenderingServer exists before
-  // extensions initialise). NOT GraphEdit / any Control: constructing a Control at scene-init runs
-  // ThemeDB::update_class_instance_items before the theme contexts exist and segfaults (the 10+11
-  // stack gate caught GraphEdit doing exactly that). The engine rejects an EMPTY surface list
-  // (ERR_FAIL_COND_V(p_surfaces.is_empty(), RID())), so the row asserts the invalid RID: the typed
-  // Array[Dictionary] cell was built, set_typed, handed over and inspected by the engine, and the
-  // call returned — a broken cell would crash or hang, not answer. A non-empty Dictionary element
-  // cannot be exercised here without a Control or a full surface dictionary (AABB values), so the
-  // DICTIONARY boxer case rides on the ARRAY case the OggPacketSequence row proves.
-  val nestedRs = ObjectCalls.getSingleton("RenderingServer")
-  val nestedMesh =
-    ObjectCalls.ptrcallWithDictionaryListIntArgsRetRID(
-      ObjectCalls.getMethodBind("RenderingServer", "mesh_create_from_surfaces", 4291747531L),
-      nestedRs,
-      emptyList(),
-      0,
-    )
-  check(
-    "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> engine rejects it, invalid RID)",
-    nestedMesh == RID(0L),
-  )
+  // PT_TYPED_ARRAY_BLOB -> nested blobs the boxer rebuilds). Data holders only — nothing that
+  // needs a physics / navigation server, and no Control, at scene-init: constructing a Control
+  // at scene-init runs ThemeDB::update_class_instance_items before the theme contexts exist and
+  // segfaults (the 10+11 stack gate caught GraphEdit doing exactly that). The Array[Dictionary]
+  // row (RenderingServer.mesh_create_from_surfaces) is NOT here: the RenderingServer singleton
+  // does not exist at scene-level extension init, so it lives in the frame-1 phase below
+  // (kanamaIosRuntimeObjectCallsSelfTestFrame).
 
   // Array[Array] whose inner Arrays hold PackedByteArrays: OggPacketSequence packet data, stored
   // as-is by the setter. Proves the nested blob both ways (arg boxer + return encoder), including
@@ -40616,29 +40669,31 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // when the freed receiver's script later ran on emit it was a use-after-free
   // (__cxa_pure_virtual).
   var lamFreeFires = 0
-  val lamFreeReceiver = ObjectCalls.constructObject("Node")
-  val lamFreeId = IosCallableRegistry.register { lamFreeFires++ }
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
-    lamEmitter,
-    listOf("kanamaLambdaFree"),
-  )
-  IosGodot.objectConnectCallable(
-    lamEmitter.address(),
-    "kanamaLambdaFree",
-    lamFreeReceiver.address(),
-    lamFreeId,
-    0L,
-  )
-  ObjectCalls.destroyObject(
-    lamFreeReceiver
-  ) // free the receiver; Godot must auto-disconnect the bound Callable
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L),
-    lamEmitter,
-    listOf("kanamaLambdaFree"),
-  )
-  check("lambda-callable(auto-disconnect on receiver free)", lamFreeFires == 0)
+  val lamFreeReceiver = requireObject("Node")
+  if (lamFreeReceiver.address() != 0L) {
+    val lamFreeId = IosCallableRegistry.register { lamFreeFires++ }
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+      lamEmitter,
+      listOf("kanamaLambdaFree"),
+    )
+    IosGodot.objectConnectCallable(
+      lamEmitter.address(),
+      "kanamaLambdaFree",
+      lamFreeReceiver.address(),
+      lamFreeId,
+      0L,
+    )
+    ObjectCalls.destroyObject(
+      lamFreeReceiver
+    ) // free the receiver; Godot must auto-disconnect the bound Callable
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L),
+      lamEmitter,
+      listOf("kanamaLambdaFree"),
+    )
+    check("lambda-callable(auto-disconnect on receiver free)", lamFreeFires == 0)
+  } else check("lambda-callable(auto-disconnect on receiver free) (instance absent)", false)
 
   // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect
   // erases the receiver-side connection entry only via the receiver it finds on the Callable it is
@@ -40647,34 +40702,37 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // (third-person BeeBot: the child Area3D dies before the RigidBody3D that connected to it). The
   // row passes when the receiver's free completes and returns here.
   var lamOrderFires = 0
-  val lamOrderEmitter = ObjectCalls.constructObject("Node")
-  val lamOrderReceiver = ObjectCalls.constructObject("Node")
-  val lamOrderId = IosCallableRegistry.register { lamOrderFires++ }
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
-    lamOrderEmitter,
-    listOf("kanamaLambdaOrder"),
-  )
-  IosGodot.objectConnectCallable(
-    lamOrderEmitter.address(),
-    "kanamaLambdaOrder",
-    lamOrderReceiver.address(),
-    lamOrderId,
-    0L,
-  )
-  val lamOrderDisconnect =
-    IosGodot.objectDisconnectCallable(
+  val lamOrderEmitter = requireObject("Node")
+  val lamOrderReceiver = requireObject("Node")
+  if (lamOrderEmitter.address() != 0L && lamOrderReceiver.address() != 0L) {
+    val lamOrderId = IosCallableRegistry.register { lamOrderFires++ }
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+      lamOrderEmitter,
+      listOf("kanamaLambdaOrder"),
+    )
+    IosGodot.objectConnectCallable(
       lamOrderEmitter.address(),
       "kanamaLambdaOrder",
       lamOrderReceiver.address(),
       lamOrderId,
+      0L,
     )
-  ObjectCalls.destroyObject(lamOrderEmitter) // emitter first: its slot is already gone
-  ObjectCalls.destroyObject(lamOrderReceiver) // receiver second: must find no dangling connection
-  check(
-    "lambda-callable(disconnect then free emitter before receiver)",
-    lamOrderDisconnect == 0 && lamOrderFires == 0,
-  )
+    val lamOrderDisconnect =
+      IosGodot.objectDisconnectCallable(
+        lamOrderEmitter.address(),
+        "kanamaLambdaOrder",
+        lamOrderReceiver.address(),
+        lamOrderId,
+      )
+    ObjectCalls.destroyObject(lamOrderEmitter) // emitter first: its slot is already gone
+    ObjectCalls.destroyObject(lamOrderReceiver) // receiver second: must find no dangling connection
+    check(
+      "lambda-callable(disconnect then free emitter before receiver)",
+      lamOrderDisconnect == 0 && lamOrderFires == 0,
+    )
+  } else
+    check("lambda-callable(disconnect then free emitter before receiver) (instance absent)", false)
 
   // Typed Array[StringName] return (Phase 2.7g). add_to_group("kgrp") then get_groups() == ["kgrp"]
   // — exercises ptrcallNoArgsRetStringNameList (Array size/get + StringName->utf8 blob). Plain
@@ -40716,31 +40774,35 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // the
   // 64-byte ret buffer reads back 16 finite floats without crashing. Camera3D is a Node3D (safe at
   // init).
-  val projCam = ObjectCalls.constructObject("Camera3D")
-  val proj =
-    ObjectCalls.ptrcallNoArgsRetProjection(
-      ObjectCalls.getMethodBind("Camera3D", "get_camera_projection", 2910717950L),
-      projCam,
+  val projCam = requireObject("Camera3D")
+  if (projCam.address() != 0L) {
+    val proj =
+      ObjectCalls.ptrcallNoArgsRetProjection(
+        ObjectCalls.getMethodBind("Camera3D", "get_camera_projection", 2910717950L),
+        projCam,
+      )
+    check(
+      "projection-ret(get_camera_projection finite)",
+      proj.x.x.isFinite() && proj.y.y.isFinite() && proj.z.z.isFinite() && proj.w.w.isFinite(),
     )
-  check(
-    "projection-ret(get_camera_projection finite)",
-    proj.x.x.isFinite() && proj.y.y.isFinite() && proj.z.z.isFinite() && proj.w.w.isFinite(),
-  )
+  } else check("projection-ret(Camera3D.get_camera_projection) (instance absent)", false)
 
   // Array[Plane] return (Phase 2.7i). Camera3D.get_frustum() — a treeless camera has no viewport so
   // this is typically empty (exercises the Array size=0 path + the Plane blob record layout); any
   // returned planes must have finite components. The Plane decode shares the fixed-size-record blob
   // machinery proven by the List<Long> path. Camera3D is a Node3D (safe at init).
-  val frustumCam = ObjectCalls.constructObject("Camera3D")
-  val frustum =
-    ObjectCalls.ptrcallNoArgsRetPlaneList(
-      ObjectCalls.getMethodBind("Camera3D", "get_frustum", 3995934104L),
-      frustumCam,
+  val frustumCam = requireObject("Camera3D")
+  if (frustumCam.address() != 0L) {
+    val frustum =
+      ObjectCalls.ptrcallNoArgsRetPlaneList(
+        ObjectCalls.getMethodBind("Camera3D", "get_frustum", 3995934104L),
+        frustumCam,
+      )
+    check(
+      "plane-array-ret(get_frustum finite)",
+      frustum.all { it.d.isFinite() && it.normal.x.isFinite() && it.normal.y.isFinite() },
     )
-  check(
-    "plane-array-ret(get_frustum finite)",
-    frustum.all { it.d.isFinite() && it.normal.x.isFinite() && it.normal.y.isFinite() },
-  )
+  } else check("plane-array-ret(Camera3D.get_frustum) (instance absent)", false)
 
   // Generic Array return (Phase 2.7j). parent + named child; parent.get_node_and_resource("Kid")
   // returns [node, resource, subpath] == [childHandle, null, NodePath("")]. Exercises the
@@ -41090,16 +41152,16 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   )
   // Engine.get_singleton_list() -> PackedStringArray (Node has only the virtual
   // _get_configuration_warnings; calling that through Object.call is an invalid-method error).
-  val singletonNames =
-    ObjectCalls.callWithVariantArgs(
-      callBind,
-      ObjectCalls.getSingleton("Engine"),
-      listOf("get_singleton_list"),
+  val callEngine = requireSingleton("Engine")
+  if (callEngine.address() != 0L) {
+    val singletonNames =
+      ObjectCalls.callWithVariantArgs(callBind, callEngine, listOf("get_singleton_list"))
+    check(
+      "variant-call-ret-packed-strings(Engine.get_singleton_list contains Engine)",
+      singletonNames is List<*> && singletonNames.contains("Engine"),
     )
-  check(
-    "variant-call-ret-packed-strings(Engine.get_singleton_list contains Engine)",
-    singletonNames is List<*> && singletonNames.contains("Engine"),
-  )
+  } else
+    check("variant-call-ret-packed-strings(Engine.get_singleton_list) (singleton absent)", false)
   // task 122 — container ARGUMENTS: List<String>, List<Double>, List<Vector2>, a Dictionary and a
   // nested container round-trip set_meta/get_meta (the arg encoder used to throw on all of them).
   ObjectCalls.callWithVariantArgs(
@@ -41538,14 +41600,16 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     ObjectCalls.destroyObject(spawner)
     // A RID-argument shape on a singleton: NativeMenu has no popup for an invalid RID, so the
     // returned Callable is empty -> null (the arg cells and the run-once entry are exercised).
-    val nativeMenu = ObjectCalls.getSingleton("NativeMenu")
-    val noPopup =
-      ObjectCalls.ptrcallWithRIDArgRetCallable(
-        ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", 3170603026L),
-        nativeMenu,
-        RID(0L),
-      )
-    check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
+    val nativeMenu = requireSingleton("NativeMenu")
+    if (nativeMenu.address() != 0L) {
+      val noPopup =
+        ObjectCalls.ptrcallWithRIDArgRetCallable(
+          ObjectCalls.getMethodBind("NativeMenu", "get_popup_open_callback", 3170603026L),
+          nativeMenu,
+          RID(0L),
+        )
+      check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
+    } else check("ret-callable(NativeMenu.get_popup_open_callback) (singleton absent)", false)
   }
 
   // task 117 P2' follow-up — SHARED-TREE STATIC dispatch (the ptrcallDispatch fix above). These
@@ -41648,4 +41712,64 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   }
 
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
+}
+
+// Debug-gated FIRST-FRAME self-test phase (called exactly once from kanama_ios_frame, when the
+// frame counter first reaches 1, before kanama_ios_runtime_frame()). It holds the rows whose
+// singleton the engine registers AFTER scene-level extension init, so they cannot run in
+// kanamaIosRuntimeObjectCallsSelfTest above: Godot 4.7.2 main/main.cpp calls
+// initialize_extensions(INITIALIZATION_LEVEL_SCENE) at line 835 and register_server_singletons()
+// — which adds the RenderingServer singleton (servers/register_server_types.cpp) — only at line
+// 3864. Until task 117 P2' follow-up 4 the RenderingServer row sat in the scene-init phase and
+// "passed" because getSingleton returned 0 and the C instance entry point's null-instance guard
+// turned the whole call into a no-op returning RID 0, which is exactly what it asserted. With
+// the D19 dispatcher a zero instance is routed to the STATIC entry point instead, so the call
+// reached Godot with a null `this` and SIGSEGV'd in RenderingServer::_mesh_create_from_surfaces.
+@OptIn(ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_objectcalls_selftest_frame")
+fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
+  var pass = 0
+  var fail = 0
+  fun check(label: String, cond: Boolean) {
+    if (cond) {
+      pass++
+    } else {
+      fail++
+      println("[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1) FAIL: $label")
+    }
+  }
+
+  // Same contract as the scene-init phase: a missing singleton is a recorded FAILURE and the
+  // dependent call is skipped, never executed with a zero instance.
+  fun requireSingleton(name: String): MemorySegment {
+    val segment = ObjectCalls.getSingleton(name)
+    check("singleton-present($name)", segment.address() != 0L)
+    return segment
+  }
+
+  // task 100 (parcel 10), moved here by task 117 P2' follow-up 4 — Array[Dictionary] ARGUMENT
+  // through the GENERATED helper (packTypedDictionaryArrayDesc -> PT_TYPED_ARRAY_BLOB -> nested
+  // blobs the boxer rebuilds). The engine rejects an EMPTY surface list
+  // (ERR_FAIL_COND_V(p_surfaces.is_empty(), RID())), so the row still asserts the invalid RID —
+  // but now against a REAL RenderingServer instance: the typed Array[Dictionary] cell was built,
+  // set_typed, handed over and inspected by the engine, and the call returned. A broken cell
+  // would crash or hang, not answer. A non-empty Dictionary element cannot be exercised here
+  // without a Control or a full surface dictionary (AABB values), so the DICTIONARY boxer case
+  // rides on the ARRAY case the OggPacketSequence row in the scene-init phase proves.
+  val nestedRs = requireSingleton("RenderingServer")
+  if (nestedRs.address() != 0L) {
+    val nestedMesh =
+      ObjectCalls.ptrcallWithDictionaryListIntArgsRetRID(
+        ObjectCalls.getMethodBind("RenderingServer", "mesh_create_from_surfaces", 4291747531L),
+        nestedRs,
+        emptyList(),
+        0,
+      )
+    check(
+      "arg-nested(RenderingServer.mesh_create_from_surfaces empty Array[Dictionary] -> engine rejects it, invalid RID)",
+      nestedMesh == RID(0L),
+    )
+  } else check("arg-nested(RenderingServer.mesh_create_from_surfaces) (singleton absent)", false)
+
+  println("[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed")
 }

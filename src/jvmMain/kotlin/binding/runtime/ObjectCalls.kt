@@ -169,9 +169,25 @@ actual object ObjectCalls {
     GodotFFI.lookup("object_get_instance_id", FunctionDescriptor.of(JAVA_LONG, ADDRESS))
   }
 
-  /** Returns the Godot object pointer for a named engine singleton (e.g. "Engine"). */
-  actual fun getSingleton(name: String): MemorySegment =
-    globalGetSingleton.invoke(GodotStrings.makeStringName(name)) as MemorySegment
+  /**
+   * Returns the Godot object pointer for a named engine singleton (e.g. "Engine").
+   *
+   * A failed lookup is loud. Godot registers singletons in stages — the servers only in
+   * `register_server_singletons()`, long after `initialize_extensions(INITIALIZATION_LEVEL_SCENE)`
+   * — so a name that is legal later resolves to NULL here, and a NULL instance is the generated
+   * tree's static-method marker: the call goes on to reach Godot with a null `this` rather than
+   * no-opping (task 117 P2' D19 gave iOS the same behaviour). The null segment is returned
+   * unchanged — no throw: the return shape is public behaviour (task 124 decides that).
+   */
+  actual fun getSingleton(name: String): MemorySegment {
+    val segment = globalGetSingleton.invoke(GodotStrings.makeStringName(name)) as MemorySegment
+    if (segment.address() == 0L) {
+      System.err.println(
+        "[kanama:kt] ERROR: getSingleton(\"$name\") returned null — not registered at this initialization level"
+      )
+    }
+    return segment
+  }
 
   /** Looks up a method bind by class name, method name, and ABI hash. Returns NULL on mismatch. */
   actual fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment =

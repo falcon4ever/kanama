@@ -78,6 +78,47 @@ versioning once public releases begin.
   `RegEx.createFromString("a+b", false)`, a `JSON.stringify`/`JSON.parseString` round-trip,
   `ShaderIncludeDB.listBuiltInIncludeFiles()` and `getBuiltInIncludeFile(...)`,
   `Resource.generateSceneUniqueId()` and `MultiplayerAPI.getDefaultInterface()`.
+- **The dispatcher exposed a self-test row that had only ever passed because of the guard.** On
+  device the `RenderingServer.mesh_create_from_surfaces` row (added by task 100 parcel 10)
+  SIGSEGV'd inside `RenderingServer::_mesh_create_from_surfaces` with a null `this`. Its comment
+  claimed "the RenderingServer exists before extensions initialise"; it does not. Godot 4.7.2
+  `main/main.cpp` runs `initialize_extensions(INITIALIZATION_LEVEL_SCENE)` long before
+  `register_server_singletons()` adds the `RenderingServer` singleton
+  (`servers/register_server_types.cpp`), so at scene init `getSingleton("RenderingServer")`
+  returned 0, the old C null-instance guard turned the whole call into a no-op returning RID 0 —
+  and the row asserted exactly `RID(0L)`. It had therefore passed for the wrong reason since it
+  was written. Routing a zero instance to the static entry point sent the call to Godot for real,
+  with no `this`. **The dispatch is right; the row was wrong.** Two mitigations, both in this
+  commit:
+  - **A first-frame self-test phase.** `kanamaIosRuntimeObjectCallsSelfTestFrame`
+    (`@CName("kanama_ios_runtime_objectcalls_selftest_frame")`) sits beside the scene-init
+    self-test with the same `check` machinery and holds the moved RenderingServer row, now run
+    against a real instance (the engine still rejects an empty surface list with
+    `ERR_FAIL_COND_V`, so `RID(0L)` remains the right expectation). `kanama_ios_frame` calls it
+    exactly once, under `KANAMA_IOS_DEBUG_VARIANT_CHECKS`, when the frame counter first reaches 1,
+    before `kanama_ios_runtime_frame()`. It prints
+    `[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): N passed, M failed`; the scene-init summary
+    line is unchanged. **Totals: 236 at scene init, 2 on frame 1** (218 − the moved row − the
+    now-redundant `input-singleton` row, + 12 `singleton-present(…)` + 8 `object-constructed(…)`
+    checks).
+  - **Singleton lookups fail loudly on both platforms.** `ObjectCalls.getSingleton` prints
+    `[kanama][ios][kn] ERROR: getSingleton("<name>") returned null — not registered at this
+    initialization level` on iOS (Godot's own error print does not reach the device console
+    capture) and the `[kanama:kt]` equivalent on `System.err` on desktop/Android. Both return the
+    null pointer unchanged — no throw; the return shape is public behaviour.
+- **Every singleton and every false-pass-prone instance in the self-test is now checked.** A new
+  `requireSingleton(name)` helper records `singleton-present(<name>)` and each of the 13 singleton
+  rows (Input, Time, OS, ClassDB ×2, Geometry3D ×2, ProjectSettings, InputMap, TranslationServer,
+  RenderingServer, Engine, NativeMenu) skips its dependent calls when the lookup fails — recorded
+  as a FAILED check with a reason, never silently passed and never executed with a zero instance.
+  The audit of the remaining instances found that every `constructObject`-backed row asserts a
+  round-trip value a zero instance cannot produce, **except eight** whose assertion is a default
+  (an empty list, an empty string, a zero `Rect2i`, "no signal fired", "all components finite") —
+  exactly the shape of the RenderingServer false pass. Those go through a matching
+  `requireObject(class)` helper and skip on failure: `TileMap.get_used_rect`,
+  `AnimationPlayer.animation_get_next`, `GridMap.get_used_cells`,
+  `Camera3D.get_camera_projection`, `Camera3D.get_frustum`, and the two lambda-Callable
+  free-ordering rows.
 
 ### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
 
