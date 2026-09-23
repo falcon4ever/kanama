@@ -361,6 +361,14 @@ stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, t
 # *Dispatch function, which also calls the entry point's _static sibling.
 python3 "$ROOT_DIR/scripts/check_ios_static_dispatch.py"
 
+stage "iOS shim fault coverage (no guarded early return is silent, task 124)"
+# The bridge's default failure mode was silence: 131 exported entry points open with guards that
+# returned 0 / -1 / nothing when the API had not resolved, the bind was zero, the instance was
+# zero or a C string was NULL — and said nothing, which is how every Godot static reached through
+# the shared tree stayed a no-op on iOS for six days behind 205 green self-test checks. Every
+# guarded early return now reports to the shim's fault sink; this gate holds the NEXT one to it.
+python3 "$ROOT_DIR/scripts/check_ios_shim_faults.py"
+
 stage "iOS PT tag table parity (five copies, task 119 item 30)"
 # The ptrcall type tags are the wire protocol of the iOS seam and exist five times (C enum,
 # generator dict, generated ObjectCalls region, KanamaIosRuntime, BuiltinTags). The drift gate

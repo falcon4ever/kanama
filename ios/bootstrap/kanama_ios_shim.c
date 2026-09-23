@@ -7,6 +7,7 @@
  */
 
 #include <limits.h>
+#include <stdatomic.h>
 #include <dlfcn.h>
 #include <objc/message.h>
 #include <objc/runtime.h>
@@ -260,6 +261,73 @@ typedef struct {
     int referenced_object_count;
 } KanamaIosScriptInstance;
 
+/*
+ * Task 124 — the fault sink: no silent paths.
+ *
+ * Every guarded early return in an exported entry point or a `_dispatch` body reports here
+ * before returning what it returned before. Return values and signatures do not change; the
+ * bridge simply stops failing quietly. `reason` is one of the fixed tokens documented in
+ * `docs/contributing/backends/ios.md` (api-unresolved, null-bind, bind-lookup-failed,
+ * null-instance, null-handle, null-arg, pending-protocol, callable-build, unknown-tag,
+ * encode-failed); `detail` is optional and names the thing that was wrong (the missing
+ * interface pointer, the parameter, `Class.method hash=<hash>`, the tag number).
+ *
+ * There is deliberately no reset function: faults are never cleared, so a fault in frame 1
+ * is still visible in the summary line at the end of the run.
+ *
+ * CONCURRENCY. Godot calls into this shim from more than the main thread (WorkerThreadPool
+ * tasks, the physics thread under `physics/3d/run_on_separate_thread`, a Thread a game starts
+ * itself), so faults can be raised concurrently. The COUNT is therefore an `_Atomic int32_t`:
+ * every fault is counted exactly once, and the device runner's `faults=<N> expected=<N>`
+ * comparison stays trustworthy. `g_last_fault` is deliberately NOT synchronized — it is a plain
+ * buffer written with one snprintf — so `kanama_ios_last_fault()` is a BEST-EFFORT SNAPSHOT
+ * that may tear (interleave two faults' text) when two threads fault at the same moment. That
+ * is the right trade: the count is the contract, the text is a debugging aid, and a lock on the
+ * failure path of every bridge call would be a worse thing to own than a torn string.
+ */
+#define KANAMA_IOS_FAULT_COUNT_MAX INT32_MAX
+#define KANAMA_IOS_FAULT_PRINT_BUDGET 64
+
+static _Atomic int32_t g_fault_count = 0;
+static char g_last_fault[192] = {0};
+
+/*
+ * Saturating atomic increment; returns the new count. The counter must never WRAP: a wrapped
+ * count reads as a small number (or a negative one), and `faults=<small> expected=7` would pass
+ * a run that faulted two billion times — the exact silence this task exists to remove. So once
+ * the count reaches INT32_MAX it stops moving: the load below means a saturated counter never
+ * reaches the fetch_add at all, and the one thread that crosses the ceiling puts it back.
+ */
+static int32_t kanama_ios_fault_bump(void) {
+    if (atomic_load(&g_fault_count) >= KANAMA_IOS_FAULT_COUNT_MAX) {
+        return KANAMA_IOS_FAULT_COUNT_MAX;
+    }
+    int32_t previous = atomic_fetch_add(&g_fault_count, 1);
+    if (previous >= KANAMA_IOS_FAULT_COUNT_MAX - 1) {
+        atomic_store(&g_fault_count, KANAMA_IOS_FAULT_COUNT_MAX);
+        return KANAMA_IOS_FAULT_COUNT_MAX;
+    }
+    return previous + 1;
+}
+
+static void kanama_ios_fault(const char *entry, const char *reason, const char *detail) {
+    int32_t count = kanama_ios_fault_bump();
+    snprintf(g_last_fault, sizeof g_last_fault, "%s %s %s", entry, reason, detail ? detail : "");
+    // A tight loop must not flood the console; the COUNT keeps counting past the budget.
+    if (count <= KANAMA_IOS_FAULT_PRINT_BUDGET) {
+        fprintf(stderr, "[kanama][ios][c] FAULT %s: %s%s%s\n", entry, reason, detail ? " " : "", detail ? detail : "");
+        fflush(stderr);
+    }
+}
+
+int32_t kanama_ios_fault_count(void) {
+    return atomic_load(&g_fault_count);
+}
+
+const char *kanama_ios_last_fault(void) {
+    return g_last_fault;
+}
+
 static int g_kanama_ios_initialized = 0;
 static int g_kanama_ios_audio_session_configured = 0;
 static GDExtensionInterfaceGetProcAddress g_get_proc_address = NULL;
@@ -372,11 +440,8 @@ static GDExtensionMethodBindPtr g_object_disconnect_bind = NULL;
 static GDExtensionMethodBindPtr g_tween_tween_property_bind = NULL;
 static GDExtensionMethodBindPtr g_tween_tween_callback_bind = NULL;
 static GDExtensionMethodBindPtr g_tween_tween_method_bind = NULL;
-static GDExtensionMethodBindPtr g_property_tweener_from_bind = NULL;
 static GDExtensionMethodBindPtr g_tween_set_parallel_bind = NULL;
 static GDExtensionMethodBindPtr g_tween_kill_bind = NULL;
-static GDExtensionMethodBindPtr g_property_tweener_set_trans_bind = NULL;
-static GDExtensionMethodBindPtr g_property_tweener_set_ease_bind = NULL;
 static GDExtensionMethodBindPtr g_viewport_get_visible_rect_bind = NULL;
 static GDExtensionPtrConstructor g_node_path_from_string_constructor = NULL;
 static GDExtensionPtrConstructor g_string_from_string_name_constructor = NULL;
@@ -854,11 +919,8 @@ enum {
     KANAMA_IOS_TWEEN_TWEEN_PROPERTY_HASH = 4049770449U,
     KANAMA_IOS_TWEEN_TWEEN_CALLBACK_HASH = 1540176488U,
     KANAMA_IOS_TWEEN_TWEEN_METHOD_HASH = 2337877153U,
-    KANAMA_IOS_PROPERTY_TWEENER_FROM_HASH = 4190193059U,
     KANAMA_IOS_TWEEN_SET_PARALLEL_HASH = 1942052223U,
     KANAMA_IOS_TWEEN_KILL_HASH = 3218959716U,
-    KANAMA_IOS_PROPERTY_TWEENER_SET_TRANS_HASH = 1899107404U,
-    KANAMA_IOS_PROPERTY_TWEENER_SET_EASE_HASH = 1080455622U,
     KANAMA_IOS_VIEWPORT_GET_VISIBLE_RECT_HASH = 1639390495U,
     KANAMA_IOS_PACKED_STRING_ARRAY_PUSH_BACK_HASH = 816187996U,
     KANAMA_IOS_PACKED_STRING_ARRAY_SIZE_HASH = 3173160232U,
@@ -1665,6 +1727,7 @@ int64_t kanama_ios_godot_get_method_bind(
     int64_t hash
 ) {
     if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
         return 0;
     }
 
@@ -1679,6 +1742,14 @@ int64_t kanama_ios_godot_get_method_bind(
     );
     kanama_ios_destroy_string_name(&method_name_storage);
     kanama_ios_destroy_string_name(&class_name_storage);
+    if (method_bind == NULL) {
+        // Task 124: report where the detail is actionable. The ptrcall entry points only ever see
+        // a zero bind (null-bind); the names and the hash exist here and nowhere else.
+        char detail[160];
+        snprintf(detail, sizeof detail, "%s.%s hash=%lld",
+                 class_name ? class_name : "?", method_name ? method_name : "?", (long long)hash);
+        kanama_ios_fault(__func__, "bind-lookup-failed", detail);
+    }
     return (int64_t)(intptr_t)method_bind;
 }
 
@@ -1732,7 +1803,12 @@ static void kanama_ios_godot_ptrcall_dispatch(
     int32_t ret_type,
     void *ret_out
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     if (arg_count < 0) {
@@ -1970,6 +2046,7 @@ void kanama_ios_godot_ptrcall(
     void *ret_out
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     kanama_ios_godot_ptrcall_dispatch(
@@ -2000,7 +2077,16 @@ int64_t kanama_ios_godot_get_builtin_method(
     const char *method,
     int64_t hash
 ) {
-    if (!kanama_ios_resolve_godot_api() || g_variant_get_ptr_builtin_method == NULL || method == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (g_variant_get_ptr_builtin_method == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_variant_get_ptr_builtin_method");
+        return 0;
+    }
+    if (method == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "method");
         return 0;
     }
     uint64_t name_storage = 0;
@@ -2011,10 +2097,10 @@ int64_t kanama_ios_godot_get_builtin_method(
         (GDExtensionInt)hash);
     kanama_ios_destroy_string_name(&name_storage);
     if (m == NULL) {
-        fprintf(stderr,
-                "[kanama][ios][c] get_builtin_method(type=%d, %s, %lld) returned NULL\n",
-                (int)variant_type, method, (long long)hash);
-        fflush(stderr);
+        // Task 124: same report as get_method_bind, keyed by Variant type instead of class name.
+        char detail[160];
+        snprintf(detail, sizeof detail, "%d.%s hash=%lld", (int)variant_type, method, (long long)hash);
+        kanama_ios_fault(__func__, "bind-lookup-failed", detail);
     }
     return (int64_t)(intptr_t)m;
 }
@@ -2032,7 +2118,12 @@ void kanama_ios_godot_builtin_call(
     int32_t arg_count,
     void *ret_out
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_ptr == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return;
+    }
+    if (method_ptr == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     if (arg_count < 0) {
@@ -2097,10 +2188,15 @@ void kanama_ios_godot_ptrcall_string_arg(
     const char *value
 ) {
     if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
         return;
     }
-    if (method_bind == 0 || instance == 0) {
-        fprintf(stderr, "[kanama][ios][c] warning: string ptrcall skipped for null method/object\n");
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
 
@@ -2128,10 +2224,17 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_string_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
+                         : "g_object_method_bind_ptrcall");
         return -1;
     }
 
@@ -2165,6 +2268,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_string(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_string_dispatch(
@@ -2192,11 +2296,19 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL ||
         g_string_from_string_name_constructor == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
+                         : g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
+                         : "g_string_from_string_name_constructor");
         return -1;
     }
 
@@ -2236,6 +2348,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_string_name(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_string_name_dispatch(
@@ -2264,11 +2377,19 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL ||
         g_string_from_node_path_constructor == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
+                         : g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
+                         : "g_string_from_node_path_constructor");
         return -1;
     }
 
@@ -2308,6 +2429,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_node_path(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_node_path_dispatch(
@@ -2359,20 +2481,32 @@ static int64_t kanama_ios_godot_ptrcall_ret_utf8_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
+                         : "g_object_method_bind_ptrcall");
         return -1;
     }
     if (ret_type == KANAMA_IOS_PT_STRING_NAME && g_string_from_string_name_constructor == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_string_from_string_name_constructor");
         return -1;
     }
     if (ret_type == KANAMA_IOS_PT_NODE_PATH && g_string_from_node_path_constructor == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_string_from_node_path_constructor");
         return -1;
     }
     if (ret_type != KANAMA_IOS_PT_STRING && ret_type != KANAMA_IOS_PT_STRING_NAME &&
         ret_type != KANAMA_IOS_PT_NODE_PATH) {
+        char kanama_ios_fault_detail[32];
+        snprintf(kanama_ios_fault_detail, sizeof kanama_ios_fault_detail, "ret_type=%d", (int)ret_type);
+        kanama_ios_fault(__func__, "unknown-tag", kanama_ios_fault_detail);
         return -1;
     }
     kanama_ios_drop_pending_utf8();
@@ -2426,6 +2560,7 @@ int64_t kanama_ios_godot_ptrcall_ret_utf8(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_ret_utf8_dispatch(
@@ -2452,7 +2587,12 @@ int64_t kanama_ios_godot_take_pending_utf8(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!g_pending_utf8_valid || g_string_to_utf8_chars == NULL) {
+    if (!g_pending_utf8_valid) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_utf8");
+        return -1;
+    }
+    if (g_string_to_utf8_chars == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_string_to_utf8_chars");
         return -1;
     }
     int64_t length = (int64_t)g_string_to_utf8_chars(
@@ -2520,15 +2660,23 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_dispatch(
     int32_t *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_cache_packed_int32_methods();
     if (g_packed_int32_array_size_method == NULL ||
         g_packed_int32_array_operator_index_const == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_packed_int32_array_size_method == NULL ? "g_packed_int32_array_size_method"
+                         : "g_packed_int32_array_operator_index_const");
         return -1;
     }
 
@@ -2568,6 +2716,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array(
     int64_t buf_cap
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_packed_int32_array_dispatch(
@@ -2638,15 +2787,23 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_dispatc
     float *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_cache_packed_float32_methods();
     if (g_packed_float32_array_size_method == NULL ||
         g_packed_float32_array_operator_index_const == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_packed_float32_array_size_method == NULL ? "g_packed_float32_array_size_method"
+                         : "g_packed_float32_array_operator_index_const");
         return -1;
     }
 
@@ -2683,6 +2840,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array(
     int64_t buf_cap
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_packed_float32_array_dispatch(
@@ -2717,15 +2875,23 @@ int64_t kanama_ios_godot_ptrcall_ret_packed_byte_array(
     uint8_t *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_cache_packed_byte_methods();
     if (g_packed_byte_array_size_method == NULL ||
         g_packed_byte_array_operator_index_const == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_packed_byte_array_size_method == NULL ? "g_packed_byte_array_size_method"
+                         : "g_packed_byte_array_operator_index_const");
         return -1;
     }
 
@@ -2770,14 +2936,22 @@ static void kanama_ios_godot_ptrcall_with_packed_float32_arg_dispatch(
     const float *elems,
     int64_t count
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return;
     }
     kanama_ios_cache_packed_float32_methods();
     if (g_packed_float32_array_constructor == NULL || g_packed_float32_array_push_back == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_packed_float32_array_constructor == NULL ? "g_packed_float32_array_constructor"
+                         : "g_packed_float32_array_push_back");
         return;
     }
 
@@ -2816,6 +2990,7 @@ void kanama_ios_godot_ptrcall_with_packed_float32_arg(
     int64_t count
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     kanama_ios_godot_ptrcall_with_packed_float32_arg_dispatch(method_bind, instance, elems, count);
@@ -2883,15 +3058,23 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_dispatc
     float *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_cache_packed_vector2_methods();
     if (g_packed_vector2_array_size_method == NULL ||
         g_packed_vector2_array_operator_index_const == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_packed_vector2_array_size_method == NULL ? "g_packed_vector2_array_size_method"
+                         : "g_packed_vector2_array_operator_index_const");
         return -1;
     }
 
@@ -2929,6 +3112,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array(
     int64_t buf_cap
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_packed_vector2_array_dispatch(
@@ -2998,15 +3182,23 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_dispatch(
     float *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_cache_packed_color_methods();
     if (g_packed_color_array_size_method == NULL ||
         g_packed_color_array_operator_index_const == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_packed_color_array_size_method == NULL ? "g_packed_color_array_size_method"
+                         : "g_packed_color_array_operator_index_const");
         return -1;
     }
 
@@ -3045,6 +3237,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_color_array(
     int64_t buf_cap
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_packed_color_array_dispatch(
@@ -3747,10 +3940,17 @@ static int64_t kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL || g_string_to_utf8_chars == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
+                         : "g_string_to_utf8_chars");
         return -1;
     }
     kanama_ios_drop_pending_blob();
@@ -3762,6 +3962,8 @@ static int64_t kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
         kanama_ios_cache_packed_string_methods();
         if (g_packed_string_array_size_method == NULL ||
             g_packed_string_array_operator_index_const == NULL) {
+            kanama_ios_fault(__func__, "api-unresolved", g_packed_string_array_size_method == NULL ? "g_packed_string_array_size_method"
+                             : "g_packed_string_array_operator_index_const");
             return -1;
         }
         KANAMA_IOS_PACKED_ARRAY_STORAGE(cell);
@@ -3783,6 +3985,8 @@ static int64_t kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
     } else if (blob_kind == KANAMA_IOS_BLOB_TYPED_ARRAY) {
         kanama_ios_cache_array_methods();
         if (g_array_size_method == NULL || g_array_get_method == NULL) {
+            kanama_ios_fault(__func__, "api-unresolved", g_array_size_method == NULL ? "g_array_size_method"
+                             : "g_array_get_method");
             return -1;
         }
         // Array opaque is 8 bytes on 64-bit (OPAQUE_8_BYTE_TYPES).
@@ -3824,6 +4028,7 @@ int64_t kanama_ios_godot_ptrcall_ret_array_blob(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_ret_array_blob_dispatch(
@@ -3853,6 +4058,7 @@ int64_t kanama_ios_godot_take_pending_blob(
     int64_t buf_size
 ) {
     if (g_pending_blob == NULL) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_blob");
         return -1;
     }
     int64_t len = g_pending_blob_len;
@@ -3880,15 +4086,24 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_dispatch
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL || g_string_to_utf8_chars == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
+                         : "g_string_to_utf8_chars");
         return -1;
     }
     kanama_ios_cache_packed_string_methods();
     if (g_packed_string_array_size_method == NULL ||
         g_packed_string_array_operator_index_const == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_packed_string_array_size_method == NULL ? "g_packed_string_array_size_method"
+                         : "g_packed_string_array_operator_index_const");
         return -1;
     }
 
@@ -3915,6 +4130,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_packed_string_array(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_packed_string_array_dispatch(
@@ -3953,14 +4169,22 @@ static int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_cache_array_methods();
     if (g_array_size_method == NULL || g_array_get_method == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_array_size_method == NULL ? "g_array_size_method"
+                         : "g_array_get_method");
         return -1;
     }
 
@@ -3989,6 +4213,7 @@ int64_t kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_no_args_ret_typed_array_blob_dispatch(
@@ -4417,16 +4642,23 @@ static int64_t kanama_ios_godot_ptrcall_ret_container_blob_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_drop_pending_container_blob();
     KanamaIosBlob b = { NULL, 0, 0, 0 };
     if (!kanama_ios_ptrcall_encode_container(
             method_bind, instance, arg_types, arg_ptrs, arg_count, container_kind, &b)) {
+        kanama_ios_fault(__func__, "encode-failed", "container blob");
         free(b.buf);
         return -1;
     }
@@ -4444,6 +4676,7 @@ int64_t kanama_ios_godot_ptrcall_ret_container_blob(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_ret_container_blob_dispatch(
@@ -4471,6 +4704,7 @@ int64_t kanama_ios_godot_take_pending_container_blob(
     int64_t buf_size
 ) {
     if (g_pending_container_blob == NULL) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_container_blob");
         return -1;
     }
     int64_t len = g_pending_container_len;
@@ -4504,16 +4738,24 @@ static int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob_dispatch(
     // Thin wrapper over the parcel-6 container encoder (task 100): same blob layout, nested
     // Dictionary/Array elements now carry their nested blob instead of byteLen 0. The two-call
     // length protocol of its hand-written callers is unchanged (the method runs per call).
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     KanamaIosBlob b = { NULL, 0, 0, 0 };
     if (!kanama_ios_ptrcall_encode_container(
             method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_VARIANT_TYPE_ARRAY, &b) ||
         b.oom) {
+        kanama_ios_fault(__func__, "encode-failed", !kanama_ios_ptrcall_encode_container( method_bind, instance, arg_types, arg_ptrs, arg_count, KANAMA_IOS_VARIANT_TYPE_ARRAY, &b) ? "container blob"
+                         : "container blob out of memory");
         free(b.buf);
         return -1;
     }
@@ -4536,6 +4778,7 @@ int64_t kanama_ios_godot_ptrcall_ret_variant_array_blob(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_ret_variant_array_blob_dispatch(
@@ -4611,10 +4854,17 @@ static int64_t kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch(
     char *out_buf,
     int64_t buf_size
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (out_buf == NULL || buf_size < 4) {
+        kanama_ios_fault(__func__, "null-arg", out_buf == NULL ? "out_buf"
+                         : "buf_size");
         return -1;
     }
     if (g_dictionary_keyed_getter == NULL || g_dictionary_keyed_checker == NULL ||
@@ -4622,6 +4872,15 @@ static int64_t kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch(
         g_variant_to_vector3 == NULL || g_variant_to_object == NULL ||
         g_variant_to_int == NULL || g_variant_get_type == NULL ||
         g_variant_destroy == NULL || g_dictionary_destructor == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_dictionary_keyed_getter == NULL ? "g_dictionary_keyed_getter"
+                         : g_dictionary_keyed_checker == NULL ? "g_dictionary_keyed_checker"
+                         : g_variant_from_string == NULL ? "g_variant_from_string"
+                         : g_variant_to_vector3 == NULL ? "g_variant_to_vector3"
+                         : g_variant_to_object == NULL ? "g_variant_to_object"
+                         : g_variant_to_int == NULL ? "g_variant_to_int"
+                         : g_variant_get_type == NULL ? "g_variant_get_type"
+                         : g_variant_destroy == NULL ? "g_variant_destroy"
+                         : "g_dictionary_destructor");
         return -1;
     }
 
@@ -4701,6 +4960,7 @@ int64_t kanama_ios_godot_ptrcall_ret_raycast_dict(
     int64_t buf_size
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch(
@@ -4738,7 +4998,12 @@ static void kanama_ios_godot_ptrcall_with_rid_array_arg_dispatch(
     const int64_t *rids,
     int32_t count
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     kanama_ios_cache_array_methods();  // resolves g_array_destructor
@@ -4753,6 +5018,10 @@ static void kanama_ios_godot_ptrcall_with_rid_array_arg_dispatch(
     }
     if (g_array_constructor == NULL || g_array_push_back == NULL ||
         g_variant_from_rid == NULL || g_array_destructor == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_array_constructor == NULL ? "g_array_constructor"
+                         : g_array_push_back == NULL ? "g_array_push_back"
+                         : g_variant_from_rid == NULL ? "g_variant_from_rid"
+                         : "g_array_destructor");
         return;
     }
 
@@ -4787,6 +5056,7 @@ void kanama_ios_godot_ptrcall_with_rid_array_arg(
     int32_t count
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     kanama_ios_godot_ptrcall_with_rid_array_arg_dispatch(method_bind, instance, rids, count);
@@ -4822,7 +5092,16 @@ static int64_t kanama_ios_godot_ptrcall_load_status_with_progress_dispatch(
     if (out_progress != NULL) {
         *out_progress = 0.0;
     }
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || path == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return -1;
+    }
+    if (path == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "path");
         return -1;
     }
     kanama_ios_cache_array_methods();
@@ -4830,6 +5109,13 @@ static int64_t kanama_ios_godot_ptrcall_load_status_with_progress_dispatch(
         g_array_destructor == NULL || g_array_size_method == NULL ||
         g_array_get_method == NULL || g_variant_to_float == NULL ||
         g_variant_destroy == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
+                         : g_array_constructor == NULL ? "g_array_constructor"
+                         : g_array_destructor == NULL ? "g_array_destructor"
+                         : g_array_size_method == NULL ? "g_array_size_method"
+                         : g_array_get_method == NULL ? "g_array_get_method"
+                         : g_variant_to_float == NULL ? "g_variant_to_float"
+                         : "g_variant_destroy");
         return -1;
     }
 
@@ -4876,6 +5162,7 @@ int64_t kanama_ios_godot_ptrcall_load_status_with_progress(
     // out-parameter preamble is repeated here because callers decode the out-parameters
     // without consulting the returned status.
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         if (out_progress != NULL) {
             *out_progress = 0.0;
         }
@@ -4966,7 +5253,12 @@ static int32_t kanama_ios_godot_ptrcall_object_arg_ret_int(
     GDExtensionObjectPtr instance,
     GDExtensionObjectPtr object_arg
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return -1;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     GDExtensionObjectPtr object_cell = object_arg;
@@ -4984,7 +5276,12 @@ static void kanama_ios_godot_ptrcall_object_bool_arg(
     GDExtensionObjectPtr object_arg,
     GDExtensionBool bool_arg
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     GDExtensionObjectPtr object_cell = object_arg;
@@ -5003,7 +5300,12 @@ static void kanama_ios_godot_ptrcall_object_bool_int_arg(
     GDExtensionBool bool_arg,
     int32_t int_arg
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     GDExtensionObjectPtr object_cell = object_arg;
@@ -5022,7 +5324,12 @@ static void kanama_ios_godot_ptrcall_object_arg(
     GDExtensionObjectPtr instance,
     GDExtensionObjectPtr object_arg
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     GDExtensionObjectPtr object_cell = object_arg;
@@ -5038,7 +5345,12 @@ static GDExtensionObjectPtr kanama_ios_godot_ptrcall_int_bool_arg_ret_object(
     int32_t int_arg,
     GDExtensionBool bool_arg
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return NULL;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return NULL;
     }
     int32_t int_cell = int_arg;
@@ -5057,7 +5369,12 @@ static int32_t kanama_ios_godot_ptrcall_bool_arg_ret_int(
     GDExtensionObjectPtr instance,
     GDExtensionBool bool_arg
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return 0;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return 0;
     }
     GDExtensionBool bool_cell = bool_arg;
@@ -5074,7 +5391,12 @@ static void kanama_ios_godot_ptrcall_bool_arg(
     GDExtensionObjectPtr instance,
     GDExtensionBool bool_arg
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     GDExtensionBool bool_cell = bool_arg;
@@ -5091,7 +5413,12 @@ static void kanama_ios_godot_ptrcall_float_arg(
     GDExtensionObjectPtr instance,
     double value
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     // SCALAR float methods take a `double` (8 bytes) at the ptrcall boundary:
@@ -5112,7 +5439,16 @@ static void kanama_ios_godot_ptrcall_string_name_arg(
     GDExtensionObjectPtr instance,
     const char *value
 ) {
-    if (method_bind == NULL || instance == NULL || value == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
+        return;
+    }
+    if (value == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "value");
         return;
     }
     uint64_t storage = 0;
@@ -5129,7 +5465,16 @@ static int32_t kanama_ios_godot_ptrcall_string_name_arg_ret_bool(
     GDExtensionObjectPtr instance,
     const char *value
 ) {
-    if (method_bind == NULL || instance == NULL || value == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return 0;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
+        return 0;
+    }
+    if (value == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "value");
         return 0;
     }
     uint64_t name_storage = 0;
@@ -5147,7 +5492,12 @@ static GDExtensionObjectPtr kanama_ios_godot_ptrcall_noargs_ret_object(
     GDExtensionMethodBindPtr method_bind,
     GDExtensionObjectPtr instance
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return NULL;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return NULL;
     }
     GDExtensionObjectPtr ret = NULL;
@@ -5159,7 +5509,12 @@ static int32_t kanama_ios_godot_ptrcall_noargs_ret_bool(
     GDExtensionMethodBindPtr method_bind,
     GDExtensionObjectPtr instance
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return 0;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return 0;
     }
     GDExtensionBool ret = 0;
@@ -5171,7 +5526,12 @@ static int64_t kanama_ios_godot_ptrcall_noargs_ret_int64(
     GDExtensionMethodBindPtr method_bind,
     GDExtensionObjectPtr instance
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return 0;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return 0;
     }
     int64_t ret = 0;
@@ -5184,7 +5544,12 @@ static GDExtensionObjectPtr kanama_ios_godot_ptrcall_int64_arg_ret_object(
     GDExtensionObjectPtr instance,
     int64_t value
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return NULL;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return NULL;
     }
     int64_t value_cell = value;
@@ -5200,7 +5565,12 @@ static void kanama_ios_godot_ptrcall_noargs(
     GDExtensionMethodBindPtr method_bind,
     GDExtensionObjectPtr instance
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     g_object_method_bind_ptrcall(method_bind, instance, NULL, NULL);
@@ -5211,7 +5581,12 @@ static void kanama_ios_godot_ptrcall_double_arg_direct(
     GDExtensionObjectPtr instance,
     double value
 ) {
-    if (method_bind == NULL || instance == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return;
     }
     double value_cell = value;
@@ -5226,12 +5601,22 @@ static GDExtensionObjectPtr kanama_ios_godot_ptrcall_node_path_arg_ret_object(
     GDExtensionObjectPtr instance,
     const char *path
 ) {
-    if (method_bind == NULL || instance == NULL || path == NULL) {
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return NULL;
+    }
+    if (instance == NULL) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
+        return NULL;
+    }
+    if (path == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "path");
         return NULL;
     }
     uint64_t path_storage = 0;
     kanama_ios_init_node_path(&path_storage, path);
     if (path_storage == 0) {
+        kanama_ios_fault(__func__, "encode-failed", "node_path");
         return NULL;
     }
     const GDExtensionConstTypePtr args[1] = {
@@ -5250,7 +5635,12 @@ static void kanama_ios_godot_notify_postinitialize(GDExtensionObjectPtr object) 
         "notification",
         KANAMA_IOS_OBJECT_NOTIFICATION_HASH
     );
-    if (object == NULL || notification_bind == NULL) {
+    if (object == NULL) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return;
+    }
+    if (notification_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     int32_t notification = KANAMA_IOS_NOTIFICATION_POSTINITIALIZE;
@@ -5263,7 +5653,12 @@ static void kanama_ios_godot_notify_postinitialize(GDExtensionObjectPtr object) 
 }
 
 int64_t kanama_ios_godot_construct_object(const char *class_name) {
-    if (!kanama_ios_resolve_godot_api() || class_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (class_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "class_name");
         return 0;
     }
 
@@ -5282,6 +5677,7 @@ int64_t kanama_ios_godot_construct_object(const char *class_name) {
 // global_get_singleton; the returned handle is borrowed (engine-owned, do not free).
 int64_t kanama_ios_godot_get_singleton(const char *name) {
     if (name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "name");
         return 0;
     }
     return (int64_t)(intptr_t)kanama_ios_global_singleton(name);
@@ -5291,7 +5687,12 @@ int64_t kanama_ios_godot_get_singleton(const char *name) {
 // The wrapper-side RefCounted release primitive (task 31 iOS mirror): called only after
 // unreference() returns true (refcount hit zero), mirroring desktop ObjectCalls.destroyObject.
 void kanama_ios_godot_object_destroy(int64_t object) {
-    if (object == 0 || !kanama_ios_resolve_godot_api()) {
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return;
+    }
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
         return;
     }
     g_object_destroy((GDExtensionObjectPtr)(intptr_t)object);
@@ -5304,7 +5705,12 @@ void kanama_ios_godot_object_queue_free(int64_t object) {
         "queue_free",
         KANAMA_IOS_NODE_QUEUE_FREE_HASH
     );
-    if (object == 0 || method_bind == NULL) {
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     g_object_method_bind_ptrcall(method_bind, (GDExtensionObjectPtr)(intptr_t)object, NULL, NULL);
@@ -5371,14 +5777,26 @@ int64_t kanama_ios_godot_node_get_child(int64_t node, int32_t index) {
 }
 
 int64_t kanama_ios_godot_object_get_instance_id(int64_t object) {
-    if (object == 0 || g_object_get_instance_id == NULL) {
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return 0;
+    }
+    if (g_object_get_instance_id == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_get_instance_id");
         return 0;
     }
     return (int64_t)g_object_get_instance_id((GDExtensionConstObjectPtr)(intptr_t)object);
 }
 
 int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id) {
-    if (instance_id == 0 || g_object_get_instance_from_id == NULL) {
+    // Task 124: THE intentional silent return. A zero instance id is a legitimate question
+    // ("is this handle still alive?") whose honest answer is "invalid" — not a caller bug — so
+    // this guard does NOT report to the fault sink. Every other early return in this shim does.
+    if (instance_id == 0) {
+        return 0;
+    }
+    if (g_object_get_instance_from_id == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_get_instance_from_id");
         return 0;
     }
     return g_object_get_instance_from_id((GDObjectInstanceID)instance_id) != NULL ? 1 : 0;
@@ -5587,7 +6005,12 @@ static void kanama_ios_godot_ptrcall_vector2_set(
         method_name,
         hash
     );
-    if (node == 0 || method_bind == NULL) {
+    if (node == 0) {
+        kanama_ios_fault(__func__, "null-handle", "node");
+        return;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     float value[2] = {(float)x, (float)y};
@@ -5644,7 +6067,12 @@ static void kanama_ios_godot_ptrcall_vector3_set(
         method_name,
         hash
     );
-    if (node == 0 || method_bind == NULL) {
+    if (node == 0) {
+        kanama_ios_fault(__func__, "null-handle", "node");
+        return;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     float value[3] = {(float)x, (float)y, (float)z};
@@ -5668,7 +6096,12 @@ static void kanama_ios_godot_ptrcall_double_arg(
         method_name,
         hash
     );
-    if (node == 0 || method_bind == NULL) {
+    if (node == 0) {
+        kanama_ios_fault(__func__, "null-handle", "node");
+        return;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     double value_cell = value;
@@ -5704,7 +6137,12 @@ void kanama_ios_godot_node2d_set_position(int64_t node, double x, double y) {
         "set_position",
         KANAMA_IOS_NODE2D_SET_POSITION_HASH
     );
-    if (node == 0 || method_bind == NULL) {
+    if (node == 0) {
+        kanama_ios_fault(__func__, "null-handle", "node");
+        return;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     float value[2] = {(float)x, (float)y};
@@ -5929,7 +6367,12 @@ void kanama_ios_godot_canvas_item_set_modulate(
         "set_modulate",
         KANAMA_IOS_CANVAS_ITEM_SET_MODULATE_HASH
     );
-    if (object == 0 || method_bind == NULL) {
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
     float color[4] = {(float)r, (float)g, (float)b, (float)a};
@@ -6039,7 +6482,12 @@ void kanama_ios_godot_collision_shape3d_set_disabled(int64_t shape, int32_t disa
 }
 
 int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint) {
-    if (!kanama_ios_resolve_godot_api() || path == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (path == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "path");
         return 0;
     }
     GDExtensionObjectPtr resource_loader = kanama_ios_resource_loader_singleton();
@@ -6049,7 +6497,12 @@ int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type
         "load",
         KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH
     );
-    if (resource_loader == NULL || method_bind == NULL) {
+    if (resource_loader == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "ResourceLoader singleton");
+        return 0;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return 0;
     }
 
@@ -6157,7 +6610,16 @@ int32_t kanama_ios_godot_object_emit_signal_int(
     const char *signal_name,
     int64_t value
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || signal_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return -1;
+    }
+    if (signal_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "signal_name");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
@@ -6167,6 +6629,7 @@ int32_t kanama_ios_godot_object_emit_signal_int(
         KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH
     );
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
 
@@ -6211,7 +6674,16 @@ int32_t kanama_ios_godot_object_emit_signal_vector2i(
     int64_t x,
     int64_t y
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || signal_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return -1;
+    }
+    if (signal_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "signal_name");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
@@ -6221,6 +6693,7 @@ int32_t kanama_ios_godot_object_emit_signal_vector2i(
         KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH
     );
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
 
@@ -6266,8 +6739,18 @@ int64_t kanama_ios_godot_object_connect(
     const char *method_name,
     int64_t flags
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || target_object == 0 ||
-        signal_name == NULL || method_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0 || target_object == 0) {
+        kanama_ios_fault(__func__, "null-handle", object == 0 ? "object"
+                         : "target_object");
+        return -1;
+    }
+    if (signal_name == NULL || method_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", signal_name == NULL ? "signal_name"
+                         : "method_name");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
@@ -6277,6 +6760,7 @@ int64_t kanama_ios_godot_object_connect(
         KANAMA_IOS_OBJECT_CONNECT_HASH
     );
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
 
@@ -6456,13 +6940,16 @@ static void kanama_ios_pt_arg_to_variant(
                 g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
             }
             break;
-        default:
-            fprintf(stderr,
-                    "[kanama][ios][c] pt_arg_to_variant: unsupported arg tag %d -> nil\n",
-                    (int)tag);
-            fflush(stderr);
+        default: {
+            // Task 124: an unknown PT tag boxed as nil used to warn without counting. It is the
+            // one type-tag switch reachable from the dispatch bodies that can silently produce a
+            // wrong VALUE, so it reports like every guarded early return does.
+            char detail[32];
+            snprintf(detail, sizeof detail, "tag=%d", (int)tag);
+            kanama_ios_fault(__func__, "unknown-tag", detail);
             g_variant_new_nil((GDExtensionUninitializedVariantPtr)out_variant);
             break;
+        }
     }
 }
 
@@ -7142,13 +7629,24 @@ static int64_t kanama_ios_godot_ptrcall_ret_callable_dispatch(
     if (out_object_handle != NULL) {
         *out_object_handle = 0;
     }
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     kanama_ios_cache_callable_methods();
     if (g_callable_get_object_method == NULL || g_callable_get_method_method == NULL ||
         g_callable_destructor == NULL || g_string_from_string_name_constructor == NULL ||
         g_string_to_utf8_chars == NULL || g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_callable_get_object_method == NULL ? "g_callable_get_object_method"
+                         : g_callable_get_method_method == NULL ? "g_callable_get_method_method"
+                         : g_callable_destructor == NULL ? "g_callable_destructor"
+                         : g_string_from_string_name_constructor == NULL ? "g_string_from_string_name_constructor"
+                         : g_string_to_utf8_chars == NULL ? "g_string_to_utf8_chars"
+                         : "g_object_method_bind_ptrcall");
         return -1;
     }
     kanama_ios_drop_pending_utf8();
@@ -7162,7 +7660,9 @@ static int64_t kanama_ios_godot_ptrcall_ret_callable_dispatch(
     GDExtensionObjectPtr target = NULL;
     g_callable_get_object_method((GDExtensionTypePtr)callable_cell, NULL, &target, 0);
     if (target == NULL) {
-        // Empty (or custom, object-less) Callable: desktop's readCallable returns null here too.
+        // Task 124, second documented silent return: an empty (or custom, object-less) Callable is
+        // a legitimate VALUE, not a bad call — desktop's readCallable returns null here too — so
+        // this path reports nothing. Length 0 is the answer, not a failure.
         g_callable_destructor(callable_cell);
         return 0;
     }
@@ -7196,6 +7696,7 @@ int64_t kanama_ios_godot_ptrcall_ret_callable(
     // out-parameter preamble is repeated here because callers decode the out-parameters
     // without consulting the returned status.
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         if (out_object_handle != NULL) {
             *out_object_handle = 0;
         }
@@ -7582,14 +8083,23 @@ static int64_t kanama_ios_godot_ptrcall_ret_packed_dispatch(
     void *out_buf,
     int64_t buf_cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_method_bind_ptrcall");
         return -1;
     }
     KanamaIosPackedKind kind;
     if (!kanama_ios_packed_kind(packed_kind, &kind)) {
+        char kanama_ios_fault_detail[32];
+        snprintf(kanama_ios_fault_detail, sizeof kanama_ios_fault_detail, "packed_kind=%d", (int)packed_kind);
+        kanama_ios_fault(__func__, "unknown-tag", kanama_ios_fault_detail);
         return -1;
     }
     kanama_ios_drop_pending_packed();
@@ -7620,6 +8130,7 @@ int64_t kanama_ios_godot_ptrcall_ret_packed(
     int64_t buf_cap
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_ret_packed_dispatch(
@@ -7647,11 +8158,23 @@ int64_t kanama_ios_godot_take_pending_packed(
     void *out_buf,
     int64_t buf_cap
 ) {
-    if (!g_pending_packed_valid || packed_kind != g_pending_packed_kind) {
+    // Two different protocol violations reach the same -1, and the detail has to tell them
+    // apart: nothing was parked at all (the Kotlin side took without a producer, or took twice),
+    // versus something IS parked but of another kind (the take is answering someone else's
+    // producer). Split rather than a ternary, so each guard reads as the thing it catches.
+    if (!g_pending_packed_valid) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_packed (nothing pending)");
+        return -1;
+    }
+    if (packed_kind != g_pending_packed_kind) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_packed (kind mismatch)");
         return -1;
     }
     KanamaIosPackedKind kind;
     if (!kanama_ios_packed_kind(packed_kind, &kind)) {
+        char kanama_ios_fault_detail[32];
+        snprintf(kanama_ios_fault_detail, sizeof kanama_ios_fault_detail, "packed_kind=%d", (int)packed_kind);
+        kanama_ios_fault(__func__, "unknown-tag", kanama_ios_fault_detail);
         kanama_ios_drop_pending_packed();
         return -1;
     }
@@ -7689,10 +8212,18 @@ static int32_t kanama_ios_godot_ptrcall_ret_variant_scalar_dispatch(
     if (out_int != NULL) *out_int = 0;
     if (out_double != NULL) *out_double = 0.0;
     if (out_str_len != NULL) *out_str_len = 0;
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (g_object_method_bind_ptrcall == NULL || g_variant_get_type == NULL || g_variant_destroy == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_object_method_bind_ptrcall == NULL ? "g_object_method_bind_ptrcall"
+                         : g_variant_get_type == NULL ? "g_variant_get_type"
+                         : "g_variant_destroy");
         return -1;
     }
     uint8_t ret_variant[24];
@@ -7721,6 +8252,7 @@ int32_t kanama_ios_godot_ptrcall_ret_variant_scalar(
     // out-parameter preamble is repeated here because callers decode the out-parameters
     // without consulting the returned status.
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         if (out_int != NULL) *out_int = 0;
         if (out_double != NULL) *out_double = 0.0;
         if (out_str_len != NULL) *out_str_len = 0;
@@ -7781,7 +8313,12 @@ static int32_t kanama_ios_godot_object_call_dispatch(
     if (out_double != NULL) *out_double = 0.0;
     if (out_str_len != NULL) *out_str_len = 0;
     if (out_is_refcounted != NULL) *out_is_refcounted = 0;
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     if (arg_count < 0) {
@@ -7861,6 +8398,7 @@ int32_t kanama_ios_godot_object_call(
     // out-parameter preamble is repeated here because callers decode the out-parameters
     // without consulting the returned status.
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         if (out_int != NULL) *out_int = 0;
         if (out_double != NULL) *out_double = 0.0;
         if (out_str_len != NULL) *out_str_len = 0;
@@ -7910,7 +8448,16 @@ static int64_t kanama_ios_classdb_instantiate_owned_dispatch(
     int32_t *out_is_refcounted
 ) {
     if (out_is_refcounted != NULL) *out_is_refcounted = 0;
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || class_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return 0;
+    }
+    if (class_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "class_name");
         return 0;
     }
 
@@ -7974,6 +8521,7 @@ int64_t kanama_ios_classdb_instantiate_owned(
     // Null-instance rejection, kept verbatim from before the _dispatch split: callers read
     // *out_is_refcounted without consulting the returned handle.
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         if (out_is_refcounted != NULL) *out_is_refcounted = 0;
         return 0;
     }
@@ -8004,8 +8552,18 @@ int32_t kanama_ios_godot_object_disconnect(
     int64_t target_object,
     const char *method_name
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || target_object == 0 ||
-        signal_name == NULL || method_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0 || target_object == 0) {
+        kanama_ios_fault(__func__, "null-handle", object == 0 ? "object"
+                         : "target_object");
+        return -1;
+    }
+    if (signal_name == NULL || method_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", signal_name == NULL ? "signal_name"
+                         : "method_name");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
@@ -8015,6 +8573,7 @@ int32_t kanama_ios_godot_object_disconnect(
         KANAMA_IOS_OBJECT_DISCONNECT_HASH
     );
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
 
@@ -8190,18 +8749,30 @@ int64_t kanama_ios_godot_object_connect_bound(
     int32_t arg_count,
     int64_t flags
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || target_object == 0 ||
-        signal_name == NULL || method_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0 || target_object == 0) {
+        kanama_ios_fault(__func__, "null-handle", object == 0 ? "object"
+                         : "target_object");
+        return -1;
+    }
+    if (signal_name == NULL || method_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", signal_name == NULL ? "signal_name"
+                         : "method_name");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_object_connect_bind, "Object", "connect", KANAMA_IOS_OBJECT_CONNECT_HASH);
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     uint8_t bound_callable[24];
     if (!kanama_ios_build_bound_callable(
             target_object, method_name, arg_tags, arg_ptrs, arg_count, bound_callable)) {
+        kanama_ios_fault(__func__, "callable-build", method_name);
         return -1;
     }
 
@@ -8256,18 +8827,30 @@ int32_t kanama_ios_godot_object_disconnect_bound(
     const void *const *arg_ptrs,
     int32_t arg_count
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || target_object == 0 ||
-        signal_name == NULL || method_name == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0 || target_object == 0) {
+        kanama_ios_fault(__func__, "null-handle", object == 0 ? "object"
+                         : "target_object");
+        return -1;
+    }
+    if (signal_name == NULL || method_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", signal_name == NULL ? "signal_name"
+                         : "method_name");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_object_disconnect_bind, "Object", "disconnect", KANAMA_IOS_OBJECT_DISCONNECT_HASH);
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     uint8_t bound_callable[24];
     if (!kanama_ios_build_bound_callable(
             target_object, method_name, arg_tags, arg_ptrs, arg_count, bound_callable)) {
+        kanama_ios_fault(__func__, "callable-build", method_name);
         return -1;
     }
 
@@ -8370,7 +8953,17 @@ int64_t kanama_ios_godot_tween_tween_property_vector2(
     double y,
     double duration
 ) {
-    if (!kanama_ios_resolve_godot_api() || tween == 0 || target == 0 || property == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (tween == 0 || target == 0) {
+        kanama_ios_fault(__func__, "null-handle", tween == 0 ? "tween"
+                         : "target");
+        return 0;
+    }
+    if (property == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "property");
         return 0;
     }
     GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
@@ -8379,7 +8972,10 @@ int64_t kanama_ios_godot_tween_tween_property_vector2(
         "tween_property",
         KANAMA_IOS_TWEEN_TWEEN_PROPERTY_HASH
     );
-    if (mb == NULL) return 0;
+    if (mb == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+return 0;
+    }
 
     GDExtensionObjectPtr tween_obj = (GDExtensionObjectPtr)(intptr_t)tween;
     GDExtensionObjectPtr target_obj = (GDExtensionObjectPtr)(intptr_t)target;
@@ -8441,7 +9037,17 @@ int64_t kanama_ios_godot_tween_tween_property_color(
     double a,
     double duration
 ) {
-    if (!kanama_ios_resolve_godot_api() || tween == 0 || target == 0 || property == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (tween == 0 || target == 0) {
+        kanama_ios_fault(__func__, "null-handle", tween == 0 ? "tween"
+                         : "target");
+        return 0;
+    }
+    if (property == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "property");
         return 0;
     }
     GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
@@ -8450,7 +9056,10 @@ int64_t kanama_ios_godot_tween_tween_property_color(
         "tween_property",
         KANAMA_IOS_TWEEN_TWEEN_PROPERTY_HASH
     );
-    if (mb == NULL) return 0;
+    if (mb == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+return 0;
+    }
 
     GDExtensionObjectPtr tween_obj = (GDExtensionObjectPtr)(intptr_t)tween;
     GDExtensionObjectPtr target_obj = (GDExtensionObjectPtr)(intptr_t)target;
@@ -8507,10 +9116,22 @@ int64_t kanama_ios_godot_tween_tween_property_color(
 // (Callable args can't be expressed through the audited ptrcall set). Returns the CallbackTweener
 // object handle (0 on failure). The demo discards the return; it's wrapped for parity.
 int64_t kanama_ios_godot_tween_tween_callback(int64_t tween, int64_t target, const char *method) {
-    if (!kanama_ios_resolve_godot_api() || tween == 0 || target == 0 || method == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (tween == 0 || target == 0) {
+        kanama_ios_fault(__func__, "null-handle", tween == 0 ? "tween"
+                         : "target");
+        return 0;
+    }
+    if (method == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "method");
         return 0;
     }
     if (g_callable_object_method_constructor == NULL || g_variant_from_callable == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_callable_object_method_constructor == NULL ? "g_callable_object_method_constructor"
+                         : "g_variant_from_callable");
         return 0;
     }
     GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
@@ -8519,7 +9140,10 @@ int64_t kanama_ios_godot_tween_tween_callback(int64_t tween, int64_t target, con
         "tween_callback",
         KANAMA_IOS_TWEEN_TWEEN_CALLBACK_HASH
     );
-    if (mb == NULL) return 0;
+    if (mb == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+return 0;
+    }
 
     GDExtensionObjectPtr tween_obj = (GDExtensionObjectPtr)(intptr_t)tween;
 
@@ -8575,11 +9199,24 @@ int64_t kanama_ios_godot_tween_tween_method(
     double to,
     double duration
 ) {
-    if (!kanama_ios_resolve_godot_api() || tween == 0 || target == 0 || method == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (tween == 0 || target == 0) {
+        kanama_ios_fault(__func__, "null-handle", tween == 0 ? "tween"
+                         : "target");
+        return 0;
+    }
+    if (method == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "method");
         return 0;
     }
     if (g_callable_object_method_constructor == NULL || g_variant_from_callable == NULL ||
         g_variant_from_float == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_callable_object_method_constructor == NULL ? "g_callable_object_method_constructor"
+                         : g_variant_from_callable == NULL ? "g_variant_from_callable"
+                         : "g_variant_from_float");
         return 0;
     }
     GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
@@ -8588,7 +9225,10 @@ int64_t kanama_ios_godot_tween_tween_method(
         "tween_method",
         KANAMA_IOS_TWEEN_TWEEN_METHOD_HASH
     );
-    if (mb == NULL) return 0;
+    if (mb == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+return 0;
+    }
 
     GDExtensionObjectPtr tween_obj = (GDExtensionObjectPtr)(intptr_t)tween;
 
@@ -8645,54 +9285,6 @@ int64_t kanama_ios_godot_tween_tween_method(
     return (int64_t)(intptr_t)result;
 }
 
-// PropertyTweener.from(Color) — sets the tween's starting value (Variant arg). The demo's only use is a
-// Color (modulate), so this boxes a COLOR Variant and calls from() via the variant path. Returns the
-// PropertyTweener handle (0 on failure).
-int64_t kanama_ios_godot_property_tweener_from_color(
-    int64_t tweener,
-    double r,
-    double g,
-    double b,
-    double a
-) {
-    if (!kanama_ios_resolve_godot_api() || tweener == 0) {
-        return 0;
-    }
-    if (g_variant_from_color == NULL) return 0;
-    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
-        &g_property_tweener_from_bind,
-        "PropertyTweener",
-        "from",
-        KANAMA_IOS_PROPERTY_TWEENER_FROM_HASH
-    );
-    if (mb == NULL) return 0;
-
-    GDExtensionObjectPtr tweener_obj = (GDExtensionObjectPtr)(intptr_t)tweener;
-    float color[4] = { (float)r, (float)g, (float)b, (float)a };
-    uint8_t val_v[24], ret_v[24];
-    memset(val_v, 0, 24); memset(ret_v, 0, 24);
-    g_variant_from_color(val_v, color);
-    kanama_ios_check_variant_arg("PropertyTweener::from", 0, val_v, KANAMA_IOS_VARIANT_TYPE_COLOR);
-
-    const GDExtensionConstVariantPtr args[1] = { (GDExtensionConstVariantPtr)val_v };
-    GDExtensionCallError error;
-    memset(&error, 0, sizeof(error));
-    g_object_method_bind_call(mb, tweener_obj, args, 1, ret_v, &error);
-    kanama_ios_check_call_error("PropertyTweener::from", &error);
-
-    GDExtensionObjectPtr result = NULL;
-    if (g_variant_to_object != NULL && g_variant_get_type != NULL) {
-        if (g_variant_get_type(ret_v) == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
-            g_variant_to_object(&result, ret_v);
-            if (!kanama_ios_retain_refcounted_object(result)) result = NULL;
-        }
-    }
-
-    g_variant_destroy(ret_v);
-    g_variant_destroy(val_v);
-    return (int64_t)(intptr_t)result;
-}
-
 int64_t kanama_ios_godot_tween_set_parallel(int64_t tween, int32_t parallel) {
     GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
         &g_tween_set_parallel_bind,
@@ -8700,7 +9292,14 @@ int64_t kanama_ios_godot_tween_set_parallel(int64_t tween, int32_t parallel) {
         "set_parallel",
         KANAMA_IOS_TWEEN_SET_PARALLEL_HASH
     );
-    if (mb == NULL || tween == 0) return 0;
+    if (mb == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+return 0;
+    }
+    if (tween == 0) {
+        kanama_ios_fault(__func__, "null-handle", "tween");
+return 0;
+    }
     GDExtensionBool b = (GDExtensionBool)parallel;
     const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&b };
     GDExtensionObjectPtr result = NULL;
@@ -8715,36 +9314,15 @@ void kanama_ios_godot_tween_kill(int64_t tween) {
         "kill",
         KANAMA_IOS_TWEEN_KILL_HASH
     );
-    if (mb == NULL || tween == 0) return;
+    if (mb == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+return;
+    }
+    if (tween == 0) {
+        kanama_ios_fault(__func__, "null-handle", "tween");
+return;
+    }
     g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tween, NULL, NULL);
-}
-
-int64_t kanama_ios_godot_tweener_set_trans(int64_t tweener, int64_t trans) {
-    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
-        &g_property_tweener_set_trans_bind,
-        "PropertyTweener",
-        "set_trans",
-        KANAMA_IOS_PROPERTY_TWEENER_SET_TRANS_HASH
-    );
-    if (mb == NULL || tweener == 0) return 0;
-    const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&trans };
-    GDExtensionObjectPtr result = NULL;
-    g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tweener, args, &result);
-    return (int64_t)(intptr_t)result;
-}
-
-int64_t kanama_ios_godot_tweener_set_ease(int64_t tweener, int64_t ease) {
-    GDExtensionMethodBindPtr mb = kanama_ios_get_method_bind_cached(
-        &g_property_tweener_set_ease_bind,
-        "PropertyTweener",
-        "set_ease",
-        KANAMA_IOS_PROPERTY_TWEENER_SET_EASE_HASH
-    );
-    if (mb == NULL || tweener == 0) return 0;
-    const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&ease };
-    GDExtensionObjectPtr result = NULL;
-    g_object_method_bind_ptrcall(mb, (GDExtensionObjectPtr)(intptr_t)tweener, args, &result);
-    return (int64_t)(intptr_t)result;
 }
 
 void kanama_ios_godot_viewport_get_visible_rect(
@@ -8775,6 +9353,7 @@ int32_t kanama_ios_godot_set_first_node_in_group_text(
     const char *value
 ) {
     if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
         return 0;
     }
 
@@ -8791,7 +9370,16 @@ int32_t kanama_ios_godot_set_first_node_in_group_text(
         "set_text",
         KANAMA_IOS_LABEL_SET_TEXT_HASH
     );
-    if (scene_tree == NULL || get_first_node_in_group == NULL || set_text == NULL) {
+    if (scene_tree == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "SceneTree singleton");
+        return 0;
+    }
+    if (get_first_node_in_group == NULL) {
+        kanama_ios_fault(__func__, "null-bind", "get_first_node_in_group");
+        return 0;
+    }
+    if (set_text == NULL) {
+        kanama_ios_fault(__func__, "null-bind", "set_text");
         return 0;
     }
 
@@ -8804,6 +9392,7 @@ int32_t kanama_ios_godot_set_first_node_in_group_text(
     g_object_method_bind_ptrcall(get_first_node_in_group, scene_tree, args, &label);
     kanama_ios_destroy_string_name(&group_name_storage);
     if (label == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "label");
         return 0;
     }
 
@@ -9591,13 +10180,26 @@ int64_t kanama_ios_godot_object_connect_callable(
     int64_t callback_id,
     int64_t flags
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || signal_name == NULL ||
-        g_callable_custom_create2 == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return -1;
+    }
+    if (signal_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "signal_name");
+        return -1;
+    }
+    if (g_callable_custom_create2 == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_callable_custom_create2");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_object_connect_bind, "Object", "connect", KANAMA_IOS_OBJECT_CONNECT_HASH);
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
 
@@ -9686,13 +10288,26 @@ int32_t kanama_ios_godot_object_disconnect_callable(
     int64_t target_object,
     int64_t callback_id
 ) {
-    if (!kanama_ios_resolve_godot_api() || object == 0 || signal_name == NULL ||
-        g_callable_custom_create2 == NULL) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (object == 0) {
+        kanama_ios_fault(__func__, "null-handle", "object");
+        return -1;
+    }
+    if (signal_name == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "signal_name");
+        return -1;
+    }
+    if (g_callable_custom_create2 == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_callable_custom_create2");
         return -1;
     }
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_object_disconnect_bind, "Object", "disconnect", KANAMA_IOS_OBJECT_DISCONNECT_HASH);
     if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
 
@@ -10164,11 +10779,23 @@ int64_t kanama_ios_godot_ptrcall_ret_object_array(
     int64_t *out_handles,
     int64_t cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0 || instance == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return -1;
+    }
+    if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     kanama_ios_cache_array_methods();
     if (g_array_size_method == NULL || g_array_get_method == NULL || g_variant_to_object == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_array_size_method == NULL ? "g_array_size_method"
+                         : g_array_get_method == NULL ? "g_array_get_method"
+                         : "g_variant_to_object");
         return -1;
     }
 
@@ -10246,11 +10873,19 @@ static int64_t kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
     int64_t *out_handles,
     int64_t cap
 ) {
-    if (!kanama_ios_resolve_godot_api() || method_bind == 0) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
+    }
+    if (method_bind == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
         return -1;
     }
     kanama_ios_cache_array_methods();
     if (g_array_size_method == NULL || g_array_get_method == NULL || g_variant_to_object == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", g_array_size_method == NULL ? "g_array_size_method"
+                         : g_array_get_method == NULL ? "g_array_get_method"
+                         : "g_variant_to_object");
         return -1;
     }
     kanama_ios_drop_pending_object_handles();
@@ -10314,6 +10949,7 @@ int64_t kanama_ios_godot_ptrcall_ret_object_handles(
     int64_t cap
 ) {
     if (instance == 0) {
+        kanama_ios_fault(__func__, "null-instance", NULL);
         return -1;
     }
     return kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
@@ -10340,6 +10976,7 @@ int64_t kanama_ios_godot_take_pending_object_handles(
     int64_t cap
 ) {
     if (g_pending_object_handles == NULL) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_object_handles");
         return -1;
     }
     int64_t count = g_pending_object_handle_count;

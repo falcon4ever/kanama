@@ -28,6 +28,7 @@ import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.sizeOf
+import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotHandle
@@ -46,6 +47,7 @@ import net.multigesture.kanama.ios.cinterop.KanamaIosTypedArrayArgDesc
 import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned_static
+import net.multigesture.kanama.ios.cinterop.kanama_ios_fault_count
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_singleton
@@ -104,6 +106,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_contai
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_object_handles
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
+import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
 import net.multigesture.kanama.types.AABB
@@ -195,6 +198,17 @@ actual object ObjectCalls {
 
   actual fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_get_method_bind(className, methodName, hash))
+
+  // Task 124 — the bridge's fault counter, read over the cinterop exports of the C shim's fault
+  // sink. Every guarded early return in the shim reports before returning what it always returned,
+  // so a non-zero count is the difference between "the call did nothing" and "the call did nothing
+  // and nobody noticed". The counter is process-wide and is NEVER reset: a fault in frame 1 is
+  // still in the count at the end of the run, which is what makes the self-test summary line a
+  // usable end-of-run assertion. `lastFault()` is "<entry> <reason> <detail>" for the most recent
+  // one, "" when there has been none.
+  fun faultCount(): Int = kanama_ios_fault_count()
+
+  fun lastFault(): String = kanama_ios_last_fault()?.toKString() ?: ""
 
   // Resolve a Godot engine singleton (Input, Engine, …). Mirrors desktop ObjectCalls;
   // used by the bespoke Input glue (and generated singleton wrappers, longer term).
@@ -38781,6 +38795,131 @@ actual object ObjectCalls {
 // Compatibility renderer the honest answer IS the empty list, which is also the no-op answer.
 // For an INSTANCE row the rule is satisfied by requireSingleton / requireObject below: they prove
 // the instance is non-zero, so the static route is not taken and a default return is a real answer.
+// Task 124 — the number of DELIBERATE faults a healthy DEBUG build produces. Every one of them is
+// raised by runFaultProbes below, inside the single `fault-probes begin`/`end` window it prints,
+// and nothing else in either self-test phase raises one. The seven, in the order they fire:
+//
+//   1  bind-lookup-failed  getMethodBind("Node3D", "set_visible", 1L) — a deliberately wrong hash
+//   2  null-bind           ptrcallWithBoolArg through the null bind probe 1 produced
+//   3  pending-protocol    take_pending_utf8 on the drained g_pending_utf8 slot (utf8-ret row)
+//   4  pending-protocol    take_pending_utf8 on the drained g_pending_utf8 slot (variant-ret row)
+//   5  pending-protocol    take_pending_packed on the drained g_pending_packed slot
+//   6  pending-protocol    take_pending_container_blob on the drained g_pending_container_blob slot
+//   7  pending-protocol    take_pending_blob on the drained g_pending_blob slot
+//
+// Both summary lines print this constant as `expected=<N>` beside the live `faults=<N>` so
+// kanama-demos/scripts/ios_device_run.sh can compare the two without knowing anything about this
+// file. Change it only when you change the probes — and the probes are all in one place, directly
+// below, so that the constant and the thing it counts cannot drift apart.
+private const val SELFTEST_EXPECTED_FAULTS = 7
+
+// ==============================================================================================
+// Task 124 — THE PERMANENT RED RUN. Seven deliberate wrong calls into the C shim, each asserted to
+// be REPORTED. Every other row in this file proves a call WORKS; these seven prove that a call that
+// does NOT work says so, which is the property that was missing when every Godot static was a
+// silent no-op on iOS for six days and 205 green checks noticed nothing (119 item 35).
+//
+// They run on every debug build, on the device, forever — a red run you cannot forget to
+// re-execute. The cost is seven lines of console noise and the `faults=7 expected=7` contract on
+// the summary lines; the benefit is that the day the fault sink stops reporting, these rows go red
+// instead of the whole mechanism quietly ceasing to exist.
+//
+// Probes 3-7 used to sit inline beside their producers as `…(pending slot drained)` rows that
+// asserted only `take_pending_*(null, 0) == -1`. That -1 is reachable ONLY through the guard that
+// now reports `pending-protocol`, so those rows were always red runs of that guard — a healthy
+// build printed five FAULT lines outside the probe window and `faults=7 expected=2`. They are fault
+// probes, so they now say so, and they assert the REPORT as well as the -1. Their producers, and
+// the non-default assertions that proved those producers worked (`…, pending slot` / `…, pending
+// blob`), stay exactly where they were: what each row proved about its own producer is still
+// proved in its own place, and what is asserted here is the guard.
+//
+// The probes print seven real FAULT lines, so they are BRACKETED by exactly ONE
+// `fault-probes begin` / `fault-probes end` pair per phase run: the device runner fails the run on
+// any `[kanama][ios][c] FAULT ` line OUTSIDE this window, which keeps `null-bind` — the most common
+// real fault — fatal instead of permanently whitelisted by its text.
+private fun runFaultProbes(n3: MemorySegment, check: (String, Boolean) -> Unit) {
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin (expect $SELFTEST_EXPECTED_FAULTS FAULT lines)"
+  )
+  val faultsBeforeProbes = ObjectCalls.faultCount()
+  var raised = 0
+
+  // Probe 1: a method bind lookup with a WRONG HASH. Godot returns NULL and the lookup reports
+  // `bind-lookup-failed` with the names and the hash — the one place where that detail exists.
+  val deliberatelyNullBind = ObjectCalls.getMethodBind("Node3D", "set_visible", 1L)
+  raised++
+  check(
+    "fault-probe(bind-lookup-failed counted)",
+    ObjectCalls.faultCount() == faultsBeforeProbes + raised,
+  )
+  check(
+    "fault-probe(bind-lookup-failed names Node3D.set_visible)",
+    ObjectCalls.lastFault().contains("bind-lookup-failed") &&
+      ObjectCalls.lastFault().contains("Node3D.set_visible"),
+  )
+
+  // Probe 2: call through that null bind on a REAL instance. The dispatch body's `method_bind == 0`
+  // guard is the one that used to swallow the whole call; it now reports `null-bind` (no names are
+  // available at call time — probe 1 is where they were).
+  ObjectCalls.ptrcallWithBoolArg(deliberatelyNullBind, n3, false)
+  raised++
+  check("fault-probe(null-bind counted)", ObjectCalls.faultCount() == faultsBeforeProbes + raised)
+  check("fault-probe(null-bind reason)", ObjectCalls.lastFault().contains("null-bind"))
+
+  // Probes 3-7: take from a DRAINED pending slot. The Kotlin two-call read-back takes only after a
+  // producer parked something (every `take_pending_*` call outside this block sits in the `else`
+  // branch that the producer's own over-capacity length selected), so "nothing pending" is a
+  // protocol violation by construction — which is exactly what each of these five asks for. Each
+  // asserts the documented default (-1), that the sink counted exactly one new fault, and that
+  // lastFault() names both `pending-protocol` and the buffer the shim says was empty.
+  fun pendingProbe(label: String, buffer: String, drained: Long) {
+    raised++
+    check("fault-probe(pending-protocol $label) == -1", drained == -1L)
+    check(
+      "fault-probe(pending-protocol $label) counted",
+      ObjectCalls.faultCount() == faultsBeforeProbes + raised,
+    )
+    val last = ObjectCalls.lastFault()
+    check(
+      "fault-probe(pending-protocol $label) reported",
+      last.contains("pending-protocol") && last.contains(buffer),
+    )
+  }
+
+  pendingProbe(
+    "g_pending_utf8 drained: utf8-ret",
+    "g_pending_utf8",
+    kanama_ios_godot_take_pending_utf8(null, 0L),
+  )
+  pendingProbe(
+    "g_pending_utf8 drained: variant-ret",
+    "g_pending_utf8",
+    kanama_ios_godot_take_pending_utf8(null, 0L),
+  )
+  pendingProbe(
+    "g_pending_packed drained: packed-ret",
+    "g_pending_packed",
+    kanama_ios_godot_take_pending_packed(ObjectCalls.VT_PACKED_BYTE_ARRAY, null, 0L),
+  )
+  pendingProbe(
+    "g_pending_container_blob drained: container-ret",
+    "g_pending_container_blob",
+    kanama_ios_godot_take_pending_container_blob(null, 0L),
+  )
+  pendingProbe(
+    "g_pending_blob drained: array-ret",
+    "g_pending_blob",
+    kanama_ios_godot_take_pending_blob(null, 0L),
+  )
+
+  check(
+    "fault-probe(exactly $SELFTEST_EXPECTED_FAULTS deliberate faults)",
+    raised == SELFTEST_EXPECTED_FAULTS &&
+      ObjectCalls.faultCount() == faultsBeforeProbes + SELFTEST_EXPECTED_FAULTS,
+  )
+  println("[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes end")
+}
+
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_objectcalls_selftest")
 fun kanamaIosRuntimeObjectCallsSelfTest() {
@@ -39514,7 +39653,9 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       -1,
     )
   check("utf8-ret(get_utf8_string 3000B==put, pending slot)", utf8LongBack == utf8Long)
-  check("utf8-ret(pending slot drained)", kanama_ios_godot_take_pending_utf8(null, 0L) == -1L)
+  // The drained-slot assertion that used to follow this row is a fault probe (it reaches the
+  // shim's `pending-protocol` guard by design): it now runs in runFaultProbes as
+  // `fault-probe(pending-protocol g_pending_utf8 drained: utf8-ret)`.
   ObjectCalls.destroyObject(utf8LongPeer)
 
   // StringName return with an int arg: Skin.set_bind_name(0, "KBind") then get_bind_name(0).
@@ -39603,7 +39744,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "variant-ret(get_var 3000B string, pending slot)",
     variantRoundTrip(variantLong) == variantLong,
   )
-  check("variant-ret(pending slot drained)", kanama_ios_godot_take_pending_utf8(null, 0L) == -1L)
+  // Drained-slot assertion moved to runFaultProbes as
+  // `fault-probe(pending-protocol g_pending_utf8 drained: variant-ret)` — it is a fault probe.
   check("variant-ret(get_var null==null)", variantRoundTrip(null) == null)
 
   // task 100 (parcel 3) — Packed*Array returns on arg-bearing shapes through the generated
@@ -39667,10 +39809,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     packedBytes.size == 3000,
   )
   check("packed-ret(random bytes not all zero)", packedBytes.any { it != 0.toByte() })
-  check(
-    "packed-ret(pending packed slot drained)",
-    kanama_ios_godot_take_pending_packed(ObjectCalls.VT_PACKED_BYTE_ARRAY, null, 0L) == -1L,
-  )
+  // Drained-slot assertion moved to runFaultProbes as
+  // `fault-probe(pending-protocol g_pending_packed drained: packed-ret)` — it is a fault probe.
   ObjectCalls.destroyObject(packedCrypto)
 
   val packedCurve = ObjectCalls.constructObject("Curve3D")
@@ -39782,10 +39922,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         ((containerAddChild["args"] as List<*>)[0] as? Map<*, *>)?.get("name") == "node" &&
         (containerAddChild["return"] as? Map<*, *>) != null,
     )
-    check(
-      "container-ret(pending container slot drained)",
-      kanama_ios_godot_take_pending_container_blob(null, 0L) == -1L,
-    )
+    // Drained-slot assertion moved to runFaultProbes as
+    // `fault-probe(pending-protocol g_pending_container_blob drained: container-ret)`.
     val containerSignal =
       ObjectCalls.ptrcallWithTwoStringNameArgsRetDictionary(
         ObjectCalls.getMethodBind("ClassDB", "class_get_signal", 3061114238L),
@@ -39977,7 +40115,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       "array-ret(ClassDB.get_inheriters_from_class(Object) >500 names, pending blob)",
       arrayObjectHeirs.size > 500 && "Node" in arrayObjectHeirs && "AStar2D" in arrayObjectHeirs,
     )
-    check("array-ret(pending blob drained)", kanama_ios_godot_take_pending_blob(null, 0L) == -1L)
+    // Drained-slot assertion moved to runFaultProbes as
+    // `fault-probe(pending-protocol g_pending_blob drained: array-ret)` — it is a fault probe.
   } else check("array-ret(ClassDB.get_inheriters_from_class) (singleton absent)", false)
 
   val arrayTiles = ObjectCalls.constructObject("TileMapLayer")
@@ -41758,7 +41897,15 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   }
 
-  println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
+  // Task 124 — THE PERMANENT RED RUN, all seven deliberate faults in one bracketed window. See
+  // runFaultProbes (declared beside SELFTEST_EXPECTED_FAULTS at the top of this section) for what
+  // each probe proves and why the five `pending slot drained` rows live there and not inline.
+  runFaultProbes(n3) { label, cond -> check(label, cond) }
+
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed " +
+      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS"
+  )
 }
 
 // Debug-gated FIRST-FRAME self-test phase (called exactly once from kanama_ios_frame, when the
@@ -41863,5 +42010,11 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
   } else check("ret-callable(NativeMenu.get_popup_open_callback) (singleton absent)", false)
 
-  println("[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed")
+  // The fault counter is process-wide and never reset, so by frame 1 it still holds exactly the
+  // two deliberate probes from the level-2 phase — unless something in between failed quietly,
+  // which is precisely what this line exists to show.
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed " +
+      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS"
+  )
 }
