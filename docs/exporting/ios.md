@@ -40,7 +40,15 @@ team IDs, provisioning profile names, or private maintainer notes.
 
 Godot's iOS export loads the C shim, which bridges to the Kotlin/Native runtime;
 the generated wrappers call Godot through `ObjectCalls` over a generic `ptrcall`
-dispatch in the shim. The component diagram, the dispatch contract, and the
+dispatch in the shim. Each instance-taking entry point that an `ObjectCalls` helper
+can reach with the static marker comes in two flavours — the guarded instance entry
+and a `_static` sibling for Godot's static methods, which ptrcall with a null object
+— and the iOS `ObjectCalls` picks between them per call. Entry points no helper
+reaches that way (`kanama_ios_godot_ptrcall_string_arg`,
+`kanama_ios_godot_ptrcall_ret_object_array` and the object-handle entries, whose zero
+check guards a live engine handle rather than a static marker) keep their single
+guarded form; `scripts/check_ios_static_dispatch.py` derives that split from the shim
+and fails if it stops holding. The component diagram, the dispatch contract, and the
 generator rules are in
 [iOS Backend Architecture](../contributing/backends/ios.md); see
 [Architecture: iOS](../contributing/architecture.md#ios) for how this maps onto

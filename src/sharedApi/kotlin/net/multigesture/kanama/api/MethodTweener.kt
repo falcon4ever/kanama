@@ -1,8 +1,8 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Interpolates an abstract value and supplies it to a method called over time.
@@ -63,7 +63,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
         fun fromHandle(handle: GodotHandle): MethodTweener? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MethodTweener? =
+        internal fun wrap(handle: RawSegment): MethodTweener? =
             if (handle.address() == 0L) null else MethodTweener(GodotHandle(handle))
 
         private const val SET_DELAY_HASH = 266477812L

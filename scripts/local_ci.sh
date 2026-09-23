@@ -353,6 +353,14 @@ python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 stage "ObjectCalls member/name parity (desktop vs iOS)"
 python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
 
+stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, task 117 P2')"
+# A zero instance is the generator's static-method marker (NULL_SEGMENT for an `is_static`
+# method) and over twenty kanama_ios_godot_* entry points early-return on it, so a static routed
+# through one is a silent no-op on a phone — no Kotlin frame, no log line, a default return. This
+# gate holds every guarded entry point to exactly one call site in ObjectCalls.kt: its private
+# *Dispatch function, which also calls the entry point's _static sibling.
+python3 "$ROOT_DIR/scripts/check_ios_static_dispatch.py"
+
 stage "iOS PT tag table parity (five copies, task 119 item 30)"
 # The ptrcall type tags are the wire protocol of the iOS seam and exist five times (C enum,
 # generator dict, generated ObjectCalls region, KanamaIosRuntime, BuiltinTags). The drift gate

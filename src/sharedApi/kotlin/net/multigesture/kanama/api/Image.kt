@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2i
 import net.multigesture.kanama.types.Vector2i
@@ -591,7 +592,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun computeImageMetrics(comparedImage: Image?, useLuma: Boolean): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(computeImageMetricsBind, segment, comparedImage?.requireOpenHandle() ?: MemorySegment.NULL, useLuma)
+        return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(computeImageMetricsBind, segment, comparedImage?.requireOpenHandle() ?: NULL_SEGMENT, useLuma)
     }
 
     /**
@@ -605,7 +606,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blitRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blitRectBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blitRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -619,7 +620,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blitRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blitRectMaskBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blitRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -631,7 +632,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blendRect(src: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blendRectBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithObjectRect2iAndVector2iArgs(blendRectBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -646,7 +647,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun blendRectMask(src: Image?, mask: Image?, srcRect: Rect2i, dst: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blendRectMaskBind, segment, src?.requireOpenHandle() ?: MemorySegment.NULL, mask?.requireOpenHandle() ?: MemorySegment.NULL, srcRect, dst)
+        ObjectCalls.ptrcallWithTwoObjectRect2iAndVector2iArgs(blendRectMaskBind, segment, src?.requireOpenHandle() ?: NULL_SEGMENT, mask?.requireOpenHandle() ?: NULL_SEGMENT, srcRect, dst)
     }
 
     /**
@@ -702,7 +703,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      */
     fun copyFrom(src: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, segment, listOf(src?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(copyFromBind, segment, listOf(src?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -885,7 +886,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create
          */
         fun create(width: Int, height: Int, useMipmaps: Boolean, format: Long): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, MemorySegment.NULL, width, height, useMipmaps, format))
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, NULL_SEGMENT, width, height, useMipmaps, format))
         }
 
         /**
@@ -895,7 +896,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create_empty
          */
         fun createEmpty(width: Int, height: Int, useMipmaps: Boolean, format: Long): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, MemorySegment.NULL, width, height, useMipmaps, format))
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format))
         }
 
         /**
@@ -905,7 +906,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create_from_data
          */
         fun createFromData(width: Int, height: Int, useMipmaps: Boolean, format: Long, data: ByteArray): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(createFromDataBind, MemorySegment.NULL, width, height, useMipmaps, format, data))
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(createFromDataBind, NULL_SEGMENT, width, height, useMipmaps, format, data))
         }
 
         /**
@@ -914,7 +915,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.load_from_file
          */
         fun loadFromFile(path: String): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, MemorySegment.NULL, path))
+            return Image.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         const val MAX_WIDTH: Long = 16777216L
@@ -997,7 +998,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
         fun fromHandle(handle: GodotHandle): Image? =
             wrap(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): Image? =
+        internal fun wrap(handle: RawSegment): Image? =
             if (handle.address() == 0L) null else Image(GodotHandle(handle))
 
         private const val GET_WIDTH_HASH = 3905245786L

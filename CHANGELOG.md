@@ -7,6 +7,311 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — iOS: Godot **static** methods called through the shared wrapper tree were silent no-ops
+
+- **Every `is_static` Godot method reached through `src/sharedApi` did nothing on iOS.** The generator
+  renders `NULL_SEGMENT` as the instance for a static method (`_null_segment()` in
+  `scripts/generate_api_wrapper.py`). Desktop hands that `MemorySegment.NULL` straight to
+  `object_method_bind_ptrcall`, which Godot accepts for a static bind. On iOS the same helpers all ended
+  in the C entry point `kanama_ios_godot_ptrcall`, which deliberately early-returns when `instance == 0`
+  — the guard commit `30c949a1` kept when it added the separate `kanama_ios_godot_ptrcall_static` entry
+  point. The per-platform iOS hand copies used the `ptrcallStatic*` helpers and were fine; the shared
+  tree never did, so its static calls returned `null` / `0` / the default on device while passing on
+  desktop. Present since the shared tree first rendered statics (`7a43afcf`, 2026-09-15, task 104 step
+  3). Recount the blast radius with
+  `grep -rc "Bind, NULL_SEGMENT" src/sharedApi/kotlin/net/multigesture/kanama/api/ | grep -v ':0'`:
+  **72 static call sites across 36 shared classes**.
+- **The fix is a dispatcher per guarded C entry point, in the iOS `ObjectCalls`** — never in the shared
+  tree. `ptrcallDispatch(...)`, hand-written above the `BEGIN GENERATED MEMBERS` marker in
+  `src/iosMain/.../binding/runtime/ObjectCalls.kt`, routes a zero instance to
+  `kanama_ios_godot_ptrcall_static` and everything else to `kanama_ios_godot_ptrcall`. All **1172**
+  plain-ptrcall call sites in that file go through it, the generated region included: the generator
+  emits `ptrcallDispatch` now, so a regen keeps the fix. Desktop needs no change — its ptrcall path
+  carries no null-instance guard (the one in `src/jvmMain/.../ObjectCalls.kt` is inside
+  `notifyPostinitialize`).
+- **`kanama_ios_godot_ptrcall` was not the only guarded entry point.** Thirteen of the 72 sites (in
+  `EditorExportPlatform`, `FileDialog`, `GLTFDocument`, `JSON`, `MultiplayerAPI`, `Node`, `Resource`
+  and `ShaderIncludeDB`) return through a specialised C entry — `..._no_args_ret_string`,
+  `..._no_args_ret_string_name`, `..._no_args_ret_packed_string_array`,
+  `..._no_args_ret_typed_array_blob`, `..._ret_array_blob`, `..._ret_utf8`, `..._ret_variant_scalar`
+  and `kanama_ios_godot_object_call` — each carrying the same `instance == 0` guard. **All 23 guarded
+  entry points in `ios/bootstrap/kanama_ios_shim.c` that an `ObjectCalls` helper calls with an instance
+  now follow the `30c949a1` pattern**: the body moves into an unguarded `static ..._dispatch(...)`, the
+  existing symbol keeps its guard and calls it, and a new `<symbol>_static(...)` sibling (declared in
+  `ios/include/kanama_ios.h` for cinterop) calls it with a null instance. No existing guard was removed
+  and no existing signature changed. The existing `ptrcallStatic*` helpers and their hand users
+  (`FileAccess`, `ImageTexture`) are untouched.
+  Entry points no helper reaches with the static marker — `kanama_ios_godot_ptrcall_string_arg`,
+  `kanama_ios_godot_ptrcall_ret_object_array` and the object-handle entries, whose zero check guards a
+  live engine handle — keep their single guarded form on purpose.
+- **Two `_static` siblings were dead ends until the split reached one level down.**
+  `kanama_ios_godot_ptrcall_ret_raycast_dict_dispatch` and
+  `..._ret_object_handles_dispatch` — the *unguarded* halves of their own splits, so by definition
+  reached with a zero instance — themselves called `kanama_ios_godot_ptrcall` rather than
+  `kanama_ios_godot_ptrcall_dispatch`. The guard bit one frame below the Kotlin dispatcher and returned
+  before writing the result cell, so a static routed through the raycast-dictionary or
+  object-handle-list shapes still no-opped. Both now call the unguarded body, as
+  `kanama_ios_ptrcall_encode_container` already did. **With that, 72 of 72 static call sites reach
+  Godot on iOS.**
+- **A 24th guarded entry point was invisible to the gate: `kanama_ios_classdb_instantiate_owned`**
+  (task 43's owned `ClassDB.instantiate` decode). It takes a `method_bind` + an instance and rejects a
+  zero instance like the rest, but it is not spelled `kanama_ios_godot_*`, and the gate's regexes keyed
+  on that prefix. It now has the same `_dispatch` / guarded entry / `_static` split and a
+  `classdbInstantiateOwnedDispatch` in `ObjectCalls.kt`. Its one shared-tree caller (`ClassDB.kt`)
+  passes the singleton, so this was latent rather than live — which is the point: the property now holds
+  by construction.
+- **New gate `scripts/check_ios_static_dispatch.py`** (a `local_ci.sh` stage beside
+  `check_objectcalls_parity`) makes this structural instead of remembered. It derives the guarded set
+  from the shim by **signature** — any `kanama_ios_*` definition taking both an `int64_t method_bind`
+  and an instance it *early-returns* on (an `if` whose condition tests the instance for zero and whose
+  block returns, not a zero comparison anywhere in the body) — and checks both sides of the boundary:
+  `ObjectCalls.kt` may name a guarded entry point only inside a private `*Dispatch` function that also
+  calls its `_static` sibling, and **no `_dispatch` body in the shim may name one at all** (it must
+  call the callee's `_dispatch` body). It prints the 26 guarded entry points, the 24 dispatched ones,
+  the count of `_dispatch` bodies scanned and the out-of-scope object-handle entries on PASS. Pointing
+  `--shim` / `--header` / `--objectcalls` at a scratch copy runs its negative tests without touching
+  the tree.
+- **The iOS `OBJECTCALLS SELFTEST` goes from 205 to 218 checks.** Thirteen new rows drive the
+  shared-tree static path through the public wrapper API rather than the `ptrcallStatic*` helpers:
+  `Image.createFromData(2, 2, false, FORMAT_RGBA8, ByteArray(16))` (non-null, width 2, height 2),
+  `Image.create(4, 3, false, FORMAT_RGBA8)` (non-null, width 4), `Thread.isMainThread()`,
+  `RegEx.createFromString("a+b", false)`, a `JSON.stringify`/`JSON.parseString` round-trip,
+  `ShaderIncludeDB.listBuiltInIncludeFiles()` and `getBuiltInIncludeFile(...)` — **both replaced
+  further down: they were not probes** — `Resource.generateSceneUniqueId()` and
+  `MultiplayerAPI.getDefaultInterface()`.
+- **The dispatcher exposed a self-test row that had only ever passed because of the guard.** On
+  device the `RenderingServer.mesh_create_from_surfaces` row (added by task 100 parcel 10)
+  SIGSEGV'd inside `RenderingServer::_mesh_create_from_surfaces` with a null `this`. Its comment
+  claimed "the RenderingServer exists before extensions initialise"; it does not. Godot 4.7.2
+  `main/main.cpp` runs `initialize_extensions(INITIALIZATION_LEVEL_SCENE)` long before
+  `register_server_singletons()` adds the `RenderingServer` singleton
+  (`servers/register_server_types.cpp`), so at scene init `getSingleton("RenderingServer")`
+  returned 0, the old C null-instance guard turned the whole call into a no-op returning RID 0 —
+  and the row asserted exactly `RID(0L)`. It had therefore passed for the wrong reason since it
+  was written. Routing a zero instance to the static entry point sent the call to Godot for real,
+  with no `this`. **The dispatch is right; the row was wrong.** Two mitigations, both in this
+  commit:
+  - **A first-frame self-test phase.** `kanamaIosRuntimeObjectCallsSelfTestFrame`
+    (`@CName("kanama_ios_runtime_objectcalls_selftest_frame")`) sits beside the scene-init
+    self-test with the same `check` machinery and holds the moved RenderingServer row, now run
+    against a real instance. (The `RID(0L)` expectation this bullet kept is **wrong**, and is
+    corrected further down: 4.7.2 returns a valid, empty mesh.) `kanama_ios_frame` calls it
+    exactly once, under `KANAMA_IOS_DEBUG_VARIANT_CHECKS`, when the frame counter first reaches 1,
+    before `kanama_ios_runtime_frame()`. It prints
+    `[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): N passed, M failed`; the scene-init summary
+    line is unchanged. Totals at this commit: 236 at scene init, 2 on frame 1 — **superseded by 236 and 4** after the probe-rule fixes further down (218 − the moved row − the
+    now-redundant `input-singleton` row, + 12 `singleton-present(…)` + 8 `object-constructed(…)`
+    checks) — **236 and 4** after the probe-rule fixes further down.
+  - **Singleton lookups fail loudly on both platforms.** `ObjectCalls.getSingleton` prints
+    `[kanama][ios][kn] ERROR: getSingleton("<name>") returned null — not registered at this
+    initialization level` on iOS (Godot's own error print does not reach the device console
+    capture) and the `[kanama:kt]` equivalent on `System.err` on desktop/Android. Both return the
+    null pointer unchanged — no throw; the return shape is public behaviour.
+- **Every singleton and every false-pass-prone instance in the self-test is now checked.** A new
+  `requireSingleton(name)` helper records `singleton-present(<name>)` and each of the 13 singleton
+  rows (Input, Time, OS, ClassDB ×2, Geometry3D ×2, ProjectSettings, InputMap, TranslationServer,
+  RenderingServer, Engine, NativeMenu) skips its dependent calls when the lookup fails — recorded
+  as a FAILED check with a reason, never silently passed and never executed with a zero instance.
+  The audit of the remaining instances found that every `constructObject`-backed row asserts a
+  round-trip value a zero instance cannot produce, **except eight** whose assertion is a default
+  (an empty list, an empty string, a zero `Rect2i`, "no signal fired", "all components finite") —
+  exactly the shape of the RenderingServer false pass. Those go through a matching
+  `requireObject(class)` helper and skip on failure: `TileMap.get_used_rect`,
+  `AnimationPlayer.animation_get_next`, `GridMap.get_used_cells`,
+  `Camera3D.get_camera_projection`, `Camera3D.get_frustum`, and the two lambda-Callable
+  free-ordering rows.
+- **With the self-test honest, the phone failed four rows at scene init and one on frame 1 — and
+  three of the five could never have failed for the right reason.** The rule they broke, now
+  written into the self-test
+  header and `docs/contributing/backends/ios.md`: **a probe must assert a value the no-op path
+  cannot produce.** A static routed with a zero instance used to return `null` / `0` / `false` /
+  `""` / an empty list / a zeroed struct, so a probe whose *expected* value is one of those cannot
+  tell the working call from the call that never happened.
+  - **`NativeMenu` was the same false pass as `RenderingServer`.** Godot adds the Engine singleton
+    entry in `register_server_singletons()` (`servers/register_server_types.cpp:400`), the same late
+    step as `RenderingServer` — `main/main.cpp:3864`, long after
+    `initialize_extensions(INITIALIZATION_LEVEL_SCENE)` at `main/main.cpp:3793` — so the scene-init
+    lookup returned 0 and the guard answered with the null Callable the row asserted. The NativeMenu
+    *object* exists far earlier on iOS, so the row MOVED rather than went:
+    `DisplayServerAppleEmbedded` (which `platform/ios` inherits through `drivers/apple_embedded`)
+    constructs one at `drivers/apple_embedded/display_server_apple_embedded.mm:65`, and
+    `NativeMenu`'s constructor sets its own singleton (`servers/display/native_menu.h:154`);
+    `DisplayServer::create` runs at `main/main.cpp:3368`. Both rows are now in the frame-1 phase.
+  - **The two `ShaderIncludeDB` probes were indistinguishable on the GL Compatibility renderer, and
+    are deleted.** `listBuiltInIncludeFiles()` expected a non-empty list and `getBuiltInIncludeFile`
+    a non-empty source, but Godot registers the built-in includes only from the RenderingDevice
+    renderer (`servers/rendering/renderer_rd/renderer_scene_render_rd.cpp:1796-1798`). Match3 runs
+    GL Compatibility, so the honest answer is the empty list — which is also exactly what the old
+    no-op produced. Their two C entry points keep their coverage through replacements that assert a
+    value a no-op cannot fake: `GLTFDocument.getSupportedGltfExtensions()` (same shared-tree
+    `ptrcallNoArgsRetPackedStringList` helper, same `NULL_SEGMENT`) must be non-empty **and** contain
+    `KHR_lights_punctual` — a hard-coded set in
+    `modules/gltf/gltf_document.cpp:6968` registered by `initialize_gltf_module` at
+    `MODULE_INITIALIZATION_LEVEL_SCENE`, which `main/main.cpp` runs immediately *before* extension
+    SCENE init (`main/main.cpp:3792-3793`), independent of the renderer; and a helper-level
+    `ObjectCalls.ptrcallWithStringArgRetString(getSha256Bind, NULL_SEGMENT, "res://project.binary")`
+    must return 64 lowercase hex characters. That second one is helper-level on purpose:
+    `FileAccess` is per-platform on iOS and hosts no shared-tree static of that shape, but the route
+    (`objectCallDispatch` → `kanama_ios_godot_object_call_static`) is identical. It is guarded by a
+    new iOS `FileAccess.fileExists` — the desktop member's exact shape, static bind through
+    `NULL_SEGMENT` — and a missing `res://project.binary` is a recorded FAILURE, not a skip.
+  - **The `RenderingServer` expectation was wrong, and had never been checked against 4.7.2.**
+    Follow-up 4 kept `RID(0L)` on the claim that the engine rejects an empty surface list with
+    `ERR_FAIL_COND_V`. It does not: `RenderingServer::_mesh_create_from_surfaces`
+    (`servers/rendering/rendering_server.cpp:1996-2002`) has no guard at all, and
+    `mesh_create_from_surfaces` (`servers/rendering/rendering_server_default.h:363`) opens with
+    `mesh_allocate()` — `mesh_owner.allocate_rid()` in the GL Compatibility mesh storage
+    (`drivers/gles3/storage/mesh_storage.cpp:65-67`) — so an empty list yields a **valid, empty
+    mesh**. An invalid RID was also the no-op answer, which is what made the row unable to tell the
+    fix from the defect either way. The row now asserts a valid RID and frees it with
+    `RenderingServer.free_rid`, so the frame-1 phase carries a non-default assertion.
+  - **A fourth row failed the rule on review and is strengthened: `Camera3D.get_camera_projection`.**
+    It asserted `isFinite()` on the four diagonal cells, which `0.0f` satisfies — so the zeroed
+    64-byte return buffer of the no-op path passed it. Its stated reason ("treeless camera
+    projection values aren't deterministic") was also unverified and wrong:
+    `Camera3D::get_camera_projection` opens with
+    `ERR_FAIL_COND_V_MSG(!is_inside_tree(), Projection(), ...)` (`scene/3d/camera_3d.cpp:299-302`)
+    and `Projection` is `= default` over member initialisers spelling the **identity** matrix
+    (`core/math/projection.h:55-60`). The row now asserts the identity — a 1.0 diagonal and a 0.0
+    off-diagonal, which the zeroed buffer cannot produce.
+- **Self-test totals: 236 at scene init (unchanged — four rows out, four in) and 4 on frame 1**
+  (was 2), all expected to pass. The remaining default-valued assertions were audited against the
+  rule and all are admissible: every one is an INSTANCE row whose instance `requireSingleton` /
+  `requireObject` has already proven non-zero (so the static route is not taken and the default is a
+  real answer), or it sits in a row that also asserts a non-default value through the same helper.
+  The last one, `plane-array-ret(get_frustum finite)`, was vacuously true (`all {}` on an empty
+  list): `Camera3D::get_frustum` returns an empty list outside the world tree
+  (`scene/3d/camera_3d.cpp:792-798`) and a populated frustum needs a viewport that does not exist at
+  scene-level extension init. It now asserts that documented empty answer
+  (`plane-array-ret(get_frustum off-world == empty)`), which is at least falsifiable, and its comment
+  names the non-default row that carries the Plane record decode
+  (`array-ret(Geometry3D.build_box_planes has 6 planes)`).
+
+### Changed — the `Tweener` family is generated once (task 117 P2', 3/3) — **source break: fluent setters return `X?`**
+
+- `Tweener`, `PropertyTweener`, `CallbackTweener` and `MethodTweener` retire together into the shared
+  wrapper tree (`src/sharedApi/.../api/<Class>.kt`). They had to go as a set: the iOS hand cluster in
+  `IosGodotApi.kt` put `setTrans`/`setEase` on the *base* `Tweener` (Godot declares them on the
+  subclasses) precisely because the generated subclass members would have clashed with it — which is
+  also why `MethodTweener` was the `unsupported` cell iOS did not host at all. All four
+  `PER_PLATFORM_WRAPPERS` entries are gone (29 → 25), and `IntervalTweener`, `AwaitTweener` and
+  `SubtweenTweener` were already shared. **`Tween` itself stays hand-written on both platforms** (its
+  iOS Variant `tween_property` runtime is outside task 117).
+- **The fluent setters return the NULLABLE self type.** The desktop hand copies returned the non-null
+  self through a private `wrapOrThis` that turned a null engine return into `this`; the generated
+  self-return collapse keeps the reference-neutral part (`if (ret.address() == segment.address()) {
+  RefCounted.releaseHandle(ret); return this }`) but ends in `wrap(ret)`, which is nullable, like
+  every other generated object return. So on **desktop**:
+  `PropertyTweener.from`, `fromCurrent`, `asRelative`, `setTrans`, `setEase`, `setCustomInterpolator`,
+  `setDelay` are `PropertyTweener?`, and `CallbackTweener.setDelay` is `CallbackTweener?`. Chained
+  calls need `?.`:
+  `tweener.setTrans(Tween.TRANS_BACK)?.setEase(Tween.EASE_OUT)`. `wrapOrThis` itself is gone — after
+  the inline collapse it had no callers. (`Tween`'s own `wrapOrThis` is untouched: `Tween` is still
+  hand-written and its 12 fluent methods still return a non-null `Tween`.)
+- **iOS gains the whole family.** `MethodTweener` arrives as a class iOS did not host (`setDelay`,
+  `setTrans`, `setEase`); `PropertyTweener` goes from one hand method (`from(value: Color)`) to the
+  generated seven, with `from(value: Any?)` covering the Color case through the iOS Variant argument
+  encoder (`packVariantDesc` boxes a `Color` as `PT_COLOR`); `CallbackTweener` gains `setDelay`; the
+  base `Tweener` gains `Signals.finished` and the companion `fromHandle`/`wrap`.
+- **iOS: `Tweener.setTrans` / `Tweener.setEase` move to the subclasses.** The hand base class carried
+  them for every tweener; Godot declares them on `PropertyTweener` and `MethodTweener` only, and that
+  is where the generated tree puts them. Every tween chain in the demos and `example_project` starts
+  from `tweenProperty(...)`, so they still resolve; `tweenCallback(...)` and `tweenInterval(...)` never
+  had a transition to set.
+- **iOS `Tween.tweenMethod(...)` returns `MethodTweener?`** (it was declared `Tweener?` because no
+  `MethodTweener` existed), matching desktop. That is the one hand edit the iOS `Tween` class needed;
+  the rest of it compiles unchanged against the generated classes, whose primary constructors are
+  public.
+- **`PropertyTweener` and `CallbackTweener` primary constructors are public** (they were `internal` on
+  desktop) — the generator's shape for every retiring class, as `Mesh`, `PackedScene` and `Resource`
+  took before (D4 as amended by D10). Both also gain `@JvmStatic fun fromHandle(handle: GodotHandle)`.
+- `Tweener` and `MethodTweener` are byte-identical to their deleted desktop copies apart from the
+  `internal wrap` parameter (`MemorySegment` → the `RawSegment` alias).
+- The iOS hand glue retires with the cluster: `IosGodot.tweenerSetTrans`, `IosGodot.tweenerSetEase`
+  and `IosGodot.propertyTweenerFromColor` are deleted along with their three cinterop imports. The C
+  shim functions (`kanama_ios_godot_tweener_set_trans` / `_set_ease` /
+  `kanama_ios_godot_property_tweener_from_color`) and their three static method binds stay in
+  `ios/bootstrap/kanama_ios_shim.c` for a later cleanup.
+- **Task 117 P2' is complete.** The wrapper parity gate is down to its permanent contract: `HAND_SHAPED`
+  is **3 classes** — `GodotObject`, `RefCounted`, `GodotCallable`, the three roots P3' turns into
+  `expect`/`actual` — and the allowlist is 68 → **62** (the six `Tweener` lines). The shared tree grows
+  1006 → **1010** classes, `PER_PLATFORM_WRAPPERS` 29 → **25**, and `IOS_UNSUPPORTED_CLASSES` is down to
+  `DirAccess` alone.
+
+### Fixed — `StaticBody3D` sits on the real physics chain on iOS (task 117 P2', 2/3)
+
+- `StaticBody3D` is generated once into the shared wrapper tree (`src/sharedApi/.../api/StaticBody3D.kt`);
+  the generated desktop copy and the hand-written iOS class in `IosGodotApi.kt` are both deleted and
+  `PER_PLATFORM_WRAPPERS` loses the entry. The shared draft is signature-identical to the deleted desktop
+  file (only the `internal wrap` parameter goes `MemorySegment` → the `RawSegment` alias), so **no desktop
+  source change and no int width change**.
+- **iOS: `StaticBody3D : Node3D` becomes `StaticBody3D : PhysicsBody3D : CollisionObject3D : Node3D`** —
+  task 117's decision **D3**, satisfied by construction rather than by a hand edit. The hand class was a
+  thin `Node3D` subclass that re-declared just `collisionLayer` and `collisionMask` because the chain it
+  needed did not exist on iOS; both now come from `CollisionObject3D` with the same `Long` type, the same
+  `ptrcallNoArgsRetUInt32` / `ptrcallWithUInt32Arg` helpers and the same method-bind hashes
+  (`set_collision_layer` 1286410249, `get_collision_layer` 3905245786, and the mask pair), so nothing
+  changes at a `body.collisionLayer` call site.
+- **iOS gains `StaticBody3D`'s own 9 members** — `physicsMaterialOverride`, `constantLinearVelocity`,
+  `constantAngularVelocity` and their `get*`/`set*` pairs — plus the companion `fromHandle`/`wrap`, plus
+  everything the corrected chain brings: `PhysicsBody3D`'s 14 members and `CollisionObject3D`'s 38
+  (`shapeOwner*`, `inputRay*`, `collisionPriority`, `areaEntered`-style binds, …).
+- `AnimatableBody3D`, which the shared tree already declared as `: StaticBody3D`, inherits the corrected
+  chain on iOS with it.
+- The wrapper parity gate drops the class from `HAND_SHAPED` (5 → **4 classes**) and its 14 allowlist
+  lines go (82 → **68**), including the `StaticBody3D | supertype | *` line that carried D3 as a known
+  divergence since P0. The shared tree grows 1005 → **1006** classes, `PER_PLATFORM_WRAPPERS` shrinks
+  30 → 29, and iOS hand-writes 10 collision classes instead of 11.
+
+### Changed — `Image` and `PlaneMesh` generated once — iOS gains 21 `Image` members (task 117 P2', 1/3)
+
+- The first two group-B classes are generated once into the shared wrapper tree
+  (`src/sharedApi/.../api/Image.kt`, `.../PlaneMesh.kt`); all four per-platform copies are deleted and
+  `PER_PLATFORM_WRAPPERS` loses both entries. Group B is the OTHER direction from group A: desktop was
+  already generated and the **iOS** copy was the hand-written one, so every change below lands on iOS —
+  the shared draft is signature-identical to the deleted desktop file (only the `internal wrap` parameter
+  goes `MemorySegment` → the `RawSegment` alias, which is `MemorySegment` on the JVM). **No desktop
+  source change, no int width change, on either class.**
+- **`Image` gains 21 members on iOS** — the shapes the 2026-07 iOS renderer could not emit and task 100's
+  `Packed*Array` / `Rect2i` / `Vector2i` marshalling since can: `blitRect`, `blitRectMask`, `blendRect`,
+  `blendRectMask`, `fillRect`, `getRegion`, `setData`, `computeImageMetrics`, the nine
+  `load{Bmp,Dds,Exr,Jpg,Ktx,Svg,Tga,Webp}FromBuffer` readers (`loadPngFromBuffer` was already hand-wired)
+  and the five `save{Dds,Exr,Jpg,Png,Webp}ToBuffer` writers. The iOS shape gap is unchanged at **3
+  desktop-only members waiting** across 2 classes — no `Image` member was refused, so no `Image.jvm.kt`
+  companion exists.
+- **`Image`'s four companion factories keep their signatures on both platforms**: `create(width,
+  height, useMipmaps, format)`, `createEmpty(...)`, `createFromData(..., data: ByteArray)` and
+  `loadFromFile(path)` are declared exactly as the iOS hand copy declared them — they are Godot statics
+  the generator emits itself, so the hand `KANAMA-IOS-SUGAR` re-add note retires with the file. Their
+  iOS **dispatch** did change: the hand copy called `createFromData` through the static entry point
+  (`ObjectCalls.ptrcallStaticWithTwoLongBoolLongByteArrayArgsRetObject`), while the shared file renders
+  the generator's `NULL_SEGMENT` static marker on the ordinary instance helper
+  (`ptrcallWithTwoIntBoolLongByteArrayArgsRetObject`). That path was a silent no-op on iOS until the
+  `ptrcallDispatch` fix recorded under **Fixed** above; with it, all four factories work on iOS again.
+- `Image.getData()` on iOS no longer passes a `getDataSize()` size hint to
+  `ObjectCalls.ptrcallNoArgsRetByteArray`; it calls the two-argument form, whose iOS `actual` delegates
+  with `-1L` (size read from the returned `PackedByteArray`). Same bytes, one fewer engine call.
+- **`PlaneMesh.fromResource(value: Resource)` takes a non-null `Resource` on iOS** (the hand copy declared
+  `Resource?` and returned `null` for it; desktop always required non-null). It is a
+  `FACTORY_HELPERS["PlaneMesh"]` row now, generated identically for every platform. Zero callers in the
+  repo or the demos. The rest of `PlaneMesh` is 15 members on both sides before and after.
+- `ObjectCalls`: the shared tree reaches 16 more helpers, all already present and audited on both
+  platforms and now `actual` on both — `ptrcallWithRect2iAndColorArg`, `ptrcallWithVector2iAndColorArg`,
+  `ptrcallWithObjectRect2iAndVector2iArgs`, `ptrcallWithTwoObjectRect2iAndVector2iArgs`,
+  `ptrcallWithTwoIntBoolLongArgsRetObject`, `ptrcallWithTwoIntBoolLongByteArrayArgs`,
+  `ptrcallWithTwoIntBoolLongByteArrayArgsRetObject`, `ptrcallWithByteArrayAndDoubleArgRetLong`,
+  `ptrcallWithDoubleArgRetByteArray`, `ptrcallWithBoolAndDoubleArgRetByteArray`,
+  `ptrcallWithTwoBoolAndDoubleArgRetByteArray`, `ptrcallWithBoolAndLongArgs`,
+  `ptrcallWithStringAndDoubleArgRetLong`, `ptrcallWithStringBoolDoubleArgsRetLong`,
+  `ptrcallWithStringTwoBoolAndDoubleArgRetLong`, `ptrcallWithThreeLongArgsRetLong`. The common
+  `expect object ObjectCalls` grows 1415 → 1431. No new native path.
+- The wrapper parity gate drops both classes from `HAND_SHAPED` (7 → **5 classes**) and their 21 allowlist
+  lines go (103 → **82**) — all 21 are `Image | desktop-only | …`; `PlaneMesh` had none. The shared tree
+  grows 1003 → **1005** classes and `PER_PLATFORM_WRAPPERS` shrinks 32 → 30.
+- `docs/reference/generated/ios-backend-handwritten.md` is regenerated and drops four stale rows (two
+  `Image` sugar sites, one `PlaneMesh`, and one for `iosMain/.../StandardMaterial3D.kt`, a file P1'(c)
+  already deleted): 20 → 16 marked sites, SUGAR 9 → 5.
+
 ### Changed — `Viewport` and `Resource` generated once — group A complete (task 117 P1'(c), 3/3) — **desktop source break**
 
 - The last two group-A classes are generated once into the shared wrapper tree

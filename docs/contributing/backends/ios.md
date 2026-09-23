@@ -260,5 +260,43 @@ platformer):
   (use values where a wrong width fails — a small value can mask it, as the int bug
   showed). The matrix + ObjectCalls probe are the ptrcall path's only runtime check
   (`check_call_error`/`check_variant_arg` only cover the Variant path).
+- **The on-device self-test runs in two phases, and a row must sit in the right one.**
+  The C ptrcall matrix and the Kotlin `kanamaIosRuntimeObjectCallsSelfTest` both run at
+  SCENE-level extension init and print
+  `[kanama][ios][c] PTRCALL SELFTEST MATRIX: N passed, M failed` and
+  `[kanama][ios][kn] OBJECTCALLS SELFTEST: N passed, M failed`. A second Kotlin phase,
+  `kanamaIosRuntimeObjectCallsSelfTestFrame`, runs **once on the first frame** — called from
+  `kanama_ios_frame` when the frame counter first reaches 1, before `kanama_ios_runtime_frame()`
+  — and prints `[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): N passed, M failed`. Anything
+  needing a singleton Godot registers *after* `initialize_extensions(INITIALIZATION_LEVEL_SCENE)`
+  belongs in the frame-1 phase: the servers arrive only with `register_server_singletons()`
+  (`servers/register_server_types.cpp:400-401`), so at scene init `getSingleton("RenderingServer")`
+  — and `getSingleton("NativeMenu")`, registered by the same call — returns 0. Resolve every
+  singleton through the phase's `requireSingleton` helper — it records `singleton-present(<name>)`
+  as its own check and the row then skips its dependent calls — because a zero instance is the
+  shared tree's static-method marker and now reaches Godot as a null `this` instead of no-opping.
+  Expected line shapes on a clean run:
+
+  ```text
+  [kanama][ios][c] PTRCALL SELFTEST MATRIX: 70 passed, 0 failed
+  [kanama][ios][kn] OBJECTCALLS SELFTEST: 236 passed, 0 failed
+  [kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 4 passed, 0 failed
+  ```
+
+- **A probe must assert a value the no-op path cannot produce.** This is the rule that decides
+  whether a row is a probe at all. A static routed with a zero instance used to hit the C guard and
+  return `null` / `0` / `false` / `""` / an empty list / a zeroed struct, so a row whose *expected*
+  value is any of those cannot tell the working call from the call that never happened — it keeps
+  passing on the day the feature breaks. Three rows shipped that way and all three were found only
+  once the singleton checks made the self-test honest: `NativeMenu`'s empty Callable, and the two
+  `ShaderIncludeDB` rows, whose "non-empty list / non-empty source" is the *correct* answer under
+  the GL Compatibility renderer — Godot registers the built-in includes only from the
+  RenderingDevice renderer
+  (`servers/rendering/renderer_rd/renderer_scene_render_rd.cpp:1796-1798`). Prefer a named element
+  over "non-empty", a valid RID over an invalid one, and a value with structure (a 64-character
+  lowercase-hex SHA-256) over a truthy one. A default expectation is admissible only when something
+  else in the row already rules the no-op out — a preceding non-default assertion through the same
+  helper, or a `requireSingleton` / `requireObject` check proving the instance is non-zero, which
+  means the static route is not taken. Every phase must contain at least one non-default assertion.
 - **Validate on device.** Every change ends with an on-device run (0 SIGSEGV baseline,
   guardrail logs clean).

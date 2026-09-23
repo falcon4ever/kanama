@@ -24,6 +24,16 @@ object FileAccess {
     fun getSize(path: String): Long =
         ObjectCalls.ptrcallStaticWithStringArgRetLong(getSizeBind, path)
 
+    /**
+     * Mirrors the desktop `FileAccess.fileExists`, down to the dispatch shape: Godot's
+     * `file_exists` is STATIC, so the instance is the `NULL_SEGMENT` static marker and
+     * `ptrcallWithStringArgRetBool` routes it to the static C entry point (task 117 P2' D19).
+     * Added by follow-up 5 for the self-test's `FileAccess.get_sha256` probe, which must record a
+     * FAILURE rather than a skip when its subject file is missing.
+     */
+    fun fileExists(path: String): Boolean =
+        ObjectCalls.ptrcallWithStringArgRetBool(fileExistsBind, NULL_SEGMENT, path)
+
     fun getFileAsBytes(path: String): ByteArray {
         val size = ObjectCalls.ptrcallStaticWithStringArgRetLong(getSizeBind, path)
         return ObjectCalls.ptrcallStaticWithStringArgRetByteArray(getFileAsBytesBind, path, size)
@@ -47,6 +57,9 @@ object FileAccess {
     }
     private val getSizeBind by lazy {
         ObjectCalls.getMethodBind("FileAccess", "get_size", 1597066294L)
+    }
+    private val fileExistsBind by lazy {
+        ObjectCalls.getMethodBind("FileAccess", "file_exists", 2323990056L)
     }
     private val getFileAsBytesBind by lazy {
         ObjectCalls.getMethodBind("FileAccess", "get_file_as_bytes", 659035735L)
