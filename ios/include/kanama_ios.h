@@ -21,6 +21,12 @@ extern "C" {
  * process-wide sink before returning; these two read it. `kanama_ios_fault_count` counts every
  * fault since process start (never reset), `kanama_ios_last_fault` returns a pointer to a static
  * "<entry> <reason> <detail>" buffer holding the most recent one (empty string when none).
+ *
+ * The COUNT is atomic and saturating: faults raised from Godot's worker/physics threads are all
+ * counted, and the counter sticks at INT32_MAX rather than wrapping to a small number that would
+ * read as "healthy". The TEXT is not synchronized — `kanama_ios_last_fault` is a BEST-EFFORT
+ * SNAPSHOT of a plain static buffer and may tear (interleave two faults' text) when two threads
+ * fault at the same moment. Compare the count; read the text as a debugging hint.
  */
 int32_t kanama_ios_fault_count(void);
 

@@ -7,6 +7,7 @@
  */
 
 #include <limits.h>
+#include <stdatomic.h>
 #include <dlfcn.h>
 #include <objc/message.h>
 #include <objc/runtime.h>
@@ -273,21 +274,54 @@ typedef struct {
  *
  * There is deliberately no reset function: faults are never cleared, so a fault in frame 1
  * is still visible in the summary line at the end of the run.
+ *
+ * CONCURRENCY. Godot calls into this shim from more than the main thread (WorkerThreadPool
+ * tasks, the physics thread under `physics/3d/run_on_separate_thread`, a Thread a game starts
+ * itself), so faults can be raised concurrently. The COUNT is therefore an `_Atomic int32_t`:
+ * every fault is counted exactly once, and the device runner's `faults=<N> expected=<N>`
+ * comparison stays trustworthy. `g_last_fault` is deliberately NOT synchronized — it is a plain
+ * buffer written with one snprintf — so `kanama_ios_last_fault()` is a BEST-EFFORT SNAPSHOT
+ * that may tear (interleave two faults' text) when two threads fault at the same moment. That
+ * is the right trade: the count is the contract, the text is a debugging aid, and a lock on the
+ * failure path of every bridge call would be a worse thing to own than a torn string.
  */
-static int32_t g_fault_count = 0;
+#define KANAMA_IOS_FAULT_COUNT_MAX INT32_MAX
+#define KANAMA_IOS_FAULT_PRINT_BUDGET 64
+
+static _Atomic int32_t g_fault_count = 0;
 static char g_last_fault[192] = {0};
 
+/*
+ * Saturating atomic increment; returns the new count. The counter must never WRAP: a wrapped
+ * count reads as a small number (or a negative one), and `faults=<small> expected=7` would pass
+ * a run that faulted two billion times — the exact silence this task exists to remove. So once
+ * the count reaches INT32_MAX it stops moving: the load below means a saturated counter never
+ * reaches the fetch_add at all, and the one thread that crosses the ceiling puts it back.
+ */
+static int32_t kanama_ios_fault_bump(void) {
+    if (atomic_load(&g_fault_count) >= KANAMA_IOS_FAULT_COUNT_MAX) {
+        return KANAMA_IOS_FAULT_COUNT_MAX;
+    }
+    int32_t previous = atomic_fetch_add(&g_fault_count, 1);
+    if (previous >= KANAMA_IOS_FAULT_COUNT_MAX - 1) {
+        atomic_store(&g_fault_count, KANAMA_IOS_FAULT_COUNT_MAX);
+        return KANAMA_IOS_FAULT_COUNT_MAX;
+    }
+    return previous + 1;
+}
+
 static void kanama_ios_fault(const char *entry, const char *reason, const char *detail) {
-    g_fault_count++;
+    int32_t count = kanama_ios_fault_bump();
     snprintf(g_last_fault, sizeof g_last_fault, "%s %s %s", entry, reason, detail ? detail : "");
-    if (g_fault_count <= 64) {  // a tight loop must not flood the console; the COUNT keeps counting
+    // A tight loop must not flood the console; the COUNT keeps counting past the budget.
+    if (count <= KANAMA_IOS_FAULT_PRINT_BUDGET) {
         fprintf(stderr, "[kanama][ios][c] FAULT %s: %s%s%s\n", entry, reason, detail ? " " : "", detail ? detail : "");
         fflush(stderr);
     }
 }
 
 int32_t kanama_ios_fault_count(void) {
-    return g_fault_count;
+    return atomic_load(&g_fault_count);
 }
 
 const char *kanama_ios_last_fault(void) {
@@ -8124,9 +8158,16 @@ int64_t kanama_ios_godot_take_pending_packed(
     void *out_buf,
     int64_t buf_cap
 ) {
-    if (!g_pending_packed_valid || packed_kind != g_pending_packed_kind) {
-        kanama_ios_fault(__func__, "pending-protocol", !g_pending_packed_valid ? "g_pending_packed"
-                         : "g_pending_packed");
+    // Two different protocol violations reach the same -1, and the detail has to tell them
+    // apart: nothing was parked at all (the Kotlin side took without a producer, or took twice),
+    // versus something IS parked but of another kind (the take is answering someone else's
+    // producer). Split rather than a ternary, so each guard reads as the thing it catches.
+    if (!g_pending_packed_valid) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_packed (nothing pending)");
+        return -1;
+    }
+    if (packed_kind != g_pending_packed_kind) {
+        kanama_ios_fault(__func__, "pending-protocol", "g_pending_packed (kind mismatch)");
         return -1;
     }
     KanamaIosPackedKind kind;
@@ -9333,9 +9374,12 @@ int32_t kanama_ios_godot_set_first_node_in_group_text(
         kanama_ios_fault(__func__, "api-unresolved", "SceneTree singleton");
         return 0;
     }
-    if (get_first_node_in_group == NULL || set_text == NULL) {
-        kanama_ios_fault(__func__, "null-bind", get_first_node_in_group == NULL ? NULL
-                         : NULL);
+    if (get_first_node_in_group == NULL) {
+        kanama_ios_fault(__func__, "null-bind", "get_first_node_in_group");
+        return 0;
+    }
+    if (set_text == NULL) {
+        kanama_ios_fault(__func__, "null-bind", "set_text");
         return 0;
     }
 

@@ -236,10 +236,22 @@ what makes the self-test's end-of-run number an assertion rather than a snapshot
 
 **The rule: every guarded early return reports.** In an exported `kanama_ios_*` entry point or
 a `static ..._dispatch` body, an `if (...)` whose body returns must call `kanama_ios_fault(...)`
-first. Return values and signatures never change — the bridge keeps behaving exactly as it did,
-it simply stops doing it quietly. `scripts/check_ios_shim_faults.py` (a `local_ci.sh` stage)
-re-derives the guard list from the source and fails on the first one that does not report, so
-the rule holds for the next guard somebody adds rather than for the ones instrumented that day.
+first — on the same path and textually *before* the return, because a call after the return is
+dead code and a call nested inside a deeper block may never run. Return values and signatures
+never change — the bridge keeps behaving exactly as it did, it simply stops doing it quietly.
+`scripts/check_ios_shim_faults.py` (a `local_ci.sh` stage) re-derives the guard list from the
+source and fails on the first one that does not report, so the rule holds for the next guard
+somebody adds rather than for the ones instrumented that day.
+
+**Scope, precisely.** The contract covers the shim's exported entry points, the `_dispatch`
+bodies behind them, and the static helpers those exported entries call directly — everything a
+Kotlin call passes through on its way to Godot. `switch` `default: return ...` arms in *other*
+static helpers (`kanama_ios_packed_kind`, `kanama_ios_get_virtual_call_data`,
+`kanama_ios_construct_extension_object`, `kanama_ios_extension_create_instance`) are outside it:
+each is a pure classifier or constructor whose "unknown" answer is checked by its caller, and
+that caller is in scope and reports (`unknown-tag`, `api-unresolved`, …) with the detail the
+helper could not name. They are not silent paths; they are the inside of a path whose exit
+reports.
 
 The reason token is one of ten fixed spellings — `api-unresolved`, `null-bind`,
 `bind-lookup-failed`, `null-instance`, `null-handle`, `null-arg`, `pending-protocol`,
@@ -263,33 +275,66 @@ reaches a ptrcall entry point all that is left to say is `null-bind`. Desktop mi
 (`[kanama:kt] FAULT bind-lookup-failed Class.method hash=<hash>` on `System.err`) but carries no
 counter — there is no shim on desktop, and a null bind crashes at the call, which is loud enough.
 
-**The self-test's two expected probes.** The level-2 (`INITIALIZATION_LEVEL_SCENE`) self-test in
-`src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt` ends with two
-deliberate wrong calls: a `getMethodBind("Node3D", "set_visible", 1L)` with a wrong hash
-(asserted to raise the count by exactly one and to leave `bind-lookup-failed` and
-`Node3D.set_visible` in `lastFault()`), then a `ptrcallWithBoolArg` through that null bind
-(asserted `+1` with `null-bind`). Every other row in that file proves a call *works*; these two
-prove that a call that does *not* work says so — a red run that re-executes itself on the device
-on every debug build, so it cannot be forgotten.
+**The self-test's seven expected probes.** The level-2 (`INITIALIZATION_LEVEL_SCENE`) self-test
+in `src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt` ends by calling
+`runFaultProbes`, which makes seven deliberate wrong calls and asserts that each one is
+*reported*:
 
-Both summary lines therefore end with `faults=<count> expected=2`:
+| # | Probe | Reason | Asserted |
+|---|---|---|---|
+| 1 | `getMethodBind("Node3D", "set_visible", 1L)` — a wrong hash | `bind-lookup-failed` | `+1`, and `Node3D.set_visible` in `lastFault()` |
+| 2 | `ptrcallWithBoolArg` through that null bind | `null-bind` | `+1`, reason in `lastFault()` |
+| 3 | `take_pending_utf8` on the drained UTF-8 slot | `pending-protocol` | `-1`, `+1`, buffer named in `lastFault()` |
+| 4 | `take_pending_utf8` on the drained UTF-8 slot, again | `pending-protocol` | `-1`, `+1`, buffer named |
+| 5 | `take_pending_packed` on the drained packed slot | `pending-protocol` | `-1`, `+1`, buffer named |
+| 6 | `take_pending_container_blob` on the drained container slot | `pending-protocol` | `-1`, `+1`, buffer named |
+| 7 | `take_pending_blob` on the drained array-blob slot | `pending-protocol` | `-1`, `+1`, buffer named |
+
+Every other row in that file proves a call *works*; these seven prove that a call that does *not*
+work says so — a red run that re-executes itself on the device on every debug build, so it cannot
+be forgotten.
+
+Rows 3–7 used to sit inline beside their producers as `…(pending slot drained)` rows asserting
+only `take_pending_*(null, 0) == -1`. That `-1` is reachable **only** through the guard that
+reports `pending-protocol`, so they were always red runs of that guard in disguise: a healthy
+build printed five FAULT lines *outside* the probe window and `faults=7 expected=2`, which the
+device runner correctly failed. They are fault probes, so they now live with the probes and say
+so. Their producers, and the non-default assertions that proved those producers worked, stayed
+where they were.
+
+Both summary lines therefore end with `faults=<count> expected=7`:
 
 ```
-[kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=2 expected=2
-[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=2 expected=2
+[kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=7 expected=7
+[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=7 expected=7
 ```
 
-`expected` is the constant `SELFTEST_EXPECTED_FAULTS` declared next to the probes; change it only
-when you change the probes. Release builds run no self-test and print neither number.
+(The counter is never reset, so the frame-1 phase — which raises no faults of its own — reprints
+the same total.) `expected` is the constant `SELFTEST_EXPECTED_FAULTS`, declared immediately
+above `runFaultProbes` with a comment listing the seven, so the number and the things it counts
+are one screen apart and cannot drift. Change it only when you change the probes. Release builds
+run no self-test and print neither summary line.
 
-The probes emit two genuine FAULT lines, so they are **bracketed** by
-`OBJECTCALLS SELFTEST fault-probes begin` / `... end`. `kanama-demos/scripts/ios_device_run.sh`
-fails the device run on any `[kanama][ios][c] FAULT ` line **outside** that window, and on any
-summary line where `faults` and `expected` disagree. Whitelisting the probes by their text instead
-would have made `null-bind` — the most common real fault — permanently invisible, so the window is
-the thing that is trusted, not the reason token. The runner's check can be re-run against any saved
-log with `scripts/ios_device_run.sh --check-console-faults /path/to/console.log`, which is how its
-own red runs are reproduced without a phone.
+The probes emit seven genuine FAULT lines, so they are **bracketed** by exactly one
+`OBJECTCALLS SELFTEST fault-probes begin` / `... end` pair per phase run.
+`kanama-demos/scripts/ios_device_run.sh` fails the device run on any `[kanama][ios][c] FAULT `
+line **outside** that window, on a window that opens and never closes, on a run that opened a
+window but printed no summary line at all, and on any summary line where `faults` and `expected`
+disagree. Whitelisting the probes by their text instead would have made `null-bind` — the most
+common real fault — permanently invisible, so the window is the thing that is trusted, not the
+reason token; and an unterminated window would silently swallow every FAULT line after it, which
+is why the window's own integrity is checked before anything is read relative to it. The runner's
+check can be re-run against any saved log with
+`scripts/ios_device_run.sh --check-console-faults /path/to/console.log`, which is how its own red
+runs are reproduced without a phone.
+
+**The sink under concurrency.** Godot calls into the shim from more than the main thread, so
+`g_fault_count` is an `_Atomic int32_t` bumped with `atomic_fetch_add` and **saturating** at
+`INT32_MAX` — it never wraps, because a wrapped count reads as a small number and
+`faults=<small> expected=7` would pass a run that faulted two billion times. `g_last_fault` is a
+plain buffer written with one `snprintf`, so `kanama_ios_last_fault()` is a **best-effort
+snapshot** that can tear when two threads fault at the same instant. Compare the count; read the
+text as a hint.
 
 ## Rules
 

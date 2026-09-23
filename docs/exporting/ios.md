@@ -320,22 +320,31 @@ The word after the colon is the reason, and it is a fixed token:
 | `unknown-tag` | A ptrcall type tag the shim does not know; the detail carries the number. |
 | `encode-failed` | A container argument could not be encoded for the engine. |
 
-Two of them you will see **on purpose**, and they are clearly bracketed:
+Seven of them you will see **on purpose**, and they are all inside one clearly
+bracketed window:
 
 ```
-[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin (expect 2 FAULT lines)
+[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin (expect 7 FAULT lines)
 [kanama][ios][c] FAULT kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
 [kanama][ios][c] FAULT kanama_ios_godot_ptrcall_dispatch: null-bind
+[kanama][ios][c] FAULT kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
+[kanama][ios][c] FAULT kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
+[kanama][ios][c] FAULT kanama_ios_godot_take_pending_packed: pending-protocol g_pending_packed (nothing pending)
+[kanama][ios][c] FAULT kanama_ios_godot_take_pending_container_blob: pending-protocol g_pending_container_blob
+[kanama][ios][c] FAULT kanama_ios_godot_take_pending_blob: pending-protocol g_pending_blob
 [kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes end
 ```
 
-A debug build's self-test deliberately makes one bad lookup and one call through the
-resulting null bind, so a healthy debug run ends with `faults=2 expected=2` on both
-`OBJECTCALLS SELFTEST` summary lines. That is the fault sink proving it still works.
-**Any FAULT line outside that window is a real one.**
+A debug build's self-test deliberately makes seven bad calls — one lookup with a wrong
+hash, one call through the resulting null bind, and five takes from a pending slot that
+has already been drained (one per pending buffer: the UTF-8 string slot twice, then the
+packed, container-blob and array-blob slots) — so a healthy debug run ends with
+`faults=7 expected=7` on both `OBJECTCALLS SELFTEST` summary lines. That is the fault
+sink proving it still works. **Any FAULT line outside that window is a real one.**
 
-Release builds run no self-test, so a healthy release run prints no FAULT line at all
-and both numbers are `0`.
+Release builds run no self-test at all, so a healthy release run prints no FAULT line
+and neither `OBJECTCALLS SELFTEST` summary line — there is no `faults=`/`expected=` pair
+to read, rather than a pair reading `0`.
 
 `kanama-demos/scripts/ios_device_run.sh` fails the device run when the captured console
 contains a FAULT line outside the probe window, or when a summary line's `faults=` does

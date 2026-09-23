@@ -16,8 +16,19 @@ that the property holds for the NEXT guard somebody adds, not just for the ones 
 that day.
 
 The rule, one line: every `if (...)` whose body returns, inside an exported `kanama_ios_*`
-entry point or a `static ..._dispatch` body, must call `kanama_ios_fault(` in that same block --
-unless the pair is one of the two documented benign returns below.
+entry point or a `static ..._dispatch` body, must call `kanama_ios_fault(` ON THAT PATH, BEFORE
+the return -- unless the pair is one of the two documented benign returns below.
+
+"On that path, before the return" is checked literally, because the two ways to satisfy a
+substring search without satisfying the rule are both things a hurried edit produces:
+
+  * a `kanama_ios_fault(` call that sits AFTER the `return` is dead code and reports nothing;
+  * a call nested inside a deeper block (`if (0) { ... }`, a loop, a `switch` arm) is on a
+    different path and may never run.
+
+So the check tracks brace depth inside the guard's block and requires a call at the block's own
+depth whose offset precedes the first `return` at that same depth. It reads the comment-stripped
+text, so a `kanama_ios_fault(` mentioned in a comment no longer counts either.
 
 Scope is derived, never hand-listed:
 
@@ -171,6 +182,32 @@ def match_brace(code: str, i: int) -> int:
     raise ValueError("unbalanced braces")
 
 
+def reports_before_return(block: str) -> bool:
+    """True when `block` calls kanama_ios_fault( on its own path, before its first return.
+
+    `block` is the comment- and string-stripped guard body: either `{ ... }` or the single
+    statement of a brace-less `if (...) return ...;`. Depth is counted from the block's own
+    level, so a call inside a nested construct does not count, and a call textually after the
+    return does not count.
+    """
+    base = 1 if block.lstrip().startswith("{") else 0
+    depth = 0
+    saw_fault = False
+    for token in re.finditer(r"[{}]|\breturn\b|\bkanama_ios_fault\s*\(", block):
+        text = token.group(0)
+        if text == "{":
+            depth += 1
+        elif text == "}":
+            depth -= 1
+        elif depth != base:
+            continue
+        elif text.startswith("kanama_ios_fault"):
+            saw_fault = True
+        else:  # a `return` at the block's own depth: this path is over
+            return saw_fault
+    return False
+
+
 def in_scope(name: str, is_static: bool) -> bool:
     if name.endswith("_dispatch"):
         return True
@@ -216,6 +253,9 @@ def guarded_returns(src: str):
                 "line": src.count("\n", 0, if_off) + 1,
                 "cond": re.sub(r"\s+", " ", src[cond_open + 1 : cond_close - 1]).strip(),
                 "block": src[j:end],
+                # The stripped twin of "block": what the rule is actually read from, so that a
+                # `kanama_ios_fault(` inside a comment or a string literal cannot satisfy it.
+                "code": code[j:end],
             }
 
 
@@ -247,12 +287,18 @@ def main() -> int:
         if key is not None:
             benign_hits.add(key)
             continue
-        if "kanama_ios_fault(" in guard["block"]:
+        if reports_before_return(guard["code"]):
             reporting += 1
             continue
+        why = (
+            "returns without calling kanama_ios_fault("
+            if "kanama_ios_fault(" not in guard["code"]
+            else "calls kanama_ios_fault( only AFTER the return or inside a nested block, "
+            "so the return is still silent"
+        )
         findings.append(
             f"silent-return {args.shim.name}:{guard['line']} {guard['func']}: "
-            f"if ({guard['cond']}) returns without calling kanama_ios_fault("
+            f"if ({guard['cond']}) {why}"
         )
 
     for func, cond in benign_index:
@@ -279,7 +325,9 @@ def main() -> int:
         print(
             "  Every guarded early return in an exported entry point or a `_dispatch` body must\n"
             "  call kanama_ios_fault(__func__, \"<reason>\", <detail or NULL>) before returning what\n"
-            "  it returns today. Return values and signatures do not change. The reason tokens are\n"
+            "  it returns today -- on the same path and textually BEFORE the return: a call after\n"
+            "  the return is dead, and one inside a nested block may never run. Return values and\n"
+            "  signatures do not change. The reason tokens are\n"
             "  fixed (api-unresolved, null-bind, bind-lookup-failed, null-instance, null-handle,\n"
             "  null-arg, pending-protocol, callable-build, unknown-tag, encode-failed) and are\n"
             "  documented in docs/contributing/backends/ios.md. If the return is genuinely correct\n"
