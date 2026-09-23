@@ -28,6 +28,7 @@ import kotlinx.cinterop.readBytes
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import kotlinx.cinterop.sizeOf
+import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotHandle
@@ -46,6 +47,7 @@ import net.multigesture.kanama.ios.cinterop.KanamaIosTypedArrayArgDesc
 import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned_static
+import net.multigesture.kanama.ios.cinterop.kanama_ios_fault_count
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_singleton
@@ -104,6 +106,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_contai
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_object_handles
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_packed
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
+import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
 import net.multigesture.kanama.types.AABB
@@ -195,6 +198,17 @@ actual object ObjectCalls {
 
   actual fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment =
     MemorySegment.ofAddress(kanama_ios_godot_get_method_bind(className, methodName, hash))
+
+  // Task 124 — the bridge's fault counter, read over the cinterop exports of the C shim's fault
+  // sink. Every guarded early return in the shim reports before returning what it always returned,
+  // so a non-zero count is the difference between "the call did nothing" and "the call did nothing
+  // and nobody noticed". The counter is process-wide and is NEVER reset: a fault in frame 1 is
+  // still in the count at the end of the run, which is what makes the self-test summary line a
+  // usable end-of-run assertion. `lastFault()` is "<entry> <reason> <detail>" for the most recent
+  // one, "" when there has been none.
+  fun faultCount(): Int = kanama_ios_fault_count()
+
+  fun lastFault(): String = kanama_ios_last_fault()?.toKString() ?: ""
 
   // Resolve a Godot engine singleton (Input, Engine, …). Mirrors desktop ObjectCalls;
   // used by the bespoke Input glue (and generated singleton wrappers, longer term).
@@ -38781,6 +38795,12 @@ actual object ObjectCalls {
 // Compatibility renderer the honest answer IS the empty list, which is also the no-op answer.
 // For an INSTANCE row the rule is satisfied by requireSingleton / requireObject below: they prove
 // the instance is non-zero, so the static route is not taken and a default return is a real answer.
+// Task 124 — the number of DELIBERATE faults a healthy debug build produces: the two probes at the
+// end of the level-2 self-test below, and nothing else. Both summary lines print it as
+// `expected=<N>` beside the live `faults=<N>` so kanama-demos/scripts/ios_device_run.sh can compare
+// the two without knowing anything about this file. Change it only when you change the probes.
+private const val SELFTEST_EXPECTED_FAULTS = 2
+
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_objectcalls_selftest")
 fun kanamaIosRuntimeObjectCallsSelfTest() {
@@ -41758,7 +41778,50 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   }
 
-  println("[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed")
+  // ==========================================================================================
+  // Task 124 — THE PERMANENT RED RUN. Two deliberate wrong calls into the C shim, asserted to be
+  // REPORTED. Every other row in this file proves a call WORKS; these two prove that a call that
+  // does NOT work says so, which is the property that was missing when every Godot static was a
+  // silent no-op on iOS for six days and 205 green checks noticed nothing (119 item 35).
+  //
+  // They run on every debug build, on the device, forever — a red run you cannot forget to
+  // re-execute. The cost is two lines of console noise and the `faults=2 expected=2` contract on
+  // the summary lines below; the benefit is that the day the fault sink stops reporting, these
+  // rows go red instead of the whole mechanism quietly ceasing to exist.
+  //
+  // The probes print two real FAULT lines, so they are BRACKETED: the device runner fails the run
+  // on any `[kanama][ios][c] FAULT ` line OUTSIDE this window, which keeps `null-bind` — the most
+  // common real fault — fatal instead of permanently whitelisted.
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin (expect $SELFTEST_EXPECTED_FAULTS FAULT lines)"
+  )
+  val faultsBeforeProbes = ObjectCalls.faultCount()
+
+  // Probe 1: a method bind lookup with a WRONG HASH. Godot returns NULL and the lookup reports
+  // `bind-lookup-failed` with the names and the hash — the one place where that detail exists.
+  val deliberatelyNullBind = ObjectCalls.getMethodBind("Node3D", "set_visible", 1L)
+  check(
+    "fault-probe(bind-lookup-failed counted)",
+    ObjectCalls.faultCount() == faultsBeforeProbes + 1,
+  )
+  check(
+    "fault-probe(bind-lookup-failed names Node3D.set_visible)",
+    ObjectCalls.lastFault().contains("bind-lookup-failed") &&
+      ObjectCalls.lastFault().contains("Node3D.set_visible"),
+  )
+
+  // Probe 2: call through that null bind on a REAL instance. The dispatch body's `method_bind == 0`
+  // guard is the one that used to swallow the whole call; it now reports `null-bind` (no names are
+  // available at call time — probe 1 is where they were).
+  ObjectCalls.ptrcallWithBoolArg(deliberatelyNullBind, n3, false)
+  check("fault-probe(null-bind counted)", ObjectCalls.faultCount() == faultsBeforeProbes + 2)
+  check("fault-probe(null-bind reason)", ObjectCalls.lastFault().contains("null-bind"))
+  println("[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes end")
+
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST: $pass passed, $fail failed " +
+      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS"
+  )
 }
 
 // Debug-gated FIRST-FRAME self-test phase (called exactly once from kanama_ios_frame, when the
@@ -41863,5 +41926,11 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
   } else check("ret-callable(NativeMenu.get_popup_open_callback) (singleton absent)", false)
 
-  println("[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed")
+  // The fault counter is process-wide and never reset, so by frame 1 it still holds exactly the
+  // two deliberate probes from the level-2 phase — unless something in between failed quietly,
+  // which is precisely what this line exists to show.
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed " +
+      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS"
+  )
 }
