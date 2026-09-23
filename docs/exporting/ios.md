@@ -290,6 +290,64 @@ committed scripts, keep device identifiers and Apple team IDs as placeholders.
 Maintainers should keep real values in private handoff notes or their local
 shell environment.
 
+### When You See A FAULT Line
+
+A line like
+
+```
+[kanama][ios][c] FAULT kanama_ios_godot_ptrcall_dispatch: null-bind
+[kanama][ios][c] FAULT kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
+```
+
+means a call into the Kanama iOS bridge did **not** reach Godot and returned its
+default instead. It is never normal in a shipped game. Before this existed, such a
+call simply returned `0` / `null` / an empty list and nothing said anything — a whole
+family of Godot static methods was a no-op on iOS for six days and neither the
+self-tests nor two demo smokes noticed.
+
+The word after the colon is the reason, and it is a fixed token:
+
+| Reason | What went wrong |
+|---|---|
+| `api-unresolved` | The Godot interface function named in the detail was not resolved (an engine version mismatch, or a call before extension init). |
+| `bind-lookup-failed` | `ClassDB` has no method with that class, name and hash — the detail gives all three. Almost always a stale method hash after a Godot upgrade. |
+| `null-bind` | The call ran with a zero `MethodBind`; the lookup that produced it reported `bind-lookup-failed` earlier in the log with the names. |
+| `null-instance` | An instance method was called with a null object. |
+| `null-handle` | An engine object handle (a node, a tween, a signal target) was zero. |
+| `null-arg` | A required string parameter — the detail names it — was null. |
+| `pending-protocol` | A value was collected before the call that produces it succeeded. |
+| `callable-build` | A bound `Callable` could not be constructed for the named method. |
+| `unknown-tag` | A ptrcall type tag the shim does not know; the detail carries the number. |
+| `encode-failed` | A container argument could not be encoded for the engine. |
+
+Two of them you will see **on purpose**, and they are clearly bracketed:
+
+```
+[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin (expect 2 FAULT lines)
+[kanama][ios][c] FAULT kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
+[kanama][ios][c] FAULT kanama_ios_godot_ptrcall_dispatch: null-bind
+[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes end
+```
+
+A debug build's self-test deliberately makes one bad lookup and one call through the
+resulting null bind, so a healthy debug run ends with `faults=2 expected=2` on both
+`OBJECTCALLS SELFTEST` summary lines. That is the fault sink proving it still works.
+**Any FAULT line outside that window is a real one.**
+
+Release builds run no self-test, so a healthy release run prints no FAULT line at all
+and both numbers are `0`.
+
+`kanama-demos/scripts/ios_device_run.sh` fails the device run when the captured console
+contains a FAULT line outside the probe window, or when a summary line's `faults=` does
+not equal its `expected=`. To re-check an existing log by hand:
+
+```sh
+scripts/ios_device_run.sh --check-console-faults /path/to/console.log
+```
+
+If you are chasing a fault, the first FAULT line in the log is the one to read: later
+ones are often consequences of it.
+
 ## Optional Simulator Template Check
 
 Only do this when deliberately using the simulator path. Before simulator work

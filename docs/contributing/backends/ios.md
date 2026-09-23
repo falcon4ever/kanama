@@ -209,6 +209,88 @@ platformer):
 - Prefer `ptrcall` over the Variant `call` path; reserve `call` for varargs/signals.
 - Minimize boundary crossings in hot loops.
 
+## Contract: no silent paths (the fault sink)
+
+`ios/bootstrap/kanama_ios_shim.c` is the entire iOS surface, and its default failure mode
+used to be silence. 131 exported entry points open with a stack of guards — the engine API
+did not resolve, the `MethodBind` is zero, the instance is zero, a C string is NULL, nothing
+is pending — and every one of them returned `0` / `-1` / nothing without a word. That is how
+every Godot static method reached through the shared wrapper tree stayed a no-op on iOS for
+six days behind 205 green self-test checks and two green demo smokes (task 117 P2', 119 item
+35), and how a self-test row passed for the wrong reason because a guard returned quietly
+(item 37).
+
+Since task 124 the shim has one sink, near the top of the file:
+
+```c
+static void kanama_ios_fault(const char *entry, const char *reason, const char *detail);
+int32_t kanama_ios_fault_count(void);      /* never reset */
+const char *kanama_ios_last_fault(void);   /* "<entry> <reason> <detail>", "" when none */
+```
+
+It increments a process-wide counter, stores `"<entry> <reason> <detail>"`, and prints
+`[kanama][ios][c] FAULT <entry>: <reason> <detail>` to stderr for the first 64 faults (a tight
+loop must not flood the console; the **count** keeps counting past 64). There is deliberately
+**no reset function**: a fault in frame 1 is still in the count at the end of the run, which is
+what makes the self-test's end-of-run number an assertion rather than a snapshot.
+
+**The rule: every guarded early return reports.** In an exported `kanama_ios_*` entry point or
+a `static ..._dispatch` body, an `if (...)` whose body returns must call `kanama_ios_fault(...)`
+first. Return values and signatures never change — the bridge keeps behaving exactly as it did,
+it simply stops doing it quietly. `scripts/check_ios_shim_faults.py` (a `local_ci.sh` stage)
+re-derives the guard list from the source and fails on the first one that does not report, so
+the rule holds for the next guard somebody adds rather than for the ones instrumented that day.
+
+The reason token is one of ten fixed spellings — `api-unresolved`, `null-bind`,
+`bind-lookup-failed`, `null-instance`, `null-handle`, `null-arg`, `pending-protocol`,
+`callable-build`, `unknown-tag`, `encode-failed` — and the detail names the specific thing:
+the missing interface pointer, the parameter, `Class.method hash=<hash>`, the tag number.
+They are documented for users in `docs/exporting/ios.md`.
+
+Two guards **deliberately** do not report, each documented in its own function comment and
+listed in the gate's `BENIGN` table (which can only shrink — a stale entry fails the gate):
+
+- `kanama_ios_godot_is_instance_id_valid(0)` — a zero instance id is a legitimate question
+  whose honest answer is "invalid", not a caller bug.
+- the `target == NULL` path in `kanama_ios_godot_ptrcall_ret_callable_dispatch` — an empty
+  (object-less) `Callable` is a legitimate value; desktop's `readCallable` returns null too.
+
+**Bind lookups report at lookup time.** `kanama_ios_godot_get_method_bind` and
+`kanama_ios_godot_get_builtin_method` call the sink with `bind-lookup-failed` and the detail
+`Class.method hash=<hash>` whenever the engine returns NULL — not only when the API itself did
+not resolve. The names and the hash exist there and nowhere else: by the time the zero bind
+reaches a ptrcall entry point all that is left to say is `null-bind`. Desktop mirrors the line
+(`[kanama:kt] FAULT bind-lookup-failed Class.method hash=<hash>` on `System.err`) but carries no
+counter — there is no shim on desktop, and a null bind crashes at the call, which is loud enough.
+
+**The self-test's two expected probes.** The level-2 (`INITIALIZATION_LEVEL_SCENE`) self-test in
+`src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt` ends with two
+deliberate wrong calls: a `getMethodBind("Node3D", "set_visible", 1L)` with a wrong hash
+(asserted to raise the count by exactly one and to leave `bind-lookup-failed` and
+`Node3D.set_visible` in `lastFault()`), then a `ptrcallWithBoolArg` through that null bind
+(asserted `+1` with `null-bind`). Every other row in that file proves a call *works*; these two
+prove that a call that does *not* work says so — a red run that re-executes itself on the device
+on every debug build, so it cannot be forgotten.
+
+Both summary lines therefore end with `faults=<count> expected=2`:
+
+```
+[kanama][ios][kn] OBJECTCALLS SELFTEST: <N> passed, 0 failed faults=2 expected=2
+[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): <N> passed, 0 failed faults=2 expected=2
+```
+
+`expected` is the constant `SELFTEST_EXPECTED_FAULTS` declared next to the probes; change it only
+when you change the probes. Release builds run no self-test and print neither number.
+
+The probes emit two genuine FAULT lines, so they are **bracketed** by
+`OBJECTCALLS SELFTEST fault-probes begin` / `... end`. `kanama-demos/scripts/ios_device_run.sh`
+fails the device run on any `[kanama][ios][c] FAULT ` line **outside** that window, and on any
+summary line where `faults` and `expected` disagree. Whitelisting the probes by their text instead
+would have made `null-bind` — the most common real fault — permanently invisible, so the window is
+the thing that is trusted, not the reason token. The runner's check can be re-run against any saved
+log with `scripts/ios_device_run.sh --check-console-faults /path/to/console.log`, which is how its
+own red runs are reproduced without a phone.
+
 ## Rules
 
 - **No silent stubs.** Every API method must call through `ObjectCalls`. A method with
