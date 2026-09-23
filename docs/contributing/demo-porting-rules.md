@@ -203,6 +203,11 @@ tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2)?.close()
 tween.close()
 ```
 
+Every `Tweener` fluent setter returns the **nullable** self type
+(`setTrans(...): PropertyTweener?`), so chain them with `?.`:
+`tweener.setTrans(Tween.TRANS_BACK)?.setEase(Tween.EASE_OUT)`. The call still
+collapses to the same wrapper when the engine hands back the receiver.
+
 If the script tracks a tween to cancel it later, use `kill()` and drop the
 Kotlin reference. Closing active tweens early can show up as native renderer
 crashes on desktop Metal/MoltenVK rather than as a clean Kotlin exception.

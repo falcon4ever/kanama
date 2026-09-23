@@ -54,6 +54,56 @@ Kotlin/Native shim — so
 freely. The generator emits it in the only three shared-tree shapes that name the
 pointer at all: `internal fun wrap(handle: RawSegment)`, `NULL_SEGMENT` for a static
 receiver or a null object argument, and `private val singleton: RawSegment by lazy`.
+
+`NULL_SEGMENT` in the *receiver* position is the tree's static-method marker
+(`_null_segment()` for an `is_static` method), and the two backends read it
+differently. Desktop/Android pass the null pointer straight to
+`object_method_bind_ptrcall`, which is exactly what Godot expects for a static bind.
+iOS cannot: its C instance entry point `kanama_ios_godot_ptrcall` keeps a deliberate
+null-instance guard, so the iOS `ObjectCalls` routes a zero instance to the separate
+`kanama_ios_godot_ptrcall_static` entry point through the hand-written
+`ptrcallDispatch` helper, which every hand and generated ptrcall member in that file
+calls. Never "fix" a static call site by inventing a receiver, and never drop the
+dispatcher: without it every shared-tree static is a silent no-op on device.
+
+The generator's marker is not the only way a zero instance arises: **a failed singleton
+lookup yields one too, and it now reaches Godot on iOS exactly as it does on desktop** —
+as a null `this`, not as a no-op the C guard swallowed — so a lookup that can fail must be
+checked before its result is used as a receiver. Both `ObjectCalls.getSingleton`
+implementations therefore log loudly when the lookup returns null
+(`[kanama][ios][kn] ERROR: getSingleton("<name>") returned null …` and the `[kanama:kt]`
+equivalent on desktop; Godot's own error print for this does not reach the iOS device console
+capture). They still return the null pointer unchanged — the return shape is public behaviour.
+
+That guard is not unique to `kanama_ios_godot_ptrcall`. Over twenty
+`kanama_ios_godot_*` entry points — the packed-array, array-blob, UTF-8,
+Variant-scalar and object-call shapes an `ObjectCalls` helper reaches for a
+non-generic return — carry the same `instance == 0` early return, and the shared tree
+reaches statics through their helpers too. **The rule: every guarded entry point an
+`ObjectCalls` helper calls gets the `30c949a1` split** — the body in an unguarded
+`static <symbol>_dispatch(...)`, the existing symbol keeping its guard and calling it,
+and a `<symbol>_static(...)` sibling (declared in `ios/include/kanama_ios.h`, the
+cinterop header) calling it with a null instance — **and is named exactly once in
+`ObjectCalls.kt`, inside a private `<entry>Dispatch` function that picks the `_static`
+sibling when the instance is zero.** Never remove an existing guard and never change an
+existing signature to make a static work. `scripts/check_ios_static_dispatch.py` (a
+`local_ci.sh` stage) enforces this: it derives the guarded set from the shim itself —
+by SIGNATURE (`kanama_ios_*` taking both an `int64_t method_bind` and an instance it
+early-returns on), not by name prefix, which is what finally brought
+`kanama_ios_classdb_instantiate_owned` into scope — and fails on any raw call, so the
+next static the generator renders through a new shape is covered without anyone
+remembering this paragraph.
+
+The gate also reads the **shim's own `_dispatch` bodies**, because the Kotlin rule is
+only half the property. A `_dispatch` body is the unguarded half of a split, so it is
+by definition reachable with a zero instance; if it then calls a guarded entry point
+instead of that entry's `_dispatch` body, the early return bites one frame below the
+Kotlin dispatcher and the `_static` sibling above it is a dead end — the result cell
+is never written and the call no-ops exactly as before. Two bodies shipped that way
+(`..._ret_raycast_dict_dispatch` and `..._ret_object_handles_dispatch`, both calling
+`kanama_ios_godot_ptrcall` instead of `kanama_ios_godot_ptrcall_dispatch`). Inside a
+`_dispatch` body, call the callee's `_dispatch` body.
+
 The per-platform generated files keep the JDK/shim spelling, and a genuine
 `const void*` argument still renders as `MemorySegment`: the three desktop-only
 helpers `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
@@ -174,12 +224,23 @@ The wrapper convention on desktop/Android:
   and returns `this` instead of minting a second owning wrapper (chained calls
   such as `tweenAwait(...)?.setTimeout(...)` stay reference-neutral). The
   generator emits this pattern whenever the receiver class conforms to the
-  method's return class; it is the same policy the hand-shaped Tween/Tweener
-  classes use (`wrapOrThis`).
+  method's return class; it is the same policy the hand-shaped `Tween` still
+  uses (`wrapOrThis`). The generated form returns the **nullable** self type
+  (`setTrans(...): PropertyTweener?`), like every other generated object return,
+  so chains take `?.`; `wrapOrThis` returned the non-null self and hid a null
+  engine return. The whole `Tweener` family is generated since task 117 P2'.
 - Wrappers minted from **Variant-path** returns or `fromHandle` casts borrow;
-  a release there underflows. Hand-shaped self-collapse helpers must therefore
+  a release there underflows. Self-collapse must therefore
   sit on a ptrcall object-return helper, never on `callWithVariantArgs`
-  (`PropertyTweener.from` regressed exactly this way once).
+  (`PropertyTweener.from` regressed exactly this way once; its generated form
+  goes through `ptrcallWithVariantArgRetObject` for the same reason). That helper
+  is **not** a `METHOD_CALL_SHAPE_OVERRIDES` entry — that table holds only the two
+  `ClassDB` rows. It comes from a return-type-keyed special case in
+  `_candidate_for_impl` (`scripts/generate_api_wrapper.py`): an `Object` return over
+  a single `Variant` argument picks the ptrcall helper instead of the Variant path
+  when the declared `return_type` is one of `Node` / `PropertyTweener`. Adding a
+  class to that set is how a new self-collapsing `(Variant) -> Object` method gets
+  the ptrcall shape.
 
 The iOS island mirrors the same convention (task 30): the C-shim exposes
 `object_destroy` (`kanama_ios_godot_object_destroy`), `ObjectCalls.destroyObject`
@@ -318,8 +379,9 @@ in `scripts/check_wrapper_generator.py`:
   `IOS_UNSUPPORTED_CLASSES` view) list the classes whose
   generated draft cannot compile on iOS, each with its reason: `DirAccess` (its draft
   references the hand-authored `DirAccessHandle` desktop policy class iOS does not
-  carry) and `MethodTweener` (its generated fluent methods clash with the
-  hand-written iOS `Tweener` glue). `--ios-emit-class <that class>` logs an
+  carry) is the only one left — `MethodTweener` sat here until task 117 P2' retired the
+  hand-written iOS `Tweener` glue its fluent methods clashed with.
+  `--ios-emit-class <that class>` logs an
   `unsupported:` line and skips it. Together with the collision registry these are the only
   by-design exceptions to iOS class-set parity with desktop (task 30); retire an entry by
   porting the desktop policy surface it depends on.

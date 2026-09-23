@@ -331,9 +331,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
         "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
         "validated 114/114)"),
-    "CallbackTweener": WrapperHome("hand", "collision",
-        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
-        "written Tween chaining glue in IosGodotApi.kt"),
     "ConfigFile": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -353,9 +350,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "iOS: hand-written static facade + FileAccessHandle glue in FileAccess.kt (static-method dispatch "
         "subset); the generated draft would clash and still references the desktop hand-shaped "
         "FileAccessHandle surface"),
-    "Image": WrapperHome("generated", "hand",
-        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
-        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
     "ImageTexture": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
@@ -374,9 +368,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "MeshDataTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "MethodTweener": WrapperHome("generated", "unsupported",
-        "iOS: generated setTrans/setEase clash with the hand-written iOS Tweener fluent glue "
-        "(IosGodotApi.kt) the class must subclass"),
     "NoiseTexture2D": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -386,17 +377,11 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ParticleProcessMaterial": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
-    "PlaneMesh": WrapperHome("generated", "hand",
-        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
-        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
     "ProceduralSkyMaterial": WrapperHome("generated", "hand",
         "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
     "ProjectSettings": WrapperHome("generated", "collision",
         "iOS: hand-written singleton (getSettingDouble Variant->Double coercion) in ProjectSettings.kt"),
-    "PropertyTweener": WrapperHome("hand", "collision",
-        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
-        "written Tween chaining glue in IosGodotApi.kt"),
     "RefCounted": WrapperHome("hand", "generated",
         "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit"),
     "ResourceLoader": WrapperHome("hand", "collision",
@@ -408,16 +393,12 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "ShaderMaterial": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "StaticBody3D": WrapperHome("generated", "collision",
-        "iOS: hand-written thin Node3D subclass in IosGodotApi.kt"),
     "SurfaceTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
     "Tween": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Variant tween_property runtime in IosGodotApi.kt"),
-    "Tweener": WrapperHome("generated", "collision",
-        "iOS: hand-written Tween chaining glue in IosGodotApi.kt"),
 }
 
 DESKTOP_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.desktop == "hand")
@@ -1316,6 +1297,9 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "MeshLibrary": FactorySpec(True),
     "OfflineMultiplayerPeer": FactorySpec(True),
     "PackedScene": FactorySpec(True),
+    # Task 117 P2': the retired iOS hand copy's only companion sugar (a Resource downcast); the
+    # rest of the class is generated on both platforms now.
+    "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Resource": FactorySpec(True, (Downcast("fromObject", "GodotObject", False),)),
     "SphereMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "Sprite2D": FactorySpec(True),
@@ -1324,7 +1308,6 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "StandardMaterial3D": FactorySpec(True),
     # Desktop-only generated classes.
     "ParticleProcessMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    "PlaneMesh": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "ProceduralSkyMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     # iOS-only generated classes. `from(value: GodotObject)` is here too: the name is just a field,
     # and leaving the two of them pasted would reorder InputEventKey's companion, whose hand-written
@@ -4308,8 +4291,10 @@ IOS_OBJECTCALLS_HEADER = """\
    * Each helper is a member of `object ObjectCalls` and carries the DESKTOP file's parameter
    * names, so the generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls -- including
    * named arguments -- resolve identically on both platforms and can become one `expect object`
-   * (task 104 step 3). Every helper marshals through the single generic C dispatch
-   * `kanama_ios_godot_ptrcall`, applying the authoritative ptrcall width table (scalar
+   * (task 104 step 3). Every helper marshals through the single generic dispatch
+   * `ptrcallDispatch` (hand-written above the BEGIN marker: `kanama_ios_godot_ptrcall` for an
+   * instance call, `kanama_ios_godot_ptrcall_static` when the instance is the generator's
+   * NULL_SEGMENT static marker), applying the authoritative ptrcall width table (scalar
    * float->double/8B, scalar int->int64/8B, Vector components->GodotReal, Object->8B handle,
    * StringName built C-side). String / StringName / NodePath returns hand the same arg cells to
    * `ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8 read-back, no
@@ -4982,7 +4967,7 @@ def render_ios_helper(
         )
     else:
         body.append(
-            f"kanama_ios_godot_ptrcall(methodBind.address(), instance.address(), "
+            f"ptrcallDispatch(methodBind.address(), instance.address(), "
             f"{types_arg}, {ptrs_arg}, {n}, {ret_tag}, {ret_ptr})"
         )
         body.append("Unit" if read_expr is None else read_expr)
