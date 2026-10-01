@@ -80,17 +80,13 @@ subprojects {
 // the desktop/Android JVM and the two iOS Kotlin/Native slices (task 104 step 3).
 // `:ios-runtime` was this module's second half until step 3 and no longer exists.
 //
-// Two shared source directories, and the difference matters:
-//   src/commonMain/kotlin  the KMP COMMON fragment -- the value types, GodotHandle, the generated
-//                          real_t and the `expect` seams (RawSegment/NULL_SEGMENT, BuiltinCalls,
-//                          ObjectCalls). The compiler proves every backend implements these.
-//   src/sharedApi/kotlin   the generated wrapper tree: ONE set of sources compiled per platform
-//                          (a srcDir of jvmMain and iosMain, copied for Android), NOT common code
-//                          -- it still names per-platform classes (GodotSignal, Engine, MainThread), which a
-//                          common source file may not name (task 117 P4'). That the tree's calls exist
-//                          on both backends follows from the ObjectCalls seam above plus
-//                          scripts/check_objectcalls_parity.py, which holds the generated `expect`
-//                          list to the set of helpers the tree actually calls.
+// One shared source directory, src/commonMain/kotlin: the KMP COMMON fragment. It holds the value
+// types, the generated real_t, the `expect` seams (RawSegment/NULL_SEGMENT, BuiltinCalls,
+// ObjectCalls, ObjectRuntime) AND, since task 117 P4', the whole Godot API wrapper tree under
+// net/multigesture/kanama/api: the generated classes, the hand roots (GodotObject, RefCounted,
+// GodotCallable) and the `expect` classes the tree names (GodotSignal/SignalConnection,
+// MainThread). `compileCommonMainKotlinMetadata` compiles it on its own, which is the proof that
+// the API is platform-neutral; the compiler proves every backend implements each `expect`.
 apply(plugin = "org.jetbrains.kotlin.multiplatform")
 
 apply(plugin = "com.google.devtools.ksp")
@@ -260,7 +256,8 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     val commonMain by getting {
       // The REAL common fragment (task 104 step 3 parcel C'): src/commonMain/kotlin holds the
       // value types, GodotHandle and the expect seams (RawSegment / NULL_SEGMENT, BuiltinCalls,
-      // ObjectCalls), plus the generated real_t. Everything here type-checks with no platform
+      // ObjectCalls, ObjectRuntime), the generated real_t, and since task 117 P4' the whole API
+      // wrapper tree (net/multigesture/kanama/api). Everything here type-checks with no platform
       // declaration in sight — K2 resolves a common source file against common code only, even
       // inside a platform compilation — which is what makes the compiler the proof that both
       // backends implement every declaration in it.
@@ -271,11 +268,6 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
       }
     }
     val jvmMain by getting {
-      // The generated Godot API wrapper tree (task 103): ONE set of sources, compiled by this
-      // target and by the two iOS targets (and copied through the PanamaPort remap for Android).
-      // It is not common code — it still names per-platform classes (GodotSignal, Engine, MainThread),
-      // which a common source file may not name (task 117 P4′).
-      kotlin.srcDir("src/sharedApi/kotlin")
       kotlin.srcDir(generateKanamaRealSegment)
       dependencies { implementation(project(":annotations")) }
     }
@@ -289,10 +281,7 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     // Kotlin/Native runtime: ObjectCalls, BuiltinCalls, the java.* shims, the per-platform
     // wrappers). Spelled out rather than left to the default hierarchy template, which is also
     // what lets its metadata compilation be disabled by name below.
-    val iosMain by creating {
-      dependsOn(commonMain)
-      kotlin.srcDir("src/sharedApi/kotlin")
-    }
+    val iosMain by creating { dependsOn(commonMain) }
     // Both iOS targets refine iosMain and compile the consumer project's scripts, identically.
     for (name in listOf("iosArm64Main", "iosSimulatorArm64Main")) {
       named(name) {

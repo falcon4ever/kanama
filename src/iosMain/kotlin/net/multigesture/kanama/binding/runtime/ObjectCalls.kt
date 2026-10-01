@@ -4109,10 +4109,10 @@ actual object ObjectCalls {
     ptrcallRetTypedByteArrayList(methodBind, instance, null, null, 0)
   }
 
-  fun ptrcallNoArgsRetCallable(methodBind: MemorySegment, instance: MemorySegment): GodotCallable? =
-    memScoped {
-      ptrcallRetCallable(methodBind, instance, null, null, 0)
-    }
+  actual fun ptrcallNoArgsRetCallable(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): GodotCallable? = memScoped { ptrcallRetCallable(methodBind, instance, null, null, 0) }
 
   actual fun ptrcallNoArgsRetDictionary(
     methodBind: MemorySegment,
@@ -7861,7 +7861,7 @@ actual object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetCallable(
+  actual fun ptrcallWithIntArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -18808,7 +18808,7 @@ actual object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetCallable(
+  actual fun ptrcallWithRIDArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20634,7 +20634,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntArgsRetCallable(
+  actual fun ptrcallWithRIDIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26626,7 +26626,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntArgsRetCallable(
+  actual fun ptrcallWithStringIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -36233,7 +36233,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTypedMaterialListArg(
+  actual fun ptrcallWithTypedMaterialListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Material>,
@@ -42018,7 +42018,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // task 117 P2' follow-up — SHARED-TREE STATIC dispatch (the ptrcallDispatch fix above). These
   // rows call the generated wrapper API, NOT the hand-written ptrcallStatic* helpers: every
-  // `is_static` method in src/sharedApi renders `NULL_SEGMENT` as the instance, and before the fix
+  // `is_static` method in the shared tree renders `NULL_SEGMENT` as the instance, and before the
+  // fix
   // the iOS C instance entry point early-returned on a null instance, so all 72 such call sites
   // across 36 shared classes were silent no-ops (null / 0 / default) on device while passing on
   // desktop. A regression that drops the dispatcher fails every row here.

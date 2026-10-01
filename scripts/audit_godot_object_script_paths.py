@@ -18,7 +18,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
-GODOT_OBJECT = ROOT / "src/sharedApi/kotlin/net/multigesture/kanama/api/GodotObject.kt"
+GODOT_OBJECT = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt"
 DESKTOP_OBJECT_RUNTIME = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectRuntime.kt"
 
 

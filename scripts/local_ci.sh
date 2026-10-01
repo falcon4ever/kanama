@@ -376,12 +376,6 @@ stage "iOS PT tag table parity (five copies, task 119 item 30)"
 # only at the shim's tag dispatch on a phone. This gate is the comparison.
 python3 "$ROOT_DIR/scripts/check_pt_tag_tables.py"
 
-stage "hand-shaped wrapper parity (desktop vs iOS, task 117)"
-# The remaining hand-shaped classes (the gate prints the count) must keep identical public shapes before they can become
-# expect/actual; every known divergence is listed with its decision in the allowlist, which can
-# only shrink (a stale line fails too).
-python3 "$ROOT_DIR/scripts/check_wrapper_parity.py"
-
 stage "shell script lint (shellcheck)"
 # Hard-required (the unzip/ios_template_preflight precedent): the gate itself
 # prints install instructions and exits 2 when shellcheck is absent.

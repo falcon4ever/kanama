@@ -12210,7 +12210,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTypedMaterialListArg(
+  actual fun ptrcallWithTypedMaterialListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Material>,
@@ -23921,7 +23921,10 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallNoArgsRetCallable(methodBind: MemorySegment, instance: MemorySegment): GodotCallable? {
+  actual fun ptrcallNoArgsRetCallable(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): GodotCallable? {
     Arena.ofConfined().use { arena ->
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
@@ -23933,7 +23936,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntArgRetCallable(
+  actual fun ptrcallWithIntArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -23953,7 +23956,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDArgRetCallable(
+  actual fun ptrcallWithRIDArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23973,7 +23976,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDIntArgsRetCallable(
+  actual fun ptrcallWithRIDIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23997,7 +24000,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringIntArgsRetCallable(
+  actual fun ptrcallWithStringIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,

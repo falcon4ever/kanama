@@ -635,21 +635,18 @@ def stale_hand_root_copies() -> list[str]:
     return problems
 
 
-SHARED_SOURCE_ROOTS = (ROOT / "src/commonMain/kotlin", ROOT / "src/sharedApi/kotlin")
+SHARED_SOURCE_ROOTS = (ROOT / "src/commonMain/kotlin",)
 
 
 def check_shared_tree_pointer() -> int:
-    """No file under src/commonMain or src/sharedApi may name a `java.lang.foreign` type
-    (task 104 step 3).
+    """No file under src/commonMain may name a `java.lang.foreign` type (task 104 step 3).
 
-    Both roots are compiled on every platform: src/commonMain/kotlin is the module's KMP common
-    fragment (the value types, GodotHandle, the expect seams), where a JDK package cannot be
-    declared or `expect`ed at all, and src/sharedApi/kotlin is the generated wrapper tree, compiled
-    per platform by the JVM and iOS targets and copied through the Android remap. The raw engine
-    pointer therefore travels under Kanama's own name,
-    `net.multigesture.kanama.binding.runtime.RawSegment`, which each platform aliases. A hand edit
-    or a generator regression that puts the JDK name back fails here, next to the edit, instead of
-    in the iOS compile.
+    src/commonMain/kotlin is the module's KMP common fragment -- the value types, GodotHandle, the
+    expect seams and, since task 117 P4', the whole generated wrapper tree -- compiled on every
+    platform, where a JDK package cannot be declared or `expect`ed at all. The compiler already
+    refuses one there; this gate names the file next to the edit, before a Gradle run, and keeps
+    the message pointing at the fix. The raw engine pointer travels under Kanama's own name,
+    `net.multigesture.kanama.binding.runtime.RawSegment`, which each platform aliases.
 
     Comments are stripped first: the `expect` files' KDoc names the JVM type on purpose when it
     explains the `actual typealias`, and prose is not what this gate is about (the Android remap
