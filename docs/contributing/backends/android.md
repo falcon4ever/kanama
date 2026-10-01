@@ -77,10 +77,11 @@ are in [Version Support → Validated Android versions](../../reference/version-
 
 The fork is upstream PanamaPort plus a short list of Kanama patches, rebased onto each upstream
 release rather than left to drift. Android OS updates do not follow Godot's schedule: in
-September 2026 a Pixel 7 updated to **Android 17** and every Kanama app aborted in the FFI
-bootstrap (`Check failed: IsExceptionPending()` in `MethodHandles.reflectAs`, called from
-PanamaPort's hidden-field reflection), while upstream had shipped Android 17 support in
-`v0.1.4`/`v0.1.5` months earlier and the fork was still on `v0.1.3`. Fork
+September 2026 a Pixel 7 took an **Android 17 update** (build `CP3A.260905.009`) and every Kanama
+app aborted in the FFI bootstrap (`Check failed: IsExceptionPending()` in `MethodHandles.reflectAs`, called from
+PanamaPort's hidden-field reflection) — the same phone had passed the full matrix on an earlier
+Android 17 build two weeks before — while upstream had shipped the Android 17 QPR fixes in
+`v0.1.4`/`v0.1.5` and the fork was still on `v0.1.3`. Fork
 `0.1.5-kanama-r8.1` (upstream `v0.1.5`) fixed it with no Kanama code change.
 
 The Kanama patches carried on top of upstream (none of them is in upstream `v0.1.5`):
