@@ -35,6 +35,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
+import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
@@ -3811,23 +3812,33 @@ actual object ObjectCalls {
   }
 
   /**
-   * Generic Variant `Object.call` dispatch.
-   *
-   * [owned] selects the return decode for calls that mint a fresh object whose sole reference lives
-   * in the return Variant (e.g. ClassDB.class_call_static returning a freshly constructed
-   * Resource). With the borrowed default the C side extracts the handle and destroys the Variant,
-   * freeing a RefCounted before Kotlin sees it. When [owned] is true the C side retains a
-   * RefCounted result before that destroy and reports it, so it comes back as the owning
-   * [RefCounted] wrapper (close() releases — task-31 return-ownership); non-RefCounted objects stay
-   * borrowed. Owned callers should use the named [callWithVariantArgsOwned] wrapper so the
-   * generator can select it as a dispatch helper via `METHOD_CALL_SHAPE_OVERRIDES`, mirroring
-   * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate.
+   * Generic Variant `Object.call` dispatch with the borrowed return decode — the `expect object
+   * ObjectCalls` member (task 117 D27). It carries no `owned` flag: an `expect` declaration takes
+   * no default argument (D24), so the owned decode is its own member, [callWithVariantArgsOwned],
+   * and the flag is a private detail of this file (desktop has the same split).
    */
-  fun callWithVariantArgs(
+  actual fun callWithVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     args: List<Any?>,
-    owned: Boolean = false,
+  ): Any? = callWithVariantArgs(methodBind, instance, args, owned = false)
+
+  /**
+   * The body of [callWithVariantArgs] and [callWithVariantArgsOwned].
+   *
+   * [owned] selects the return decode for calls that mint a fresh object whose sole reference lives
+   * in the return Variant (e.g. ClassDB.class_call_static returning a freshly constructed
+   * Resource). With the borrowed decode the C side extracts the handle and destroys the Variant,
+   * freeing a RefCounted before Kotlin sees it. When [owned] is true the C side retains a
+   * RefCounted result before that destroy and reports it, so it comes back as the owning
+   * [RefCounted] wrapper (close() releases — task-31 return-ownership); non-RefCounted objects stay
+   * borrowed.
+   */
+  private fun callWithVariantArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    args: List<Any?>,
+    owned: Boolean,
   ): Any? = memScoped {
     val (tags, ptrs, n) = encodeVariantArgs(args)
     val outInt = alloc<LongVar>()
@@ -36225,7 +36236,7 @@ actual object ObjectCalls {
   fun ptrcallWithTypedMaterialListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<*>,
+    values: List<Material>,
   ) = memScoped {
     val c0 = packTypedObjectArrayDesc(values)
     val types = allocArray<IntVar>(1)

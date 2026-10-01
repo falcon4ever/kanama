@@ -36,7 +36,7 @@ import net.multigesture.kanama.types.Vector4
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
- * Excluded, and listed in the gate as such: `callWithVariantArgs`, `ptrcallNoArgsRetCallable`,
+ * Excluded, and listed in the gate as such: `ptrcallNoArgsRetCallable`,
  * `ptrcallWithIntArgRetCallable`, `ptrcallWithRIDArgRetCallable`,
  * `ptrcallWithRIDIntArgsRetCallable`, `ptrcallWithStringIntArgsRetCallable`,
  * `ptrcallWithTypedMaterialListArg` -- their signatures name a wrapper class the common fragment
@@ -142,6 +142,8 @@ expect object ObjectCalls {
     secondBool: Boolean,
     wrapper: (RawSegment) -> T?,
   ): List<T>
+
+  fun callWithVariantArgs(methodBind: RawSegment, instance: RawSegment, args: List<Any?>): Any?
 
   fun callWithVariantArgsOwned(methodBind: RawSegment, instance: RawSegment, args: List<Any?>): Any?
 

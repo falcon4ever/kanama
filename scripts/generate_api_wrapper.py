@@ -3361,16 +3361,6 @@ COMMON_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
 # not delete an entry because the class stopped being hand-written — delete it when it is common.
 PLATFORM_ONLY_SIGNATURE_TYPES = ("GodotCallable", "Material")
 
-# Referenced helpers with a DEFAULT ARGUMENT, which cannot be `expect` members. An `actual` may not
-# restate a default ("Actual function cannot have default argument values. They must be declared in
-# the expected function"), so the default would have to live on the `expect` declaration -- and
-# ANDROID compiles a copy of these same sources with no common fragment at all (the `*.expect.kt`
-# files are skipped, the `actual ` modifiers stripped), so on that lane the default would simply be
-# gone and every caller that omits the argument would fail to compile. Keeping the helper out of the
-# `expect` object keeps one default in one place on all four lanes; the desktop/iOS parameter-name
-# parity of these helpers is still gated by scripts/check_objectcalls_parity.py.
-EXPECT_DEFAULT_ARG_EXCLUSIONS = {"callWithVariantArgs"}
-
 # Desktop OVERLOADS that stay platform-only. Desktop declares two type-differentiated overloads of
 # these two helpers (`value: Int` / `value: Long`, `path: NodePath` / `path: String`) and iOS has
 # only the one the shared tree calls, so the other cannot be an `expect` member -- an `expect`
@@ -3574,14 +3564,14 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
             excluded_overloads.append(signature)
             continue
         if "=" in _read_parens(signature, signature.index("(")):
-            if name not in EXPECT_DEFAULT_ARG_EXCLUSIONS:
-                raise SystemExit(
-                    f"{name}: the desktop signature carries a default argument, which an `expect` "
-                    "member cannot express on the Android lane; add it to "
-                    "EXPECT_DEFAULT_ARG_EXCLUSIONS in scripts/generate_api_wrapper.py"
-                )
-            excluded.append(name)
-            continue
+            # An `expect` member takes no default argument (task 117 D24): the Android lane skips
+            # `*.expect.kt` and strips `actual`, so the default would not exist there. Split the
+            # desktop helper into overloads (`callWithVariantArgs` / `callWithVariantArgsOwned` is
+            # the precedent) instead of excluding it from the seam.
+            raise SystemExit(
+                f"{name}: the desktop signature carries a default argument, which an `expect` "
+                "member cannot carry (task 117 D24); split it into overloads"
+            )
         members.append(f"  {signature}")
     members.sort()
     excluded = sorted(set(excluded))
@@ -3609,8 +3599,7 @@ def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
         "Excluded, and listed in the gate as such: "
         + ", ".join(f"`{name}`" for name in excluded)
         + " -- their signatures name a wrapper class the common fragment cannot see (per-platform "
-        "or shared-tree, until task 117 moves the tree to commonMain) or carry a default argument (which an `expect` "
-        "member cannot express on the Android lane)."
+        "or shared-tree, until task 117 moves the tree to commonMain)."
         if excluded
         else "No referenced helper is excluded."
     ) + overload_note
@@ -4418,6 +4407,18 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
     if kind in IOS_TYPED_ARRAY_ARGS:
         param_type, helper = IOS_TYPED_ARRAY_ARGS[kind]
         return (param_type, "PT_TYPED_ARRAY_BLOB", [f"val {c} = {helper}({a})"], f"{c}.reinterpret<CPointed>()")
+    if kind == "TypedMaterialArray":
+        # The one typed-object-array arg desktop spells with its element class:
+        # `ptrcallWithTypedMaterialListArg(values: List<Material>)` (119 finding 18). Since task 117
+        # P4' the helper is an `expect object ObjectCalls` member -- `Material` is common code now --
+        # so iOS must spell the parameter TYPE exactly like desktop. The descriptor is the same
+        # untyped object Array as below; only the Kotlin parameter type differs.
+        return (
+            "List<Material>",
+            "PT_TYPED_ARRAY_BLOB",
+            [f"val {c} = packTypedObjectArrayDesc({a})"],
+            f"{c}.reinterpret<CPointed>()",
+        )
     typed_object_element = typed_object_array_element_any(kind)
     if typed_object_element is not None:
         # Array[Object subclass] arg: the wrapper passes List<Element>; List is covariant, so the
