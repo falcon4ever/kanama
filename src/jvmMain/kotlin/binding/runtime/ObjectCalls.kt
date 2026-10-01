@@ -189,13 +189,28 @@ actual object ObjectCalls {
     return segment
   }
 
-  /** Looks up a method bind by class name, method name, and ABI hash. Returns NULL on mismatch. */
-  actual fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment =
-    classdbGetMethodBind.invoke(
-      GodotStrings.makeStringName(className),
-      GodotStrings.makeStringName(methodName),
-      hash,
-    ) as MemorySegment
+  /**
+   * Looks up a method bind by class name, method name, and ABI hash. Returns NULL on mismatch.
+   *
+   * A failed lookup is LOUD (task 124, the desktop half). The iOS shim carries a full fault sink
+   * with a counter because its guarded early returns turn a bad bind into a silent no-op; desktop
+   * needs no counter — there is no shim, and a null bind crashes at the ptrcall, which is already
+   * loud. What desktop DID lack is the one line that says WHICH bind failed, printed at the lookup
+   * where the class, the method and the hash all exist. After a Godot bump that is the difference
+   * between "a hash moved" and a stack trace in ptrcall with no names in it.
+   */
+  actual fun getMethodBind(className: String, methodName: String, hash: Long): MemorySegment {
+    val bind =
+      classdbGetMethodBind.invoke(
+        GodotStrings.makeStringName(className),
+        GodotStrings.makeStringName(methodName),
+        hash,
+      ) as MemorySegment
+    if (bind.address() == 0L) {
+      System.err.println("[kanama:kt] FAULT bind-lookup-failed $className.$methodName hash=$hash")
+    }
+    return bind
+  }
 
   actual fun constructObject(className: String): MemorySegment {
     val instance =

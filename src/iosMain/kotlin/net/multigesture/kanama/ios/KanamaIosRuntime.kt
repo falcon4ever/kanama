@@ -141,12 +141,15 @@ internal expect fun registerKanamaIosProjectScripts()
 
 internal object KanamaIosRuntime {
   private const val PROBE_GROUP = "kanama_ios_probe"
+  private const val PROBE_LABEL_GIVE_UP_FRAME = 120
   private const val PROBE_SCRIPT_PATH = "res://kanama_ios_probe.kt"
   private const val LABEL_SET_TEXT_HASH = 83702148L
 
   private var initialized = false
   private var frameCount = 0
   private var probeLabelUpdated = false
+  // Set once the probe label has had PROBE_LABEL_GIVE_UP_FRAME frames to appear and did not.
+  private var probeLabelGivenUp = false
   private var projectRegistryLoaded = false
   private var nextHandle = 1L
   private var labelSetTextBind = 0L
@@ -188,7 +191,7 @@ internal object KanamaIosRuntime {
     // Resume any coroutines parked on MainThread.awaitNextFrame() once per engine frame.
     // Runs every frame (before the probe-label early-return) so frame-based waits keep advancing.
     MainThread.pumpNextFrame()
-    if (probeLabelUpdated) {
+    if (probeLabelUpdated || probeLabelGivenUp) {
       return
     }
     frameCount += 1
@@ -197,7 +200,14 @@ internal object KanamaIosRuntime {
     ) {
       probeLabelUpdated = true
       log("updated grouped probe label on frame=$frameCount")
-    } else if (frameCount == 1 || frameCount == 30 || frameCount == 120) {
+    } else if (frameCount >= PROBE_LABEL_GIVE_UP_FRAME) {
+      // Only the iOS example project (scripts/ios_visual_smoke.sh --kanama-probe) carries a node in
+      // the probe group, as a static Label in its main scene, so it is found on frame 1. Every
+      // other game has none, and before task 124 follow-up 3 this poll ran a SceneTree
+      // get_first_node_in_group ptrcall on EVERY frame for the game's whole life. Stop asking.
+      probeLabelGivenUp = true
+      log("probe label group absent after $PROBE_LABEL_GIVE_UP_FRAME frames; not retrying")
+    } else if (frameCount == 1 || frameCount == 30) {
       log("waiting for grouped probe label on frame=$frameCount")
     }
   }
