@@ -17,12 +17,10 @@ import kotlinx.cinterop.get
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
-import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_hide
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_local_mouse_position
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_viewport_rect
@@ -94,7 +92,6 @@ import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.resume
 import kotlin.math.PI
 import kotlin.math.pow
 import kotlin.random.Random
@@ -130,59 +127,6 @@ class KanamaScope : CoroutineScope {
 
 interface KanamaCoroutineOwner {
     val kanamaScope: KanamaScope
-}
-
-// KANAMA-IOS-HANDWRITTEN: [platform] MainThread.post is a no-op shim; on iOS main thread dispatch is handled by Godot's frame loop, not a JVM executor.
-object MainThread {
-    // Continuations parked by [awaitNextFrame], resumed once per engine frame by
-    // KanamaIosRuntime.frame() via [pumpNextFrame]. Accessed only on the engine main thread
-    // (awaitNextFrame runs under Dispatchers.Main; frame() runs on the engine main thread).
-    private val nextFrameContinuations = mutableListOf<CancellableContinuation<Unit>>()
-    private val nextFrameTasks = mutableListOf<() -> Unit>()
-
-    fun post(action: () -> Unit) {
-        action()
-    }
-
-    // Run [action] after at least one engine frame pump (mirrors desktop MainThread.postNextFrame).
-    fun postNextFrame(action: () -> Unit) {
-        nextFrameTasks.add(action)
-    }
-
-    // Run [action] after at least [frames] engine frame pumps (mirrors desktop postAfterFrames).
-    fun postAfterFrames(frames: Int, action: () -> Unit) {
-        if (frames <= 0) {
-            action()
-            return
-        }
-        postNextFrame { postAfterFrames(frames - 1, action) }
-    }
-
-    // Suspend until the next engine frame is pumped (mirrors desktop MainThread.awaitNextFrame).
-    // Frame-based waiting is robust to device frame rate, unlike a wall-clock delay.
-    suspend fun awaitNextFrame() {
-        suspendCancellableCoroutine { continuation ->
-            nextFrameContinuations.add(continuation)
-            continuation.invokeOnCancellation { nextFrameContinuations.remove(continuation) }
-        }
-    }
-
-    // Once per engine frame: run parked tasks, then resume parked continuations. Both are
-    // snapshot-then-cleared so work re-queued by a resumed coroutine/task waits for the next frame
-    // (matching desktop's one-step-per-frame semantics).
-    internal fun pumpNextFrame() {
-        if (nextFrameTasks.isNotEmpty()) {
-            val tasks = nextFrameTasks.toList()
-            nextFrameTasks.clear()
-            for (task in tasks) task()
-        }
-        if (nextFrameContinuations.isEmpty()) return
-        val pending = nextFrameContinuations.toList()
-        nextFrameContinuations.clear()
-        for (continuation in pending) {
-            if (continuation.isActive) continuation.resume(Unit)
-        }
-    }
 }
 
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
