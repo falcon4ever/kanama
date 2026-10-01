@@ -235,7 +235,7 @@ actual object ObjectCalls {
   // Destroy an engine Object immediately (GDExtension object_destroy). Mirrors desktop
   // ObjectCalls.destroyObject; RefCounted.close()/releaseHandle call it only after
   // unreference() returned true (refcount hit zero) — task 31 ownership mirror.
-  fun destroyObject(instance: MemorySegment) {
+  actual fun destroyObject(instance: MemorySegment) {
     if (instance.address() == 0L) return
     kanama_ios_godot_object_destroy(instance.address())
   }
@@ -1071,7 +1071,7 @@ actual object ObjectCalls {
           if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
         }
       }
-    GodotCallable(GodotObject(handle.value), method)
+    GodotCallable(GodotObject(GodotHandle(MemorySegment.ofAddress(handle.value))), method)
   }
 
   // task 100 (parcel 2) — Variant-scalar return on any audited arg shape. Same arg cells as
@@ -3717,6 +3717,75 @@ actual object ObjectCalls {
     )
   }
 
+  // ── The root Object shapes the shared GodotObject calls that the generator does not emit (task
+  // 117 P3′, D22). The other root shapes (indexed get/set, get_meta, callv, is_connected, tr/tr_n)
+  // are generated below the BEGIN marker from the root `Object` methods
+  // (`collect_root_object_shapes`); these four are hand-written because they delegate to the shim
+  // paths iOS already proved on a device, or carry a desktop-only helper name. All four are listed
+  // in IOS_HANDWRITTEN_HELPERS. None takes a guarded `method_bind` + instance C entry, so the
+  // static-dispatch gate does not apply; every guarded early return they reach reports to the
+  // shim's fault sink (task 124).
+
+  // Object.connect(signal, Callable(target, method), flags) for GodotObject.connect. Delegates to
+  // the shim's object+method connect (`kanama_ios_godot_object_connect`: source object, signal,
+  // target object, method, flags — it builds the Callable, boxes it into a Variant and calls the
+  // Object.connect bind it resolves itself, so [methodBind] is not consulted; Object.connect is the
+  // only API method of this shape). Returns the Godot Error (0 == OK), -1 when the shim refused.
+  actual fun ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    flags: Long,
+  ): Long =
+    IosGodot.objectConnect(
+      instance.address(),
+      name,
+      callableObject.address(),
+      callableMethod,
+      flags,
+    )
+
+  // Object.connect(signal, Callable(target, method).bindv(boundArgs), flags) for
+  // GodotObject.connectBound — the existing bound-Callable path above ([connectBound]); the shim
+  // resolves the Object.connect bind itself, so [methodBind] is not consulted.
+  actual fun ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    boundArgs: List<Any?>,
+    flags: Long,
+  ): Long = connectBound(instance, name, callableObject, callableMethod, boundArgs, flags)
+
+  // Object.disconnect(signal, Callable(target, method).bindv(boundArgs)) for
+  // GodotObject.disconnectBound — the existing symmetric teardown above ([disconnectBound]).
+  actual fun ptrcallWithStringNameAndBoundCallableArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    boundArgs: List<Any?>,
+  ) {
+    disconnectBound(instance, name, callableObject, callableMethod, boundArgs)
+  }
+
+  // Object.add_user_signal(signal, arguments) for GodotObject.addUserSignal. The generator names
+  // this shape `ptrcallWithStringAndArrayArg`; desktop's helper (and so the shared GodotObject)
+  // spells it with the element type. The Array of Dictionaries travels the device-proven Variant
+  // path with the method's own bind (encodeVariantArgs boxes List -> Array, Map -> Dictionary).
+  actual fun ptrcallWithStringAndArrayOfDictionariesArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    message: String,
+    data: List<Map<String, Any>>,
+  ) {
+    callWithVariantArgs(methodBind, instance, listOf(message, data))
+  }
+
   /**
    * Generic Variant `Object.call` dispatch.
    *
@@ -3907,8 +3976,10 @@ actual object ObjectCalls {
    * Each helper is a member of `object ObjectCalls` and carries the DESKTOP file's parameter
    * names, so the generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls -- including
    * named arguments -- resolve identically on both platforms and can become one `expect object`
-   * (task 104 step 3). Every helper marshals through the single generic C dispatch
-   * `kanama_ios_godot_ptrcall`, applying the authoritative ptrcall width table (scalar
+   * (task 104 step 3). Every helper marshals through the single generic dispatch
+   * `ptrcallDispatch` (hand-written above the BEGIN marker: `kanama_ios_godot_ptrcall` for an
+   * instance call, `kanama_ios_godot_ptrcall_static` when the instance is the generator's
+   * NULL_SEGMENT static marker), applying the authoritative ptrcall width table (scalar
    * float->double/8B, scalar int->int64/8B, Vector components->GodotReal, Object->8B handle,
    * StringName built C-side). String / StringName / NodePath returns hand the same arg cells to
    * `ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8 read-back, no
@@ -12323,6 +12394,23 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithNodePathAndVariantArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    path: NodePath,
+    value: Any?,
+  ) = memScoped {
+    val c1 = packVariantDesc(value)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_NODE_PATH
+    types[1] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
+    Unit
+  }
+
   actual fun ptrcallWithNodePathArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -12391,6 +12479,18 @@ actual object ObjectCalls {
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
+  }
+
+  actual fun ptrcallWithNodePathArgRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    path: NodePath,
+  ): Any? = memScoped {
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_NODE_PATH
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 1)
   }
 
   actual fun ptrcallWithNodePathListArg(
@@ -26911,6 +27011,27 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithStringNameAndCallableArgsRetBool(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+  ): Boolean = memScoped {
+    val ret = alloc<ByteVar>()
+    val c1 = alloc<KanamaIosCallableArgDesc>()
+    c1.object_handle = callableObject.address()
+    c1.method = callableMethod.cstr.ptr
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_CALLABLE
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
+    ret.value.toInt() != 0
+  }
+
   actual fun ptrcallWithStringNameAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -27184,6 +27305,22 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithStringNameAndVariantArgRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    value: Any?,
+  ): Any? = memScoped {
+    val c1 = packVariantDesc(value)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
+  }
+
   actual fun ptrcallWithStringNameAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -27392,6 +27529,22 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
+  }
+
+  actual fun ptrcallWithStringNameArrayArgsRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    method: String,
+    arguments: List<Any?>,
+  ): Any? = memScoped {
+    val c1 = packArrayBlob(arguments)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_ARRAY
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = method.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
   actual fun ptrcallWithStringNameArrayBoolArgs(
@@ -34850,6 +35003,21 @@ actual object ObjectCalls {
     RID(ret.value)
   }
 
+  actual fun ptrcallWithTwoStringNameArgsRetString(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+  ): String = memScoped {
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_STRING_NAME
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
+    ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+  }
+
   actual fun ptrcallWithTwoStringNameArgsRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -34959,6 +35127,29 @@ actual object ObjectCalls {
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_RID, ret.ptr)
     RID(ret.value)
+  }
+
+  actual fun ptrcallWithTwoStringNameIntStringNameArgsRetString(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+    count: Int,
+    context: String,
+  ): String = memScoped {
+    val c2 = alloc<LongVar>()
+    c2.value = count.toLong()
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_STRING_NAME
+    types[2] = PT_INT64
+    types[3] = PT_STRING_NAME
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = context.cstr.ptr.reinterpret<CPointed>()
+    ptrcallRetUtf8(methodBind, instance, types, ptrs, 4, PT_STRING)
   }
 
   actual fun ptrcallWithTwoStringNameIntStringNameArgsRetStringName(

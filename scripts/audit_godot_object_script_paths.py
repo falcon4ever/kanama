@@ -5,6 +5,11 @@
 wrappers are not enough for dynamically attached Kanama scripts. Keep this
 audit narrow and explicit so future wrapper cleanups do not accidentally
 restore native-ClassDB-only behavior.
+
+Since task 117 P3' the class is written once in the shared tree and reaches the
+desktop `ScriptBridge` through the internal `ObjectRuntime` seam, so the audit
+checks both halves: the shared body calls the hook, and the desktop actual of
+the hook calls `ScriptBridge`.
 """
 
 from pathlib import Path
@@ -13,7 +18,8 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
-GODOT_OBJECT = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotObject.kt"
+GODOT_OBJECT = ROOT / "src/sharedApi/kotlin/net/multigesture/kanama/api/GodotObject.kt"
+DESKTOP_OBJECT_RUNTIME = ROOT / "src/jvmMain/kotlin/binding/runtime/ObjectRuntime.kt"
 
 
 def function_body(source: str, name: str) -> str:
@@ -53,12 +59,21 @@ def main() -> int:
         errors.append("GodotObject.set must use Object.set, not ClassDB.classSetProperty")
     if "ptrcallWithStringNameAndVariantArg(objectSetBind" not in set_body:
         errors.append("GodotObject.set must call the Object.set MethodBind")
-    if "ScriptBridge.applyOrRecordScriptPropertySet" not in set_body:
-        errors.append("GodotObject.set must preserve pending Kanama script property replay")
+    if "ObjectRuntime.onPropertySet" not in set_body:
+        errors.append("GodotObject.set must preserve pending Kanama script property replay (ObjectRuntime.onPropertySet)")
 
     set_script_body = function_body(source, "setScript")
-    if "ScriptBridge.noteSetScript" not in set_script_body:
-        errors.append("GodotObject.setScript must notify ScriptBridge before attaching scripts")
+    hook = set_script_body.find("ObjectRuntime.onSetScript")
+    if hook == -1:
+        errors.append("GodotObject.setScript must notify ScriptBridge before attaching scripts (ObjectRuntime.onSetScript)")
+    elif hook > set_script_body.find("setScriptBind"):
+        errors.append("GodotObject.setScript must call ObjectRuntime.onSetScript BEFORE the set_script ptrcall")
+
+    runtime = DESKTOP_OBJECT_RUNTIME.read_text()
+    if "ScriptBridge.applyOrRecordScriptPropertySet(" not in runtime:
+        errors.append("desktop ObjectRuntime.onPropertySet must call ScriptBridge.applyOrRecordScriptPropertySet")
+    if "ScriptBridge.noteSetScript(" not in runtime:
+        errors.append("desktop ObjectRuntime.onSetScript must call ScriptBridge.noteSetScript")
 
     if "Object\", \"set\", OBJECT_SET_HASH" not in source:
         errors.append("GodotObject must bind Object.set explicitly")

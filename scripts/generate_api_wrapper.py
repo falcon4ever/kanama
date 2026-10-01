@@ -382,8 +382,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
     "ProjectSettings": WrapperHome("generated", "collision",
         "iOS: hand-written singleton (getSettingDouble Variant->Double coercion) in ProjectSettings.kt"),
-    "RefCounted": WrapperHome("hand", "generated",
-        "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit"),
     "ResourceLoader": WrapperHome("hand", "collision",
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written typed-loader glue (loadTexture2D/AudioStream/PackedScene) in IosGodotApi.kt"),
@@ -400,6 +398,20 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
         "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
         "written Variant tween_property runtime in IosGodotApi.kt"),
 }
+
+# Godot classes whose wrapper is written ONCE, by hand, in the shared tree (task 117 P3', D20):
+# neither platform generates them and neither platform has a copy. `GodotObject` (Godot's `Object`,
+# via WRAPPER_CLASS_ALIASES) and `GodotCallable` (a value class, not a Godot class) are hand roots
+# too but carry no Godot class name, so the tree universe never sees them; this table is for a root
+# that DOES share its name with a Godot class and would otherwise be generated into the shared tree
+# over the hand file. Their platform-bound hooks go through the internal `ObjectRuntime` seam in
+# src/commonMain. scripts/check_wrapper_parity.py fails when a per-platform copy of one reappears.
+SHARED_HAND_ROOTS: dict[str, str] = {
+    "RefCounted": "lifetime policy root (checkOpen/close/retain/releaseHandle over ObjectCalls)",
+}
+# The hand roots with no Godot class name of their own (see SHARED_HAND_ROOTS).
+SHARED_HAND_ROOT_FILES = ("GodotObject", "GodotCallable", *SHARED_HAND_ROOTS)
+assert not set(SHARED_HAND_ROOTS) & set(PER_PLATFORM_WRAPPERS), "a shared hand root is not per-platform"
 
 DESKTOP_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.desktop == "hand")
 IOS_HANDSHAPED = frozenset(n for n, h in PER_PLATFORM_WRAPPERS.items() if h.ios == "hand")
@@ -571,6 +583,14 @@ IOS_HANDWRITTEN_HELPERS = {
     "ptrcallWithPackedColorListArg",
     "ptrcallWithPackedVector2ListArg",
     "ptrcallWithRIDListArg",
+    # task 117 P3': root Object shapes the shared hand-written GodotObject calls. The Callable /
+    # bound-Callable connect shapes delegate to the shim connect paths iOS proved on a device;
+    # add_user_signal carries desktop's helper name (the generator spells it ptrcallWithStringAndArrayArg).
+    # The other root shapes are generated (collect_root_object_shapes).
+    "ptrcallWithStringNameCallableAndUInt32ArgsRetLong",
+    "ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong",
+    "ptrcallWithStringNameAndBoundCallableArgs",
+    "ptrcallWithStringAndArrayOfDictionariesArg",
 }
 PARAMETER_NAME_OVERRIDES = {
     ("Time", "get_datetime_dict_from_unix_time", "unix_time_val"): "unixTime",
@@ -654,19 +674,14 @@ KOTLIN_DEFAULT_EXPRESSION_OVERRIDES = {
 NULLABLE_OBJECT_PARAM_OVERRIDES = {
     ("Node", "set_owner", "owner"),
 }
-# Extra supertypes on a generated class header. The generated iOS RefCounted owns close()
-# (unreference + destroy at zero, custom section) and must declare AutoCloseable itself now that
-# GodotObject is not AutoCloseable on any platform (task 103; desktop RefCounted is hand-shaped and
-# already declares it).
-CLASS_EXTRA_SUPERTYPES = {
-    "RefCounted": ("AutoCloseable",),
-}
-# Visibility prefix for a generated method (default public). RefCounted.unreference() is the
-# close() primitive: generated iOS RefCounted keeps it internal so scripts cannot unbalance the
-# refcount, matching desktop where the hand-shaped RefCounted does not expose it at all.
-METHOD_VISIBILITY_OVERRIDES = {
-    ("RefCounted", "unreference"): "internal ",
-}
+# Extra supertypes on a generated class header. Empty since task 117 P3': its one entry gave the
+# generated iOS RefCounted `AutoCloseable`, and RefCounted is a shared hand root now
+# (SHARED_HAND_ROOTS) that declares it itself.
+CLASS_EXTRA_SUPERTYPES: dict[str, tuple[str, ...]] = {}
+# Visibility prefix for a generated method (default public). Empty since task 117 P3': its one entry
+# kept the generated iOS `RefCounted.unreference()` internal, and the shared hand-written RefCounted
+# has no such member (close() calls the bind directly, like desktop always did).
+METHOD_VISIBILITY_OVERRIDES: dict[tuple[str, str], str] = {}
 DESKTOP_MEMBER_SECTIONS = {
     "ProjectSettings": """
     @JvmStatic
@@ -763,37 +778,8 @@ DESKTOP_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
 # propagateCall sugar that routed Variant / Array arguments through call() is gone — those members
 # are generated now (Variant / Dictionary / Array are audited arg kinds).
 IOS_MEMBER_SECTIONS = {
-    "RefCounted": """
-    // ── Kanama iOS RefCounted ownership (generator custom-section; task 31 mirror) ─────
-    // A wrapper returned from a RefCounted-typed ptrcall method owns the +1 reference the
-    // engine hands through the return slot (meta:"required" included). close() releases it:
-    // unreference() + destroy at zero. Wrappers minted from Variant-path returns or
-    // fromHandle casts borrow — do not close those (see wrapper-maintenance.md
-    // "RefCounted Return Ownership").
-    private var wrapperReferenceReleased = false
-    private var closed = false
-
-    // Receiver-side use-after-close guard (task 98, desktop RefCounted.checkOpen mirror): every
-    // generated method on a RefCounted-derived wrapper calls this first, so a call through a
-    // handle whose close() destroyed the object is an IllegalStateException, not a native fault.
-    internal fun checkOpen() {
-        check(!closed) { "RefCounted handle is closed" }
-    }
-
-    internal override fun requireOpenHandle(): MemorySegment {
-        checkOpen()
-        return segment
-    }
-
-    override fun close() {
-        if (wrapperReferenceReleased) return
-        wrapperReferenceReleased = true
-        if (unreference()) {
-            closed = true
-            ObjectCalls.destroyObject(segment)
-        }
-    }
-""".strip("\n"),
+    # (RefCounted's ownership section left with task 117 P3': RefCounted is a shared hand root,
+    # SHARED_HAND_ROOTS, and carries close()/checkOpen()/requireOpenHandle() itself.)
     "SurfaceTool": """
     // No-arg commit() — the generated commit(existing, flags) doesn't default the nullable `existing`
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
@@ -804,16 +790,7 @@ IOS_MEMBER_SECTIONS = {
 # iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
 # 8-space indent). A shared class's iOS-only sugar belongs in IOS_EXTENSION_SECTIONS instead.
 IOS_COMPANION_MEMBER_SECTIONS = {
-    "RefCounted": """
-        // Releases the +1 return-slot reference carried by `handle` without minting a
-        // wrapper — the generated self-return-collapse pattern calls this before
-        // returning `this` (task 31 mirror; matches desktop RefCounted.releaseHandle).
-        internal fun releaseHandle(handle: MemorySegment) {
-            if (handle.address() != 0L && ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)) {
-                ObjectCalls.destroyObject(handle)
-            }
-        }
-""".strip("\n"),
+    # (RefCounted's releaseHandle section left with task 117 P3', like its member section above.)
     "InputEventKey": """
         // Godot Key enum constants (subset used by gameplay code; values match @GlobalScope.Key).
         const val KEY_ESCAPE = 4194305L
@@ -4114,7 +4091,7 @@ def tree_universe(api_classes: dict[str, ApiClass]) -> tuple[list[str], list[str
     rot = sorted(set(PER_PLATFORM_WRAPPERS) - api)
     if rot:
         raise SystemExit(f"[generate_api_wrapper] PER_PLATFORM_WRAPPERS names classes not in the API: {rot}")
-    shared = sorted((committed & api) - set(PER_PLATFORM_WRAPPERS))
+    shared = sorted((committed & api) - set(PER_PLATFORM_WRAPPERS) - set(SHARED_HAND_ROOTS))
     return shared, sorted(DESKTOP_ONLY_GENERATED), sorted(IOS_ONLY_GENERATED)
 
 
@@ -4196,7 +4173,9 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     # the iOS-only generated classes AND the iOS hand-shaped ones (their hand files still call the
     # generated helpers and other wrappers return them), i.e. the old "emit union". Collision and
     # unsupported classes stay out, as before.
-    ios_universe = set(shared) | set(ios_only) | set(IOS_HANDSHAPED)
+    # The shared hand roots (RefCounted) are in it too: they are hosted on iOS, so methods that take or
+    # return them stay emittable.
+    ios_universe = set(shared) | set(ios_only) | set(IOS_HANDSHAPED) | set(SHARED_HAND_ROOTS)
     wrapper_classes = scan_wrapper_classes(DESKTOP_API_DIR)
     api_dir = DESKTOP_API_DIR
     files: dict[str, str] = {}
@@ -4243,6 +4222,11 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             registry = collect_ios_shapes(
                 [api_classes[name] for name in sorted(ios_universe)], object_types, wrapper_classes, api_classes, api_dir
             )
+            # The hand-written shared roots call ObjectCalls like a generated wrapper (task 117 P3').
+            for function, entry in collect_root_object_shapes(
+                api_classes, object_types, referenced_objectcalls_helpers()
+            ).items():
+                registry.setdefault(function, entry)
             # `actual` on the region members that actualize an `expect object ObjectCalls` member
             # (task 104 step 3 parcel C'): the iOS-only overloads in the same region stay plain,
             # which is why the marker keys on the parameter names and not just the helper name.
@@ -5028,6 +5012,39 @@ def collect_ios_shapes(
     return registry
 
 
+def collect_root_object_shapes(
+    api_classes: dict[str, ApiClass],
+    object_types: set[str],
+    referenced: set[str],
+) -> dict[str, tuple[tuple[str, ...], str, str]]:
+    """Helper shapes of the root Godot `Object` that the hand-written shared roots call.
+
+    `GodotObject` is written once by hand in the shared tree (task 117 P3', D20), so its Object
+    methods are never rendered (`unsupported_reason`: "root Object methods are exposed through the
+    hand-shaped GodotObject policy") and `collect_ios_shapes` never sees their helper shapes. The
+    hand file still calls `ObjectCalls.<shape>(...)` like any generated wrapper, so every such call
+    whose shape the iOS renderer can emit is emitted here: a root `Object` method whose generated
+    helper name is one the shared sources reference ([referenced], the same scan the `expect`
+    object is derived from) and whose arg/return kinds pass the iOS audit. Shapes the renderer
+    cannot emit (or that the roots call under a hand name) are hand-written above the GENERATED
+    MEMBERS region and listed in IOS_HANDWRITTEN_HELPERS, like every other override.
+    """
+    registry: dict[str, tuple[tuple[str, ...], str, str]] = {}
+    for method_list in api_classes["Object"].methods.values():
+        for method in method_list:
+            if method.is_vararg or method.is_virtual or method.name.startswith("_"):
+                continue
+            shape = candidate_for(method, object_types, "Object")
+            if shape is None or shape.function in IOS_HANDWRITTEN_HELPERS or shape.function not in referenced:
+                continue
+            if not ios_method_supported(method, object_types, "Object"):
+                continue
+            registry.setdefault(
+                shape.function, (method.logical_arg_kinds(object_types), shape.kotlin_return, method.return_type)
+            )
+    return registry
+
+
 def render_ios_objectcalls(
     registry: dict[str, tuple[tuple[str, ...], str, str]],
     unnamed: set[str] | None = None,
@@ -5261,6 +5278,14 @@ def main() -> int:
         requested = list(dict.fromkeys(args.ios_classes))
         emit_names: list[str] = []
         for class_name in requested:
+            root = SHARED_HAND_ROOTS.get(class_name)
+            if root is not None:
+                print(
+                    f"[generate_api_wrapper] hand-root: {class_name} is written once by hand in the "
+                    f"shared tree ({root}); skipping generation.",
+                    file=sys.stderr,
+                )
+                continue
             reason = IOS_HANDWRITTEN_COLLISION_CLASSES.get(class_name)
             if reason is not None:
                 print(
