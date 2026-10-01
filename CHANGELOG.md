@@ -7,6 +7,59 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — the API tree is common code (task 117 P4′)
+
+- **The Godot API wrapper tree moved from `src/sharedApi/kotlin` to
+  `src/commonMain/kotlin/net/multigesture/kanama/api/`** — the 1,010 generated classes and the
+  three hand-written roots (`GodotObject`, `RefCounted`, `GodotCallable`), now part of the
+  module's KMP common fragment. `src/sharedApi` is gone; `jvmMain`/`iosMain` no longer add it as a
+  source directory, the generator writes to `commonMain`, and the Android plugin's existing copy of
+  `commonMain` (minus `*.expect.kt`) carries the tree. `compileCommonMainKotlinMetadata` compiles
+  the whole API on its own, so the compiler now proves it is platform-neutral. Package names are
+  unchanged: scripts import `net.multigesture.kanama.api.*` exactly as before.
+- **The platform classes the tree names are `expect`s with one `actual` per platform:**
+  - `expect class GodotSignal internal constructor(owner, name)` and
+    `expect class SignalConnection : AutoCloseable` in `src/commonMain/.../api/GodotSignal.expect.kt`
+    (desktop/Android actual: `SignalCallbackRegistry` + bound Callable; iOS actual:
+    `IosCallableRegistry` + the shim's custom Callable).
+  - `expect object MainThread` in `src/commonMain/.../api/MainThread.expect.kt` with `post`,
+    `postNextFrame`, `postAfterFrames`, `awaitNextFrame` and `runOnMainThread`. **iOS gains
+    `runOnMainThread`** (the same inline enqueue as `post`, which now delegates to it, as on
+    desktop); the iOS object moved out of `IosGodotApi.kt` into its own `MainThread.kt`.
+    `@JvmStatic` is on the expect and mirrored on both actuals, so desktop keeps its static JVM
+    methods.
+- **No default arguments on an `expect`; overloads instead.** The Android lane skips
+  `*.expect.kt`, so a default declared only on an `expect` would not exist there. The defaults of
+  `GodotSignal` became overloads: `connect(target, method)` + `connect(target, method, flags)`;
+  `connect(target, argumentCount, callback)` + `connect(target, argumentCount, flags, callback)`;
+  `connectObject(target, callback)` + `connectObject(target, flags, callback)`; `await(target)` +
+  `await(target, argumentCount)`. Positional, trailing-lambda and named-argument calls compile
+  unchanged — no source break found in this repository (KSP emitters, `example_project`, templates)
+  or in the eleven demos (desktop compile of all eleven; iOS compile of Match3, third-person,
+  tps-demo and squash-the-creeps); every named-argument form a default allowed (`argumentCount =`,
+  `flags =`, `callback =`) has a matching overload. Binary only: script classes compiled against
+  an earlier `kanama.jar` that omitted one of these arguments call the removed `…$default`
+  synthetic methods — recompile the scripts (the normal build does).
+  `scripts/check_expect_no_defaults.py` (a new local_ci stage) fails on any default in a
+  `*.expect.kt` file.
+- **`ObjectCalls`: every helper the tree calls is an `expect` member** (1,450). The six whose
+  signatures name `GodotCallable` or `Material` joined with the move; iOS
+  `ptrcallWithTypedMaterialListArg` takes `List<Material>` like desktop (was `List<*>`).
+  `callWithVariantArgs(methodBind, instance, args)` is the borrowed `actual` on both platforms;
+  its former `owned: Boolean = false` parameter is a private detail of each `ObjectCalls`, reached
+  through `callWithVariantArgsOwned` (no in-repo or demo caller passed `owned`).
+  `scripts/check_objectcalls_parity.py` now fails on any platform-only exception (it listed seven).
+- **Gates:** `scripts/check_wrapper_parity.py`, `scripts/wrapper_parity_allowlist.txt` and their
+  local_ci stage are retired — the compiler holds `GodotSignal`/`SignalConnection`/`MainThread` to
+  one surface now. The drift gate still fails on a stale per-platform copy of a root or of a shared
+  class. The Android remap's `expect`/`actual` audit also recognizes `constructor`.
+- **Build cost (D29), same Mac, each task alone with `--rerun-tasks --no-build-cache`:**
+  `compileKotlinJvm` 54.97 s → 51.32 s, `compileKotlinIosArm64` 34.27 s → 36.47 s,
+  `linkDebugStaticIosArm64` 113.75 s → 121.55 s, `installAddonJar` (whole build) 93.89 s →
+  82.63 s; `libkanama_ios_runtime.a` debug 235,775,424 → 236,065,128 bytes (+0.12 %), release
+  124,719,880 → 124,691,160 bytes, `kanama.jar` 12,245,507 → 12,247,869 bytes. The release link
+  is not comparable on that machine: 530 s and 1,506 s for the same baseline commit, 1,270 s and
+  1,072 s after, tracking the machine's background load. Within noise everywhere else.
 ### Fixed — Android 17 September update: every Kanama app aborted in PanamaPort's FFI bootstrap (task 127)
 
 - After the September 2026 **Android 17** update (API 37, build `CP3A.260905.009`) a Pixel 7 aborted every Kanama app during startup

@@ -298,9 +298,12 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
 //
 // iosMain's cannot compile, for the reason the deleted `ios-runtime/build.gradle.kts` recorded:
 // it is an intermediate source set shared by the two iOS targets, so it is compiled to Kotlin
-// *metadata* — and that compilation rejects the `@JvmName`/`@JvmStatic` annotations the generated
-// wrappers carry ("Declaration annotated with '@OptionalExpectation' can only be used in common
-// module sources"), because src/sharedApi/kotlin is a srcDir of iosMain and is not common. Every
+// *metadata* — and that compilation rejects `@JvmName`/`@JvmStatic` in a non-common source
+// ("Declaration annotated with '@OptionalExpectation' can only be used in common module sources").
+// The wrapper tree is common code since task 117 P4', but src/iosMain's own api files still carry
+// them (the iOS-only generated classes, the hand iOS classes, and the MainThread actual mirroring
+// its expect's @JvmStatic, D6): re-enabling it at P4' gave 263 such errors in 16 iosMain files and
+// no other kind. Every
 // platform compilation (commonMain + that platform's sources) type-checks, the static link and the
 // xcframework lanes are green, and nothing consumes Kanama as a KMP library — iOS ships an
 // xcframework, desktop a jar — so nothing needs iosMain metadata.
