@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Hand-shaped wrapper parity gate (task 117, parcel P0).
 
-The remaining hand-shaped wrapper classes (HAND_SHAPED below; the count shrinks as task 117 P1' retires them) exist twice — `src/jvmMain/.../api/<Class>.kt` and
-`src/iosMain/.../api/<Class>.kt` (three live inside `IosGodotApi.kt`) — and the generated wrapper
-tree extends them. Until task 117 turns them into `expect`/`actual` (which needs identical public
-shapes), this gate is the contract: it parses both copies and reports every difference in
+The remaining per-platform classes the shared sources call (HAND_SHAPED below: since task 117 P3'
+the two signal classes, GodotSignal and SignalConnection) exist twice — `src/jvmMain/.../api/<Class>.kt`
+and `src/iosMain/.../api/<Class>.kt`. Until task 117 turns them into `expect`/`actual` (which needs
+identical public shapes), this gate is the contract: it parses both copies and reports every difference in
 
   supertype, modality, primary constructor (visibility + parameters), class-body members
   (one-sided names, overload counts, return types, visibility, modifiers, parameter names,
@@ -39,15 +39,30 @@ IOS_API = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"
 ALLOWLIST = ROOT / "scripts/wrapper_parity_allowlist.txt"
 TAG = "[wrapper_parity]"
 
-# The classes the generated tree (src/sharedApi) extends or calls that are NOT part of that shared
-# tree: each exists as a separate per-platform file. Provenance is read from the generator's
-# PER_PLATFORM_WRAPPERS at run time and printed in the PASS line (GodotObject/GodotCallable are
-# hand-written roots outside the table). The gate compares the two committed files regardless of who wrote them; a
-# regenerated file that changes shape shows up here like any other change and P1 decides. Every
-# name except the two roots must appear in the generator's PER_PLATFORM_WRAPPERS (checked below).
+# The classes the shared sources call that are NOT part of the shared tree: each exists as a
+# separate per-platform file, and this gate compares the two committed files.
+#
+# Since task 117 P3' these are the two genuinely platform classes of the roots (decision D21):
+# `GodotSignal` and `SignalConnection` — desktop dispatches lambda connections through
+# SignalCallbackRegistry and a bound Callable, iOS through IosCallableRegistry and a custom Callable
+# in the shim. D21 makes them `expect class` with one `actual` per platform; that half is blocked
+# until the tree moves to commonMain (P4'): an `expect` in src/commonMain cannot name `GodotObject`,
+# which lives in src/sharedApi (K2 resolves a common source against common code only). Until then
+# the gate compares the two actuals against each other — the only comparison available without an
+# `expect` file, and the simpler one: a member that exists on one platform only is exactly the
+# defect class an `expect` would reject.
+#
+# Neither is a Godot class, so neither is in the generator's PER_PLATFORM_WRAPPERS; any other name
+# here must be (checked below).
 HAND_SHAPED = [
-    "GodotObject", "RefCounted", "GodotCallable",
+    "GodotSignal", "SignalConnection",
 ]
+PLATFORM_RUNTIME_CLASSES = {"GodotSignal", "SignalConnection"}
+
+# The roots written ONCE by hand in src/sharedApi (task 117 P3', D20). They left HAND_SHAPED with
+# their duplication; a class of that name declared in either platform api directory is a stale
+# per-platform copy (task 119 item 34) and fails the gate. Never allowlistable.
+SHARED_ROOTS = ("GodotObject", "RefCounted", "GodotCallable")
 
 # ---------------------------------------------------------------------------------------------
 # Kotlin source parsing (textual; comments + strings blanked so braces and keywords are honest)
@@ -548,6 +563,10 @@ def load_allowlist(path: Path) -> dict[tuple[str, str, str], str]:
     return entries
 
 
+# Findings no allowlist line can excuse.
+NEVER_ALLOWLISTED = {"parse-error", "not-in-generator-table", "stale-per-platform-root"}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--allowlist", type=Path, default=ALLOWLIST)
@@ -565,9 +584,13 @@ def main() -> int:
 
     findings: list[tuple[str, str, str, str]] = []
     provenance = collections.Counter()
+    for root in SHARED_ROOTS:
+        for platform, idx in (("desktop", jvm), ("ios", ios)):
+            if root in idx:
+                findings.append((root, "stale-per-platform-root", platform, f"{idx[root]['path'].relative_to(ROOT).as_posix()} declares it; the root is written once in src/sharedApi (task 117 P3')"))
     for cls in HAND_SHAPED:
-        if cls in ("GodotObject", "GodotCallable"):
-            provenance["hand/hand (root)"] += 1
+        if cls in PLATFORM_RUNTIME_CLASSES:
+            provenance["hand/hand (platform runtime, D21)"] += 1
         elif cls not in PER_PLATFORM_WRAPPERS:
             findings.append((cls, "not-in-generator-table", "*", "HAND_SHAPED names a class PER_PLATFORM_WRAPPERS does not know (retired? drop it here too)"))
         else:
@@ -608,6 +631,7 @@ def main() -> int:
             "modality": "D2 same modality on both platforms (P1)",
             "parse-error": "NEVER allowlist: fix the parser or the source layout",
             "not-in-generator-table": "NEVER allowlist: fix HAND_SHAPED or PER_PLATFORM_WRAPPERS",
+            "stale-per-platform-root": "NEVER allowlist: delete the per-platform copy of a shared root",
             "missing-on-platform": "class must exist on both platforms (P1)",
         }
         keys = sorted({(c, cat, m) for c, cat, m, _ in findings})
@@ -632,7 +656,9 @@ def main() -> int:
     for c, cat, m, detail in findings:
         key = (c, cat, m)
         wild = (c, cat, "*")
-        if key in allow:
+        if cat in NEVER_ALLOWLISTED:
+            unallowed.append((c, cat, m, detail))
+        elif key in allow:
             used.add(key)
         elif wild in allow:
             used.add(wild)

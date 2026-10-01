@@ -235,7 +235,7 @@ actual object ObjectCalls {
   // Destroy an engine Object immediately (GDExtension object_destroy). Mirrors desktop
   // ObjectCalls.destroyObject; RefCounted.close()/releaseHandle call it only after
   // unreference() returned true (refcount hit zero) — task 31 ownership mirror.
-  fun destroyObject(instance: MemorySegment) {
+  actual fun destroyObject(instance: MemorySegment) {
     if (instance.address() == 0L) return
     kanama_ios_godot_object_destroy(instance.address())
   }
@@ -1071,7 +1071,7 @@ actual object ObjectCalls {
           if (got <= 0L) "" else full.readBytes(minOf(got, len).toInt()).decodeToString()
         }
       }
-    GodotCallable(GodotObject(handle.value), method)
+    GodotCallable(GodotObject(GodotHandle(MemorySegment.ofAddress(handle.value))), method)
   }
 
   // task 100 (parcel 2) — Variant-scalar return on any audited arg shape. Same arg cells as
@@ -3717,6 +3717,99 @@ actual object ObjectCalls {
     )
   }
 
+  // ── The root Object shapes the shared GodotObject calls that the generator does not emit (task
+  // 117 P3′, D22). The other root shapes (indexed get/set, get_meta, callv, is_connected, tr/tr_n)
+  // are generated below the BEGIN marker from the root `Object` methods
+  // (`collect_root_object_shapes`); these four are hand-written because they delegate to the shim
+  // paths iOS already proved on a device, or carry a desktop-only helper name. All four are listed
+  // in IOS_HANDWRITTEN_HELPERS. None takes a guarded `method_bind` + instance C entry, so the
+  // static-dispatch gate does not apply; every guarded early return they reach reports to the
+  // shim's fault sink (task 124).
+
+  // Object.connect(signal, Callable(target, method), flags) for GodotObject.connect. Delegates to
+  // the shim's object+method connect (`kanama_ios_godot_object_connect`: source object, signal,
+  // target object, method, flags — it builds the Callable, boxes it into a Variant and calls the
+  // Object.connect bind it resolves itself, so [methodBind] is not consulted; Object.connect is the
+  // only API method of this shape). Returns the Godot Error (0 == OK), -1 when the shim refused.
+  // [methodBind] is not checked against the expected `Object.connect` bind (hash 1518946055): the
+  // fault sink (`kanama_ios_fault`) is C-only and this file has no debug-only throwing check,
+  // so an assertion here could only be `error(...)`, a release crash on a path that works.
+  // The shared GodotObject is the only caller and passes its cached `Object.connect` bind.
+  actual fun ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    flags: Long,
+  ): Long {
+    // Desktop's BuiltinTypes.requireUInt32(flags): Object.connect's flags are a Godot uint32.
+    require(flags in 0L..0xffff_ffffL) {
+      "Value $flags is outside Godot uint32 range 0..4294967295"
+    }
+    return IosGodot.objectConnect(
+      instance.address(),
+      name,
+      callableObject.address(),
+      callableMethod,
+      flags,
+    )
+  }
+
+  // Object.connect(signal, Callable(target, method).bindv(boundArgs), flags) for
+  // GodotObject.connectBound — the existing bound-Callable path above ([connectBound]); the shim
+  // resolves the Object.connect bind itself, so [methodBind] is not consulted.
+  // [methodBind] is not checked against the expected `Object.connect` bind (hash 1518946055): the
+  // fault sink (`kanama_ios_fault`) is C-only and this file has no debug-only throwing check,
+  // so an assertion here could only be `error(...)`, a release crash on a path that works.
+  // The shared GodotObject is the only caller and passes its cached `Object.connect` bind.
+  actual fun ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    boundArgs: List<Any?>,
+    flags: Long,
+  ): Long {
+    // Desktop's BuiltinTypes.requireUInt32(flags): Object.connect's flags are a Godot uint32.
+    require(flags in 0L..0xffff_ffffL) {
+      "Value $flags is outside Godot uint32 range 0..4294967295"
+    }
+    return connectBound(instance, name, callableObject, callableMethod, boundArgs, flags)
+  }
+
+  // Object.disconnect(signal, Callable(target, method).bindv(boundArgs)) for
+  // GodotObject.disconnectBound — the existing symmetric teardown above ([disconnectBound]); the
+  // shim resolves the Object.disconnect bind itself, so [methodBind] is not consulted.
+  // [methodBind] is not checked against the expected `Object.disconnect` bind (hash 1874754934):
+  // the fault sink (`kanama_ios_fault`) is C-only and this file has no debug-only throwing check,
+  // so an assertion here could only be `error(...)`, a release crash on a path that works.
+  // The shared GodotObject is the only caller and passes its cached `Object.disconnect` bind.
+  actual fun ptrcallWithStringNameAndBoundCallableArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    boundArgs: List<Any?>,
+  ) {
+    disconnectBound(instance, name, callableObject, callableMethod, boundArgs)
+  }
+
+  // Object.add_user_signal(signal, arguments) for GodotObject.addUserSignal. The generator names
+  // this shape `ptrcallWithStringAndArrayArg`; desktop's helper (and so the shared GodotObject)
+  // spells it with the element type. The Array of Dictionaries travels the device-proven Variant
+  // path with the method's own bind (encodeVariantArgs boxes List -> Array, Map -> Dictionary).
+  actual fun ptrcallWithStringAndArrayOfDictionariesArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    message: String,
+    data: List<Map<String, Any>>,
+  ) {
+    callWithVariantArgs(methodBind, instance, listOf(message, data))
+  }
+
   /**
    * Generic Variant `Object.call` dispatch.
    *
@@ -3907,8 +4000,10 @@ actual object ObjectCalls {
    * Each helper is a member of `object ObjectCalls` and carries the DESKTOP file's parameter
    * names, so the generated Godot API wrappers' `ObjectCalls.<helper>(...)` calls -- including
    * named arguments -- resolve identically on both platforms and can become one `expect object`
-   * (task 104 step 3). Every helper marshals through the single generic C dispatch
-   * `kanama_ios_godot_ptrcall`, applying the authoritative ptrcall width table (scalar
+   * (task 104 step 3). Every helper marshals through the single generic dispatch
+   * `ptrcallDispatch` (hand-written above the BEGIN marker: `kanama_ios_godot_ptrcall` for an
+   * instance call, `kanama_ios_godot_ptrcall_static` when the instance is the generator's
+   * NULL_SEGMENT static marker), applying the authoritative ptrcall width table (scalar
    * float->double/8B, scalar int->int64/8B, Vector components->GodotReal, Object->8B handle,
    * StringName built C-side). String / StringName / NodePath returns hand the same arg cells to
    * `ptrcallRetUtf8` (kanama_ios_godot_ptrcall_ret_utf8: one invocation, UTF-8 read-back, no
@@ -12323,6 +12418,23 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithNodePathAndVariantArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    path: NodePath,
+    value: Any?,
+  ) = memScoped {
+    val c1 = packVariantDesc(value)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_NODE_PATH
+    types[1] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
+    Unit
+  }
+
   actual fun ptrcallWithNodePathArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -12391,6 +12503,18 @@ actual object ObjectCalls {
     ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
+  }
+
+  actual fun ptrcallWithNodePathArgRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    path: NodePath,
+  ): Any? = memScoped {
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_NODE_PATH
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = path.path.cstr.ptr.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 1)
   }
 
   actual fun ptrcallWithNodePathListArg(
@@ -26911,6 +27035,27 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithStringNameAndCallableArgsRetBool(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    callableObject: MemorySegment,
+    callableMethod: String,
+  ): Boolean = memScoped {
+    val ret = alloc<ByteVar>()
+    val c1 = alloc<KanamaIosCallableArgDesc>()
+    c1.object_handle = callableObject.address()
+    c1.method = callableMethod.cstr.ptr
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_CALLABLE
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_BOOL, ret.ptr)
+    ret.value.toInt() != 0
+  }
+
   actual fun ptrcallWithStringNameAndColorArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -27184,6 +27329,22 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithStringNameAndVariantArgRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    value: Any?,
+  ): Any? = memScoped {
+    val c1 = packVariantDesc(value)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
+  }
+
   actual fun ptrcallWithStringNameAndVector2Arg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -27392,6 +27553,22 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VOID, null)
     Unit
+  }
+
+  actual fun ptrcallWithStringNameArrayArgsRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    method: String,
+    arguments: List<Any?>,
+  ): Any? = memScoped {
+    val c1 = packArrayBlob(arguments)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_ARRAY
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = method.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
   actual fun ptrcallWithStringNameArrayBoolArgs(
@@ -34850,6 +35027,21 @@ actual object ObjectCalls {
     RID(ret.value)
   }
 
+  actual fun ptrcallWithTwoStringNameArgsRetString(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+  ): String = memScoped {
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_STRING_NAME
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
+    ptrcallRetUtf8(methodBind, instance, types, ptrs, 2, PT_STRING)
+  }
+
   actual fun ptrcallWithTwoStringNameArgsRetStringName(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -34959,6 +35151,29 @@ actual object ObjectCalls {
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_RID, ret.ptr)
     RID(ret.value)
+  }
+
+  actual fun ptrcallWithTwoStringNameIntStringNameArgsRetString(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+    count: Int,
+    context: String,
+  ): String = memScoped {
+    val c2 = alloc<LongVar>()
+    c2.value = count.toLong()
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_STRING_NAME
+    types[2] = PT_INT64
+    types[3] = PT_STRING_NAME
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = context.cstr.ptr.reinterpret<CPointed>()
+    ptrcallRetUtf8(methodBind, instance, types, ptrs, 4, PT_STRING)
   }
 
   actual fun ptrcallWithTwoStringNameIntStringNameArgsRetStringName(
@@ -41914,6 +42129,187 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       "shared-static(MultiplayerAPI.getDefaultInterface == SceneMultiplayer)",
       net.multigesture.kanama.api.MultiplayerAPI.getDefaultInterface() == "SceneMultiplayer",
     )
+  }
+
+  // Task 117 P3′ — the members iOS gains from the shared GodotObject (D20/D22), driven through the
+  // public wrapper API rather than the helpers, so the shared body, the generated or hand-written
+  // iOS helper behind it and the shim are all on the path. THE PROBE RULE holds row by row: every
+  // assertion is a value the no-op path cannot produce (it would return null / false / "" / 0), or
+  // a default that is only reachable through a state an earlier row proved non-default (hasMeta
+  // false only AFTER hasMeta true; isConnected false only AFTER isConnected true).
+  run {
+    val rootSeg = requireObject("Node2D")
+    val targetSeg = requireObject("Node")
+    if (rootSeg.address() != 0L && targetSeg.address() != 0L) {
+      val root = GodotObject(GodotHandle(rootSeg))
+      val target = GodotObject(GodotHandle(targetSeg))
+
+      // set_meta / get_meta / has_meta / remove_meta (generated ptrcallWithStringNameAndVariantArg
+      // + ptrcallWithStringNameAndVariantArgRetVariantScalar, generated StringName->bool, void).
+      root.setMeta("kanama_p3_meta", 42L)
+      check(
+        "root(setMeta/getMeta round trip == 42)",
+        (root.getMeta("kanama_p3_meta") as? Number)?.toLong() == 42L,
+      )
+      check("root(hasMeta after setMeta)", root.hasMeta("kanama_p3_meta"))
+      root.removeMeta("kanama_p3_meta")
+      check("root(hasMeta false after removeMeta)", !root.hasMeta("kanama_p3_meta"))
+      check(
+        "root(getMeta default after removeMeta == 7)",
+        (root.getMeta("kanama_p3_meta", 7L) as? Number)?.toLong() == 7L,
+      )
+
+      // set_indexed / get_indexed on a Node2D sub-property (generated NodePath + Variant shapes).
+      root.setIndexed("position:x", 12.5)
+      check(
+        "root(setIndexed/getIndexed position:x == 12.5)",
+        (root.getIndexed("position:x") as? Number)?.toDouble() == 12.5,
+      )
+
+      // callv (generated StringName + Array -> Variant) and tr (generated two-StringName ->
+      // String).
+      check("root(callv get_class == Node2D)", root.callv("get_class", emptyList()) == "Node2D")
+      check("root(tr(x) == x, no translation loaded)", root.tr("x") == "x")
+
+      // add_user_signal (hand-written, Variant path) / has_user_signal.
+      root.addUserSignal("kanama_p3_user")
+      check("root(addUserSignal -> hasUserSignal)", root.hasUserSignal("kanama_p3_user"))
+
+      // connect (hand-written -> IosGodot.objectConnect) + is_connected (generated PT_CALLABLE) +
+      // disconnect (generated PT_CALLABLE), user signal -> a no-arg Node method.
+      val method = "update_configuration_warnings"
+      val connectError = root.connect("kanama_p3_user", target, method)
+      check(
+        "root(connect user signal -> OK and isConnected)",
+        connectError == 0L && root.isConnected("kanama_p3_user", target, method),
+      )
+      root.disconnect("kanama_p3_user", target, method)
+      check(
+        "root(disconnect -> isConnected false)",
+        !root.isConnected("kanama_p3_user", target, method),
+      )
+
+      // GodotSignal.disconnect (iOS gains it, D21): connect through the signal, disconnect through
+      // it.
+      val userSignal = root.signal("kanama_p3_user")
+      userSignal.connect(target, method)
+      check(
+        "root(GodotSignal.connect -> isConnected)",
+        root.isConnected("kanama_p3_user", target, method),
+      )
+      userSignal.disconnect(target, method)
+      check(
+        "root(GodotSignal.disconnect -> isConnected false)",
+        !root.isConnected("kanama_p3_user", target, method),
+      )
+
+      // Task 117 P3′ follow-up 2 — the members whose iOS PATH changed (they existed on iOS before
+      // P3′ but went through other shim entries). Same probe rule: each row asserts a value the
+      // no-op path cannot produce, or a default only after an earlier row proved the non-default.
+
+      // set / get (Variant path -> generated Object.set / Object.get ptrcall). The setIndexed row
+      // above left position.x at 12.5, so (3, 4) is a fresh value in both components.
+      root.set("position", Vector2(3.0, 4.0))
+      check("root(set/get position == (3, 4))", root.get("position") == Vector2(3.0, 4.0))
+
+      // setDeferred is not covered: Object.set_deferred queues the set on the MessageQueue, which
+      // is flushed only at the end of an iteration of the main loop, so nothing is observable
+      // synchronously at scene init.
+
+      // is_class (ptrcall, no isNotBlank guard any more) — the `false` answer only after `true`.
+      check("root(isClass(Node2D))", root.isClass("Node2D"))
+      check("root(isClass(Node3D) false after isClass(Node2D) true)", !root.isClass("Node3D"))
+
+      // get_instance_id (ptrcall) agrees with the id ObjectRuntime.instanceIdOf captured at
+      // construction (object_get_instance_id), and neither is the no-op 0.
+      check(
+        "root(getInstanceId == instanceId, non-zero)",
+        root.instanceId != 0L && root.getInstanceId() == root.instanceId,
+      )
+
+      // to_string (engine ptrcall; it was Kotlin's Any.toString on iOS before P3′). Godot 4.7.2:
+      // Object::to_string (core/object/object.cpp:948) falls through to the virtual _to_string;
+      // Node::_to_string (scene/main/node.cpp:3610-3612) prefixes "<name>:" only when the node
+      // has a name, and Object::_to_string (core/object/object.cpp:1832-1833) is
+      // "<" + get_class() + "#" + itos(get_instance_id()) + ">". This Node2D is unnamed.
+      check("root(toString == <Node2D#id>)", root.toString() == "<Node2D#${root.instanceId}>")
+
+      // emitSignal through ObjectRuntime, Long fast path (kanama_ios_godot_object_emit_signal_int)
+      // into a Kotlin lambda connected through GodotSignal.connect(target, argumentCount). Godot
+      // does not check a user signal's declared arity on emit, so one argument on the zero-arg
+      // kanama_p3_user is delivered as is.
+      var longArgs: List<Any?>? = null
+      val longConnection =
+        root.signal("kanama_p3_user").connect(target, 1) { args -> longArgs = args }
+      root.emitSignal("kanama_p3_user", 5L)
+      val receivedLong = longArgs
+      check(
+        "root(emitSignal Long fast path -> lambda received 5)",
+        longConnection.error == 0L &&
+          receivedLong != null &&
+          receivedLong.size == 1 &&
+          (receivedLong[0] as? Number)?.toLong() == 5L,
+      )
+
+      // add_user_signal WITH arguments (the hand-written Array-of-Dictionaries helper on the
+      // Variant path): Variant.Type TYPE_STRING = 4, TYPE_INT = 2 (extension_api.json global enum
+      // "Variant.Type"). Godot 4.7.2: Object::_add_user_signal (core/object/object.cpp:1353-1382)
+      // reads "name" and "type" from each Dictionary; Object::get_signal_list (1438-1453) appends
+      // the user signals, and _get_signal_list (1384-1394) returns them as MethodInfo dictionaries
+      // whose "args" are PropertyInfo dictionaries (core/object/method_info.cpp:37-39,
+      // core/object/property_info.cpp:36-43).
+      root.addUserSignal(
+        "kanama_p3_args",
+        listOf(mapOf("name" to "a", "type" to 4L), mapOf("name" to "b", "type" to 2L)),
+      )
+      val argsEntry = root.getSignalList().firstOrNull { it["name"] == "kanama_p3_args" }
+      val declaredArgs = (argsEntry?.get("args") as? List<*>)?.map { it as? Map<*, *> }
+      check(
+        "root(addUserSignal with args -> getSignalList kanama_p3_args(a: String, b: int))",
+        declaredArgs != null &&
+          declaredArgs.size == 2 &&
+          declaredArgs[0]?.get("name") == "a" &&
+          (declaredArgs[0]?.get("type") as? Number)?.toLong() == 4L &&
+          declaredArgs[1]?.get("name") == "b" &&
+          (declaredArgs[1]?.get("type") as? Number)?.toLong() == 2L,
+      )
+
+      // emitSignal with two arguments takes the Variant path (Object.call("emit_signal", ...)).
+      // The iOS lambda trampoline (kanamaIosRuntimeDispatchCallable in IosGodotApi.kt) decodes
+      // only bool / int / float / Object arguments and hands every other type over as null, so
+      // the String "a" arrives as null on iOS (desktop delivers "a"); the row asserts the arity
+      // and the int, which the no-op path cannot produce.
+      var pairArgs: List<Any?>? = null
+      val pairConnection =
+        root.signal("kanama_p3_args").connect(target, 2) { args -> pairArgs = args }
+      root.emitSignal("kanama_p3_args", "a", 2L)
+      val receivedPair = pairArgs
+      check(
+        "root(emitSignal two args, Variant path -> lambda received (_, 2))",
+        pairConnection.error == 0L &&
+          receivedPair != null &&
+          receivedPair.size == 2 &&
+          (receivedPair[1] as? Number)?.toLong() == 2L,
+      )
+
+      // Close both lambda connections; "no connections" is admissible only because the two rows
+      // above proved each connection delivered.
+      longConnection.close()
+      pairConnection.close()
+      check(
+        "root(SignalConnection.close -> no connections left)",
+        !root.hasConnections("kanama_p3_user") && !root.hasConnections("kanama_p3_args"),
+      )
+
+      // setScript(null) / getScript is not covered: a `getScript() == null` row is admissible only
+      // after a row proving getScript returns non-null for something, and no scripted object
+      // exists at scene-level extension init (no scene is loaded yet, and a script built here
+      // would need a compiled, instantiable Script — Object::set_script creates no instance
+      // otherwise, so get_script would still answer null; core/object/object.cpp:984-992,
+      // 1010-1011).
+    }
+    if (rootSeg.address() != 0L) ObjectCalls.destroyObject(rootSeg)
+    if (targetSeg.address() != 0L) ObjectCalls.destroyObject(targetSeg)
   }
 
   // Task 124 — THE PERMANENT RED RUN: seven deliberate faults, raised in the sink's probe mode.

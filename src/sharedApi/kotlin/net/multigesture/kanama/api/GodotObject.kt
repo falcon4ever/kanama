@@ -1,10 +1,10 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
-import net.multigesture.kanama.binding.ScriptBridge
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import net.multigesture.kanama.binding.runtime.Signals as RuntimeSignals
+import net.multigesture.kanama.binding.runtime.ObjectRuntime
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -17,6 +17,13 @@ import net.multigesture.kanama.types.NodePath
  * instance id once (see [instanceId]). After the object is freed the wrapper is a
  * dangling pointer for every member except [instanceId], and `GD.isInstanceValid`
  * is the only safe question left to ask it.
+ *
+ * Written once for every backend (task 117 P3′, D20): this file is compiled by the desktop/Android
+ * and iOS targets alike. Every member is a ptrcall through `ObjectCalls` except the four
+ * platform-bound hooks — instance-id capture, `emitSignal`, and the script-property buffering in
+ * [set]/[call]/[setScript] — which go through the internal `ObjectRuntime` seam
+ * (`src/commonMain/.../binding/runtime/ObjectRuntime.expect.kt`). [signal] returns the platform's
+ * own `GodotSignal`.
  */
 open class GodotObject(val handle: GodotHandle) {
 
@@ -43,7 +50,14 @@ open class GodotObject(val handle: GodotHandle) {
      * `getInstanceId()J` signature; Kotlin callers read `instanceId` as usual.
      */
     @get:JvmName("capturedInstanceId")
-    val instanceId: Long = ObjectCalls.objectGetInstanceId(segment)
+    val instanceId: Long = ObjectRuntime.instanceIdOf(segment)
+
+    /**
+     * Argument-position handle check. A non-owning wrapper has nothing to refuse; [RefCounted]
+     * overrides it with its closed-handle check (task 98). Internal: it hands out the raw engine
+     * pointer, which is never part of a wrapper signature (task 104).
+     */
+    internal open fun requireOpenHandle(): RawSegment = segment
 
     fun getClassName(): String =
         ObjectCalls.ptrcallNoArgsRetString(getClassBind, segment)
@@ -190,7 +204,7 @@ open class GodotObject(val handle: GodotHandle) {
     }
 
     fun emitSignal(signal: String, vararg args: Any?) {
-        RuntimeSignals.emitAny(segment, signal, args.toList())
+        ObjectRuntime.emitSignal(segment, signal, args.toList())
     }
 
     fun setBlockSignals(enable: Boolean) {
@@ -234,7 +248,7 @@ open class GodotObject(val handle: GodotHandle) {
         if (method == "set" && args.size == 2) {
             val property = args[0] as? String
             if (property != null) {
-                ScriptBridge.applyOrRecordScriptPropertySet(segment, property, args[1])
+                ObjectRuntime.onPropertySet(segment, property, args[1])
             }
         }
         return result
@@ -258,7 +272,7 @@ open class GodotObject(val handle: GodotHandle) {
 
     fun set(property: String, value: Any?): Long {
         ObjectCalls.ptrcallWithStringNameAndVariantArg(objectSetBind, segment, property, value)
-        ScriptBridge.applyOrRecordScriptPropertySet(segment, property, value)
+        ObjectRuntime.onPropertySet(segment, property, value)
         return 0L
     }
 
@@ -267,7 +281,7 @@ open class GodotObject(val handle: GodotHandle) {
     }
 
     fun setScript(script: Resource?) {
-        ScriptBridge.noteSetScript(segment, script?.segment ?: NULL_SEGMENT)
+        ObjectRuntime.onSetScript(segment, script?.segment ?: NULL_SEGMENT)
         ObjectCalls.ptrcallWithVariantArg(setScriptBind, segment, script)
     }
 
@@ -306,6 +320,9 @@ open class GodotObject(val handle: GodotHandle) {
         const val CONNECT_ONE_SHOT = 4L
         const val CONNECT_REFERENCE_COUNTED = 8L
         const val CONNECT_APPEND_SOURCE_OBJECT = 16L
+
+        /** A non-owning view of the object behind [handle], or null for a NULL handle. */
+        fun fromHandle(handle: GodotHandle): GodotObject? = wrap(handle.segment)
 
         internal fun wrap(handle: RawSegment): GodotObject? =
             if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
@@ -496,7 +513,9 @@ open class GodotObject(val handle: GodotHandle) {
             ObjectCalls.getMethodBind("Object", "can_translate_messages", NOARGS_BOOL_HASH)
         }
 
-        private val callBind by lazy {
+        // Internal, not private: the iOS ObjectRuntime.emitSignal Variant path reuses this cached
+        // Object.call bind instead of resolving its own (task 117 P3′ follow-up).
+        internal val callBind by lazy {
             ObjectCalls.getMethodBind("Object", "call", CALL_HASH)
         }
 

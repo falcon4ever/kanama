@@ -23,6 +23,7 @@ from generate_api_wrapper import (
     IOS_ONLY_GENERATED,
     IOS_UNSUPPORTED_CLASSES,
     PER_PLATFORM_WRAPPERS,
+    SHARED_HAND_ROOT_FILES,
     TreeResult,
     generated_companion_paths,
     ios_generated_member_names,
@@ -420,14 +421,21 @@ def check_ios_policies(output_dir: Path) -> int:
               "(script-attachable non-null factory policy regressed)", file=sys.stderr)
         return 1
 
-    # RefCounted return-slot ownership mirror (task 30/31): the iOS RefCounted wrapper must
-    # carry the release primitive (close() = unreference + destroy at zero, releaseHandle for
-    # the collapse pattern), and fluent self-returns must emit the same collapse pattern as
-    # desktop — otherwise every RefCounted-typed ptrcall return leaks an engine ref on iOS.
-    _gen_ios(policy_dir, "RefCounted", "Resource")
-    rc = (policy_dir / "RefCounted.kt").read_text(encoding="utf-8")
+    # RefCounted return-slot ownership (task 30/31): RefCounted carries the release primitive
+    # (close() = unreference + destroy at zero, releaseHandle for the collapse pattern), and fluent
+    # self-returns must emit the same collapse pattern on iOS as on desktop — otherwise every
+    # RefCounted-typed ptrcall return leaks an engine ref on iOS. Since task 117 P3' RefCounted is a
+    # shared hand root (SHARED_HAND_ROOTS) written once in the shared tree, so the lock reads that
+    # file, and the iOS renderer must refuse to emit a second RefCounted.
+    refused = _gen_ios(policy_dir, "RefCounted", "Resource")
+    if (policy_dir / "RefCounted.kt").exists() or "hand-root: RefCounted" not in refused.stderr:
+        print("[wrapper_generator] FAIL the iOS renderer emitted RefCounted (or did not report the "
+              "refusal); it is a shared hand root written once in the shared tree (task 117 P3')",
+              file=sys.stderr)
+        return 1
+    rc = (SHARED_API_DIR / "RefCounted.kt").read_text(encoding="utf-8")
     if "override fun close()" not in rc or "internal fun releaseHandle" not in rc:
-        print("[wrapper_generator] FAIL iOS RefCounted lost its ownership custom sections "
+        print("[wrapper_generator] FAIL the shared RefCounted lost its ownership members "
               "(close()/releaseHandle — RefCounted returns would leak again)", file=sys.stderr)
         return 1
     ios_resource = (policy_dir / "Resource.kt").read_text(encoding="utf-8")
@@ -435,11 +443,12 @@ def check_ios_policies(output_dir: Path) -> int:
         print("[wrapper_generator] FAIL iOS self-return collapse pattern not emitted "
               "(Resource.duplicate should carry the desktop collapse policy)", file=sys.stderr)
         return 1
-    # Receiver-side use-after-close guard (task 98): the iOS RefCounted must carry checkOpen()
-    # and every RefCounted-derived method body must open with it, on both platforms.
+    # Receiver-side use-after-close guard (task 98): RefCounted must carry checkOpen() and the
+    # requireOpenHandle() override, and every RefCounted-derived method body must open with it, on
+    # both platforms.
     if "internal fun checkOpen()" not in rc or "override fun requireOpenHandle()" not in rc:
-        print("[wrapper_generator] FAIL iOS RefCounted lost its checkOpen()/requireOpenHandle() "
-              "custom section (use-after-close would be a native fault again)", file=sys.stderr)
+        print("[wrapper_generator] FAIL the shared RefCounted lost its checkOpen()/requireOpenHandle() "
+              "(use-after-close would be a native fault again)", file=sys.stderr)
         return 1
     if "        checkOpen()\n" not in ios_resource:
         print("[wrapper_generator] FAIL iOS RefCounted-derived methods no longer emit checkOpen() "
@@ -554,6 +563,15 @@ def check_single_tree(tree: TreeResult) -> int:
         rc = 1
         print(f"[wrapper_generator] FAIL {len(ios_copies)} shared classes also have an iOS copy under {_rel(IOS_API_DIR)}: {ios_copies[:20]}", file=sys.stderr)
 
+    stale_roots = stale_hand_root_copies()
+    if stale_roots:
+        rc = 1
+        print(f"[wrapper_generator] FAIL {len(stale_roots)} stale per-platform copies of a shared hand root "
+              f"(task 117 P3' writes GodotObject/RefCounted/GodotCallable once, in {_rel(SHARED_API_DIR)}):",
+              file=sys.stderr)
+        for problem in stale_roots:
+            print(f"    {problem}", file=sys.stderr)
+
     table_problems: list[str] = []
     for name, home in sorted(PER_PLATFORM_WRAPPERS.items()):
         if (SHARED_API_DIR / f"{name}.kt").exists():
@@ -584,6 +602,37 @@ def check_single_tree(tree: TreeResult) -> int:
             f"collision={len(IOS_HANDWRITTEN_COLLISION_CLASSES)} unsupported={len(IOS_UNSUPPORTED_CLASSES)}){pending}"
         )
     return rc
+
+
+# Leading annotations (`@Suppress("X")`, on the same line or the lines above) and every modifier a
+# stale copy could carry, `private` and `sealed` included: a `private class GodotObject` in a
+# platform file still shadows the shared root inside that file.
+_ROOT_DECLARATION_RE = re.compile(
+    r"(?m)^(?:@[\w.]+(?:\([^)]*\))?\s+)*"
+    r"(?:(?:public|internal|private|open|abstract|sealed|data|expect|actual)\s+)*class\s+("
+    + "|".join(SHARED_HAND_ROOT_FILES)
+    + r")\b"
+)
+
+
+def stale_hand_root_copies() -> list[str]:
+    """Task 119 item 34, for the shared hand roots (task 117 P3'): each root is ONE hand-written file
+    in the shared tree, so a `<Root>.kt` in a platform directory, or a `class <Root>` declared in any
+    platform api file (the iOS GodotObject used to live inside IosGodotApi.kt), is a stale copy that
+    would either fail one platform's compile as a redeclaration or, worse, shadow the shared class
+    in a lane that compiles the platform tree alone."""
+    problems: list[str] = []
+    for name in SHARED_HAND_ROOT_FILES:
+        if not (SHARED_API_DIR / f"{name}.kt").exists():
+            problems.append(f"{name}: {_rel(SHARED_API_DIR)}/{name}.kt is missing")
+    for directory in (DESKTOP_API_DIR, IOS_API_DIR):
+        for path in sorted(directory.glob("*.kt")):
+            if path.stem in SHARED_HAND_ROOT_FILES:
+                problems.append(f"{path.stem}: per-platform file {_rel(path)}")
+                continue
+            for match in _ROOT_DECLARATION_RE.finditer(strip_comments(path.read_text(encoding="utf-8"))):
+                problems.append(f"{match.group(1)}: declared in {_rel(path)}")
+    return problems
 
 
 SHARED_SOURCE_ROOTS = (ROOT / "src/commonMain/kotlin", ROOT / "src/sharedApi/kotlin")

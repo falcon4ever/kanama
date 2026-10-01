@@ -1,8 +1,20 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
+// Written once for every backend (task 117 P3′, D20/D22): one lifetime policy, every body a
+// ptrcall through `ObjectCalls`. The constructor is internal (D4): constructing a ref-counted wrapper
+// from a raw handle without a retain is the ownership footgun `fromHandle` exists to prevent; the
+// generated subclasses and the owned-decode paths inside the module keep working.
+//
+// Ownership (wrapper-maintenance.md "RefCounted Return Ownership"): a wrapper returned from a
+// RefCounted-typed ptrcall method owns the +1 reference the engine hands through the return slot
+// (meta:"required" included), and close() releases it — unreference() + destroy at zero. Wrappers
+// minted from Variant-path returns or fromHandle casts borrow; do not close those.
+//
+// The KDoc blocks marked "Generated from Godot docs" are owned by sync_kdoc_from_godot_docs.py.
 /**
  * Base class for reference-counted objects.
  *
@@ -15,21 +27,29 @@ open class RefCounted internal constructor(
     private var closed = false
     private var wrapperReferenceReleased = false
 
+    // `Int`, the generator's width mapping for Godot's int32 (task 117 D12/D22); desktop returned
+    // `Long` until P3′.
     /**
      * Returns the current reference count.
      *
      * Generated from Godot docs: RefCounted.get_reference_count
      */
-    fun getReferenceCount(): Long {
+    fun getReferenceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, segment).toLong()
+        return ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, segment)
     }
 
+    /**
+     * Receiver-side use-after-close guard (task 98): every generated method on a RefCounted-derived
+     * wrapper calls this first, so a call through a handle whose [close] destroyed the object is an
+     * IllegalStateException, not a native fault.
+     */
     internal fun checkOpen() {
         check(!closed) { "RefCounted handle is closed" }
     }
 
-    internal fun requireOpenHandle(): RawSegment {
+    /** Argument-position counterpart of [checkOpen]: the closed-handle check for an argument. */
+    internal override fun requireOpenHandle(): RawSegment {
         checkOpen()
         return segment
     }
@@ -68,6 +88,14 @@ open class RefCounted internal constructor(
     }
 
     companion object {
+        /** A BORROWED view of the object behind [handle] (no retain): never `close()` it. */
+        @JvmStatic
+        fun fromHandle(handle: GodotHandle): RefCounted? =
+            wrap(handle.segment)
+
+        internal fun wrap(handle: RawSegment): RefCounted? =
+            if (handle.address() == 0L) null else RefCounted(GodotHandle(handle))
+
         private const val NOARGS_LONG_HASH = 3905245786L
         private const val UNREFERENCE_HASH = 2240911060L
         // reference() shares unreference()'s hash: both are bool()-signatured no-arg RefCounted methods.
@@ -97,6 +125,10 @@ open class RefCounted internal constructor(
             return ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
         }
 
+        /**
+         * Releases the `+1` return-slot reference carried by [handle] without minting a wrapper —
+         * the generated self-return-collapse pattern calls this before returning `this` (task 31).
+         */
         internal fun releaseHandle(handle: RawSegment) {
             if (handle.address() != 0L) {
                 if (ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)) {

@@ -1893,7 +1893,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNameAndVariantArgRetVariantScalar(
+  actual fun ptrcallWithStringNameAndVariantArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -19569,7 +19569,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoStringNameArgsRetString(
+  actual fun ptrcallWithTwoStringNameArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -19980,7 +19980,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithNodePathArgRetVariantScalar(
+  actual fun ptrcallWithNodePathArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -20006,7 +20006,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithNodePathAndVariantArg(
+  actual fun ptrcallWithNodePathAndVariantArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: NodePath,
@@ -22108,7 +22108,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (StringName, Callable, uint32) and int64 return value. */
-  fun ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
+  actual fun ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -22138,7 +22138,7 @@ actual object ObjectCalls {
   /**
    * Calls [methodBind] with (StringName, Callable.bindv(boundArgs), uint32) and int64 return value.
    */
-  fun ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
+  actual fun ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -22203,7 +22203,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (StringName, Callable) and bool return value. */
-  fun ptrcallWithStringNameAndCallableArgsRetBool(
+  actual fun ptrcallWithStringNameAndCallableArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -24135,7 +24135,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (StringName, Callable.bindv(boundArgs)) and no return value. */
-  fun ptrcallWithStringNameAndBoundCallableArgs(
+  actual fun ptrcallWithStringNameAndBoundCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -24172,7 +24172,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (String, Array[Dictionary]) and no return value. */
-  fun ptrcallWithStringAndArrayOfDictionariesArg(
+  actual fun ptrcallWithStringAndArrayOfDictionariesArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     message: String,
@@ -35999,7 +35999,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoStringNameIntStringNameArgsRetString(
+  actual fun ptrcallWithTwoStringNameIntStringNameArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -38519,7 +38519,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNameArrayArgsRetVariantScalar(
+  actual fun ptrcallWithStringNameArrayArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     method: String,
@@ -40296,7 +40296,7 @@ actual object ObjectCalls {
     objectGetInstanceId.invoke(instance) as Long
 
   /** Destroys a Godot Object pointer allocated via classdb_construct_object3. */
-  fun destroyObject(instance: MemorySegment) {
+  actual fun destroyObject(instance: MemorySegment) {
     if (instance.address() == 0L) return
     objectDestroy.invoke(instance)
   }

@@ -118,9 +118,9 @@ Generated wrappers are held to a **single-tree drift gate**. There is one genera
 wrapper tree, `src/sharedApi/kotlin/net/multigesture/kanama/api`, a source directory
 of BOTH platform source sets of the one multiplatform module (`jvmMain` and
 `iosMain`), also copied through the PanamaPort remap by the Android plugin. It is
-shared SOURCE, not KMP common code: its classes extend the hand-shaped per-platform
-wrappers (`Node`, `GodotObject`, …), which a common source file may not name — task
-117 is the parcel that would change that. The shared
+shared SOURCE, not KMP common code: its sources still name per-platform classes
+(`GodotSignal`, `Engine`, `MainThread`), which a common source file
+may not name — task 117 P4′ is the parcel that moves the tree to `commonMain`. The shared
 file of a class carries the members both native backends can call: the method set is
 the iOS-audited helper-shape set (`IOS_AUDIT_ONLY`), the surface is desktop's
 (`@JvmStatic`, factory helpers). Members desktop can call but iOS cannot yet (no
@@ -171,7 +171,39 @@ inside `IosGodotApi.kt` or a bespoke file, or `unsupported`). `DESKTOP_HANDSHAPE
 views of that table. A class is per-platform only when the platforms genuinely host it
 differently, and a `hand` cell is the only thing the gate exempts; a class joins that
 table only when the generator genuinely cannot reproduce it on both platforms. Non-API
-files (`GodotObject`, `GD`, `DirAccessHandle`, …) are auto-excluded.
+files (`GD`, `DirAccessHandle`, …) are auto-excluded, and so are the hand-written roots
+described next.
+
+**The roots are written once (task 117 P3′).** `GodotObject`, `RefCounted` and
+`GodotCallable` are hand-written files in the shared tree
+(`src/sharedApi/kotlin/.../api/{GodotObject,RefCounted,GodotCallable}.kt`), compiled by every
+platform like the generated classes they are the base of; neither platform has a copy.
+`RefCounted` shares its name with a Godot class, so `SHARED_HAND_ROOTS` in the generator keeps it
+out of the tree universe (and `--ios-emit-class RefCounted` refuses it); `GodotObject` (Godot's
+`Object`) and `GodotCallable` carry no Godot class name and were never generated. Every member of
+the three is a ptrcall through `ObjectCalls`, except four platform-bound hooks that go through the
+internal **`ObjectRuntime` seam** — `internal expect object ObjectRuntime` in
+`src/commonMain/.../binding/runtime/ObjectRuntime.expect.kt`, the compiler-checked contract in the
+same style as `ObjectCalls` and `BuiltinCalls`:
+
+| hook | called from | desktop/Android actual | iOS actual |
+|---|---|---|---|
+| `instanceIdOf(segment)` | `GodotObject.instanceId` (captured at construction) | `ObjectCalls.objectGetInstanceId` | `IosGodot.objectGetInstanceId` |
+| `emitSignal(segment, signal, args)` | `GodotObject.emitSignal` | `binding.runtime.Signals.emitAny` | shim fast paths for one `Int`/`Long`/`Vector2i`, else Variant `emit_signal` |
+| `onPropertySet(segment, property, value)` | `GodotObject.set`, `call("set", …)` | `ScriptBridge.applyOrRecordScriptPropertySet` | documented no-op |
+| `onSetScript(segment, script)` | `GodotObject.setScript` (before the ptrcall) | `ScriptBridge.noteSetScript` | documented no-op |
+
+Keep the seam that small: a hook belongs there only when a root's body cannot be a ptrcall. The
+root `Object` helper shapes the roots call are part of the generated `expect object ObjectCalls`
+like any other referenced helper; on iOS the generator emits them from the root `Object` methods
+(`collect_root_object_shapes`) where the renderer can, and the rest are hand-written above the
+`GENERATED MEMBERS` marker (listed in `IOS_HANDWRITTEN_HELPERS`). `GodotSignal` and
+`SignalConnection` are the two genuinely per-platform classes left (desktop
+`SignalCallbackRegistry` + bound Callable, iOS `IosCallableRegistry` + the shim's custom
+Callable); `scripts/check_wrapper_parity.py` holds their two copies to one public shape until the
+tree move lets them become `expect`/`actual`. The drift gate and the parity gate both fail on a
+stale per-platform copy of a root (a `<Root>.kt` in a platform api directory, or a `class <Root>`
+declared in any platform api file).
 
 `check_single_tree` in `scripts/check_wrapper_generator.py` regenerates the whole tree
 in-process (a few seconds) and fails if any generated file — a shared class, a
@@ -243,16 +275,15 @@ The wrapper convention on desktop/Android:
   the ptrcall shape.
 
 The iOS island mirrors the same convention (task 30): the C-shim exposes
-`object_destroy` (`kanama_ios_godot_object_destroy`), `ObjectCalls.destroyObject`
-wraps it, and the generated iOS `RefCounted` carries `close()` (unreference +
-destroy at zero) plus the internal `releaseHandle` primitive via generator
-custom sections — so the collapse pattern above is emitted identically in the
-shared tree and the iOS-only generated files. The iOS `GodotObject` is not
-`AutoCloseable`, like desktop; the generated iOS `RefCounted` declares it and owns
-`close()` (node/server returns are raw pointers with no reference transfer). Both the custom sections
-and the collapse emission are locked by `check_ios_policies`, and the on-device
-self-test matrix carries a `refcounted-ret-owns-plus1` refcount probe
-(duplicate() → refcount 1 → close()).
+`object_destroy` (`kanama_ios_godot_object_destroy`) and `ObjectCalls.destroyObject`
+wraps it. Since task 117 P3′ there is one `RefCounted` for every platform — the hand-written
+shared root — carrying `close()` (unreference + destroy at zero) and the internal
+`releaseHandle` primitive, so the collapse pattern above is emitted identically in the
+shared tree and the iOS-only generated files. `GodotObject` is not `AutoCloseable`;
+`RefCounted` declares it and owns `close()` (node/server returns are raw pointers with no
+reference transfer). The shared `RefCounted`'s ownership members and the collapse emission are
+locked by `check_ios_policies`, and the on-device self-test matrix carries a
+`refcounted-ret-owns-plus1` refcount probe (duplicate() → refcount 1 → close()).
 
 ### Freshly created resources own their reference — *close what you create* (tasks 61/62)
 
@@ -340,10 +371,10 @@ dropping or clashing. These are locked by `check_ios_policies`
 in `scripts/check_wrapper_generator.py`:
 
 - **Bare-`Object` returns.** `get_collider()`-style methods that return the root Godot
-  `Object` wrap to `GodotObject?`. Desktop/Android find `GodotObject.wrap()` via a
-  `GodotObject.kt` file; on iOS `GodotObject` lives inside `IosGodotApi.kt`, so
-  `wrapper_has_wrap` special-cases `GodotObject` as always-present. Without this the iOS
-  regen drops every bare-`Object`-return method (a silent coverage loss), even though the
+  `Object` wrap to `GodotObject?`. `wrapper_has_wrap` finds `GodotObject.wrap()` in the shared
+  `GodotObject.kt` on every platform (until task 117 P3′ the iOS `GodotObject` lived inside
+  `IosGodotApi.kt` and needed a special case). Without it the iOS regen drops every
+  bare-`Object`-return method (a silent coverage loss), even though the
   `ptrcallNoArgsRetObject` helper is fully wired (Node returns use it).
 
 - **Subclass-override openness** *(no live probe since task 117 P1'(b2); kept as the rule for the
@@ -386,10 +417,12 @@ in `scripts/check_wrapper_generator.py`:
   by-design exceptions to iOS class-set parity with desktop (task 30); retire an entry by
   porting the desktop policy surface it depends on.
 
-- **RefCounted ownership sections.** The iOS `RefCounted` wrapper's `close()`/`releaseHandle`
-  custom sections and the fluent self-return collapse emission (see "RefCounted Return
-  Ownership" above) are locked by `check_ios_policies` so a generator refactor cannot
-  silently reintroduce the per-call RefCounted return leak.
+- **RefCounted ownership.** The shared hand-written `RefCounted`'s `close()`/`releaseHandle`/
+  `checkOpen()`/`requireOpenHandle()` members, the iOS renderer's refusal to emit a second
+  `RefCounted`, and the fluent self-return collapse emission (see "RefCounted Return
+  Ownership" above) are locked by `check_ios_policies` so a refactor cannot silently
+  reintroduce the per-call RefCounted return leak. (Until task 117 P3′ the iOS `RefCounted` was
+  generated with these as custom sections.)
 
 Two cross-platform load-bearing wrapper shapes are reproduced by explicit policy (so a regen
 does not drop them), locked by `check_ios_policies`:
@@ -625,8 +658,8 @@ desktop (Android gets it through the source remap), and
 `src/iosMain/.../binding/runtime/ObjectCalls.kt` over the C shim for iOS. Since task 104
 step 3 both are `actual object ObjectCalls`, actualizing the GENERATED
 `expect object ObjectCalls` in
-`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt` — 1,352 of
-the 1,359 helpers the tree calls, with seven documented exceptions in
+`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt` — 1,443 of
+the 1,450 helpers the tree calls (task 117 P3′), with seven documented exceptions in
 `scripts/check_objectcalls_parity.py`. The compiler, not a script, is the parity contract.
 
 **One file per platform.** The iOS file is hand-written except for a marked region at the

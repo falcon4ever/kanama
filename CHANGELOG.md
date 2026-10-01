@@ -7,6 +7,84 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — the roots written once (task 117 P3′) — **desktop and iOS source breaks**
+
+- **`GodotObject`, `RefCounted` and `GodotCallable` exist once**, hand-written, in
+  `src/sharedApi/kotlin/net/multigesture/kanama/api/` — the same source directory the generated
+  wrapper tree lives in, compiled by desktop, Android and iOS. The per-platform copies are gone:
+  `src/jvmMain/.../api/{GodotObject,RefCounted,GodotCallable}.kt` moved there,
+  `src/iosMain/.../api/{RefCounted,GodotCallable}.kt` and the `GodotObject` class inside
+  `IosGodotApi.kt` are deleted. In plain words, the three decisions behind it:
+  - **D20 — one source over a thin seam, not two `expect`/`actual` copies.** Every member of the
+    three is a ptrcall through `ObjectCalls`, except four platform-bound hooks — capturing the
+    instance id, `emitSignal`, and desktop's script-property buffering in `set` / `call("set")` /
+    `setScript` — which go through one small `internal expect object ObjectRuntime` in
+    `src/commonMain/.../binding/runtime/ObjectRuntime.expect.kt` (desktop actual: `ObjectCalls`,
+    `Signals.emitAny`, `ScriptBridge`; iOS actual: `IosGodot`, the shim's emit fast paths, two
+    documented no-ops). Divergence between the platforms is now impossible rather than gated.
+  - **D21 — `GodotSignal` and `SignalConnection` are the genuinely per-platform classes** (desktop
+    `SignalCallbackRegistry` + bound Callable, iOS `IosCallableRegistry` + the shim's custom
+    Callable), with desktop's public surface on both. The iOS pair moved out of `IosGodotApi.kt`
+    into its own `GodotSignal.kt`. They are not `expect` classes yet: an `expect` in
+    `src/commonMain` cannot name `GodotObject`, which lives in `src/sharedApi` until the tree moves
+    to `commonMain` (P4′); until then `scripts/check_wrapper_parity.py` compares the two copies.
+  - **D22 — the shape rulings:** desktop's surface is canonical; `requireOpenHandle()` is an
+    `internal open` member of `GodotObject` that `RefCounted` overrides; `RefCounted`'s constructor
+    is `internal`; both roots have a public companion `fromHandle` and an internal `wrap`;
+    `connectBound`/`disconnectBound` are internal.
+- **Desktop source break: `RefCounted.getReferenceCount()` returns `Int`** (was `Long`) — the
+  generator's width mapping for Godot's `int32`, which iOS already used. `x.getReferenceCount() ?: 0L`
+  no longer type-checks as a number; write `?: 0`. `example_project/HelloScript.kt` is the one
+  in-repo caller that needed it; the eleven demos compile unchanged.
+- **`RefCounted`'s constructor is `internal`** on every platform (it was public on iOS). Nothing
+  outside the module constructed one; use `RefCounted.fromHandle(handle)` for a borrowed view.
+  iOS also loses the internal `unreference()` (no caller; `close()` is the contract).
+- **iOS source breaks:** `GodotObject(handle: Long)` is gone — construct from a `GodotHandle`, or
+  use `GodotObject.fromHandle(handle)`; the three `emitSignal(name, Int | Long | Vector2i): Int`
+  overloads are gone — `emitSignal(name, vararg args)` covers them and still takes the same shim
+  fast paths for a single `Int`/`Long`/`Vector2i` argument, but returns `Unit`; constructing a
+  `GodotObject` over a NULL handle now throws (`require`, like desktop) instead of yielding a
+  wrapper with `instanceId == 0`. `connect`/`disconnect` take desktop's parameter name `signal`
+  (was `signalName`) for named-argument callers. `connectBound`/`disconnectBound` are now
+  `internal` on iOS (they were public). **`toString()` is now an engine ptrcall on iOS**
+  (`Object.to_string`, e.g. `<Node2D#123>`, as on desktop; it used to be Kotlin's
+  `Any.toString`): calling it on a wrapper whose object was freed — a string template, a log
+  line — dereferences a dangling pointer. Check `instanceId` / `GD.isInstanceValid` first. The
+  same holds for `GodotCallable.toString()`, a data class over a `GodotObject`.
+- **Desktop: `GodotObject.fromHandle` and `RefCounted.fromHandle` are new public members** (a
+  non-owning view of the object behind a `GodotHandle`, or null for a NULL handle; iOS already
+  had `RefCounted.fromHandle` and gains `GodotObject.fromHandle`).
+- **iOS gains 35 `GodotObject` members** it never had: `getClassName`, `setIndexed`/`getIndexed`
+  (`NodePath` and `String` forms), `getPropertyList`, `getMethodList`, `propertyCanRevert`,
+  `propertyGetRevert`, `notification`, `getScript`, `setMeta`, `getMeta`, `hasMeta`, `removeMeta`,
+  `getMetaList`, `addUserSignal`, `hasUserSignal`, `removeUserSignal`, `getMethodArgumentCount`,
+  `getSignalList`, `getSignalConnectionList`, `getIncomingConnections`, `hasConnections`,
+  `isConnected`, `setBlockSignals`, `isBlockingSignals`, `notifyPropertyListChanged`,
+  `setMessageTranslation`, `canTranslateMessages`, `callv`, `tr`, `trN`, `getTranslationDomain`,
+  `setTranslationDomain`, `cancelFree` and `toString` — plus the seven `NOTIFICATION_*`/`CONNECT_*`
+  companion constants it lacked, the nested `GodotObject.Signals`, `GodotSignal.disconnect(target,
+  method)` and `GodotSignal.awaitObject(target)`. `isClass`, `getInstanceId`, `set`, `get`,
+  `setScript` and `setDeferred` now use the desktop ptrcall bodies on iOS too. Twenty-three new
+  level-2 `OBJECTCALLS SELFTEST` rows prove the new members and the changed paths on the device:
+  fourteen for the members iOS gains, nine for the members whose iOS path changed (`set`/`get`,
+  `isClass`, `getInstanceId`, `toString`, `emitSignal` on the Long fast path and the Variant path
+  into Kotlin lambdas, `addUserSignal` with arguments read back through `getSignalList`, and
+  `SignalConnection.close`). `setDeferred` (not observable synchronously) and `setScript(null)`
+  (no scripted object exists at scene init to prove `getScript` non-null first) are not covered.
+- **`ObjectCalls`:** the expect object gains the 12 helpers the shared roots call that it did not
+  list (`destroyObject` and 11 root-`Object` shapes). iOS had 11 of them missing: 7 are generated
+  from the root `Object` methods (`collect_root_object_shapes` — indexed get/set, `get_meta`,
+  `callv`, `is_connected`, `tr`, `tr_n`) and 4 are hand-written (`connect` →
+  `IosGodot.objectConnect`, the two bound-Callable shapes → the existing bound-connect shim paths,
+  `add_user_signal` → the Variant path). The two iOS connect helpers range-check `flags` like
+  desktop's (`requireUInt32`): a value outside Godot's `uint32` now throws
+  `IllegalArgumentException` on iOS too instead of reaching the shim.
+- **Gates:** `check_wrapper_parity.py`'s `HAND_SHAPED` is `GodotSignal`, `SignalConnection`; the
+  allowlist drops from 62 lines to **1** (`SignalConnection`'s internal constructor — per-platform
+  connection plumbing). The drift gate (`check_wrapper_generator.py`) and the parity gate both fail
+  on a stale per-platform copy of a root (task 119 item 34). The generator's `SHARED_HAND_ROOTS`
+  keeps `RefCounted` out of the generated tree; `PER_PLATFORM_WRAPPERS` is 25 → **24** classes.
+
 ### Fixed — iOS: the bridge no longer fails quietly (task 124)
 
 - **Every guarded early return in the iOS C shim now reports.** `ios/bootstrap/kanama_ios_shim.c` is the

@@ -106,6 +106,30 @@ the backend's pointer type (iOS declares its own over the `MemorySegment` shim),
 the same wrapper source runs on both backends. A wrapper BODY unwraps it once through
 the internal `GodotObject.segment`; the raw type never appears in a public signature.
 
+**The roots are shared too (task 117 P3′).** `GodotObject`, `RefCounted` and `GodotCallable`
+are written once, by hand, in `src/sharedApi/kotlin/.../api/` — iOS no longer has its own
+copies (the old iOS `GodotObject` lived inside `IosGodotApi.kt`). Every member is the desktop
+ptrcall body over `ObjectCalls`, so iOS carries the full desktop `GodotObject` surface
+(`setMeta`/`getMeta`, `setIndexed`/`getIndexed`, `callv`, `tr`/`trN`, `addUserSignal`,
+`isConnected`, …). The four things a root cannot do through `ObjectCalls` go through the
+internal `ObjectRuntime` seam (`src/commonMain/.../binding/runtime/ObjectRuntime.expect.kt`);
+the iOS actual is `src/iosMain/.../binding/runtime/ObjectRuntime.kt`:
+
+| hook | iOS actual |
+|---|---|
+| `instanceIdOf` | `IosGodot.objectGetInstanceId` (`kanama_ios_godot_object_get_instance_id`) |
+| `emitSignal` | a single `Int`/`Long`/`Vector2i` argument takes the shim fast paths (`kanama_ios_godot_object_emit_signal_int` / `_vector2i`); everything else, including no-argument signals, goes through `Object.call("emit_signal", …)` on the Variant path |
+| `onPropertySet`, `onSetScript` | documented no-ops: desktop buffers a script property set on a Kanama-script owner before its Kotlin instance exists; iOS receives engine-driven sets directly through `KanamaIosScriptBridge` and does not buffer |
+
+The root `Object` helpers behind those members are generated into the iOS `ObjectCalls`
+`GENERATED MEMBERS` region where the renderer can emit the shape (`collect_root_object_shapes`
+in the generator); four are hand-written above the marker — `connect` delegates to
+`IosGodot.objectConnect`, the two bound-Callable shapes to the existing
+`ObjectCalls.connectBound`/`disconnectBound`, and `add_user_signal` (desktop's helper name) to
+the Variant path. `GodotSignal`/`SignalConnection` stay per-platform
+(`src/iosMain/.../api/GodotSignal.kt`: `IosCallableRegistry` + the shim's custom Callable)
+with the desktop public surface, held by `scripts/check_wrapper_parity.py`.
+
 ```
 extension_api.json
    │  generate_api_wrapper.py (+ iOS emission target)
@@ -431,8 +455,8 @@ text as a hint.
 
   ```text
   [kanama][ios][c] PTRCALL SELFTEST MATRIX: 70 passed, 0 failed
-  [kanama][ios][kn] OBJECTCALLS SELFTEST: 236 passed, 0 failed
-  [kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 4 passed, 0 failed
+  [kanama][ios][kn] OBJECTCALLS SELFTEST: 274 passed, 0 failed faults=7 expected=7
+  [kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 4 passed, 0 failed faults=7 expected=7
   ```
 
 - **A probe must assert a value the no-op path cannot produce.** This is the rule that decides
