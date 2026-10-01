@@ -48,6 +48,7 @@ import net.multigesture.kanama.ios.cinterop.KanamaIosVariantArgDesc
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned
 import net.multigesture.kanama.ios.cinterop.kanama_ios_classdb_instantiate_owned_static
 import net.multigesture.kanama.ios.cinterop.kanama_ios_fault_count
+import net.multigesture.kanama.ios.cinterop.kanama_ios_fault_set_probe
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_singleton
@@ -38796,7 +38797,7 @@ actual object ObjectCalls {
 // For an INSTANCE row the rule is satisfied by requireSingleton / requireObject below: they prove
 // the instance is non-zero, so the static route is not taken and a default return is a real answer.
 // Task 124 — the number of DELIBERATE faults a healthy DEBUG build produces. Every one of them is
-// raised by runFaultProbes below, inside the single `fault-probes begin`/`end` window it prints,
+// raised by runFaultProbes below, with the sink in probe mode so each prints as `FAULT-PROBE`,
 // and nothing else in either self-test phase raises one. The seven, in the order they fire:
 //
 //   1  bind-lookup-failed  getMethodBind("Node3D", "set_visible", 1L) — a deliberately wrong hash
@@ -38827,20 +38828,39 @@ private const val SELFTEST_EXPECTED_FAULTS = 7
 // Probes 3-7 used to sit inline beside their producers as `…(pending slot drained)` rows that
 // asserted only `take_pending_*(null, 0) == -1`. That -1 is reachable ONLY through the guard that
 // now reports `pending-protocol`, so those rows were always red runs of that guard — a healthy
-// build printed five FAULT lines outside the probe window and `faults=7 expected=2`. They are fault
+// build printed five unexpected FAULT lines and `faults=7 expected=2`. They are fault
 // probes, so they now say so, and they assert the REPORT as well as the -1. Their producers, and
 // the non-default assertions that proved those producers worked (`…, pending slot` / `…, pending
 // blob`), stay exactly where they were: what each row proved about its own producer is still
 // proved in its own place, and what is asserted here is the guard.
 //
-// The probes print seven real FAULT lines, so they are BRACKETED by exactly ONE
-// `fault-probes begin` / `fault-probes end` pair per phase run: the device runner fails the run on
-// any `[kanama][ios][c] FAULT ` line OUTSIDE this window, which keeps `null-bind` — the most common
-// real fault — fatal instead of permanently whitelisted by its text.
+// The probes are MARKED BY THE SINK, not by the lines around them: runFaultProbes turns the shim's
+// probe mode on before the first probe and off after the last (in a finally), and while it is on
+// the sink prints `[kanama][ios][c] FAULT-PROBE …` instead of `[kanama][ios][c] FAULT …`. The
+// device runner fails the run on any `[kanama][ios][c] FAULT ` line (with the space), so a real
+// fault — `null-bind` included — stays fatal while the seven probes do not trip it. An earlier
+// design bracketed the probes with `fault-probes begin`/`end` println lines and trusted the FAULT
+// lines between them; the first device run showed why that cannot work: these println lines go to
+// stdout, the sink writes stderr, and `devicectl --console` merges the two without preserving their
+// relative order, so all seven probe lines landed after the `end` marker. The begin/end lines stay
+// only as human-readable markers in the log; nothing parses them, and nothing may rely on where the
+// FAULT-PROBE lines appear relative to them. What proves that the probes and nothing else fired is
+// the count: `faults=7 expected=7` on both summary lines.
 private fun runFaultProbes(n3: MemorySegment, check: (String, Boolean) -> Unit) {
   println(
-    "[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin (expect $SELFTEST_EXPECTED_FAULTS FAULT lines)"
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin " +
+      "(expect $SELFTEST_EXPECTED_FAULTS FAULT-PROBE lines; stdout/stderr order is not preserved)"
   )
+  kanama_ios_fault_set_probe(1)
+  try {
+    runFaultProbesInProbeMode(n3, check)
+  } finally {
+    kanama_ios_fault_set_probe(0)
+  }
+  println("[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes end")
+}
+
+private fun runFaultProbesInProbeMode(n3: MemorySegment, check: (String, Boolean) -> Unit) {
   val faultsBeforeProbes = ObjectCalls.faultCount()
   var raised = 0
 
@@ -38917,7 +38937,6 @@ private fun runFaultProbes(n3: MemorySegment, check: (String, Boolean) -> Unit) 
     raised == SELFTEST_EXPECTED_FAULTS &&
       ObjectCalls.faultCount() == faultsBeforeProbes + SELFTEST_EXPECTED_FAULTS,
   )
-  println("[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes end")
 }
 
 @OptIn(ExperimentalNativeApi::class)
@@ -41897,9 +41916,9 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   }
 
-  // Task 124 — THE PERMANENT RED RUN, all seven deliberate faults in one bracketed window. See
-  // runFaultProbes (declared beside SELFTEST_EXPECTED_FAULTS at the top of this section) for what
-  // each probe proves and why the five `pending slot drained` rows live there and not inline.
+  // Task 124 — THE PERMANENT RED RUN: seven deliberate faults, raised in the sink's probe mode.
+  // See runFaultProbes (declared beside SELFTEST_EXPECTED_FAULTS at the top of this section) for
+  // what each probe proves and why the five `pending slot drained` rows live there, not inline.
   runFaultProbes(n3) { label, cond -> check(label, cond) }
 
   println(
@@ -42011,7 +42030,7 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
   } else check("ret-callable(NativeMenu.get_popup_open_callback) (singleton absent)", false)
 
   // The fault counter is process-wide and never reset, so by frame 1 it still holds exactly the
-  // two deliberate probes from the level-2 phase — unless something in between failed quietly,
+  // seven deliberate probes from the level-2 phase — unless something in between failed quietly,
   // which is precisely what this line exists to show.
   println(
     "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed " +

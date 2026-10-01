@@ -310,12 +310,34 @@ static int32_t kanama_ios_fault_bump(void) {
     return previous + 1;
 }
 
+/*
+ * Probe mode. The debug self-test raises seven deliberate faults (the `fault-probe(...)` rows in
+ * ObjectCalls.kt); while it does, it turns probe mode on so the sink itself marks those lines as
+ * `FAULT-PROBE` instead of `FAULT`. The marking MUST live in the sink, on the same line: the
+ * self-test's own begin/end markers are Kotlin `println` (stdout) and this sink writes stderr, and
+ * `devicectl --console` merges the two streams without preserving their relative order, so no
+ * scheme that reads "which FAULT lines sit between two marker lines" can work on a device.
+ *
+ * Probe mode changes only the printed tag. A probe fault is still counted and still recorded in
+ * `g_last_fault`, under the same print budget — the summary line's `faults=<N> expected=<N>`
+ * comparison is what proves the probes (and nothing else) fired. A real fault raised by another
+ * thread while probe mode is on would be printed as FAULT-PROBE, but it is still counted, so the
+ * summary reads `faults=8 expected=7` and the run fails anyway.
+ */
+static _Atomic int32_t g_fault_probe_mode = 0;
+
+void kanama_ios_fault_set_probe(int32_t on) {
+    atomic_store(&g_fault_probe_mode, on != 0 ? 1 : 0);
+}
+
 static void kanama_ios_fault(const char *entry, const char *reason, const char *detail) {
     int32_t count = kanama_ios_fault_bump();
     snprintf(g_last_fault, sizeof g_last_fault, "%s %s %s", entry, reason, detail ? detail : "");
     // A tight loop must not flood the console; the COUNT keeps counting past the budget.
     if (count <= KANAMA_IOS_FAULT_PRINT_BUDGET) {
-        fprintf(stderr, "[kanama][ios][c] FAULT %s: %s%s%s\n", entry, reason, detail ? " " : "", detail ? detail : "");
+        const char *tag = atomic_load(&g_fault_probe_mode) != 0 ? "FAULT-PROBE" : "FAULT";
+        fprintf(stderr, "[kanama][ios][c] %s %s: %s%s%s\n", tag, entry, reason, detail ? " " : "",
+                detail ? detail : "");
         fflush(stderr);
     }
 }
@@ -5789,7 +5811,8 @@ int64_t kanama_ios_godot_object_get_instance_id(int64_t object) {
 }
 
 int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id) {
-    // Task 124: THE intentional silent return. A zero instance id is a legitimate question
+    // Task 124, first documented silent return (of three; the BENIGN table in
+    // scripts/check_ios_shim_faults.py lists them all). A zero instance id is a legitimate question
     // ("is this handle still alive?") whose honest answer is "invalid" — not a caller bug — so
     // this guard does NOT report to the fault sink. Every other early return in this shim does.
     if (instance_id == 0) {
@@ -9392,7 +9415,12 @@ int32_t kanama_ios_godot_set_first_node_in_group_text(
     g_object_method_bind_ptrcall(get_first_node_in_group, scene_tree, args, &label);
     kanama_ios_destroy_string_name(&group_name_storage);
     if (label == NULL) {
-        kanama_ios_fault(__func__, "null-arg", "label");
+        // Task 124, third documented silent return: a lookup that legitimately finds nothing. NULL
+        // here is the ANSWER "no node is in this group" — not a bad argument (only the iOS example
+        // project carries the `kanama_ios_probe` label; every other game has none) — and the
+        // caller, KanamaIosRuntime, treats 0 as "not present". The device run that first printed
+        // this as `null-arg label` printed it on every frame of a game without the label. The
+        // other guards in this function (API, SceneTree, the two binds) still report.
         return 0;
     }
 

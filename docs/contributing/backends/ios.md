@@ -212,7 +212,7 @@ platformer):
 ## Contract: no silent paths (the fault sink)
 
 `ios/bootstrap/kanama_ios_shim.c` is the entire iOS surface, and its default failure mode
-used to be silence. 131 exported entry points open with a stack of guards — the engine API
+used to be silence. 132 exported entry points open with a stack of guards — the engine API
 did not resolve, the `MethodBind` is zero, the instance is zero, a C string is NULL, nothing
 is pending — and every one of them returned `0` / `-1` / nothing without a word. That is how
 every Godot static method reached through the shared wrapper tree stayed a no-op on iOS for
@@ -226,6 +226,7 @@ Since task 124 the shim has one sink, near the top of the file:
 static void kanama_ios_fault(const char *entry, const char *reason, const char *detail);
 int32_t kanama_ios_fault_count(void);      /* never reset */
 const char *kanama_ios_last_fault(void);   /* "<entry> <reason> <detail>", "" when none */
+void kanama_ios_fault_set_probe(int32_t on); /* self-test only: tag lines FAULT-PROBE */
 ```
 
 It increments a process-wide counter, stores `"<entry> <reason> <detail>"`, and prints
@@ -259,13 +260,24 @@ The reason token is one of ten fixed spellings — `api-unresolved`, `null-bind`
 the missing interface pointer, the parameter, `Class.method hash=<hash>`, the tag number.
 They are documented for users in `docs/exporting/ios.md`.
 
-Two guards **deliberately** do not report, each documented in its own function comment and
+Three guards **deliberately** do not report, each documented in its own function comment and
 listed in the gate's `BENIGN` table (which can only shrink — a stale entry fails the gate):
 
 - `kanama_ios_godot_is_instance_id_valid(0)` — a zero instance id is a legitimate question
   whose honest answer is "invalid", not a caller bug.
 - the `target == NULL` path in `kanama_ios_godot_ptrcall_ret_callable_dispatch` — an empty
   (object-less) `Callable` is a legitimate value; desktop's `readCallable` returns null too.
+- the `label == NULL` path in `kanama_ios_godot_set_first_node_in_group_text` — a lookup that
+  legitimately finds nothing: NULL is the answer "no node is in the group", and the caller
+  (`KanamaIosRuntime.frame()`) treats `0` as "not present". Only the iOS example project carries
+  a `kanama_ios_probe` label. Task 124 first ruled this `null-arg`, and the first device run
+  (Match3) printed it on every frame; the function's other guards (API, `SceneTree`, the two
+  binds) still report. The caller also stops polling after 120 frames
+  (`probe label group absent after 120 frames; not retrying`) — before that it ran a
+  `get_first_node_in_group` ptrcall on every frame of every game without the label.
+
+The gate prints the totals on PASS: 132 exported entry points and 24 `_dispatch` bodies; 219
+guarded early returns across 83 functions, 216 reporting, 3 documented benign.
 
 **Bind lookups report at lookup time.** `kanama_ios_godot_get_method_bind` and
 `kanama_ios_godot_get_builtin_method` call the sink with `bind-lookup-failed` and the detail
@@ -297,8 +309,8 @@ be forgotten.
 Rows 3–7 used to sit inline beside their producers as `…(pending slot drained)` rows asserting
 only `take_pending_*(null, 0) == -1`. That `-1` is reachable **only** through the guard that
 reports `pending-protocol`, so they were always red runs of that guard in disguise: a healthy
-build printed five FAULT lines *outside* the probe window and `faults=7 expected=2`, which the
-device runner correctly failed. They are fault probes, so they now live with the probes and say
+build printed five unexpected FAULT lines and `faults=7 expected=2`, which the device runner
+correctly failed. They are fault probes, so they now live with the probes and say
 so. Their producers, and the non-default assertions that proved those producers worked, stayed
 where they were.
 
@@ -315,16 +327,29 @@ above `runFaultProbes` with a comment listing the seven, so the number and the t
 are one screen apart and cannot drift. Change it only when you change the probes. Release builds
 run no self-test and print neither summary line.
 
-The probes emit seven genuine FAULT lines, so they are **bracketed** by exactly one
-`OBJECTCALLS SELFTEST fault-probes begin` / `... end` pair per phase run.
-`kanama-demos/scripts/ios_device_run.sh` fails the device run on any `[kanama][ios][c] FAULT `
-line **outside** that window, on a window that opens and never closes, on a run that opened a
-window but printed no summary line at all, and on any summary line where `faults` and `expected`
-disagree. Whitelisting the probes by their text instead would have made `null-bind` — the most
-common real fault — permanently invisible, so the window is the thing that is trusted, not the
-reason token; and an unterminated window would silently swallow every FAULT line after it, which
-is why the window's own integrity is checked before anything is read relative to it. The runner's
-check can be re-run against any saved log with
+**The sink marks the probes, not the lines around them.** `runFaultProbes` calls
+`kanama_ios_fault_set_probe(1)` before the first probe and `kanama_ios_fault_set_probe(0)` after the
+last, in a `finally`. While probe mode is on, the sink still counts each fault and still records
+it in `g_last_fault`, under the same print budget, but prints
+`[kanama][ios][c] FAULT-PROBE <entry>: <reason> <detail>` instead of `[kanama][ios][c] FAULT …`.
+`kanama-demos/scripts/ios_device_run.sh` then fails the device run on any line containing the
+literal `[kanama][ios][c] FAULT ` (with the space, so `FAULT-PROBE` does not match), on any summary
+line where `faults` and `expected` disagree, and on a run where the self-test ran (the
+`PTRCALL SELFTEST MATRIX` line is in the console) but no summary line was printed. A real fault —
+`null-bind`, the most common one, included — therefore stays fatal: the probes are told apart by
+a mark the sink puts on the line at the moment it knows the fault is deliberate, never by the
+reason token. A real fault raised on another thread while probe mode is on would print as
+`FAULT-PROBE`, but it is still counted, so the summary reads `faults=8 expected=7` and the run
+fails anyway.
+
+**Why line order across streams cannot be relied on.** An earlier cut bracketed the probes with
+`OBJECTCALLS SELFTEST fault-probes begin` / `... end` lines and trusted the FAULT lines between
+them. Those markers are Kotlin `println` (stdout); the sink is `fprintf(stderr)`. `devicectl
+--console` merges the two streams without preserving their relative order, and on the first real
+device run (iPhone 12, Match3) all seven probe lines landed *after* the `end` marker, so the runner
+failed a healthy build. Any check that reads a stderr line's meaning from its position relative to
+a stdout line is wrong on a device. The begin/end lines are still printed, as human-readable
+markers only; nothing parses them. The runner's check can be re-run against any saved log with
 `scripts/ios_device_run.sh --check-console-faults /path/to/console.log`, which is how its own red
 runs are reproduced without a phone.
 

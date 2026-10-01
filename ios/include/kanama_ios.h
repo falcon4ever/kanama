@@ -32,6 +32,16 @@ int32_t kanama_ios_fault_count(void);
 
 const char *kanama_ios_last_fault(void);
 
+/*
+ * Probe mode for the debug self-test's deliberate fault probes. While on (non-zero), every fault
+ * is still counted and recorded, but the console line reads `[kanama][ios][c] FAULT-PROBE ...`
+ * instead of `[kanama][ios][c] FAULT ...`, so the device runner can tell an expected probe from a
+ * real fault by the line alone. Line order cannot be used for that: the self-test's markers go to
+ * stdout and the sink to stderr, and `devicectl --console` does not preserve their relative order.
+ * Off by default; only the self-test turns it on, around the probes, and off again in a finally.
+ */
+void kanama_ios_fault_set_probe(int32_t on);
+
 void kanama_ios_godot_ptrcall(
     int64_t method_bind,
     int64_t instance,

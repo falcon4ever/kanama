@@ -320,19 +320,17 @@ The word after the colon is the reason, and it is a fixed token:
 | `unknown-tag` | A ptrcall type tag the shim does not know; the detail carries the number. |
 | `encode-failed` | A container argument could not be encoded for the engine. |
 
-Seven of them you will see **on purpose**, and they are all inside one clearly
-bracketed window:
+Seven more you will see **on purpose**, and they carry their own tag — `FAULT-PROBE`
+instead of `FAULT`:
 
 ```
-[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin (expect 7 FAULT lines)
-[kanama][ios][c] FAULT kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
-[kanama][ios][c] FAULT kanama_ios_godot_ptrcall_dispatch: null-bind
-[kanama][ios][c] FAULT kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
-[kanama][ios][c] FAULT kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
-[kanama][ios][c] FAULT kanama_ios_godot_take_pending_packed: pending-protocol g_pending_packed (nothing pending)
-[kanama][ios][c] FAULT kanama_ios_godot_take_pending_container_blob: pending-protocol g_pending_container_blob
-[kanama][ios][c] FAULT kanama_ios_godot_take_pending_blob: pending-protocol g_pending_blob
-[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes end
+[kanama][ios][c] FAULT-PROBE kanama_ios_godot_get_method_bind: bind-lookup-failed Node3D.set_visible hash=1
+[kanama][ios][c] FAULT-PROBE kanama_ios_godot_ptrcall_dispatch: null-bind
+[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
+[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_utf8: pending-protocol g_pending_utf8
+[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_packed: pending-protocol g_pending_packed (nothing pending)
+[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_container_blob: pending-protocol g_pending_container_blob
+[kanama][ios][c] FAULT-PROBE kanama_ios_godot_take_pending_blob: pending-protocol g_pending_blob
 ```
 
 A debug build's self-test deliberately makes seven bad calls — one lookup with a wrong
@@ -340,15 +338,27 @@ hash, one call through the resulting null bind, and five takes from a pending sl
 has already been drained (one per pending buffer: the UTF-8 string slot twice, then the
 packed, container-blob and array-blob slots) — so a healthy debug run ends with
 `faults=7 expected=7` on both `OBJECTCALLS SELFTEST` summary lines. That is the fault
-sink proving it still works. **Any FAULT line outside that window is a real one.**
+sink proving it still works. While it makes them, the self-test puts the sink in probe
+mode, so these seven print as `FAULT-PROBE`; they are still counted, which is why the
+summary says 7. **Every `FAULT` line (without `-PROBE`) is a real one.**
+
+Do not read anything into where the `FAULT-PROBE` lines sit in the log. The self-test
+also prints `OBJECTCALLS SELFTEST fault-probes begin` / `... end` markers, but those go
+to stdout and the fault lines go to stderr, and the device console (`devicectl
+--console`) merges the two streams without keeping their relative order — on a phone
+the seven `FAULT-PROBE` lines routinely appear after the `end` marker. The tag on the
+line and the `faults=`/`expected=` count are what to trust.
 
 Release builds run no self-test at all, so a healthy release run prints no FAULT line
 and neither `OBJECTCALLS SELFTEST` summary line — there is no `faults=`/`expected=` pair
 to read, rather than a pair reading `0`.
 
 `kanama-demos/scripts/ios_device_run.sh` fails the device run when the captured console
-contains a FAULT line outside the probe window, or when a summary line's `faults=` does
-not equal its `expected=`. To re-check an existing log by hand:
+contains any `[kanama][ios][c] FAULT ` line, when a summary line's `faults=` does not
+equal its `expected=`, or when the self-test ran (the `PTRCALL SELFTEST MATRIX` line is
+there) but printed no summary line. `FAULT-PROBE` lines do not fail it by themselves —
+the count does that if there are more or fewer than seven. To re-check an existing log
+by hand:
 
 ```sh
 scripts/ios_device_run.sh --check-console-faults /path/to/console.log

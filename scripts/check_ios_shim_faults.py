@@ -17,7 +17,7 @@ that day.
 
 The rule, one line: every `if (...)` whose body returns, inside an exported `kanama_ios_*`
 entry point or a `static ..._dispatch` body, must call `kanama_ios_fault(` ON THAT PATH, BEFORE
-the return -- unless the pair is one of the two documented benign returns below.
+the return -- unless the pair is one of the three documented benign returns below.
 
 "On that path, before the return" is checked literally, because the two ways to satisfy a
 substring search without satisfying the rule are both things a hurried edit produces:
@@ -70,7 +70,7 @@ SHIM = ROOT / "ios/bootstrap/kanama_ios_shim.c"
 TAG = "[check-ios-shim-faults]"
 
 # (function, guard condition as written, why it is correct to return silently).
-# Both are documented in the function's own comment in the shim; see the task 124 contract table.
+# Each is documented in the function's own comment in the shim; see the task 124 contract table.
 BENIGN = [
     (
         "kanama_ios_godot_is_instance_id_valid",
@@ -81,6 +81,12 @@ BENIGN = [
         "kanama_ios_godot_ptrcall_ret_callable_dispatch",
         "target == NULL",
         "an empty (object-less) Callable is a legitimate value; desktop readCallable returns null too",
+    ),
+    (
+        "kanama_ios_godot_set_first_node_in_group_text",
+        "label == NULL",
+        "a lookup that legitimately finds nothing: no node is in the group; the caller treats 0 as "
+        "'not present'",
     ),
 ]
 

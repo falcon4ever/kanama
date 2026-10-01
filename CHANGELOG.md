@@ -10,13 +10,13 @@ versioning once public releases begin.
 ### Fixed — iOS: the bridge no longer fails quietly (task 124)
 
 - **Every guarded early return in the iOS C shim now reports.** `ios/bootstrap/kanama_ios_shim.c` is the
-  whole iOS surface — **131 exported entry points** and **24 `static ..._dispatch` bodies** — and it
+  whole iOS surface — **132 exported entry points** and **24 `static ..._dispatch` bodies** — and it
   opened with **219 guarded early returns** that handed back `0` / `-1` / nothing and said nothing when
   the engine API had not resolved, the `MethodBind` was zero, the instance was zero, a C-string
   parameter was NULL, or nothing was pending. That silence is how every Godot static method reached
   through the shared wrapper tree stayed a no-op on iOS for six days behind 205 green self-test checks
   and two green demo smokes (task 117 P2', 119 item 35), and how a self-test row passed for the wrong
-  reason because a guard returned quietly (item 37). **217 of the 219 now call the shim's new fault
+  reason because a guard returned quietly (item 37). **216 of the 219 now call the shim's new fault
   sink** before returning exactly what they returned before; return values and signatures are
   unchanged. Each prints one line — `[kanama][ios][c] FAULT <entry>: <reason> <detail>` — and bumps a
   process-wide counter that is never reset. That counter is an `_Atomic int32_t` bumped with
@@ -31,11 +31,31 @@ versioning once public releases begin.
   the class, the method and the hash all still exist: `kanama_ios_godot_get_method_bind` and
   `kanama_ios_godot_get_builtin_method` report whenever the engine returns NULL, not only when the API
   itself did not resolve.
-- **Exactly two returns stay silent, both documented in their own function comment** and listed in the
+- **Exactly three returns stay silent, each documented in its own function comment** and listed in the
   gate's `BENIGN` table: `kanama_ios_godot_is_instance_id_valid(0)` (a zero id is a legitimate question
-  whose honest answer is "invalid") and the `target == NULL` path of
+  whose honest answer is "invalid"), the `target == NULL` path of
   `kanama_ios_godot_ptrcall_ret_callable_dispatch` (an empty, object-less `Callable` is a legitimate
-  value — desktop's `readCallable` returns null there too).
+  value — desktop's `readCallable` returns null there too), and the `label == NULL` path of
+  `kanama_ios_godot_set_first_node_in_group_text` (a lookup that legitimately finds nothing; the caller
+  treats `0` as "not present").
+- **What the first real device run showed (iPhone 12, Match3).** Two things, both fixed here:
+  - *The probes cannot be told apart by where their lines sit.* The first cut bracketed the seven
+    probes with `fault-probes begin` / `end` lines and the runner trusted FAULT lines between them. The
+    markers are Kotlin `println` (stdout), the sink writes stderr, and `devicectl --console` merges the
+    two without preserving their relative order: all seven probe lines landed after the `end` marker
+    and the runner failed a healthy build. The sink now marks them itself — the self-test turns the
+    new `kanama_ios_fault_set_probe(1)` on around the probes (off again in a `finally`), and while it is
+    on each fault is still counted and recorded but prints as `[kanama][ios][c] FAULT-PROBE …`. The
+    runner fails on any `[kanama][ios][c] FAULT ` line (`FAULT-PROBE` does not match), on
+    `faults=` ≠ `expected=`, and on a self-test that ran without printing a summary line.
+  - *`set_first_node_in_group_text` was misclassified, and its caller polled it forever.* Its
+    `label == NULL` branch is the lookup's answer "no node is in group `kanama_ios_probe`" — only the
+    iOS example project has that label — not a bad argument, yet it was ruled `null-arg` and reported
+    on every frame. It is now the third documented benign return. And `KanamaIosRuntime.frame()`
+    retried the lookup on every frame until it succeeded, so every game without the label had run a
+    `get_first_node_in_group` ptrcall per frame for its whole life; it now gives up after frame 120
+    and logs `probe label group absent after 120 frames; not retrying` once. The example project's
+    label is a static node in its main scene and is still found on frame 1.
 - **Desktop gets the one line it was missing**, without a counter: `ObjectCalls.getMethodBind` in
   `src/jvmMain/.../binding/runtime/ObjectCalls.kt` prints
   `[kanama:kt] FAULT bind-lookup-failed Class.method hash=<hash>` on `System.err` when ClassDB returns
@@ -49,33 +69,35 @@ versioning once public releases begin.
 ### Added — iOS: a fault counter, seven permanent probes, and a gate that keeps the property
 
 - **`ObjectCalls.faultCount()` and `ObjectCalls.lastFault()`** on iOS, over the shim's new
-  `kanama_ios_fault_count` / `kanama_ios_last_fault` cinterop exports. Both `OBJECTCALLS SELFTEST`
+  `kanama_ios_fault_count` / `kanama_ios_last_fault` cinterop exports, plus
+  `kanama_ios_fault_set_probe` for the self-test's probe mode. Both `OBJECTCALLS SELFTEST`
   summary lines now end with `faults=<count> expected=7`.
 - **A permanent red run on the device.** The level-2 self-test ends in `runFaultProbes`, seven
-  deliberate wrong calls in one bracketed window, each asserted to raise the counter by exactly one and
+  deliberate wrong calls made with the sink in probe mode (their lines read `FAULT-PROBE`), each asserted to raise the counter by exactly one and
   to name its reason and detail in `lastFault()`: a `getMethodBind("Node3D", "set_visible", 1L)` with a
   wrong hash (`bind-lookup-failed`), a `ptrcallWithBoolArg` through the resulting null bind
   (`null-bind`), and five takes from an already-drained pending slot (`pending-protocol` — the UTF-8
   string slot twice, then the packed, container-blob and array-blob slots). Those last five used to be
   inline `…(pending slot drained)` rows asserting only the `-1`; that `-1` is reachable only through the
-  guard that reports `pending-protocol`, so they were red runs of that guard all along, printing FAULT
-  lines outside the probe window on a healthy build. Every other row in that file proves a call works;
+  guard that reports `pending-protocol`, so they were red runs of that guard all along, printing five
+  unexpected FAULT lines on a healthy build. Every other row in that file proves a call works;
   these seven prove that a call that does not work says so. A healthy debug build therefore ends at
   `faults=7 expected=7`; a release build runs no self-test and prints neither summary line.
 - **`scripts/check_ios_shim_faults.py`** (a `local_ci.sh` stage) re-derives every guarded early return
   in an exported entry point or a `_dispatch` body from the source and fails unless the block reports or
-  is one of the two documented benign cases — so the rule holds for the next guard somebody adds. The
+  is one of the three documented benign cases — so the rule holds for the next guard somebody adds. The
   sink call must be on the guard's own path and textually **before** the return: a call after the return
   is dead code, and one nested inside a deeper block may never run, and both are now findings. A stale
   `BENIGN` entry fails too.
 - **`kanama-demos/scripts/ios_device_run.sh` fails the run** on any `[kanama][ios][c] FAULT ` line
-  outside the self-test's bracketed fault-probe window, on a window that opens and never closes, on a
-  run that opened a window but printed no summary line, and on any summary line whose `faults=` and
-  `expected=` disagree. `scripts/ios_device_run.sh --check-console-faults <log>` re-runs just that
+  (the probes' `FAULT-PROBE` lines do not match), on any summary line whose `faults=` and `expected=`
+  disagree, and on a run whose self-test ran (`PTRCALL SELFTEST MATRIX` printed) but printed no
+  summary line. `scripts/ios_device_run.sh --check-console-faults <log>` re-runs just that
   check against a saved console log.
 - Docs: "When you see a FAULT line" with the full reason table in `docs/exporting/ios.md`; the sink, the
-  every-early-return rule, the contract's exact scope, the two benign exceptions, the sink's
-  concurrency contract and the seven expected probes in `docs/contributing/backends/ios.md`.
+  every-early-return rule, the contract's exact scope, the three benign exceptions, the sink's
+  probe mode and why line order across stdout/stderr cannot be relied on, the sink's concurrency
+  contract and the seven expected probes in `docs/contributing/backends/ios.md`.
 
 ### Fixed — iOS: Godot **static** methods called through the shared wrapper tree were silent no-ops
 
