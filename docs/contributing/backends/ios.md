@@ -455,8 +455,8 @@ text as a hint.
 
   ```text
   [kanama][ios][c] PTRCALL SELFTEST MATRIX: 70 passed, 0 failed
-  [kanama][ios][kn] OBJECTCALLS SELFTEST: 236 passed, 0 failed
-  [kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 4 passed, 0 failed
+  [kanama][ios][kn] OBJECTCALLS SELFTEST: 274 passed, 0 failed faults=7 expected=7
+  [kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): 4 passed, 0 failed faults=7 expected=7
   ```
 
 - **A probe must assert a value the no-op path cannot produce.** This is the rule that decides

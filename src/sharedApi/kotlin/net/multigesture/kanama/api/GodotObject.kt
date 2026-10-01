@@ -513,7 +513,9 @@ open class GodotObject(val handle: GodotHandle) {
             ObjectCalls.getMethodBind("Object", "can_translate_messages", NOARGS_BOOL_HASH)
         }
 
-        private val callBind by lazy {
+        // Internal, not private: the iOS ObjectRuntime.emitSignal Variant path reuses this cached
+        // Object.call bind instead of resolving its own (task 117 P3′ follow-up).
+        internal val callBind by lazy {
             ObjectCalls.getMethodBind("Object", "call", CALL_HASH)
         }
 

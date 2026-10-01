@@ -3731,6 +3731,10 @@ actual object ObjectCalls {
   // target object, method, flags — it builds the Callable, boxes it into a Variant and calls the
   // Object.connect bind it resolves itself, so [methodBind] is not consulted; Object.connect is the
   // only API method of this shape). Returns the Godot Error (0 == OK), -1 when the shim refused.
+  // [methodBind] is not checked against the expected `Object.connect` bind (hash 1518946055): the
+  // fault sink (`kanama_ios_fault`) is C-only and this file has no debug-only throwing check,
+  // so an assertion here could only be `error(...)`, a release crash on a path that works.
+  // The shared GodotObject is the only caller and passes its cached `Object.connect` bind.
   actual fun ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -3738,18 +3742,27 @@ actual object ObjectCalls {
     callableObject: MemorySegment,
     callableMethod: String,
     flags: Long,
-  ): Long =
-    IosGodot.objectConnect(
+  ): Long {
+    // Desktop's BuiltinTypes.requireUInt32(flags): Object.connect's flags are a Godot uint32.
+    require(flags in 0L..0xffff_ffffL) {
+      "Value $flags is outside Godot uint32 range 0..4294967295"
+    }
+    return IosGodot.objectConnect(
       instance.address(),
       name,
       callableObject.address(),
       callableMethod,
       flags,
     )
+  }
 
   // Object.connect(signal, Callable(target, method).bindv(boundArgs), flags) for
   // GodotObject.connectBound — the existing bound-Callable path above ([connectBound]); the shim
   // resolves the Object.connect bind itself, so [methodBind] is not consulted.
+  // [methodBind] is not checked against the expected `Object.connect` bind (hash 1518946055): the
+  // fault sink (`kanama_ios_fault`) is C-only and this file has no debug-only throwing check,
+  // so an assertion here could only be `error(...)`, a release crash on a path that works.
+  // The shared GodotObject is the only caller and passes its cached `Object.connect` bind.
   actual fun ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -3758,10 +3771,21 @@ actual object ObjectCalls {
     callableMethod: String,
     boundArgs: List<Any?>,
     flags: Long,
-  ): Long = connectBound(instance, name, callableObject, callableMethod, boundArgs, flags)
+  ): Long {
+    // Desktop's BuiltinTypes.requireUInt32(flags): Object.connect's flags are a Godot uint32.
+    require(flags in 0L..0xffff_ffffL) {
+      "Value $flags is outside Godot uint32 range 0..4294967295"
+    }
+    return connectBound(instance, name, callableObject, callableMethod, boundArgs, flags)
+  }
 
   // Object.disconnect(signal, Callable(target, method).bindv(boundArgs)) for
-  // GodotObject.disconnectBound — the existing symmetric teardown above ([disconnectBound]).
+  // GodotObject.disconnectBound — the existing symmetric teardown above ([disconnectBound]); the
+  // shim resolves the Object.disconnect bind itself, so [methodBind] is not consulted.
+  // [methodBind] is not checked against the expected `Object.disconnect` bind (hash 1874754934):
+  // the fault sink (`kanama_ios_fault`) is C-only and this file has no debug-only throwing check,
+  // so an assertion here could only be `error(...)`, a release crash on a path that works.
+  // The shared GodotObject is the only caller and passes its cached `Object.disconnect` bind.
   actual fun ptrcallWithStringNameAndBoundCallableArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -42178,6 +42202,111 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         "root(GodotSignal.disconnect -> isConnected false)",
         !root.isConnected("kanama_p3_user", target, method),
       )
+
+      // Task 117 P3′ follow-up 2 — the members whose iOS PATH changed (they existed on iOS before
+      // P3′ but went through other shim entries). Same probe rule: each row asserts a value the
+      // no-op path cannot produce, or a default only after an earlier row proved the non-default.
+
+      // set / get (Variant path -> generated Object.set / Object.get ptrcall). The setIndexed row
+      // above left position.x at 12.5, so (3, 4) is a fresh value in both components.
+      root.set("position", Vector2(3.0, 4.0))
+      check("root(set/get position == (3, 4))", root.get("position") == Vector2(3.0, 4.0))
+
+      // setDeferred is not covered: Object.set_deferred queues the set on the MessageQueue, which
+      // is flushed only at the end of an iteration of the main loop, so nothing is observable
+      // synchronously at scene init.
+
+      // is_class (ptrcall, no isNotBlank guard any more) — the `false` answer only after `true`.
+      check("root(isClass(Node2D))", root.isClass("Node2D"))
+      check("root(isClass(Node3D) false after isClass(Node2D) true)", !root.isClass("Node3D"))
+
+      // get_instance_id (ptrcall) agrees with the id ObjectRuntime.instanceIdOf captured at
+      // construction (object_get_instance_id), and neither is the no-op 0.
+      check(
+        "root(getInstanceId == instanceId, non-zero)",
+        root.instanceId != 0L && root.getInstanceId() == root.instanceId,
+      )
+
+      // to_string (engine ptrcall; it was Kotlin's Any.toString on iOS before P3′). Godot 4.7.2:
+      // Object::to_string (core/object/object.cpp:948) falls through to the virtual _to_string;
+      // Node::_to_string (scene/main/node.cpp:3610-3612) prefixes "<name>:" only when the node
+      // has a name, and Object::_to_string (core/object/object.cpp:1832-1833) is
+      // "<" + get_class() + "#" + itos(get_instance_id()) + ">". This Node2D is unnamed.
+      check("root(toString == <Node2D#id>)", root.toString() == "<Node2D#${root.instanceId}>")
+
+      // emitSignal through ObjectRuntime, Long fast path (kanama_ios_godot_object_emit_signal_int)
+      // into a Kotlin lambda connected through GodotSignal.connect(target, argumentCount). Godot
+      // does not check a user signal's declared arity on emit, so one argument on the zero-arg
+      // kanama_p3_user is delivered as is.
+      var longArgs: List<Any?>? = null
+      val longConnection =
+        root.signal("kanama_p3_user").connect(target, 1) { args -> longArgs = args }
+      root.emitSignal("kanama_p3_user", 5L)
+      val receivedLong = longArgs
+      check(
+        "root(emitSignal Long fast path -> lambda received 5)",
+        longConnection.error == 0L &&
+          receivedLong != null &&
+          receivedLong.size == 1 &&
+          (receivedLong[0] as? Number)?.toLong() == 5L,
+      )
+
+      // add_user_signal WITH arguments (the hand-written Array-of-Dictionaries helper on the
+      // Variant path): Variant.Type TYPE_STRING = 4, TYPE_INT = 2 (extension_api.json global enum
+      // "Variant.Type"). Godot 4.7.2: Object::_add_user_signal (core/object/object.cpp:1353-1382)
+      // reads "name" and "type" from each Dictionary; Object::get_signal_list (1438-1453) appends
+      // the user signals, and _get_signal_list (1384-1394) returns them as MethodInfo dictionaries
+      // whose "args" are PropertyInfo dictionaries (core/object/method_info.cpp:37-39,
+      // core/object/property_info.cpp:36-43).
+      root.addUserSignal(
+        "kanama_p3_args",
+        listOf(mapOf("name" to "a", "type" to 4L), mapOf("name" to "b", "type" to 2L)),
+      )
+      val argsEntry = root.getSignalList().firstOrNull { it["name"] == "kanama_p3_args" }
+      val declaredArgs = (argsEntry?.get("args") as? List<*>)?.map { it as? Map<*, *> }
+      check(
+        "root(addUserSignal with args -> getSignalList kanama_p3_args(a: String, b: int))",
+        declaredArgs != null &&
+          declaredArgs.size == 2 &&
+          declaredArgs[0]?.get("name") == "a" &&
+          (declaredArgs[0]?.get("type") as? Number)?.toLong() == 4L &&
+          declaredArgs[1]?.get("name") == "b" &&
+          (declaredArgs[1]?.get("type") as? Number)?.toLong() == 2L,
+      )
+
+      // emitSignal with two arguments takes the Variant path (Object.call("emit_signal", ...)).
+      // The iOS lambda trampoline (kanamaIosRuntimeDispatchCallable in IosGodotApi.kt) decodes
+      // only bool / int / float / Object arguments and hands every other type over as null, so
+      // the String "a" arrives as null on iOS (desktop delivers "a"); the row asserts the arity
+      // and the int, which the no-op path cannot produce.
+      var pairArgs: List<Any?>? = null
+      val pairConnection =
+        root.signal("kanama_p3_args").connect(target, 2) { args -> pairArgs = args }
+      root.emitSignal("kanama_p3_args", "a", 2L)
+      val receivedPair = pairArgs
+      check(
+        "root(emitSignal two args, Variant path -> lambda received (_, 2))",
+        pairConnection.error == 0L &&
+          receivedPair != null &&
+          receivedPair.size == 2 &&
+          (receivedPair[1] as? Number)?.toLong() == 2L,
+      )
+
+      // Close both lambda connections; "no connections" is admissible only because the two rows
+      // above proved each connection delivered.
+      longConnection.close()
+      pairConnection.close()
+      check(
+        "root(SignalConnection.close -> no connections left)",
+        !root.hasConnections("kanama_p3_user") && !root.hasConnections("kanama_p3_args"),
+      )
+
+      // setScript(null) / getScript is not covered: a `getScript() == null` row is admissible only
+      // after a row proving getScript returns non-null for something, and no scripted object
+      // exists at scene-level extension init (no scene is loaded yet, and a script built here
+      // would need a compiled, instantiable Script — Object::set_script creates no instance
+      // otherwise, so get_script would still answer null; core/object/object.cpp:984-992,
+      // 1010-1011).
     }
     if (rootSeg.address() != 0L) ObjectCalls.destroyObject(rootSeg)
     if (targetSeg.address() != 0L) ObjectCalls.destroyObject(targetSeg)

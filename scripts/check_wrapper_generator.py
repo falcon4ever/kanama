@@ -604,8 +604,12 @@ def check_single_tree(tree: TreeResult) -> int:
     return rc
 
 
+# Leading annotations (`@Suppress("X")`, on the same line or the lines above) and every modifier a
+# stale copy could carry, `private` and `sealed` included: a `private class GodotObject` in a
+# platform file still shadows the shared root inside that file.
 _ROOT_DECLARATION_RE = re.compile(
-    r"(?m)^(?:(?:public|internal|open|abstract|data|expect|actual)\s+)*class\s+("
+    r"(?m)^(?:@[\w.]+(?:\([^)]*\))?\s+)*"
+    r"(?:(?:public|internal|private|open|abstract|sealed|data|expect|actual)\s+)*class\s+("
     + "|".join(SHARED_HAND_ROOT_FILES)
     + r")\b"
 )

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.binding.runtime
 
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.types.Vector2i
 
@@ -27,7 +28,11 @@ internal actual object ObjectRuntime {
       // Object.emit_signal via the Variant call path. The previous `when` silently dropped
       // no-arg signals (empty args matched nothing), so e.g. a no-arg @Signal never fired.
       else ->
-        ObjectCalls.callWithVariantArgs(callBind, segment, listOf("emit_signal", signal) + args)
+        ObjectCalls.callWithVariantArgs(
+          GodotObject.callBind,
+          segment,
+          listOf("emit_signal", signal) + args,
+        )
     }
   }
 
@@ -41,7 +46,4 @@ internal actual object ObjectRuntime {
   // Desktop also calls ScriptBridge.noteSetScript here to arm the pre-instance script-property
   // buffering described on [onPropertySet]; iOS does not mirror it. Deliberately a no-op.
   actual fun onSetScript(segment: RawSegment, script: RawSegment) {}
-
-  // Object.call (Variant path) — the same bind GodotObject.call uses.
-  private val callBind by lazy { ObjectCalls.getMethodBind("Object", "call", 3400424181L) }
 }
