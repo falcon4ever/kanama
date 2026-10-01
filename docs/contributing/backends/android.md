@@ -36,7 +36,8 @@ minified path. The validated Android version floors per build type are in
 The Android implementation uses a forked
 [PanamaPort](https://github.com/vova7878/PanamaPort) artifact, published via
 [JitPack](https://jitpack.io):
-`com.github.falcon4ever.PanamaPort:Core:0.1.3-kanama-r8.4`.
+`com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1` — upstream `v0.1.5` plus
+the Kanama patches listed below.
 
 Upstream PanamaPort `v0.1.3` miscompiles under Godot 4.7's R8 because its
 Android linker uses Java pattern switches over sealed storage/layout types. The
@@ -71,6 +72,34 @@ r8.3 added the `SDK_INT_FULL` bootstrap guard that every device below
 Android 16 needs. Release builds below Android 13 remain blocked by a
 separate release-mode PanamaPort constraint — the floors and their evidence
 are in [Version Support → Validated Android versions](../../reference/version-support.md#validated-android-versions).
+
+### Keeping the fork close to upstream
+
+The fork is upstream PanamaPort plus a short list of Kanama patches, rebased onto each upstream
+release rather than left to drift. Android OS updates do not follow Godot's schedule: in
+September 2026 a Pixel 7 took an **Android 17 update** (build `CP3A.260905.009`) and every Kanama
+app aborted in the FFI bootstrap (`Check failed: IsExceptionPending()` in `MethodHandles.reflectAs`, called from
+PanamaPort's hidden-field reflection) — the same phone had passed the full matrix on an earlier
+Android 17 build two weeks before — while upstream had shipped the Android 17 QPR fixes in
+`v0.1.4`/`v0.1.5` and the fork was still on `v0.1.3`. Fork
+`0.1.5-kanama-r8.1` (upstream `v0.1.5`) fixed it with no Kanama code change.
+
+The Kanama patches carried on top of upstream (none of them is in upstream `v0.1.5`):
+
+| Patch | Why |
+|---|---|
+| Sealed-type `switch`es rewritten as `instanceof` chains (+ R8 annotations) | Godot's R8 miscompiles the pattern switches into `shouldNotReachHere` (minified release builds). |
+| JitPack publishing (single release variant, unsigned local publish) | JitPack serves the classified multi-variant AARs as 404s. |
+| `ArtVersion.SDK_INT_FULL_COMPAT` | Upstream reads the Android-16-only `SDK_INT_FULL` unconditionally; every device below 16 fails the bootstrap. |
+| `NativeCodeBlob.makeCodeBlobSingle` | R8 turns a one-element `byte[]...` call into `filled-new-array [[B`, which crashes ART's interpreter below Android 13. |
+| `compileSdk` kept at 36 | Upstream's 37 stamps `minCompileSdk=37` into the AARs, which Godot 4.7.2's export template (compileSdk 36) rejects. |
+
+**Rebase routine:** before every Kanama release, compare the fork's upstream base with
+upstream's latest release and rebase if they differ; after an Android major or QPR update on
+a validation device, run the Android smoke early. A rebase is the table above as a
+checklist: re-apply each patch, drop it if upstream now covers it, prove the result on a
+device with the nine-demo matrix and the R8-minified Match3 release
+(`-PkanamaPanamaPortCore=<test coordinate>` switches the AARs and the `.gdap` end to end).
 
 ## Desktop vs Android FFM
 

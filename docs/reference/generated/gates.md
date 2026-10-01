@@ -149,9 +149,9 @@ python3 scripts/record_gate_evidence.py --gate android-device-matrix --result PA
 
 | Gate | Claim | Last run | Godot pin | Result | Accepted stale until |
 | --- | --- | --- | --- | --- | --- |
-| `android-debug-matrix` | Android Supported | 2026-09-15 | `4.7.2.stable` | PASS | — |
+| `android-debug-matrix` | Android Supported | 2026-10-01 | `4.7.2.stable` | PASS | — |
 | `android-device-matrix` | Android Supported | 2026-07-13 | `4.7.stable` | PASS | 2026-10-31 |
-| `android-r8-release` | Android Supported | 2026-07-13 | `4.7.stable` | PASS | 2026-10-31 |
+| `android-r8-release` | Android Supported | 2026-10-01 | `4.7.2.stable` | PASS | — |
 | `android-vulkan-mobile-matrix` | Android Supported | 2026-07-10 | `4.7.stable` | PASS | 2026-10-31 |
 | `ios-device-gate` | iOS Supported | 2026-09-11 | `4.7.2.stable` | PASS | — |
 | `linux-arm64-full-gate` | Linux arm64 Supported | 2026-07-14 | `4.7.stable` | PASS | 2026-10-31 |

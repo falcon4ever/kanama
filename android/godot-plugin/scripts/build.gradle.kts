@@ -12,7 +12,7 @@ plugins {
 val demoDir = providers.gradleProperty("kanamaAndroidDemoDir").map { file(it) }
 val androidScriptSources = layout.buildDirectory.dir("generated/kanamaAndroidScriptSources")
 val panamaPortCoreDependency = providers.gradleProperty("kanamaPanamaPortCore")
-    .orElse("com.github.falcon4ever.PanamaPort:Core:0.1.3-kanama-r8.4")
+    .orElse("com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1")
 
 val auditAndroidDemoSources by tasks.registering {
     inputs.dir(demoDir.map { it.resolve("kotlin-src") })

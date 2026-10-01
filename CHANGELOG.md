@@ -7,6 +7,22 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — Android 17 September update: every Kanama app aborted in PanamaPort's FFI bootstrap (task 127)
+
+- After the September 2026 **Android 17** update (API 37, build `CP3A.260905.009`) a Pixel 7 aborted every Kanama app during startup
+  (the same phone on an earlier Android 17 build passed the nine-demo matrix on 2026-09-15 with the old fork):
+  `Check failed: IsExceptionPending()` in `MethodHandles.reflectAs`, called from PanamaPort's
+  hidden-field reflection under `GodotFFI.<clinit>`. Kanama's PanamaPort fork was still based on
+  upstream `v0.1.3`; upstream shipped Android 17 QPR fixes in `v0.1.4`/`v0.1.5`.
+- The fork is rebased onto upstream **`v0.1.5`**: `com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1`
+  (was `0.1.3-kanama-r8.4`). All four Kanama patches carry over (none is upstream yet), plus one new
+  one: `compileSdk` stays at 36 so the AARs remain consumable by Godot 4.7.2's export template.
+  No Kanama code change: the coordinate is the default of `-PkanamaPanamaPortCore`.
+- Validated on the Pixel 7 on that Android 17 build: nine-demo debug matrix and the R8-minified Match3 release, from the published JitPack artifact.
+  The Android 9/12/14 evidence is carried from the previous fork and was not re-run.
+- `docs/contributing/backends/android.md` gains the patch list and a rebase routine (compare the
+  fork's upstream base before every release; smoke early after an Android OS update).
+
 ### Changed — the roots written once (task 117 P3′) — **desktop and iOS source breaks**
 
 - **`GodotObject`, `RefCounted` and `GodotCallable` exist once**, hand-written, in
