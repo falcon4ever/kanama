@@ -16,6 +16,32 @@
 extern "C" {
 #endif
 
+/*
+ * Task 124 — the bridge's fault counter. Every guarded early return in this shim reports to a
+ * process-wide sink before returning; these two read it. `kanama_ios_fault_count` counts every
+ * fault since process start (never reset), `kanama_ios_last_fault` returns a pointer to a static
+ * "<entry> <reason> <detail>" buffer holding the most recent one (empty string when none).
+ *
+ * The COUNT is atomic and saturating: faults raised from Godot's worker/physics threads are all
+ * counted, and the counter sticks at INT32_MAX rather than wrapping to a small number that would
+ * read as "healthy". The TEXT is not synchronized — `kanama_ios_last_fault` is a BEST-EFFORT
+ * SNAPSHOT of a plain static buffer and may tear (interleave two faults' text) when two threads
+ * fault at the same moment. Compare the count; read the text as a debugging hint.
+ */
+int32_t kanama_ios_fault_count(void);
+
+const char *kanama_ios_last_fault(void);
+
+/*
+ * Probe mode for the debug self-test's deliberate fault probes. While on (non-zero), every fault
+ * is still counted and recorded, but the console line reads `[kanama][ios][c] FAULT-PROBE ...`
+ * instead of `[kanama][ios][c] FAULT ...`, so the device runner can tell an expected probe from a
+ * real fault by the line alone. Line order cannot be used for that: the self-test's markers go to
+ * stdout and the sink to stderr, and `devicectl --console` does not preserve their relative order.
+ * Off by default; only the self-test turns it on, around the probes, and off again in a finally.
+ */
+void kanama_ios_fault_set_probe(int32_t on);
+
 void kanama_ios_godot_ptrcall(
     int64_t method_bind,
     int64_t instance,
@@ -1172,20 +1198,7 @@ int64_t kanama_ios_godot_tween_tween_method(
     double duration
 );
 
-/* Returns an owned +1 self-reference; fluent callers must collapse and release it. */
-int64_t kanama_ios_godot_property_tweener_from_color(
-    int64_t tweener,
-    double r,
-    double g,
-    double b,
-    double a
-);
-
 void kanama_ios_godot_tween_kill(int64_t tween);
-
-int64_t kanama_ios_godot_tweener_set_trans(int64_t tweener, int64_t trans);
-
-int64_t kanama_ios_godot_tweener_set_ease(int64_t tweener, int64_t ease);
 
 void kanama_ios_godot_viewport_get_visible_rect(
     int64_t viewport,
