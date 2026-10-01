@@ -18,7 +18,6 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -93,7 +92,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_viewport_get_visibl
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
-import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
@@ -184,245 +182,6 @@ object MainThread {
         for (continuation in pending) {
             if (continuation.isActive) continuation.resume(Unit)
         }
-    }
-}
-
-open class GodotObject(
-    val handle: GodotHandle,
-) {
-    constructor(handle: Long) : this(GodotHandle(RawSegment.ofAddress(handle)))
-
-    /**
-     * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam. Internal: game code
-     * passes [handle] around and never unwraps it.
-     */
-    internal val segment: RawSegment get() = handle.segment
-
-    /**
-     * The engine instance id, captured once at construction (0 for a NULL handle). Never
-     * re-reads [handle], so it stays valid after the object is freed; `GD.isInstanceValid`
-     * routes through it (task 98, desktop mirror).
-     */
-    val instanceId: Long =
-        if (segment.address() == 0L) 0L else IosGodot.objectGetInstanceId(segment.address())
-
-    /** Returns true when both wrappers refer to the same Godot object instance. */
-    fun isSameInstance(other: GodotObject): Boolean = segment.address() == other.segment.address()
-
-    // Argument-position handle check. Non-owning wrappers have nothing to refuse; the generated
-    // RefCounted overrides this with its closed-handle check (task 98 desktop mirror). Internal:
-    // it hands out the raw engine pointer, which is never part of a wrapper signature (task 104).
-    internal open fun requireOpenHandle(): RawSegment = segment
-
-    fun isClass(className: String): Boolean =
-        className.isNotBlank() && IosGodot.objectIsClass(segment.address(), className)
-
-    // KANAMA-IOS-HANDWRITTEN: [runtime] signal/connect/emitSignal/await use the custom GDExtension
-    // Callable + IosCallableRegistry (lambda/bound dispatch); bespoke runtime, not generated.
-    fun signal(name: String): GodotSignal =
-        GodotSignal(this, name)
-
-    // Variant Object.call dispatch: [method, *args] boxed into Variants, called via the
-    // Variant path (the varargs path ptrcall can't express). Scalar, small fixed-size
-    // (Vector2/Vector2i/Vector3/Color) and container (Array -> List, Dictionary -> Map,
-    // Packed*Array -> List, task 121) returns decoded to Any?; other types surface null.
-    fun call(method: String, vararg args: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callBind, segment, listOf(method, *args))
-
-    // Object.set_deferred(property, value) via the Variant path; applies on the next idle frame.
-    fun setDeferred(property: String, value: Any?) {
-        ObjectCalls.callWithVariantArgs(setDeferredBind, segment, listOf(property, value))
-    }
-
-    // Object.call_deferred(method, *args) via the Variant path; runs on the next idle frame.
-    fun callDeferred(method: String, vararg args: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callDeferredBind, segment, listOf(method, *args))
-
-    // Object.has_signal(signal) — true if the object declares the named signal.
-    fun hasSignal(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasSignalBind, segment, signal)
-
-    // Object.set_script(resource) via the Variant call path. Signature matches desktop
-    // GodotObject.setScript(Resource?). NOTE: desktop also calls ScriptBridge.noteSetScript to
-    // arm pre-instance script-property buffering; iOS does not mirror that buffering (see set()).
-    fun setScript(script: Resource?) {
-        call("set_script", script)
-    }
-
-    // Object.set(property, value) via the Variant call path. Signature/return match desktop
-    // GodotObject.set (returns 0L). NOTE: desktop also calls ScriptBridge.applyOrRecordScriptPropertySet,
-    // which buffers a value set on a Kanama-script owner *before* its Kotlin instance exists and
-    // replays it once the instance is created. iOS receives engine-driven property sets directly
-    // through KanamaIosScriptBridge, so the steady-state path needs no buffering; the rare
-    // "set a script property before the instance is ready" case is not buffered on iOS.
-    fun set(property: String, value: Any?): Long {
-        call("set", property, value)
-        return 0L
-    }
-
-    // Object.get(property) via the Variant call path. Return type matches desktop GodotObject.get(): Any?.
-    fun get(property: String): Any? = call("get", property)
-
-    // Object.has_method(name) — ptrcall (StringName arg, bool ret), mirroring desktop GodotObject.
-    fun hasMethod(method: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMethodBind, segment, method)
-
-    // Object.get_instance_id() via the Variant call path (int64 return). Matches desktop GodotObject.
-    fun getInstanceId(): Long =
-        (call("get_instance_id") as? Long) ?: 0L
-
-    // Object.is_queued_for_deletion() — ptrcall (no args, bool ret), mirroring desktop GodotObject.
-    fun isQueuedForDeletion(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isQueuedForDeletionBind, segment)
-
-    fun connect(signalName: String, target: GodotObject, method: String, flags: Long = CONNECT_DEFAULT): Long =
-        IosGodot.objectConnect(segment.address(), signalName, target.segment.address(), method, flags)
-
-    // Object.disconnect(signal, Callable(target, method)) — symmetric to connect().
-    fun disconnect(signalName: String, target: GodotObject, method: String) {
-        IosGodot.objectDisconnect(segment.address(), signalName, target.segment.address(), method)
-    }
-
-    // Object.connect(signal, Callable(target, method).bindv([boundArgs]), flags). Routes through the
-    // C shim's bound-Callable path (Array of PT-tagged bound args -> Callable.bindv). Phase 4.1.
-    fun connectBound(
-        signalName: String,
-        target: GodotObject,
-        method: String,
-        boundArgs: List<Any?>,
-        flags: Long = CONNECT_DEFAULT,
-    ): Long = ObjectCalls.connectBound(segment, signalName, target.segment, method, boundArgs, flags)
-
-    // Symmetric teardown — rebuilds the same bound Callable so Object.disconnect matches. Phase 4.1.
-    fun disconnectBound(signalName: String, target: GodotObject, method: String, boundArgs: List<Any?>) {
-        ObjectCalls.disconnectBound(segment, signalName, target.segment, method, boundArgs)
-    }
-
-    fun emitSignal(signalName: String, value: Int): Int =
-        IosGodot.objectEmitSignalInt(segment.address(), signalName, value.toLong())
-
-    fun emitSignal(signalName: String, value: Long): Int =
-        IosGodot.objectEmitSignalInt(segment.address(), signalName, value)
-
-    fun emitSignal(signalName: String, value: Vector2i): Int =
-        IosGodot.objectEmitSignalVector2i(segment.address(), signalName, value.x.toLong(), value.y.toLong())
-
-    fun emitSignal(signalName: String, vararg args: Any?) {
-        when {
-            // Keep the bespoke C-shim fast paths for the single scalar args they cover...
-            args.size == 1 && args[0] is Int -> emitSignal(signalName, args[0] as Int)
-            args.size == 1 && args[0] is Long -> emitSignal(signalName, args[0] as Long)
-            args.size == 1 && args[0] is Vector2i -> emitSignal(signalName, args[0] as Vector2i)
-            // ...and route everything else (no-arg signals, and any other arg shapes) through
-            // Object.emit_signal via the Variant call path. The previous `when` silently dropped
-            // no-arg signals (empty args matched nothing), so e.g. a no-arg @Signal never fired.
-            else -> call("emit_signal", signalName, *args)
-        }
-    }
-
-    // Not AutoCloseable, like the desktop GodotObject (task 103, task 97 R10c): nodes and servers
-    // are raw pointers with no reference to release. The generated RefCounted declares
-    // AutoCloseable and owns the real close() (unreference + destroy at zero).
-
-    companion object {
-        const val CONNECT_DEFAULT = 0L
-        const val CONNECT_ONE_SHOT = 4L
-
-        // Variant-call binds (resolved once) for the dynamic Object.call / set_deferred path.
-        private val callBind by lazy { ObjectCalls.getMethodBind("Object", "call", 3400424181L) }
-        private val callDeferredBind by lazy { ObjectCalls.getMethodBind("Object", "call_deferred", 3400424181L) }
-        private val hasSignalBind by lazy { ObjectCalls.getMethodBind("Object", "has_signal", 2619796661L) }
-        private val setDeferredBind by lazy { ObjectCalls.getMethodBind("Object", "set_deferred", 3776071444L) }
-        private val hasMethodBind by lazy { ObjectCalls.getMethodBind("Object", "has_method", 2619796661L) }
-        private val isQueuedForDeletionBind by lazy { ObjectCalls.getMethodBind("Object", "is_queued_for_deletion", 36873697L) }
-
-        fun fromHandle(handle: GodotHandle): GodotObject? = wrap(handle.segment)
-
-        internal fun wrap(handle: RawSegment): GodotObject? =
-            if (handle.address() == 0L) null else GodotObject(GodotHandle(handle))
-    }
-}
-
-class GodotSignal internal constructor(
-    private val owner: GodotObject,
-    val name: String,
-) {
-    fun connect(target: GodotObject, method: String, flags: Long = GodotObject.CONNECT_DEFAULT): Long =
-        owner.connect(name, target, method, flags)
-
-    /** Emits this signal (matches desktop Signal.emit). Delegates to the owner's emit_signal path. */
-    fun emit(vararg args: Any?) {
-        owner.emitSignal(name, *args)
-    }
-
-    fun connect(
-        target: GodotObject,
-        argumentCount: Int,
-        flags: Long = GodotObject.CONNECT_DEFAULT,
-        callback: (List<Any?>) -> Unit,
-    ): SignalConnection {
-        val callbackId = IosCallableRegistry.register(callback)
-        // Pass the receiver (target) so the Callable is bound to its ObjectID and Godot auto-disconnects
-        // it when the receiver is freed. Previously target was ignored, leaving an object-less Callable
-        // that survived the receiver's free and fired into freed memory on later emissions.
-        val result = IosGodot.objectConnectCallable(owner.segment.address(), name, target.segment.address(), callbackId, flags)
-        if (result != 0L) {
-            // connect failed; Godot freed the callable (which released the entry),
-            // but release defensively in case it never reached the trampoline path.
-            IosCallableRegistry.release(callbackId)
-        }
-        return SignalConnection(result, owner, name, callbackId, target)
-    }
-
-    fun connectObject(
-        target: GodotObject,
-        flags: Long = GodotObject.CONNECT_DEFAULT,
-        callback: (GodotObject) -> Unit,
-    ): SignalConnection =
-        connect(target, argumentCount = 1, flags = flags) { args ->
-            (args.firstOrNull() as? GodotObject)?.let(callback)
-        }
-
-    suspend fun await(target: GodotObject, argumentCount: Int = 0): List<Any?> {
-        // Connect a one-shot callable that completes the deferred when the signal
-        // fires, then suspend until then. CONNECT_ONE_SHOT makes Godot drop the
-        // connection after it fires, which releases the registry entry via free_func.
-        val deferred = CompletableDeferred<List<Any?>>()
-        connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) { args ->
-            deferred.complete(args)
-        }
-        return deferred.await()
-    }
-}
-
-class SignalConnection internal constructor(
-    // Real Object.connect return Error (0 == OK) from the lambda-connect path.
-    val error: Long = 0L,
-    private val owner: GodotObject? = null,
-    private val signalName: String = "",
-    private val callbackId: Long = 0L,
-    // The receiver the Callable was bound to at connect time; disconnect must present the same
-    // receiver so Godot also erases the receiver-side connection entry (task 108).
-    private val target: GodotObject? = null,
-) : AutoCloseable {
-    private var closed = false
-
-    // Disconnect the lambda Callable. The C path recreates the identity-equal custom Callable
-    // (call_func + callback_id, bound to the same receiver) and Object.disconnects it; the
-    // connection's free_func then releases the registry entry. No-op if the connect failed or
-    // close() was already called. (A CONNECT_ONE_SHOT connection auto-disconnects when it fires;
-    // calling close() afterwards is a benign redundant disconnect.) Phase 4.1b.
-    override fun close() {
-        if (closed || error != 0L || owner == null || callbackId == 0L) {
-            return
-        }
-        closed = true
-        IosGodot.objectDisconnectCallable(
-            owner.segment.address(),
-            signalName,
-            target?.segment?.address() ?: 0L,
-            callbackId,
-        )
     }
 }
 
@@ -1166,7 +925,7 @@ fun kanamaIosRuntimeDispatchCallable(
                 VT_BOOL -> value != 0L
                 VT_INT -> value
                 VT_FLOAT -> Double.fromBits(value)
-                VT_OBJECT -> if (value != 0L) GodotObject(value) else null
+                VT_OBJECT -> GodotObject.wrap(RawSegment.ofAddress(value))
                 else -> null
             },
         )

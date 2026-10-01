@@ -283,7 +283,7 @@ class HelloScript(godotObject: GodotHandle) :
     val deepDuplicatedScriptIsScript = deepDuplicatedScript?.isClass("Script") ?: false
     deepDuplicatedScript?.close()
     val loadedScriptIsScript = loadedScript?.isClass("Script") ?: false
-    val loadedScriptRefCount = loadedScript?.getReferenceCount() ?: 0L
+    val loadedScriptRefCount = loadedScript?.getReferenceCount() ?: 0
     val saveExtensions =
       loadedScript?.let { ResourceSaver.getRecognizedExtensions(it) } ?: emptyList()
     val savePath = "res://.kanama_resource_saver_smoke.kt"
@@ -299,7 +299,7 @@ class HelloScript(godotObject: GodotHandle) :
     val cachedScript = ResourceLoader.getCachedRef("res://HelloScript.kt")
     val cachedScriptPath = cachedScript?.getPath().orEmpty()
     val cachedScriptIsScript = cachedScript?.isClass("Script") ?: false
-    val cachedScriptRefCount = cachedScript?.getReferenceCount() ?: 0L
+    val cachedScriptRefCount = cachedScript?.getReferenceCount() ?: 0
     cachedScript?.close()
     loadedScript?.close()
     val pendingSetProbe = Node(GodotHandle(ObjectCalls.constructObject("Node")))
@@ -901,13 +901,13 @@ class HelloScript(godotObject: GodotHandle) :
         ignoreTimeScale = true,
       )
     val sceneTreeTimerClass = sceneTreeTimer?.getClassName().orEmpty()
-    val sceneTreeTimerRefCount = sceneTreeTimer?.getReferenceCount() ?: 0L
+    val sceneTreeTimerRefCount = sceneTreeTimer?.getReferenceCount() ?: 0
     sceneTreeTimer?.setTimeLeft(3.0)
     val sceneTreeTimerTimeLeft = sceneTreeTimer?.getTimeLeft() ?: 0.0
     sceneTreeTimer?.close()
     val tween = SceneTree.createTween()
     val tweenClass = tween?.getClassName().orEmpty()
-    val tweenRefCount = tween?.getReferenceCount() ?: 0L
+    val tweenRefCount = tween?.getReferenceCount() ?: 0
     tween
       ?.bindNode(selfNode)
       ?.setProcessMode(Tween.TWEEN_PROCESS_IDLE)
@@ -933,19 +933,19 @@ class HelloScript(godotObject: GodotHandle) :
       val probeTween = SceneTree.createTween()
       val probeMethodTweener =
         probeTween?.tweenMethod(selfNode, "set_process_priority", 3L, 3L, 0.01)
-      val probeMethodCreated = probeMethodTweener?.getReferenceCount() ?: -1L
+      val probeMethodCreated = probeMethodTweener?.getReferenceCount() ?: -1
       val probeMethodChained = probeMethodTweener?.setDelay(0.0)
-      val probeMethodAfterDelay = probeMethodTweener?.getReferenceCount() ?: -1L
+      val probeMethodAfterDelay = probeMethodTweener?.getReferenceCount() ?: -1
       probeMethodTweener?.setTrans(Tween.TRANS_LINEAR)
-      val probeMethodAfterTrans = probeMethodTweener?.getReferenceCount() ?: -1L
+      val probeMethodAfterTrans = probeMethodTweener?.getReferenceCount() ?: -1
       val probePropertyTweener = probeTween?.tweenProperty(selfNode, "process_priority", 5L, 0.01)
-      val probePropertyCreated = probePropertyTweener?.getReferenceCount() ?: -1L
+      val probePropertyCreated = probePropertyTweener?.getReferenceCount() ?: -1
       probePropertyTweener?.from(3L)
-      val probePropertyAfterFrom = probePropertyTweener?.getReferenceCount() ?: -1L
+      val probePropertyAfterFrom = probePropertyTweener?.getReferenceCount() ?: -1
       val probeAwaitTweener = probeTween?.tweenAwait(selfNode.signal("renamed"))
-      val probeAwaitCreated = probeAwaitTweener?.getReferenceCount() ?: -1L
+      val probeAwaitCreated = probeAwaitTweener?.getReferenceCount() ?: -1
       val probeAwaitChained = probeAwaitTweener?.setTimeout(30.0)
-      val probeAwaitAfterTimeout = probeAwaitTweener?.getReferenceCount() ?: -1L
+      val probeAwaitAfterTimeout = probeAwaitTweener?.getReferenceCount() ?: -1
       System.err.println(
         "[kanama:kt] Tweener ownership method_delay_delta=${probeMethodAfterDelay - probeMethodCreated} " +
           "method_trans_delta=${probeMethodAfterTrans - probeMethodAfterDelay} " +
@@ -968,10 +968,10 @@ class HelloScript(godotObject: GodotHandle) :
       val created = ClassDB.instantiate("Gradient")
       val ownedWrapper = created as? RefCounted
       val createdClass = ownedWrapper?.getClassName().orEmpty()
-      val createdRc = ownedWrapper?.getReferenceCount() ?: -1L
+      val createdRc = ownedWrapper?.getReferenceCount() ?: -1
       val usable = ownedWrapper?.isClass("Resource") ?: false
       selfNode.setMeta("kanama_probe_gradient", ownedWrapper)
-      val heldRc = ownedWrapper?.getReferenceCount() ?: -1L
+      val heldRc = ownedWrapper?.getReferenceCount() ?: -1
       ownedWrapper?.close()
       val metaHeld = selfNode.getMeta("kanama_probe_gradient") as? GodotObject
       val closedRc = (metaHeld?.call("get_reference_count") as? Number)?.toLong() ?: -1L
@@ -996,10 +996,10 @@ class HelloScript(godotObject: GodotHandle) :
       val created = ClassDB.classCallStatic("RegEx", "create_from_string", "a.c")
       val ownedWrapper = created as? RefCounted
       val createdClass = ownedWrapper?.getClassName().orEmpty()
-      val createdRc = ownedWrapper?.getReferenceCount() ?: -1L
+      val createdRc = ownedWrapper?.getReferenceCount() ?: -1
       val usable = ownedWrapper?.isClass("RegEx") ?: false
       selfNode.setMeta("kanama_probe_regex", ownedWrapper)
-      val heldRc = ownedWrapper?.getReferenceCount() ?: -1L
+      val heldRc = ownedWrapper?.getReferenceCount() ?: -1
       ownedWrapper?.close()
       val metaHeld = selfNode.getMeta("kanama_probe_regex") as? GodotObject
       val closedRc = (metaHeld?.call("get_reference_count") as? Number)?.toLong() ?: -1L
