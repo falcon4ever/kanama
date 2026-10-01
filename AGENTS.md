@@ -73,7 +73,10 @@ task, then use targeted `rg` searches.
     - `src/sharedApi/kotlin`: the shared generated Godot API wrapper tree, a source
       directory of BOTH platform source sets and copied by the Android plugin (see
       `docs/contributing/wrapper-maintenance.md`). Shared SOURCE, not common code:
-      its classes extend the hand-shaped per-platform wrappers (task 117).
+      it still names per-platform classes (`GodotSignal`, `Engine`, `MainThread`; task 117 P4′
+      moves it). The roots `GodotObject`/`RefCounted`/`GodotCallable` are hand-written
+      here once (task 117 P3′); their platform hooks go through the internal
+      `ObjectRuntime` seam in `src/commonMain`.
     - `src/jvmMain/kotlin`: Kanama runtime, bootstrap-facing Kotlin code, the
       hand-shaped and desktop-only wrappers with their `<Class>.jvm.kt` companions,
       the `actual`s of the seams, and editor/runtime support.

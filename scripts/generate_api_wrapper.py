@@ -1516,13 +1516,10 @@ def check_factory_helpers(shared_classes: set[str]) -> list[str]:
 
 
 def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
-    # GodotObject is the hand-written universal base — it always exists on every platform with a
-    # `wrap(handle): GodotObject?` helper, but it does not live in a GodotObject.kt file on iOS
-    # (it is declared inside IosGodotApi.kt). Treat it as always-present so bare-`Object` returns
-    # (get_collider, shape_owner_get_owner, ...) stay emittable on iOS instead of being dropped on
-    # regen — matching desktop/Android, where GodotObject.kt makes the file check pass.
-    if class_name == "GodotObject":
-        return True
+    # GodotObject needed a special case here until task 117 P3': on iOS it lived inside
+    # IosGodotApi.kt, so the file check failed and every bare-`Object` return (get_collider,
+    # shape_owner_get_owner, ...) dropped on an iOS regen. It is one hand-written file in the shared
+    # tree now, which the loop below finds for every platform.
     for directory in (SHARED_API_DIR, api_dir):
         path = directory / f"{class_name}.kt"
         if path.exists():

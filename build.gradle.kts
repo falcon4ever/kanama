@@ -86,8 +86,8 @@ subprojects {
 //                          ObjectCalls). The compiler proves every backend implements these.
 //   src/sharedApi/kotlin   the generated wrapper tree: ONE set of sources compiled per platform
 //                          (a srcDir of jvmMain and iosMain, copied for Android), NOT common code
-//                          -- its classes extend the hand-shaped per-platform wrappers, which a
-//                          common source file may not name (task 117). That the tree's calls exist
+//                          -- it still names per-platform classes (GodotSignal, Engine, MainThread), which a
+//                          common source file may not name (task 117 P4'). That the tree's calls exist
 //                          on both backends follows from the ObjectCalls seam above plus
 //                          scripts/check_objectcalls_parity.py, which holds the generated `expect`
 //                          list to the set of helpers the tree actually calls.
@@ -273,8 +273,8 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     val jvmMain by getting {
       // The generated Godot API wrapper tree (task 103): ONE set of sources, compiled by this
       // target and by the two iOS targets (and copied through the PanamaPort remap for Android).
-      // It is not common code — its classes extend the per-platform hand-shaped wrappers
-      // (GodotObject, Node, …), which a common source file may not name (task 117).
+      // It is not common code — it still names per-platform classes (GodotSignal, Engine, MainThread),
+      // which a common source file may not name (task 117 P4′).
       kotlin.srcDir("src/sharedApi/kotlin")
       kotlin.srcDir(generateKanamaRealSegment)
       dependencies { implementation(project(":annotations")) }
