@@ -211,7 +211,8 @@ Symptoms and what they mean:
 | Symptom | Likely cause / fix |
 |---|---|
 | A **release** APK (`--export-release`, minified or not) crashes during PanamaPort's FFI bootstrap on Android 12 or older, while the debug APK runs. | Release builds are validated only on Android 13+; debug builds run down to Android 9. The floors, the models they were measured on, and the release-mode ART constraint behind them are in [Version Support → Android](../reference/version-support.md#android). Ship a debug build to older devices or raise the app's minimum SDK. |
-| Any build fails the FFI bootstrap on every device **below Android 16**. | PanamaPort fork `0.1.3-kanama-r8.3` or newer is required (the `SDK_INT_FULL` bootstrap guard); older fork versions and upstream PanamaPort fail there. Check the coordinate under [PanamaPort](#panamaport). |
+| Any build aborts during the FFI bootstrap on **Android 17** with `Check failed: IsExceptionPending()` in `MethodHandles.reflectAs` (logcat, before any Kanama script loads). | PanamaPort fork `0.1.5-kanama-r8.1` or newer is required (upstream `v0.1.5` added Android 17 support; the earlier `0.1.3-kanama-*` forks predate it). Check the coordinate under [PanamaPort](#panamaport). |
+| Any build fails the FFI bootstrap on every device **below Android 16**. | PanamaPort fork `0.1.3-kanama-r8.3` or newer is required (every `0.1.5-kanama-*` fork includes it) (the `SDK_INT_FULL` bootstrap guard); older fork versions and upstream PanamaPort fail there. Check the coordinate under [PanamaPort](#panamaport). |
 | A **minified release** APK crashes in the FFI bootstrap with `AssertionError: Should not reach here` at `nativeLinker().downcallHandle()`, then logs `No loader found for resource: res://kotlin-src/*.kt` and shows a flickering splash. | You are on upstream PanamaPort `v0.1.3`, which Godot's R8 mis-optimizes. Use Kanama's fork coordinate (below); the root cause and the fork's fix are in [Android Internals → PanamaPort](../contributing/backends/android.md#panamaport). |
 | The app segfaults inside the vendor shader compiler (`libllvm-glnext.so`) before any Kanama code runs, on an old device with a factory image. | Old vendor **OpenGL** drivers (a Pixel 3 XL on its factory Android 9 image, 2018 Adreno 630) crash while linking Godot 4.7 Compatibility-renderer shaders. The same device runs the demo smoke with the **Mobile (Vulkan) renderer** (`rendering_method.mobile = "mobile"`; Vulkan 1.1.66 initialized, 2026-07-13). This is an engine-vs-driver constraint, not a Kanama one — the renderer is chosen by Godot from project settings before scripts run, so it cannot be switched from Kanama at runtime. Projects targeting older devices should prefer the Mobile renderer (Godot falls back to GL Compatibility on devices without usable Vulkan) and validate on real hardware. |
 | The smoke fails at launch with a renderer surface error. | The device screen must be on and unlocked — a secure lock screen fails renderer surface creation. |
@@ -220,11 +221,12 @@ Symptoms and what they mean:
 
 Kanama's Android plugin currently consumes a forked
 [PanamaPort](https://github.com/vova7878/PanamaPort)
-artifact, `com.github.falcon4ever.PanamaPort:Core:0.1.3-kanama-r8.4`, published
+artifact, `com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1` (upstream `v0.1.5`
+plus Kanama's patches), published
 via [JitPack](https://jitpack.io) from Kanama's PanamaPort fork. The dependency
 can be overridden with `-PkanamaPanamaPortCore=...`, and the Android export
 scripts inject the JitPack repository (alongside the local Maven repository, for
-fork iteration) into Godot's generated Gradle project. Upstream PanamaPort
-`v0.1.3` from Maven Central is not an R8-supported release path for Kanama;
+fork iteration) into Godot's generated Gradle project. Upstream PanamaPort from
+Maven Central is not an R8-supported release path for Kanama;
 why, and what each fork revision fixed, is in
 [Android Internals → PanamaPort](../contributing/backends/android.md#panamaport).
