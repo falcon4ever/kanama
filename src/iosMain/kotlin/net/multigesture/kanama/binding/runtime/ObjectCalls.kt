@@ -42107,6 +42107,82 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   }
 
+  // Task 117 P3′ — the members iOS gains from the shared GodotObject (D20/D22), driven through the
+  // public wrapper API rather than the helpers, so the shared body, the generated or hand-written
+  // iOS helper behind it and the shim are all on the path. THE PROBE RULE holds row by row: every
+  // assertion is a value the no-op path cannot produce (it would return null / false / "" / 0), or
+  // a default that is only reachable through a state an earlier row proved non-default (hasMeta
+  // false only AFTER hasMeta true; isConnected false only AFTER isConnected true).
+  run {
+    val rootSeg = requireObject("Node2D")
+    val targetSeg = requireObject("Node")
+    if (rootSeg.address() != 0L && targetSeg.address() != 0L) {
+      val root = GodotObject(GodotHandle(rootSeg))
+      val target = GodotObject(GodotHandle(targetSeg))
+
+      // set_meta / get_meta / has_meta / remove_meta (generated ptrcallWithStringNameAndVariantArg
+      // + ptrcallWithStringNameAndVariantArgRetVariantScalar, generated StringName->bool, void).
+      root.setMeta("kanama_p3_meta", 42L)
+      check(
+        "root(setMeta/getMeta round trip == 42)",
+        (root.getMeta("kanama_p3_meta") as? Number)?.toLong() == 42L,
+      )
+      check("root(hasMeta after setMeta)", root.hasMeta("kanama_p3_meta"))
+      root.removeMeta("kanama_p3_meta")
+      check("root(hasMeta false after removeMeta)", !root.hasMeta("kanama_p3_meta"))
+      check(
+        "root(getMeta default after removeMeta == 7)",
+        (root.getMeta("kanama_p3_meta", 7L) as? Number)?.toLong() == 7L,
+      )
+
+      // set_indexed / get_indexed on a Node2D sub-property (generated NodePath + Variant shapes).
+      root.setIndexed("position:x", 12.5)
+      check(
+        "root(setIndexed/getIndexed position:x == 12.5)",
+        (root.getIndexed("position:x") as? Number)?.toDouble() == 12.5,
+      )
+
+      // callv (generated StringName + Array -> Variant) and tr (generated two-StringName ->
+      // String).
+      check("root(callv get_class == Node2D)", root.callv("get_class", emptyList()) == "Node2D")
+      check("root(tr(x) == x, no translation loaded)", root.tr("x") == "x")
+
+      // add_user_signal (hand-written, Variant path) / has_user_signal.
+      root.addUserSignal("kanama_p3_user")
+      check("root(addUserSignal -> hasUserSignal)", root.hasUserSignal("kanama_p3_user"))
+
+      // connect (hand-written -> IosGodot.objectConnect) + is_connected (generated PT_CALLABLE) +
+      // disconnect (generated PT_CALLABLE), user signal -> a no-arg Node method.
+      val method = "update_configuration_warnings"
+      val connectError = root.connect("kanama_p3_user", target, method)
+      check(
+        "root(connect user signal -> OK and isConnected)",
+        connectError == 0L && root.isConnected("kanama_p3_user", target, method),
+      )
+      root.disconnect("kanama_p3_user", target, method)
+      check(
+        "root(disconnect -> isConnected false)",
+        !root.isConnected("kanama_p3_user", target, method),
+      )
+
+      // GodotSignal.disconnect (iOS gains it, D21): connect through the signal, disconnect through
+      // it.
+      val userSignal = root.signal("kanama_p3_user")
+      userSignal.connect(target, method)
+      check(
+        "root(GodotSignal.connect -> isConnected)",
+        root.isConnected("kanama_p3_user", target, method),
+      )
+      userSignal.disconnect(target, method)
+      check(
+        "root(GodotSignal.disconnect -> isConnected false)",
+        !root.isConnected("kanama_p3_user", target, method),
+      )
+    }
+    if (rootSeg.address() != 0L) ObjectCalls.destroyObject(rootSeg)
+    if (targetSeg.address() != 0L) ObjectCalls.destroyObject(targetSeg)
+  }
+
   // Task 124 — THE PERMANENT RED RUN: seven deliberate faults, raised in the sink's probe mode.
   // See runFaultProbes (declared beside SELFTEST_EXPECTED_FAULTS at the top of this section) for
   // what each probe proves and why the five `pending slot drained` rows live there, not inline.
