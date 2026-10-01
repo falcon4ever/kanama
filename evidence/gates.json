@@ -244,6 +244,26 @@
       "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh (task 104 step 3 close-out run, one KMP module; log kanama-tasks/evidence/task104/closeout-android-matrix-2026-09-15.log)",
       "result": "PASS",
       "source": "scripts/android_smoke.sh"
+    },
+    {
+      "gate": "android-debug-matrix",
+      "claim": "Android Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "7997626edc6480b75a3b35bda79e9cf767ddb983",
+      "date": "2026-10-01",
+      "where": "Pixel 7 (Android 17, build CP3A.260905.009, the September 2026 update): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh on PanamaPort fork 0.1.5-kanama-r8.1 from JitPack (task 127; the previous fork aborts in the FFI bootstrap on this build)",
+      "result": "PASS",
+      "source": "scripts/android_smoke.sh"
+    },
+    {
+      "gate": "android-r8-release",
+      "claim": "Android Supported",
+      "godotPin": "4.7.2.stable",
+      "kanamaSha": "7997626edc6480b75a3b35bda79e9cf767ddb983",
+      "date": "2026-10-01",
+      "where": "Pixel 7 (Android 17, build CP3A.260905.009): scripts/android_export_minified.sh R8-minified Match3 release on PanamaPort fork 0.1.5-kanama-r8.1 from JitPack (task 127)",
+      "result": "PASS",
+      "source": "scripts/android_export_minified.sh"
     }
   ]
 }
