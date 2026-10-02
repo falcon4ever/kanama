@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: AnimationNodeOneShot
  */
 class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
-    var mixMode: Long
+    var mixMode: AnimationNodeOneShot.MixMode
         @JvmName("mixModeProperty")
         get() = getMixMode()
         @JvmName("setMixModeProperty")
@@ -281,9 +282,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      *
      * Generated from Godot docs: AnimationNodeOneShot.set_mix_mode
      */
-    fun setMixMode(mode: Long) {
+    fun setMixMode(mode: AnimationNodeOneShot.MixMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMixModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setMixModeBind, segment, mode.value)
     }
 
     /**
@@ -291,19 +292,60 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      *
      * Generated from Godot docs: AnimationNodeOneShot.get_mix_mode
      */
-    fun getMixMode(): Long {
+    fun getMixMode(): AnimationNodeOneShot.MixMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, segment)
+        return AnimationNodeOneShot.MixMode(ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, segment))
+    }
+
+    @JvmInline
+    value class OneShotRequest(val value: Long) {
+        companion object {
+            /**
+             * The default state of the request. Nothing is done.
+             *
+             * Generated from Godot docs: AnimationNodeOneShot.ONE_SHOT_REQUEST_NONE
+             */
+            val NONE: OneShotRequest get() = OneShotRequest(0L)
+            /**
+             * The request to play the animation connected to "shot" port.
+             *
+             * Generated from Godot docs: AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE
+             */
+            val FIRE: OneShotRequest get() = OneShotRequest(1L)
+            /**
+             * The request to stop the animation connected to "shot" port.
+             *
+             * Generated from Godot docs: AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT
+             */
+            val ABORT: OneShotRequest get() = OneShotRequest(2L)
+            /**
+             * The request to fade out the animation connected to "shot" port.
+             *
+             * Generated from Godot docs: AnimationNodeOneShot.ONE_SHOT_REQUEST_FADE_OUT
+             */
+            val FADE_OUT: OneShotRequest get() = OneShotRequest(3L)
+        }
+    }
+
+    @JvmInline
+    value class MixMode(val value: Long) {
+        companion object {
+            /**
+             * Blends two animations. See also `AnimationNodeBlend2`.
+             *
+             * Generated from Godot docs: AnimationNodeOneShot.MIX_MODE_BLEND
+             */
+            val BLEND: MixMode get() = MixMode(0L)
+            /**
+             * Blends two animations additively. See also `AnimationNodeAdd2`.
+             *
+             * Generated from Godot docs: AnimationNodeOneShot.MIX_MODE_ADD
+             */
+            val ADD: MixMode get() = MixMode(1L)
+        }
     }
 
     companion object {
-        const val ONE_SHOT_REQUEST_NONE: Long = 0L
-        const val ONE_SHOT_REQUEST_FIRE: Long = 1L
-        const val ONE_SHOT_REQUEST_ABORT: Long = 2L
-        const val ONE_SHOT_REQUEST_FADE_OUT: Long = 3L
-        const val MIX_MODE_BLEND: Long = 0L
-        const val MIX_MODE_ADD: Long = 1L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeOneShot? =
             wrap(handle.segment)

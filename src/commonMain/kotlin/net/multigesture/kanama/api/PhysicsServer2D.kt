@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,86 +18,6 @@ object PhysicsServer2D {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("PhysicsServer2D")
     }
-
-    const val SPACE_PARAM_CONTACT_RECYCLE_RADIUS: Long = 0L
-    const val SPACE_PARAM_CONTACT_MAX_SEPARATION: Long = 1L
-    const val SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION: Long = 2L
-    const val SPACE_PARAM_CONTACT_DEFAULT_BIAS: Long = 3L
-    const val SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD: Long = 4L
-    const val SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD: Long = 5L
-    const val SPACE_PARAM_BODY_TIME_TO_SLEEP: Long = 6L
-    const val SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS: Long = 7L
-    const val SPACE_PARAM_SOLVER_ITERATIONS: Long = 8L
-    const val SHAPE_WORLD_BOUNDARY: Long = 0L
-    const val SHAPE_SEPARATION_RAY: Long = 1L
-    const val SHAPE_SEGMENT: Long = 2L
-    const val SHAPE_CIRCLE: Long = 3L
-    const val SHAPE_RECTANGLE: Long = 4L
-    const val SHAPE_CAPSULE: Long = 5L
-    const val SHAPE_CONVEX_POLYGON: Long = 6L
-    const val SHAPE_CONCAVE_POLYGON: Long = 7L
-    const val SHAPE_CUSTOM: Long = 8L
-    const val AREA_PARAM_GRAVITY_OVERRIDE_MODE: Long = 0L
-    const val AREA_PARAM_GRAVITY: Long = 1L
-    const val AREA_PARAM_GRAVITY_VECTOR: Long = 2L
-    const val AREA_PARAM_GRAVITY_IS_POINT: Long = 3L
-    const val AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE: Long = 4L
-    const val AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE: Long = 5L
-    const val AREA_PARAM_LINEAR_DAMP: Long = 6L
-    const val AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE: Long = 7L
-    const val AREA_PARAM_ANGULAR_DAMP: Long = 8L
-    const val AREA_PARAM_PRIORITY: Long = 9L
-    const val AREA_SPACE_OVERRIDE_DISABLED: Long = 0L
-    const val AREA_SPACE_OVERRIDE_COMBINE: Long = 1L
-    const val AREA_SPACE_OVERRIDE_COMBINE_REPLACE: Long = 2L
-    const val AREA_SPACE_OVERRIDE_REPLACE: Long = 3L
-    const val AREA_SPACE_OVERRIDE_REPLACE_COMBINE: Long = 4L
-    const val BODY_MODE_STATIC: Long = 0L
-    const val BODY_MODE_KINEMATIC: Long = 1L
-    const val BODY_MODE_RIGID: Long = 2L
-    const val BODY_MODE_RIGID_LINEAR: Long = 3L
-    const val BODY_PARAM_BOUNCE: Long = 0L
-    const val BODY_PARAM_FRICTION: Long = 1L
-    const val BODY_PARAM_MASS: Long = 2L
-    const val BODY_PARAM_INERTIA: Long = 3L
-    const val BODY_PARAM_CENTER_OF_MASS: Long = 4L
-    const val BODY_PARAM_GRAVITY_SCALE: Long = 5L
-    const val BODY_PARAM_LINEAR_DAMP_MODE: Long = 6L
-    const val BODY_PARAM_ANGULAR_DAMP_MODE: Long = 7L
-    const val BODY_PARAM_LINEAR_DAMP: Long = 8L
-    const val BODY_PARAM_ANGULAR_DAMP: Long = 9L
-    const val BODY_PARAM_MAX: Long = 10L
-    const val BODY_DAMP_MODE_COMBINE: Long = 0L
-    const val BODY_DAMP_MODE_REPLACE: Long = 1L
-    const val BODY_STATE_TRANSFORM: Long = 0L
-    const val BODY_STATE_LINEAR_VELOCITY: Long = 1L
-    const val BODY_STATE_ANGULAR_VELOCITY: Long = 2L
-    const val BODY_STATE_SLEEPING: Long = 3L
-    const val BODY_STATE_CAN_SLEEP: Long = 4L
-    const val JOINT_TYPE_PIN: Long = 0L
-    const val JOINT_TYPE_GROOVE: Long = 1L
-    const val JOINT_TYPE_DAMPED_SPRING: Long = 2L
-    const val JOINT_TYPE_MAX: Long = 3L
-    const val JOINT_PARAM_BIAS: Long = 0L
-    const val JOINT_PARAM_MAX_BIAS: Long = 1L
-    const val JOINT_PARAM_MAX_FORCE: Long = 2L
-    const val PIN_JOINT_SOFTNESS: Long = 0L
-    const val PIN_JOINT_LIMIT_UPPER: Long = 1L
-    const val PIN_JOINT_LIMIT_LOWER: Long = 2L
-    const val PIN_JOINT_MOTOR_TARGET_VELOCITY: Long = 3L
-    const val PIN_JOINT_FLAG_ANGULAR_LIMIT_ENABLED: Long = 0L
-    const val PIN_JOINT_FLAG_MOTOR_ENABLED: Long = 1L
-    const val DAMPED_SPRING_REST_LENGTH: Long = 0L
-    const val DAMPED_SPRING_STIFFNESS: Long = 1L
-    const val DAMPED_SPRING_DAMPING: Long = 2L
-    const val CCD_MODE_DISABLED: Long = 0L
-    const val CCD_MODE_CAST_RAY: Long = 1L
-    const val CCD_MODE_CAST_SHAPE: Long = 2L
-    const val AREA_BODY_ADDED: Long = 0L
-    const val AREA_BODY_REMOVED: Long = 1L
-    const val INFO_ACTIVE_OBJECTS: Long = 0L
-    const val INFO_COLLISION_PAIRS: Long = 1L
-    const val INFO_ISLAND_COUNT: Long = 2L
 
     /**
      * Creates a 2D world boundary shape in the physics server, and returns the `RID` that identifies
@@ -218,8 +139,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.shape_get_type
      */
     @JvmStatic
-    fun shapeGetType(shape: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapeGetTypeBind, singleton, shape)
+    fun shapeGetType(shape: RID): PhysicsServer2D.ShapeType {
+        return PhysicsServer2D.ShapeType(ObjectCalls.ptrcallWithRIDArgRetLong(shapeGetTypeBind, singleton, shape))
     }
 
     /**
@@ -273,8 +194,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.space_set_param
      */
     @JvmStatic
-    fun spaceSetParam(space: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(spaceSetParamBind, singleton, space, param, value)
+    fun spaceSetParam(space: RID, param: PhysicsServer2D.SpaceParameter, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(spaceSetParamBind, singleton, space, param.value, value)
     }
 
     /**
@@ -283,8 +204,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.space_get_param
      */
     @JvmStatic
-    fun spaceGetParam(space: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(spaceGetParamBind, singleton, space, param)
+    fun spaceGetParam(space: RID, param: PhysicsServer2D.SpaceParameter): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(spaceGetParamBind, singleton, space, param.value)
     }
 
     /**
@@ -480,8 +401,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.area_set_param
      */
     @JvmStatic
-    fun areaSetParam(area: RID, param: Long, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param, value)
+    fun areaSetParam(area: RID, param: PhysicsServer2D.AreaParameter, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param.value, value)
     }
 
     /**
@@ -500,8 +421,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.area_get_param
      */
     @JvmStatic
-    fun areaGetParam(area: RID, param: Long): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param)
+    fun areaGetParam(area: RID, param: PhysicsServer2D.AreaParameter): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param.value)
     }
 
     /**
@@ -653,8 +574,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_set_mode
      */
     @JvmStatic
-    fun bodySetMode(body: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetModeBind, singleton, body, mode)
+    fun bodySetMode(body: RID, mode: PhysicsServer2D.BodyMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetModeBind, singleton, body, mode.value)
     }
 
     /**
@@ -663,8 +584,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_get_mode
      */
     @JvmStatic
-    fun bodyGetMode(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetModeBind, singleton, body)
+    fun bodyGetMode(body: RID): PhysicsServer2D.BodyMode {
+        return PhysicsServer2D.BodyMode(ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetModeBind, singleton, body))
     }
 
     /**
@@ -832,8 +753,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_set_continuous_collision_detection_mode
      */
     @JvmStatic
-    fun bodySetContinuousCollisionDetectionMode(body: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetContinuousCollisionDetectionModeBind, singleton, body, mode)
+    fun bodySetContinuousCollisionDetectionMode(body: RID, mode: PhysicsServer2D.CCDMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetContinuousCollisionDetectionModeBind, singleton, body, mode.value)
     }
 
     /**
@@ -842,8 +763,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_get_continuous_collision_detection_mode
      */
     @JvmStatic
-    fun bodyGetContinuousCollisionDetectionMode(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetContinuousCollisionDetectionModeBind, singleton, body)
+    fun bodyGetContinuousCollisionDetectionMode(body: RID): PhysicsServer2D.CCDMode {
+        return PhysicsServer2D.CCDMode(ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetContinuousCollisionDetectionModeBind, singleton, body))
     }
 
     /**
@@ -914,8 +835,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_set_param
      */
     @JvmStatic
-    fun bodySetParam(body: RID, param: Long, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param, value)
+    fun bodySetParam(body: RID, param: PhysicsServer2D.BodyParameter, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param.value, value)
     }
 
     /**
@@ -924,8 +845,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_get_param
      */
     @JvmStatic
-    fun bodyGetParam(body: RID, param: Long): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param)
+    fun bodyGetParam(body: RID, param: PhysicsServer2D.BodyParameter): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param.value)
     }
 
     /**
@@ -946,8 +867,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_set_state
      */
     @JvmStatic
-    fun bodySetState(body: RID, state: Long, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state, value)
+    fun bodySetState(body: RID, state: PhysicsServer2D.BodyState, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state.value, value)
     }
 
     /**
@@ -956,8 +877,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_get_state
      */
     @JvmStatic
-    fun bodyGetState(body: RID, state: Long): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state)
+    fun bodyGetState(body: RID, state: PhysicsServer2D.BodyState): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state.value)
     }
 
     /**
@@ -1284,8 +1205,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.joint_set_param
      */
     @JvmStatic
-    fun jointSetParam(joint: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(jointSetParamBind, singleton, joint, param, value)
+    fun jointSetParam(joint: RID, param: PhysicsServer2D.JointParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(jointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1294,8 +1215,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.joint_get_param
      */
     @JvmStatic
-    fun jointGetParam(joint: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(jointGetParamBind, singleton, joint, param)
+    fun jointGetParam(joint: RID, param: PhysicsServer2D.JointParam): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(jointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1360,8 +1281,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.pin_joint_set_flag
      */
     @JvmStatic
-    fun pinJointSetFlag(joint: RID, flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(pinJointSetFlagBind, singleton, joint, flag, enabled)
+    fun pinJointSetFlag(joint: RID, flag: PhysicsServer2D.PinJointFlag, enabled: Boolean) {
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(pinJointSetFlagBind, singleton, joint, flag.value, enabled)
     }
 
     /**
@@ -1370,8 +1291,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.pin_joint_get_flag
      */
     @JvmStatic
-    fun pinJointGetFlag(joint: RID, flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(pinJointGetFlagBind, singleton, joint, flag)
+    fun pinJointGetFlag(joint: RID, flag: PhysicsServer2D.PinJointFlag): Boolean {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(pinJointGetFlagBind, singleton, joint, flag.value)
     }
 
     /**
@@ -1380,8 +1301,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.pin_joint_set_param
      */
     @JvmStatic
-    fun pinJointSetParam(joint: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(pinJointSetParamBind, singleton, joint, param, value)
+    fun pinJointSetParam(joint: RID, param: PhysicsServer2D.PinJointParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(pinJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1390,8 +1311,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.pin_joint_get_param
      */
     @JvmStatic
-    fun pinJointGetParam(joint: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(pinJointGetParamBind, singleton, joint, param)
+    fun pinJointGetParam(joint: RID, param: PhysicsServer2D.PinJointParam): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(pinJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1400,8 +1321,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.damped_spring_joint_set_param
      */
     @JvmStatic
-    fun dampedSpringJointSetParam(joint: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(dampedSpringJointSetParamBind, singleton, joint, param, value)
+    fun dampedSpringJointSetParam(joint: RID, param: PhysicsServer2D.DampedSpringParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(dampedSpringJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1410,8 +1331,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.damped_spring_joint_get_param
      */
     @JvmStatic
-    fun dampedSpringJointGetParam(joint: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(dampedSpringJointGetParamBind, singleton, joint, param)
+    fun dampedSpringJointGetParam(joint: RID, param: PhysicsServer2D.DampedSpringParam): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(dampedSpringJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1420,8 +1341,8 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.joint_get_type
      */
     @JvmStatic
-    fun jointGetType(joint: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(jointGetTypeBind, singleton, joint)
+    fun jointGetType(joint: RID): PhysicsServer2D.JointType {
+        return PhysicsServer2D.JointType(ObjectCalls.ptrcallWithRIDArgRetLong(jointGetTypeBind, singleton, joint))
     }
 
     /**
@@ -1452,8 +1373,665 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.get_process_info
      */
     @JvmStatic
-    fun getProcessInfo(processInfo: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo)
+    fun getProcessInfo(processInfo: PhysicsServer2D.ProcessInfo): Int {
+        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
+    }
+
+    @JvmInline
+    value class SpaceParameter(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get the maximum distance a pair of bodies has to move before their collision
+             * status has to be recalculated. The default value of this parameter is
+             * `ProjectSettings.physics/2d/solver/contact_recycle_radius`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_CONTACT_RECYCLE_RADIUS
+             */
+            val CONTACT_RECYCLE_RADIUS: SpaceParameter get() = SpaceParameter(0L)
+            /**
+             * Constant to set/get the maximum distance a shape can be from another before they are considered
+             * separated and the contact is discarded. The default value of this parameter is
+             * `ProjectSettings.physics/2d/solver/contact_max_separation`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_CONTACT_MAX_SEPARATION
+             */
+            val CONTACT_MAX_SEPARATION: SpaceParameter get() = SpaceParameter(1L)
+            /**
+             * Constant to set/get the maximum distance a shape can penetrate another shape before it is
+             * considered a collision. The default value of this parameter is
+             * `ProjectSettings.physics/2d/solver/contact_max_allowed_penetration`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION
+             */
+            val CONTACT_MAX_ALLOWED_PENETRATION: SpaceParameter get() = SpaceParameter(2L)
+            /**
+             * Constant to set/get the default solver bias for all physics contacts. A solver bias is a factor
+             * controlling how much two objects "rebound", after overlapping, to avoid leaving them in that
+             * state because of numerical imprecision. The default value of this parameter is
+             * `ProjectSettings.physics/2d/solver/default_contact_bias`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_CONTACT_DEFAULT_BIAS
+             */
+            val CONTACT_DEFAULT_BIAS: SpaceParameter get() = SpaceParameter(3L)
+            /**
+             * Constant to set/get the threshold linear velocity of activity. A body marked as potentially
+             * inactive for both linear and angular velocity will be put to sleep after the time given. The
+             * default value of this parameter is `ProjectSettings.physics/2d/sleep_threshold_linear`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD
+             */
+            val BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD: SpaceParameter get() = SpaceParameter(4L)
+            /**
+             * Constant to set/get the threshold angular velocity of activity. A body marked as potentially
+             * inactive for both linear and angular velocity will be put to sleep after the time given. The
+             * default value of this parameter is `ProjectSettings.physics/2d/sleep_threshold_angular`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD
+             */
+            val BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD: SpaceParameter get() = SpaceParameter(5L)
+            /**
+             * Constant to set/get the maximum time of activity. A body marked as potentially inactive for both
+             * linear and angular velocity will be put to sleep after this time. The default value of this
+             * parameter is `ProjectSettings.physics/2d/time_before_sleep`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_BODY_TIME_TO_SLEEP
+             */
+            val BODY_TIME_TO_SLEEP: SpaceParameter get() = SpaceParameter(6L)
+            /**
+             * Constant to set/get the default solver bias for all physics constraints. A solver bias is a
+             * factor controlling how much two objects "rebound", after violating a constraint, to avoid
+             * leaving them in that state because of numerical imprecision. The default value of this parameter
+             * is `ProjectSettings.physics/2d/solver/default_constraint_bias`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS
+             */
+            val CONSTRAINT_DEFAULT_BIAS: SpaceParameter get() = SpaceParameter(7L)
+            /**
+             * Constant to set/get the number of solver iterations for all contacts and constraints. The
+             * greater the number of iterations, the more accurate the collisions will be. However, a greater
+             * number of iterations requires more CPU power, which can decrease performance. The default value
+             * of this parameter is `ProjectSettings.physics/2d/solver/solver_iterations`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SPACE_PARAM_SOLVER_ITERATIONS
+             */
+            val SOLVER_ITERATIONS: SpaceParameter get() = SpaceParameter(8L)
+        }
+    }
+
+    @JvmInline
+    value class ShapeType(val value: Long) {
+        companion object {
+            /**
+             * This is the constant for creating world boundary shapes. A world boundary shape is an infinite
+             * line with an origin point, and a normal. Thus, it can be used for front/behind checks.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_WORLD_BOUNDARY
+             */
+            val WORLD_BOUNDARY: ShapeType get() = ShapeType(0L)
+            /**
+             * This is the constant for creating separation ray shapes. A separation ray is defined by a length
+             * and separates itself from what is touching its far endpoint. Useful for character controllers.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_SEPARATION_RAY
+             */
+            val SEPARATION_RAY: ShapeType get() = ShapeType(1L)
+            /**
+             * This is the constant for creating segment shapes. A segment shape is a finite line from a point
+             * A to a point B. It can be checked for intersections.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_SEGMENT
+             */
+            val SEGMENT: ShapeType get() = ShapeType(2L)
+            /**
+             * This is the constant for creating circle shapes. A circle shape only has a radius. It can be
+             * used for intersections and inside/outside checks.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_CIRCLE
+             */
+            val CIRCLE: ShapeType get() = ShapeType(3L)
+            /**
+             * This is the constant for creating rectangle shapes. A rectangle shape is defined by a width and
+             * a height. It can be used for intersections and inside/outside checks.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_RECTANGLE
+             */
+            val RECTANGLE: ShapeType get() = ShapeType(4L)
+            /**
+             * This is the constant for creating capsule shapes. A capsule shape is defined by a radius and a
+             * length. It can be used for intersections and inside/outside checks.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_CAPSULE
+             */
+            val CAPSULE: ShapeType get() = ShapeType(5L)
+            /**
+             * This is the constant for creating convex polygon shapes. A polygon is defined by a list of
+             * points. It can be used for intersections and inside/outside checks.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_CONVEX_POLYGON
+             */
+            val CONVEX_POLYGON: ShapeType get() = ShapeType(6L)
+            /**
+             * This is the constant for creating concave polygon shapes. A polygon is defined by a list of
+             * points. It can be used for intersections checks, but not for inside/outside checks.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_CONCAVE_POLYGON
+             */
+            val CONCAVE_POLYGON: ShapeType get() = ShapeType(7L)
+            /**
+             * This constant is used internally by the engine. Any attempt to create this kind of shape results
+             * in an error.
+             *
+             * Generated from Godot docs: PhysicsServer2D.SHAPE_CUSTOM
+             */
+            val CUSTOM: ShapeType get() = ShapeType(8L)
+        }
+    }
+
+    @JvmInline
+    value class AreaParameter(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get gravity override mode in an area. See `AreaSpaceOverrideMode` for possible
+             * values. The default value of this parameter is `AREA_SPACE_OVERRIDE_DISABLED`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_GRAVITY_OVERRIDE_MODE
+             */
+            val GRAVITY_OVERRIDE_MODE: AreaParameter get() = AreaParameter(0L)
+            /**
+             * Constant to set/get gravity strength in an area. The default value of this parameter is
+             * `9.80665`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_GRAVITY
+             */
+            val GRAVITY: AreaParameter get() = AreaParameter(1L)
+            /**
+             * Constant to set/get gravity vector/center in an area. The default value of this parameter is
+             * `Vector2(0, -1)`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_GRAVITY_VECTOR
+             */
+            val GRAVITY_VECTOR: AreaParameter get() = AreaParameter(2L)
+            /**
+             * Constant to set/get whether the gravity vector of an area is a direction, or a center point. The
+             * default value of this parameter is `false`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_GRAVITY_IS_POINT
+             */
+            val GRAVITY_IS_POINT: AreaParameter get() = AreaParameter(3L)
+            /**
+             * Constant to set/get the distance at which the gravity strength is equal to the gravity
+             * controlled by `AREA_PARAM_GRAVITY`. For example, on a planet 100 pixels in radius with a surface
+             * gravity of 4.0 px/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity will
+             * have falloff according to the inverse square law, so in the example, at 200 pixels from the
+             * center the gravity will be 1.0 px/s² (twice the distance, 1/4th the gravity), at 50 pixels it
+             * will be 16.0 px/s² (half the distance, 4x the gravity), and so on. The above is true only when
+             * the unit distance is a positive number. When the unit distance is set to 0.0, the gravity will
+             * be constant regardless of distance. The default value of this parameter is `0.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE
+             */
+            val GRAVITY_POINT_UNIT_DISTANCE: AreaParameter get() = AreaParameter(4L)
+            /**
+             * Constant to set/get linear damping override mode in an area. See `AreaSpaceOverrideMode` for
+             * possible values. The default value of this parameter is `AREA_SPACE_OVERRIDE_DISABLED`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE
+             */
+            val LINEAR_DAMP_OVERRIDE_MODE: AreaParameter get() = AreaParameter(5L)
+            /**
+             * Constant to set/get the linear damping factor of an area. The default value of this parameter is
+             * `0.1`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_LINEAR_DAMP
+             */
+            val LINEAR_DAMP: AreaParameter get() = AreaParameter(6L)
+            /**
+             * Constant to set/get angular damping override mode in an area. See `AreaSpaceOverrideMode` for
+             * possible values. The default value of this parameter is `AREA_SPACE_OVERRIDE_DISABLED`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE
+             */
+            val ANGULAR_DAMP_OVERRIDE_MODE: AreaParameter get() = AreaParameter(7L)
+            /**
+             * Constant to set/get the angular damping factor of an area. The default value of this parameter
+             * is `1.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_ANGULAR_DAMP
+             */
+            val ANGULAR_DAMP: AreaParameter get() = AreaParameter(8L)
+            /**
+             * Constant to set/get the priority (order of processing) of an area. The default value of this
+             * parameter is `0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_PRIORITY
+             */
+            val PRIORITY: AreaParameter get() = AreaParameter(9L)
+        }
+    }
+
+    @JvmInline
+    value class AreaSpaceOverrideMode(val value: Long) {
+        companion object {
+            /**
+             * This area does not affect gravity/damp. These are generally areas that exist only to detect
+             * collisions, and objects entering or exiting them.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_SPACE_OVERRIDE_DISABLED
+             */
+            val DISABLED: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(0L)
+            /**
+             * This area adds its gravity/damp values to whatever has been calculated so far. This way, many
+             * overlapping areas can combine their physics to make interesting effects.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_SPACE_OVERRIDE_COMBINE
+             */
+            val COMBINE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(1L)
+            /**
+             * This area adds its gravity/damp values to whatever has been calculated so far. Then stops taking
+             * into account the rest of the areas, even the default one.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_SPACE_OVERRIDE_COMBINE_REPLACE
+             */
+            val COMBINE_REPLACE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(2L)
+            /**
+             * This area replaces any gravity/damp, even the default one, and stops taking into account the
+             * rest of the areas.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_SPACE_OVERRIDE_REPLACE
+             */
+            val REPLACE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(3L)
+            /**
+             * This area replaces any gravity/damp calculated so far, but keeps calculating the rest of the
+             * areas, down to the default one.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_SPACE_OVERRIDE_REPLACE_COMBINE
+             */
+            val REPLACE_COMBINE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(4L)
+        }
+    }
+
+    @JvmInline
+    value class BodyMode(val value: Long) {
+        companion object {
+            /**
+             * Constant for static bodies. In this mode, a body can be only moved by user code and doesn't
+             * collide with other bodies along its path when moved.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_MODE_STATIC
+             */
+            val STATIC: BodyMode get() = BodyMode(0L)
+            /**
+             * Constant for kinematic bodies. In this mode, a body can be only moved by user code and collides
+             * with other bodies along its path.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_MODE_KINEMATIC
+             */
+            val KINEMATIC: BodyMode get() = BodyMode(1L)
+            /**
+             * Constant for rigid bodies. In this mode, a body can be pushed by other bodies and has forces
+             * applied.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_MODE_RIGID
+             */
+            val RIGID: BodyMode get() = BodyMode(2L)
+            /**
+             * Constant for linear rigid bodies. In this mode, a body can not rotate, and only its linear
+             * velocity is affected by external forces.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_MODE_RIGID_LINEAR
+             */
+            val RIGID_LINEAR: BodyMode get() = BodyMode(3L)
+        }
+    }
+
+    @JvmInline
+    value class BodyParameter(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get a body's bounce factor. The default value of this parameter is `0.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_BOUNCE
+             */
+            val BOUNCE: BodyParameter get() = BodyParameter(0L)
+            /**
+             * Constant to set/get a body's friction. The default value of this parameter is `1.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_FRICTION
+             */
+            val FRICTION: BodyParameter get() = BodyParameter(1L)
+            /**
+             * Constant to set/get a body's mass. The default value of this parameter is `1.0`. If the body's
+             * mode is set to `BODY_MODE_RIGID`, then setting this parameter will have the following additional
+             * effects: - If the parameter `BODY_PARAM_CENTER_OF_MASS` has never been set explicitly, then the
+             * value of that parameter will be recalculated based on the body's shapes. - If the parameter
+             * `BODY_PARAM_INERTIA` is set to a value `<= 0.0`, then the value of that parameter will be
+             * recalculated based on the body's shapes, mass, and center of mass.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_MASS
+             */
+            val MASS: BodyParameter get() = BodyParameter(2L)
+            /**
+             * Constant to set/get a body's inertia. The default value of this parameter is `0.0`. If the
+             * body's inertia is set to a value `<= 0.0`, then the inertia will be recalculated based on the
+             * body's shapes, mass, and center of mass.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_INERTIA
+             */
+            val INERTIA: BodyParameter get() = BodyParameter(3L)
+            /**
+             * Constant to set/get a body's center of mass position in the body's local coordinate system. The
+             * default value of this parameter is `Vector2(0, 0)`. If this parameter is never set explicitly,
+             * then it is recalculated based on the body's shapes when setting the parameter `BODY_PARAM_MASS`
+             * or when calling `body_set_space`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_CENTER_OF_MASS
+             */
+            val CENTER_OF_MASS: BodyParameter get() = BodyParameter(4L)
+            /**
+             * Constant to set/get a body's gravity multiplier. The default value of this parameter is `1.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_GRAVITY_SCALE
+             */
+            val GRAVITY_SCALE: BodyParameter get() = BodyParameter(5L)
+            /**
+             * Constant to set/get a body's linear damping mode. See `BodyDampMode` for possible values. The
+             * default value of this parameter is `BODY_DAMP_MODE_COMBINE`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_LINEAR_DAMP_MODE
+             */
+            val LINEAR_DAMP_MODE: BodyParameter get() = BodyParameter(6L)
+            /**
+             * Constant to set/get a body's angular damping mode. See `BodyDampMode` for possible values. The
+             * default value of this parameter is `BODY_DAMP_MODE_COMBINE`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_ANGULAR_DAMP_MODE
+             */
+            val ANGULAR_DAMP_MODE: BodyParameter get() = BodyParameter(7L)
+            /**
+             * Constant to set/get a body's linear damping factor. The default value of this parameter is
+             * `0.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_LINEAR_DAMP
+             */
+            val LINEAR_DAMP: BodyParameter get() = BodyParameter(8L)
+            /**
+             * Constant to set/get a body's angular damping factor. The default value of this parameter is
+             * `0.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_ANGULAR_DAMP
+             */
+            val ANGULAR_DAMP: BodyParameter get() = BodyParameter(9L)
+            /**
+             * Represents the size of the `BodyParameter` enum.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_MAX
+             */
+            val MAX: BodyParameter get() = BodyParameter(10L)
+        }
+    }
+
+    @JvmInline
+    value class BodyDampMode(val value: Long) {
+        companion object {
+            /**
+             * The body's damping value is added to any value set in areas or the default value.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_DAMP_MODE_COMBINE
+             */
+            val COMBINE: BodyDampMode get() = BodyDampMode(0L)
+            /**
+             * The body's damping value replaces any value set in areas or the default value.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_DAMP_MODE_REPLACE
+             */
+            val REPLACE: BodyDampMode get() = BodyDampMode(1L)
+        }
+    }
+
+    @JvmInline
+    value class BodyState(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get the current transform matrix of the body.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_STATE_TRANSFORM
+             */
+            val TRANSFORM: BodyState get() = BodyState(0L)
+            /**
+             * Constant to set/get the current linear velocity of the body.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_STATE_LINEAR_VELOCITY
+             */
+            val LINEAR_VELOCITY: BodyState get() = BodyState(1L)
+            /**
+             * Constant to set/get the current angular velocity of the body.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_STATE_ANGULAR_VELOCITY
+             */
+            val ANGULAR_VELOCITY: BodyState get() = BodyState(2L)
+            /**
+             * Constant to sleep/wake up a body, or to get whether it is sleeping.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_STATE_SLEEPING
+             */
+            val SLEEPING: BodyState get() = BodyState(3L)
+            /**
+             * Constant to set/get whether the body can sleep.
+             *
+             * Generated from Godot docs: PhysicsServer2D.BODY_STATE_CAN_SLEEP
+             */
+            val CAN_SLEEP: BodyState get() = BodyState(4L)
+        }
+    }
+
+    @JvmInline
+    value class JointType(val value: Long) {
+        companion object {
+            /**
+             * Constant to create pin joints.
+             *
+             * Generated from Godot docs: PhysicsServer2D.JOINT_TYPE_PIN
+             */
+            val PIN: JointType get() = JointType(0L)
+            /**
+             * Constant to create groove joints.
+             *
+             * Generated from Godot docs: PhysicsServer2D.JOINT_TYPE_GROOVE
+             */
+            val GROOVE: JointType get() = JointType(1L)
+            /**
+             * Constant to create damped spring joints.
+             *
+             * Generated from Godot docs: PhysicsServer2D.JOINT_TYPE_DAMPED_SPRING
+             */
+            val DAMPED_SPRING: JointType get() = JointType(2L)
+            /**
+             * Represents the size of the `JointType` enum.
+             *
+             * Generated from Godot docs: PhysicsServer2D.JOINT_TYPE_MAX
+             */
+            val MAX: JointType get() = JointType(3L)
+        }
+    }
+
+    @JvmInline
+    value class JointParam(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get how fast the joint pulls the bodies back to satisfy the joint constraint.
+             * The lower the value, the more the two bodies can pull on the joint. The default value of this
+             * parameter is `0.0`. Note: In Godot Physics, this parameter is only used for pin joints and
+             * groove joints.
+             *
+             * Generated from Godot docs: PhysicsServer2D.JOINT_PARAM_BIAS
+             */
+            val BIAS: JointParam get() = JointParam(0L)
+            /**
+             * Constant to set/get the maximum speed with which the joint can apply corrections. The default
+             * value of this parameter is `3.40282e+38`. Note: In Godot Physics, this parameter is only used
+             * for groove joints.
+             *
+             * Generated from Godot docs: PhysicsServer2D.JOINT_PARAM_MAX_BIAS
+             */
+            val MAX_BIAS: JointParam get() = JointParam(1L)
+            /**
+             * Constant to set/get the maximum force that the joint can use to act on the two bodies. The
+             * default value of this parameter is `3.40282e+38`. Note: In Godot Physics, this parameter is only
+             * used for groove joints.
+             *
+             * Generated from Godot docs: PhysicsServer2D.JOINT_PARAM_MAX_FORCE
+             */
+            val MAX_FORCE: JointParam get() = JointParam(2L)
+        }
+    }
+
+    @JvmInline
+    value class PinJointParam(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get a how much the bond of the pin joint can flex. The default value of this
+             * parameter is `0.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.PIN_JOINT_SOFTNESS
+             */
+            val SOFTNESS: PinJointParam get() = PinJointParam(0L)
+            /**
+             * The maximum rotation around the pin.
+             *
+             * Generated from Godot docs: PhysicsServer2D.PIN_JOINT_LIMIT_UPPER
+             */
+            val LIMIT_UPPER: PinJointParam get() = PinJointParam(1L)
+            /**
+             * The minimum rotation around the pin.
+             *
+             * Generated from Godot docs: PhysicsServer2D.PIN_JOINT_LIMIT_LOWER
+             */
+            val LIMIT_LOWER: PinJointParam get() = PinJointParam(2L)
+            /**
+             * Target speed for the motor. In radians per second.
+             *
+             * Generated from Godot docs: PhysicsServer2D.PIN_JOINT_MOTOR_TARGET_VELOCITY
+             */
+            val MOTOR_TARGET_VELOCITY: PinJointParam get() = PinJointParam(3L)
+        }
+    }
+
+    @JvmInline
+    value class PinJointFlag(val value: Long) {
+        companion object {
+            /**
+             * If `true`, the pin has a maximum and a minimum rotation.
+             *
+             * Generated from Godot docs: PhysicsServer2D.PIN_JOINT_FLAG_ANGULAR_LIMIT_ENABLED
+             */
+            val ANGULAR_LIMIT_ENABLED: PinJointFlag get() = PinJointFlag(0L)
+            /**
+             * If `true`, a motor turns the pin.
+             *
+             * Generated from Godot docs: PhysicsServer2D.PIN_JOINT_FLAG_MOTOR_ENABLED
+             */
+            val MOTOR_ENABLED: PinJointFlag get() = PinJointFlag(1L)
+        }
+    }
+
+    @JvmInline
+    value class DampedSpringParam(val value: Long) {
+        companion object {
+            /**
+             * Sets the resting length of the spring joint. The joint will always try to go to back this length
+             * when pulled apart. The default value of this parameter is the distance between the joint's
+             * anchor points.
+             *
+             * Generated from Godot docs: PhysicsServer2D.DAMPED_SPRING_REST_LENGTH
+             */
+            val REST_LENGTH: DampedSpringParam get() = DampedSpringParam(0L)
+            /**
+             * Sets the stiffness of the spring joint. The joint applies a force equal to the stiffness times
+             * the distance from its resting length. The default value of this parameter is `20.0`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.DAMPED_SPRING_STIFFNESS
+             */
+            val STIFFNESS: DampedSpringParam get() = DampedSpringParam(1L)
+            /**
+             * Sets the damping ratio of the spring joint. A value of 0 indicates an undamped spring, while 1
+             * causes the system to reach equilibrium as fast as possible (critical damping). The default value
+             * of this parameter is `1.5`.
+             *
+             * Generated from Godot docs: PhysicsServer2D.DAMPED_SPRING_DAMPING
+             */
+            val DAMPING: DampedSpringParam get() = DampedSpringParam(2L)
+        }
+    }
+
+    @JvmInline
+    value class CCDMode(val value: Long) {
+        companion object {
+            /**
+             * Disables continuous collision detection. This is the fastest way to detect body collisions, but
+             * it can miss small and/or fast-moving objects.
+             *
+             * Generated from Godot docs: PhysicsServer2D.CCD_MODE_DISABLED
+             */
+            val DISABLED: CCDMode get() = CCDMode(0L)
+            /**
+             * Enables continuous collision detection by raycasting. It is faster than shapecasting, but less
+             * precise.
+             *
+             * Generated from Godot docs: PhysicsServer2D.CCD_MODE_CAST_RAY
+             */
+            val CAST_RAY: CCDMode get() = CCDMode(1L)
+            /**
+             * Enables continuous collision detection by shapecasting. It is the slowest CCD method, and the
+             * most precise.
+             *
+             * Generated from Godot docs: PhysicsServer2D.CCD_MODE_CAST_SHAPE
+             */
+            val CAST_SHAPE: CCDMode get() = CCDMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class AreaBodyStatus(val value: Long) {
+        companion object {
+            /**
+             * The value of the first parameter and area callback function receives, when an object enters one
+             * of its shapes.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_BODY_ADDED
+             */
+            val ADDED: AreaBodyStatus get() = AreaBodyStatus(0L)
+            /**
+             * The value of the first parameter and area callback function receives, when an object exits one
+             * of its shapes.
+             *
+             * Generated from Godot docs: PhysicsServer2D.AREA_BODY_REMOVED
+             */
+            val REMOVED: AreaBodyStatus get() = AreaBodyStatus(1L)
+        }
+    }
+
+    @JvmInline
+    value class ProcessInfo(val value: Long) {
+        companion object {
+            /**
+             * Constant to get the number of objects that are not sleeping.
+             *
+             * Generated from Godot docs: PhysicsServer2D.INFO_ACTIVE_OBJECTS
+             */
+            val ACTIVE_OBJECTS: ProcessInfo get() = ProcessInfo(0L)
+            /**
+             * Constant to get the number of possible collisions.
+             *
+             * Generated from Godot docs: PhysicsServer2D.INFO_COLLISION_PAIRS
+             */
+            val COLLISION_PAIRS: ProcessInfo get() = ProcessInfo(1L)
+            /**
+             * Constant to get the number of space regions where a collision could occur.
+             *
+             * Generated from Godot docs: PhysicsServer2D.INFO_ISLAND_COUNT
+             */
+            val ISLAND_COUNT: ProcessInfo get() = ProcessInfo(2L)
+        }
     }
 
     @JvmStatic

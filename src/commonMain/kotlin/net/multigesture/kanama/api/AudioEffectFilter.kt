@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -29,7 +30,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
         @JvmName("setGainProperty")
         set(value) = setGain(value)
 
-    var db: Long
+    var db: AudioEffectFilter.FilterDB
         @JvmName("dbProperty")
         get() = getDb()
         @JvmName("setDbProperty")
@@ -114,9 +115,9 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectFilter.set_db
      */
-    fun setDb(amount: Long) {
+    fun setDb(amount: AudioEffectFilter.FilterDB) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDbBind, segment, amount)
+        ObjectCalls.ptrcallWithLongArg(setDbBind, segment, amount.value)
     }
 
     /**
@@ -126,17 +127,46 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectFilter.get_db
      */
-    fun getDb(): Long {
+    fun getDb(): AudioEffectFilter.FilterDB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDbBind, segment)
+        return AudioEffectFilter.FilterDB(ObjectCalls.ptrcallNoArgsRetLong(getDbBind, segment))
+    }
+
+    @JvmInline
+    value class FilterDB(val value: Long) {
+        companion object {
+            /**
+             * Cutting off at 6 dB per octave. One octave is twice the frequency above `cutoff_hz`, or half the
+             * frequency below `cutoff_hz`.
+             *
+             * Generated from Godot docs: AudioEffectFilter.FILTER_6DB
+             */
+            val FILTER_6DB: FilterDB get() = FilterDB(0L)
+            /**
+             * Cutting off at 12 dB per octave. One octave is twice the frequency above `cutoff_hz`, or half
+             * the frequency below `cutoff_hz`.
+             *
+             * Generated from Godot docs: AudioEffectFilter.FILTER_12DB
+             */
+            val FILTER_12DB: FilterDB get() = FilterDB(1L)
+            /**
+             * Cutting off at 18 dB per octave. One octave is twice the frequency above `cutoff_hz`, or half
+             * the frequency below `cutoff_hz`.
+             *
+             * Generated from Godot docs: AudioEffectFilter.FILTER_18DB
+             */
+            val FILTER_18DB: FilterDB get() = FilterDB(2L)
+            /**
+             * Cutting off at 24 dB per octave. One octave is twice the frequency above `cutoff_hz`, or half
+             * the frequency below `cutoff_hz`.
+             *
+             * Generated from Godot docs: AudioEffectFilter.FILTER_24DB
+             */
+            val FILTER_24DB: FilterDB get() = FilterDB(3L)
+        }
     }
 
     companion object {
-        const val FILTER_6DB: Long = 0L
-        const val FILTER_12DB: Long = 1L
-        const val FILTER_18DB: Long = 2L
-        const val FILTER_24DB: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectFilter? =
             wrap(handle.segment)

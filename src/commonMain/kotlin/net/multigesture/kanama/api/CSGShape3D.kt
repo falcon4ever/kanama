@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,7 +22,7 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setSmoothingAngleProperty")
         set(value) = setSmoothingAngle(value)
 
-    var operation: Long
+    var operation: CSGShape3D.Operation
         @JvmName("operationProperty")
         get() = getOperation()
         @JvmName("setOperationProperty")
@@ -67,12 +68,12 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isRootShapeBind, segment)
     }
 
-    fun setOperation(operation: Long) {
-        ObjectCalls.ptrcallWithLongArg(setOperationBind, segment, operation)
+    fun setOperation(operation: CSGShape3D.Operation) {
+        ObjectCalls.ptrcallWithLongArg(setOperationBind, segment, operation.value)
     }
 
-    fun getOperation(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperationBind, segment)
+    fun getOperation(): CSGShape3D.Operation {
+        return CSGShape3D.Operation(ObjectCalls.ptrcallNoArgsRetLong(getOperationBind, segment))
     }
 
     fun setSnap(snap: Double) {
@@ -167,11 +168,16 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getSmoothingAngleBind, segment)
     }
 
-    companion object {
-        const val OPERATION_UNION: Long = 0L
-        const val OPERATION_INTERSECTION: Long = 1L
-        const val OPERATION_SUBTRACTION: Long = 2L
+    @JvmInline
+    value class Operation(val value: Long) {
+        companion object {
+            val UNION: Operation get() = Operation(0L)
+            val INTERSECTION: Operation get() = Operation(1L)
+            val SUBTRACTION: Operation get() = Operation(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CSGShape3D? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -16,20 +17,6 @@ object XRServer {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("XRServer")
     }
-
-    const val TRACKER_HEAD: Long = 1L
-    const val TRACKER_CONTROLLER: Long = 2L
-    const val TRACKER_BASESTATION: Long = 4L
-    const val TRACKER_ANCHOR: Long = 8L
-    const val TRACKER_HAND: Long = 16L
-    const val TRACKER_BODY: Long = 32L
-    const val TRACKER_FACE: Long = 64L
-    const val TRACKER_ANY_KNOWN: Long = 127L
-    const val TRACKER_UNKNOWN: Long = 128L
-    const val TRACKER_ANY: Long = 255L
-    const val RESET_FULL_ROTATION: Long = 0L
-    const val RESET_BUT_KEEP_TILT: Long = 1L
-    const val DONT_RESET_ROTATION: Long = 2L
 
     var worldScale: Double
         @JvmName("worldScaleProperty")
@@ -140,8 +127,8 @@ object XRServer {
      * Generated from Godot docs: XRServer.center_on_hmd
      */
     @JvmStatic
-    fun centerOnHmd(rotationMode: Long, keepHeight: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(centerOnHmdBind, singleton, rotationMode, keepHeight)
+    fun centerOnHmd(rotationMode: XRServer.RotationMode, keepHeight: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(centerOnHmdBind, singleton, rotationMode.value, keepHeight)
     }
 
     /**
@@ -310,6 +297,100 @@ object XRServer {
         const val trackerUpdated: String = "tracker_updated"
         const val trackerRemoved: String = "tracker_removed"
         const val worldOriginChanged: String = "world_origin_changed"
+    }
+
+    @JvmInline
+    value class TrackerType(val value: Long) {
+        companion object {
+            /**
+             * The tracker tracks the location of the player's head. This is usually a location centered
+             * between the player's eyes. Note that for handheld AR devices this can be the current location of
+             * the device.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_HEAD
+             */
+            val HEAD: TrackerType get() = TrackerType(1L)
+            /**
+             * The tracker tracks the location of a controller.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_CONTROLLER
+             */
+            val CONTROLLER: TrackerType get() = TrackerType(2L)
+            /**
+             * The tracker tracks the location of a base station.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_BASESTATION
+             */
+            val BASESTATION: TrackerType get() = TrackerType(4L)
+            /**
+             * The tracker tracks the location and size of an AR anchor.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_ANCHOR
+             */
+            val ANCHOR: TrackerType get() = TrackerType(8L)
+            /**
+             * The tracker tracks the location and joints of a hand.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_HAND
+             */
+            val HAND: TrackerType get() = TrackerType(16L)
+            /**
+             * The tracker tracks the location and joints of a body.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_BODY
+             */
+            val BODY: TrackerType get() = TrackerType(32L)
+            /**
+             * The tracker tracks the expressions of a face.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_FACE
+             */
+            val FACE: TrackerType get() = TrackerType(64L)
+            /**
+             * Used internally to filter trackers of any known type.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_ANY_KNOWN
+             */
+            val ANY_KNOWN: TrackerType get() = TrackerType(127L)
+            /**
+             * Used internally if we haven't set the tracker type yet.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_UNKNOWN
+             */
+            val UNKNOWN: TrackerType get() = TrackerType(128L)
+            /**
+             * Used internally to select all trackers.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_ANY
+             */
+            val ANY: TrackerType get() = TrackerType(255L)
+        }
+    }
+
+    @JvmInline
+    value class RotationMode(val value: Long) {
+        companion object {
+            /**
+             * Fully reset the orientation of the HMD. Regardless of what direction the user is looking to in
+             * the real world. The user will look dead ahead in the virtual world.
+             *
+             * Generated from Godot docs: XRServer.RESET_FULL_ROTATION
+             */
+            val RESET_FULL_ROTATION: RotationMode get() = RotationMode(0L)
+            /**
+             * Resets the orientation but keeps the tilt of the device. So if we're looking down, we keep
+             * looking down but heading will be reset.
+             *
+             * Generated from Godot docs: XRServer.RESET_BUT_KEEP_TILT
+             */
+            val RESET_BUT_KEEP_TILT: RotationMode get() = RotationMode(1L)
+            /**
+             * Does not reset the orientation of the HMD, only the position of the player gets centered.
+             *
+             * Generated from Godot docs: XRServer.DONT_RESET_ROTATION
+             */
+            val DONT_RESET_ROTATION: RotationMode get() = RotationMode(2L)
+        }
     }
 
     @JvmStatic

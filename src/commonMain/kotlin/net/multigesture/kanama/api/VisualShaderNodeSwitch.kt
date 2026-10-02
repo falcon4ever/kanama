@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,33 +10,38 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeSwitch
  */
 class VisualShaderNodeSwitch(handle: GodotHandle) : VisualShaderNode(handle) {
-    var opType: Long
+    var opType: VisualShaderNodeSwitch.OpType
         @JvmName("opTypeProperty")
         get() = getOpType()
         @JvmName("setOpTypeProperty")
         set(value) = setOpType(value)
 
-    fun setOpType(type: Long) {
+    fun setOpType(type: VisualShaderNodeSwitch.OpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type.value)
     }
 
-    fun getOpType(): Long {
+    fun getOpType(): VisualShaderNodeSwitch.OpType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
+        return VisualShaderNodeSwitch.OpType(ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment))
+    }
+
+    @JvmInline
+    value class OpType(val value: Long) {
+        companion object {
+            val FLOAT: OpType get() = OpType(0L)
+            val INT: OpType get() = OpType(1L)
+            val UINT: OpType get() = OpType(2L)
+            val VECTOR_2D: OpType get() = OpType(3L)
+            val VECTOR_3D: OpType get() = OpType(4L)
+            val VECTOR_4D: OpType get() = OpType(5L)
+            val BOOLEAN: OpType get() = OpType(6L)
+            val TRANSFORM: OpType get() = OpType(7L)
+            val MAX: OpType get() = OpType(8L)
+        }
     }
 
     companion object {
-        const val OP_TYPE_FLOAT: Long = 0L
-        const val OP_TYPE_INT: Long = 1L
-        const val OP_TYPE_UINT: Long = 2L
-        const val OP_TYPE_VECTOR_2D: Long = 3L
-        const val OP_TYPE_VECTOR_3D: Long = 4L
-        const val OP_TYPE_VECTOR_4D: Long = 5L
-        const val OP_TYPE_BOOLEAN: Long = 6L
-        const val OP_TYPE_TRANSFORM: Long = 7L
-        const val OP_TYPE_MAX: Long = 8L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeSwitch? =
             wrap(handle.segment)

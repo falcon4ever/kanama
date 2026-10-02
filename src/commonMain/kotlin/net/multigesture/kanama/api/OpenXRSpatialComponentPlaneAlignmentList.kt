@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -8,17 +9,22 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: OpenXRSpatialComponentPlaneAlignmentList
  */
 class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
-    fun getPlaneAlignment(index: Long): Long {
+    fun getPlaneAlignment(index: Long): OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getPlaneAlignmentBind, segment, index)
+        return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallWithLongArgRetLong(getPlaneAlignmentBind, segment, index))
+    }
+
+    @JvmInline
+    value class PlaneAlignment(val value: Long) {
+        companion object {
+            val HORIZONTAL_UPWARD: PlaneAlignment get() = PlaneAlignment(0L)
+            val HORIZONTAL_DOWNWARD: PlaneAlignment get() = PlaneAlignment(1L)
+            val VERTICAL: PlaneAlignment get() = PlaneAlignment(2L)
+            val ARBITRARY: PlaneAlignment get() = PlaneAlignment(3L)
+        }
     }
 
     companion object {
-        const val PLANE_ALIGNMENT_HORIZONTAL_UPWARD: Long = 0L
-        const val PLANE_ALIGNMENT_HORIZONTAL_DOWNWARD: Long = 1L
-        const val PLANE_ALIGNMENT_VERTICAL: Long = 2L
-        const val PLANE_ALIGNMENT_ARBITRARY: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPlaneAlignmentList? =
             wrap(handle.segment)

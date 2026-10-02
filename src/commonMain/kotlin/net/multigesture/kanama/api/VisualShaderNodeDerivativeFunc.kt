@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,69 +10,86 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeDerivativeFunc
  */
 class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(handle) {
-    var opType: Long
+    var opType: VisualShaderNodeDerivativeFunc.OpType
         @JvmName("opTypeProperty")
         get() = getOpType()
         @JvmName("setOpTypeProperty")
         set(value) = setOpType(value)
 
-    var function: Long
+    var function: VisualShaderNodeDerivativeFunc.Function
         @JvmName("functionProperty")
         get() = getFunction()
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
-    var precision: Long
+    var precision: VisualShaderNodeDerivativeFunc.Precision
         @JvmName("precisionProperty")
         get() = getPrecision()
         @JvmName("setPrecisionProperty")
         set(value) = setPrecision(value)
 
-    fun setOpType(type: Long) {
+    fun setOpType(type: VisualShaderNodeDerivativeFunc.OpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, type.value)
     }
 
-    fun getOpType(): Long {
+    fun getOpType(): VisualShaderNodeDerivativeFunc.OpType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
+        return VisualShaderNodeDerivativeFunc.OpType(ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment))
     }
 
-    fun setFunction(func: Long) {
+    fun setFunction(func: VisualShaderNodeDerivativeFunc.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
     }
 
-    fun getFunction(): Long {
+    fun getFunction(): VisualShaderNodeDerivativeFunc.Function {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
+        return VisualShaderNodeDerivativeFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
     }
 
-    fun setPrecision(precision: Long) {
+    fun setPrecision(precision: VisualShaderNodeDerivativeFunc.Precision) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPrecisionBind, segment, precision)
+        ObjectCalls.ptrcallWithLongArg(setPrecisionBind, segment, precision.value)
     }
 
-    fun getPrecision(): Long {
+    fun getPrecision(): VisualShaderNodeDerivativeFunc.Precision {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrecisionBind, segment)
+        return VisualShaderNodeDerivativeFunc.Precision(ObjectCalls.ptrcallNoArgsRetLong(getPrecisionBind, segment))
+    }
+
+    @JvmInline
+    value class OpType(val value: Long) {
+        companion object {
+            val SCALAR: OpType get() = OpType(0L)
+            val VECTOR_2D: OpType get() = OpType(1L)
+            val VECTOR_3D: OpType get() = OpType(2L)
+            val VECTOR_4D: OpType get() = OpType(3L)
+            val MAX: OpType get() = OpType(4L)
+        }
+    }
+
+    @JvmInline
+    value class Function(val value: Long) {
+        companion object {
+            val SUM: Function get() = Function(0L)
+            val X: Function get() = Function(1L)
+            val Y: Function get() = Function(2L)
+            val MAX: Function get() = Function(3L)
+        }
+    }
+
+    @JvmInline
+    value class Precision(val value: Long) {
+        companion object {
+            val NONE: Precision get() = Precision(0L)
+            val COARSE: Precision get() = Precision(1L)
+            val FINE: Precision get() = Precision(2L)
+            val MAX: Precision get() = Precision(3L)
+        }
     }
 
     companion object {
-        const val OP_TYPE_SCALAR: Long = 0L
-        const val OP_TYPE_VECTOR_2D: Long = 1L
-        const val OP_TYPE_VECTOR_3D: Long = 2L
-        const val OP_TYPE_VECTOR_4D: Long = 3L
-        const val OP_TYPE_MAX: Long = 4L
-        const val FUNC_SUM: Long = 0L
-        const val FUNC_X: Long = 1L
-        const val FUNC_Y: Long = 2L
-        const val FUNC_MAX: Long = 3L
-        const val PRECISION_NONE: Long = 0L
-        const val PRECISION_COARSE: Long = 1L
-        const val PRECISION_FINE: Long = 2L
-        const val PRECISION_MAX: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeDerivativeFunc? =
             wrap(handle.segment)

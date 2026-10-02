@@ -1,5 +1,7 @@
 package net.multigesture.kanama.types
 
+import kotlin.jvm.JvmInline
+
 /**
  * A 2D vector using integer coordinates. Kanama value types are immutable snapshots; assign a new
  * value back to the Godot property after changing components.
@@ -20,6 +22,20 @@ data class Vector2i(
    */
   val y: Int,
 ) {
+  // ===== BEGIN GENERATED ENUMS: Vector2i (scripts/generate_api_wrapper.py — do not edit) =====
+  @JvmInline
+  value class Axis(val value: Long) {
+    companion object {
+      val X: Axis
+        get() = Axis(0L)
+
+      val Y: Axis
+        get() = Axis(1L)
+    }
+  }
+
+  // ===== END GENERATED ENUMS: Vector2i =====
+
   /** Returns a copy with the X component replaced. */
   fun withX(value: Int): Vector2i = Vector2i(value, y)
 

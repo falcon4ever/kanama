@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -65,13 +66,13 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
         @JvmName("setScaleProperty")
         set(value) = setScale(value)
 
-    var rotationEditMode: Long
+    var rotationEditMode: Node3D.RotationEditMode
         @JvmName("rotationEditModeProperty")
         get() = getRotationEditMode()
         @JvmName("setRotationEditModeProperty")
         set(value) = setRotationEditMode(value)
 
-    var rotationOrder: Long
+    var rotationOrder: EulerOrder
         @JvmName("rotationOrderProperty")
         get() = getRotationOrder()
         @JvmName("setRotationOrderProperty")
@@ -218,8 +219,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.set_rotation_order
      */
-    fun setRotationOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, segment, order)
+    fun setRotationOrder(order: EulerOrder) {
+        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, segment, order.value)
     }
 
     /**
@@ -229,8 +230,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.get_rotation_order
      */
-    fun getRotationOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, segment)
+    fun getRotationOrder(): EulerOrder {
+        return EulerOrder(ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, segment))
     }
 
     /**
@@ -238,8 +239,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.set_rotation_edit_mode
      */
-    fun setRotationEditMode(editMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, segment, editMode)
+    fun setRotationEditMode(editMode: Node3D.RotationEditMode) {
+        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, segment, editMode.value)
     }
 
     /**
@@ -247,8 +248,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.get_rotation_edit_mode
      */
-    fun getRotationEditMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, segment)
+    fun getRotationEditMode(): Node3D.RotationEditMode {
+        return Node3D.RotationEditMode(ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, segment))
     }
 
     /**
@@ -922,15 +923,42 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
         const val visibilityChanged: String = "visibility_changed"
     }
 
+    @JvmInline
+    value class RotationEditMode(val value: Long) {
+        companion object {
+            /**
+             * The rotation is edited using a `Vector3` in Euler angles
+             * (https://en.wikipedia.org/wiki/Euler_angles). In Godot, Euler angles always use intrinsic order,
+             * meaning that rotation happens around the local axes of the object.
+             *
+             * Generated from Godot docs: Node3D.ROTATION_EDIT_MODE_EULER
+             */
+            val EULER: RotationEditMode get() = RotationEditMode(0L)
+            /**
+             * The rotation is edited using a `Quaternion`. Quaternions avoid gimbal lock
+             * ($DOCS_URL/tutorials/3d/using_transforms.html) and having to choose an order of rotation, but
+             * are less intuitive. Quaternion rotation is mostly the same as rotors in 3D geometric algebra,
+             * except that the numbers are labeled differently.
+             *
+             * Generated from Godot docs: Node3D.ROTATION_EDIT_MODE_QUATERNION
+             */
+            val QUATERNION: RotationEditMode get() = RotationEditMode(1L)
+            /**
+             * The rotation is edited using a `Basis`. In this mode, the raw `basis`'s axes can be freely
+             * modified, but the `scale` property is not available.
+             *
+             * Generated from Godot docs: Node3D.ROTATION_EDIT_MODE_BASIS
+             */
+            val BASIS: RotationEditMode get() = RotationEditMode(2L)
+        }
+    }
+
     companion object {
         const val NOTIFICATION_TRANSFORM_CHANGED: Long = 2000L
         const val NOTIFICATION_ENTER_WORLD: Long = 41L
         const val NOTIFICATION_EXIT_WORLD: Long = 42L
         const val NOTIFICATION_VISIBILITY_CHANGED: Long = 43L
         const val NOTIFICATION_LOCAL_TRANSFORM_CHANGED: Long = 44L
-        const val ROTATION_EDIT_MODE_EULER: Long = 0L
-        const val ROTATION_EDIT_MODE_QUATERNION: Long = 1L
-        const val ROTATION_EDIT_MODE_BASIS: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Node3D? =

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setOffsetProperty")
         set(value) = setOffset(value)
 
-    var anchorMode: Long
+    var anchorMode: Camera2D.AnchorMode
         @JvmName("anchorModeProperty")
         get() = getAnchorMode()
         @JvmName("setAnchorModeProperty")
@@ -46,7 +47,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("customViewportProperty")
         get() = getCustomViewport()
 
-    var processCallback: Long
+    var processCallback: Camera2D.Camera2DProcessCallback
         @JvmName("processCallbackProperty")
         get() = getProcessCallback()
         @JvmName("setProcessCallbackProperty")
@@ -60,27 +61,27 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
 
     var limitLeft: Int
         @JvmName("limitLeftProperty")
-        get() = getLimit(0L)
+        get() = getLimit(Side.LEFT)
         @JvmName("setLimitLeftProperty")
-        set(value) = setLimit(0L, value)
+        set(value) = setLimit(Side.LEFT, value)
 
     var limitTop: Int
         @JvmName("limitTopProperty")
-        get() = getLimit(1L)
+        get() = getLimit(Side.TOP)
         @JvmName("setLimitTopProperty")
-        set(value) = setLimit(1L, value)
+        set(value) = setLimit(Side.TOP, value)
 
     var limitRight: Int
         @JvmName("limitRightProperty")
-        get() = getLimit(2L)
+        get() = getLimit(Side.RIGHT)
         @JvmName("setLimitRightProperty")
-        set(value) = setLimit(2L, value)
+        set(value) = setLimit(Side.RIGHT, value)
 
     var limitBottom: Int
         @JvmName("limitBottomProperty")
-        get() = getLimit(3L)
+        get() = getLimit(Side.BOTTOM)
         @JvmName("setLimitBottomProperty")
-        set(value) = setLimit(3L, value)
+        set(value) = setLimit(Side.BOTTOM, value)
 
     var limitSmoothed: Boolean
         @JvmName("limitSmoothedProperty")
@@ -138,27 +139,27 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
 
     var dragLeftMargin: Double
         @JvmName("dragLeftMarginProperty")
-        get() = getDragMargin(0L)
+        get() = getDragMargin(Side.LEFT)
         @JvmName("setDragLeftMarginProperty")
-        set(value) = setDragMargin(0L, value)
+        set(value) = setDragMargin(Side.LEFT, value)
 
     var dragTopMargin: Double
         @JvmName("dragTopMarginProperty")
-        get() = getDragMargin(1L)
+        get() = getDragMargin(Side.TOP)
         @JvmName("setDragTopMarginProperty")
-        set(value) = setDragMargin(1L, value)
+        set(value) = setDragMargin(Side.TOP, value)
 
     var dragRightMargin: Double
         @JvmName("dragRightMarginProperty")
-        get() = getDragMargin(2L)
+        get() = getDragMargin(Side.RIGHT)
         @JvmName("setDragRightMarginProperty")
-        set(value) = setDragMargin(2L, value)
+        set(value) = setDragMargin(Side.RIGHT, value)
 
     var dragBottomMargin: Double
         @JvmName("dragBottomMarginProperty")
-        get() = getDragMargin(3L)
+        get() = getDragMargin(Side.BOTTOM)
         @JvmName("setDragBottomMarginProperty")
-        set(value) = setDragMargin(3L, value)
+        set(value) = setDragMargin(Side.BOTTOM, value)
 
     var editorDrawScreen: Boolean
         @JvmName("editorDrawScreenProperty")
@@ -205,8 +206,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.set_anchor_mode
      */
-    fun setAnchorMode(anchorMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAnchorModeBind, segment, anchorMode)
+    fun setAnchorMode(anchorMode: Camera2D.AnchorMode) {
+        ObjectCalls.ptrcallWithLongArg(setAnchorModeBind, segment, anchorMode.value)
     }
 
     /**
@@ -214,8 +215,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.get_anchor_mode
      */
-    fun getAnchorMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAnchorModeBind, segment)
+    fun getAnchorMode(): Camera2D.AnchorMode {
+        return Camera2D.AnchorMode(ObjectCalls.ptrcallNoArgsRetLong(getAnchorModeBind, segment))
     }
 
     /**
@@ -243,8 +244,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.set_process_callback
      */
-    fun setProcessCallback(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode)
+    fun setProcessCallback(mode: Camera2D.Camera2DProcessCallback) {
+        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode.value)
     }
 
     /**
@@ -252,8 +253,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.get_process_callback
      */
-    fun getProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment)
+    fun getProcessCallback(): Camera2D.Camera2DProcessCallback {
+        return Camera2D.Camera2DProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment))
     }
 
     /**
@@ -324,8 +325,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.set_limit
      */
-    fun setLimit(margin: Long, limit: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setLimitBind, segment, margin, limit)
+    fun setLimit(margin: Side, limit: Int) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(setLimitBind, segment, margin.value, limit)
     }
 
     /**
@@ -334,8 +335,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.get_limit
      */
-    fun getLimit(margin: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getLimitBind, segment, margin)
+    fun getLimit(margin: Side): Int {
+        return ObjectCalls.ptrcallWithLongArgRetInt(getLimitBind, segment, margin.value)
     }
 
     /**
@@ -454,8 +455,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.set_drag_margin
      */
-    fun setDragMargin(margin: Long, dragMargin: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setDragMarginBind, segment, margin, dragMargin)
+    fun setDragMargin(margin: Side, dragMargin: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setDragMarginBind, segment, margin.value, dragMargin)
     }
 
     /**
@@ -464,8 +465,8 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Camera2D.get_drag_margin
      */
-    fun getDragMargin(margin: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getDragMarginBind, segment, margin)
+    fun getDragMargin(margin: Side): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getDragMarginBind, segment, margin.value)
     }
 
     /**
@@ -728,12 +729,43 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isMarginDrawingEnabledBind, segment)
     }
 
-    companion object {
-        const val ANCHOR_MODE_FIXED_TOP_LEFT: Long = 0L
-        const val ANCHOR_MODE_DRAG_CENTER: Long = 1L
-        const val CAMERA2D_PROCESS_PHYSICS: Long = 0L
-        const val CAMERA2D_PROCESS_IDLE: Long = 1L
+    @JvmInline
+    value class AnchorMode(val value: Long) {
+        companion object {
+            /**
+             * The camera's position is fixed so that the top-left corner is always at the origin.
+             *
+             * Generated from Godot docs: Camera2D.ANCHOR_MODE_FIXED_TOP_LEFT
+             */
+            val FIXED_TOP_LEFT: AnchorMode get() = AnchorMode(0L)
+            /**
+             * The camera's position takes into account vertical/horizontal offsets and the screen size.
+             *
+             * Generated from Godot docs: Camera2D.ANCHOR_MODE_DRAG_CENTER
+             */
+            val DRAG_CENTER: AnchorMode get() = AnchorMode(1L)
+        }
+    }
 
+    @JvmInline
+    value class Camera2DProcessCallback(val value: Long) {
+        companion object {
+            /**
+             * The camera updates during physics frames (see `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`).
+             *
+             * Generated from Godot docs: Camera2D.CAMERA2D_PROCESS_PHYSICS
+             */
+            val PHYSICS: Camera2DProcessCallback get() = Camera2DProcessCallback(0L)
+            /**
+             * The camera updates during process frames (see `Node.NOTIFICATION_INTERNAL_PROCESS`).
+             *
+             * Generated from Godot docs: Camera2D.CAMERA2D_PROCESS_IDLE
+             */
+            val IDLE: Camera2DProcessCallback get() = Camera2DProcessCallback(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Camera2D? =
             wrap(handle.segment)

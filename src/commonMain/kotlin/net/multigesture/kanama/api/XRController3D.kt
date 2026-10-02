@@ -61,8 +61,8 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
      *
      * Generated from Godot docs: XRController3D.get_tracker_hand
      */
-    fun getTrackerHand(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment)
+    fun getTrackerHand(): XRPositionalTracker.TrackerHand {
+        return XRPositionalTracker.TrackerHand(ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment))
     }
 
     object Signals {

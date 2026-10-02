@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -74,34 +75,187 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
         const val modificationProcessed: String = "modification_processed"
     }
 
-    companion object {
-        const val BONE_AXIS_PLUS_X: Long = 0L
-        const val BONE_AXIS_MINUS_X: Long = 1L
-        const val BONE_AXIS_PLUS_Y: Long = 2L
-        const val BONE_AXIS_MINUS_Y: Long = 3L
-        const val BONE_AXIS_PLUS_Z: Long = 4L
-        const val BONE_AXIS_MINUS_Z: Long = 5L
-        const val BONE_DIRECTION_PLUS_X: Long = 0L
-        const val BONE_DIRECTION_MINUS_X: Long = 1L
-        const val BONE_DIRECTION_PLUS_Y: Long = 2L
-        const val BONE_DIRECTION_MINUS_Y: Long = 3L
-        const val BONE_DIRECTION_PLUS_Z: Long = 4L
-        const val BONE_DIRECTION_MINUS_Z: Long = 5L
-        const val BONE_DIRECTION_FROM_PARENT: Long = 6L
-        const val SECONDARY_DIRECTION_NONE: Long = 0L
-        const val SECONDARY_DIRECTION_PLUS_X: Long = 1L
-        const val SECONDARY_DIRECTION_MINUS_X: Long = 2L
-        const val SECONDARY_DIRECTION_PLUS_Y: Long = 3L
-        const val SECONDARY_DIRECTION_MINUS_Y: Long = 4L
-        const val SECONDARY_DIRECTION_PLUS_Z: Long = 5L
-        const val SECONDARY_DIRECTION_MINUS_Z: Long = 6L
-        const val SECONDARY_DIRECTION_CUSTOM: Long = 7L
-        const val ROTATION_AXIS_X: Long = 0L
-        const val ROTATION_AXIS_Y: Long = 1L
-        const val ROTATION_AXIS_Z: Long = 2L
-        const val ROTATION_AXIS_ALL: Long = 3L
-        const val ROTATION_AXIS_CUSTOM: Long = 4L
+    @JvmInline
+    value class BoneAxis(val value: Long) {
+        companion object {
+            /**
+             * Enumerated value for the +X axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_AXIS_PLUS_X
+             */
+            val PLUS_X: BoneAxis get() = BoneAxis(0L)
+            /**
+             * Enumerated value for the -X axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_AXIS_MINUS_X
+             */
+            val MINUS_X: BoneAxis get() = BoneAxis(1L)
+            /**
+             * Enumerated value for the +Y axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_AXIS_PLUS_Y
+             */
+            val PLUS_Y: BoneAxis get() = BoneAxis(2L)
+            /**
+             * Enumerated value for the -Y axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_AXIS_MINUS_Y
+             */
+            val MINUS_Y: BoneAxis get() = BoneAxis(3L)
+            /**
+             * Enumerated value for the +Z axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_AXIS_PLUS_Z
+             */
+            val PLUS_Z: BoneAxis get() = BoneAxis(4L)
+            /**
+             * Enumerated value for the -Z axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_AXIS_MINUS_Z
+             */
+            val MINUS_Z: BoneAxis get() = BoneAxis(5L)
+        }
+    }
 
+    @JvmInline
+    value class BoneDirection(val value: Long) {
+        companion object {
+            /**
+             * Enumerated value for the +X axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_DIRECTION_PLUS_X
+             */
+            val PLUS_X: BoneDirection get() = BoneDirection(0L)
+            /**
+             * Enumerated value for the -X axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_DIRECTION_MINUS_X
+             */
+            val MINUS_X: BoneDirection get() = BoneDirection(1L)
+            /**
+             * Enumerated value for the +Y axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_DIRECTION_PLUS_Y
+             */
+            val PLUS_Y: BoneDirection get() = BoneDirection(2L)
+            /**
+             * Enumerated value for the -Y axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_DIRECTION_MINUS_Y
+             */
+            val MINUS_Y: BoneDirection get() = BoneDirection(3L)
+            /**
+             * Enumerated value for the +Z axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_DIRECTION_PLUS_Z
+             */
+            val PLUS_Z: BoneDirection get() = BoneDirection(4L)
+            /**
+             * Enumerated value for the -Z axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_DIRECTION_MINUS_Z
+             */
+            val MINUS_Z: BoneDirection get() = BoneDirection(5L)
+            /**
+             * Enumerated value for the axis from a parent bone to the child bone.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.BONE_DIRECTION_FROM_PARENT
+             */
+            val FROM_PARENT: BoneDirection get() = BoneDirection(6L)
+        }
+    }
+
+    @JvmInline
+    value class SecondaryDirection(val value: Long) {
+        companion object {
+            /**
+             * Enumerated value for the case when the axis is undefined.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_NONE
+             */
+            val NONE: SecondaryDirection get() = SecondaryDirection(0L)
+            /**
+             * Enumerated value for the +X axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_PLUS_X
+             */
+            val PLUS_X: SecondaryDirection get() = SecondaryDirection(1L)
+            /**
+             * Enumerated value for the -X axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_MINUS_X
+             */
+            val MINUS_X: SecondaryDirection get() = SecondaryDirection(2L)
+            /**
+             * Enumerated value for the +Y axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_PLUS_Y
+             */
+            val PLUS_Y: SecondaryDirection get() = SecondaryDirection(3L)
+            /**
+             * Enumerated value for the -Y axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_MINUS_Y
+             */
+            val MINUS_Y: SecondaryDirection get() = SecondaryDirection(4L)
+            /**
+             * Enumerated value for the +Z axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_PLUS_Z
+             */
+            val PLUS_Z: SecondaryDirection get() = SecondaryDirection(5L)
+            /**
+             * Enumerated value for the -Z axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_MINUS_Z
+             */
+            val MINUS_Z: SecondaryDirection get() = SecondaryDirection(6L)
+            /**
+             * Enumerated value for an optional axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.SECONDARY_DIRECTION_CUSTOM
+             */
+            val CUSTOM: SecondaryDirection get() = SecondaryDirection(7L)
+        }
+    }
+
+    @JvmInline
+    value class RotationAxis(val value: Long) {
+        companion object {
+            /**
+             * Enumerated value for the rotation of the X axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.ROTATION_AXIS_X
+             */
+            val X: RotationAxis get() = RotationAxis(0L)
+            /**
+             * Enumerated value for the rotation of the Y axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.ROTATION_AXIS_Y
+             */
+            val Y: RotationAxis get() = RotationAxis(1L)
+            /**
+             * Enumerated value for the rotation of the Z axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.ROTATION_AXIS_Z
+             */
+            val Z: RotationAxis get() = RotationAxis(2L)
+            /**
+             * Enumerated value for the unconstrained rotation.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.ROTATION_AXIS_ALL
+             */
+            val ALL: RotationAxis get() = RotationAxis(3L)
+            /**
+             * Enumerated value for an optional rotation axis.
+             *
+             * Generated from Godot docs: SkeletonModifier3D.ROTATION_AXIS_CUSTOM
+             */
+            val CUSTOM: RotationAxis get() = RotationAxis(4L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonModifier3D? =
             wrap(handle.segment)

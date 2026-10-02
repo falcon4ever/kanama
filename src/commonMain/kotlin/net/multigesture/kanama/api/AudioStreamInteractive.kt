@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -67,14 +68,14 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
         return AudioStream.wrap(ret)
     }
 
-    fun setClipAutoAdvance(clipIndex: Int, mode: Long) {
+    fun setClipAutoAdvance(clipIndex: Int, mode: AudioStreamInteractive.AutoAdvanceMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setClipAutoAdvanceBind, segment, clipIndex, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setClipAutoAdvanceBind, segment, clipIndex, mode.value)
     }
 
-    fun getClipAutoAdvance(clipIndex: Int): Long {
+    fun getClipAutoAdvance(clipIndex: Int): AudioStreamInteractive.AutoAdvanceMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getClipAutoAdvanceBind, segment, clipIndex)
+        return AudioStreamInteractive.AutoAdvanceMode(ObjectCalls.ptrcallWithIntArgRetLong(getClipAutoAdvanceBind, segment, clipIndex))
     }
 
     fun setClipAutoAdvanceNextClip(clipIndex: Int, autoAdvanceNextClip: Int) {
@@ -87,9 +88,9 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
         return ObjectCalls.ptrcallWithIntArgRetInt(getClipAutoAdvanceNextClipBind, segment, clipIndex)
     }
 
-    fun addTransition(fromClip: Int, toClip: Int, fromTime: Long, toTime: Long, fadeMode: Long, fadeBeats: Double, useFillerClip: Boolean = false, fillerClip: Int = -1, holdPrevious: Boolean = false) {
+    fun addTransition(fromClip: Int, toClip: Int, fromTime: AudioStreamInteractive.TransitionFromTime, toTime: AudioStreamInteractive.TransitionToTime, fadeMode: AudioStreamInteractive.FadeMode, fadeBeats: Double, useFillerClip: Boolean = false, fillerClip: Int = -1, holdPrevious: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(addTransitionBind, segment, fromClip, toClip, fromTime, toTime, fadeMode, fadeBeats, useFillerClip, fillerClip, holdPrevious)
+        ObjectCalls.ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs(addTransitionBind, segment, fromClip, toClip, fromTime.value, toTime.value, fadeMode.value, fadeBeats, useFillerClip, fillerClip, holdPrevious)
     }
 
     fun hasTransition(fromClip: Int, toClip: Int): Boolean {
@@ -107,19 +108,19 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getTransitionListBind, segment)
     }
 
-    fun getTransitionFromTime(fromClip: Int, toClip: Int): Long {
+    fun getTransitionFromTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionFromTime {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFromTimeBind, segment, fromClip, toClip)
+        return AudioStreamInteractive.TransitionFromTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFromTimeBind, segment, fromClip, toClip))
     }
 
-    fun getTransitionToTime(fromClip: Int, toClip: Int): Long {
+    fun getTransitionToTime(fromClip: Int, toClip: Int): AudioStreamInteractive.TransitionToTime {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionToTimeBind, segment, fromClip, toClip)
+        return AudioStreamInteractive.TransitionToTime(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionToTimeBind, segment, fromClip, toClip))
     }
 
-    fun getTransitionFadeMode(fromClip: Int, toClip: Int): Long {
+    fun getTransitionFadeMode(fromClip: Int, toClip: Int): AudioStreamInteractive.FadeMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFadeModeBind, segment, fromClip, toClip)
+        return AudioStreamInteractive.FadeMode(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getTransitionFadeModeBind, segment, fromClip, toClip))
     }
 
     fun getTransitionFadeBeats(fromClip: Int, toClip: Int): Double {
@@ -142,23 +143,47 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
         return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isTransitionHoldingPreviousBind, segment, fromClip, toClip)
     }
 
+    @JvmInline
+    value class TransitionFromTime(val value: Long) {
+        companion object {
+            val IMMEDIATE: TransitionFromTime get() = TransitionFromTime(0L)
+            val NEXT_BEAT: TransitionFromTime get() = TransitionFromTime(1L)
+            val NEXT_BAR: TransitionFromTime get() = TransitionFromTime(2L)
+            val END: TransitionFromTime get() = TransitionFromTime(3L)
+        }
+    }
+
+    @JvmInline
+    value class TransitionToTime(val value: Long) {
+        companion object {
+            val SAME_POSITION: TransitionToTime get() = TransitionToTime(0L)
+            val START: TransitionToTime get() = TransitionToTime(1L)
+            val PREVIOUS_POSITION: TransitionToTime get() = TransitionToTime(2L)
+        }
+    }
+
+    @JvmInline
+    value class FadeMode(val value: Long) {
+        companion object {
+            val DISABLED: FadeMode get() = FadeMode(0L)
+            val IN: FadeMode get() = FadeMode(1L)
+            val OUT: FadeMode get() = FadeMode(2L)
+            val CROSS: FadeMode get() = FadeMode(3L)
+            val AUTOMATIC: FadeMode get() = FadeMode(4L)
+        }
+    }
+
+    @JvmInline
+    value class AutoAdvanceMode(val value: Long) {
+        companion object {
+            val DISABLED: AutoAdvanceMode get() = AutoAdvanceMode(0L)
+            val ENABLED: AutoAdvanceMode get() = AutoAdvanceMode(1L)
+            val RETURN_TO_HOLD: AutoAdvanceMode get() = AutoAdvanceMode(2L)
+        }
+    }
+
     companion object {
         const val CLIP_ANY: Long = -1L
-        const val TRANSITION_FROM_TIME_IMMEDIATE: Long = 0L
-        const val TRANSITION_FROM_TIME_NEXT_BEAT: Long = 1L
-        const val TRANSITION_FROM_TIME_NEXT_BAR: Long = 2L
-        const val TRANSITION_FROM_TIME_END: Long = 3L
-        const val TRANSITION_TO_TIME_SAME_POSITION: Long = 0L
-        const val TRANSITION_TO_TIME_START: Long = 1L
-        const val TRANSITION_TO_TIME_PREVIOUS_POSITION: Long = 2L
-        const val FADE_DISABLED: Long = 0L
-        const val FADE_IN: Long = 1L
-        const val FADE_OUT: Long = 2L
-        const val FADE_CROSS: Long = 3L
-        const val FADE_AUTOMATIC: Long = 4L
-        const val AUTO_ADVANCE_DISABLED: Long = 0L
-        const val AUTO_ADVANCE_ENABLED: Long = 1L
-        const val AUTO_ADVANCE_RETURN_TO_HOLD: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamInteractive? =

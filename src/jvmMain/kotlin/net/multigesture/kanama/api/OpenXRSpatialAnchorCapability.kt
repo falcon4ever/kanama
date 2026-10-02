@@ -9,6 +9,16 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: OpenXRSpatialAnchorCapability
  */
 class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
+    // ===== BEGIN GENERATED ENUMS: OpenXRSpatialAnchorCapability (scripts/generate_api_wrapper.py — do not edit) =====
+    @JvmInline
+    value class PersistenceScope(val value: Long) {
+        companion object {
+            val SYSTEM_MANAGED: PersistenceScope get() = PersistenceScope(1L)
+            val LOCAL_ANCHORS: PersistenceScope get() = PersistenceScope(1000781000L)
+        }
+    }
+    // ===== END GENERATED ENUMS: OpenXRSpatialAnchorCapability =====
+
     fun isSpatialAnchorSupported(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isSpatialAnchorSupportedBind, segment)
     }
@@ -17,12 +27,12 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
         return ObjectCalls.ptrcallNoArgsRetBool(isSpatialPersistenceSupportedBind, segment)
     }
 
-    fun isPersistenceScopeSupported(scope: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isPersistenceScopeSupportedBind, segment, scope)
+    fun isPersistenceScopeSupported(scope: OpenXRSpatialAnchorCapability.PersistenceScope): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isPersistenceScopeSupportedBind, segment, scope.value)
     }
 
-    fun createPersistenceContext(scope: Long, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(createPersistenceContextBind, segment, scope, userCallback.target.segment, userCallback.method))
+    fun createPersistenceContext(scope: OpenXRSpatialAnchorCapability.PersistenceScope, userCallback: GodotCallable): OpenXRFutureResult? {
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(createPersistenceContextBind, segment, scope.value, userCallback.target.segment, userCallback.method))
     }
 
     fun getPersistenceContextHandle(persistenceContext: RID): Long {

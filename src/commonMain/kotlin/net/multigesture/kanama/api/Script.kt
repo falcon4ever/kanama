@@ -67,9 +67,9 @@ open class Script(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Script.reload
      */
-    fun reload(keepState: Boolean = false): Long {
+    fun reload(keepState: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetLong(reloadBind, segment, keepState)
+        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(reloadBind, segment, keepState))
     }
 
     /**

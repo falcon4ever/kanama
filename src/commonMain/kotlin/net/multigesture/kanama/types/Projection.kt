@@ -1,5 +1,7 @@
 package net.multigesture.kanama.types
 
+import kotlin.jvm.JvmInline
+
 /**
  * A 4×4 matrix for 3D projective transformations. Kanama value types are immutable snapshots;
  * assign a new value back to the Godot property after changing components.
@@ -32,6 +34,32 @@ data class Projection(
    */
   val w: Vector4,
 ) {
+  // ===== BEGIN GENERATED ENUMS: Projection (scripts/generate_api_wrapper.py — do not edit) =====
+  @JvmInline
+  value class Planes(val value: Long) {
+    companion object {
+      val NEAR: Planes
+        get() = Planes(0L)
+
+      val FAR: Planes
+        get() = Planes(1L)
+
+      val LEFT: Planes
+        get() = Planes(2L)
+
+      val TOP: Planes
+        get() = Planes(3L)
+
+      val RIGHT: Planes
+        get() = Planes(4L)
+
+      val BOTTOM: Planes
+        get() = Planes(5L)
+    }
+  }
+
+  // ===== END GENERATED ENUMS: Projection =====
+
   /** Godot-style fuzzy compare: true if every column is approximately equal. */
   fun isEqualApprox(other: Projection): Boolean =
     x.isEqualApprox(other.x) &&

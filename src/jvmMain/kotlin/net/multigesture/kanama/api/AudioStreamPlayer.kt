@@ -9,6 +9,32 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: AudioStreamPlayer
  */
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
+    // ===== BEGIN GENERATED ENUMS: AudioStreamPlayer (scripts/generate_api_wrapper.py — do not edit) =====
+    @JvmInline
+    value class MixTarget(val value: Long) {
+        companion object {
+            /**
+             * The audio will be played only on the first channel. This is the default.
+             *
+             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_STEREO
+             */
+            val STEREO: MixTarget get() = MixTarget(0L)
+            /**
+             * The audio will be played on all surround channels.
+             *
+             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_SURROUND
+             */
+            val SURROUND: MixTarget get() = MixTarget(1L)
+            /**
+             * The audio will be played on the second channel, which is usually the center.
+             *
+             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_CENTER
+             */
+            val CENTER: MixTarget get() = MixTarget(2L)
+        }
+    }
+    // ===== END GENERATED ENUMS: AudioStreamPlayer =====
+
 
     /**
      * Plays a sound from the beginning, or the given `from_position` in seconds.
@@ -92,7 +118,7 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      * Loads an `AudioStream` from [path], assigns it to this player, and releases Kanama's temporary
      * resource wrapper. Use this when mirroring GDScript's `stream = load(path)` pattern.
      */
-    fun setStreamFromPath(path: String, cacheMode: Long = ResourceLoader.CACHE_MODE_REUSE) {
+    fun setStreamFromPath(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE) {
         ResourceLoader.loadAudioStream(path, cacheMode)?.use { stream ->
             setStream(stream)
         }
@@ -214,8 +240,8 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer.set_mix_target
      */
-    fun setMixTarget(mixTarget: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMixTargetBind, segment, mixTarget)
+    fun setMixTarget(mixTarget: AudioStreamPlayer.MixTarget) {
+        ObjectCalls.ptrcallWithLongArg(setMixTargetBind, segment, mixTarget.value)
     }
 
     /**
@@ -224,8 +250,8 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer.get_mix_target
      */
-    fun getMixTarget(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getMixTargetBind, segment)
+    fun getMixTarget(): AudioStreamPlayer.MixTarget =
+        AudioStreamPlayer.MixTarget(ObjectCalls.ptrcallNoArgsRetLong(getMixTargetBind, segment))
 
     /**
      * The maximum number of sounds this node can play at the same time. Calling `play` after this
@@ -283,8 +309,8 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer.set_playback_type
      */
-    fun setPlaybackType(playbackType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType)
+    fun setPlaybackType(playbackType: AudioServer.PlaybackType) {
+        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType.value)
     }
 
     /**
@@ -293,13 +319,10 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer.get_playback_type
      */
-    fun getPlaybackType(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment)
+    fun getPlaybackType(): AudioServer.PlaybackType =
+        AudioServer.PlaybackType(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment))
 
     companion object {
-        const val MIX_TARGET_STEREO = 0L
-        const val MIX_TARGET_SURROUND = 1L
-        const val MIX_TARGET_CENTER = 2L
 
         private const val DOUBLE_VOID_HASH = 373806689L
         private const val PLAY_HASH = 1958160172L

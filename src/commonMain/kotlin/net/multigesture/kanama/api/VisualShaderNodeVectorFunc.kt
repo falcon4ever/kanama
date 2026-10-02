@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,58 +10,63 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeVectorFunc
  */
 class VisualShaderNodeVectorFunc(handle: GodotHandle) : VisualShaderNodeVectorBase(handle) {
-    var function: Long
+    var function: VisualShaderNodeVectorFunc.Function
         @JvmName("functionProperty")
         get() = getFunction()
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
-    fun setFunction(func: Long) {
+    fun setFunction(func: VisualShaderNodeVectorFunc.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
     }
 
-    fun getFunction(): Long {
+    fun getFunction(): VisualShaderNodeVectorFunc.Function {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
+        return VisualShaderNodeVectorFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
+    }
+
+    @JvmInline
+    value class Function(val value: Long) {
+        companion object {
+            val NORMALIZE: Function get() = Function(0L)
+            val SATURATE: Function get() = Function(1L)
+            val NEGATE: Function get() = Function(2L)
+            val RECIPROCAL: Function get() = Function(3L)
+            val ABS: Function get() = Function(4L)
+            val ACOS: Function get() = Function(5L)
+            val ACOSH: Function get() = Function(6L)
+            val ASIN: Function get() = Function(7L)
+            val ASINH: Function get() = Function(8L)
+            val ATAN: Function get() = Function(9L)
+            val ATANH: Function get() = Function(10L)
+            val CEIL: Function get() = Function(11L)
+            val COS: Function get() = Function(12L)
+            val COSH: Function get() = Function(13L)
+            val DEGREES: Function get() = Function(14L)
+            val EXP: Function get() = Function(15L)
+            val EXP2: Function get() = Function(16L)
+            val FLOOR: Function get() = Function(17L)
+            val FRACT: Function get() = Function(18L)
+            val INVERSE_SQRT: Function get() = Function(19L)
+            val LOG: Function get() = Function(20L)
+            val LOG2: Function get() = Function(21L)
+            val RADIANS: Function get() = Function(22L)
+            val ROUND: Function get() = Function(23L)
+            val ROUNDEVEN: Function get() = Function(24L)
+            val SIGN: Function get() = Function(25L)
+            val SIN: Function get() = Function(26L)
+            val SINH: Function get() = Function(27L)
+            val SQRT: Function get() = Function(28L)
+            val TAN: Function get() = Function(29L)
+            val TANH: Function get() = Function(30L)
+            val TRUNC: Function get() = Function(31L)
+            val ONEMINUS: Function get() = Function(32L)
+            val MAX: Function get() = Function(33L)
+        }
     }
 
     companion object {
-        const val FUNC_NORMALIZE: Long = 0L
-        const val FUNC_SATURATE: Long = 1L
-        const val FUNC_NEGATE: Long = 2L
-        const val FUNC_RECIPROCAL: Long = 3L
-        const val FUNC_ABS: Long = 4L
-        const val FUNC_ACOS: Long = 5L
-        const val FUNC_ACOSH: Long = 6L
-        const val FUNC_ASIN: Long = 7L
-        const val FUNC_ASINH: Long = 8L
-        const val FUNC_ATAN: Long = 9L
-        const val FUNC_ATANH: Long = 10L
-        const val FUNC_CEIL: Long = 11L
-        const val FUNC_COS: Long = 12L
-        const val FUNC_COSH: Long = 13L
-        const val FUNC_DEGREES: Long = 14L
-        const val FUNC_EXP: Long = 15L
-        const val FUNC_EXP2: Long = 16L
-        const val FUNC_FLOOR: Long = 17L
-        const val FUNC_FRACT: Long = 18L
-        const val FUNC_INVERSE_SQRT: Long = 19L
-        const val FUNC_LOG: Long = 20L
-        const val FUNC_LOG2: Long = 21L
-        const val FUNC_RADIANS: Long = 22L
-        const val FUNC_ROUND: Long = 23L
-        const val FUNC_ROUNDEVEN: Long = 24L
-        const val FUNC_SIGN: Long = 25L
-        const val FUNC_SIN: Long = 26L
-        const val FUNC_SINH: Long = 27L
-        const val FUNC_SQRT: Long = 28L
-        const val FUNC_TAN: Long = 29L
-        const val FUNC_TANH: Long = 30L
-        const val FUNC_TRUNC: Long = 31L
-        const val FUNC_ONEMINUS: Long = 32L
-        const val FUNC_MAX: Long = 33L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorFunc? =
             wrap(handle.segment)

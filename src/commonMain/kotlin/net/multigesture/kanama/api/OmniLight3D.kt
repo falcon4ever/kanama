@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -13,34 +14,49 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class OmniLight3D(handle: GodotHandle) : Light3D(handle) {
     var omniRange: Double
         @JvmName("omniRangeProperty")
-        get() = getParam(4L)
+        get() = getParam(Light3D.Param.RANGE)
         @JvmName("setOmniRangeProperty")
-        set(value) = setParam(4L, value)
+        set(value) = setParam(Light3D.Param.RANGE, value)
 
     var omniAttenuation: Double
         @JvmName("omniAttenuationProperty")
-        get() = getParam(6L)
+        get() = getParam(Light3D.Param.ATTENUATION)
         @JvmName("setOmniAttenuationProperty")
-        set(value) = setParam(6L, value)
+        set(value) = setParam(Light3D.Param.ATTENUATION, value)
 
-    var omniShadowMode: Long
+    var omniShadowMode: OmniLight3D.ShadowMode
         @JvmName("omniShadowModeProperty")
         get() = getShadowMode()
         @JvmName("setOmniShadowModeProperty")
         set(value) = setShadowMode(value)
 
-    fun setShadowMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode)
+    fun setShadowMode(mode: OmniLight3D.ShadowMode) {
+        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode.value)
     }
 
-    fun getShadowMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment)
+    fun getShadowMode(): OmniLight3D.ShadowMode {
+        return OmniLight3D.ShadowMode(ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment))
+    }
+
+    @JvmInline
+    value class ShadowMode(val value: Long) {
+        companion object {
+            /**
+             * Shadows are rendered to a dual-paraboloid texture. Faster than `SHADOW_CUBE`, but lower-quality.
+             *
+             * Generated from Godot docs: OmniLight3D.SHADOW_DUAL_PARABOLOID
+             */
+            val DUAL_PARABOLOID: ShadowMode get() = ShadowMode(0L)
+            /**
+             * Shadows are rendered to a cubemap. Slower than `SHADOW_DUAL_PARABOLOID`, but higher-quality.
+             *
+             * Generated from Godot docs: OmniLight3D.SHADOW_CUBE
+             */
+            val CUBE: ShadowMode get() = ShadowMode(1L)
+        }
     }
 
     companion object {
-        const val SHADOW_DUAL_PARABOLOID: Long = 0L
-        const val SHADOW_CUBE: Long = 1L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OmniLight3D? =
             wrap(handle.segment)

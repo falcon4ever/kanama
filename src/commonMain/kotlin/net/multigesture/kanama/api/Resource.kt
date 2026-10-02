@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -312,9 +313,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Resource.duplicate_deep
      */
-    fun duplicateDeep(deepSubresourcesMode: Long = 1L): Resource? {
+    fun duplicateDeep(deepSubresourcesMode: Resource.DeepDuplicateMode = Resource.DeepDuplicateMode.INTERNAL): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, deepSubresourcesMode)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, deepSubresourcesMode.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -327,14 +328,40 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Resource.copy_from_resource
      */
-    fun copyFromResource(resource: Resource?): Long {
+    fun copyFromResource(resource: Resource?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     object Signals {
         const val changed: String = "changed"
         const val setupLocalToSceneRequested: String = "setup_local_to_scene_requested"
+    }
+
+    @JvmInline
+    value class DeepDuplicateMode(val value: Long) {
+        companion object {
+            /**
+             * No subresources at all are duplicated. This is useful even in a deep duplication to have all the
+             * arrays and dictionaries duplicated but still pointing to the original resources.
+             *
+             * Generated from Godot docs: Resource.DEEP_DUPLICATE_NONE
+             */
+            val NONE: DeepDuplicateMode get() = DeepDuplicateMode(0L)
+            /**
+             * Only subresources without a path or with a scene-local path will be duplicated.
+             *
+             * Generated from Godot docs: Resource.DEEP_DUPLICATE_INTERNAL
+             */
+            val INTERNAL: DeepDuplicateMode get() = DeepDuplicateMode(1L)
+            /**
+             * Every subresource found will be duplicated, even if it has a non-local path. In other words,
+             * even potentially big resources stored separately will be duplicated.
+             *
+             * Generated from Godot docs: Resource.DEEP_DUPLICATE_ALL
+             */
+            val ALL: DeepDuplicateMode get() = DeepDuplicateMode(2L)
+        }
     }
 
     companion object {
@@ -348,10 +375,6 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         fun generateSceneUniqueId(): String {
             return ObjectCalls.ptrcallNoArgsRetString(generateSceneUniqueIdBind, NULL_SEGMENT)
         }
-
-        const val DEEP_DUPLICATE_NONE: Long = 0L
-        const val DEEP_DUPLICATE_INTERNAL: Long = 1L
-        const val DEEP_DUPLICATE_ALL: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Resource =

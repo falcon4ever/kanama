@@ -29,9 +29,9 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      *
      * Generated from Godot docs: RenderSceneBuffersRD.create_texture
      */
-    fun createTexture(context: String, name: String, dataFormat: Long, usageBits: Long, textureSamples: Long, size: Vector2i, layers: Long, mipmaps: Long, unique: Boolean, discardable: Boolean): RID {
+    fun createTexture(context: String, name: String, dataFormat: RenderingDevice.DataFormat, usageBits: Long, textureSamples: RenderingDevice.TextureSamples, size: Vector2i, layers: Long, mipmaps: Long, unique: Boolean, discardable: Boolean): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(createTextureBind, segment, context, name, dataFormat, usageBits, textureSamples, size, layers, mipmaps, unique, discardable)
+        return ObjectCalls.ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID(createTextureBind, segment, context, name, dataFormat.value, usageBits, textureSamples.value, size, layers, mipmaps, unique, discardable)
     }
 
     /**
@@ -231,9 +231,9 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      *
      * Generated from Godot docs: RenderSceneBuffersRD.get_scaling_3d_mode
      */
-    fun getScaling3dMode(): Long {
+    fun getScaling3dMode(): RenderingServer.ViewportScaling3DMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
+        return RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment))
     }
 
     /**
@@ -252,9 +252,9 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      *
      * Generated from Godot docs: RenderSceneBuffersRD.get_msaa_3d
      */
-    fun getMsaa3d(): Long {
+    fun getMsaa3d(): RenderingServer.ViewportMSAA {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
+        return RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment))
     }
 
     /**
@@ -262,9 +262,9 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      *
      * Generated from Godot docs: RenderSceneBuffersRD.get_texture_samples
      */
-    fun getTextureSamples(): Long {
+    fun getTextureSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureSamplesBind, segment)
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getTextureSamplesBind, segment))
     }
 
     /**
@@ -272,9 +272,9 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      *
      * Generated from Godot docs: RenderSceneBuffersRD.get_screen_space_aa
      */
-    fun getScreenSpaceAa(): Long {
+    fun getScreenSpaceAa(): RenderingServer.ViewportScreenSpaceAA {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
+        return RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment))
     }
 
     /**

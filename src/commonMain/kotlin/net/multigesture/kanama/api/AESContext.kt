@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,9 +18,9 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AESContext.start
      */
-    fun start(mode: Long, key: ByteArray, iv: ByteArray): Long {
+    fun start(mode: AESContext.Mode, key: ByteArray, iv: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, segment, mode, key, iv)
+        return GodotError(ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, segment, mode.value, key, iv))
     }
 
     /**
@@ -56,13 +57,43 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(finishBind, segment)
     }
 
-    companion object {
-        const val MODE_ECB_ENCRYPT: Long = 0L
-        const val MODE_ECB_DECRYPT: Long = 1L
-        const val MODE_CBC_ENCRYPT: Long = 2L
-        const val MODE_CBC_DECRYPT: Long = 3L
-        const val MODE_MAX: Long = 4L
+    @JvmInline
+    value class Mode(val value: Long) {
+        companion object {
+            /**
+             * AES electronic codebook encryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_ECB_ENCRYPT
+             */
+            val ECB_ENCRYPT: Mode get() = Mode(0L)
+            /**
+             * AES electronic codebook decryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_ECB_DECRYPT
+             */
+            val ECB_DECRYPT: Mode get() = Mode(1L)
+            /**
+             * AES cipher block chaining encryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_CBC_ENCRYPT
+             */
+            val CBC_ENCRYPT: Mode get() = Mode(2L)
+            /**
+             * AES cipher block chaining decryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_CBC_DECRYPT
+             */
+            val CBC_DECRYPT: Mode get() = Mode(3L)
+            /**
+             * Maximum value for the mode enum.
+             *
+             * Generated from Godot docs: AESContext.MODE_MAX
+             */
+            val MAX: Mode get() = Mode(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AESContext? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -131,8 +132,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_direction
      */
-    fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
+    fun setEndBoneDirection(index: Int, boneDirection: SkeletonModifier3D.BoneDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection.value)
     }
 
     /**
@@ -141,8 +142,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_direction
      */
-    fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
+    fun getEndBoneDirection(index: Int): SkeletonModifier3D.BoneDirection {
+        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index))
     }
 
     /**
@@ -172,8 +173,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_center_from
      */
-    fun setCenterFrom(index: Int, centerFrom: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCenterFromBind, segment, index, centerFrom)
+    fun setCenterFrom(index: Int, centerFrom: SpringBoneSimulator3D.CenterFrom) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCenterFromBind, segment, index, centerFrom.value)
     }
 
     /**
@@ -181,8 +182,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_center_from
      */
-    fun getCenterFrom(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCenterFromBind, segment, index)
+    fun getCenterFrom(index: Int): SpringBoneSimulator3D.CenterFrom {
+        return SpringBoneSimulator3D.CenterFrom(ObjectCalls.ptrcallWithIntArgRetLong(getCenterFromBind, segment, index))
     }
 
     /**
@@ -269,8 +270,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis
      */
-    fun setRotationAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setRotationAxisBind, segment, index, axis)
+    fun setRotationAxis(index: Int, axis: SkeletonModifier3D.RotationAxis) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setRotationAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -278,8 +279,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis
      */
-    fun getRotationAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getRotationAxisBind, segment, index)
+    fun getRotationAxis(index: Int): SkeletonModifier3D.RotationAxis {
+        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithIntArgRetLong(getRotationAxisBind, segment, index))
     }
 
     /**
@@ -532,8 +533,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis
      */
-    fun setJointRotationAxis(index: Int, joint: Int, axis: Long) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis)
+    fun setJointRotationAxis(index: Int, joint: Int, axis: SkeletonModifier3D.RotationAxis) {
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis.value)
     }
 
     /**
@@ -541,8 +542,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis
      */
-    fun getJointRotationAxis(index: Int, joint: Int): Long {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint)
+    fun getJointRotationAxis(index: Int, joint: Int): SkeletonModifier3D.RotationAxis {
+        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint))
     }
 
     /**
@@ -853,11 +854,33 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
-    companion object {
-        const val CENTER_FROM_WORLD_ORIGIN: Long = 0L
-        const val CENTER_FROM_NODE: Long = 1L
-        const val CENTER_FROM_BONE: Long = 2L
+    @JvmInline
+    value class CenterFrom(val value: Long) {
+        companion object {
+            /**
+             * The world origin is defined as center.
+             *
+             * Generated from Godot docs: SpringBoneSimulator3D.CENTER_FROM_WORLD_ORIGIN
+             */
+            val WORLD_ORIGIN: CenterFrom get() = CenterFrom(0L)
+            /**
+             * The `Node3D` specified by `set_center_node` is defined as center. If `Node3D` is not found, the
+             * parent `Skeleton3D` is treated as center.
+             *
+             * Generated from Godot docs: SpringBoneSimulator3D.CENTER_FROM_NODE
+             */
+            val NODE: CenterFrom get() = CenterFrom(1L)
+            /**
+             * The bone pose origin of the parent `Skeleton3D` specified by `set_center_bone` is defined as
+             * center. If `Node3D` is not found, the parent `Skeleton3D` is treated as center.
+             *
+             * Generated from Godot docs: SpringBoneSimulator3D.CENTER_FROM_BONE
+             */
+            val BONE: CenterFrom get() = CenterFrom(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SpringBoneSimulator3D? =
             wrap(handle.segment)

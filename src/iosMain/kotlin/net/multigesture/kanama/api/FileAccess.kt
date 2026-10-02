@@ -11,13 +11,67 @@ import net.multigesture.kanama.binding.runtime.*
 // no path are STATIC in Godot and must dispatch with a NULL instance (ptrcallStatic*);
 // get_file_as_bytes sizes its buffer with get_size so the two-call read-back protocol
 // collapses to a single file read.
-object FileAccess {
-    const val READ = 1L
-    const val WRITE = 2L
-    const val READ_WRITE = 3L
+actual object FileAccess {
+    // ===== BEGIN GENERATED ENUMS: FileAccess (scripts/generate_api_wrapper.py — do not edit) =====
+    actual value class ModeFlags
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            actual val READ: ModeFlags get() = ModeFlags(1L)
+            actual val WRITE: ModeFlags get() = ModeFlags(2L)
+            actual val READ_WRITE: ModeFlags get() = ModeFlags(3L)
+            actual val WRITE_READ: ModeFlags get() = ModeFlags(7L)
+        }
+    }
 
-    fun open(path: String, flags: Long): FileAccessHandle? {
-        val segment = ObjectCalls.ptrcallStaticWithStringAndLongArgsRetObject(openBind, path, flags)
+    actual value class CompressionMode
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            actual val FASTLZ: CompressionMode get() = CompressionMode(0L)
+            actual val DEFLATE: CompressionMode get() = CompressionMode(1L)
+            actual val ZSTD: CompressionMode get() = CompressionMode(2L)
+            actual val GZIP: CompressionMode get() = CompressionMode(3L)
+            actual val BROTLI: CompressionMode get() = CompressionMode(4L)
+        }
+    }
+
+    actual value class UnixPermissionFlags
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual infix fun or(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value or other.value)
+
+        actual infix fun and(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value and other.value)
+
+        actual infix fun xor(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value xor other.value)
+
+        actual fun inv(): UnixPermissionFlags = UnixPermissionFlags(value.inv())
+
+        actual operator fun contains(other: UnixPermissionFlags): Boolean = (value and other.value) == other.value
+
+        actual companion object {
+            actual val READ_OWNER: UnixPermissionFlags get() = UnixPermissionFlags(256L)
+            actual val WRITE_OWNER: UnixPermissionFlags get() = UnixPermissionFlags(128L)
+            actual val EXECUTE_OWNER: UnixPermissionFlags get() = UnixPermissionFlags(64L)
+            actual val READ_GROUP: UnixPermissionFlags get() = UnixPermissionFlags(32L)
+            actual val WRITE_GROUP: UnixPermissionFlags get() = UnixPermissionFlags(16L)
+            actual val EXECUTE_GROUP: UnixPermissionFlags get() = UnixPermissionFlags(8L)
+            actual val READ_OTHER: UnixPermissionFlags get() = UnixPermissionFlags(4L)
+            actual val WRITE_OTHER: UnixPermissionFlags get() = UnixPermissionFlags(2L)
+            actual val EXECUTE_OTHER: UnixPermissionFlags get() = UnixPermissionFlags(1L)
+            actual val SET_USER_ID: UnixPermissionFlags get() = UnixPermissionFlags(2048L)
+            actual val SET_GROUP_ID: UnixPermissionFlags get() = UnixPermissionFlags(1024L)
+            actual val RESTRICTED_DELETE: UnixPermissionFlags get() = UnixPermissionFlags(512L)
+        }
+    }
+    // ===== END GENERATED ENUMS: FileAccess =====
+
+
+    fun open(path: String, flags: FileAccess.ModeFlags): FileAccessHandle? {
+        val segment = ObjectCalls.ptrcallStaticWithStringAndLongArgsRetObject(openBind, path, flags.value)
         return if (segment.address() == 0L) null else FileAccessHandle(GodotHandle(segment))
     }
 

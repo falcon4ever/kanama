@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -44,14 +45,14 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSpawnBind, segment, path, enabled)
     }
 
-    fun propertyGetReplicationMode(path: NodePath): Long {
+    fun propertyGetReplicationMode(path: NodePath): SceneReplicationConfig.ReplicationMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetLong(propertyGetReplicationModeBind, segment, path)
+        return SceneReplicationConfig.ReplicationMode(ObjectCalls.ptrcallWithNodePathArgRetLong(propertyGetReplicationModeBind, segment, path))
     }
 
-    fun propertySetReplicationMode(path: NodePath, mode: Long) {
+    fun propertySetReplicationMode(path: NodePath, mode: SceneReplicationConfig.ReplicationMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndLongArg(propertySetReplicationModeBind, segment, path, mode)
+        ObjectCalls.ptrcallWithNodePathAndLongArg(propertySetReplicationModeBind, segment, path, mode.value)
     }
 
     fun propertyGetSync(path: NodePath): Boolean {
@@ -74,11 +75,16 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetWatchBind, segment, path, enabled)
     }
 
-    companion object {
-        const val REPLICATION_MODE_NEVER: Long = 0L
-        const val REPLICATION_MODE_ALWAYS: Long = 1L
-        const val REPLICATION_MODE_ON_CHANGE: Long = 2L
+    @JvmInline
+    value class ReplicationMode(val value: Long) {
+        companion object {
+            val NEVER: ReplicationMode get() = ReplicationMode(0L)
+            val ALWAYS: ReplicationMode get() = ReplicationMode(1L)
+            val ON_CHANGE: ReplicationMode get() = ReplicationMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneReplicationConfig? =
             wrap(handle.segment)

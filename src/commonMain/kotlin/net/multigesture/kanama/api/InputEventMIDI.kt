@@ -17,7 +17,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
         @JvmName("setChannelProperty")
         set(value) = setChannel(value)
 
-    var message: Long
+    var message: MIDIMessage
         @JvmName("messageProperty")
         get() = getMessage()
         @JvmName("setMessageProperty")
@@ -88,9 +88,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      *
      * Generated from Godot docs: InputEventMIDI.set_message
      */
-    fun setMessage(message: Long) {
+    fun setMessage(message: MIDIMessage) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMessageBind, segment, message)
+        ObjectCalls.ptrcallWithLongArg(setMessageBind, segment, message.value)
     }
 
     /**
@@ -100,9 +100,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      *
      * Generated from Godot docs: InputEventMIDI.get_message
      */
-    fun getMessage(): Long {
+    fun getMessage(): MIDIMessage {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMessageBind, segment)
+        return MIDIMessage(ObjectCalls.ptrcallNoArgsRetLong(getMessageBind, segment))
     }
 
     /**

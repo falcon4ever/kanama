@@ -5,6 +5,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
 
@@ -207,14 +208,14 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: InputEvent.xformed_by
      */
-    fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0f, 0f)): InputEvent? {
+    fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0f, 0f)): InputEvent {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, segment, xform, localOfs)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return InputEvent.wrap(ret)
+        return requireGodotReturn(InputEvent.wrap(ret), "InputEvent.xformed_by")
     }
 
     companion object {

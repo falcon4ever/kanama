@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -24,19 +25,19 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setTitleProperty")
         set(value) = setTitle(value)
 
-    var titleAlignment: Long
+    var titleAlignment: HorizontalAlignment
         @JvmName("titleAlignmentProperty")
         get() = getTitleAlignment()
         @JvmName("setTitleAlignmentProperty")
         set(value) = setTitleAlignment(value)
 
-    var titlePosition: Long
+    var titlePosition: FoldableContainer.TitlePosition
         @JvmName("titlePositionProperty")
         get() = getTitlePosition()
         @JvmName("setTitlePositionProperty")
         set(value) = setTitlePosition(value)
 
-    var titleTextOverrunBehavior: Long
+    var titleTextOverrunBehavior: TextServer.OverrunBehavior
         @JvmName("titleTextOverrunBehaviorProperty")
         get() = getTitleTextOverrunBehavior()
         @JvmName("setTitleTextOverrunBehaviorProperty")
@@ -48,7 +49,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setFoldableGroupProperty")
         set(value) = setFoldableGroup(value)
 
-    var titleTextDirection: Long
+    var titleTextDirection: Control.TextDirection
         @JvmName("titleTextDirectionProperty")
         get() = getTitleTextDirection()
         @JvmName("setTitleTextDirectionProperty")
@@ -139,8 +140,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.set_title_alignment
      */
-    fun setTitleAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitleAlignmentBind, segment, alignment)
+    fun setTitleAlignment(alignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setTitleAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -148,8 +149,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.get_title_alignment
      */
-    fun getTitleAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitleAlignmentBind, segment)
+    fun getTitleAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getTitleAlignmentBind, segment))
     }
 
     /**
@@ -177,8 +178,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.set_title_text_direction
      */
-    fun setTitleTextDirection(textDirection: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitleTextDirectionBind, segment, textDirection)
+    fun setTitleTextDirection(textDirection: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTitleTextDirectionBind, segment, textDirection.value)
     }
 
     /**
@@ -186,8 +187,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.get_title_text_direction
      */
-    fun getTitleTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextDirectionBind, segment)
+    fun getTitleTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTitleTextDirectionBind, segment))
     }
 
     /**
@@ -195,8 +196,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.set_title_text_overrun_behavior
      */
-    fun setTitleTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitleTextOverrunBehaviorBind, segment, overrunBehavior)
+    fun setTitleTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
+        ObjectCalls.ptrcallWithLongArg(setTitleTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -204,8 +205,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.get_title_text_overrun_behavior
      */
-    fun getTitleTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitleTextOverrunBehaviorBind, segment)
+    fun getTitleTextOverrunBehavior(): TextServer.OverrunBehavior {
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTitleTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -213,8 +214,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.set_title_position
      */
-    fun setTitlePosition(titlePosition: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTitlePositionBind, segment, titlePosition)
+    fun setTitlePosition(titlePosition: FoldableContainer.TitlePosition) {
+        ObjectCalls.ptrcallWithLongArg(setTitlePositionBind, segment, titlePosition.value)
     }
 
     /**
@@ -222,8 +223,8 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: FoldableContainer.get_title_position
      */
-    fun getTitlePosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTitlePositionBind, segment)
+    fun getTitlePosition(): FoldableContainer.TitlePosition {
+        return FoldableContainer.TitlePosition(ObjectCalls.ptrcallNoArgsRetLong(getTitlePositionBind, segment))
     }
 
     /**
@@ -252,10 +253,26 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
         const val foldingChanged: String = "folding_changed"
     }
 
-    companion object {
-        const val POSITION_TOP: Long = 0L
-        const val POSITION_BOTTOM: Long = 1L
+    @JvmInline
+    value class TitlePosition(val value: Long) {
+        companion object {
+            /**
+             * Makes the title appear at the top of the container.
+             *
+             * Generated from Godot docs: FoldableContainer.POSITION_TOP
+             */
+            val TOP: TitlePosition get() = TitlePosition(0L)
+            /**
+             * Makes the title appear at the bottom of the container. Also makes all StyleBoxes flipped
+             * vertically.
+             *
+             * Generated from Godot docs: FoldableContainer.POSITION_BOTTOM
+             */
+            val BOTTOM: TitlePosition get() = TitlePosition(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FoldableContainer? =
             wrap(handle.segment)

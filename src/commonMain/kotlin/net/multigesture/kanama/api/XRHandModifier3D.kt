@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setHandTrackerProperty")
         set(value) = setHandTracker(value)
 
-    var boneUpdate: Long
+    var boneUpdate: XRHandModifier3D.BoneUpdate
         @JvmName("boneUpdateProperty")
         get() = getBoneUpdate()
         @JvmName("setBoneUpdateProperty")
@@ -48,8 +49,8 @@ class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: XRHandModifier3D.set_bone_update
      */
-    fun setBoneUpdate(boneUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate)
+    fun setBoneUpdate(boneUpdate: XRHandModifier3D.BoneUpdate) {
+        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate.value)
     }
 
     /**
@@ -57,15 +58,35 @@ class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: XRHandModifier3D.get_bone_update
      */
-    fun getBoneUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment)
+    fun getBoneUpdate(): XRHandModifier3D.BoneUpdate {
+        return XRHandModifier3D.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment))
+    }
+
+    @JvmInline
+    value class BoneUpdate(val value: Long) {
+        companion object {
+            /**
+             * The skeleton's bones are fully updated (both position and rotation) to match the tracked bones.
+             *
+             * Generated from Godot docs: XRHandModifier3D.BONE_UPDATE_FULL
+             */
+            val FULL: BoneUpdate get() = BoneUpdate(0L)
+            /**
+             * The skeleton's bones are only rotated to align with the tracked bones, preserving bone length.
+             *
+             * Generated from Godot docs: XRHandModifier3D.BONE_UPDATE_ROTATION_ONLY
+             */
+            val ROTATION_ONLY: BoneUpdate get() = BoneUpdate(1L)
+            /**
+             * Represents the size of the `BoneUpdate` enum.
+             *
+             * Generated from Godot docs: XRHandModifier3D.BONE_UPDATE_MAX
+             */
+            val MAX: BoneUpdate get() = BoneUpdate(2L)
+        }
     }
 
     companion object {
-        const val BONE_UPDATE_FULL: Long = 0L
-        const val BONE_UPDATE_ROTATION_ONLY: Long = 1L
-        const val BONE_UPDATE_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRHandModifier3D? =
             wrap(handle.segment)

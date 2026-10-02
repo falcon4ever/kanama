@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -14,71 +15,6 @@ object Performance {
         ObjectCalls.getSingleton("Performance")
     }
 
-    const val TIME_FPS: Long = 0L
-    const val TIME_PROCESS: Long = 1L
-    const val TIME_PHYSICS_PROCESS: Long = 2L
-    const val TIME_NAVIGATION_PROCESS: Long = 3L
-    const val MEMORY_STATIC: Long = 4L
-    const val MEMORY_STATIC_MAX: Long = 5L
-    const val MEMORY_MESSAGE_BUFFER_MAX: Long = 6L
-    const val OBJECT_COUNT: Long = 7L
-    const val OBJECT_RESOURCE_COUNT: Long = 8L
-    const val OBJECT_NODE_COUNT: Long = 9L
-    const val OBJECT_ORPHAN_NODE_COUNT: Long = 10L
-    const val RENDER_TOTAL_OBJECTS_IN_FRAME: Long = 11L
-    const val RENDER_TOTAL_PRIMITIVES_IN_FRAME: Long = 12L
-    const val RENDER_TOTAL_DRAW_CALLS_IN_FRAME: Long = 13L
-    const val RENDER_VIDEO_MEM_USED: Long = 14L
-    const val RENDER_TEXTURE_MEM_USED: Long = 15L
-    const val RENDER_BUFFER_MEM_USED: Long = 16L
-    const val PHYSICS_2D_ACTIVE_OBJECTS: Long = 17L
-    const val PHYSICS_2D_COLLISION_PAIRS: Long = 18L
-    const val PHYSICS_2D_ISLAND_COUNT: Long = 19L
-    const val PHYSICS_3D_ACTIVE_OBJECTS: Long = 20L
-    const val PHYSICS_3D_COLLISION_PAIRS: Long = 21L
-    const val PHYSICS_3D_ISLAND_COUNT: Long = 22L
-    const val AUDIO_OUTPUT_LATENCY: Long = 23L
-    const val NAVIGATION_ACTIVE_MAPS: Long = 24L
-    const val NAVIGATION_REGION_COUNT: Long = 25L
-    const val NAVIGATION_AGENT_COUNT: Long = 26L
-    const val NAVIGATION_LINK_COUNT: Long = 27L
-    const val NAVIGATION_POLYGON_COUNT: Long = 28L
-    const val NAVIGATION_EDGE_COUNT: Long = 29L
-    const val NAVIGATION_EDGE_MERGE_COUNT: Long = 30L
-    const val NAVIGATION_EDGE_CONNECTION_COUNT: Long = 31L
-    const val NAVIGATION_EDGE_FREE_COUNT: Long = 32L
-    const val NAVIGATION_OBSTACLE_COUNT: Long = 33L
-    const val PIPELINE_COMPILATIONS_CANVAS: Long = 34L
-    const val PIPELINE_COMPILATIONS_MESH: Long = 35L
-    const val PIPELINE_COMPILATIONS_SURFACE: Long = 36L
-    const val PIPELINE_COMPILATIONS_DRAW: Long = 37L
-    const val PIPELINE_COMPILATIONS_SPECIALIZATION: Long = 38L
-    const val NAVIGATION_2D_ACTIVE_MAPS: Long = 39L
-    const val NAVIGATION_2D_REGION_COUNT: Long = 40L
-    const val NAVIGATION_2D_AGENT_COUNT: Long = 41L
-    const val NAVIGATION_2D_LINK_COUNT: Long = 42L
-    const val NAVIGATION_2D_POLYGON_COUNT: Long = 43L
-    const val NAVIGATION_2D_EDGE_COUNT: Long = 44L
-    const val NAVIGATION_2D_EDGE_MERGE_COUNT: Long = 45L
-    const val NAVIGATION_2D_EDGE_CONNECTION_COUNT: Long = 46L
-    const val NAVIGATION_2D_EDGE_FREE_COUNT: Long = 47L
-    const val NAVIGATION_2D_OBSTACLE_COUNT: Long = 48L
-    const val NAVIGATION_3D_ACTIVE_MAPS: Long = 49L
-    const val NAVIGATION_3D_REGION_COUNT: Long = 50L
-    const val NAVIGATION_3D_AGENT_COUNT: Long = 51L
-    const val NAVIGATION_3D_LINK_COUNT: Long = 52L
-    const val NAVIGATION_3D_POLYGON_COUNT: Long = 53L
-    const val NAVIGATION_3D_EDGE_COUNT: Long = 54L
-    const val NAVIGATION_3D_EDGE_MERGE_COUNT: Long = 55L
-    const val NAVIGATION_3D_EDGE_CONNECTION_COUNT: Long = 56L
-    const val NAVIGATION_3D_EDGE_FREE_COUNT: Long = 57L
-    const val NAVIGATION_3D_OBSTACLE_COUNT: Long = 58L
-    const val MONITOR_MAX: Long = 59L
-    const val MONITOR_TYPE_QUANTITY: Long = 0L
-    const val MONITOR_TYPE_MEMORY: Long = 1L
-    const val MONITOR_TYPE_TIME: Long = 2L
-    const val MONITOR_TYPE_PERCENTAGE: Long = 3L
-
     /**
      * Returns the value of one of the available built-in monitors. You should provide one of the
      * `Monitor` constants as the argument, like this:
@@ -86,8 +22,8 @@ object Performance {
      * Generated from Godot docs: Performance.get_monitor
      */
     @JvmStatic
-    fun getMonitor(monitor: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getMonitorBind, singleton, monitor)
+    fun getMonitor(monitor: Performance.Monitor): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getMonitorBind, singleton, monitor.value)
     }
 
     /**
@@ -99,8 +35,8 @@ object Performance {
      * Generated from Godot docs: Performance.add_custom_monitor
      */
     @JvmStatic
-    fun addCustomMonitor(id: String, callable: GodotCallable, arguments: List<Any?> = emptyList(), type: Long = 0L) {
-        ObjectCalls.ptrcallWithStringNameCallableArrayLongArgs(addCustomMonitorBind, singleton, id, callable.target.segment, callable.method, arguments, type)
+    fun addCustomMonitor(id: String, callable: GodotCallable, arguments: List<Any?> = emptyList(), type: Performance.MonitorType = Performance.MonitorType.QUANTITY) {
+        ObjectCalls.ptrcallWithStringNameCallableArrayLongArgs(addCustomMonitorBind, singleton, id, callable.target.segment, callable.method, arguments, type.value)
     }
 
     /**
@@ -163,6 +99,439 @@ object Performance {
     @JvmStatic
     fun getCustomMonitorTypes(): List<Int> {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getCustomMonitorTypesBind, singleton)
+    }
+
+    @JvmInline
+    value class Monitor(val value: Long) {
+        companion object {
+            /**
+             * The number of frames rendered in the last second. This metric is only updated once per second,
+             * even if queried more often. Higher is better.
+             *
+             * Generated from Godot docs: Performance.TIME_FPS
+             */
+            val TIME_FPS: Monitor get() = Monitor(0L)
+            /**
+             * Time it took to complete one frame, in seconds. Lower is better.
+             *
+             * Generated from Godot docs: Performance.TIME_PROCESS
+             */
+            val TIME_PROCESS: Monitor get() = Monitor(1L)
+            /**
+             * Time it took to complete one physics frame, in seconds. Lower is better.
+             *
+             * Generated from Godot docs: Performance.TIME_PHYSICS_PROCESS
+             */
+            val TIME_PHYSICS_PROCESS: Monitor get() = Monitor(2L)
+            /**
+             * Time it took to complete one navigation step, in seconds. This includes navigation map updates
+             * as well as agent avoidance calculations. Lower is better.
+             *
+             * Generated from Godot docs: Performance.TIME_NAVIGATION_PROCESS
+             */
+            val TIME_NAVIGATION_PROCESS: Monitor get() = Monitor(3L)
+            /**
+             * Static memory currently used, in bytes. Not available in release builds. Lower is better.
+             *
+             * Generated from Godot docs: Performance.MEMORY_STATIC
+             */
+            val MEMORY_STATIC: Monitor get() = Monitor(4L)
+            /**
+             * Available static memory. Not available in release builds. Lower is better.
+             *
+             * Generated from Godot docs: Performance.MEMORY_STATIC_MAX
+             */
+            val MEMORY_STATIC_MAX: Monitor get() = Monitor(5L)
+            /**
+             * Largest amount of memory the message queue buffer has used, in bytes. The message queue is used
+             * for deferred functions calls and notifications. Lower is better.
+             *
+             * Generated from Godot docs: Performance.MEMORY_MESSAGE_BUFFER_MAX
+             */
+            val MEMORY_MESSAGE_BUFFER_MAX: Monitor get() = Monitor(6L)
+            /**
+             * Number of objects currently instantiated (including nodes). Lower is better.
+             *
+             * Generated from Godot docs: Performance.OBJECT_COUNT
+             */
+            val OBJECT_COUNT: Monitor get() = Monitor(7L)
+            /**
+             * Number of resources currently used. Lower is better.
+             *
+             * Generated from Godot docs: Performance.OBJECT_RESOURCE_COUNT
+             */
+            val OBJECT_RESOURCE_COUNT: Monitor get() = Monitor(8L)
+            /**
+             * Number of nodes currently instantiated in the scene tree. This also includes the root node.
+             * Lower is better.
+             *
+             * Generated from Godot docs: Performance.OBJECT_NODE_COUNT
+             */
+            val OBJECT_NODE_COUNT: Monitor get() = Monitor(9L)
+            /**
+             * Number of orphan nodes, i.e. nodes which are not parented to a node of the scene tree. Lower is
+             * better. Note: This is only available in debug mode and will always return `0` when used in a
+             * project exported in release mode.
+             *
+             * Generated from Godot docs: Performance.OBJECT_ORPHAN_NODE_COUNT
+             */
+            val OBJECT_ORPHAN_NODE_COUNT: Monitor get() = Monitor(10L)
+            /**
+             * The total number of objects in the last rendered frame. This metric doesn't include culled
+             * objects (either via hiding nodes, frustum culling or occlusion culling). Lower is better.
+             *
+             * Generated from Godot docs: Performance.RENDER_TOTAL_OBJECTS_IN_FRAME
+             */
+            val RENDER_TOTAL_OBJECTS_IN_FRAME: Monitor get() = Monitor(11L)
+            /**
+             * The total number of vertices or indices rendered in the last rendered frame. This metric doesn't
+             * include primitives from culled objects (either via hiding nodes, frustum culling or occlusion
+             * culling). Due to the depth prepass and shadow passes, the number of primitives is always higher
+             * than the actual number of vertices in the scene (typically double or triple the original vertex
+             * count). Lower is better.
+             *
+             * Generated from Godot docs: Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME
+             */
+            val RENDER_TOTAL_PRIMITIVES_IN_FRAME: Monitor get() = Monitor(12L)
+            /**
+             * The total number of draw calls performed in the last rendered frame. This metric doesn't include
+             * culled objects (either via hiding nodes, frustum culling or occlusion culling), since they do
+             * not result in draw calls. Lower is better.
+             *
+             * Generated from Godot docs: Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME
+             */
+            val RENDER_TOTAL_DRAW_CALLS_IN_FRAME: Monitor get() = Monitor(13L)
+            /**
+             * The amount of video memory used (texture and vertex memory combined, in bytes). Since this
+             * metric also includes miscellaneous allocations, this value is always greater than the sum of
+             * `RENDER_TEXTURE_MEM_USED` and `RENDER_BUFFER_MEM_USED`. Lower is better.
+             *
+             * Generated from Godot docs: Performance.RENDER_VIDEO_MEM_USED
+             */
+            val RENDER_VIDEO_MEM_USED: Monitor get() = Monitor(14L)
+            /**
+             * The amount of texture memory used (in bytes). Lower is better.
+             *
+             * Generated from Godot docs: Performance.RENDER_TEXTURE_MEM_USED
+             */
+            val RENDER_TEXTURE_MEM_USED: Monitor get() = Monitor(15L)
+            /**
+             * The amount of render buffer memory used (in bytes). Lower is better.
+             *
+             * Generated from Godot docs: Performance.RENDER_BUFFER_MEM_USED
+             */
+            val RENDER_BUFFER_MEM_USED: Monitor get() = Monitor(16L)
+            /**
+             * Number of active `RigidBody2D` nodes in the game. Lower is better.
+             *
+             * Generated from Godot docs: Performance.PHYSICS_2D_ACTIVE_OBJECTS
+             */
+            val PHYSICS_2D_ACTIVE_OBJECTS: Monitor get() = Monitor(17L)
+            /**
+             * Number of collision pairs in the 2D physics engine. Lower is better.
+             *
+             * Generated from Godot docs: Performance.PHYSICS_2D_COLLISION_PAIRS
+             */
+            val PHYSICS_2D_COLLISION_PAIRS: Monitor get() = Monitor(18L)
+            /**
+             * Number of islands in the 2D physics engine. Lower is better.
+             *
+             * Generated from Godot docs: Performance.PHYSICS_2D_ISLAND_COUNT
+             */
+            val PHYSICS_2D_ISLAND_COUNT: Monitor get() = Monitor(19L)
+            /**
+             * Number of active `RigidBody3D` and `VehicleBody3D` nodes in the game. Lower is better.
+             *
+             * Generated from Godot docs: Performance.PHYSICS_3D_ACTIVE_OBJECTS
+             */
+            val PHYSICS_3D_ACTIVE_OBJECTS: Monitor get() = Monitor(20L)
+            /**
+             * Number of collision pairs in the 3D physics engine. Lower is better.
+             *
+             * Generated from Godot docs: Performance.PHYSICS_3D_COLLISION_PAIRS
+             */
+            val PHYSICS_3D_COLLISION_PAIRS: Monitor get() = Monitor(21L)
+            /**
+             * Number of islands in the 3D physics engine. Lower is better.
+             *
+             * Generated from Godot docs: Performance.PHYSICS_3D_ISLAND_COUNT
+             */
+            val PHYSICS_3D_ISLAND_COUNT: Monitor get() = Monitor(22L)
+            /**
+             * Output latency of the `AudioServer`. Equivalent to calling `AudioServer.get_output_latency`, it
+             * is not recommended to call this every frame.
+             *
+             * Generated from Godot docs: Performance.AUDIO_OUTPUT_LATENCY
+             */
+            val AUDIO_OUTPUT_LATENCY: Monitor get() = Monitor(23L)
+            /**
+             * Number of active navigation maps in `NavigationServer2D` and `NavigationServer3D`. This also
+             * includes the empty default navigation maps created by `World2D` and `World3D` instances.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_ACTIVE_MAPS
+             */
+            val NAVIGATION_ACTIVE_MAPS: Monitor get() = Monitor(24L)
+            /**
+             * Number of active navigation regions in `NavigationServer2D` and `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_REGION_COUNT
+             */
+            val NAVIGATION_REGION_COUNT: Monitor get() = Monitor(25L)
+            /**
+             * Number of active navigation agents processing avoidance in `NavigationServer2D` and
+             * `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_AGENT_COUNT
+             */
+            val NAVIGATION_AGENT_COUNT: Monitor get() = Monitor(26L)
+            /**
+             * Number of active navigation links in `NavigationServer2D` and `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_LINK_COUNT
+             */
+            val NAVIGATION_LINK_COUNT: Monitor get() = Monitor(27L)
+            /**
+             * Number of navigation mesh polygons in `NavigationServer2D` and `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_POLYGON_COUNT
+             */
+            val NAVIGATION_POLYGON_COUNT: Monitor get() = Monitor(28L)
+            /**
+             * Number of navigation mesh polygon edges in `NavigationServer2D` and `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_EDGE_COUNT
+             */
+            val NAVIGATION_EDGE_COUNT: Monitor get() = Monitor(29L)
+            /**
+             * Number of navigation mesh polygon edges that were merged due to edge key overlap in
+             * `NavigationServer2D` and `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_EDGE_MERGE_COUNT
+             */
+            val NAVIGATION_EDGE_MERGE_COUNT: Monitor get() = Monitor(30L)
+            /**
+             * Number of polygon edges that are considered connected by edge proximity `NavigationServer2D` and
+             * `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_EDGE_CONNECTION_COUNT
+             */
+            val NAVIGATION_EDGE_CONNECTION_COUNT: Monitor get() = Monitor(31L)
+            /**
+             * Number of navigation mesh polygon edges that could not be merged in `NavigationServer2D` and
+             * `NavigationServer3D`. The edges still may be connected by edge proximity or with links.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_EDGE_FREE_COUNT
+             */
+            val NAVIGATION_EDGE_FREE_COUNT: Monitor get() = Monitor(32L)
+            /**
+             * Number of active navigation obstacles in the `NavigationServer2D` and `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_OBSTACLE_COUNT
+             */
+            val NAVIGATION_OBSTACLE_COUNT: Monitor get() = Monitor(33L)
+            /**
+             * Number of pipeline compilations that were triggered by the 2D canvas renderer.
+             *
+             * Generated from Godot docs: Performance.PIPELINE_COMPILATIONS_CANVAS
+             */
+            val PIPELINE_COMPILATIONS_CANVAS: Monitor get() = Monitor(34L)
+            /**
+             * Number of pipeline compilations that were triggered by loading meshes. These compilations will
+             * show up as longer loading times the first time a user runs the game and the pipeline is
+             * required.
+             *
+             * Generated from Godot docs: Performance.PIPELINE_COMPILATIONS_MESH
+             */
+            val PIPELINE_COMPILATIONS_MESH: Monitor get() = Monitor(35L)
+            /**
+             * Number of pipeline compilations that were triggered by building the surface cache before
+             * rendering the scene. These compilations will show up as a stutter when loading a scene the first
+             * time a user runs the game and the pipeline is required.
+             *
+             * Generated from Godot docs: Performance.PIPELINE_COMPILATIONS_SURFACE
+             */
+            val PIPELINE_COMPILATIONS_SURFACE: Monitor get() = Monitor(36L)
+            /**
+             * Number of pipeline compilations that were triggered while drawing the scene. These compilations
+             * will show up as stutters during gameplay the first time a user runs the game and the pipeline is
+             * required.
+             *
+             * Generated from Godot docs: Performance.PIPELINE_COMPILATIONS_DRAW
+             */
+            val PIPELINE_COMPILATIONS_DRAW: Monitor get() = Monitor(37L)
+            /**
+             * Number of pipeline compilations that were triggered to optimize the current scene. These
+             * compilations are done in the background and should not cause any stutters whatsoever.
+             *
+             * Generated from Godot docs: Performance.PIPELINE_COMPILATIONS_SPECIALIZATION
+             */
+            val PIPELINE_COMPILATIONS_SPECIALIZATION: Monitor get() = Monitor(38L)
+            /**
+             * Number of active navigation maps in the `NavigationServer2D`. This also includes the empty
+             * default navigation maps created by `World2D` instances.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_ACTIVE_MAPS
+             */
+            val NAVIGATION_2D_ACTIVE_MAPS: Monitor get() = Monitor(39L)
+            /**
+             * Number of active navigation regions in the `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_REGION_COUNT
+             */
+            val NAVIGATION_2D_REGION_COUNT: Monitor get() = Monitor(40L)
+            /**
+             * Number of active navigation agents processing avoidance in the `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_AGENT_COUNT
+             */
+            val NAVIGATION_2D_AGENT_COUNT: Monitor get() = Monitor(41L)
+            /**
+             * Number of active navigation links in the `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_LINK_COUNT
+             */
+            val NAVIGATION_2D_LINK_COUNT: Monitor get() = Monitor(42L)
+            /**
+             * Number of navigation mesh polygons in the `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_POLYGON_COUNT
+             */
+            val NAVIGATION_2D_POLYGON_COUNT: Monitor get() = Monitor(43L)
+            /**
+             * Number of navigation mesh polygon edges in the `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_EDGE_COUNT
+             */
+            val NAVIGATION_2D_EDGE_COUNT: Monitor get() = Monitor(44L)
+            /**
+             * Number of navigation mesh polygon edges that were merged due to edge key overlap in the
+             * `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_EDGE_MERGE_COUNT
+             */
+            val NAVIGATION_2D_EDGE_MERGE_COUNT: Monitor get() = Monitor(45L)
+            /**
+             * Number of polygon edges that are considered connected by edge proximity `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_EDGE_CONNECTION_COUNT
+             */
+            val NAVIGATION_2D_EDGE_CONNECTION_COUNT: Monitor get() = Monitor(46L)
+            /**
+             * Number of navigation mesh polygon edges that could not be merged in the `NavigationServer2D`.
+             * The edges still may be connected by edge proximity or with links.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_EDGE_FREE_COUNT
+             */
+            val NAVIGATION_2D_EDGE_FREE_COUNT: Monitor get() = Monitor(47L)
+            /**
+             * Number of active navigation obstacles in the `NavigationServer2D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_2D_OBSTACLE_COUNT
+             */
+            val NAVIGATION_2D_OBSTACLE_COUNT: Monitor get() = Monitor(48L)
+            /**
+             * Number of active navigation maps in the `NavigationServer3D`. This also includes the empty
+             * default navigation maps created by `World3D` instances.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_ACTIVE_MAPS
+             */
+            val NAVIGATION_3D_ACTIVE_MAPS: Monitor get() = Monitor(49L)
+            /**
+             * Number of active navigation regions in the `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_REGION_COUNT
+             */
+            val NAVIGATION_3D_REGION_COUNT: Monitor get() = Monitor(50L)
+            /**
+             * Number of active navigation agents processing avoidance in the `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_AGENT_COUNT
+             */
+            val NAVIGATION_3D_AGENT_COUNT: Monitor get() = Monitor(51L)
+            /**
+             * Number of active navigation links in the `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_LINK_COUNT
+             */
+            val NAVIGATION_3D_LINK_COUNT: Monitor get() = Monitor(52L)
+            /**
+             * Number of navigation mesh polygons in the `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_POLYGON_COUNT
+             */
+            val NAVIGATION_3D_POLYGON_COUNT: Monitor get() = Monitor(53L)
+            /**
+             * Number of navigation mesh polygon edges in the `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_EDGE_COUNT
+             */
+            val NAVIGATION_3D_EDGE_COUNT: Monitor get() = Monitor(54L)
+            /**
+             * Number of navigation mesh polygon edges that were merged due to edge key overlap in the
+             * `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_EDGE_MERGE_COUNT
+             */
+            val NAVIGATION_3D_EDGE_MERGE_COUNT: Monitor get() = Monitor(55L)
+            /**
+             * Number of polygon edges that are considered connected by edge proximity `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_EDGE_CONNECTION_COUNT
+             */
+            val NAVIGATION_3D_EDGE_CONNECTION_COUNT: Monitor get() = Monitor(56L)
+            /**
+             * Number of navigation mesh polygon edges that could not be merged in the `NavigationServer3D`.
+             * The edges still may be connected by edge proximity or with links.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_EDGE_FREE_COUNT
+             */
+            val NAVIGATION_3D_EDGE_FREE_COUNT: Monitor get() = Monitor(57L)
+            /**
+             * Number of active navigation obstacles in the `NavigationServer3D`.
+             *
+             * Generated from Godot docs: Performance.NAVIGATION_3D_OBSTACLE_COUNT
+             */
+            val NAVIGATION_3D_OBSTACLE_COUNT: Monitor get() = Monitor(58L)
+            /**
+             * Represents the size of the `Monitor` enum.
+             *
+             * Generated from Godot docs: Performance.MONITOR_MAX
+             */
+            val MONITOR_MAX: Monitor get() = Monitor(59L)
+        }
+    }
+
+    @JvmInline
+    value class MonitorType(val value: Long) {
+        companion object {
+            /**
+             * Monitor output is formatted as an integer value.
+             *
+             * Generated from Godot docs: Performance.MONITOR_TYPE_QUANTITY
+             */
+            val QUANTITY: MonitorType get() = MonitorType(0L)
+            /**
+             * Monitor output is formatted as computer memory. Submitted values should represent a number of
+             * bytes.
+             *
+             * Generated from Godot docs: Performance.MONITOR_TYPE_MEMORY
+             */
+            val MEMORY: MonitorType get() = MonitorType(1L)
+            /**
+             * Monitor output is formatted as time in milliseconds. Submitted values should represent a time in
+             * seconds (not milliseconds).
+             *
+             * Generated from Godot docs: Performance.MONITOR_TYPE_TIME
+             */
+            val TIME: MonitorType get() = MonitorType(2L)
+            /**
+             * Monitor output is formatted as a percentage. Submitted values should represent a fractional
+             * value rather than the percentage directly, e.g. `0.5` for `50.00%`.
+             *
+             * Generated from Godot docs: Performance.MONITOR_TYPE_PERCENTAGE
+             */
+            val PERCENTAGE: MonitorType get() = MonitorType(3L)
+        }
     }
 
     @JvmStatic

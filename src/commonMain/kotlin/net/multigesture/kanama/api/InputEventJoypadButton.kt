@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: InputEventJoypadButton
  */
 class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
-    var buttonIndex: Long
+    var buttonIndex: JoyButton
         @JvmName("buttonIndexProperty")
         get() = getButtonIndex()
         @JvmName("setButtonIndexProperty")
@@ -28,9 +28,9 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
      *
      * Generated from Godot docs: InputEventJoypadButton.set_button_index
      */
-    fun setButtonIndex(buttonIndex: Long) {
+    fun setButtonIndex(buttonIndex: JoyButton) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex)
+        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex.value)
     }
 
     /**
@@ -38,9 +38,9 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
      *
      * Generated from Godot docs: InputEventJoypadButton.get_button_index
      */
-    fun getButtonIndex(): Long {
+    fun getButtonIndex(): JoyButton {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, segment)
+        return JoyButton(ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, segment))
     }
 
     fun setPressure(pressure: Double) {

@@ -103,9 +103,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ConfigFile.load
      */
-    fun load(path: String): Long {
+    fun load(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
     }
 
     /**
@@ -115,9 +115,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ConfigFile.parse
      */
-    fun parse(data: String): Long {
+    fun parse(data: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data))
     }
 
     /**
@@ -127,9 +127,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ConfigFile.save
      */
-    fun save(path: String): Long {
+    fun save(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path))
     }
 
     /**
@@ -149,9 +149,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ConfigFile.load_encrypted
      */
-    fun loadEncrypted(path: String, key: ByteArray): Long {
+    fun loadEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key)
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key))
     }
 
     /**
@@ -162,9 +162,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ConfigFile.load_encrypted_pass
      */
-    fun loadEncryptedPass(path: String, password: String): Long {
+    fun loadEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password))
     }
 
     /**
@@ -174,9 +174,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ConfigFile.save_encrypted
      */
-    fun saveEncrypted(path: String, key: ByteArray): Long {
+    fun saveEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key)
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key))
     }
 
     /**
@@ -186,9 +186,9 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: ConfigFile.save_encrypted_pass
      */
-    fun saveEncryptedPass(path: String, password: String): Long {
+    fun saveEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password))
     }
 
     /**

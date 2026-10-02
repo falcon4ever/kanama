@@ -702,8 +702,8 @@ object EditorInterface {
      * Generated from Godot docs: EditorInterface.save_scene
      */
     @JvmStatic
-    fun saveScene(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(saveSceneBind, singleton)
+    fun saveScene(): GodotError {
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(saveSceneBind, singleton))
     }
 
     /**
@@ -733,8 +733,8 @@ object EditorInterface {
      * Generated from Godot docs: EditorInterface.close_scene
      */
     @JvmStatic
-    fun closeScene(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(closeSceneBind, singleton)
+    fun closeScene(): GodotError {
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(closeSceneBind, singleton))
     }
 
     /**

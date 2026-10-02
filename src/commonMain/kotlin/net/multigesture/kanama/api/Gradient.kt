@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,13 +13,13 @@ import net.multigesture.kanama.types.Color
  * Generated from Godot docs: Gradient
  */
 class Gradient(handle: GodotHandle) : Resource(handle) {
-    var interpolationMode: Long
+    var interpolationMode: Gradient.InterpolationMode
         @JvmName("interpolationModeProperty")
         get() = getInterpolationMode()
         @JvmName("setInterpolationModeProperty")
         set(value) = setInterpolationMode(value)
 
-    var interpolationColorSpace: Long
+    var interpolationColorSpace: Gradient.ColorSpace
         @JvmName("interpolationColorSpaceProperty")
         get() = getInterpolationColorSpace()
         @JvmName("setInterpolationColorSpaceProperty")
@@ -181,9 +182,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Gradient.set_interpolation_mode
      */
-    fun setInterpolationMode(interpolationMode: Long) {
+    fun setInterpolationMode(interpolationMode: Gradient.InterpolationMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, segment, interpolationMode)
+        ObjectCalls.ptrcallWithLongArg(setInterpolationModeBind, segment, interpolationMode.value)
     }
 
     /**
@@ -191,9 +192,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Gradient.get_interpolation_mode
      */
-    fun getInterpolationMode(): Long {
+    fun getInterpolationMode(): Gradient.InterpolationMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, segment)
+        return Gradient.InterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(getInterpolationModeBind, segment))
     }
 
     /**
@@ -203,9 +204,9 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Gradient.set_interpolation_color_space
      */
-    fun setInterpolationColorSpace(interpolationColorSpace: Long) {
+    fun setInterpolationColorSpace(interpolationColorSpace: Gradient.ColorSpace) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, segment, interpolationColorSpace)
+        ObjectCalls.ptrcallWithLongArg(setInterpolationColorSpaceBind, segment, interpolationColorSpace.value)
     }
 
     /**
@@ -215,19 +216,62 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Gradient.get_interpolation_color_space
      */
-    fun getInterpolationColorSpace(): Long {
+    fun getInterpolationColorSpace(): Gradient.ColorSpace {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, segment)
+        return Gradient.ColorSpace(ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, segment))
+    }
+
+    @JvmInline
+    value class InterpolationMode(val value: Long) {
+        companion object {
+            /**
+             * Linear interpolation.
+             *
+             * Generated from Godot docs: Gradient.GRADIENT_INTERPOLATE_LINEAR
+             */
+            val LINEAR: InterpolationMode get() = InterpolationMode(0L)
+            /**
+             * Constant interpolation, color changes abruptly at each point and stays uniform between. This
+             * might cause visible aliasing when used for a gradient texture in some cases.
+             *
+             * Generated from Godot docs: Gradient.GRADIENT_INTERPOLATE_CONSTANT
+             */
+            val CONSTANT: InterpolationMode get() = InterpolationMode(1L)
+            /**
+             * Cubic interpolation.
+             *
+             * Generated from Godot docs: Gradient.GRADIENT_INTERPOLATE_CUBIC
+             */
+            val CUBIC: InterpolationMode get() = InterpolationMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class ColorSpace(val value: Long) {
+        companion object {
+            /**
+             * sRGB color space.
+             *
+             * Generated from Godot docs: Gradient.GRADIENT_COLOR_SPACE_SRGB
+             */
+            val SRGB: ColorSpace get() = ColorSpace(0L)
+            /**
+             * Linear sRGB color space.
+             *
+             * Generated from Godot docs: Gradient.GRADIENT_COLOR_SPACE_LINEAR_SRGB
+             */
+            val LINEAR_SRGB: ColorSpace get() = ColorSpace(1L)
+            /**
+             * Oklab (https://bottosson.github.io/posts/oklab/) color space. This color space provides a smooth
+             * and uniform-looking transition between colors.
+             *
+             * Generated from Godot docs: Gradient.GRADIENT_COLOR_SPACE_OKLAB
+             */
+            val OKLAB: ColorSpace get() = ColorSpace(2L)
+        }
     }
 
     companion object {
-        const val GRADIENT_INTERPOLATE_LINEAR: Long = 0L
-        const val GRADIENT_INTERPOLATE_CONSTANT: Long = 1L
-        const val GRADIENT_INTERPOLATE_CUBIC: Long = 2L
-        const val GRADIENT_COLOR_SPACE_SRGB: Long = 0L
-        const val GRADIENT_COLOR_SPACE_LINEAR_SRGB: Long = 1L
-        const val GRADIENT_COLOR_SPACE_OKLAB: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Gradient? =
             wrap(handle.segment)

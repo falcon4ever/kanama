@@ -17,7 +17,7 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: TextParagraph
  */
 class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
-    var direction: Long
+    var direction: TextServer.Direction
         @JvmName("directionProperty")
         get() = getDirection()
         @JvmName("setDirectionProperty")
@@ -29,7 +29,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setCustomPunctuationProperty")
         set(value) = setCustomPunctuation(value)
 
-    var orientation: Long
+    var orientation: TextServer.Orientation
         @JvmName("orientationProperty")
         get() = getOrientation()
         @JvmName("setOrientationProperty")
@@ -47,25 +47,25 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setPreserveControlProperty")
         set(value) = setPreserveControl(value)
 
-    var alignment: Long
+    var alignment: HorizontalAlignment
         @JvmName("alignmentProperty")
         get() = getAlignment()
         @JvmName("setAlignmentProperty")
         set(value) = setAlignment(value)
 
-    var breakFlags: Long
+    var breakFlags: TextServer.LineBreakFlag
         @JvmName("breakFlagsProperty")
         get() = getBreakFlags()
         @JvmName("setBreakFlagsProperty")
         set(value) = setBreakFlags(value)
 
-    var justificationFlags: Long
+    var justificationFlags: TextServer.JustificationFlag
         @JvmName("justificationFlagsProperty")
         get() = getJustificationFlags()
         @JvmName("setJustificationFlagsProperty")
         set(value) = setJustificationFlags(value)
 
-    var textOverrunBehavior: Long
+    var textOverrunBehavior: TextServer.OverrunBehavior
         @JvmName("textOverrunBehaviorProperty")
         get() = getTextOverrunBehavior()
         @JvmName("setTextOverrunBehaviorProperty")
@@ -125,9 +125,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.set_direction
      */
-    fun setDirection(direction: Long) {
+    fun setDirection(direction: TextServer.Direction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDirectionBind, segment, direction)
+        ObjectCalls.ptrcallWithLongArg(setDirectionBind, segment, direction.value)
     }
 
     /**
@@ -135,9 +135,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.get_direction
      */
-    fun getDirection(): Long {
+    fun getDirection(): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, segment)
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, segment))
     }
 
     /**
@@ -145,9 +145,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.get_inferred_direction
      */
-    fun getInferredDirection(): Long {
+    fun getInferredDirection(): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, segment)
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, segment))
     }
 
     /**
@@ -177,9 +177,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.set_orientation
      */
-    fun setOrientation(orientation: Long) {
+    fun setOrientation(orientation: TextServer.Orientation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation)
+        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation.value)
     }
 
     /**
@@ -187,9 +187,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.get_orientation
      */
-    fun getOrientation(): Long {
+    fun getOrientation(): TextServer.Orientation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment)
+        return TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment))
     }
 
     /**
@@ -280,9 +280,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.add_object
      */
-    fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
+    fun addObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, length: Int = 1, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, segment, key, size, inlineAlign, length, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
     }
 
     /**
@@ -290,9 +290,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.resize_object
      */
-    fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+    fun resizeObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, segment, key, size, inlineAlign, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
     }
 
     /**
@@ -310,9 +310,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.set_alignment
      */
-    fun setAlignment(alignment: Long) {
+    fun setAlignment(alignment: HorizontalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment)
+        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -320,9 +320,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.get_alignment
      */
-    fun getAlignment(): Long {
+    fun getAlignment(): HorizontalAlignment {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment)
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment))
     }
 
     /**
@@ -340,9 +340,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.set_break_flags
      */
-    fun setBreakFlags(flags: Long) {
+    fun setBreakFlags(flags: TextServer.LineBreakFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBreakFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithLongArg(setBreakFlagsBind, segment, flags.value)
     }
 
     /**
@@ -350,9 +350,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.get_break_flags
      */
-    fun getBreakFlags(): Long {
+    fun getBreakFlags(): TextServer.LineBreakFlag {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBreakFlagsBind, segment)
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getBreakFlagsBind, segment))
     }
 
     /**
@@ -360,9 +360,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.set_justification_flags
      */
-    fun setJustificationFlags(flags: Long) {
+    fun setJustificationFlags(flags: TextServer.JustificationFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, flags.value)
     }
 
     /**
@@ -370,9 +370,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.get_justification_flags
      */
-    fun getJustificationFlags(): Long {
+    fun getJustificationFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
     }
 
     /**
@@ -380,9 +380,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.set_text_overrun_behavior
      */
-    fun setTextOverrunBehavior(overrunBehavior: Long) {
+    fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -390,9 +390,9 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextParagraph.get_text_overrun_behavior
      */
-    fun getTextOverrunBehavior(): Long {
+    fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
     }
 
     /**

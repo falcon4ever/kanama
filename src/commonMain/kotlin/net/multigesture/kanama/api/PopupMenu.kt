@@ -43,7 +43,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
         @JvmName("setAllowSearchProperty")
         set(value) = setAllowSearch(value)
 
-    var systemMenuId: Long
+    var systemMenuId: NativeMenu.SystemMenus
         @JvmName("systemMenuIdProperty")
         get() = getSystemMenu()
         @JvmName("setSystemMenuIdProperty")
@@ -151,8 +151,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_item
      */
-    fun addItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, segment, label, id, accel)
+    fun addItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, segment, label, id, accel.value)
     }
 
     /**
@@ -164,8 +164,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_icon_item
      */
-    fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
+    fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
@@ -179,8 +179,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_check_item
      */
-    fun addCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, segment, label, id, accel)
+    fun addCheckItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, segment, label, id, accel.value)
     }
 
     /**
@@ -194,8 +194,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_icon_check_item
      */
-    fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
+    fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
@@ -209,8 +209,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_radio_check_item
      */
-    fun addRadioCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, segment, label, id, accel)
+    fun addRadioCheckItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, segment, label, id, accel.value)
     }
 
     /**
@@ -218,8 +218,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_item
      */
-    fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
+    fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
@@ -233,8 +233,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_multistate_item
      */
-    fun addMultistateItem(label: String, maxStates: Int, defaultState: Int = 0, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, segment, label, maxStates, defaultState, id, accel)
+    fun addMultistateItem(label: String, maxStates: Int, defaultState: Int = 0, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, segment, label, maxStates, defaultState, id, accel.value)
     }
 
     /**
@@ -349,8 +349,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.set_item_text_direction
      */
-    fun setItemTextDirection(index: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, index, direction)
+    fun setItemTextDirection(index: Int, direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, index, direction.value)
     }
 
     /**
@@ -371,8 +371,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.set_item_auto_translate_mode
      */
-    fun setItemAutoTranslateMode(index: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, index, mode)
+    fun setItemAutoTranslateMode(index: Int, mode: Node.AutoTranslateMode) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, index, mode.value)
     }
 
     /**
@@ -431,8 +431,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.set_item_accelerator
      */
-    fun setItemAccelerator(index: Int, accel: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, segment, index, accel)
+    fun setItemAccelerator(index: Int, accel: Key) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, segment, index, accel.value)
     }
 
     /**
@@ -606,8 +606,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.get_item_text_direction
      */
-    fun getItemTextDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, index)
+    fun getItemTextDirection(index: Int): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, index))
     }
 
     /**
@@ -624,8 +624,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.get_item_auto_translate_mode
      */
-    fun getItemAutoTranslateMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, index)
+    fun getItemAutoTranslateMode(index: Int): Node.AutoTranslateMode {
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, index))
     }
 
     /**
@@ -692,8 +692,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.get_item_accelerator
      */
-    fun getItemAccelerator(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, segment, index)
+    fun getItemAccelerator(index: Int): Key {
+        return Key(ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, segment, index))
     }
 
     /**
@@ -1020,8 +1020,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.set_system_menu
      */
-    fun setSystemMenu(systemMenuId: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, segment, systemMenuId)
+    fun setSystemMenu(systemMenuId: NativeMenu.SystemMenus) {
+        ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, segment, systemMenuId.value)
     }
 
     /**
@@ -1030,8 +1030,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.get_system_menu
      */
-    fun getSystemMenu(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, segment)
+    fun getSystemMenu(): NativeMenu.SystemMenus {
+        return NativeMenu.SystemMenus(ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, segment))
     }
 
     /**

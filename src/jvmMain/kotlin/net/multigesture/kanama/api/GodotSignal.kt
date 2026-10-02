@@ -19,10 +19,10 @@ internal actual constructor(
     internal val owner: GodotObject,
     actual val name: String,
 ) {
-    actual fun connect(target: GodotObject, method: String): Long =
-        connect(target, method, GodotObject.CONNECT_DEFAULT)
+    actual fun connect(target: GodotObject, method: String): GodotError =
+        connect(target, method, GodotObject.ConnectFlags(0L))
 
-    actual fun connect(target: GodotObject, method: String, flags: Long): Long =
+    actual fun connect(target: GodotObject, method: String, flags: GodotObject.ConnectFlags): GodotError =
         owner.connect(name, target, method, flags)
 
     actual fun disconnect(target: GodotObject, method: String) {
@@ -37,12 +37,12 @@ internal actual constructor(
         target: GodotObject,
         argumentCount: Int,
         callback: (List<Any?>) -> Unit,
-    ): SignalConnection = connect(target, argumentCount, GodotObject.CONNECT_DEFAULT, callback)
+    ): SignalConnection = connect(target, argumentCount, GodotObject.ConnectFlags(0L), callback)
 
     actual fun connect(
         target: GodotObject,
         argumentCount: Int,
-        flags: Long,
+        flags: GodotObject.ConnectFlags,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         require(argumentCount in 0..3) { "Signal lambda callbacks currently support 0..3 emitted arguments" }
@@ -50,7 +50,7 @@ internal actual constructor(
         val method = "__kanama_signal_dispatch$argumentCount"
         val boundArgs = listOf(id)
         val error = owner.connectBound(name, target, method, boundArgs, flags)
-        if (error != 0L) {
+        if (error != GodotError.OK) {
             SignalCallbackRegistry.unregister(id)
         }
         return SignalConnection(
@@ -61,16 +61,16 @@ internal actual constructor(
             boundArgs = boundArgs,
             callbackId = id,
             error = error,
-            disconnectOnClose = flags and GodotObject.CONNECT_ONE_SHOT == 0L,
+            disconnectOnClose = GodotObject.ConnectFlags.ONE_SHOT !in flags,
         )
     }
 
     actual fun connectObject(target: GodotObject, callback: (GodotObject) -> Unit): SignalConnection =
-        connectObject(target, GodotObject.CONNECT_DEFAULT, callback)
+        connectObject(target, GodotObject.ConnectFlags(0L), callback)
 
     actual fun connectObject(
         target: GodotObject,
-        flags: Long,
+        flags: GodotObject.ConnectFlags,
         callback: (GodotObject) -> Unit,
     ): SignalConnection =
         connect(target, argumentCount = 1, flags = flags) { args ->
@@ -82,11 +82,11 @@ internal actual constructor(
     actual suspend fun await(target: GodotObject, argumentCount: Int): List<Any?> =
         suspendCancellableCoroutine { continuation ->
             var connection: SignalConnection? = null
-            connection = connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) { args ->
+            connection = connect(target, argumentCount, GodotObject.ConnectFlags.ONE_SHOT) { args ->
                 connection?.close()
                 if (continuation.isActive) continuation.resume(args)
             }
-            if (connection.error != 0L) {
+            if (connection.error != GodotError.OK) {
                 connection.close()
                 continuation.cancel(CancellationException("connect($name) failed: error=${connection.error}"))
             } else {
@@ -107,7 +107,7 @@ actual class SignalConnection internal constructor(
     private val method: String,
     private val boundArgs: List<Any?>,
     private val callbackId: Long,
-    actual val error: Long,
+    actual val error: GodotError,
     private val disconnectOnClose: Boolean,
 ) : AutoCloseable {
     private var closed = false
@@ -116,7 +116,7 @@ actual class SignalConnection internal constructor(
         if (closed) return
         closed = true
         SignalCallbackRegistry.unregister(callbackId)
-        if (error == 0L && disconnectOnClose) {
+        if (error == GodotError.OK && disconnectOnClose) {
             owner.disconnectBound(signal, target, method, boundArgs)
         }
     }

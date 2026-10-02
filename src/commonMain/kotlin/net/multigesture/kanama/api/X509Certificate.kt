@@ -15,9 +15,9 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: X509Certificate.save
      */
-    fun save(path: String): Long {
+    fun save(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path))
     }
 
     /**
@@ -25,9 +25,9 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: X509Certificate.load
      */
-    fun load(path: String): Long {
+    fun load(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
     }
 
     /**
@@ -46,9 +46,9 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: X509Certificate.load_from_string
      */
-    fun loadFromString(string: String): Long {
+    fun loadFromString(string: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, segment, string)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadFromStringBind, segment, string))
     }
 
     companion object {

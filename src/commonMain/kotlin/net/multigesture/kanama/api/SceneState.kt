@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -258,12 +259,41 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, segment, idx)
     }
 
-    companion object {
-        const val GEN_EDIT_STATE_DISABLED: Long = 0L
-        const val GEN_EDIT_STATE_INSTANCE: Long = 1L
-        const val GEN_EDIT_STATE_MAIN: Long = 2L
-        const val GEN_EDIT_STATE_MAIN_INHERITED: Long = 3L
+    @JvmInline
+    value class GenEditState(val value: Long) {
+        companion object {
+            /**
+             * If passed to `PackedScene.instantiate`, blocks edits to the scene state.
+             *
+             * Generated from Godot docs: SceneState.GEN_EDIT_STATE_DISABLED
+             */
+            val DISABLED: GenEditState get() = GenEditState(0L)
+            /**
+             * If passed to `PackedScene.instantiate`, provides inherited scene resources to the local scene.
+             * Note: Only available in editor builds.
+             *
+             * Generated from Godot docs: SceneState.GEN_EDIT_STATE_INSTANCE
+             */
+            val INSTANCE: GenEditState get() = GenEditState(1L)
+            /**
+             * If passed to `PackedScene.instantiate`, provides local scene resources to the local scene. Only
+             * the main scene should receive the main edit state. Note: Only available in editor builds.
+             *
+             * Generated from Godot docs: SceneState.GEN_EDIT_STATE_MAIN
+             */
+            val MAIN: GenEditState get() = GenEditState(2L)
+            /**
+             * If passed to `PackedScene.instantiate`, it's similar to `GEN_EDIT_STATE_MAIN`, but for the case
+             * where the scene is being instantiated to be the base of another one. Note: Only available in
+             * editor builds.
+             *
+             * Generated from Godot docs: SceneState.GEN_EDIT_STATE_MAIN_INHERITED
+             */
+            val MAIN_INHERITED: GenEditState get() = GenEditState(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneState? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -46,27 +47,27 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
 
     var stretchMarginLeft: Int
         @JvmName("stretchMarginLeftProperty")
-        get() = getStretchMargin(0L)
+        get() = getStretchMargin(Side.LEFT)
         @JvmName("setStretchMarginLeftProperty")
-        set(value) = setStretchMargin(0L, value)
+        set(value) = setStretchMargin(Side.LEFT, value)
 
     var stretchMarginTop: Int
         @JvmName("stretchMarginTopProperty")
-        get() = getStretchMargin(1L)
+        get() = getStretchMargin(Side.TOP)
         @JvmName("setStretchMarginTopProperty")
-        set(value) = setStretchMargin(1L, value)
+        set(value) = setStretchMargin(Side.TOP, value)
 
     var stretchMarginRight: Int
         @JvmName("stretchMarginRightProperty")
-        get() = getStretchMargin(2L)
+        get() = getStretchMargin(Side.RIGHT)
         @JvmName("setStretchMarginRightProperty")
-        set(value) = setStretchMargin(2L, value)
+        set(value) = setStretchMargin(Side.RIGHT, value)
 
     var stretchMarginBottom: Int
         @JvmName("stretchMarginBottomProperty")
-        get() = getStretchMargin(3L)
+        get() = getStretchMargin(Side.BOTTOM)
         @JvmName("setStretchMarginBottomProperty")
-        set(value) = setStretchMargin(3L, value)
+        set(value) = setStretchMargin(Side.BOTTOM, value)
 
     var textureUnder: Texture2D?
         @JvmName("textureUnderProperty")
@@ -345,8 +346,8 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: TextureProgressBar.set_stretch_margin
      */
-    fun setStretchMargin(margin: Long, value: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setStretchMarginBind, segment, margin, value)
+    fun setStretchMargin(margin: Side, value: Int) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(setStretchMarginBind, segment, margin.value, value)
     }
 
     /**
@@ -354,8 +355,8 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: TextureProgressBar.get_stretch_margin
      */
-    fun getStretchMargin(margin: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getStretchMarginBind, segment, margin)
+    fun getStretchMargin(margin: Side): Int {
+        return ObjectCalls.ptrcallWithLongArgRetInt(getStretchMarginBind, segment, margin.value)
     }
 
     /**
@@ -382,17 +383,73 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getNinePatchStretchBind, segment)
     }
 
-    companion object {
-        const val FILL_LEFT_TO_RIGHT: Long = 0L
-        const val FILL_RIGHT_TO_LEFT: Long = 1L
-        const val FILL_TOP_TO_BOTTOM: Long = 2L
-        const val FILL_BOTTOM_TO_TOP: Long = 3L
-        const val FILL_CLOCKWISE: Long = 4L
-        const val FILL_COUNTER_CLOCKWISE: Long = 5L
-        const val FILL_BILINEAR_LEFT_AND_RIGHT: Long = 6L
-        const val FILL_BILINEAR_TOP_AND_BOTTOM: Long = 7L
-        const val FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE: Long = 8L
+    @JvmInline
+    value class FillMode(val value: Long) {
+        companion object {
+            /**
+             * The `texture_progress` fills from left to right.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_LEFT_TO_RIGHT
+             */
+            val LEFT_TO_RIGHT: FillMode get() = FillMode(0L)
+            /**
+             * The `texture_progress` fills from right to left.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_RIGHT_TO_LEFT
+             */
+            val RIGHT_TO_LEFT: FillMode get() = FillMode(1L)
+            /**
+             * The `texture_progress` fills from top to bottom.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_TOP_TO_BOTTOM
+             */
+            val TOP_TO_BOTTOM: FillMode get() = FillMode(2L)
+            /**
+             * The `texture_progress` fills from bottom to top.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_BOTTOM_TO_TOP
+             */
+            val BOTTOM_TO_TOP: FillMode get() = FillMode(3L)
+            /**
+             * Turns the node into a radial bar. The `texture_progress` fills clockwise. See
+             * `radial_center_offset`, `radial_initial_angle` and `radial_fill_degrees` to control the way the
+             * bar fills up.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_CLOCKWISE
+             */
+            val CLOCKWISE: FillMode get() = FillMode(4L)
+            /**
+             * Turns the node into a radial bar. The `texture_progress` fills counterclockwise. See
+             * `radial_center_offset`, `radial_initial_angle` and `radial_fill_degrees` to control the way the
+             * bar fills up.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_COUNTER_CLOCKWISE
+             */
+            val COUNTER_CLOCKWISE: FillMode get() = FillMode(5L)
+            /**
+             * The `texture_progress` fills from the center, expanding both towards the left and the right.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_BILINEAR_LEFT_AND_RIGHT
+             */
+            val BILINEAR_LEFT_AND_RIGHT: FillMode get() = FillMode(6L)
+            /**
+             * The `texture_progress` fills from the center, expanding both towards the top and the bottom.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_BILINEAR_TOP_AND_BOTTOM
+             */
+            val BILINEAR_TOP_AND_BOTTOM: FillMode get() = FillMode(7L)
+            /**
+             * Turns the node into a radial bar. The `texture_progress` fills radially from the center,
+             * expanding both clockwise and counterclockwise. See `radial_center_offset`,
+             * `radial_initial_angle` and `radial_fill_degrees` to control the way the bar fills up.
+             *
+             * Generated from Godot docs: TextureProgressBar.FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE
+             */
+            val CLOCKWISE_AND_COUNTER_CLOCKWISE: FillMode get() = FillMode(8L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureProgressBar? =
             wrap(handle.segment)

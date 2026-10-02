@@ -29,9 +29,9 @@ class JSON(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: JSON.parse
      */
-    fun parse(jsonText: String, keepText: Boolean = false): Long {
+    fun parse(jsonText: String, keepText: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, segment, jsonText, keepText)
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(parseBind, segment, jsonText, keepText))
     }
 
     /**

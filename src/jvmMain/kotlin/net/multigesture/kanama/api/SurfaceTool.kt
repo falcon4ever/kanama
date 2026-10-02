@@ -15,6 +15,94 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: SurfaceTool
  */
 class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
+    // ===== BEGIN GENERATED ENUMS: SurfaceTool (scripts/generate_api_wrapper.py — do not edit) =====
+    @JvmInline
+    value class CustomFormat(val value: Long) {
+        companion object {
+            /**
+             * Limits range of data passed to `set_custom` to unsigned normalized 0 to 1 stored in 8 bits per
+             * channel. See `Mesh.ARRAY_CUSTOM_RGBA8_UNORM`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA8_UNORM
+             */
+            val RGBA8_UNORM: CustomFormat get() = CustomFormat(0L)
+            /**
+             * Limits range of data passed to `set_custom` to signed normalized -1 to 1 stored in 8 bits per
+             * channel. See `Mesh.ARRAY_CUSTOM_RGBA8_SNORM`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA8_SNORM
+             */
+            val RGBA8_SNORM: CustomFormat get() = CustomFormat(1L)
+            /**
+             * Stores data passed to `set_custom` as half precision floats, and uses only red and green color
+             * channels. See `Mesh.ARRAY_CUSTOM_RG_HALF`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RG_HALF
+             */
+            val RG_HALF: CustomFormat get() = CustomFormat(2L)
+            /**
+             * Stores data passed to `set_custom` as half precision floats and uses all color channels. See
+             * `Mesh.ARRAY_CUSTOM_RGBA_HALF`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA_HALF
+             */
+            val RGBA_HALF: CustomFormat get() = CustomFormat(3L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red color channel.
+             * See `Mesh.ARRAY_CUSTOM_R_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_R_FLOAT
+             */
+            val R_FLOAT: CustomFormat get() = CustomFormat(4L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red and green color
+             * channels. See `Mesh.ARRAY_CUSTOM_RG_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RG_FLOAT
+             */
+            val RG_FLOAT: CustomFormat get() = CustomFormat(5L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red, green and blue
+             * color channels. See `Mesh.ARRAY_CUSTOM_RGB_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGB_FLOAT
+             */
+            val RGB_FLOAT: CustomFormat get() = CustomFormat(6L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses all color channels. See
+             * `Mesh.ARRAY_CUSTOM_RGBA_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA_FLOAT
+             */
+            val RGBA_FLOAT: CustomFormat get() = CustomFormat(7L)
+            /**
+             * Used to indicate a disabled custom channel.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_MAX
+             */
+            val MAX: CustomFormat get() = CustomFormat(8L)
+        }
+    }
+
+    @JvmInline
+    value class SkinWeightCount(val value: Long) {
+        companion object {
+            /**
+             * Each individual vertex can be influenced by only 4 bone weights.
+             *
+             * Generated from Godot docs: SurfaceTool.SKIN_4_WEIGHTS
+             */
+            val SKIN_4_WEIGHTS: SkinWeightCount get() = SkinWeightCount(0L)
+            /**
+             * Each individual vertex can be influenced by up to 8 bone weights.
+             *
+             * Generated from Godot docs: SurfaceTool.SKIN_8_WEIGHTS
+             */
+            val SKIN_8_WEIGHTS: SkinWeightCount get() = SkinWeightCount(1L)
+        }
+    }
+    // ===== END GENERATED ENUMS: SurfaceTool =====
+
     /**
      * Set to `SKIN_8_WEIGHTS` to indicate that up to 8 bone influences per vertex may be used. By
      * default, only 4 bone influences are used (`SKIN_4_WEIGHTS`). Note: This function takes an enum,
@@ -22,9 +110,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: SurfaceTool.set_skin_weight_count
      */
-    fun setSkinWeightCount(count: Long) {
+    fun setSkinWeightCount(count: SurfaceTool.SkinWeightCount) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, segment, count)
+        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, segment, count.value)
     }
 
     /**
@@ -34,9 +122,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: SurfaceTool.get_skin_weight_count
      */
-    fun getSkinWeightCount(): Long {
+    fun getSkinWeightCount(): SurfaceTool.SkinWeightCount {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, segment)
+        return SurfaceTool.SkinWeightCount(ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, segment))
     }
 
     /**
@@ -45,9 +133,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: SurfaceTool.set_custom_format
      */
-    fun setCustomFormat(channelIndex: Int, format: Long) {
+    fun setCustomFormat(channelIndex: Int, format: SurfaceTool.CustomFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, segment, channelIndex, format)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, segment, channelIndex, format.value)
     }
 
     /**
@@ -56,9 +144,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: SurfaceTool.get_custom_format
      */
-    fun getCustomFormat(channelIndex: Int): Long {
+    fun getCustomFormat(channelIndex: Int): SurfaceTool.CustomFormat {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, segment, channelIndex)
+        return SurfaceTool.CustomFormat(ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, segment, channelIndex))
     }
 
     /**
@@ -67,9 +155,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: SurfaceTool.begin
      */
-    fun begin(primitive: Long) {
+    fun begin(primitive: Mesh.PrimitiveType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(beginBind, segment, primitive)
+        ObjectCalls.ptrcallWithLongArg(beginBind, segment, primitive.value)
     }
 
     /**
@@ -311,9 +399,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: SurfaceTool.get_primitive_type
      */
-    fun getPrimitiveType(): Long {
+    fun getPrimitiveType(): Mesh.PrimitiveType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, segment)
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, segment))
     }
 
     /**
@@ -344,9 +432,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: SurfaceTool.create_from_arrays
      */
-    fun createFromArrays(arrays: List<Any?>, primitiveType: Long = 3L) {
+    fun createFromArrays(arrays: List<Any?>, primitiveType: Mesh.PrimitiveType = Mesh.PrimitiveType.TRIANGLES) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, segment, arrays, primitiveType)
+        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, segment, arrays, primitiveType.value)
     }
 
     /**
@@ -397,17 +485,6 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     }
 
     companion object {
-        const val CUSTOM_RGBA8_UNORM: Long = 0L
-        const val CUSTOM_RGBA8_SNORM: Long = 1L
-        const val CUSTOM_RG_HALF: Long = 2L
-        const val CUSTOM_RGBA_HALF: Long = 3L
-        const val CUSTOM_R_FLOAT: Long = 4L
-        const val CUSTOM_RG_FLOAT: Long = 5L
-        const val CUSTOM_RGB_FLOAT: Long = 6L
-        const val CUSTOM_RGBA_FLOAT: Long = 7L
-        const val CUSTOM_MAX: Long = 8L
-        const val SKIN_4_WEIGHTS: Long = 0L
-        const val SKIN_8_WEIGHTS: Long = 1L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SurfaceTool? =

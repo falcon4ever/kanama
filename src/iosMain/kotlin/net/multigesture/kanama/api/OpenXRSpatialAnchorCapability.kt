@@ -19,16 +19,16 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
         return ObjectCalls.ptrcallNoArgsRetBool(isSpatialPersistenceSupportedBind, segment)
     }
 
-    fun isPersistenceScopeSupported(scope: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isPersistenceScopeSupportedBind, segment, scope)
+    fun isPersistenceScopeSupported(scope: OpenXRSpatialAnchorCapability.PersistenceScope): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isPersistenceScopeSupportedBind, segment, scope.value)
     }
 
     fun createDefaultPersistenceContext(userCallback: GodotCallable): OpenXRFutureResult? {
         return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithCallableArgRetObject(createDefaultPersistenceContextBind, segment, userCallback.target.segment, userCallback.method))
     }
 
-    fun createPersistenceContext(scope: Long, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(createPersistenceContextBind, segment, scope, userCallback.target.segment, userCallback.method))
+    fun createPersistenceContext(scope: OpenXRSpatialAnchorCapability.PersistenceScope, userCallback: GodotCallable): OpenXRFutureResult? {
+        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(createPersistenceContextBind, segment, scope.value, userCallback.target.segment, userCallback.method))
     }
 
     fun getPersistenceContextHandle(persistenceContext: RID): Long {
@@ -63,10 +63,14 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
         ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(doEntityUpdateBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    companion object {
-        const val PERSISTENCE_SCOPE_SYSTEM_MANAGED: Long = 1L
-        const val PERSISTENCE_SCOPE_LOCAL_ANCHORS: Long = 1000781000L
+    value class PersistenceScope(val value: Long) {
+        companion object {
+            val SYSTEM_MANAGED: PersistenceScope get() = PersistenceScope(1L)
+            val LOCAL_ANCHORS: PersistenceScope get() = PersistenceScope(1000781000L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialAnchorCapability? =
             wrap(handle.segment)

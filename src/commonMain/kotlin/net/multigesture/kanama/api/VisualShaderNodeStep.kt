@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,32 +10,37 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeStep
  */
 class VisualShaderNodeStep(handle: GodotHandle) : VisualShaderNode(handle) {
-    var opType: Long
+    var opType: VisualShaderNodeStep.OpType
         @JvmName("opTypeProperty")
         get() = getOpType()
         @JvmName("setOpTypeProperty")
         set(value) = setOpType(value)
 
-    fun setOpType(opType: Long) {
+    fun setOpType(opType: VisualShaderNodeStep.OpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, opType)
+        ObjectCalls.ptrcallWithLongArg(setOpTypeBind, segment, opType.value)
     }
 
-    fun getOpType(): Long {
+    fun getOpType(): VisualShaderNodeStep.OpType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment)
+        return VisualShaderNodeStep.OpType(ObjectCalls.ptrcallNoArgsRetLong(getOpTypeBind, segment))
+    }
+
+    @JvmInline
+    value class OpType(val value: Long) {
+        companion object {
+            val SCALAR: OpType get() = OpType(0L)
+            val VECTOR_2D: OpType get() = OpType(1L)
+            val VECTOR_2D_SCALAR: OpType get() = OpType(2L)
+            val VECTOR_3D: OpType get() = OpType(3L)
+            val VECTOR_3D_SCALAR: OpType get() = OpType(4L)
+            val VECTOR_4D: OpType get() = OpType(5L)
+            val VECTOR_4D_SCALAR: OpType get() = OpType(6L)
+            val MAX: OpType get() = OpType(7L)
+        }
     }
 
     companion object {
-        const val OP_TYPE_SCALAR: Long = 0L
-        const val OP_TYPE_VECTOR_2D: Long = 1L
-        const val OP_TYPE_VECTOR_2D_SCALAR: Long = 2L
-        const val OP_TYPE_VECTOR_3D: Long = 3L
-        const val OP_TYPE_VECTOR_3D_SCALAR: Long = 4L
-        const val OP_TYPE_VECTOR_4D: Long = 5L
-        const val OP_TYPE_VECTOR_4D_SCALAR: Long = 6L
-        const val OP_TYPE_MAX: Long = 7L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeStep? =
             wrap(handle.segment)

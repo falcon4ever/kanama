@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -324,9 +325,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      *
      * Generated from Godot docs: TileSetAtlasSource.set_tile_animation_mode
      */
-    fun setTileAnimationMode(atlasCoords: Vector2i, mode: Long) {
+    fun setTileAnimationMode(atlasCoords: Vector2i, mode: TileSetAtlasSource.TileAnimationMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndLongArg(setTileAnimationModeBind, segment, atlasCoords, mode)
+        ObjectCalls.ptrcallWithVector2iAndLongArg(setTileAnimationModeBind, segment, atlasCoords, mode.value)
     }
 
     /**
@@ -335,9 +336,9 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      *
      * Generated from Godot docs: TileSetAtlasSource.get_tile_animation_mode
      */
-    fun getTileAnimationMode(atlasCoords: Vector2i): Long {
+    fun getTileAnimationMode(atlasCoords: Vector2i): TileSetAtlasSource.TileAnimationMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetLong(getTileAnimationModeBind, segment, atlasCoords)
+        return TileSetAtlasSource.TileAnimationMode(ObjectCalls.ptrcallWithVector2iArgRetLong(getTileAnimationModeBind, segment, atlasCoords))
     }
 
     /**
@@ -493,13 +494,34 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getRuntimeTileTextureRegionBind, segment, atlasCoords, frame)
     }
 
+    @JvmInline
+    value class TileAnimationMode(val value: Long) {
+        companion object {
+            /**
+             * Tile animations start at same time, looking identical.
+             *
+             * Generated from Godot docs: TileSetAtlasSource.TILE_ANIMATION_MODE_DEFAULT
+             */
+            val DEFAULT: TileAnimationMode get() = TileAnimationMode(0L)
+            /**
+             * Tile animations start at random times, looking varied.
+             *
+             * Generated from Godot docs: TileSetAtlasSource.TILE_ANIMATION_MODE_RANDOM_START_TIMES
+             */
+            val RANDOM_START_TIMES: TileAnimationMode get() = TileAnimationMode(1L)
+            /**
+             * Represents the size of the `TileAnimationMode` enum.
+             *
+             * Generated from Godot docs: TileSetAtlasSource.TILE_ANIMATION_MODE_MAX
+             */
+            val MAX: TileAnimationMode get() = TileAnimationMode(2L)
+        }
+    }
+
     companion object {
         const val TRANSFORM_FLIP_H: Long = 4096L
         const val TRANSFORM_FLIP_V: Long = 8192L
         const val TRANSFORM_TRANSPOSE: Long = 16384L
-        const val TILE_ANIMATION_MODE_DEFAULT: Long = 0L
-        const val TILE_ANIMATION_MODE_RANDOM_START_TIMES: Long = 1L
-        const val TILE_ANIMATION_MODE_MAX: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileSetAtlasSource? =

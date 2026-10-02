@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,7 +19,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Camera3D
  */
 open class Camera3D(handle: GodotHandle) : Node3D(handle) {
-    var keepAspect: Long
+    var keepAspect: Camera3D.KeepAspect
         @JvmName("keepAspectProperty")
         get() = getKeepAspectMode()
         @JvmName("setKeepAspectProperty")
@@ -60,13 +61,13 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setVOffsetProperty")
         set(value) = setVOffset(value)
 
-    var dopplerTracking: Long
+    var dopplerTracking: Camera3D.DopplerTracking
         @JvmName("dopplerTrackingProperty")
         get() = getDopplerTracking()
         @JvmName("setDopplerTrackingProperty")
         set(value) = setDopplerTracking(value)
 
-    var projection: Long
+    var projection: Camera3D.ProjectionType
         @JvmName("projectionProperty")
         get() = getProjection()
         @JvmName("setProjectionProperty")
@@ -393,8 +394,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Camera3D.get_projection
      */
-    fun getProjection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, segment)
+    fun getProjection(): Camera3D.ProjectionType {
+        return Camera3D.ProjectionType(ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, segment))
     }
 
     /**
@@ -403,8 +404,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Camera3D.set_projection
      */
-    fun setProjection(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProjectionBind, segment, mode)
+    fun setProjection(mode: Camera3D.ProjectionType) {
+        ObjectCalls.ptrcallWithLongArg(setProjectionBind, segment, mode.value)
     }
 
     /**
@@ -538,8 +539,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Camera3D.set_keep_aspect_mode
      */
-    fun setKeepAspectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, segment, mode)
+    fun setKeepAspectMode(mode: Camera3D.KeepAspect) {
+        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, segment, mode.value)
     }
 
     /**
@@ -547,8 +548,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Camera3D.get_keep_aspect_mode
      */
-    fun getKeepAspectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, segment)
+    fun getKeepAspectMode(): Camera3D.KeepAspect {
+        return Camera3D.KeepAspect(ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, segment))
     }
 
     /**
@@ -560,8 +561,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Camera3D.set_doppler_tracking
      */
-    fun setDopplerTracking(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode)
+    fun setDopplerTracking(mode: Camera3D.DopplerTracking) {
+        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode.value)
     }
 
     /**
@@ -573,8 +574,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Camera3D.get_doppler_tracking
      */
-    fun getDopplerTracking(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment)
+    fun getDopplerTracking(): Camera3D.DopplerTracking {
+        return Camera3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment))
     }
 
     /**
@@ -638,16 +639,85 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCullMaskValueBind, segment, layerNumber)
     }
 
-    companion object {
-        const val PROJECTION_PERSPECTIVE: Long = 0L
-        const val PROJECTION_ORTHOGONAL: Long = 1L
-        const val PROJECTION_FRUSTUM: Long = 2L
-        const val KEEP_WIDTH: Long = 0L
-        const val KEEP_HEIGHT: Long = 1L
-        const val DOPPLER_TRACKING_DISABLED: Long = 0L
-        const val DOPPLER_TRACKING_IDLE_STEP: Long = 1L
-        const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
+    @JvmInline
+    value class ProjectionType(val value: Long) {
+        companion object {
+            /**
+             * Perspective projection. Objects on the screen becomes smaller when they are far away.
+             *
+             * Generated from Godot docs: Camera3D.PROJECTION_PERSPECTIVE
+             */
+            val PERSPECTIVE: ProjectionType get() = ProjectionType(0L)
+            /**
+             * Orthogonal projection, also known as orthographic projection. Objects remain the same size on
+             * the screen no matter how far away they are.
+             *
+             * Generated from Godot docs: Camera3D.PROJECTION_ORTHOGONAL
+             */
+            val ORTHOGONAL: ProjectionType get() = ProjectionType(1L)
+            /**
+             * Frustum projection. This mode allows adjusting `frustum_offset` to create "tilted frustum"
+             * effects.
+             *
+             * Generated from Godot docs: Camera3D.PROJECTION_FRUSTUM
+             */
+            val FRUSTUM: ProjectionType get() = ProjectionType(2L)
+        }
+    }
 
+    @JvmInline
+    value class KeepAspect(val value: Long) {
+        companion object {
+            /**
+             * Preserves the horizontal aspect ratio; also known as Vert- scaling. This is usually the best
+             * option for projects running in portrait mode, as taller aspect ratios will benefit from a wider
+             * vertical FOV.
+             *
+             * Generated from Godot docs: Camera3D.KEEP_WIDTH
+             */
+            val WIDTH: KeepAspect get() = KeepAspect(0L)
+            /**
+             * Preserves the vertical aspect ratio; also known as Hor+ scaling. This is usually the best option
+             * for projects running in landscape mode, as wider aspect ratios will automatically benefit from a
+             * wider horizontal FOV.
+             *
+             * Generated from Godot docs: Camera3D.KEEP_HEIGHT
+             */
+            val HEIGHT: KeepAspect get() = KeepAspect(1L)
+        }
+    }
+
+    @JvmInline
+    value class DopplerTracking(val value: Long) {
+        companion object {
+            /**
+             * Disables Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) simulation (default).
+             *
+             * Generated from Godot docs: Camera3D.DOPPLER_TRACKING_DISABLED
+             */
+            val DISABLED: DopplerTracking get() = DopplerTracking(0L)
+            /**
+             * Simulate Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) by tracking positions of
+             * objects that are changed in `_process`. Changes in the relative velocity of this camera compared
+             * to those objects affect how audio is perceived (changing the audio's
+             * `AudioStreamPlayer3D.pitch_scale`).
+             *
+             * Generated from Godot docs: Camera3D.DOPPLER_TRACKING_IDLE_STEP
+             */
+            val IDLE_STEP: DopplerTracking get() = DopplerTracking(1L)
+            /**
+             * Simulate Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) by tracking positions of
+             * objects that are changed in `_physics_process`. Changes in the relative velocity of this camera
+             * compared to those objects affect how audio is perceived (changing the audio's
+             * `AudioStreamPlayer3D.pitch_scale`).
+             *
+             * Generated from Godot docs: Camera3D.DOPPLER_TRACKING_PHYSICS_STEP
+             */
+            val PHYSICS_STEP: DopplerTracking get() = DopplerTracking(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Camera3D? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
         @JvmName("setBufferLengthProperty")
         set(value) = setBufferLength(value)
 
-    var fftSize: Long
+    var fftSize: AudioEffectSpectrumAnalyzer.FFTSize
         @JvmName("fftSizeProperty")
         get() = getFftSize()
         @JvmName("setFftSizeProperty")
@@ -53,9 +54,9 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectSpectrumAnalyzer.set_fft_size
      */
-    fun setFftSize(size: Long) {
+    fun setFftSize(size: AudioEffectSpectrumAnalyzer.FFTSize) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, segment, size)
+        ObjectCalls.ptrcallWithLongArg(setFftSizeBind, segment, size.value)
     }
 
     /**
@@ -65,19 +66,58 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectSpectrumAnalyzer.get_fft_size
      */
-    fun getFftSize(): Long {
+    fun getFftSize(): AudioEffectSpectrumAnalyzer.FFTSize {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment)
+        return AudioEffectSpectrumAnalyzer.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment))
+    }
+
+    @JvmInline
+    value class FFTSize(val value: Long) {
+        companion object {
+            /**
+             * Use a buffer of 256 samples for the Fast Fourier transform. Lowest latency, but least stable
+             * over time.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzer.FFT_SIZE_256
+             */
+            val SIZE_256: FFTSize get() = FFTSize(0L)
+            /**
+             * Use a buffer of 512 samples for the Fast Fourier transform. Low latency, but less stable over
+             * time.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzer.FFT_SIZE_512
+             */
+            val SIZE_512: FFTSize get() = FFTSize(1L)
+            /**
+             * Use a buffer of 1024 samples for the Fast Fourier transform. This is a compromise between
+             * latency and stability over time.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzer.FFT_SIZE_1024
+             */
+            val SIZE_1024: FFTSize get() = FFTSize(2L)
+            /**
+             * Use a buffer of 2048 samples for the Fast Fourier transform. High latency, but stable over time.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzer.FFT_SIZE_2048
+             */
+            val SIZE_2048: FFTSize get() = FFTSize(3L)
+            /**
+             * Use a buffer of 4096 samples for the Fast Fourier transform. Highest latency, but most stable
+             * over time.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzer.FFT_SIZE_4096
+             */
+            val SIZE_4096: FFTSize get() = FFTSize(4L)
+            /**
+             * Represents the size of the `FFTSize` enum.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzer.FFT_SIZE_MAX
+             */
+            val MAX: FFTSize get() = FFTSize(5L)
+        }
     }
 
     companion object {
-        const val FFT_SIZE_256: Long = 0L
-        const val FFT_SIZE_512: Long = 1L
-        const val FFT_SIZE_1024: Long = 2L
-        const val FFT_SIZE_2048: Long = 3L
-        const val FFT_SIZE_4096: Long = 4L
-        const val FFT_SIZE_MAX: Long = 5L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectSpectrumAnalyzer? =
             wrap(handle.segment)

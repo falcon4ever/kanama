@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -38,21 +39,26 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorScenePostImportPlugin.add_import_option_advanced
      */
-    fun addImportOptionAdvanced(type: Long, name: String, defaultValue: Any?, hint: Long = 0L, hintString: String = "", usageFlags: Int = 6) {
+    fun addImportOptionAdvanced(type: VariantType, name: String, defaultValue: Any?, hint: GodotPropertyHint = GodotPropertyHint.NONE, hintString: String = "", usageFlags: Int = 6) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type, name, defaultValue, hint, hintString, usageFlags)
+        ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
+    }
+
+    @JvmInline
+    value class InternalImportCategory(val value: Long) {
+        companion object {
+            val NODE: InternalImportCategory get() = InternalImportCategory(0L)
+            val MESH_3D_NODE: InternalImportCategory get() = InternalImportCategory(1L)
+            val MESH: InternalImportCategory get() = InternalImportCategory(2L)
+            val MATERIAL: InternalImportCategory get() = InternalImportCategory(3L)
+            val ANIMATION: InternalImportCategory get() = InternalImportCategory(4L)
+            val ANIMATION_NODE: InternalImportCategory get() = InternalImportCategory(5L)
+            val SKELETON_3D_NODE: InternalImportCategory get() = InternalImportCategory(6L)
+            val MAX: InternalImportCategory get() = InternalImportCategory(7L)
+        }
     }
 
     companion object {
-        const val INTERNAL_IMPORT_CATEGORY_NODE: Long = 0L
-        const val INTERNAL_IMPORT_CATEGORY_MESH_3D_NODE: Long = 1L
-        const val INTERNAL_IMPORT_CATEGORY_MESH: Long = 2L
-        const val INTERNAL_IMPORT_CATEGORY_MATERIAL: Long = 3L
-        const val INTERNAL_IMPORT_CATEGORY_ANIMATION: Long = 4L
-        const val INTERNAL_IMPORT_CATEGORY_ANIMATION_NODE: Long = 5L
-        const val INTERNAL_IMPORT_CATEGORY_SKELETON_3D_NODE: Long = 6L
-        const val INTERNAL_IMPORT_CATEGORY_MAX: Long = 7L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorScenePostImportPlugin? =
             wrap(handle.segment)

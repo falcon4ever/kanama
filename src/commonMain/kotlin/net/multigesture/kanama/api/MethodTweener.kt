@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
  * Interpolates an abstract value and supplies it to a method called over time.
@@ -16,14 +17,14 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: MethodTweener.set_delay
      */
-    fun setDelay(delay: Double): MethodTweener? {
+    fun setDelay(delay: Double): MethodTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return MethodTweener.wrap(ret)
+        return requireGodotReturn(MethodTweener.wrap(ret), "MethodTweener.set_delay")
     }
 
     /**
@@ -32,14 +33,14 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: MethodTweener.set_trans
      */
-    fun setTrans(trans: Long): MethodTweener? {
+    fun setTrans(trans: Tween.TransitionType): MethodTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return MethodTweener.wrap(ret)
+        return requireGodotReturn(MethodTweener.wrap(ret), "MethodTweener.set_trans")
     }
 
     /**
@@ -48,14 +49,14 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: MethodTweener.set_ease
      */
-    fun setEase(ease: Long): MethodTweener? {
+    fun setEase(ease: Tween.EaseType): MethodTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return MethodTweener.wrap(ret)
+        return requireGodotReturn(MethodTweener.wrap(ret), "MethodTweener.set_ease")
     }
 
     companion object {

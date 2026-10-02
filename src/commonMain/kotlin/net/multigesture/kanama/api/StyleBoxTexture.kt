@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -22,59 +23,59 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
 
     var textureMarginLeft: Double
         @JvmName("textureMarginLeftProperty")
-        get() = getTextureMargin(0L)
+        get() = getTextureMargin(Side.LEFT)
         @JvmName("setTextureMarginLeftProperty")
-        set(value) = setTextureMargin(0L, value)
+        set(value) = setTextureMargin(Side.LEFT, value)
 
     var textureMarginTop: Double
         @JvmName("textureMarginTopProperty")
-        get() = getTextureMargin(1L)
+        get() = getTextureMargin(Side.TOP)
         @JvmName("setTextureMarginTopProperty")
-        set(value) = setTextureMargin(1L, value)
+        set(value) = setTextureMargin(Side.TOP, value)
 
     var textureMarginRight: Double
         @JvmName("textureMarginRightProperty")
-        get() = getTextureMargin(2L)
+        get() = getTextureMargin(Side.RIGHT)
         @JvmName("setTextureMarginRightProperty")
-        set(value) = setTextureMargin(2L, value)
+        set(value) = setTextureMargin(Side.RIGHT, value)
 
     var textureMarginBottom: Double
         @JvmName("textureMarginBottomProperty")
-        get() = getTextureMargin(3L)
+        get() = getTextureMargin(Side.BOTTOM)
         @JvmName("setTextureMarginBottomProperty")
-        set(value) = setTextureMargin(3L, value)
+        set(value) = setTextureMargin(Side.BOTTOM, value)
 
     var expandMarginLeft: Double
         @JvmName("expandMarginLeftProperty")
-        get() = getExpandMargin(0L)
+        get() = getExpandMargin(Side.LEFT)
         @JvmName("setExpandMarginLeftProperty")
-        set(value) = setExpandMargin(0L, value)
+        set(value) = setExpandMargin(Side.LEFT, value)
 
     var expandMarginTop: Double
         @JvmName("expandMarginTopProperty")
-        get() = getExpandMargin(1L)
+        get() = getExpandMargin(Side.TOP)
         @JvmName("setExpandMarginTopProperty")
-        set(value) = setExpandMargin(1L, value)
+        set(value) = setExpandMargin(Side.TOP, value)
 
     var expandMarginRight: Double
         @JvmName("expandMarginRightProperty")
-        get() = getExpandMargin(2L)
+        get() = getExpandMargin(Side.RIGHT)
         @JvmName("setExpandMarginRightProperty")
-        set(value) = setExpandMargin(2L, value)
+        set(value) = setExpandMargin(Side.RIGHT, value)
 
     var expandMarginBottom: Double
         @JvmName("expandMarginBottomProperty")
-        get() = getExpandMargin(3L)
+        get() = getExpandMargin(Side.BOTTOM)
         @JvmName("setExpandMarginBottomProperty")
-        set(value) = setExpandMargin(3L, value)
+        set(value) = setExpandMargin(Side.BOTTOM, value)
 
-    var axisStretchHorizontal: Long
+    var axisStretchHorizontal: StyleBoxTexture.AxisStretchMode
         @JvmName("axisStretchHorizontalProperty")
         get() = getHAxisStretchMode()
         @JvmName("setAxisStretchHorizontalProperty")
         set(value) = setHAxisStretchMode(value)
 
-    var axisStretchVertical: Long
+    var axisStretchVertical: StyleBoxTexture.AxisStretchMode
         @JvmName("axisStretchVerticalProperty")
         get() = getVAxisStretchMode()
         @JvmName("setAxisStretchVerticalProperty")
@@ -125,9 +126,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.set_texture_margin
      */
-    fun setTextureMargin(margin: Long, size: Double) {
+    fun setTextureMargin(margin: Side, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, segment, margin, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setTextureMarginBind, segment, margin.value, size)
     }
 
     /**
@@ -147,9 +148,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.get_texture_margin
      */
-    fun getTextureMargin(margin: Long): Double {
+    fun getTextureMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, segment, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getTextureMarginBind, segment, margin.value)
     }
 
     /**
@@ -158,9 +159,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.set_expand_margin
      */
-    fun setExpandMargin(margin: Long, size: Double) {
+    fun setExpandMargin(margin: Side, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin.value, size)
     }
 
     /**
@@ -179,9 +180,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.get_expand_margin
      */
-    fun getExpandMargin(margin: Long): Double {
+    fun getExpandMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin.value)
     }
 
     /**
@@ -253,9 +254,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.set_h_axis_stretch_mode
      */
-    fun setHAxisStretchMode(mode: Long) {
+    fun setHAxisStretchMode(mode: StyleBoxTexture.AxisStretchMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -263,9 +264,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.get_h_axis_stretch_mode
      */
-    fun getHAxisStretchMode(): Long {
+    fun getHAxisStretchMode(): StyleBoxTexture.AxisStretchMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment)
+        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment))
     }
 
     /**
@@ -273,9 +274,9 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.set_v_axis_stretch_mode
      */
-    fun setVAxisStretchMode(mode: Long) {
+    fun setVAxisStretchMode(mode: StyleBoxTexture.AxisStretchMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -283,16 +284,39 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxTexture.get_v_axis_stretch_mode
      */
-    fun getVAxisStretchMode(): Long {
+    fun getVAxisStretchMode(): StyleBoxTexture.AxisStretchMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment)
+        return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment))
+    }
+
+    @JvmInline
+    value class AxisStretchMode(val value: Long) {
+        companion object {
+            /**
+             * Stretch the stylebox's texture. This results in visible distortion unless the texture size
+             * matches the stylebox's size perfectly.
+             *
+             * Generated from Godot docs: StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+             */
+            val STRETCH: AxisStretchMode get() = AxisStretchMode(0L)
+            /**
+             * Repeats the stylebox's texture to match the stylebox's size according to the nine-patch system.
+             *
+             * Generated from Godot docs: StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+             */
+            val TILE: AxisStretchMode get() = AxisStretchMode(1L)
+            /**
+             * Repeats the stylebox's texture to match the stylebox's size according to the nine-patch system.
+             * Unlike `AXIS_STRETCH_MODE_TILE`, the texture may be slightly stretched to make the nine-patch
+             * texture tile seamlessly.
+             *
+             * Generated from Godot docs: StyleBoxTexture.AXIS_STRETCH_MODE_TILE_FIT
+             */
+            val TILE_FIT: AxisStretchMode get() = AxisStretchMode(2L)
+        }
     }
 
     companion object {
-        const val AXIS_STRETCH_MODE_STRETCH: Long = 0L
-        const val AXIS_STRETCH_MODE_TILE: Long = 1L
-        const val AXIS_STRETCH_MODE_TILE_FIT: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StyleBoxTexture? =
             wrap(handle.segment)

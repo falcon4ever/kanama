@@ -12,6 +12,76 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: ParticleProcessMaterial
  */
 class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
+    // ===== BEGIN GENERATED ENUMS: ParticleProcessMaterial (scripts/generate_api_wrapper.py — do not edit) =====
+    value class Parameter(val value: Long) {
+        companion object {
+            val INITIAL_LINEAR_VELOCITY: Parameter get() = Parameter(0L)
+            val ANGULAR_VELOCITY: Parameter get() = Parameter(1L)
+            val ORBIT_VELOCITY: Parameter get() = Parameter(2L)
+            val LINEAR_ACCEL: Parameter get() = Parameter(3L)
+            val RADIAL_ACCEL: Parameter get() = Parameter(4L)
+            val TANGENTIAL_ACCEL: Parameter get() = Parameter(5L)
+            val DAMPING: Parameter get() = Parameter(6L)
+            val ANGLE: Parameter get() = Parameter(7L)
+            val SCALE: Parameter get() = Parameter(8L)
+            val HUE_VARIATION: Parameter get() = Parameter(9L)
+            val ANIM_SPEED: Parameter get() = Parameter(10L)
+            val ANIM_OFFSET: Parameter get() = Parameter(11L)
+            val RADIAL_VELOCITY: Parameter get() = Parameter(15L)
+            val DIRECTIONAL_VELOCITY: Parameter get() = Parameter(16L)
+            val SCALE_OVER_VELOCITY: Parameter get() = Parameter(17L)
+            val MAX: Parameter get() = Parameter(18L)
+            val TURB_VEL_INFLUENCE: Parameter get() = Parameter(13L)
+            val TURB_INIT_DISPLACEMENT: Parameter get() = Parameter(14L)
+            val TURB_INFLUENCE_OVER_LIFE: Parameter get() = Parameter(12L)
+        }
+    }
+
+    value class ParticleFlags(val value: Long) {
+        companion object {
+            val ALIGN_Y_TO_VELOCITY: ParticleFlags get() = ParticleFlags(0L)
+            val ROTATE_Y: ParticleFlags get() = ParticleFlags(1L)
+            val DISABLE_Z: ParticleFlags get() = ParticleFlags(2L)
+            val DAMPING_AS_FRICTION: ParticleFlags get() = ParticleFlags(3L)
+            val INHERIT_EMITTER_SCALE: ParticleFlags get() = ParticleFlags(4L)
+            val MAX: ParticleFlags get() = ParticleFlags(5L)
+        }
+    }
+
+    value class EmissionShape(val value: Long) {
+        companion object {
+            val POINT: EmissionShape get() = EmissionShape(0L)
+            val SPHERE: EmissionShape get() = EmissionShape(1L)
+            val SPHERE_SURFACE: EmissionShape get() = EmissionShape(2L)
+            val BOX: EmissionShape get() = EmissionShape(3L)
+            val POINTS: EmissionShape get() = EmissionShape(4L)
+            val DIRECTED_POINTS: EmissionShape get() = EmissionShape(5L)
+            val RING: EmissionShape get() = EmissionShape(6L)
+            val MAX: EmissionShape get() = EmissionShape(7L)
+        }
+    }
+
+    value class SubEmitterMode(val value: Long) {
+        companion object {
+            val DISABLED: SubEmitterMode get() = SubEmitterMode(0L)
+            val CONSTANT: SubEmitterMode get() = SubEmitterMode(1L)
+            val AT_END: SubEmitterMode get() = SubEmitterMode(2L)
+            val AT_COLLISION: SubEmitterMode get() = SubEmitterMode(3L)
+            val AT_START: SubEmitterMode get() = SubEmitterMode(4L)
+            val MAX: SubEmitterMode get() = SubEmitterMode(5L)
+        }
+    }
+
+    value class CollisionMode(val value: Long) {
+        companion object {
+            val DISABLED: CollisionMode get() = CollisionMode(0L)
+            val RIGID: CollisionMode get() = CollisionMode(1L)
+            val HIDE_ON_CONTACT: CollisionMode get() = CollisionMode(2L)
+            val MAX: CollisionMode get() = CollisionMode(3L)
+        }
+    }
+    // ===== END GENERATED ENUMS: ParticleProcessMaterial =====
+
     var lifetimeRandomness: Double
         @JvmName("lifetimeRandomnessProperty")
         get() = getLifetimeRandomness()
@@ -30,7 +100,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         @JvmName("setEmissionShapeScaleProperty")
         set(value) = setEmissionShapeScale(value)
 
-    var emissionShape: Long
+    var emissionShape: ParticleProcessMaterial.EmissionShape
         @JvmName("emissionShapeProperty")
         get() = getEmissionShape()
         @JvmName("setEmissionShapeProperty")
@@ -270,7 +340,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         @JvmName("setTurbulenceNoiseSpeedRandomProperty")
         set(value) = setTurbulenceNoiseSpeedRandom(value)
 
-    var collisionMode: Long
+    var collisionMode: ParticleProcessMaterial.CollisionMode
         @JvmName("collisionModeProperty")
         get() = getCollisionMode()
         @JvmName("setCollisionModeProperty")
@@ -294,7 +364,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         @JvmName("setCollisionUseScaleProperty")
         set(value) = setCollisionUseScale(value)
 
-    var subEmitterMode: Long
+    var subEmitterMode: ParticleProcessMaterial.SubEmitterMode
         @JvmName("subEmitterModeProperty")
         get() = getSubEmitterMode()
         @JvmName("setSubEmitterModeProperty")
@@ -370,44 +440,44 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFlatnessBind, segment)
     }
 
-    fun setParam(param: Long, value: Vector2) {
+    fun setParam(param: ParticleProcessMaterial.Parameter, value: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, segment, param, value)
+        ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, segment, param.value, value)
     }
 
-    fun getParam(param: Long): Vector2 {
+    fun getParam(param: ParticleProcessMaterial.Parameter): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, segment, param)
+        return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, segment, param.value)
     }
 
-    fun setParamMin(param: Long, value: Double) {
+    fun setParamMin(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param.value, value)
     }
 
-    fun getParamMin(param: Long): Double {
+    fun getParamMin(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param.value)
     }
 
-    fun setParamMax(param: Long, value: Double) {
+    fun setParamMax(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param.value, value)
     }
 
-    fun getParamMax(param: Long): Double {
+    fun getParamMax(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param.value)
     }
 
-    fun setParamTexture(param: Long, texture: Texture2D?) {
+    fun setParamTexture(param: ParticleProcessMaterial.Parameter, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, segment, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, segment, param.value, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
-    fun getParamTexture(param: Long): Texture2D? {
+    fun getParamTexture(param: ParticleProcessMaterial.Parameter): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param.value))
     }
 
     fun setColor(color: Color) {
@@ -530,14 +600,14 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, segment))
     }
 
-    fun setParticleFlag(particleFlag: Long, enable: Boolean) {
+    fun setParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag.value, enable)
     }
 
-    fun getParticleFlag(particleFlag: Long): Boolean {
+    fun getParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag.value)
     }
 
     fun setVelocityPivot(pivot: Vector3) {
@@ -550,14 +620,14 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetVector3(getVelocityPivotBind, segment)
     }
 
-    fun setEmissionShape(shape: Long) {
+    fun setEmissionShape(shape: ParticleProcessMaterial.EmissionShape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape)
+        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape.value)
     }
 
-    fun getEmissionShape(): Long {
+    fun getEmissionShape(): ParticleProcessMaterial.EmissionShape {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment)
+        return ParticleProcessMaterial.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment))
     }
 
     fun setEmissionSphereRadius(radius: Double) {
@@ -760,14 +830,14 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getLifetimeRandomnessBind, segment)
     }
 
-    fun getSubEmitterMode(): Long {
+    fun getSubEmitterMode(): ParticleProcessMaterial.SubEmitterMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, segment)
+        return ParticleProcessMaterial.SubEmitterMode(ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, segment))
     }
 
-    fun setSubEmitterMode(mode: Long) {
+    fun setSubEmitterMode(mode: ParticleProcessMaterial.SubEmitterMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, segment, mode.value)
     }
 
     fun getSubEmitterFrequency(): Double {
@@ -830,14 +900,14 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isAttractorInteractionEnabledBind, segment)
     }
 
-    fun setCollisionMode(mode: Long) {
+    fun setCollisionMode(mode: ParticleProcessMaterial.CollisionMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, segment, mode.value)
     }
 
-    fun getCollisionMode(): Long {
+    fun getCollisionMode(): ParticleProcessMaterial.CollisionMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, segment)
+        return ParticleProcessMaterial.CollisionMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, segment))
     }
 
     fun setCollisionUseScale(radius: Boolean) {
@@ -920,49 +990,6 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         fun fromResource(value: Resource?): ParticleProcessMaterial? =
             value?.takeIf { it.isClass("ParticleProcessMaterial") }?.let { ParticleProcessMaterial(it.handle) }
 
-        const val PARAM_INITIAL_LINEAR_VELOCITY: Long = 0L
-        const val PARAM_ANGULAR_VELOCITY: Long = 1L
-        const val PARAM_ORBIT_VELOCITY: Long = 2L
-        const val PARAM_LINEAR_ACCEL: Long = 3L
-        const val PARAM_RADIAL_ACCEL: Long = 4L
-        const val PARAM_TANGENTIAL_ACCEL: Long = 5L
-        const val PARAM_DAMPING: Long = 6L
-        const val PARAM_ANGLE: Long = 7L
-        const val PARAM_SCALE: Long = 8L
-        const val PARAM_HUE_VARIATION: Long = 9L
-        const val PARAM_ANIM_SPEED: Long = 10L
-        const val PARAM_ANIM_OFFSET: Long = 11L
-        const val PARAM_RADIAL_VELOCITY: Long = 15L
-        const val PARAM_DIRECTIONAL_VELOCITY: Long = 16L
-        const val PARAM_SCALE_OVER_VELOCITY: Long = 17L
-        const val PARAM_MAX: Long = 18L
-        const val PARAM_TURB_VEL_INFLUENCE: Long = 13L
-        const val PARAM_TURB_INIT_DISPLACEMENT: Long = 14L
-        const val PARAM_TURB_INFLUENCE_OVER_LIFE: Long = 12L
-        const val PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY: Long = 0L
-        const val PARTICLE_FLAG_ROTATE_Y: Long = 1L
-        const val PARTICLE_FLAG_DISABLE_Z: Long = 2L
-        const val PARTICLE_FLAG_DAMPING_AS_FRICTION: Long = 3L
-        const val PARTICLE_FLAG_INHERIT_EMITTER_SCALE: Long = 4L
-        const val PARTICLE_FLAG_MAX: Long = 5L
-        const val EMISSION_SHAPE_POINT: Long = 0L
-        const val EMISSION_SHAPE_SPHERE: Long = 1L
-        const val EMISSION_SHAPE_SPHERE_SURFACE: Long = 2L
-        const val EMISSION_SHAPE_BOX: Long = 3L
-        const val EMISSION_SHAPE_POINTS: Long = 4L
-        const val EMISSION_SHAPE_DIRECTED_POINTS: Long = 5L
-        const val EMISSION_SHAPE_RING: Long = 6L
-        const val EMISSION_SHAPE_MAX: Long = 7L
-        const val SUB_EMITTER_DISABLED: Long = 0L
-        const val SUB_EMITTER_CONSTANT: Long = 1L
-        const val SUB_EMITTER_AT_END: Long = 2L
-        const val SUB_EMITTER_AT_COLLISION: Long = 3L
-        const val SUB_EMITTER_AT_START: Long = 4L
-        const val SUB_EMITTER_MAX: Long = 5L
-        const val COLLISION_DISABLED: Long = 0L
-        const val COLLISION_RIGID: Long = 1L
-        const val COLLISION_HIDE_ON_CONTACT: Long = 2L
-        const val COLLISION_MAX: Long = 3L
 
         fun fromHandle(handle: GodotHandle): ParticleProcessMaterial? =
             wrap(handle.segment)

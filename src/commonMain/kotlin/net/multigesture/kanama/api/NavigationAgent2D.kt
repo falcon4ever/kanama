@@ -44,19 +44,19 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
         @JvmName("setNavigationLayersProperty")
         set(value) = setNavigationLayers(value)
 
-    var pathfindingAlgorithm: Long
+    var pathfindingAlgorithm: NavigationPathQueryParameters2D.PathfindingAlgorithm
         @JvmName("pathfindingAlgorithmProperty")
         get() = getPathfindingAlgorithm()
         @JvmName("setPathfindingAlgorithmProperty")
         set(value) = setPathfindingAlgorithm(value)
 
-    var pathPostprocessing: Long
+    var pathPostprocessing: NavigationPathQueryParameters2D.PathPostProcessing
         @JvmName("pathPostprocessingProperty")
         get() = getPathPostprocessing()
         @JvmName("setPathPostprocessingProperty")
         set(value) = setPathPostprocessing(value)
 
-    var pathMetadataFlags: Long
+    var pathMetadataFlags: NavigationPathQueryParameters2D.PathMetadataFlags
         @JvmName("pathMetadataFlagsProperty")
         get() = getPathMetadataFlags()
         @JvmName("setPathMetadataFlagsProperty")
@@ -490,8 +490,8 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: NavigationAgent2D.set_pathfinding_algorithm
      */
-    fun setPathfindingAlgorithm(pathfindingAlgorithm: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm)
+    fun setPathfindingAlgorithm(pathfindingAlgorithm: NavigationPathQueryParameters2D.PathfindingAlgorithm) {
+        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm.value)
     }
 
     /**
@@ -499,8 +499,8 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: NavigationAgent2D.get_pathfinding_algorithm
      */
-    fun getPathfindingAlgorithm(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment)
+    fun getPathfindingAlgorithm(): NavigationPathQueryParameters2D.PathfindingAlgorithm {
+        return NavigationPathQueryParameters2D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment))
     }
 
     /**
@@ -508,8 +508,8 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: NavigationAgent2D.set_path_postprocessing
      */
-    fun setPathPostprocessing(pathPostprocessing: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing)
+    fun setPathPostprocessing(pathPostprocessing: NavigationPathQueryParameters2D.PathPostProcessing) {
+        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing.value)
     }
 
     /**
@@ -517,8 +517,8 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: NavigationAgent2D.get_path_postprocessing
      */
-    fun getPathPostprocessing(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment)
+    fun getPathPostprocessing(): NavigationPathQueryParameters2D.PathPostProcessing {
+        return NavigationPathQueryParameters2D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment))
     }
 
     /**
@@ -526,8 +526,8 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: NavigationAgent2D.set_path_metadata_flags
      */
-    fun setPathMetadataFlags(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathMetadataFlagsBind, segment, flags)
+    fun setPathMetadataFlags(flags: NavigationPathQueryParameters2D.PathMetadataFlags) {
+        ObjectCalls.ptrcallWithLongArg(setPathMetadataFlagsBind, segment, flags.value)
     }
 
     /**
@@ -535,8 +535,8 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: NavigationAgent2D.get_path_metadata_flags
      */
-    fun getPathMetadataFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathMetadataFlagsBind, segment)
+    fun getPathMetadataFlags(): NavigationPathQueryParameters2D.PathMetadataFlags {
+        return NavigationPathQueryParameters2D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(getPathMetadataFlagsBind, segment))
     }
 
     /**

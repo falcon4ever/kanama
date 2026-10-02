@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -27,8 +28,8 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: UndoRedo.create_action
      */
-    fun createAction(name: String, mergeMode: Long = 0L, backwardUndoOps: Boolean = false) {
-        ObjectCalls.ptrcallWithStringLongBoolArgs(createActionBind, segment, name, mergeMode, backwardUndoOps)
+    fun createAction(name: String, mergeMode: UndoRedo.MergeMode = UndoRedo.MergeMode.DISABLE, backwardUndoOps: Boolean = false) {
+        ObjectCalls.ptrcallWithStringLongBoolArgs(createActionBind, segment, name, mergeMode.value, backwardUndoOps)
     }
 
     /**
@@ -251,11 +252,33 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
         const val versionChanged: String = "version_changed"
     }
 
-    companion object {
-        const val MERGE_DISABLE: Long = 0L
-        const val MERGE_ENDS: Long = 1L
-        const val MERGE_ALL: Long = 2L
+    @JvmInline
+    value class MergeMode(val value: Long) {
+        companion object {
+            /**
+             * Makes "do"/"undo" operations stay in separate actions.
+             *
+             * Generated from Godot docs: UndoRedo.MERGE_DISABLE
+             */
+            val DISABLE: MergeMode get() = MergeMode(0L)
+            /**
+             * Merges this action with the previous one if they have the same name. Keeps only the first
+             * action's "undo" operations and the last action's "do" operations. Useful for sequential changes
+             * to a single value.
+             *
+             * Generated from Godot docs: UndoRedo.MERGE_ENDS
+             */
+            val ENDS: MergeMode get() = MergeMode(1L)
+            /**
+             * Merges this action with the previous one if they have the same name.
+             *
+             * Generated from Godot docs: UndoRedo.MERGE_ALL
+             */
+            val ALL: MergeMode get() = MergeMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UndoRedo? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -33,9 +34,9 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: PortableCompressedTexture2D.create_from_image
      */
-    fun createFromImage(image: Image?, compressionMode: Long, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
+    fun createFromImage(image: Image?, compressionMode: PortableCompressedTexture2D.CompressionMode, normalMap: Boolean = false, lossyQuality: Double = 0.8) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, compressionMode, normalMap, lossyQuality)
+        ObjectCalls.ptrcallWithObjectLongBoolDoubleArgs(createFromImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, compressionMode.value, normalMap, lossyQuality)
     }
 
     /**
@@ -43,9 +44,9 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: PortableCompressedTexture2D.get_compression_mode
      */
-    fun getCompressionMode(): Long {
+    fun getCompressionMode(): PortableCompressedTexture2D.CompressionMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCompressionModeBind, segment)
+        return PortableCompressedTexture2D.CompressionMode(ObjectCalls.ptrcallNoArgsRetLong(getCompressionModeBind, segment))
     }
 
     /**
@@ -106,6 +107,19 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBasisuCompressorParamsBind, segment, uastcLevel, rdoQualityLoss)
     }
 
+    @JvmInline
+    value class CompressionMode(val value: Long) {
+        companion object {
+            val LOSSLESS: CompressionMode get() = CompressionMode(0L)
+            val LOSSY: CompressionMode get() = CompressionMode(1L)
+            val BASIS_UNIVERSAL: CompressionMode get() = CompressionMode(2L)
+            val S3TC: CompressionMode get() = CompressionMode(3L)
+            val ETC2: CompressionMode get() = CompressionMode(4L)
+            val BPTC: CompressionMode get() = CompressionMode(5L)
+            val ASTC: CompressionMode get() = CompressionMode(6L)
+        }
+    }
+
     companion object {
         /**
          * If `keep` is `true`, overrides the flag globally for all textures of this type. This is used
@@ -125,14 +139,6 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
         fun isKeepingAllCompressedBuffers(): Boolean {
             return ObjectCalls.ptrcallNoArgsRetBool(isKeepingAllCompressedBuffersBind, NULL_SEGMENT)
         }
-
-        const val COMPRESSION_MODE_LOSSLESS: Long = 0L
-        const val COMPRESSION_MODE_LOSSY: Long = 1L
-        const val COMPRESSION_MODE_BASIS_UNIVERSAL: Long = 2L
-        const val COMPRESSION_MODE_S3TC: Long = 3L
-        const val COMPRESSION_MODE_ETC2: Long = 4L
-        const val COMPRESSION_MODE_BPTC: Long = 5L
-        const val COMPRESSION_MODE_ASTC: Long = 6L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PortableCompressedTexture2D? =

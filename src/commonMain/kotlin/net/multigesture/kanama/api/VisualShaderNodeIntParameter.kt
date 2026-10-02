@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeIntParameter
  */
 class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
-    var hint: Long
+    var hint: VisualShaderNodeIntParameter.Hint
         @JvmName("hintProperty")
         get() = getHint()
         @JvmName("setHintProperty")
@@ -51,14 +52,14 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
-    fun setHint(hint: Long) {
+    fun setHint(hint: VisualShaderNodeIntParameter.Hint) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint)
+        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint.value)
     }
 
-    fun getHint(): Long {
+    fun getHint(): VisualShaderNodeIntParameter.Hint {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment)
+        return VisualShaderNodeIntParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment))
     }
 
     fun setMin(value: Int) {
@@ -121,13 +122,18 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
         return ObjectCalls.ptrcallNoArgsRetInt(getDefaultValueBind, segment)
     }
 
-    companion object {
-        const val HINT_NONE: Long = 0L
-        const val HINT_RANGE: Long = 1L
-        const val HINT_RANGE_STEP: Long = 2L
-        const val HINT_ENUM: Long = 3L
-        const val HINT_MAX: Long = 4L
+    @JvmInline
+    value class Hint(val value: Long) {
+        companion object {
+            val NONE: Hint get() = Hint(0L)
+            val RANGE: Hint get() = Hint(1L)
+            val RANGE_STEP: Hint get() = Hint(2L)
+            val ENUM: Hint get() = Hint(3L)
+            val MAX: Hint get() = Hint(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeIntParameter? =
             wrap(handle.segment)

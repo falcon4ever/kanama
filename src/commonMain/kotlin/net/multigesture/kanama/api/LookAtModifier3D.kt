@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,13 +32,13 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setBoneProperty")
         set(value) = setBone(value)
 
-    var forwardAxis: Long
+    var forwardAxis: SkeletonModifier3D.BoneAxis
         @JvmName("forwardAxisProperty")
         get() = getForwardAxis()
         @JvmName("setForwardAxisProperty")
         set(value) = setForwardAxis(value)
 
-    var primaryRotationAxis: Long
+    var primaryRotationAxis: Vector3.Axis
         @JvmName("primaryRotationAxisProperty")
         get() = getPrimaryRotationAxis()
         @JvmName("setPrimaryRotationAxisProperty")
@@ -55,7 +56,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setRelativeProperty")
         set(value) = setRelative(value)
 
-    var originFrom: Long
+    var originFrom: LookAtModifier3D.OriginFrom
         @JvmName("originFromProperty")
         get() = getOriginFrom()
         @JvmName("setOriginFromProperty")
@@ -97,13 +98,13 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setDurationProperty")
         set(value) = setDuration(value)
 
-    var transitionType: Long
+    var transitionType: Tween.TransitionType
         @JvmName("transitionTypeProperty")
         get() = getTransitionType()
         @JvmName("setTransitionTypeProperty")
         set(value) = setTransitionType(value)
 
-    var easeType: Long
+    var easeType: Tween.EaseType
         @JvmName("easeTypeProperty")
         get() = getEaseType()
         @JvmName("setEaseTypeProperty")
@@ -255,8 +256,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.set_forward_axis
      */
-    fun setForwardAxis(forwardAxis: Long) {
-        ObjectCalls.ptrcallWithLongArg(setForwardAxisBind, segment, forwardAxis)
+    fun setForwardAxis(forwardAxis: SkeletonModifier3D.BoneAxis) {
+        ObjectCalls.ptrcallWithLongArg(setForwardAxisBind, segment, forwardAxis.value)
     }
 
     /**
@@ -265,8 +266,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.get_forward_axis
      */
-    fun getForwardAxis(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getForwardAxisBind, segment)
+    fun getForwardAxis(): SkeletonModifier3D.BoneAxis {
+        return SkeletonModifier3D.BoneAxis(ObjectCalls.ptrcallNoArgsRetLong(getForwardAxisBind, segment))
     }
 
     /**
@@ -275,8 +276,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.set_primary_rotation_axis
      */
-    fun setPrimaryRotationAxis(axis: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPrimaryRotationAxisBind, segment, axis)
+    fun setPrimaryRotationAxis(axis: Vector3.Axis) {
+        ObjectCalls.ptrcallWithLongArg(setPrimaryRotationAxisBind, segment, axis.value)
     }
 
     /**
@@ -285,8 +286,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.get_primary_rotation_axis
      */
-    fun getPrimaryRotationAxis(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrimaryRotationAxisBind, segment)
+    fun getPrimaryRotationAxis(): Vector3.Axis {
+        return Vector3.Axis(ObjectCalls.ptrcallNoArgsRetLong(getPrimaryRotationAxisBind, segment))
     }
 
     /**
@@ -361,8 +362,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.set_origin_from
      */
-    fun setOriginFrom(originFrom: Long) {
-        ObjectCalls.ptrcallWithLongArg(setOriginFromBind, segment, originFrom)
+    fun setOriginFrom(originFrom: LookAtModifier3D.OriginFrom) {
+        ObjectCalls.ptrcallWithLongArg(setOriginFromBind, segment, originFrom.value)
     }
 
     /**
@@ -371,8 +372,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.get_origin_from
      */
-    fun getOriginFrom(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getOriginFromBind, segment)
+    fun getOriginFrom(): LookAtModifier3D.OriginFrom {
+        return LookAtModifier3D.OriginFrom(ObjectCalls.ptrcallNoArgsRetLong(getOriginFromBind, segment))
     }
 
     /**
@@ -488,8 +489,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.set_transition_type
      */
-    fun setTransitionType(transitionType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTransitionTypeBind, segment, transitionType)
+    fun setTransitionType(transitionType: Tween.TransitionType) {
+        ObjectCalls.ptrcallWithLongArg(setTransitionTypeBind, segment, transitionType.value)
     }
 
     /**
@@ -497,8 +498,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.get_transition_type
      */
-    fun getTransitionType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransitionTypeBind, segment)
+    fun getTransitionType(): Tween.TransitionType {
+        return Tween.TransitionType(ObjectCalls.ptrcallNoArgsRetLong(getTransitionTypeBind, segment))
     }
 
     /**
@@ -506,8 +507,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.set_ease_type
      */
-    fun setEaseType(easeType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEaseTypeBind, segment, easeType)
+    fun setEaseType(easeType: Tween.EaseType) {
+        ObjectCalls.ptrcallWithLongArg(setEaseTypeBind, segment, easeType.value)
     }
 
     /**
@@ -515,8 +516,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: LookAtModifier3D.get_ease_type
      */
-    fun getEaseType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEaseTypeBind, segment)
+    fun getEaseType(): Tween.EaseType {
+        return Tween.EaseType(ObjectCalls.ptrcallNoArgsRetLong(getEaseTypeBind, segment))
     }
 
     /**
@@ -831,11 +832,37 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isTargetWithinLimitationBind, segment)
     }
 
-    companion object {
-        const val ORIGIN_FROM_SELF: Long = 0L
-        const val ORIGIN_FROM_SPECIFIC_BONE: Long = 1L
-        const val ORIGIN_FROM_EXTERNAL_NODE: Long = 2L
+    @JvmInline
+    value class OriginFrom(val value: Long) {
+        companion object {
+            /**
+             * The bone rest position of the bone specified in `bone` is used as origin.
+             *
+             * Generated from Godot docs: LookAtModifier3D.ORIGIN_FROM_SELF
+             */
+            val SELF: OriginFrom get() = OriginFrom(0L)
+            /**
+             * The bone global pose position of the bone specified in `origin_bone` is used as origin. Note: It
+             * is recommended that you select only the parent bone unless you are familiar with the bone
+             * processing process. The specified bone pose at the time the `LookAtModifier3D` is processed is
+             * used as a reference. In other words, if you specify a child bone and the `LookAtModifier3D`
+             * causes the child bone to move, the rendered result and direction will not match.
+             *
+             * Generated from Godot docs: LookAtModifier3D.ORIGIN_FROM_SPECIFIC_BONE
+             */
+            val SPECIFIC_BONE: OriginFrom get() = OriginFrom(1L)
+            /**
+             * The global position of the `Node3D` specified in `origin_external_node` is used as origin. Note:
+             * Same as `ORIGIN_FROM_SPECIFIC_BONE`, when specifying a `BoneAttachment3D` with a child bone
+             * assigned, the rendered result and direction will not match.
+             *
+             * Generated from Godot docs: LookAtModifier3D.ORIGIN_FROM_EXTERNAL_NODE
+             */
+            val EXTERNAL_NODE: OriginFrom get() = OriginFrom(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LookAtModifier3D? =
             wrap(handle.segment)

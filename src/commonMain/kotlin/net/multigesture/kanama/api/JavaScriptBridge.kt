@@ -126,8 +126,8 @@ object JavaScriptBridge {
      * Generated from Godot docs: JavaScriptBridge.pwa_update
      */
     @JvmStatic
-    fun pwaUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(pwaUpdateBind, singleton)
+    fun pwaUpdate(): GodotError {
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pwaUpdateBind, singleton))
     }
 
     /**

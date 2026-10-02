@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -67,9 +68,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPreset.get_file_export_mode
      */
-    fun getFileExportMode(path: String, default: Long = 0L): Long {
+    fun getFileExportMode(path: String, default: EditorExportPreset.FileExportMode = EditorExportPreset.FileExportMode.NOT_CUSTOMIZED): EditorExportPreset.FileExportMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, segment, path, default)
+        return EditorExportPreset.FileExportMode(ObjectCalls.ptrcallWithStringAndLongArgRetLong(getFileExportModeBind, segment, path, default.value))
     }
 
     /**
@@ -128,9 +129,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPreset.get_export_filter
      */
-    fun getExportFilter(): Long {
+    fun getExportFilter(): EditorExportPreset.ExportFilter {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, segment)
+        return EditorExportPreset.ExportFilter(ObjectCalls.ptrcallNoArgsRetLong(getExportFilterBind, segment))
     }
 
     /**
@@ -240,9 +241,9 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPreset.get_script_export_mode
      */
-    fun getScriptExportMode(): Long {
+    fun getScriptExportMode(): EditorExportPreset.ScriptExportMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, segment)
+        return EditorExportPreset.ScriptExportMode(ObjectCalls.ptrcallNoArgsRetLong(getScriptExportModeBind, segment))
     }
 
     /**
@@ -268,20 +269,37 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, segment, name, windowsVersion)
     }
 
-    companion object {
-        const val EXPORT_ALL_RESOURCES: Long = 0L
-        const val EXPORT_SELECTED_SCENES: Long = 1L
-        const val EXPORT_SELECTED_RESOURCES: Long = 2L
-        const val EXCLUDE_SELECTED_RESOURCES: Long = 3L
-        const val EXPORT_CUSTOMIZED: Long = 4L
-        const val MODE_FILE_NOT_CUSTOMIZED: Long = 0L
-        const val MODE_FILE_STRIP: Long = 1L
-        const val MODE_FILE_KEEP: Long = 2L
-        const val MODE_FILE_REMOVE: Long = 3L
-        const val MODE_SCRIPT_TEXT: Long = 0L
-        const val MODE_SCRIPT_BINARY_TOKENS: Long = 1L
-        const val MODE_SCRIPT_BINARY_TOKENS_COMPRESSED: Long = 2L
+    @JvmInline
+    value class ExportFilter(val value: Long) {
+        companion object {
+            val EXPORT_ALL_RESOURCES: ExportFilter get() = ExportFilter(0L)
+            val EXPORT_SELECTED_SCENES: ExportFilter get() = ExportFilter(1L)
+            val EXPORT_SELECTED_RESOURCES: ExportFilter get() = ExportFilter(2L)
+            val EXCLUDE_SELECTED_RESOURCES: ExportFilter get() = ExportFilter(3L)
+            val EXPORT_CUSTOMIZED: ExportFilter get() = ExportFilter(4L)
+        }
+    }
 
+    @JvmInline
+    value class FileExportMode(val value: Long) {
+        companion object {
+            val NOT_CUSTOMIZED: FileExportMode get() = FileExportMode(0L)
+            val STRIP: FileExportMode get() = FileExportMode(1L)
+            val KEEP: FileExportMode get() = FileExportMode(2L)
+            val REMOVE: FileExportMode get() = FileExportMode(3L)
+        }
+    }
+
+    @JvmInline
+    value class ScriptExportMode(val value: Long) {
+        companion object {
+            val TEXT: ScriptExportMode get() = ScriptExportMode(0L)
+            val BINARY_TOKENS: ScriptExportMode get() = ScriptExportMode(1L)
+            val BINARY_TOKENS_COMPRESSED: ScriptExportMode get() = ScriptExportMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPreset? =
             wrap(handle.segment)

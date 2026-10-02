@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
         @JvmName("setAnimationProperty")
         set(value) = setAnimation(value)
 
-    var playMode: Long
+    var playMode: AnimationNodeAnimation.PlayMode
         @JvmName("playModeProperty")
         get() = getPlayMode()
         @JvmName("setPlayModeProperty")
@@ -53,7 +54,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
         @JvmName("setStartOffsetProperty")
         set(value) = setStartOffset(value)
 
-    var loopMode: Long
+    var loopMode: Animation.LoopMode
         @JvmName("loopModeProperty")
         get() = getLoopMode()
         @JvmName("setLoopModeProperty")
@@ -86,9 +87,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      *
      * Generated from Godot docs: AnimationNodeAnimation.set_play_mode
      */
-    fun setPlayMode(mode: Long) {
+    fun setPlayMode(mode: AnimationNodeAnimation.PlayMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlayModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setPlayModeBind, segment, mode.value)
     }
 
     /**
@@ -96,9 +97,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      *
      * Generated from Godot docs: AnimationNodeAnimation.get_play_mode
      */
-    fun getPlayMode(): Long {
+    fun getPlayMode(): AnimationNodeAnimation.PlayMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, segment)
+        return AnimationNodeAnimation.PlayMode(ObjectCalls.ptrcallNoArgsRetLong(getPlayModeBind, segment))
     }
 
     /**
@@ -226,9 +227,9 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      *
      * Generated from Godot docs: AnimationNodeAnimation.set_loop_mode
      */
-    fun setLoopMode(loopMode: Long) {
+    fun setLoopMode(loopMode: Animation.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode)
+        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode.value)
     }
 
     /**
@@ -240,15 +241,30 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
      *
      * Generated from Godot docs: AnimationNodeAnimation.get_loop_mode
      */
-    fun getLoopMode(): Long {
+    fun getLoopMode(): Animation.LoopMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment)
+        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment))
+    }
+
+    @JvmInline
+    value class PlayMode(val value: Long) {
+        companion object {
+            /**
+             * Plays animation in forward direction.
+             *
+             * Generated from Godot docs: AnimationNodeAnimation.PLAY_MODE_FORWARD
+             */
+            val FORWARD: PlayMode get() = PlayMode(0L)
+            /**
+             * Plays animation in backward direction.
+             *
+             * Generated from Godot docs: AnimationNodeAnimation.PLAY_MODE_BACKWARD
+             */
+            val BACKWARD: PlayMode get() = PlayMode(1L)
+        }
     }
 
     companion object {
-        const val PLAY_MODE_FORWARD: Long = 0L
-        const val PLAY_MODE_BACKWARD: Long = 1L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeAnimation? =
             wrap(handle.segment)

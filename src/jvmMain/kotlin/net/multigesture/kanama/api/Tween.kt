@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import java.lang.foreign.MemorySegment
 
 /**
@@ -8,7 +9,171 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: Tween
  */
-class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
+actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
+    // ===== BEGIN GENERATED ENUMS: Tween (scripts/generate_api_wrapper.py — do not edit) =====
+    @JvmInline
+    actual value class TweenProcessMode
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            /**
+             * The `Tween` updates after each physics frame (see `Node._physics_process`).
+             *
+             * Generated from Godot docs: Tween.TWEEN_PROCESS_PHYSICS
+             */
+            actual val PHYSICS: TweenProcessMode get() = TweenProcessMode(0L)
+            /**
+             * The `Tween` updates after each process frame (see `Node._process`).
+             *
+             * Generated from Godot docs: Tween.TWEEN_PROCESS_IDLE
+             */
+            actual val IDLE: TweenProcessMode get() = TweenProcessMode(1L)
+        }
+    }
+
+    @JvmInline
+    actual value class TweenPauseMode
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            /**
+             * If the `Tween` has a bound node, it will process when that node can process (see
+             * `Node.process_mode`). Otherwise it's the same as `TWEEN_PAUSE_STOP`.
+             *
+             * Generated from Godot docs: Tween.TWEEN_PAUSE_BOUND
+             */
+            actual val BOUND: TweenPauseMode get() = TweenPauseMode(0L)
+            /**
+             * If `SceneTree` is paused, the `Tween` will also pause.
+             *
+             * Generated from Godot docs: Tween.TWEEN_PAUSE_STOP
+             */
+            actual val STOP: TweenPauseMode get() = TweenPauseMode(1L)
+            /**
+             * The `Tween` will process regardless of whether `SceneTree` is paused.
+             *
+             * Generated from Godot docs: Tween.TWEEN_PAUSE_PROCESS
+             */
+            actual val PROCESS: TweenPauseMode get() = TweenPauseMode(2L)
+        }
+    }
+
+    @JvmInline
+    actual value class TransitionType
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            /**
+             * The animation is interpolated linearly.
+             *
+             * Generated from Godot docs: Tween.TRANS_LINEAR
+             */
+            actual val LINEAR: TransitionType get() = TransitionType(0L)
+            /**
+             * The animation is interpolated using a sine function.
+             *
+             * Generated from Godot docs: Tween.TRANS_SINE
+             */
+            actual val SINE: TransitionType get() = TransitionType(1L)
+            /**
+             * The animation is interpolated with a quintic (to the power of 5) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_QUINT
+             */
+            actual val QUINT: TransitionType get() = TransitionType(2L)
+            /**
+             * The animation is interpolated with a quartic (to the power of 4) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_QUART
+             */
+            actual val QUART: TransitionType get() = TransitionType(3L)
+            /**
+             * The animation is interpolated with a quadratic (to the power of 2) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_QUAD
+             */
+            actual val QUAD: TransitionType get() = TransitionType(4L)
+            /**
+             * The animation is interpolated with an exponential (to the power of x) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_EXPO
+             */
+            actual val EXPO: TransitionType get() = TransitionType(5L)
+            /**
+             * The animation is interpolated with elasticity, wiggling around the edges.
+             *
+             * Generated from Godot docs: Tween.TRANS_ELASTIC
+             */
+            actual val ELASTIC: TransitionType get() = TransitionType(6L)
+            /**
+             * The animation is interpolated with a cubic (to the power of 3) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_CUBIC
+             */
+            actual val CUBIC: TransitionType get() = TransitionType(7L)
+            /**
+             * The animation is interpolated with a function using square roots.
+             *
+             * Generated from Godot docs: Tween.TRANS_CIRC
+             */
+            actual val CIRC: TransitionType get() = TransitionType(8L)
+            /**
+             * The animation is interpolated by bouncing at the end.
+             *
+             * Generated from Godot docs: Tween.TRANS_BOUNCE
+             */
+            actual val BOUNCE: TransitionType get() = TransitionType(9L)
+            /**
+             * The animation is interpolated backing out at ends.
+             *
+             * Generated from Godot docs: Tween.TRANS_BACK
+             */
+            actual val BACK: TransitionType get() = TransitionType(10L)
+            /**
+             * The animation is interpolated like a spring towards the end.
+             *
+             * Generated from Godot docs: Tween.TRANS_SPRING
+             */
+            actual val SPRING: TransitionType get() = TransitionType(11L)
+        }
+    }
+
+    @JvmInline
+    actual value class EaseType
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            /**
+             * The interpolation starts slowly and speeds up towards the end.
+             *
+             * Generated from Godot docs: Tween.EASE_IN
+             */
+            actual val IN: EaseType get() = EaseType(0L)
+            /**
+             * The interpolation starts quickly and slows down towards the end.
+             *
+             * Generated from Godot docs: Tween.EASE_OUT
+             */
+            actual val OUT: EaseType get() = EaseType(1L)
+            /**
+             * A combination of `EASE_IN` and `EASE_OUT`. The interpolation is slowest at both ends.
+             *
+             * Generated from Godot docs: Tween.EASE_IN_OUT
+             */
+            actual val IN_OUT: EaseType get() = EaseType(2L)
+            /**
+             * A combination of `EASE_IN` and `EASE_OUT`. The interpolation is fastest at both ends.
+             *
+             * Generated from Godot docs: Tween.EASE_OUT_IN
+             */
+            actual val OUT_IN: EaseType get() = EaseType(3L)
+        }
+    }
+    // ===== END GENERATED ENUMS: Tween =====
 
     /**
      * Creates and appends a `PropertyTweener`. This method tweens a `property` of an `object` between
@@ -23,17 +188,20 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
         property: String,
         finalValue: Any?,
         duration: Double,
-    ): PropertyTweener? {
+    ): PropertyTweener {
         checkOpen()
-        return PropertyTweener.wrap(
-            ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
-                tweenPropertyBind,
-                segment,
-                target.segment,
-                property,
-                finalValue,
-                duration,
+        return requireGodotReturn(
+            PropertyTweener.wrap(
+                ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+                    tweenPropertyBind,
+                    segment,
+                    target.segment,
+                    property,
+                    finalValue,
+                    duration,
+                ),
             ),
+            "Tween.tween_property",
         )
     }
 
@@ -45,9 +213,12 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.tween_interval
      */
-    fun tweenInterval(time: Double): IntervalTweener? {
+    fun tweenInterval(time: Double): IntervalTweener {
         checkOpen()
-        return IntervalTweener.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(tweenIntervalBind, segment, time))
+        return requireGodotReturn(
+            IntervalTweener.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(tweenIntervalBind, segment, time)),
+            "Tween.tween_interval",
+        )
     }
 
     /**
@@ -56,10 +227,13 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.tween_callback
      */
-    fun tweenCallback(target: GodotObject, method: String): CallbackTweener? {
+    fun tweenCallback(target: GodotObject, method: String): CallbackTweener {
         checkOpen()
-        return CallbackTweener.wrap(
-            ObjectCalls.ptrcallWithCallableArgRetObject(tweenCallbackBind, segment, target.segment, method),
+        return requireGodotReturn(
+            CallbackTweener.wrap(
+                ObjectCalls.ptrcallWithCallableArgRetObject(tweenCallbackBind, segment, target.segment, method),
+            ),
+            "Tween.tween_callback",
         )
     }
 
@@ -79,18 +253,21 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
         from: Any?,
         to: Any?,
         duration: Double,
-    ): MethodTweener? {
+    ): MethodTweener {
         checkOpen()
-        return MethodTweener.wrap(
-            ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(
-                tweenMethodBind,
-                segment,
-                target.segment,
-                method,
-                from,
-                to,
-                duration,
+        return requireGodotReturn(
+            MethodTweener.wrap(
+                ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(
+                    tweenMethodBind,
+                    segment,
+                    target.segment,
+                    method,
+                    from,
+                    to,
+                    duration,
+                ),
             ),
+            "Tween.tween_method",
         )
     }
 
@@ -100,14 +277,17 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.tween_subtween
      */
-    fun tweenSubtween(subtween: Tween?): SubtweenTweener? {
+    fun tweenSubtween(subtween: Tween?): SubtweenTweener {
         checkOpen()
-        return SubtweenTweener.wrap(
-            ObjectCalls.ptrcallWithObjectArgRetObject(
-                tweenSubtweenBind,
-                segment,
-                subtween?.requireOpenHandle() ?: MemorySegment.NULL,
+        return requireGodotReturn(
+            SubtweenTweener.wrap(
+                ObjectCalls.ptrcallWithObjectArgRetObject(
+                    tweenSubtweenBind,
+                    segment,
+                    subtween?.requireOpenHandle() ?: MemorySegment.NULL,
+                ),
             ),
+            "Tween.tween_subtween",
         )
     }
 
@@ -121,10 +301,13 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.tween_await
      */
-    fun tweenAwait(signal: GodotSignal): AwaitTweener? {
+    fun tweenAwait(signal: GodotSignal): AwaitTweener {
         checkOpen()
-        return AwaitTweener.wrap(
-            ObjectCalls.ptrcallWithSignalArgRetObject(tweenAwaitBind, segment, signal.owner.segment, signal.name),
+        return requireGodotReturn(
+            AwaitTweener.wrap(
+                ObjectCalls.ptrcallWithSignalArgRetObject(tweenAwaitBind, segment, signal.owner.segment, signal.name),
+            ),
+            "Tween.tween_await",
         )
     }
 
@@ -233,7 +416,7 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      */
     fun bindNode(node: Node): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment))
+        return wrapOrThis(ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment), "bind_node")
     }
 
     /**
@@ -242,9 +425,9 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.set_process_mode
      */
-    fun setProcessMode(mode: Long): Tween {
+    fun setProcessMode(mode: Tween.TweenProcessMode): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setProcessModeBind, segment, mode))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setProcessModeBind, segment, mode.value), "set_process_mode")
     }
 
     /**
@@ -253,9 +436,9 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.set_pause_mode
      */
-    fun setPauseMode(mode: Long): Tween {
+    fun setPauseMode(mode: Tween.TweenPauseMode): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setPauseModeBind, segment, mode))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setPauseModeBind, segment, mode.value), "set_pause_mode")
     }
 
     /**
@@ -266,7 +449,7 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setIgnoreTimeScale(ignore: Boolean = true): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setIgnoreTimeScaleBind, segment, ignore))
+        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setIgnoreTimeScaleBind, segment, ignore), "set_ignore_time_scale")
     }
 
     /**
@@ -278,7 +461,7 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setParallel(parallel: Boolean = true): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setParallelBind, segment, parallel))
+        return wrapOrThis(ObjectCalls.ptrcallWithBoolArgRetObject(setParallelBind, segment, parallel), "set_parallel")
     }
 
     /**
@@ -295,7 +478,7 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLoops(loops: Long = 0): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithIntArgRetObject(setLoopsBind, segment, loops.toInt()))
+        return wrapOrThis(ObjectCalls.ptrcallWithIntArgRetObject(setLoopsBind, segment, loops.toInt()), "set_loops")
     }
 
     /**
@@ -317,7 +500,7 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSpeedScale(speed: Double): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithDoubleArgRetObject(setSpeedScaleBind, segment, speed))
+        return wrapOrThis(ObjectCalls.ptrcallWithDoubleArgRetObject(setSpeedScaleBind, segment, speed), "set_speed_scale")
     }
 
     /**
@@ -326,9 +509,9 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.set_trans
      */
-    fun setTrans(trans: Long): Tween {
+    fun setTrans(trans: Tween.TransitionType): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans.value), "set_trans")
     }
 
     /**
@@ -337,9 +520,9 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Tween.set_ease
      */
-    fun setEase(ease: Long): Tween {
+    fun setEase(ease: Tween.EaseType): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease))
+        return wrapOrThis(ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value), "set_ease")
     }
 
     /**
@@ -349,7 +532,7 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parallel(): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(parallelBind, segment))
+        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(parallelBind, segment), "parallel")
     }
 
     /**
@@ -359,12 +542,13 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
      */
     fun chain(): Tween {
         checkOpen()
-        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(chainBind, segment))
+        return wrapOrThis(ObjectCalls.ptrcallNoArgsRetObject(chainBind, segment), "chain")
     }
 
-    private fun wrapOrThis(value: MemorySegment): Tween =
+    // `meta: "required"` (task 128 A): a null from Godot throws instead of silently returning `this`.
+    private fun wrapOrThis(value: MemorySegment, godotMethod: String): Tween =
         if (value.address() == 0L) {
-            this
+            requireGodotReturn(null, "Tween.$godotMethod")
         } else if (value.address() == segment.address()) {
             releaseHandle(value)
             this
@@ -398,8 +582,8 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
             deltaValue: Any?,
             elapsedTime: Double,
             duration: Double,
-            transType: Long,
-            easeType: Long,
+            transType: Tween.TransitionType,
+            easeType: Tween.EaseType,
         ): Any? =
             ObjectCalls.ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(
                 interpolateValueBind,
@@ -408,34 +592,9 @@ class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
                 deltaValue,
                 elapsedTime,
                 duration,
-                transType,
-                easeType,
+                transType.value,
+                easeType.value,
             )
-
-        const val TWEEN_PROCESS_PHYSICS = 0L
-        const val TWEEN_PROCESS_IDLE = 1L
-
-        const val TWEEN_PAUSE_BOUND = 0L
-        const val TWEEN_PAUSE_STOP = 1L
-        const val TWEEN_PAUSE_PROCESS = 2L
-
-        const val TRANS_LINEAR = 0L
-        const val TRANS_SINE = 1L
-        const val TRANS_QUINT = 2L
-        const val TRANS_QUART = 3L
-        const val TRANS_QUAD = 4L
-        const val TRANS_EXPO = 5L
-        const val TRANS_ELASTIC = 6L
-        const val TRANS_CUBIC = 7L
-        const val TRANS_CIRC = 8L
-        const val TRANS_BOUNCE = 9L
-        const val TRANS_BACK = 10L
-        const val TRANS_SPRING = 11L
-
-        const val EASE_IN = 0L
-        const val EASE_OUT = 1L
-        const val EASE_IN_OUT = 2L
-        const val EASE_OUT_IN = 3L
 
         private const val TWEEN_PROPERTY_HASH = 4049770449L
         private const val TWEEN_INTERVAL_HASH = 413360199L

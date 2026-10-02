@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,15 +19,30 @@ class AudioEffectSpectrumAnalyzerInstance(handle: GodotHandle) : AudioEffectInst
      *
      * Generated from Godot docs: AudioEffectSpectrumAnalyzerInstance.get_magnitude_for_frequency_range
      */
-    fun getMagnitudeForFrequencyRange(fromHz: Double, toHz: Double, mode: Long = 1L): Vector2 {
+    fun getMagnitudeForFrequencyRange(fromHz: Double, toHz: Double, mode: AudioEffectSpectrumAnalyzerInstance.MagnitudeMode = AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.MAX): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(getMagnitudeForFrequencyRangeBind, segment, fromHz, toHz, mode)
+        return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(getMagnitudeForFrequencyRangeBind, segment, fromHz, toHz, mode.value)
+    }
+
+    @JvmInline
+    value class MagnitudeMode(val value: Long) {
+        companion object {
+            /**
+             * Use the average value across the frequency range as magnitude.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
+             */
+            val AVERAGE: MagnitudeMode get() = MagnitudeMode(0L)
+            /**
+             * Use the maximum value of the frequency range as magnitude.
+             *
+             * Generated from Godot docs: AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_MAX
+             */
+            val MAX: MagnitudeMode get() = MagnitudeMode(1L)
+        }
     }
 
     companion object {
-        const val MAGNITUDE_AVERAGE: Long = 0L
-        const val MAGNITUDE_MAX: Long = 1L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectSpectrumAnalyzerInstance? =
             wrap(handle.segment)

@@ -565,13 +565,15 @@ internal class IosScriptCodeEmitter(
           val typedParams = args.joinToString("") { ", ${it.name}: ${it.kotlinType}" }
           val forwardArgs = args.joinToString("") { ", ${it.name}" }
           val godotLit = kotlinString(rpc.godotName)
-          builder.appendLine("    fun rpc$suffix(instance: $fqClassName$typedParams): Long =")
+          builder.appendLine(
+            "    fun rpc$suffix(instance: $fqClassName$typedParams): net.multigesture.kanama.api.GodotError ="
+          )
           builder.appendLine(
             "        net.multigesture.kanama.api.Node(instance.godotObject).rpc($godotLit$forwardArgs)"
           )
           builder.appendLine()
           builder.appendLine(
-            "    fun rpcId$suffix(instance: $fqClassName, peerId: Long$typedParams): Long ="
+            "    fun rpcId$suffix(instance: $fqClassName, peerId: Long$typedParams): net.multigesture.kanama.api.GodotError ="
           )
           builder.appendLine(
             "        net.multigesture.kanama.api.Node(instance.godotObject).rpcId(peerId, $godotLit$forwardArgs)"

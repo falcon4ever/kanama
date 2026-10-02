@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,13 +20,13 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
         @JvmName("setVerticesProperty")
         set(value) = setVertices(value)
 
-    var samplePartitionType: Long
+    var samplePartitionType: NavigationPolygon.SamplePartitionType
         @JvmName("samplePartitionTypeProperty")
         get() = getSamplePartitionType()
         @JvmName("setSamplePartitionTypeProperty")
         set(value) = setSamplePartitionType(value)
 
-    var parsedGeometryType: Long
+    var parsedGeometryType: NavigationPolygon.ParsedGeometryType
         @JvmName("parsedGeometryTypeProperty")
         get() = getParsedGeometryType()
         @JvmName("setParsedGeometryTypeProperty")
@@ -37,7 +38,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
         @JvmName("setParsedCollisionMaskProperty")
         set(value) = setParsedCollisionMask(value)
 
-    var sourceGeometryMode: Long
+    var sourceGeometryMode: NavigationPolygon.SourceGeometryMode
         @JvmName("sourceGeometryModeProperty")
         get() = getSourceGeometryMode()
         @JvmName("setSourceGeometryModeProperty")
@@ -288,9 +289,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationPolygon.set_sample_partition_type
      */
-    fun setSamplePartitionType(samplePartitionType: Long) {
+    fun setSamplePartitionType(samplePartitionType: NavigationPolygon.SamplePartitionType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType)
+        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType.value)
     }
 
     /**
@@ -298,9 +299,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationPolygon.get_sample_partition_type
      */
-    fun getSamplePartitionType(): Long {
+    fun getSamplePartitionType(): NavigationPolygon.SamplePartitionType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment)
+        return NavigationPolygon.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment))
     }
 
     /**
@@ -308,9 +309,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationPolygon.set_parsed_geometry_type
      */
-    fun setParsedGeometryType(geometryType: Long) {
+    fun setParsedGeometryType(geometryType: NavigationPolygon.ParsedGeometryType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType)
+        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType.value)
     }
 
     /**
@@ -318,9 +319,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationPolygon.get_parsed_geometry_type
      */
-    fun getParsedGeometryType(): Long {
+    fun getParsedGeometryType(): NavigationPolygon.ParsedGeometryType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment)
+        return NavigationPolygon.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment))
     }
 
     /**
@@ -372,9 +373,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationPolygon.set_source_geometry_mode
      */
-    fun setSourceGeometryMode(geometryMode: Long) {
+    fun setSourceGeometryMode(geometryMode: NavigationPolygon.SourceGeometryMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, geometryMode)
+        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, geometryMode.value)
     }
 
     /**
@@ -382,9 +383,9 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationPolygon.get_source_geometry_mode
      */
-    fun getSourceGeometryMode(): Long {
+    fun getSourceGeometryMode(): NavigationPolygon.SourceGeometryMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment)
+        return NavigationPolygon.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment))
     }
 
     /**
@@ -491,19 +492,95 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
-    companion object {
-        const val SAMPLE_PARTITION_CONVEX_PARTITION: Long = 0L
-        const val SAMPLE_PARTITION_TRIANGULATE: Long = 1L
-        const val SAMPLE_PARTITION_MAX: Long = 2L
-        const val PARSED_GEOMETRY_MESH_INSTANCES: Long = 0L
-        const val PARSED_GEOMETRY_STATIC_COLLIDERS: Long = 1L
-        const val PARSED_GEOMETRY_BOTH: Long = 2L
-        const val PARSED_GEOMETRY_MAX: Long = 3L
-        const val SOURCE_GEOMETRY_ROOT_NODE_CHILDREN: Long = 0L
-        const val SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN: Long = 1L
-        const val SOURCE_GEOMETRY_GROUPS_EXPLICIT: Long = 2L
-        const val SOURCE_GEOMETRY_MAX: Long = 3L
+    @JvmInline
+    value class SamplePartitionType(val value: Long) {
+        companion object {
+            /**
+             * Convex partitioning that results in a navigation mesh with convex polygons.
+             *
+             * Generated from Godot docs: NavigationPolygon.SAMPLE_PARTITION_CONVEX_PARTITION
+             */
+            val CONVEX_PARTITION: SamplePartitionType get() = SamplePartitionType(0L)
+            /**
+             * Triangulation partitioning that results in a navigation mesh with triangle polygons.
+             *
+             * Generated from Godot docs: NavigationPolygon.SAMPLE_PARTITION_TRIANGULATE
+             */
+            val TRIANGULATE: SamplePartitionType get() = SamplePartitionType(1L)
+            /**
+             * Represents the size of the `SamplePartitionType` enum.
+             *
+             * Generated from Godot docs: NavigationPolygon.SAMPLE_PARTITION_MAX
+             */
+            val MAX: SamplePartitionType get() = SamplePartitionType(2L)
+        }
+    }
 
+    @JvmInline
+    value class ParsedGeometryType(val value: Long) {
+        companion object {
+            /**
+             * Parses mesh instances as obstruction geometry. This includes `Polygon2D`, `MeshInstance2D`,
+             * `MultiMeshInstance2D`, and `TileMap` nodes. Meshes are only parsed when they use a 2D vertices
+             * surface format.
+             *
+             * Generated from Godot docs: NavigationPolygon.PARSED_GEOMETRY_MESH_INSTANCES
+             */
+            val MESH_INSTANCES: ParsedGeometryType get() = ParsedGeometryType(0L)
+            /**
+             * Parses `StaticBody2D` and `TileMap` colliders as obstruction geometry. The collider should be in
+             * any of the layers specified by `parsed_collision_mask`.
+             *
+             * Generated from Godot docs: NavigationPolygon.PARSED_GEOMETRY_STATIC_COLLIDERS
+             */
+            val STATIC_COLLIDERS: ParsedGeometryType get() = ParsedGeometryType(1L)
+            /**
+             * Both `PARSED_GEOMETRY_MESH_INSTANCES` and `PARSED_GEOMETRY_STATIC_COLLIDERS`.
+             *
+             * Generated from Godot docs: NavigationPolygon.PARSED_GEOMETRY_BOTH
+             */
+            val BOTH: ParsedGeometryType get() = ParsedGeometryType(2L)
+            /**
+             * Represents the size of the `ParsedGeometryType` enum.
+             *
+             * Generated from Godot docs: NavigationPolygon.PARSED_GEOMETRY_MAX
+             */
+            val MAX: ParsedGeometryType get() = ParsedGeometryType(3L)
+        }
+    }
+
+    @JvmInline
+    value class SourceGeometryMode(val value: Long) {
+        companion object {
+            /**
+             * Scans the child nodes of the root node recursively for geometry.
+             *
+             * Generated from Godot docs: NavigationPolygon.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN
+             */
+            val ROOT_NODE_CHILDREN: SourceGeometryMode get() = SourceGeometryMode(0L)
+            /**
+             * Scans nodes in a group and their child nodes recursively for geometry. The group is specified by
+             * `source_geometry_group_name`.
+             *
+             * Generated from Godot docs: NavigationPolygon.SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN
+             */
+            val GROUPS_WITH_CHILDREN: SourceGeometryMode get() = SourceGeometryMode(1L)
+            /**
+             * Uses nodes in a group for geometry. The group is specified by `source_geometry_group_name`.
+             *
+             * Generated from Godot docs: NavigationPolygon.SOURCE_GEOMETRY_GROUPS_EXPLICIT
+             */
+            val GROUPS_EXPLICIT: SourceGeometryMode get() = SourceGeometryMode(2L)
+            /**
+             * Represents the size of the `SourceGeometryMode` enum.
+             *
+             * Generated from Godot docs: NavigationPolygon.SOURCE_GEOMETRY_MAX
+             */
+            val MAX: SourceGeometryMode get() = SourceGeometryMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationPolygon? =
             wrap(handle.segment)

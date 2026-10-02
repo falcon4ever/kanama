@@ -26,7 +26,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
         @JvmName("setIgnoreInvalidConnectionTypeProperty")
         set(value) = setIgnoreInvalidConnectionType(value)
 
-    var slotsFocusMode: Long
+    var slotsFocusMode: Control.FocusMode
         @JvmName("slotsFocusModeProperty")
         get() = getSlotsFocusMode()
         @JvmName("setSlotsFocusModeProperty")
@@ -338,8 +338,8 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      *
      * Generated from Godot docs: GraphNode.set_slots_focus_mode
      */
-    fun setSlotsFocusMode(focusMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSlotsFocusModeBind, segment, focusMode)
+    fun setSlotsFocusMode(focusMode: Control.FocusMode) {
+        ObjectCalls.ptrcallWithLongArg(setSlotsFocusModeBind, segment, focusMode.value)
     }
 
     /**
@@ -352,8 +352,8 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      *
      * Generated from Godot docs: GraphNode.get_slots_focus_mode
      */
-    fun getSlotsFocusMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSlotsFocusModeBind, segment)
+    fun getSlotsFocusMode(): Control.FocusMode {
+        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(getSlotsFocusModeBind, segment))
     }
 
     /**

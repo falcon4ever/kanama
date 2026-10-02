@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -31,7 +32,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         @JvmName("setGravityScaleProperty")
         set(value) = setGravityScale(value)
 
-    var centerOfMassMode: Long
+    var centerOfMassMode: RigidBody2D.CenterOfMassMode
         @JvmName("centerOfMassModeProperty")
         get() = getCenterOfMassMode()
         @JvmName("setCenterOfMassModeProperty")
@@ -73,7 +74,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         @JvmName("setFreezeProperty")
         set(value) = setFreezeEnabled(value)
 
-    var freezeMode: Long
+    var freezeMode: RigidBody2D.FreezeMode
         @JvmName("freezeModeProperty")
         get() = getFreezeMode()
         @JvmName("setFreezeModeProperty")
@@ -85,7 +86,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         @JvmName("setCustomIntegratorProperty")
         set(value) = setUseCustomIntegrator(value)
 
-    var continuousCd: Long
+    var continuousCd: RigidBody2D.CCDMode
         @JvmName("continuousCdProperty")
         get() = getContinuousCollisionDetectionMode()
         @JvmName("setContinuousCdProperty")
@@ -109,7 +110,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         @JvmName("setLinearVelocityProperty")
         set(value) = setLinearVelocity(value)
 
-    var linearDampMode: Long
+    var linearDampMode: RigidBody2D.DampMode
         @JvmName("linearDampModeProperty")
         get() = getLinearDampMode()
         @JvmName("setLinearDampModeProperty")
@@ -127,7 +128,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         @JvmName("setAngularVelocityProperty")
         set(value) = setAngularVelocity(value)
 
-    var angularDampMode: Long
+    var angularDampMode: RigidBody2D.DampMode
         @JvmName("angularDampModeProperty")
         get() = getAngularDampMode()
         @JvmName("setAngularDampModeProperty")
@@ -200,8 +201,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.set_center_of_mass_mode
      */
-    fun setCenterOfMassMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, segment, mode)
+    fun setCenterOfMassMode(mode: RigidBody2D.CenterOfMassMode) {
+        ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, segment, mode.value)
     }
 
     /**
@@ -209,8 +210,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.get_center_of_mass_mode
      */
-    fun getCenterOfMassMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, segment)
+    fun getCenterOfMassMode(): RigidBody2D.CenterOfMassMode {
+        return RigidBody2D.CenterOfMassMode(ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, segment))
     }
 
     /**
@@ -288,8 +289,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.set_linear_damp_mode
      */
-    fun setLinearDampMode(linearDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode)
+    fun setLinearDampMode(linearDampMode: RigidBody2D.DampMode) {
+        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode.value)
     }
 
     /**
@@ -297,8 +298,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.get_linear_damp_mode
      */
-    fun getLinearDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment)
+    fun getLinearDampMode(): RigidBody2D.DampMode {
+        return RigidBody2D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment))
     }
 
     /**
@@ -306,8 +307,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.set_angular_damp_mode
      */
-    fun setAngularDampMode(angularDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode)
+    fun setAngularDampMode(angularDampMode: RigidBody2D.DampMode) {
+        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode.value)
     }
 
     /**
@@ -315,8 +316,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.get_angular_damp_mode
      */
-    fun getAngularDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment)
+    fun getAngularDampMode(): RigidBody2D.DampMode {
+        return RigidBody2D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment))
     }
 
     /**
@@ -504,8 +505,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.set_continuous_collision_detection_mode
      */
-    fun setContinuousCollisionDetectionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContinuousCollisionDetectionModeBind, segment, mode)
+    fun setContinuousCollisionDetectionMode(mode: RigidBody2D.CCDMode) {
+        ObjectCalls.ptrcallWithLongArg(setContinuousCollisionDetectionModeBind, segment, mode.value)
     }
 
     /**
@@ -516,8 +517,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.get_continuous_collision_detection_mode
      */
-    fun getContinuousCollisionDetectionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContinuousCollisionDetectionModeBind, segment)
+    fun getContinuousCollisionDetectionMode(): RigidBody2D.CCDMode {
+        return RigidBody2D.CCDMode(ObjectCalls.ptrcallNoArgsRetLong(getContinuousCollisionDetectionModeBind, segment))
     }
 
     /**
@@ -755,8 +756,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.set_freeze_mode
      */
-    fun setFreezeMode(freezeMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, segment, freezeMode)
+    fun setFreezeMode(freezeMode: RigidBody2D.FreezeMode) {
+        ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, segment, freezeMode.value)
     }
 
     /**
@@ -765,8 +766,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.get_freeze_mode
      */
-    fun getFreezeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, segment)
+    fun getFreezeMode(): RigidBody2D.FreezeMode {
+        return RigidBody2D.FreezeMode(ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, segment))
     }
 
     /**
@@ -789,17 +790,92 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         const val sleepingStateChanged: String = "sleeping_state_changed"
     }
 
-    companion object {
-        const val FREEZE_MODE_STATIC: Long = 0L
-        const val FREEZE_MODE_KINEMATIC: Long = 1L
-        const val CENTER_OF_MASS_MODE_AUTO: Long = 0L
-        const val CENTER_OF_MASS_MODE_CUSTOM: Long = 1L
-        const val DAMP_MODE_COMBINE: Long = 0L
-        const val DAMP_MODE_REPLACE: Long = 1L
-        const val CCD_MODE_DISABLED: Long = 0L
-        const val CCD_MODE_CAST_RAY: Long = 1L
-        const val CCD_MODE_CAST_SHAPE: Long = 2L
+    @JvmInline
+    value class FreezeMode(val value: Long) {
+        companion object {
+            /**
+             * Static body freeze mode (default). The body is not affected by gravity and forces. It can be
+             * only moved by user code and doesn't collide with other bodies along its path.
+             *
+             * Generated from Godot docs: RigidBody2D.FREEZE_MODE_STATIC
+             */
+            val STATIC: FreezeMode get() = FreezeMode(0L)
+            /**
+             * Kinematic body freeze mode. Similar to `FREEZE_MODE_STATIC`, but collides with other bodies
+             * along its path when moved. Useful for a frozen body that needs to be animated.
+             *
+             * Generated from Godot docs: RigidBody2D.FREEZE_MODE_KINEMATIC
+             */
+            val KINEMATIC: FreezeMode get() = FreezeMode(1L)
+        }
+    }
 
+    @JvmInline
+    value class CenterOfMassMode(val value: Long) {
+        companion object {
+            /**
+             * In this mode, the body's center of mass is calculated automatically based on its shapes. This
+             * assumes that the shapes' origins are also their center of mass.
+             *
+             * Generated from Godot docs: RigidBody2D.CENTER_OF_MASS_MODE_AUTO
+             */
+            val AUTO: CenterOfMassMode get() = CenterOfMassMode(0L)
+            /**
+             * In this mode, the body's center of mass is set through `center_of_mass`. Defaults to the body's
+             * origin position.
+             *
+             * Generated from Godot docs: RigidBody2D.CENTER_OF_MASS_MODE_CUSTOM
+             */
+            val CUSTOM: CenterOfMassMode get() = CenterOfMassMode(1L)
+        }
+    }
+
+    @JvmInline
+    value class DampMode(val value: Long) {
+        companion object {
+            /**
+             * In this mode, the body's damping value is added to any value set in areas or the default value.
+             *
+             * Generated from Godot docs: RigidBody2D.DAMP_MODE_COMBINE
+             */
+            val COMBINE: DampMode get() = DampMode(0L)
+            /**
+             * In this mode, the body's damping value replaces any value set in areas or the default value.
+             *
+             * Generated from Godot docs: RigidBody2D.DAMP_MODE_REPLACE
+             */
+            val REPLACE: DampMode get() = DampMode(1L)
+        }
+    }
+
+    @JvmInline
+    value class CCDMode(val value: Long) {
+        companion object {
+            /**
+             * Continuous collision detection disabled. This is the fastest way to detect body collisions, but
+             * can miss small, fast-moving objects.
+             *
+             * Generated from Godot docs: RigidBody2D.CCD_MODE_DISABLED
+             */
+            val DISABLED: CCDMode get() = CCDMode(0L)
+            /**
+             * Continuous collision detection enabled using raycasting. This is faster than shapecasting but
+             * less precise.
+             *
+             * Generated from Godot docs: RigidBody2D.CCD_MODE_CAST_RAY
+             */
+            val CAST_RAY: CCDMode get() = CCDMode(1L)
+            /**
+             * Continuous collision detection enabled using shapecasting. This is the slowest CCD method and
+             * the most precise.
+             *
+             * Generated from Godot docs: RigidBody2D.CCD_MODE_CAST_SHAPE
+             */
+            val CAST_SHAPE: CCDMode get() = CCDMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RigidBody2D? =
             wrap(handle.segment)

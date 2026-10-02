@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -25,8 +26,8 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: EditorUndoRedoManager.create_action
      */
-    fun createAction(name: String, mergeMode: Long = 0L, customContext: GodotObject, backwardUndoOps: Boolean = false, markUnsaved: Boolean = true) {
-        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(createActionBind, segment, name, mergeMode, customContext.segment, backwardUndoOps, markUnsaved)
+    fun createAction(name: String, mergeMode: UndoRedo.MergeMode = UndoRedo.MergeMode.DISABLE, customContext: GodotObject, backwardUndoOps: Boolean = false, markUnsaved: Boolean = true) {
+        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(createActionBind, segment, name, mergeMode.value, customContext.segment, backwardUndoOps, markUnsaved)
     }
 
     /**
@@ -162,11 +163,31 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
         const val versionChanged: String = "version_changed"
     }
 
-    companion object {
-        const val GLOBAL_HISTORY: Long = 0L
-        const val REMOTE_HISTORY: Long = -9L
-        const val INVALID_HISTORY: Long = -99L
+    @JvmInline
+    value class SpecialHistory(val value: Long) {
+        companion object {
+            /**
+             * Global history not associated with any scene, but with external resources etc.
+             *
+             * Generated from Godot docs: EditorUndoRedoManager.GLOBAL_HISTORY
+             */
+            val GLOBAL_HISTORY: SpecialHistory get() = SpecialHistory(0L)
+            /**
+             * History associated with remote inspector. Used when live editing a running project.
+             *
+             * Generated from Godot docs: EditorUndoRedoManager.REMOTE_HISTORY
+             */
+            val REMOTE_HISTORY: SpecialHistory get() = SpecialHistory(-9L)
+            /**
+             * Invalid "null" history. It's a special value, not associated with any object.
+             *
+             * Generated from Godot docs: EditorUndoRedoManager.INVALID_HISTORY
+             */
+            val INVALID_HISTORY: SpecialHistory get() = SpecialHistory(-99L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorUndoRedoManager? =
             wrap(handle.segment)

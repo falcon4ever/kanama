@@ -14,9 +14,9 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
-    fun compile(pattern: String, showError: Boolean = true): Long {
+    fun compile(pattern: String, showError: Boolean = true): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(compileBind, segment, pattern, showError)
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(compileBind, segment, pattern, showError))
     }
 
     fun search(subject: String, offset: Int = 0, end: Int = -1): RegExMatch? {

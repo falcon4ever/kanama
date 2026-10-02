@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,13 +19,13 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
         @JvmName("setDataProperty")
         set(value) = setData(value)
 
-    var format: Long
+    var format: AudioStreamWAV.Format
         @JvmName("formatProperty")
         get() = getFormat()
         @JvmName("setFormatProperty")
         set(value) = setFormat(value)
 
-    var loopMode: Long
+    var loopMode: AudioStreamWAV.LoopMode
         @JvmName("loopModeProperty")
         get() = getLoopMode()
         @JvmName("setLoopModeProperty")
@@ -89,9 +90,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      *
      * Generated from Godot docs: AudioStreamWAV.set_format
      */
-    fun setFormat(format: Long) {
+    fun setFormat(format: AudioStreamWAV.Format) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format.value)
     }
 
     /**
@@ -99,9 +100,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      *
      * Generated from Godot docs: AudioStreamWAV.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): AudioStreamWAV.Format {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**
@@ -109,9 +110,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      *
      * Generated from Godot docs: AudioStreamWAV.set_loop_mode
      */
-    fun setLoopMode(loopMode: Long) {
+    fun setLoopMode(loopMode: AudioStreamWAV.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode)
+        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode.value)
     }
 
     /**
@@ -119,9 +120,9 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      *
      * Generated from Godot docs: AudioStreamWAV.get_loop_mode
      */
-    fun getLoopMode(): Long {
+    fun getLoopMode(): AudioStreamWAV.LoopMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment)
+        return AudioStreamWAV.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment))
     }
 
     /**
@@ -251,9 +252,69 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
      *
      * Generated from Godot docs: AudioStreamWAV.save_to_wav
      */
-    fun saveToWav(path: String): Long {
+    fun saveToWav(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, segment, path))
+    }
+
+    @JvmInline
+    value class Format(val value: Long) {
+        companion object {
+            /**
+             * 8-bit PCM audio codec.
+             *
+             * Generated from Godot docs: AudioStreamWAV.FORMAT_8_BITS
+             */
+            val FORMAT_8_BITS: Format get() = Format(0L)
+            /**
+             * 16-bit PCM audio codec.
+             *
+             * Generated from Godot docs: AudioStreamWAV.FORMAT_16_BITS
+             */
+            val FORMAT_16_BITS: Format get() = Format(1L)
+            /**
+             * Audio is lossily compressed as IMA ADPCM.
+             *
+             * Generated from Godot docs: AudioStreamWAV.FORMAT_IMA_ADPCM
+             */
+            val IMA_ADPCM: Format get() = Format(2L)
+            /**
+             * Audio is lossily compressed as Quite OK Audio (https://qoaformat.org/).
+             *
+             * Generated from Godot docs: AudioStreamWAV.FORMAT_QOA
+             */
+            val QOA: Format get() = Format(3L)
+        }
+    }
+
+    @JvmInline
+    value class LoopMode(val value: Long) {
+        companion object {
+            /**
+             * Audio does not loop.
+             *
+             * Generated from Godot docs: AudioStreamWAV.LOOP_DISABLED
+             */
+            val DISABLED: LoopMode get() = LoopMode(0L)
+            /**
+             * Audio loops the data between `loop_begin` and `loop_end`, playing forward only.
+             *
+             * Generated from Godot docs: AudioStreamWAV.LOOP_FORWARD
+             */
+            val FORWARD: LoopMode get() = LoopMode(1L)
+            /**
+             * Audio loops the data between `loop_begin` and `loop_end`, playing back and forth.
+             *
+             * Generated from Godot docs: AudioStreamWAV.LOOP_PINGPONG
+             */
+            val PINGPONG: LoopMode get() = LoopMode(2L)
+            /**
+             * Audio loops the data between `loop_begin` and `loop_end`, playing backward only.
+             *
+             * Generated from Godot docs: AudioStreamWAV.LOOP_BACKWARD
+             */
+            val BACKWARD: LoopMode get() = LoopMode(3L)
+        }
     }
 
     companion object {
@@ -277,15 +338,6 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
         fun loadFromFile(path: String, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
             return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(loadFromFileBind, NULL_SEGMENT, path, options))
         }
-
-        const val FORMAT_8_BITS: Long = 0L
-        const val FORMAT_16_BITS: Long = 1L
-        const val FORMAT_IMA_ADPCM: Long = 2L
-        const val FORMAT_QOA: Long = 3L
-        const val LOOP_DISABLED: Long = 0L
-        const val LOOP_FORWARD: Long = 1L
-        const val LOOP_PINGPONG: Long = 2L
-        const val LOOP_BACKWARD: Long = 3L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamWAV? =

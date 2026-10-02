@@ -52,9 +52,9 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Crypto.sign
      */
-    fun sign(hashType: Long, hash: ByteArray, key: CryptoKey?): ByteArray {
+    fun sign(hashType: HashingContext.HashType, hash: ByteArray, key: CryptoKey?): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(signBind, segment, hashType, hash, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithLongByteArrayObjectArgsRetByteArray(signBind, segment, hashType.value, hash, key?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -63,9 +63,9 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Crypto.verify
      */
-    fun verify(hashType: Long, hash: ByteArray, signature: ByteArray, key: CryptoKey?): Boolean {
+    fun verify(hashType: HashingContext.HashType, hash: ByteArray, signature: ByteArray, key: CryptoKey?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(verifyBind, segment, hashType, hash, signature, key?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithLongTwoByteArrayObjectArgsRetBool(verifyBind, segment, hashType.value, hash, signature, key?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -97,9 +97,9 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Crypto.hmac_digest
      */
-    fun hmacDigest(hashType: Long, key: ByteArray, msg: ByteArray): ByteArray {
+    fun hmacDigest(hashType: HashingContext.HashType, key: ByteArray, msg: ByteArray): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetByteArray(hmacDigestBind, segment, hashType, key, msg)
+        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetByteArray(hmacDigestBind, segment, hashType.value, key, msg)
     }
 
     /**

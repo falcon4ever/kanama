@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -61,8 +62,8 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: EditorVCSInterface.create_status_file
      */
-    fun createStatusFile(filePath: String, changeType: Long, area: Long): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringTwoLongArgsRetDictionary(createStatusFileBind, segment, filePath, changeType, area)
+    fun createStatusFile(filePath: String, changeType: EditorVCSInterface.ChangeType, area: EditorVCSInterface.TreeArea): Map<String, Any?> {
+        return ObjectCalls.ptrcallWithStringTwoLongArgsRetDictionary(createStatusFileBind, segment, filePath, changeType.value, area.value)
     }
 
     /**
@@ -93,17 +94,73 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
         ObjectCalls.ptrcallWithStringArg(popupErrorBind, segment, msg)
     }
 
-    companion object {
-        const val CHANGE_TYPE_NEW: Long = 0L
-        const val CHANGE_TYPE_MODIFIED: Long = 1L
-        const val CHANGE_TYPE_RENAMED: Long = 2L
-        const val CHANGE_TYPE_DELETED: Long = 3L
-        const val CHANGE_TYPE_TYPECHANGE: Long = 4L
-        const val CHANGE_TYPE_UNMERGED: Long = 5L
-        const val TREE_AREA_COMMIT: Long = 0L
-        const val TREE_AREA_STAGED: Long = 1L
-        const val TREE_AREA_UNSTAGED: Long = 2L
+    @JvmInline
+    value class ChangeType(val value: Long) {
+        companion object {
+            /**
+             * A new file has been added.
+             *
+             * Generated from Godot docs: EditorVCSInterface.CHANGE_TYPE_NEW
+             */
+            val NEW: ChangeType get() = ChangeType(0L)
+            /**
+             * An earlier added file has been modified.
+             *
+             * Generated from Godot docs: EditorVCSInterface.CHANGE_TYPE_MODIFIED
+             */
+            val MODIFIED: ChangeType get() = ChangeType(1L)
+            /**
+             * An earlier added file has been renamed.
+             *
+             * Generated from Godot docs: EditorVCSInterface.CHANGE_TYPE_RENAMED
+             */
+            val RENAMED: ChangeType get() = ChangeType(2L)
+            /**
+             * An earlier added file has been deleted.
+             *
+             * Generated from Godot docs: EditorVCSInterface.CHANGE_TYPE_DELETED
+             */
+            val DELETED: ChangeType get() = ChangeType(3L)
+            /**
+             * An earlier added file has been typechanged.
+             *
+             * Generated from Godot docs: EditorVCSInterface.CHANGE_TYPE_TYPECHANGE
+             */
+            val TYPECHANGE: ChangeType get() = ChangeType(4L)
+            /**
+             * A file is left unmerged.
+             *
+             * Generated from Godot docs: EditorVCSInterface.CHANGE_TYPE_UNMERGED
+             */
+            val UNMERGED: ChangeType get() = ChangeType(5L)
+        }
+    }
 
+    @JvmInline
+    value class TreeArea(val value: Long) {
+        companion object {
+            /**
+             * A commit is encountered from the commit area.
+             *
+             * Generated from Godot docs: EditorVCSInterface.TREE_AREA_COMMIT
+             */
+            val COMMIT: TreeArea get() = TreeArea(0L)
+            /**
+             * A file is encountered from the staged area.
+             *
+             * Generated from Godot docs: EditorVCSInterface.TREE_AREA_STAGED
+             */
+            val STAGED: TreeArea get() = TreeArea(1L)
+            /**
+             * A file is encountered from the unstaged area.
+             *
+             * Generated from Godot docs: EditorVCSInterface.TREE_AREA_UNSTAGED
+             */
+            val UNSTAGED: TreeArea get() = TreeArea(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorVCSInterface? =
             wrap(handle.segment)

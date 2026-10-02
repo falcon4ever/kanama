@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -22,33 +23,33 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     var particleFlagAlignY: Boolean
         @JvmName("particleFlagAlignYProperty")
-        get() = getParticleFlag(0L)
+        get() = getParticleFlag(ParticleProcessMaterial.ParticleFlags.ALIGN_Y_TO_VELOCITY)
         @JvmName("setParticleFlagAlignYProperty")
-        set(value) = setParticleFlag(0L, value)
+        set(value) = setParticleFlag(ParticleProcessMaterial.ParticleFlags.ALIGN_Y_TO_VELOCITY, value)
 
     var particleFlagRotateY: Boolean
         @JvmName("particleFlagRotateYProperty")
-        get() = getParticleFlag(1L)
+        get() = getParticleFlag(ParticleProcessMaterial.ParticleFlags.ROTATE_Y)
         @JvmName("setParticleFlagRotateYProperty")
-        set(value) = setParticleFlag(1L, value)
+        set(value) = setParticleFlag(ParticleProcessMaterial.ParticleFlags.ROTATE_Y, value)
 
     var particleFlagDisableZ: Boolean
         @JvmName("particleFlagDisableZProperty")
-        get() = getParticleFlag(2L)
+        get() = getParticleFlag(ParticleProcessMaterial.ParticleFlags.DISABLE_Z)
         @JvmName("setParticleFlagDisableZProperty")
-        set(value) = setParticleFlag(2L, value)
+        set(value) = setParticleFlag(ParticleProcessMaterial.ParticleFlags.DISABLE_Z, value)
 
     var particleFlagDampingAsFriction: Boolean
         @JvmName("particleFlagDampingAsFrictionProperty")
-        get() = getParticleFlag(3L)
+        get() = getParticleFlag(ParticleProcessMaterial.ParticleFlags.DAMPING_AS_FRICTION)
         @JvmName("setParticleFlagDampingAsFrictionProperty")
-        set(value) = setParticleFlag(3L, value)
+        set(value) = setParticleFlag(ParticleProcessMaterial.ParticleFlags.DAMPING_AS_FRICTION, value)
 
     var particleFlagInheritEmitterScale: Boolean
         @JvmName("particleFlagInheritEmitterScaleProperty")
-        get() = getParticleFlag(4L)
+        get() = getParticleFlag(ParticleProcessMaterial.ParticleFlags.INHERIT_EMITTER_SCALE)
         @JvmName("setParticleFlagInheritEmitterScaleProperty")
-        set(value) = setParticleFlag(4L, value)
+        set(value) = setParticleFlag(ParticleProcessMaterial.ParticleFlags.INHERIT_EMITTER_SCALE, value)
 
     var emissionShapeOffset: Vector3
         @JvmName("emissionShapeOffsetProperty")
@@ -62,7 +63,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         @JvmName("setEmissionShapeScaleProperty")
         set(value) = setEmissionShapeScale(value)
 
-    var emissionShape: Long
+    var emissionShape: ParticleProcessMaterial.EmissionShape
         @JvmName("emissionShapeProperty")
         get() = getEmissionShape()
         @JvmName("setEmissionShapeProperty")
@@ -136,27 +137,27 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     var angle: Vector2
         @JvmName("angleProperty")
-        get() = getParam(7L)
+        get() = getParam(ParticleProcessMaterial.Parameter.ANGLE)
         @JvmName("setAngleProperty")
-        set(value) = setParam(7L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.ANGLE, value)
 
     var angleMin: Double
         @JvmName("angleMinProperty")
-        get() = getParamMin(7L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.ANGLE)
         @JvmName("setAngleMinProperty")
-        set(value) = setParamMin(7L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.ANGLE, value)
 
     var angleMax: Double
         @JvmName("angleMaxProperty")
-        get() = getParamMax(7L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.ANGLE)
         @JvmName("setAngleMaxProperty")
-        set(value) = setParamMax(7L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.ANGLE, value)
 
     var angleCurve: Texture2D?
         @JvmName("angleCurveProperty")
-        get() = getParamTexture(7L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.ANGLE)
         @JvmName("setAngleCurveProperty")
-        set(value) = setParamTexture(7L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.ANGLE, value)
 
     var useRotation3d: Boolean
         @JvmName("useRotation3dProperty")
@@ -208,117 +209,117 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     var initialVelocity: Vector2
         @JvmName("initialVelocityProperty")
-        get() = getParam(0L)
+        get() = getParam(ParticleProcessMaterial.Parameter.INITIAL_LINEAR_VELOCITY)
         @JvmName("setInitialVelocityProperty")
-        set(value) = setParam(0L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.INITIAL_LINEAR_VELOCITY, value)
 
     var initialVelocityMin: Double
         @JvmName("initialVelocityMinProperty")
-        get() = getParamMin(0L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.INITIAL_LINEAR_VELOCITY)
         @JvmName("setInitialVelocityMinProperty")
-        set(value) = setParamMin(0L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.INITIAL_LINEAR_VELOCITY, value)
 
     var initialVelocityMax: Double
         @JvmName("initialVelocityMaxProperty")
-        get() = getParamMax(0L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.INITIAL_LINEAR_VELOCITY)
         @JvmName("setInitialVelocityMaxProperty")
-        set(value) = setParamMax(0L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.INITIAL_LINEAR_VELOCITY, value)
 
     var angularVelocity: Vector2
         @JvmName("angularVelocityProperty")
-        get() = getParam(1L)
+        get() = getParam(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY)
         @JvmName("setAngularVelocityProperty")
-        set(value) = setParam(1L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY, value)
 
     var angularVelocityMin: Double
         @JvmName("angularVelocityMinProperty")
-        get() = getParamMin(1L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY)
         @JvmName("setAngularVelocityMinProperty")
-        set(value) = setParamMin(1L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY, value)
 
     var angularVelocityMax: Double
         @JvmName("angularVelocityMaxProperty")
-        get() = getParamMax(1L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY)
         @JvmName("setAngularVelocityMaxProperty")
-        set(value) = setParamMax(1L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY, value)
 
     var angularVelocityCurve: Texture2D?
         @JvmName("angularVelocityCurveProperty")
-        get() = getParamTexture(1L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY)
         @JvmName("setAngularVelocityCurveProperty")
-        set(value) = setParamTexture(1L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.ANGULAR_VELOCITY, value)
 
     var directionalVelocity: Vector2
         @JvmName("directionalVelocityProperty")
-        get() = getParam(16L)
+        get() = getParam(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY)
         @JvmName("setDirectionalVelocityProperty")
-        set(value) = setParam(16L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY, value)
 
     var directionalVelocityMin: Double
         @JvmName("directionalVelocityMinProperty")
-        get() = getParamMin(16L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY)
         @JvmName("setDirectionalVelocityMinProperty")
-        set(value) = setParamMin(16L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY, value)
 
     var directionalVelocityMax: Double
         @JvmName("directionalVelocityMaxProperty")
-        get() = getParamMax(16L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY)
         @JvmName("setDirectionalVelocityMaxProperty")
-        set(value) = setParamMax(16L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY, value)
 
     var directionalVelocityCurve: Texture2D?
         @JvmName("directionalVelocityCurveProperty")
-        get() = getParamTexture(16L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY)
         @JvmName("setDirectionalVelocityCurveProperty")
-        set(value) = setParamTexture(16L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.DIRECTIONAL_VELOCITY, value)
 
     var orbitVelocity: Vector2
         @JvmName("orbitVelocityProperty")
-        get() = getParam(2L)
+        get() = getParam(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY)
         @JvmName("setOrbitVelocityProperty")
-        set(value) = setParam(2L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY, value)
 
     var orbitVelocityMin: Double
         @JvmName("orbitVelocityMinProperty")
-        get() = getParamMin(2L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY)
         @JvmName("setOrbitVelocityMinProperty")
-        set(value) = setParamMin(2L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY, value)
 
     var orbitVelocityMax: Double
         @JvmName("orbitVelocityMaxProperty")
-        get() = getParamMax(2L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY)
         @JvmName("setOrbitVelocityMaxProperty")
-        set(value) = setParamMax(2L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY, value)
 
     var orbitVelocityCurve: Texture2D?
         @JvmName("orbitVelocityCurveProperty")
-        get() = getParamTexture(2L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY)
         @JvmName("setOrbitVelocityCurveProperty")
-        set(value) = setParamTexture(2L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.ORBIT_VELOCITY, value)
 
     var radialVelocity: Vector2
         @JvmName("radialVelocityProperty")
-        get() = getParam(15L)
+        get() = getParam(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY)
         @JvmName("setRadialVelocityProperty")
-        set(value) = setParam(15L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY, value)
 
     var radialVelocityMin: Double
         @JvmName("radialVelocityMinProperty")
-        get() = getParamMin(15L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY)
         @JvmName("setRadialVelocityMinProperty")
-        set(value) = setParamMin(15L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY, value)
 
     var radialVelocityMax: Double
         @JvmName("radialVelocityMaxProperty")
-        get() = getParamMax(15L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY)
         @JvmName("setRadialVelocityMaxProperty")
-        set(value) = setParamMax(15L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY, value)
 
     var radialVelocityCurve: Texture2D?
         @JvmName("radialVelocityCurveProperty")
-        get() = getParamTexture(15L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY)
         @JvmName("setRadialVelocityCurveProperty")
-        set(value) = setParamTexture(15L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.RADIAL_VELOCITY, value)
 
     var velocityLimitCurve: Texture2D?
         @JvmName("velocityLimitCurveProperty")
@@ -358,99 +359,99 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     var linearAccel: Vector2
         @JvmName("linearAccelProperty")
-        get() = getParam(3L)
+        get() = getParam(ParticleProcessMaterial.Parameter.LINEAR_ACCEL)
         @JvmName("setLinearAccelProperty")
-        set(value) = setParam(3L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.LINEAR_ACCEL, value)
 
     var linearAccelMin: Double
         @JvmName("linearAccelMinProperty")
-        get() = getParamMin(3L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.LINEAR_ACCEL)
         @JvmName("setLinearAccelMinProperty")
-        set(value) = setParamMin(3L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.LINEAR_ACCEL, value)
 
     var linearAccelMax: Double
         @JvmName("linearAccelMaxProperty")
-        get() = getParamMax(3L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.LINEAR_ACCEL)
         @JvmName("setLinearAccelMaxProperty")
-        set(value) = setParamMax(3L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.LINEAR_ACCEL, value)
 
     var linearAccelCurve: Texture2D?
         @JvmName("linearAccelCurveProperty")
-        get() = getParamTexture(3L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.LINEAR_ACCEL)
         @JvmName("setLinearAccelCurveProperty")
-        set(value) = setParamTexture(3L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.LINEAR_ACCEL, value)
 
     var radialAccel: Vector2
         @JvmName("radialAccelProperty")
-        get() = getParam(4L)
+        get() = getParam(ParticleProcessMaterial.Parameter.RADIAL_ACCEL)
         @JvmName("setRadialAccelProperty")
-        set(value) = setParam(4L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.RADIAL_ACCEL, value)
 
     var radialAccelMin: Double
         @JvmName("radialAccelMinProperty")
-        get() = getParamMin(4L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.RADIAL_ACCEL)
         @JvmName("setRadialAccelMinProperty")
-        set(value) = setParamMin(4L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.RADIAL_ACCEL, value)
 
     var radialAccelMax: Double
         @JvmName("radialAccelMaxProperty")
-        get() = getParamMax(4L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.RADIAL_ACCEL)
         @JvmName("setRadialAccelMaxProperty")
-        set(value) = setParamMax(4L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.RADIAL_ACCEL, value)
 
     var radialAccelCurve: Texture2D?
         @JvmName("radialAccelCurveProperty")
-        get() = getParamTexture(4L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.RADIAL_ACCEL)
         @JvmName("setRadialAccelCurveProperty")
-        set(value) = setParamTexture(4L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.RADIAL_ACCEL, value)
 
     var tangentialAccel: Vector2
         @JvmName("tangentialAccelProperty")
-        get() = getParam(5L)
+        get() = getParam(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL)
         @JvmName("setTangentialAccelProperty")
-        set(value) = setParam(5L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL, value)
 
     var tangentialAccelMin: Double
         @JvmName("tangentialAccelMinProperty")
-        get() = getParamMin(5L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL)
         @JvmName("setTangentialAccelMinProperty")
-        set(value) = setParamMin(5L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL, value)
 
     var tangentialAccelMax: Double
         @JvmName("tangentialAccelMaxProperty")
-        get() = getParamMax(5L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL)
         @JvmName("setTangentialAccelMaxProperty")
-        set(value) = setParamMax(5L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL, value)
 
     var tangentialAccelCurve: Texture2D?
         @JvmName("tangentialAccelCurveProperty")
-        get() = getParamTexture(5L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL)
         @JvmName("setTangentialAccelCurveProperty")
-        set(value) = setParamTexture(5L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.TANGENTIAL_ACCEL, value)
 
     var damping: Vector2
         @JvmName("dampingProperty")
-        get() = getParam(6L)
+        get() = getParam(ParticleProcessMaterial.Parameter.DAMPING)
         @JvmName("setDampingProperty")
-        set(value) = setParam(6L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.DAMPING, value)
 
     var dampingMin: Double
         @JvmName("dampingMinProperty")
-        get() = getParamMin(6L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.DAMPING)
         @JvmName("setDampingMinProperty")
-        set(value) = setParamMin(6L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.DAMPING, value)
 
     var dampingMax: Double
         @JvmName("dampingMaxProperty")
-        get() = getParamMax(6L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.DAMPING)
         @JvmName("setDampingMaxProperty")
-        set(value) = setParamMax(6L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.DAMPING, value)
 
     var dampingCurve: Texture2D?
         @JvmName("dampingCurveProperty")
-        get() = getParamTexture(6L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.DAMPING)
         @JvmName("setDampingCurveProperty")
-        set(value) = setParamTexture(6L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.DAMPING, value)
 
     var attractorInteractionEnabled: Boolean
         @JvmName("attractorInteractionEnabledProperty")
@@ -478,51 +479,51 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     var scale: Vector2
         @JvmName("scaleProperty")
-        get() = getParam(8L)
+        get() = getParam(ParticleProcessMaterial.Parameter.SCALE)
         @JvmName("setScaleProperty")
-        set(value) = setParam(8L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.SCALE, value)
 
     var scaleMin: Double
         @JvmName("scaleMinProperty")
-        get() = getParamMin(8L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.SCALE)
         @JvmName("setScaleMinProperty")
-        set(value) = setParamMin(8L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.SCALE, value)
 
     var scaleMax: Double
         @JvmName("scaleMaxProperty")
-        get() = getParamMax(8L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.SCALE)
         @JvmName("setScaleMaxProperty")
-        set(value) = setParamMax(8L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.SCALE, value)
 
     var scaleCurve: Texture2D?
         @JvmName("scaleCurveProperty")
-        get() = getParamTexture(8L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.SCALE)
         @JvmName("setScaleCurveProperty")
-        set(value) = setParamTexture(8L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.SCALE, value)
 
     var scaleOverVelocity: Vector2
         @JvmName("scaleOverVelocityProperty")
-        get() = getParam(17L)
+        get() = getParam(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY)
         @JvmName("setScaleOverVelocityProperty")
-        set(value) = setParam(17L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY, value)
 
     var scaleOverVelocityMin: Double
         @JvmName("scaleOverVelocityMinProperty")
-        get() = getParamMin(17L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY)
         @JvmName("setScaleOverVelocityMinProperty")
-        set(value) = setParamMin(17L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY, value)
 
     var scaleOverVelocityMax: Double
         @JvmName("scaleOverVelocityMaxProperty")
-        get() = getParamMax(17L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY)
         @JvmName("setScaleOverVelocityMaxProperty")
-        set(value) = setParamMax(17L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY, value)
 
     var scaleOverVelocityCurve: Texture2D?
         @JvmName("scaleOverVelocityCurveProperty")
-        get() = getParamTexture(17L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY)
         @JvmName("setScaleOverVelocityCurveProperty")
-        set(value) = setParamTexture(17L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.SCALE_OVER_VELOCITY, value)
 
     var color: Color
         @JvmName("colorProperty")
@@ -556,75 +557,75 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     var hueVariation: Vector2
         @JvmName("hueVariationProperty")
-        get() = getParam(9L)
+        get() = getParam(ParticleProcessMaterial.Parameter.HUE_VARIATION)
         @JvmName("setHueVariationProperty")
-        set(value) = setParam(9L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.HUE_VARIATION, value)
 
     var hueVariationMin: Double
         @JvmName("hueVariationMinProperty")
-        get() = getParamMin(9L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.HUE_VARIATION)
         @JvmName("setHueVariationMinProperty")
-        set(value) = setParamMin(9L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.HUE_VARIATION, value)
 
     var hueVariationMax: Double
         @JvmName("hueVariationMaxProperty")
-        get() = getParamMax(9L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.HUE_VARIATION)
         @JvmName("setHueVariationMaxProperty")
-        set(value) = setParamMax(9L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.HUE_VARIATION, value)
 
     var hueVariationCurve: Texture2D?
         @JvmName("hueVariationCurveProperty")
-        get() = getParamTexture(9L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.HUE_VARIATION)
         @JvmName("setHueVariationCurveProperty")
-        set(value) = setParamTexture(9L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.HUE_VARIATION, value)
 
     var animSpeed: Vector2
         @JvmName("animSpeedProperty")
-        get() = getParam(10L)
+        get() = getParam(ParticleProcessMaterial.Parameter.ANIM_SPEED)
         @JvmName("setAnimSpeedProperty")
-        set(value) = setParam(10L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.ANIM_SPEED, value)
 
     var animSpeedMin: Double
         @JvmName("animSpeedMinProperty")
-        get() = getParamMin(10L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.ANIM_SPEED)
         @JvmName("setAnimSpeedMinProperty")
-        set(value) = setParamMin(10L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.ANIM_SPEED, value)
 
     var animSpeedMax: Double
         @JvmName("animSpeedMaxProperty")
-        get() = getParamMax(10L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.ANIM_SPEED)
         @JvmName("setAnimSpeedMaxProperty")
-        set(value) = setParamMax(10L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.ANIM_SPEED, value)
 
     var animSpeedCurve: Texture2D?
         @JvmName("animSpeedCurveProperty")
-        get() = getParamTexture(10L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.ANIM_SPEED)
         @JvmName("setAnimSpeedCurveProperty")
-        set(value) = setParamTexture(10L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.ANIM_SPEED, value)
 
     var animOffset: Vector2
         @JvmName("animOffsetProperty")
-        get() = getParam(11L)
+        get() = getParam(ParticleProcessMaterial.Parameter.ANIM_OFFSET)
         @JvmName("setAnimOffsetProperty")
-        set(value) = setParam(11L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.ANIM_OFFSET, value)
 
     var animOffsetMin: Double
         @JvmName("animOffsetMinProperty")
-        get() = getParamMin(11L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.ANIM_OFFSET)
         @JvmName("setAnimOffsetMinProperty")
-        set(value) = setParamMin(11L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.ANIM_OFFSET, value)
 
     var animOffsetMax: Double
         @JvmName("animOffsetMaxProperty")
-        get() = getParamMax(11L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.ANIM_OFFSET)
         @JvmName("setAnimOffsetMaxProperty")
-        set(value) = setParamMax(11L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.ANIM_OFFSET, value)
 
     var animOffsetCurve: Texture2D?
         @JvmName("animOffsetCurveProperty")
-        get() = getParamTexture(11L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.ANIM_OFFSET)
         @JvmName("setAnimOffsetCurveProperty")
-        set(value) = setParamTexture(11L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.ANIM_OFFSET, value)
 
     var turbulenceEnabled: Boolean
         @JvmName("turbulenceEnabledProperty")
@@ -658,47 +659,47 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     var turbulenceInfluence: Vector2
         @JvmName("turbulenceInfluenceProperty")
-        get() = getParam(13L)
+        get() = getParam(ParticleProcessMaterial.Parameter.TURB_VEL_INFLUENCE)
         @JvmName("setTurbulenceInfluenceProperty")
-        set(value) = setParam(13L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.TURB_VEL_INFLUENCE, value)
 
     var turbulenceInfluenceMin: Double
         @JvmName("turbulenceInfluenceMinProperty")
-        get() = getParamMin(13L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.TURB_VEL_INFLUENCE)
         @JvmName("setTurbulenceInfluenceMinProperty")
-        set(value) = setParamMin(13L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.TURB_VEL_INFLUENCE, value)
 
     var turbulenceInfluenceMax: Double
         @JvmName("turbulenceInfluenceMaxProperty")
-        get() = getParamMax(13L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.TURB_VEL_INFLUENCE)
         @JvmName("setTurbulenceInfluenceMaxProperty")
-        set(value) = setParamMax(13L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.TURB_VEL_INFLUENCE, value)
 
     var turbulenceInitialDisplacement: Vector2
         @JvmName("turbulenceInitialDisplacementProperty")
-        get() = getParam(14L)
+        get() = getParam(ParticleProcessMaterial.Parameter.TURB_INIT_DISPLACEMENT)
         @JvmName("setTurbulenceInitialDisplacementProperty")
-        set(value) = setParam(14L, value)
+        set(value) = setParam(ParticleProcessMaterial.Parameter.TURB_INIT_DISPLACEMENT, value)
 
     var turbulenceInitialDisplacementMin: Double
         @JvmName("turbulenceInitialDisplacementMinProperty")
-        get() = getParamMin(14L)
+        get() = getParamMin(ParticleProcessMaterial.Parameter.TURB_INIT_DISPLACEMENT)
         @JvmName("setTurbulenceInitialDisplacementMinProperty")
-        set(value) = setParamMin(14L, value)
+        set(value) = setParamMin(ParticleProcessMaterial.Parameter.TURB_INIT_DISPLACEMENT, value)
 
     var turbulenceInitialDisplacementMax: Double
         @JvmName("turbulenceInitialDisplacementMaxProperty")
-        get() = getParamMax(14L)
+        get() = getParamMax(ParticleProcessMaterial.Parameter.TURB_INIT_DISPLACEMENT)
         @JvmName("setTurbulenceInitialDisplacementMaxProperty")
-        set(value) = setParamMax(14L, value)
+        set(value) = setParamMax(ParticleProcessMaterial.Parameter.TURB_INIT_DISPLACEMENT, value)
 
     var turbulenceInfluenceOverLife: Texture2D?
         @JvmName("turbulenceInfluenceOverLifeProperty")
-        get() = getParamTexture(12L)
+        get() = getParamTexture(ParticleProcessMaterial.Parameter.TURB_INFLUENCE_OVER_LIFE)
         @JvmName("setTurbulenceInfluenceOverLifeProperty")
-        set(value) = setParamTexture(12L, value)
+        set(value) = setParamTexture(ParticleProcessMaterial.Parameter.TURB_INFLUENCE_OVER_LIFE, value)
 
-    var collisionMode: Long
+    var collisionMode: ParticleProcessMaterial.CollisionMode
         @JvmName("collisionModeProperty")
         get() = getCollisionMode()
         @JvmName("setCollisionModeProperty")
@@ -722,7 +723,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         @JvmName("setCollisionUseScaleProperty")
         set(value) = setCollisionUseScale(value)
 
-    var subEmitterMode: Long
+    var subEmitterMode: ParticleProcessMaterial.SubEmitterMode
         @JvmName("subEmitterModeProperty")
         get() = getSubEmitterMode()
         @JvmName("setSubEmitterModeProperty")
@@ -846,9 +847,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_param
      */
-    fun setParam(param: Long, value: Vector2) {
+    fun setParam(param: ParticleProcessMaterial.Parameter, value: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, segment, param, value)
+        ObjectCalls.ptrcallWithLongAndVector2Arg(setParamBind, segment, param.value, value)
     }
 
     /**
@@ -857,9 +858,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_param
      */
-    fun getParam(param: Long): Vector2 {
+    fun getParam(param: ParticleProcessMaterial.Parameter): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, segment, param)
+        return ObjectCalls.ptrcallWithLongArgRetVector2(getParamBind, segment, param.value)
     }
 
     /**
@@ -869,9 +870,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_param_min
      */
-    fun setParamMin(param: Long, value: Double) {
+    fun setParamMin(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param.value, value)
     }
 
     /**
@@ -881,9 +882,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_param_min
      */
-    fun getParamMin(param: Long): Double {
+    fun getParamMin(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param.value)
     }
 
     /**
@@ -893,9 +894,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_param_max
      */
-    fun setParamMax(param: Long, value: Double) {
+    fun setParamMax(param: ParticleProcessMaterial.Parameter, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param.value, value)
     }
 
     /**
@@ -905,9 +906,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_param_max
      */
-    fun getParamMax(param: Long): Double {
+    fun getParamMax(param: ParticleProcessMaterial.Parameter): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param.value)
     }
 
     /**
@@ -916,9 +917,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_param_texture
      */
-    fun setParamTexture(param: Long, texture: Texture2D?) {
+    fun setParamTexture(param: ParticleProcessMaterial.Parameter, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, segment, param, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamTextureBind, segment, param.value, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     /**
@@ -927,9 +928,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_param_texture
      */
-    fun getParamTexture(param: Long): Texture2D? {
+    fun getParamTexture(param: ParticleProcessMaterial.Parameter): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param.value))
     }
 
     /**
@@ -1221,9 +1222,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_particle_flag
      */
-    fun setParticleFlag(particleFlag: Long, enable: Boolean) {
+    fun setParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag.value, enable)
     }
 
     /**
@@ -1231,9 +1232,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_particle_flag
      */
-    fun getParticleFlag(particleFlag: Long): Boolean {
+    fun getParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag.value)
     }
 
     /**
@@ -1261,9 +1262,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_shape
      */
-    fun setEmissionShape(shape: Long) {
+    fun setEmissionShape(shape: ParticleProcessMaterial.EmissionShape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape)
+        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape.value)
     }
 
     /**
@@ -1271,9 +1272,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_shape
      */
-    fun getEmissionShape(): Long {
+    fun getEmissionShape(): ParticleProcessMaterial.EmissionShape {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment)
+        return ParticleProcessMaterial.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment))
     }
 
     /**
@@ -1744,9 +1745,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_sub_emitter_mode
      */
-    fun getSubEmitterMode(): Long {
+    fun getSubEmitterMode(): ParticleProcessMaterial.SubEmitterMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, segment)
+        return ParticleProcessMaterial.SubEmitterMode(ObjectCalls.ptrcallNoArgsRetLong(getSubEmitterModeBind, segment))
     }
 
     /**
@@ -1755,9 +1756,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_sub_emitter_mode
      */
-    fun setSubEmitterMode(mode: Long) {
+    fun setSubEmitterMode(mode: ParticleProcessMaterial.SubEmitterMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setSubEmitterModeBind, segment, mode.value)
     }
 
     /**
@@ -1926,9 +1927,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_collision_mode
      */
-    fun setCollisionMode(mode: Long) {
+    fun setCollisionMode(mode: ParticleProcessMaterial.CollisionMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setCollisionModeBind, segment, mode.value)
     }
 
     /**
@@ -1941,9 +1942,9 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_collision_mode
      */
-    fun getCollisionMode(): Long {
+    fun getCollisionMode(): ParticleProcessMaterial.CollisionMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, segment)
+        return ParticleProcessMaterial.CollisionMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionModeBind, segment))
     }
 
     /**
@@ -2100,51 +2101,304 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         const val emissionShapeChanged: String = "emission_shape_changed"
     }
 
-    companion object {
-        const val PARAM_INITIAL_LINEAR_VELOCITY: Long = 0L
-        const val PARAM_ANGULAR_VELOCITY: Long = 1L
-        const val PARAM_ORBIT_VELOCITY: Long = 2L
-        const val PARAM_LINEAR_ACCEL: Long = 3L
-        const val PARAM_RADIAL_ACCEL: Long = 4L
-        const val PARAM_TANGENTIAL_ACCEL: Long = 5L
-        const val PARAM_DAMPING: Long = 6L
-        const val PARAM_ANGLE: Long = 7L
-        const val PARAM_SCALE: Long = 8L
-        const val PARAM_HUE_VARIATION: Long = 9L
-        const val PARAM_ANIM_SPEED: Long = 10L
-        const val PARAM_ANIM_OFFSET: Long = 11L
-        const val PARAM_RADIAL_VELOCITY: Long = 15L
-        const val PARAM_DIRECTIONAL_VELOCITY: Long = 16L
-        const val PARAM_SCALE_OVER_VELOCITY: Long = 17L
-        const val PARAM_MAX: Long = 18L
-        const val PARAM_TURB_VEL_INFLUENCE: Long = 13L
-        const val PARAM_TURB_INIT_DISPLACEMENT: Long = 14L
-        const val PARAM_TURB_INFLUENCE_OVER_LIFE: Long = 12L
-        const val PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY: Long = 0L
-        const val PARTICLE_FLAG_ROTATE_Y: Long = 1L
-        const val PARTICLE_FLAG_DISABLE_Z: Long = 2L
-        const val PARTICLE_FLAG_DAMPING_AS_FRICTION: Long = 3L
-        const val PARTICLE_FLAG_INHERIT_EMITTER_SCALE: Long = 4L
-        const val PARTICLE_FLAG_MAX: Long = 5L
-        const val EMISSION_SHAPE_POINT: Long = 0L
-        const val EMISSION_SHAPE_SPHERE: Long = 1L
-        const val EMISSION_SHAPE_SPHERE_SURFACE: Long = 2L
-        const val EMISSION_SHAPE_BOX: Long = 3L
-        const val EMISSION_SHAPE_POINTS: Long = 4L
-        const val EMISSION_SHAPE_DIRECTED_POINTS: Long = 5L
-        const val EMISSION_SHAPE_RING: Long = 6L
-        const val EMISSION_SHAPE_MAX: Long = 7L
-        const val SUB_EMITTER_DISABLED: Long = 0L
-        const val SUB_EMITTER_CONSTANT: Long = 1L
-        const val SUB_EMITTER_AT_END: Long = 2L
-        const val SUB_EMITTER_AT_COLLISION: Long = 3L
-        const val SUB_EMITTER_AT_START: Long = 4L
-        const val SUB_EMITTER_MAX: Long = 5L
-        const val COLLISION_DISABLED: Long = 0L
-        const val COLLISION_RIGID: Long = 1L
-        const val COLLISION_HIDE_ON_CONTACT: Long = 2L
-        const val COLLISION_MAX: Long = 3L
+    @JvmInline
+    value class Parameter(val value: Long) {
+        companion object {
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set initial velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_INITIAL_LINEAR_VELOCITY
+             */
+            val INITIAL_LINEAR_VELOCITY: Parameter get() = Parameter(0L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set angular velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANGULAR_VELOCITY
+             */
+            val ANGULAR_VELOCITY: Parameter get() = Parameter(1L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set orbital velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ORBIT_VELOCITY
+             */
+            val ORBIT_VELOCITY: Parameter get() = Parameter(2L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set linear acceleration
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_LINEAR_ACCEL
+             */
+            val LINEAR_ACCEL: Parameter get() = Parameter(3L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set radial acceleration
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_RADIAL_ACCEL
+             */
+            val RADIAL_ACCEL: Parameter get() = Parameter(4L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set tangential
+             * acceleration properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TANGENTIAL_ACCEL
+             */
+            val TANGENTIAL_ACCEL: Parameter get() = Parameter(5L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set damping properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_DAMPING
+             */
+            val DAMPING: Parameter get() = Parameter(6L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set angle properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANGLE
+             */
+            val ANGLE: Parameter get() = Parameter(7L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set scale properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_SCALE
+             */
+            val SCALE: Parameter get() = Parameter(8L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set hue variation
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_HUE_VARIATION
+             */
+            val HUE_VARIATION: Parameter get() = Parameter(9L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set animation speed
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANIM_SPEED
+             */
+            val ANIM_SPEED: Parameter get() = Parameter(10L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set animation offset
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANIM_OFFSET
+             */
+            val ANIM_OFFSET: Parameter get() = Parameter(11L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set radial velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_RADIAL_VELOCITY
+             */
+            val RADIAL_VELOCITY: Parameter get() = Parameter(15L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set directional velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_DIRECTIONAL_VELOCITY
+             */
+            val DIRECTIONAL_VELOCITY: Parameter get() = Parameter(16L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set scale over velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_SCALE_OVER_VELOCITY
+             */
+            val SCALE_OVER_VELOCITY: Parameter get() = Parameter(17L)
+            /**
+             * Represents the size of the `Parameter` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_MAX
+             */
+            val MAX: Parameter get() = Parameter(18L)
+            /**
+             * Use with `set_param_min` and `set_param_max` to set the turbulence minimum und maximum influence
+             * on each particles velocity.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TURB_VEL_INFLUENCE
+             */
+            val TURB_VEL_INFLUENCE: Parameter get() = Parameter(13L)
+            /**
+             * Use with `set_param_min` and `set_param_max` to set the turbulence minimum and maximum
+             * displacement of the particles spawn position.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TURB_INIT_DISPLACEMENT
+             */
+            val TURB_INIT_DISPLACEMENT: Parameter get() = Parameter(14L)
+            /**
+             * Use with `set_param_texture` to set the turbulence influence over the particles life time.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TURB_INFLUENCE_OVER_LIFE
+             */
+            val TURB_INFLUENCE_OVER_LIFE: Parameter get() = Parameter(12L)
+        }
+    }
 
+    @JvmInline
+    value class ParticleFlags(val value: Long) {
+        companion object {
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_align_y`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY
+             */
+            val ALIGN_Y_TO_VELOCITY: ParticleFlags get() = ParticleFlags(0L)
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_rotate_y`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_ROTATE_Y
+             */
+            val ROTATE_Y: ParticleFlags get() = ParticleFlags(1L)
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_disable_z`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_DISABLE_Z
+             */
+            val DISABLE_Z: ParticleFlags get() = ParticleFlags(2L)
+            val DAMPING_AS_FRICTION: ParticleFlags get() = ParticleFlags(3L)
+            val INHERIT_EMITTER_SCALE: ParticleFlags get() = ParticleFlags(4L)
+            /**
+             * Represents the size of the `ParticleFlags` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_MAX
+             */
+            val MAX: ParticleFlags get() = ParticleFlags(5L)
+        }
+    }
+
+    @JvmInline
+    value class EmissionShape(val value: Long) {
+        companion object {
+            /**
+             * All particles will be emitted from a single point.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_POINT
+             */
+            val POINT: EmissionShape get() = EmissionShape(0L)
+            /**
+             * Particles will be emitted in the volume of a sphere.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+             */
+            val SPHERE: EmissionShape get() = EmissionShape(1L)
+            /**
+             * Particles will be emitted on the surface of a sphere.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_SPHERE_SURFACE
+             */
+            val SPHERE_SURFACE: EmissionShape get() = EmissionShape(2L)
+            /**
+             * Particles will be emitted in the volume of a box.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_BOX
+             */
+            val BOX: EmissionShape get() = EmissionShape(3L)
+            /**
+             * Particles will be emitted at a position determined by sampling a random point on the
+             * `emission_point_texture`. Particle color will be modulated by `emission_color_texture`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_POINTS
+             */
+            val POINTS: EmissionShape get() = EmissionShape(4L)
+            /**
+             * Particles will be emitted at a position determined by sampling a random point on the
+             * `emission_point_texture`. Particle velocity and rotation will be set based on
+             * `emission_normal_texture`. Particle color will be modulated by `emission_color_texture`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_DIRECTED_POINTS
+             */
+            val DIRECTED_POINTS: EmissionShape get() = EmissionShape(5L)
+            /**
+             * Particles will be emitted in a ring or cylinder.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_RING
+             */
+            val RING: EmissionShape get() = EmissionShape(6L)
+            /**
+             * Represents the size of the `EmissionShape` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_MAX
+             */
+            val MAX: EmissionShape get() = EmissionShape(7L)
+        }
+    }
+
+    @JvmInline
+    value class SubEmitterMode(val value: Long) {
+        companion object {
+            /**
+             * The subemitter is disabled.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_DISABLED
+             */
+            val DISABLED: SubEmitterMode get() = SubEmitterMode(0L)
+            /**
+             * The submitter is emitted on the constant interval defined by `sub_emitter_frequency`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_CONSTANT
+             */
+            val CONSTANT: SubEmitterMode get() = SubEmitterMode(1L)
+            /**
+             * The subemitter is emitted at the end of the particle's lifetime.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_AT_END
+             */
+            val AT_END: SubEmitterMode get() = SubEmitterMode(2L)
+            /**
+             * The subemitter is emitted when the particle collides.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_AT_COLLISION
+             */
+            val AT_COLLISION: SubEmitterMode get() = SubEmitterMode(3L)
+            /**
+             * The subemitter is emitted when the particle spawns.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_AT_START
+             */
+            val AT_START: SubEmitterMode get() = SubEmitterMode(4L)
+            /**
+             * Represents the size of the `SubEmitterMode` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_MAX
+             */
+            val MAX: SubEmitterMode get() = SubEmitterMode(5L)
+        }
+    }
+
+    @JvmInline
+    value class CollisionMode(val value: Long) {
+        companion object {
+            /**
+             * No collision for particles. Particles will go through `GPUParticlesCollision3D` nodes.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_DISABLED
+             */
+            val DISABLED: CollisionMode get() = CollisionMode(0L)
+            /**
+             * `RigidBody3D`-style collision for particles using `GPUParticlesCollision3D` nodes.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_RIGID
+             */
+            val RIGID: CollisionMode get() = CollisionMode(1L)
+            /**
+             * Hide particles instantly when colliding with a `GPUParticlesCollision3D` node. This can be
+             * combined with a subemitter that uses the `COLLISION_RIGID` collision mode to "replace" the
+             * parent particle with the subemitter on impact.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT
+             */
+            val HIDE_ON_CONTACT: CollisionMode get() = CollisionMode(2L)
+            /**
+             * Represents the size of the `CollisionMode` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_MAX
+             */
+            val MAX: CollisionMode get() = CollisionMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ParticleProcessMaterial? =
             wrap(handle.segment)

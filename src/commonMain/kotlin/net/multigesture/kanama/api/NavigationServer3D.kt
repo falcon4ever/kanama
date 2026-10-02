@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,17 +19,6 @@ object NavigationServer3D {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("NavigationServer3D")
     }
-
-    const val INFO_ACTIVE_MAPS: Long = 0L
-    const val INFO_REGION_COUNT: Long = 1L
-    const val INFO_AGENT_COUNT: Long = 2L
-    const val INFO_LINK_COUNT: Long = 3L
-    const val INFO_POLYGON_COUNT: Long = 4L
-    const val INFO_EDGE_COUNT: Long = 5L
-    const val INFO_EDGE_MERGE_COUNT: Long = 6L
-    const val INFO_EDGE_CONNECTION_COUNT: Long = 7L
-    const val INFO_EDGE_FREE_COUNT: Long = 8L
-    const val INFO_OBSTACLE_COUNT: Long = 9L
 
     /**
      * Returns all created navigation map `RID`s on the NavigationServer. This returns both 2D and 3D
@@ -1707,14 +1697,83 @@ object NavigationServer3D {
      * Generated from Godot docs: NavigationServer3D.get_process_info
      */
     @JvmStatic
-    fun getProcessInfo(processInfo: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo)
+    fun getProcessInfo(processInfo: NavigationServer3D.ProcessInfo): Int {
+        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
     }
 
     object Signals {
         const val mapChanged: String = "map_changed"
         const val navigationDebugChanged: String = "navigation_debug_changed"
         const val avoidanceDebugChanged: String = "avoidance_debug_changed"
+    }
+
+    @JvmInline
+    value class ProcessInfo(val value: Long) {
+        companion object {
+            /**
+             * Constant to get the number of active navigation maps.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_ACTIVE_MAPS
+             */
+            val ACTIVE_MAPS: ProcessInfo get() = ProcessInfo(0L)
+            /**
+             * Constant to get the number of active navigation regions.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_REGION_COUNT
+             */
+            val REGION_COUNT: ProcessInfo get() = ProcessInfo(1L)
+            /**
+             * Constant to get the number of active navigation agents processing avoidance.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_AGENT_COUNT
+             */
+            val AGENT_COUNT: ProcessInfo get() = ProcessInfo(2L)
+            /**
+             * Constant to get the number of active navigation links.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_LINK_COUNT
+             */
+            val LINK_COUNT: ProcessInfo get() = ProcessInfo(3L)
+            /**
+             * Constant to get the number of navigation mesh polygons.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_POLYGON_COUNT
+             */
+            val POLYGON_COUNT: ProcessInfo get() = ProcessInfo(4L)
+            /**
+             * Constant to get the number of navigation mesh polygon edges.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_EDGE_COUNT
+             */
+            val EDGE_COUNT: ProcessInfo get() = ProcessInfo(5L)
+            /**
+             * Constant to get the number of navigation mesh polygon edges that were merged due to edge key
+             * overlap.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_EDGE_MERGE_COUNT
+             */
+            val EDGE_MERGE_COUNT: ProcessInfo get() = ProcessInfo(6L)
+            /**
+             * Constant to get the number of navigation mesh polygon edges that are considered connected by
+             * edge proximity.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_EDGE_CONNECTION_COUNT
+             */
+            val EDGE_CONNECTION_COUNT: ProcessInfo get() = ProcessInfo(7L)
+            /**
+             * Constant to get the number of navigation mesh polygon edges that could not be merged but may be
+             * still connected by edge proximity or with links.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_EDGE_FREE_COUNT
+             */
+            val EDGE_FREE_COUNT: ProcessInfo get() = ProcessInfo(8L)
+            /**
+             * Constant to get the number of active navigation obstacles.
+             *
+             * Generated from Godot docs: NavigationServer3D.INFO_OBSTACLE_COUNT
+             */
+            val OBSTACLE_COUNT: ProcessInfo get() = ProcessInfo(9L)
+        }
     }
 
     @JvmStatic

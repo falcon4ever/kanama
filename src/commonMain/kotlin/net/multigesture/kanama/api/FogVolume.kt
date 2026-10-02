@@ -19,7 +19,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
-    var shape: Long
+    var shape: RenderingServer.FogVolumeShape
         @JvmName("shapeProperty")
         get() = getShape()
         @JvmName("setShapeProperty")
@@ -77,8 +77,8 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: FogVolume.set_shape
      */
-    fun setShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape)
+    fun setShape(shape: RenderingServer.FogVolumeShape) {
+        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape.value)
     }
 
     /**
@@ -89,8 +89,8 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: FogVolume.get_shape
      */
-    fun getShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment)
+    fun getShape(): RenderingServer.FogVolumeShape {
+        return RenderingServer.FogVolumeShape(ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment))
     }
 
     /**

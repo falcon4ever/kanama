@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         @JvmName("setHasTrackingDataProperty")
         set(value) = setHasTrackingData(value)
 
-    var bodyFlags: Long
+    var bodyFlags: XRBodyTracker.BodyFlags
         @JvmName("bodyFlagsProperty")
         get() = getBodyFlags()
         @JvmName("setBodyFlagsProperty")
@@ -49,9 +50,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRBodyTracker.set_body_flags
      */
-    fun setBodyFlags(flags: Long) {
+    fun setBodyFlags(flags: XRBodyTracker.BodyFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBodyFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithLongArg(setBodyFlagsBind, segment, flags.value)
     }
 
     /**
@@ -59,9 +60,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRBodyTracker.get_body_flags
      */
-    fun getBodyFlags(): Long {
+    fun getBodyFlags(): XRBodyTracker.BodyFlags {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBodyFlagsBind, segment)
+        return XRBodyTracker.BodyFlags(ObjectCalls.ptrcallNoArgsRetLong(getBodyFlagsBind, segment))
     }
 
     /**
@@ -69,9 +70,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRBodyTracker.set_joint_flags
      */
-    fun setJointFlags(joint: Long, flags: Long) {
+    fun setJointFlags(joint: XRBodyTracker.Joint, flags: XRBodyTracker.JointFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setJointFlagsBind, segment, joint, flags)
+        ObjectCalls.ptrcallWithTwoLongArgs(setJointFlagsBind, segment, joint.value, flags.value)
     }
 
     /**
@@ -79,9 +80,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRBodyTracker.get_joint_flags
      */
-    fun getJointFlags(joint: Long): Long {
+    fun getJointFlags(joint: XRBodyTracker.Joint): XRBodyTracker.JointFlags {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getJointFlagsBind, segment, joint)
+        return XRBodyTracker.JointFlags(ObjectCalls.ptrcallWithLongArgRetLong(getJointFlagsBind, segment, joint.value))
     }
 
     /**
@@ -89,9 +90,9 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRBodyTracker.set_joint_transform
      */
-    fun setJointTransform(joint: Long, transform: Transform3D) {
+    fun setJointTransform(joint: XRBodyTracker.Joint, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTransform3DArg(setJointTransformBind, segment, joint, transform)
+        ObjectCalls.ptrcallWithLongAndTransform3DArg(setJointTransformBind, segment, joint.value, transform)
     }
 
     /**
@@ -99,108 +100,621 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRBodyTracker.get_joint_transform
      */
-    fun getJointTransform(joint: Long): Transform3D {
+    fun getJointTransform(joint: XRBodyTracker.Joint): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, segment, joint)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, segment, joint.value)
+    }
+
+    @JvmInline
+    value class BodyFlags(val value: Long) {
+        infix fun or(other: BodyFlags): BodyFlags = BodyFlags(value or other.value)
+
+        infix fun and(other: BodyFlags): BodyFlags = BodyFlags(value and other.value)
+
+        infix fun xor(other: BodyFlags): BodyFlags = BodyFlags(value xor other.value)
+
+        fun inv(): BodyFlags = BodyFlags(value.inv())
+
+        operator fun contains(other: BodyFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Upper body tracking supported.
+             *
+             * Generated from Godot docs: XRBodyTracker.BODY_FLAG_UPPER_BODY_SUPPORTED
+             */
+            val UPPER_BODY_SUPPORTED: BodyFlags get() = BodyFlags(1L)
+            /**
+             * Lower body tracking supported.
+             *
+             * Generated from Godot docs: XRBodyTracker.BODY_FLAG_LOWER_BODY_SUPPORTED
+             */
+            val LOWER_BODY_SUPPORTED: BodyFlags get() = BodyFlags(2L)
+            /**
+             * Hand tracking supported.
+             *
+             * Generated from Godot docs: XRBodyTracker.BODY_FLAG_HANDS_SUPPORTED
+             */
+            val HANDS_SUPPORTED: BodyFlags get() = BodyFlags(4L)
+        }
+    }
+
+    @JvmInline
+    value class Joint(val value: Long) {
+        companion object {
+            /**
+             * Root joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_ROOT
+             */
+            val ROOT: Joint get() = Joint(0L)
+            /**
+             * Hips joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_HIPS
+             */
+            val HIPS: Joint get() = Joint(1L)
+            /**
+             * Spine joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_SPINE
+             */
+            val SPINE: Joint get() = Joint(2L)
+            /**
+             * Chest joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_CHEST
+             */
+            val CHEST: Joint get() = Joint(3L)
+            /**
+             * Upper chest joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_UPPER_CHEST
+             */
+            val UPPER_CHEST: Joint get() = Joint(4L)
+            /**
+             * Neck joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_NECK
+             */
+            val NECK: Joint get() = Joint(5L)
+            /**
+             * Head joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_HEAD
+             */
+            val HEAD: Joint get() = Joint(6L)
+            /**
+             * Head tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_HEAD_TIP
+             */
+            val HEAD_TIP: Joint get() = Joint(7L)
+            /**
+             * Left shoulder joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_SHOULDER
+             */
+            val LEFT_SHOULDER: Joint get() = Joint(8L)
+            /**
+             * Left upper arm joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_UPPER_ARM
+             */
+            val LEFT_UPPER_ARM: Joint get() = Joint(9L)
+            /**
+             * Left lower arm joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_LOWER_ARM
+             */
+            val LEFT_LOWER_ARM: Joint get() = Joint(10L)
+            /**
+             * Right shoulder joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_SHOULDER
+             */
+            val RIGHT_SHOULDER: Joint get() = Joint(11L)
+            /**
+             * Right upper arm joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_UPPER_ARM
+             */
+            val RIGHT_UPPER_ARM: Joint get() = Joint(12L)
+            /**
+             * Right lower arm joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_LOWER_ARM
+             */
+            val RIGHT_LOWER_ARM: Joint get() = Joint(13L)
+            /**
+             * Left upper leg joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_UPPER_LEG
+             */
+            val LEFT_UPPER_LEG: Joint get() = Joint(14L)
+            /**
+             * Left lower leg joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_LOWER_LEG
+             */
+            val LEFT_LOWER_LEG: Joint get() = Joint(15L)
+            /**
+             * Left foot joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_FOOT
+             */
+            val LEFT_FOOT: Joint get() = Joint(16L)
+            /**
+             * Left toes joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_TOES
+             */
+            val LEFT_TOES: Joint get() = Joint(17L)
+            /**
+             * Right upper leg joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_UPPER_LEG
+             */
+            val RIGHT_UPPER_LEG: Joint get() = Joint(18L)
+            /**
+             * Right lower leg joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_LOWER_LEG
+             */
+            val RIGHT_LOWER_LEG: Joint get() = Joint(19L)
+            /**
+             * Right foot joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_FOOT
+             */
+            val RIGHT_FOOT: Joint get() = Joint(20L)
+            /**
+             * Right toes joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_TOES
+             */
+            val RIGHT_TOES: Joint get() = Joint(21L)
+            /**
+             * Left hand joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_HAND
+             */
+            val LEFT_HAND: Joint get() = Joint(22L)
+            /**
+             * Left palm joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_PALM
+             */
+            val LEFT_PALM: Joint get() = Joint(23L)
+            /**
+             * Left wrist joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_WRIST
+             */
+            val LEFT_WRIST: Joint get() = Joint(24L)
+            /**
+             * Left thumb metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_THUMB_METACARPAL
+             */
+            val LEFT_THUMB_METACARPAL: Joint get() = Joint(25L)
+            /**
+             * Left thumb phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_THUMB_PHALANX_PROXIMAL
+             */
+            val LEFT_THUMB_PHALANX_PROXIMAL: Joint get() = Joint(26L)
+            /**
+             * Left thumb phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_THUMB_PHALANX_DISTAL
+             */
+            val LEFT_THUMB_PHALANX_DISTAL: Joint get() = Joint(27L)
+            /**
+             * Left thumb tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_THUMB_TIP
+             */
+            val LEFT_THUMB_TIP: Joint get() = Joint(28L)
+            /**
+             * Left index finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_INDEX_FINGER_METACARPAL
+             */
+            val LEFT_INDEX_FINGER_METACARPAL: Joint get() = Joint(29L)
+            /**
+             * Left index finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_INDEX_FINGER_PHALANX_PROXIMAL
+             */
+            val LEFT_INDEX_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(30L)
+            /**
+             * Left index finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_INDEX_FINGER_PHALANX_INTERMEDIATE
+             */
+            val LEFT_INDEX_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(31L)
+            /**
+             * Left index finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_INDEX_FINGER_PHALANX_DISTAL
+             */
+            val LEFT_INDEX_FINGER_PHALANX_DISTAL: Joint get() = Joint(32L)
+            /**
+             * Left index finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_INDEX_FINGER_TIP
+             */
+            val LEFT_INDEX_FINGER_TIP: Joint get() = Joint(33L)
+            /**
+             * Left middle finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_MIDDLE_FINGER_METACARPAL
+             */
+            val LEFT_MIDDLE_FINGER_METACARPAL: Joint get() = Joint(34L)
+            /**
+             * Left middle finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_MIDDLE_FINGER_PHALANX_PROXIMAL
+             */
+            val LEFT_MIDDLE_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(35L)
+            /**
+             * Left middle finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_MIDDLE_FINGER_PHALANX_INTERMEDIATE
+             */
+            val LEFT_MIDDLE_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(36L)
+            /**
+             * Left middle finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_MIDDLE_FINGER_PHALANX_DISTAL
+             */
+            val LEFT_MIDDLE_FINGER_PHALANX_DISTAL: Joint get() = Joint(37L)
+            /**
+             * Left middle finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_MIDDLE_FINGER_TIP
+             */
+            val LEFT_MIDDLE_FINGER_TIP: Joint get() = Joint(38L)
+            /**
+             * Left ring finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_RING_FINGER_METACARPAL
+             */
+            val LEFT_RING_FINGER_METACARPAL: Joint get() = Joint(39L)
+            /**
+             * Left ring finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_RING_FINGER_PHALANX_PROXIMAL
+             */
+            val LEFT_RING_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(40L)
+            /**
+             * Left ring finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_RING_FINGER_PHALANX_INTERMEDIATE
+             */
+            val LEFT_RING_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(41L)
+            /**
+             * Left ring finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_RING_FINGER_PHALANX_DISTAL
+             */
+            val LEFT_RING_FINGER_PHALANX_DISTAL: Joint get() = Joint(42L)
+            /**
+             * Left ring finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_RING_FINGER_TIP
+             */
+            val LEFT_RING_FINGER_TIP: Joint get() = Joint(43L)
+            /**
+             * Left pinky finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_PINKY_FINGER_METACARPAL
+             */
+            val LEFT_PINKY_FINGER_METACARPAL: Joint get() = Joint(44L)
+            /**
+             * Left pinky finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_PINKY_FINGER_PHALANX_PROXIMAL
+             */
+            val LEFT_PINKY_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(45L)
+            /**
+             * Left pinky finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_PINKY_FINGER_PHALANX_INTERMEDIATE
+             */
+            val LEFT_PINKY_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(46L)
+            /**
+             * Left pinky finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_PINKY_FINGER_PHALANX_DISTAL
+             */
+            val LEFT_PINKY_FINGER_PHALANX_DISTAL: Joint get() = Joint(47L)
+            /**
+             * Left pinky finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_PINKY_FINGER_TIP
+             */
+            val LEFT_PINKY_FINGER_TIP: Joint get() = Joint(48L)
+            /**
+             * Right hand joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_HAND
+             */
+            val RIGHT_HAND: Joint get() = Joint(49L)
+            /**
+             * Right palm joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_PALM
+             */
+            val RIGHT_PALM: Joint get() = Joint(50L)
+            /**
+             * Right wrist joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_WRIST
+             */
+            val RIGHT_WRIST: Joint get() = Joint(51L)
+            /**
+             * Right thumb metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_THUMB_METACARPAL
+             */
+            val RIGHT_THUMB_METACARPAL: Joint get() = Joint(52L)
+            /**
+             * Right thumb phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_THUMB_PHALANX_PROXIMAL
+             */
+            val RIGHT_THUMB_PHALANX_PROXIMAL: Joint get() = Joint(53L)
+            /**
+             * Right thumb phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_THUMB_PHALANX_DISTAL
+             */
+            val RIGHT_THUMB_PHALANX_DISTAL: Joint get() = Joint(54L)
+            /**
+             * Right thumb tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_THUMB_TIP
+             */
+            val RIGHT_THUMB_TIP: Joint get() = Joint(55L)
+            /**
+             * Right index finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_INDEX_FINGER_METACARPAL
+             */
+            val RIGHT_INDEX_FINGER_METACARPAL: Joint get() = Joint(56L)
+            /**
+             * Right index finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_INDEX_FINGER_PHALANX_PROXIMAL
+             */
+            val RIGHT_INDEX_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(57L)
+            /**
+             * Right index finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_INDEX_FINGER_PHALANX_INTERMEDIATE
+             */
+            val RIGHT_INDEX_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(58L)
+            /**
+             * Right index finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_INDEX_FINGER_PHALANX_DISTAL
+             */
+            val RIGHT_INDEX_FINGER_PHALANX_DISTAL: Joint get() = Joint(59L)
+            /**
+             * Right index finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_INDEX_FINGER_TIP
+             */
+            val RIGHT_INDEX_FINGER_TIP: Joint get() = Joint(60L)
+            /**
+             * Right middle finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_MIDDLE_FINGER_METACARPAL
+             */
+            val RIGHT_MIDDLE_FINGER_METACARPAL: Joint get() = Joint(61L)
+            /**
+             * Right middle finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_MIDDLE_FINGER_PHALANX_PROXIMAL
+             */
+            val RIGHT_MIDDLE_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(62L)
+            /**
+             * Right middle finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_MIDDLE_FINGER_PHALANX_INTERMEDIATE
+             */
+            val RIGHT_MIDDLE_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(63L)
+            /**
+             * Right middle finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_MIDDLE_FINGER_PHALANX_DISTAL
+             */
+            val RIGHT_MIDDLE_FINGER_PHALANX_DISTAL: Joint get() = Joint(64L)
+            /**
+             * Right middle finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_MIDDLE_FINGER_TIP
+             */
+            val RIGHT_MIDDLE_FINGER_TIP: Joint get() = Joint(65L)
+            /**
+             * Right ring finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_RING_FINGER_METACARPAL
+             */
+            val RIGHT_RING_FINGER_METACARPAL: Joint get() = Joint(66L)
+            /**
+             * Right ring finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_RING_FINGER_PHALANX_PROXIMAL
+             */
+            val RIGHT_RING_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(67L)
+            /**
+             * Right ring finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_RING_FINGER_PHALANX_INTERMEDIATE
+             */
+            val RIGHT_RING_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(68L)
+            /**
+             * Right ring finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_RING_FINGER_PHALANX_DISTAL
+             */
+            val RIGHT_RING_FINGER_PHALANX_DISTAL: Joint get() = Joint(69L)
+            /**
+             * Right ring finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_RING_FINGER_TIP
+             */
+            val RIGHT_RING_FINGER_TIP: Joint get() = Joint(70L)
+            /**
+             * Right pinky finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_PINKY_FINGER_METACARPAL
+             */
+            val RIGHT_PINKY_FINGER_METACARPAL: Joint get() = Joint(71L)
+            /**
+             * Right pinky finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_PINKY_FINGER_PHALANX_PROXIMAL
+             */
+            val RIGHT_PINKY_FINGER_PHALANX_PROXIMAL: Joint get() = Joint(72L)
+            /**
+             * Right pinky finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_PINKY_FINGER_PHALANX_INTERMEDIATE
+             */
+            val RIGHT_PINKY_FINGER_PHALANX_INTERMEDIATE: Joint get() = Joint(73L)
+            /**
+             * Right pinky finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_PINKY_FINGER_PHALANX_DISTAL
+             */
+            val RIGHT_PINKY_FINGER_PHALANX_DISTAL: Joint get() = Joint(74L)
+            /**
+             * Right pinky finger tip joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_PINKY_FINGER_TIP
+             */
+            val RIGHT_PINKY_FINGER_TIP: Joint get() = Joint(75L)
+            /**
+             * Lower chest joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LOWER_CHEST
+             */
+            val LOWER_CHEST: Joint get() = Joint(76L)
+            /**
+             * Left scapula joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_SCAPULA
+             */
+            val LEFT_SCAPULA: Joint get() = Joint(77L)
+            /**
+             * Left wrist twist joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_WRIST_TWIST
+             */
+            val LEFT_WRIST_TWIST: Joint get() = Joint(78L)
+            /**
+             * Right scapula joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_SCAPULA
+             */
+            val RIGHT_SCAPULA: Joint get() = Joint(79L)
+            /**
+             * Right wrist twist joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_WRIST_TWIST
+             */
+            val RIGHT_WRIST_TWIST: Joint get() = Joint(80L)
+            /**
+             * Left foot twist joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_FOOT_TWIST
+             */
+            val LEFT_FOOT_TWIST: Joint get() = Joint(81L)
+            /**
+             * Left heel joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_HEEL
+             */
+            val LEFT_HEEL: Joint get() = Joint(82L)
+            /**
+             * Left middle foot joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_LEFT_MIDDLE_FOOT
+             */
+            val LEFT_MIDDLE_FOOT: Joint get() = Joint(83L)
+            /**
+             * Right foot twist joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_FOOT_TWIST
+             */
+            val RIGHT_FOOT_TWIST: Joint get() = Joint(84L)
+            /**
+             * Right heel joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_HEEL
+             */
+            val RIGHT_HEEL: Joint get() = Joint(85L)
+            /**
+             * Right middle foot joint.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_RIGHT_MIDDLE_FOOT
+             */
+            val RIGHT_MIDDLE_FOOT: Joint get() = Joint(86L)
+            /**
+             * Represents the size of the `Joint` enum.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_MAX
+             */
+            val MAX: Joint get() = Joint(87L)
+        }
+    }
+
+    @JvmInline
+    value class JointFlags(val value: Long) {
+        infix fun or(other: JointFlags): JointFlags = JointFlags(value or other.value)
+
+        infix fun and(other: JointFlags): JointFlags = JointFlags(value and other.value)
+
+        infix fun xor(other: JointFlags): JointFlags = JointFlags(value xor other.value)
+
+        fun inv(): JointFlags = JointFlags(value.inv())
+
+        operator fun contains(other: JointFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * The joint's orientation data is valid.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_FLAG_ORIENTATION_VALID
+             */
+            val ORIENTATION_VALID: JointFlags get() = JointFlags(1L)
+            /**
+             * The joint's orientation is actively tracked. May not be set if tracking has been temporarily
+             * lost.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_FLAG_ORIENTATION_TRACKED
+             */
+            val ORIENTATION_TRACKED: JointFlags get() = JointFlags(2L)
+            /**
+             * The joint's position data is valid.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_FLAG_POSITION_VALID
+             */
+            val POSITION_VALID: JointFlags get() = JointFlags(4L)
+            /**
+             * The joint's position is actively tracked. May not be set if tracking has been temporarily lost.
+             *
+             * Generated from Godot docs: XRBodyTracker.JOINT_FLAG_POSITION_TRACKED
+             */
+            val POSITION_TRACKED: JointFlags get() = JointFlags(8L)
+        }
     }
 
     companion object {
-        const val BODY_FLAG_UPPER_BODY_SUPPORTED: Long = 1L
-        const val BODY_FLAG_LOWER_BODY_SUPPORTED: Long = 2L
-        const val BODY_FLAG_HANDS_SUPPORTED: Long = 4L
-        const val JOINT_ROOT: Long = 0L
-        const val JOINT_HIPS: Long = 1L
-        const val JOINT_SPINE: Long = 2L
-        const val JOINT_CHEST: Long = 3L
-        const val JOINT_UPPER_CHEST: Long = 4L
-        const val JOINT_NECK: Long = 5L
-        const val JOINT_HEAD: Long = 6L
-        const val JOINT_HEAD_TIP: Long = 7L
-        const val JOINT_LEFT_SHOULDER: Long = 8L
-        const val JOINT_LEFT_UPPER_ARM: Long = 9L
-        const val JOINT_LEFT_LOWER_ARM: Long = 10L
-        const val JOINT_RIGHT_SHOULDER: Long = 11L
-        const val JOINT_RIGHT_UPPER_ARM: Long = 12L
-        const val JOINT_RIGHT_LOWER_ARM: Long = 13L
-        const val JOINT_LEFT_UPPER_LEG: Long = 14L
-        const val JOINT_LEFT_LOWER_LEG: Long = 15L
-        const val JOINT_LEFT_FOOT: Long = 16L
-        const val JOINT_LEFT_TOES: Long = 17L
-        const val JOINT_RIGHT_UPPER_LEG: Long = 18L
-        const val JOINT_RIGHT_LOWER_LEG: Long = 19L
-        const val JOINT_RIGHT_FOOT: Long = 20L
-        const val JOINT_RIGHT_TOES: Long = 21L
-        const val JOINT_LEFT_HAND: Long = 22L
-        const val JOINT_LEFT_PALM: Long = 23L
-        const val JOINT_LEFT_WRIST: Long = 24L
-        const val JOINT_LEFT_THUMB_METACARPAL: Long = 25L
-        const val JOINT_LEFT_THUMB_PHALANX_PROXIMAL: Long = 26L
-        const val JOINT_LEFT_THUMB_PHALANX_DISTAL: Long = 27L
-        const val JOINT_LEFT_THUMB_TIP: Long = 28L
-        const val JOINT_LEFT_INDEX_FINGER_METACARPAL: Long = 29L
-        const val JOINT_LEFT_INDEX_FINGER_PHALANX_PROXIMAL: Long = 30L
-        const val JOINT_LEFT_INDEX_FINGER_PHALANX_INTERMEDIATE: Long = 31L
-        const val JOINT_LEFT_INDEX_FINGER_PHALANX_DISTAL: Long = 32L
-        const val JOINT_LEFT_INDEX_FINGER_TIP: Long = 33L
-        const val JOINT_LEFT_MIDDLE_FINGER_METACARPAL: Long = 34L
-        const val JOINT_LEFT_MIDDLE_FINGER_PHALANX_PROXIMAL: Long = 35L
-        const val JOINT_LEFT_MIDDLE_FINGER_PHALANX_INTERMEDIATE: Long = 36L
-        const val JOINT_LEFT_MIDDLE_FINGER_PHALANX_DISTAL: Long = 37L
-        const val JOINT_LEFT_MIDDLE_FINGER_TIP: Long = 38L
-        const val JOINT_LEFT_RING_FINGER_METACARPAL: Long = 39L
-        const val JOINT_LEFT_RING_FINGER_PHALANX_PROXIMAL: Long = 40L
-        const val JOINT_LEFT_RING_FINGER_PHALANX_INTERMEDIATE: Long = 41L
-        const val JOINT_LEFT_RING_FINGER_PHALANX_DISTAL: Long = 42L
-        const val JOINT_LEFT_RING_FINGER_TIP: Long = 43L
-        const val JOINT_LEFT_PINKY_FINGER_METACARPAL: Long = 44L
-        const val JOINT_LEFT_PINKY_FINGER_PHALANX_PROXIMAL: Long = 45L
-        const val JOINT_LEFT_PINKY_FINGER_PHALANX_INTERMEDIATE: Long = 46L
-        const val JOINT_LEFT_PINKY_FINGER_PHALANX_DISTAL: Long = 47L
-        const val JOINT_LEFT_PINKY_FINGER_TIP: Long = 48L
-        const val JOINT_RIGHT_HAND: Long = 49L
-        const val JOINT_RIGHT_PALM: Long = 50L
-        const val JOINT_RIGHT_WRIST: Long = 51L
-        const val JOINT_RIGHT_THUMB_METACARPAL: Long = 52L
-        const val JOINT_RIGHT_THUMB_PHALANX_PROXIMAL: Long = 53L
-        const val JOINT_RIGHT_THUMB_PHALANX_DISTAL: Long = 54L
-        const val JOINT_RIGHT_THUMB_TIP: Long = 55L
-        const val JOINT_RIGHT_INDEX_FINGER_METACARPAL: Long = 56L
-        const val JOINT_RIGHT_INDEX_FINGER_PHALANX_PROXIMAL: Long = 57L
-        const val JOINT_RIGHT_INDEX_FINGER_PHALANX_INTERMEDIATE: Long = 58L
-        const val JOINT_RIGHT_INDEX_FINGER_PHALANX_DISTAL: Long = 59L
-        const val JOINT_RIGHT_INDEX_FINGER_TIP: Long = 60L
-        const val JOINT_RIGHT_MIDDLE_FINGER_METACARPAL: Long = 61L
-        const val JOINT_RIGHT_MIDDLE_FINGER_PHALANX_PROXIMAL: Long = 62L
-        const val JOINT_RIGHT_MIDDLE_FINGER_PHALANX_INTERMEDIATE: Long = 63L
-        const val JOINT_RIGHT_MIDDLE_FINGER_PHALANX_DISTAL: Long = 64L
-        const val JOINT_RIGHT_MIDDLE_FINGER_TIP: Long = 65L
-        const val JOINT_RIGHT_RING_FINGER_METACARPAL: Long = 66L
-        const val JOINT_RIGHT_RING_FINGER_PHALANX_PROXIMAL: Long = 67L
-        const val JOINT_RIGHT_RING_FINGER_PHALANX_INTERMEDIATE: Long = 68L
-        const val JOINT_RIGHT_RING_FINGER_PHALANX_DISTAL: Long = 69L
-        const val JOINT_RIGHT_RING_FINGER_TIP: Long = 70L
-        const val JOINT_RIGHT_PINKY_FINGER_METACARPAL: Long = 71L
-        const val JOINT_RIGHT_PINKY_FINGER_PHALANX_PROXIMAL: Long = 72L
-        const val JOINT_RIGHT_PINKY_FINGER_PHALANX_INTERMEDIATE: Long = 73L
-        const val JOINT_RIGHT_PINKY_FINGER_PHALANX_DISTAL: Long = 74L
-        const val JOINT_RIGHT_PINKY_FINGER_TIP: Long = 75L
-        const val JOINT_LOWER_CHEST: Long = 76L
-        const val JOINT_LEFT_SCAPULA: Long = 77L
-        const val JOINT_LEFT_WRIST_TWIST: Long = 78L
-        const val JOINT_RIGHT_SCAPULA: Long = 79L
-        const val JOINT_RIGHT_WRIST_TWIST: Long = 80L
-        const val JOINT_LEFT_FOOT_TWIST: Long = 81L
-        const val JOINT_LEFT_HEEL: Long = 82L
-        const val JOINT_LEFT_MIDDLE_FOOT: Long = 83L
-        const val JOINT_RIGHT_FOOT_TWIST: Long = 84L
-        const val JOINT_RIGHT_HEEL: Long = 85L
-        const val JOINT_RIGHT_MIDDLE_FOOT: Long = 86L
-        const val JOINT_MAX: Long = 87L
-        const val JOINT_FLAG_ORIENTATION_VALID: Long = 1L
-        const val JOINT_FLAG_ORIENTATION_TRACKED: Long = 2L
-        const val JOINT_FLAG_POSITION_VALID: Long = 4L
-        const val JOINT_FLAG_POSITION_TRACKED: Long = 8L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRBodyTracker? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -46,24 +47,24 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
         @JvmName("setHeartbeatIntervalProperty")
         set(value) = setHeartbeatInterval(value)
 
-    fun connectToUrl(url: String, tlsClientOptions: TLSOptions?): Long {
+    fun connectToUrl(url: String, tlsClientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(connectToUrlBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(connectToUrlBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
-    fun acceptStream(stream: StreamPeer?): Long {
+    fun acceptStream(stream: StreamPeer?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
-    fun send(message: ByteArray, writeMode: Long = 1L): Long {
+    fun send(message: ByteArray, writeMode: WebSocketPeer.WriteMode = WebSocketPeer.WriteMode.BINARY): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayAndLongArgRetLong(sendBind, segment, message, writeMode)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayAndLongArgRetLong(sendBind, segment, message, writeMode.value))
     }
 
-    fun sendText(message: String): Long {
+    fun sendText(message: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(sendTextBind, segment, message)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(sendTextBind, segment, message))
     }
 
     fun wasStringPacket(): Boolean {
@@ -111,9 +112,9 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getCurrentOutboundBufferedAmountBind, segment)
     }
 
-    fun getReadyState(): Long {
+    fun getReadyState(): WebSocketPeer.State {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, segment)
+        return WebSocketPeer.State(ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, segment))
     }
 
     fun getCloseCode(): Int {
@@ -186,14 +187,25 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeartbeatIntervalBind, segment)
     }
 
-    companion object {
-        const val WRITE_MODE_TEXT: Long = 0L
-        const val WRITE_MODE_BINARY: Long = 1L
-        const val STATE_CONNECTING: Long = 0L
-        const val STATE_OPEN: Long = 1L
-        const val STATE_CLOSING: Long = 2L
-        const val STATE_CLOSED: Long = 3L
+    @JvmInline
+    value class WriteMode(val value: Long) {
+        companion object {
+            val TEXT: WriteMode get() = WriteMode(0L)
+            val BINARY: WriteMode get() = WriteMode(1L)
+        }
+    }
 
+    @JvmInline
+    value class State(val value: Long) {
+        companion object {
+            val CONNECTING: State get() = State(0L)
+            val OPEN: State get() = State(1L)
+            val CLOSING: State get() = State(2L)
+            val CLOSED: State get() = State(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebSocketPeer? =
             wrap(handle.segment)

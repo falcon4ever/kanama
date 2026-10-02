@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -74,7 +75,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
         @JvmName("setDropModeFlagsProperty")
         set(value) = setDropModeFlags(value)
 
-    var selectMode: Long
+    var selectMode: Tree.SelectMode
         @JvmName("selectModeProperty")
         get() = getSelectMode()
         @JvmName("setSelectModeProperty")
@@ -98,7 +99,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
         @JvmName("setScrollVerticalEnabledProperty")
         set(value) = setVScrollEnabled(value)
 
-    var scrollHintMode: Long
+    var scrollHintMode: Tree.ScrollHintMode
         @JvmName("scrollHintModeProperty")
         get() = getScrollHintMode()
         @JvmName("setScrollHintModeProperty")
@@ -306,8 +307,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.set_select_mode
      */
-    fun setSelectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode)
+    fun setSelectMode(mode: Tree.SelectMode) {
+        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode.value)
     }
 
     /**
@@ -315,8 +316,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.get_select_mode
      */
-    fun getSelectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment)
+    fun getSelectMode(): Tree.SelectMode {
+        return Tree.SelectMode(ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment))
     }
 
     /**
@@ -517,8 +518,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.set_column_title_alignment
      */
-    fun setColumnTitleAlignment(column: Int, titleAlignment: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleAlignmentBind, segment, column, titleAlignment)
+    fun setColumnTitleAlignment(column: Int, titleAlignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleAlignmentBind, segment, column, titleAlignment.value)
     }
 
     /**
@@ -526,8 +527,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.get_column_title_alignment
      */
-    fun getColumnTitleAlignment(column: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleAlignmentBind, segment, column)
+    fun getColumnTitleAlignment(column: Int): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleAlignmentBind, segment, column))
     }
 
     /**
@@ -535,8 +536,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.set_column_title_direction
      */
-    fun setColumnTitleDirection(column: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleDirectionBind, segment, column, direction)
+    fun setColumnTitleDirection(column: Int, direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setColumnTitleDirectionBind, segment, column, direction.value)
     }
 
     /**
@@ -544,8 +545,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.get_column_title_direction
      */
-    fun getColumnTitleDirection(column: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleDirectionBind, segment, column)
+    fun getColumnTitleDirection(column: Int): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getColumnTitleDirectionBind, segment, column))
     }
 
     /**
@@ -627,8 +628,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.set_scroll_hint_mode
      */
-    fun setScrollHintMode(scrollHintMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode)
+    fun setScrollHintMode(scrollHintMode: Tree.ScrollHintMode) {
+        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode.value)
     }
 
     /**
@@ -637,8 +638,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Tree.get_scroll_hint_mode
      */
-    fun getScrollHintMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment)
+    fun getScrollHintMode(): Tree.ScrollHintMode {
+        return Tree.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment))
     }
 
     /**
@@ -835,18 +836,99 @@ class Tree(handle: GodotHandle) : Control(handle) {
         const val nothingSelected: String = "nothing_selected"
     }
 
-    companion object {
-        const val SELECT_SINGLE: Long = 0L
-        const val SELECT_ROW: Long = 1L
-        const val SELECT_MULTI: Long = 2L
-        const val DROP_MODE_DISABLED: Long = 0L
-        const val DROP_MODE_ON_ITEM: Long = 1L
-        const val DROP_MODE_INBETWEEN: Long = 2L
-        const val SCROLL_HINT_MODE_DISABLED: Long = 0L
-        const val SCROLL_HINT_MODE_BOTH: Long = 1L
-        const val SCROLL_HINT_MODE_TOP: Long = 2L
-        const val SCROLL_HINT_MODE_BOTTOM: Long = 3L
+    @JvmInline
+    value class SelectMode(val value: Long) {
+        companion object {
+            /**
+             * Allows selection of a single cell at a time. From the perspective of items, only a single item
+             * is allowed to be selected. And there is only one column selected in the selected item. The focus
+             * cursor is always hidden in this mode, but it is positioned at the current selection, making the
+             * currently selected item the currently focused item.
+             *
+             * Generated from Godot docs: Tree.SELECT_SINGLE
+             */
+            val SINGLE: SelectMode get() = SelectMode(0L)
+            /**
+             * Allows selection of a single row at a time. From the perspective of items, only a single items
+             * is allowed to be selected. And all the columns are selected in the selected item. The focus
+             * cursor is always hidden in this mode, but it is positioned at the first column of the current
+             * selection, making the currently selected item the currently focused item.
+             *
+             * Generated from Godot docs: Tree.SELECT_ROW
+             */
+            val ROW: SelectMode get() = SelectMode(1L)
+            /**
+             * Allows selection of multiple cells at the same time. From the perspective of items, multiple
+             * items are allowed to be selected. And there can be multiple columns selected in each selected
+             * item. The focus cursor is visible in this mode, the item or column under the cursor is not
+             * necessarily selected.
+             *
+             * Generated from Godot docs: Tree.SELECT_MULTI
+             */
+            val MULTI: SelectMode get() = SelectMode(2L)
+        }
+    }
 
+    @JvmInline
+    value class DropModeFlags(val value: Long) {
+        companion object {
+            /**
+             * Disables all drop sections. Note: This is the default flag, it has no effect when combined with
+             * other flags.
+             *
+             * Generated from Godot docs: Tree.DROP_MODE_DISABLED
+             */
+            val DISABLED: DropModeFlags get() = DropModeFlags(0L)
+            /**
+             * Enables the "on item" drop section. This drop section covers the entire item. When combined with
+             * `DROP_MODE_INBETWEEN`, this drop section halves in height and stays centered vertically.
+             *
+             * Generated from Godot docs: Tree.DROP_MODE_ON_ITEM
+             */
+            val ON_ITEM: DropModeFlags get() = DropModeFlags(1L)
+            /**
+             * Enables "above item" and "below item" drop sections. The "above item" drop section covers the
+             * top half of the item, while the "below item" drop section covers the bottom half, and extends
+             * downward to the left of any children. When combined with `DROP_MODE_ON_ITEM`, these drop
+             * sections halve in height and stay at the top and bottom respectively.
+             *
+             * Generated from Godot docs: Tree.DROP_MODE_INBETWEEN
+             */
+            val INBETWEEN: DropModeFlags get() = DropModeFlags(2L)
+        }
+    }
+
+    @JvmInline
+    value class ScrollHintMode(val value: Long) {
+        companion object {
+            /**
+             * Scroll hints will never be shown.
+             *
+             * Generated from Godot docs: Tree.SCROLL_HINT_MODE_DISABLED
+             */
+            val DISABLED: ScrollHintMode get() = ScrollHintMode(0L)
+            /**
+             * Scroll hints will be shown at the top and bottom.
+             *
+             * Generated from Godot docs: Tree.SCROLL_HINT_MODE_BOTH
+             */
+            val BOTH: ScrollHintMode get() = ScrollHintMode(1L)
+            /**
+             * Only the top scroll hint will be shown.
+             *
+             * Generated from Godot docs: Tree.SCROLL_HINT_MODE_TOP
+             */
+            val TOP: ScrollHintMode get() = ScrollHintMode(2L)
+            /**
+             * Only the bottom scroll hint will be shown.
+             *
+             * Generated from Godot docs: Tree.SCROLL_HINT_MODE_BOTTOM
+             */
+            val BOTTOM: ScrollHintMode get() = ScrollHintMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Tree? =
             wrap(handle.segment)

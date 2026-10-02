@@ -17,37 +17,37 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
         @JvmName("setEnableBlendProperty")
         set(value) = setEnableBlend(value)
 
-    var srcColorBlendFactor: Long
+    var srcColorBlendFactor: RenderingDevice.BlendFactor
         @JvmName("srcColorBlendFactorProperty")
         get() = getSrcColorBlendFactor()
         @JvmName("setSrcColorBlendFactorProperty")
         set(value) = setSrcColorBlendFactor(value)
 
-    var dstColorBlendFactor: Long
+    var dstColorBlendFactor: RenderingDevice.BlendFactor
         @JvmName("dstColorBlendFactorProperty")
         get() = getDstColorBlendFactor()
         @JvmName("setDstColorBlendFactorProperty")
         set(value) = setDstColorBlendFactor(value)
 
-    var colorBlendOp: Long
+    var colorBlendOp: RenderingDevice.BlendOperation
         @JvmName("colorBlendOpProperty")
         get() = getColorBlendOp()
         @JvmName("setColorBlendOpProperty")
         set(value) = setColorBlendOp(value)
 
-    var srcAlphaBlendFactor: Long
+    var srcAlphaBlendFactor: RenderingDevice.BlendFactor
         @JvmName("srcAlphaBlendFactorProperty")
         get() = getSrcAlphaBlendFactor()
         @JvmName("setSrcAlphaBlendFactorProperty")
         set(value) = setSrcAlphaBlendFactor(value)
 
-    var dstAlphaBlendFactor: Long
+    var dstAlphaBlendFactor: RenderingDevice.BlendFactor
         @JvmName("dstAlphaBlendFactorProperty")
         get() = getDstAlphaBlendFactor()
         @JvmName("setDstAlphaBlendFactorProperty")
         set(value) = setDstAlphaBlendFactor(value)
 
-    var alphaBlendOp: Long
+    var alphaBlendOp: RenderingDevice.BlendOperation
         @JvmName("alphaBlendOpProperty")
         get() = getAlphaBlendOp()
         @JvmName("setAlphaBlendOpProperty")
@@ -124,9 +124,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_src_color_blend_factor
      */
-    fun setSrcColorBlendFactor(pMember: Long) {
+    fun setSrcColorBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -135,9 +135,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_src_color_blend_factor
      */
-    fun getSrcColorBlendFactor(): Long {
+    fun getSrcColorBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, segment)
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, segment))
     }
 
     /**
@@ -146,9 +146,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_dst_color_blend_factor
      */
-    fun setDstColorBlendFactor(pMember: Long) {
+    fun setDstColorBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -157,9 +157,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_dst_color_blend_factor
      */
-    fun getDstColorBlendFactor(): Long {
+    fun getDstColorBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, segment)
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, segment))
     }
 
     /**
@@ -167,9 +167,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_color_blend_op
      */
-    fun setColorBlendOp(pMember: Long) {
+    fun setColorBlendOp(pMember: RenderingDevice.BlendOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, segment, pMember.value)
     }
 
     /**
@@ -177,9 +177,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_color_blend_op
      */
-    fun getColorBlendOp(): Long {
+    fun getColorBlendOp(): RenderingDevice.BlendOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, segment)
+        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, segment))
     }
 
     /**
@@ -188,9 +188,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_src_alpha_blend_factor
      */
-    fun setSrcAlphaBlendFactor(pMember: Long) {
+    fun setSrcAlphaBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -199,9 +199,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_src_alpha_blend_factor
      */
-    fun getSrcAlphaBlendFactor(): Long {
+    fun getSrcAlphaBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, segment)
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, segment))
     }
 
     /**
@@ -210,9 +210,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_dst_alpha_blend_factor
      */
-    fun setDstAlphaBlendFactor(pMember: Long) {
+    fun setDstAlphaBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -221,9 +221,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_dst_alpha_blend_factor
      */
-    fun getDstAlphaBlendFactor(): Long {
+    fun getDstAlphaBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, segment)
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, segment))
     }
 
     /**
@@ -231,9 +231,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_alpha_blend_op
      */
-    fun setAlphaBlendOp(pMember: Long) {
+    fun setAlphaBlendOp(pMember: RenderingDevice.BlendOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, segment, pMember.value)
     }
 
     /**
@@ -241,9 +241,9 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.get_alpha_blend_op
      */
-    fun getAlphaBlendOp(): Long {
+    fun getAlphaBlendOp(): RenderingDevice.BlendOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, segment)
+        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, segment))
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: TabContainer
  */
 class TabContainer(handle: GodotHandle) : Container(handle) {
-    var tabAlignment: Long
+    var tabAlignment: TabBar.AlignmentMode
         @JvmName("tabAlignmentProperty")
         get() = getTabAlignment()
         @JvmName("setTabAlignmentProperty")
@@ -25,7 +26,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setCurrentTabProperty")
         set(value) = setCurrentTab(value)
 
-    var tabsPosition: Long
+    var tabsPosition: TabContainer.TabPosition
         @JvmName("tabsPositionProperty")
         get() = getTabsPosition()
         @JvmName("setTabsPositionProperty")
@@ -73,7 +74,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setUseHiddenTabsForMinSizeProperty")
         set(value) = setUseHiddenTabsForMinSize(value)
 
-    var tabFocusMode: Long
+    var tabFocusMode: Control.FocusMode
         @JvmName("tabFocusModeProperty")
         get() = getTabFocusMode()
         @JvmName("setTabFocusModeProperty")
@@ -177,8 +178,8 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: TabContainer.set_tab_alignment
      */
-    fun setTabAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment)
+    fun setTabAlignment(alignment: TabBar.AlignmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -186,8 +187,8 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: TabContainer.get_tab_alignment
      */
-    fun getTabAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment)
+    fun getTabAlignment(): TabBar.AlignmentMode {
+        return TabBar.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment))
     }
 
     /**
@@ -195,8 +196,8 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: TabContainer.set_tabs_position
      */
-    fun setTabsPosition(tabsPosition: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabsPositionBind, segment, tabsPosition)
+    fun setTabsPosition(tabsPosition: TabContainer.TabPosition) {
+        ObjectCalls.ptrcallWithLongArg(setTabsPositionBind, segment, tabsPosition.value)
     }
 
     /**
@@ -204,8 +205,8 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: TabContainer.get_tabs_position
      */
-    fun getTabsPosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabsPositionBind, segment)
+    fun getTabsPosition(): TabContainer.TabPosition {
+        return TabContainer.TabPosition(ObjectCalls.ptrcallNoArgsRetLong(getTabsPositionBind, segment))
     }
 
     /**
@@ -543,8 +544,8 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: TabContainer.set_tab_focus_mode
      */
-    fun setTabFocusMode(focusMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabFocusModeBind, segment, focusMode)
+    fun setTabFocusMode(focusMode: Control.FocusMode) {
+        ObjectCalls.ptrcallWithLongArg(setTabFocusModeBind, segment, focusMode.value)
     }
 
     /**
@@ -552,8 +553,8 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: TabContainer.get_tab_focus_mode
      */
-    fun getTabFocusMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabFocusModeBind, segment)
+    fun getTabFocusMode(): Control.FocusMode {
+        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(getTabFocusModeBind, segment))
     }
 
     /**
@@ -586,11 +587,31 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         const val prePopupPressed: String = "pre_popup_pressed"
     }
 
-    companion object {
-        const val POSITION_TOP: Long = 0L
-        const val POSITION_BOTTOM: Long = 1L
-        const val POSITION_MAX: Long = 2L
+    @JvmInline
+    value class TabPosition(val value: Long) {
+        companion object {
+            /**
+             * Places the tab bar at the top.
+             *
+             * Generated from Godot docs: TabContainer.POSITION_TOP
+             */
+            val TOP: TabPosition get() = TabPosition(0L)
+            /**
+             * Places the tab bar at the bottom. The tab bar's `StyleBox` will be flipped vertically.
+             *
+             * Generated from Godot docs: TabContainer.POSITION_BOTTOM
+             */
+            val BOTTOM: TabPosition get() = TabPosition(1L)
+            /**
+             * Represents the size of the `TabPosition` enum.
+             *
+             * Generated from Godot docs: TabContainer.POSITION_MAX
+             */
+            val MAX: TabPosition get() = TabPosition(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TabContainer? =
             wrap(handle.segment)

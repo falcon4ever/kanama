@@ -47,7 +47,6 @@ import net.multigesture.kanama.api.OpenXRExtensionWrapper
 import net.multigesture.kanama.api.OpenXRSpatialCapabilityConfigurationBaseHeader
 import net.multigesture.kanama.api.OpenXRSpatialComponentData
 import net.multigesture.kanama.api.OpenXRStructureBase
-import net.multigesture.kanama.api.PhysicsBody3D
 import net.multigesture.kanama.api.PhysicsDirectSpaceState2DExtension
 import net.multigesture.kanama.api.PhysicsDirectSpaceState3DExtension
 import net.multigesture.kanama.api.PhysicsServer2DExtension
@@ -86,11 +85,10 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     val maybeKey: InputEventKey? = InputEventKey.from(value)
     val maybeButton: InputEventMouseButton? = InputEventMouseButton.from(value)
     val maybeMotion: InputEventMouseMotion? = InputEventMouseMotion.from(value)
-    val keyConstants: List<Long> = listOf(InputEventKey.KEY_W, InputEventKey.KEY_F10)
-    val mouseConstants: List<Long> =
-      listOf(InputEventMouseButton.MOUSE_BUTTON_LEFT, InputEventMouseButton.MOUSE_BUTTON_WHEEL_DOWN)
+    val keyConstants: List<Key> = listOf(Key.W, Key.F10)
+    val mouseConstants: List<MouseButton> = listOf(MouseButton.LEFT, MouseButton.WHEEL_DOWN)
 
-    key.setKeycode(InputEventKey.KEY_W)
+    key.setKeycode(Key.W)
     key.setPressed(true)
     key.close() // close what you create (task 61) — this probe otherwise models a leak
   }
@@ -101,7 +99,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     val meshDataTool: MeshDataTool = MeshDataTool.create()
     val surfaceTool: SurfaceTool = SurfaceTool.create()
 
-    surfaceTool.begin(Mesh.PRIMITIVE_TRIANGLES)
+    surfaceTool.begin(Mesh.PrimitiveType.TRIANGLES)
     surfaceTool.createFrom(mesh, 0)
     surfaceTool.commit(arrayMesh)
     // close what you create (task 61) — these factories return owned wrappers.
@@ -132,9 +130,9 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     animationNode: AnimationNode,
   ) {
     styleBox.getMinimumSize()
-    styleBox.setContentMargin(0L, 2.0)
-    styleBox.getContentMargin(0L)
-    styleBox.getMargin(0L)
+    styleBox.setContentMargin(Side.LEFT, 2.0)
+    styleBox.getContentMargin(Side.LEFT)
+    styleBox.getMargin(Side.LEFT)
     styleBox.getOffset()
     styleBox.testMask(Vector2.ZERO, Rect2.ZERO)
     audioStream.getLength()
@@ -211,17 +209,9 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     debuggerPlugin.getSessions()
     scenePostImportPlugin.getOptionValue("kanama_probe")
     scenePostImportPlugin.addImportOption("kanama_probe", true)
-    scenePostImportPlugin.addImportOptionAdvanced(
-      EditorScenePostImportPlugin.INTERNAL_IMPORT_CATEGORY_NODE,
-      "kanama_probe",
-      true,
-    )
+    scenePostImportPlugin.addImportOptionAdvanced(VariantType.BOOL, "kanama_probe", true)
     sceneFormatImporter.addImportOption("kanama_probe", true)
-    sceneFormatImporter.addImportOptionAdvanced(
-      EditorSceneFormatImporter.IMPORT_SCENE,
-      "kanama_probe",
-      true,
-    )
+    sceneFormatImporter.addImportOptionAdvanced(VariantType.BOOL, "kanama_probe", true)
     importPlugin.appendImportExternalResource("res://kanama_probe.res")
     previewGenerator.requestDrawAndWait(RID.EMPTY)
     tooltipPlugin.requestThumbnail("res://kanama_probe.res", textureRect)
@@ -275,8 +265,8 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     editorVCSInterface.createCommit("message", "author", "id", 0L, 0L)
     editorVCSInterface.createStatusFile(
       "res://kanama_probe.gd",
-      EditorVCSInterface.CHANGE_TYPE_MODIFIED,
-      EditorVCSInterface.TREE_AREA_UNSTAGED,
+      EditorVCSInterface.ChangeType.MODIFIED,
+      EditorVCSInterface.TreeArea.UNSTAGED,
     )
     editorVCSInterface.addLineDiffsIntoDiffHunk(hunk, listOf(line))
     editorVCSInterface.addDiffHunksIntoDiffFile(file, listOf(hunk))
@@ -347,7 +337,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
 
   fun constantsAndFactories(): Camera3D {
     val invalidCellItem: Long = GridMap.INVALID_CELL_ITEM
-    val bodyAxis: Long = PhysicsBody3D.BODY_AXIS_ANGULAR_X
+    val bodyAxis: PhysicsServer3D.BodyAxis = PhysicsServer3D.BodyAxis.ANGULAR_X
 
     return Camera3D.create()
   }

@@ -53,8 +53,8 @@ object WorkerThreadPool {
      * Generated from Godot docs: WorkerThreadPool.wait_for_task_completion
      */
     @JvmStatic
-    fun waitForTaskCompletion(taskId: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(waitForTaskCompletionBind, singleton, taskId)
+    fun waitForTaskCompletion(taskId: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(waitForTaskCompletionBind, singleton, taskId))
     }
 
     /**

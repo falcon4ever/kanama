@@ -11,31 +11,31 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: RDTextureView
  */
 class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
-    var formatOverride: Long
+    var formatOverride: RenderingDevice.DataFormat
         @JvmName("formatOverrideProperty")
         get() = getFormatOverride()
         @JvmName("setFormatOverrideProperty")
         set(value) = setFormatOverride(value)
 
-    var swizzleR: Long
+    var swizzleR: RenderingDevice.TextureSwizzle
         @JvmName("swizzleRProperty")
         get() = getSwizzleR()
         @JvmName("setSwizzleRProperty")
         set(value) = setSwizzleR(value)
 
-    var swizzleG: Long
+    var swizzleG: RenderingDevice.TextureSwizzle
         @JvmName("swizzleGProperty")
         get() = getSwizzleG()
         @JvmName("setSwizzleGProperty")
         set(value) = setSwizzleG(value)
 
-    var swizzleB: Long
+    var swizzleB: RenderingDevice.TextureSwizzle
         @JvmName("swizzleBProperty")
         get() = getSwizzleB()
         @JvmName("setSwizzleBProperty")
         set(value) = setSwizzleB(value)
 
-    var swizzleA: Long
+    var swizzleA: RenderingDevice.TextureSwizzle
         @JvmName("swizzleAProperty")
         get() = getSwizzleA()
         @JvmName("setSwizzleAProperty")
@@ -48,9 +48,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.set_format_override
      */
-    fun setFormatOverride(pMember: Long) {
+    fun setFormatOverride(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatOverrideBind, segment, pMember.value)
     }
 
     /**
@@ -60,9 +60,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.get_format_override
      */
-    fun getFormatOverride(): Long {
+    fun getFormatOverride(): RenderingDevice.DataFormat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, segment)
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatOverrideBind, segment))
     }
 
     /**
@@ -70,9 +70,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.set_swizzle_r
      */
-    fun setSwizzleR(pMember: Long) {
+    fun setSwizzleR(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleRBind, segment, pMember.value)
     }
 
     /**
@@ -80,9 +80,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.get_swizzle_r
      */
-    fun getSwizzleR(): Long {
+    fun getSwizzleR(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, segment)
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleRBind, segment))
     }
 
     /**
@@ -90,9 +90,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.set_swizzle_g
      */
-    fun setSwizzleG(pMember: Long) {
+    fun setSwizzleG(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleGBind, segment, pMember.value)
     }
 
     /**
@@ -100,9 +100,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.get_swizzle_g
      */
-    fun getSwizzleG(): Long {
+    fun getSwizzleG(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, segment)
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleGBind, segment))
     }
 
     /**
@@ -110,9 +110,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.set_swizzle_b
      */
-    fun setSwizzleB(pMember: Long) {
+    fun setSwizzleB(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleBBind, segment, pMember.value)
     }
 
     /**
@@ -120,9 +120,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.get_swizzle_b
      */
-    fun getSwizzleB(): Long {
+    fun getSwizzleB(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, segment)
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleBBind, segment))
     }
 
     /**
@@ -130,9 +130,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.set_swizzle_a
      */
-    fun setSwizzleA(pMember: Long) {
+    fun setSwizzleA(pMember: RenderingDevice.TextureSwizzle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwizzleABind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSwizzleABind, segment, pMember.value)
     }
 
     /**
@@ -140,9 +140,9 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureView.get_swizzle_a
      */
-    fun getSwizzleA(): Long {
+    fun getSwizzleA(): RenderingDevice.TextureSwizzle {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, segment)
+        return RenderingDevice.TextureSwizzle(ObjectCalls.ptrcallNoArgsRetLong(getSwizzleABind, segment))
     }
 
     companion object {

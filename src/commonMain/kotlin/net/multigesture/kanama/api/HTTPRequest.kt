@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -71,8 +72,8 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: HTTPRequest.request
      */
-    fun request(url: String, customHeaders: List<String>, method: Long = 0L, requestData: String = ""): Long {
-        return ObjectCalls.ptrcallWithStringPackedStringListLongStringArgsRetLong(requestBind, segment, url, customHeaders, method, requestData)
+    fun request(url: String, customHeaders: List<String>, method: HTTPClient.Method = HTTPClient.Method.GET, requestData: String = ""): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringPackedStringListLongStringArgsRetLong(requestBind, segment, url, customHeaders, method.value, requestData))
     }
 
     /**
@@ -86,8 +87,8 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: HTTPRequest.request_raw
      */
-    fun requestRaw(url: String, customHeaders: List<String>, method: Long = 0L, requestDataRaw: ByteArray): Long {
-        return ObjectCalls.ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(requestRawBind, segment, url, customHeaders, method, requestDataRaw)
+    fun requestRaw(url: String, customHeaders: List<String>, method: HTTPClient.Method = HTTPClient.Method.GET, requestDataRaw: ByteArray): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringPackedStringListLongByteArrayArgsRetLong(requestRawBind, segment, url, customHeaders, method.value, requestDataRaw))
     }
 
     /**
@@ -113,8 +114,8 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: HTTPRequest.get_http_client_status
      */
-    fun getHttpClientStatus(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHttpClientStatusBind, segment)
+    fun getHttpClientStatus(): HTTPClient.Status {
+        return HTTPClient.Status(ObjectCalls.ptrcallNoArgsRetLong(getHttpClientStatusBind, segment))
     }
 
     /**
@@ -319,22 +320,101 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
         const val requestCompleted: String = "request_completed"
     }
 
-    companion object {
-        const val RESULT_SUCCESS: Long = 0L
-        const val RESULT_CHUNKED_BODY_SIZE_MISMATCH: Long = 1L
-        const val RESULT_CANT_CONNECT: Long = 2L
-        const val RESULT_CANT_RESOLVE: Long = 3L
-        const val RESULT_CONNECTION_ERROR: Long = 4L
-        const val RESULT_TLS_HANDSHAKE_ERROR: Long = 5L
-        const val RESULT_NO_RESPONSE: Long = 6L
-        const val RESULT_BODY_SIZE_LIMIT_EXCEEDED: Long = 7L
-        const val RESULT_BODY_DECOMPRESS_FAILED: Long = 8L
-        const val RESULT_REQUEST_FAILED: Long = 9L
-        const val RESULT_DOWNLOAD_FILE_CANT_OPEN: Long = 10L
-        const val RESULT_DOWNLOAD_FILE_WRITE_ERROR: Long = 11L
-        const val RESULT_REDIRECT_LIMIT_REACHED: Long = 12L
-        const val RESULT_TIMEOUT: Long = 13L
+    @JvmInline
+    value class Result(val value: Long) {
+        companion object {
+            /**
+             * Request successful.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_SUCCESS
+             */
+            val SUCCESS: Result get() = Result(0L)
+            /**
+             * Request failed due to a mismatch between the expected and actual chunked body size during
+             * transfer. Possible causes include network errors, server misconfiguration, or issues with
+             * chunked encoding.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_CHUNKED_BODY_SIZE_MISMATCH
+             */
+            val CHUNKED_BODY_SIZE_MISMATCH: Result get() = Result(1L)
+            /**
+             * Request failed while connecting.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_CANT_CONNECT
+             */
+            val CANT_CONNECT: Result get() = Result(2L)
+            /**
+             * Request failed while resolving.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_CANT_RESOLVE
+             */
+            val CANT_RESOLVE: Result get() = Result(3L)
+            /**
+             * Request failed due to connection (read/write) error.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_CONNECTION_ERROR
+             */
+            val CONNECTION_ERROR: Result get() = Result(4L)
+            /**
+             * Request failed on TLS handshake.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_TLS_HANDSHAKE_ERROR
+             */
+            val TLS_HANDSHAKE_ERROR: Result get() = Result(5L)
+            /**
+             * Request does not have a response (yet).
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_NO_RESPONSE
+             */
+            val NO_RESPONSE: Result get() = Result(6L)
+            /**
+             * Request exceeded its maximum size limit, see `body_size_limit`.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_BODY_SIZE_LIMIT_EXCEEDED
+             */
+            val BODY_SIZE_LIMIT_EXCEEDED: Result get() = Result(7L)
+            /**
+             * Request failed due to an error while decompressing the response body. Possible causes include
+             * unsupported or incorrect compression format, corrupted data, or incomplete transfer.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_BODY_DECOMPRESS_FAILED
+             */
+            val BODY_DECOMPRESS_FAILED: Result get() = Result(8L)
+            /**
+             * Request failed (currently unused).
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_REQUEST_FAILED
+             */
+            val REQUEST_FAILED: Result get() = Result(9L)
+            /**
+             * HTTPRequest couldn't open the download file.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_DOWNLOAD_FILE_CANT_OPEN
+             */
+            val DOWNLOAD_FILE_CANT_OPEN: Result get() = Result(10L)
+            /**
+             * HTTPRequest couldn't write to the download file.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_DOWNLOAD_FILE_WRITE_ERROR
+             */
+            val DOWNLOAD_FILE_WRITE_ERROR: Result get() = Result(11L)
+            /**
+             * Request reached its maximum redirect limit, see `max_redirects`.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_REDIRECT_LIMIT_REACHED
+             */
+            val REDIRECT_LIMIT_REACHED: Result get() = Result(12L)
+            /**
+             * Request failed due to a timeout. If you expect requests to take a long time, try increasing the
+             * value of `timeout` or setting it to `0.0` to remove the timeout completely.
+             *
+             * Generated from Godot docs: HTTPRequest.RESULT_TIMEOUT
+             */
+            val TIMEOUT: Result get() = Result(13L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): HTTPRequest? =
             wrap(handle.segment)

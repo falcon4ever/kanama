@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: Timer
  */
 class Timer(handle: GodotHandle) : Node(handle) {
-    var processCallback: Long
+    var processCallback: Timer.TimerProcessCallback
         @JvmName("processCallbackProperty")
         get() = getTimerProcessCallback()
         @JvmName("setProcessCallbackProperty")
@@ -206,8 +207,8 @@ class Timer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Timer.set_timer_process_callback
      */
-    fun setTimerProcessCallback(callback: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTimerProcessCallbackBind, segment, callback)
+    fun setTimerProcessCallback(callback: Timer.TimerProcessCallback) {
+        ObjectCalls.ptrcallWithLongArg(setTimerProcessCallbackBind, segment, callback.value)
     }
 
     /**
@@ -215,18 +216,33 @@ class Timer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Timer.get_timer_process_callback
      */
-    fun getTimerProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTimerProcessCallbackBind, segment)
+    fun getTimerProcessCallback(): Timer.TimerProcessCallback {
+        return Timer.TimerProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getTimerProcessCallbackBind, segment))
     }
 
     object Signals {
         const val timeout: String = "timeout"
     }
 
-    companion object {
-        const val TIMER_PROCESS_PHYSICS: Long = 0L
-        const val TIMER_PROCESS_IDLE: Long = 1L
+    @JvmInline
+    value class TimerProcessCallback(val value: Long) {
+        companion object {
+            /**
+             * Update the timer every physics process frame (see `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`).
+             *
+             * Generated from Godot docs: Timer.TIMER_PROCESS_PHYSICS
+             */
+            val PHYSICS: TimerProcessCallback get() = TimerProcessCallback(0L)
+            /**
+             * Update the timer every process (rendered) frame (see `Node.NOTIFICATION_INTERNAL_PROCESS`).
+             *
+             * Generated from Godot docs: Timer.TIMER_PROCESS_IDLE
+             */
+            val IDLE: TimerProcessCallback get() = TimerProcessCallback(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Timer? =
             wrap(handle.segment)

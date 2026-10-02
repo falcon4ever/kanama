@@ -13,10 +13,13 @@ import net.multigesture.kanama.binding.runtime.*
 // hand-written iOS `Node` carried it as a member, so iOS keeps it as an extension: every
 // `self.createTween()` / `node.createTween()` call site resolves on both platforms
 // (task 117 P1'(b2); mirrors the SceneTree entry above).
-fun Node.createTween(): Tween? =
-    ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
-        .takeIf { it.address() != 0L }
-        ?.let { Tween(GodotHandle(it)) }
+fun Node.createTween(): Tween =
+    requireGodotReturn(
+        ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
+            .takeIf { it.address() != 0L }
+            ?.let { Tween(GodotHandle(it)) },
+        "Node.create_tween",
+    )
 
 private val nodeCreateTweenBind by lazy {
     ObjectCalls.getMethodBind("Node", "create_tween", 3426978995L)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -92,8 +93,8 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationTree.set_process_callback
      */
-    fun setProcessCallback(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode)
+    fun setProcessCallback(mode: AnimationTree.AnimationProcessCallback) {
+        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode.value)
     }
 
     /**
@@ -101,19 +102,24 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationTree.get_process_callback
      */
-    fun getProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment)
+    fun getProcessCallback(): AnimationTree.AnimationProcessCallback {
+        return AnimationTree.AnimationProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment))
     }
 
     object Signals {
         const val animationPlayerChanged: String = "animation_player_changed"
     }
 
-    companion object {
-        const val ANIMATION_PROCESS_PHYSICS: Long = 0L
-        const val ANIMATION_PROCESS_IDLE: Long = 1L
-        const val ANIMATION_PROCESS_MANUAL: Long = 2L
+    @JvmInline
+    value class AnimationProcessCallback(val value: Long) {
+        companion object {
+            val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)
+            val IDLE: AnimationProcessCallback get() = AnimationProcessCallback(1L)
+            val MANUAL: AnimationProcessCallback get() = AnimationProcessCallback(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationTree? =
             wrap(handle.segment)

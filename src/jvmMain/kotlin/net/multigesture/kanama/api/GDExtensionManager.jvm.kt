@@ -18,8 +18,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  *
  * Generated from Godot docs: GDExtensionManager.load_extension_from_function
  */
-fun GDExtensionManager.loadExtensionFromFunction(path: String, initFunc: MemorySegment): Long {
-    return ObjectCalls.ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong(loadExtensionFromFunctionBind, gDExtensionManagerSingleton, path, initFunc)
+fun GDExtensionManager.loadExtensionFromFunction(path: String, initFunc: MemorySegment): GDExtensionManager.LoadStatus {
+    return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong(loadExtensionFromFunctionBind, gDExtensionManagerSingleton, path, initFunc))
 }
 
 private val gDExtensionManagerSingleton: RawSegment by lazy {

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -24,7 +25,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setPlaceholderTextProperty")
         set(value) = setPlaceholder(value)
 
-    var alignment: Long
+    var alignment: HorizontalAlignment
         @JvmName("alignmentProperty")
         get() = getHorizontalAlignment()
         @JvmName("setAlignmentProperty")
@@ -138,7 +139,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setVirtualKeyboardShowOnFocusProperty")
         set(value) = setVirtualKeyboardShowOnFocus(value)
 
-    var virtualKeyboardType: Long
+    var virtualKeyboardType: LineEdit.VirtualKeyboardType
         @JvmName("virtualKeyboardTypeProperty")
         get() = getVirtualKeyboardType()
         @JvmName("setVirtualKeyboardTypeProperty")
@@ -186,7 +187,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setSecretCharacterProperty")
         set(value) = setSecretCharacter(value)
 
-    var textDirection: Long
+    var textDirection: Control.TextDirection
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -198,7 +199,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    var structuredTextBidiOverride: Long
+    var structuredTextBidiOverride: TextServer.StructuredTextParser
         @JvmName("structuredTextBidiOverrideProperty")
         get() = getStructuredTextBidiOverride()
         @JvmName("setStructuredTextBidiOverrideProperty")
@@ -216,7 +217,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setRightIconProperty")
         set(value) = setRightIcon(value)
 
-    var iconExpandMode: Long
+    var iconExpandMode: LineEdit.ExpandMode
         @JvmName("iconExpandModeProperty")
         get() = getIconExpandMode()
         @JvmName("setIconExpandModeProperty")
@@ -263,8 +264,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.set_horizontal_alignment
      */
-    fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
+    fun setHorizontalAlignment(alignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -272,8 +273,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.get_horizontal_alignment
      */
-    fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
+    fun getHorizontalAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -459,8 +460,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -468,8 +469,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -497,8 +498,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.set_structured_text_bidi_override
      */
-    fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
+    fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -506,8 +507,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.get_structured_text_bidi_override
      */
-    fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
+    fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -935,8 +936,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.set_virtual_keyboard_type
      */
-    fun setVirtualKeyboardType(type: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVirtualKeyboardTypeBind, segment, type)
+    fun setVirtualKeyboardType(type: LineEdit.VirtualKeyboardType) {
+        ObjectCalls.ptrcallWithLongArg(setVirtualKeyboardTypeBind, segment, type.value)
     }
 
     /**
@@ -944,8 +945,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.get_virtual_keyboard_type
      */
-    fun getVirtualKeyboardType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVirtualKeyboardTypeBind, segment)
+    fun getVirtualKeyboardType(): LineEdit.VirtualKeyboardType {
+        return LineEdit.VirtualKeyboardType(ObjectCalls.ptrcallNoArgsRetLong(getVirtualKeyboardTypeBind, segment))
     }
 
     /**
@@ -1087,8 +1088,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.set_icon_expand_mode
      */
-    fun setIconExpandMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconExpandModeBind, segment, mode)
+    fun setIconExpandMode(mode: LineEdit.ExpandMode) {
+        ObjectCalls.ptrcallWithLongArg(setIconExpandModeBind, segment, mode.value)
     }
 
     /**
@@ -1096,8 +1097,8 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: LineEdit.get_icon_expand_mode
      */
-    fun getIconExpandMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getIconExpandModeBind, segment)
+    fun getIconExpandMode(): LineEdit.ExpandMode {
+        return LineEdit.ExpandMode(ObjectCalls.ptrcallNoArgsRetLong(getIconExpandModeBind, segment))
     }
 
     /**
@@ -1161,51 +1162,286 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         const val editingToggled: String = "editing_toggled"
     }
 
-    companion object {
-        const val MENU_CUT: Long = 0L
-        const val MENU_COPY: Long = 1L
-        const val MENU_PASTE: Long = 2L
-        const val MENU_CLEAR: Long = 3L
-        const val MENU_SELECT_ALL: Long = 4L
-        const val MENU_UNDO: Long = 5L
-        const val MENU_REDO: Long = 6L
-        const val MENU_SUBMENU_TEXT_DIR: Long = 7L
-        const val MENU_DIR_INHERITED: Long = 8L
-        const val MENU_DIR_AUTO: Long = 9L
-        const val MENU_DIR_LTR: Long = 10L
-        const val MENU_DIR_RTL: Long = 11L
-        const val MENU_DISPLAY_UCC: Long = 12L
-        const val MENU_SUBMENU_INSERT_UCC: Long = 13L
-        const val MENU_INSERT_LRM: Long = 14L
-        const val MENU_INSERT_RLM: Long = 15L
-        const val MENU_INSERT_LRE: Long = 16L
-        const val MENU_INSERT_RLE: Long = 17L
-        const val MENU_INSERT_LRO: Long = 18L
-        const val MENU_INSERT_RLO: Long = 19L
-        const val MENU_INSERT_PDF: Long = 20L
-        const val MENU_INSERT_ALM: Long = 21L
-        const val MENU_INSERT_LRI: Long = 22L
-        const val MENU_INSERT_RLI: Long = 23L
-        const val MENU_INSERT_FSI: Long = 24L
-        const val MENU_INSERT_PDI: Long = 25L
-        const val MENU_INSERT_ZWJ: Long = 26L
-        const val MENU_INSERT_ZWNJ: Long = 27L
-        const val MENU_INSERT_WJ: Long = 28L
-        const val MENU_INSERT_SHY: Long = 29L
-        const val MENU_EMOJI_AND_SYMBOL: Long = 30L
-        const val MENU_MAX: Long = 31L
-        const val KEYBOARD_TYPE_DEFAULT: Long = 0L
-        const val KEYBOARD_TYPE_MULTILINE: Long = 1L
-        const val KEYBOARD_TYPE_NUMBER: Long = 2L
-        const val KEYBOARD_TYPE_NUMBER_DECIMAL: Long = 3L
-        const val KEYBOARD_TYPE_PHONE: Long = 4L
-        const val KEYBOARD_TYPE_EMAIL_ADDRESS: Long = 5L
-        const val KEYBOARD_TYPE_PASSWORD: Long = 6L
-        const val KEYBOARD_TYPE_URL: Long = 7L
-        const val EXPAND_MODE_ORIGINAL_SIZE: Long = 0L
-        const val EXPAND_MODE_FIT_TO_TEXT: Long = 1L
-        const val EXPAND_MODE_FIT_TO_LINE_EDIT: Long = 2L
+    @JvmInline
+    value class MenuItems(val value: Long) {
+        companion object {
+            /**
+             * Cuts (copies and clears) the selected text.
+             *
+             * Generated from Godot docs: LineEdit.MENU_CUT
+             */
+            val CUT: MenuItems get() = MenuItems(0L)
+            /**
+             * Copies the selected text.
+             *
+             * Generated from Godot docs: LineEdit.MENU_COPY
+             */
+            val COPY: MenuItems get() = MenuItems(1L)
+            /**
+             * Pastes the clipboard text over the selected text (or at the caret's position). Non-printable
+             * escape characters are automatically stripped from the OS clipboard via `String.strip_escapes`.
+             *
+             * Generated from Godot docs: LineEdit.MENU_PASTE
+             */
+            val PASTE: MenuItems get() = MenuItems(2L)
+            /**
+             * Erases the whole `LineEdit` text.
+             *
+             * Generated from Godot docs: LineEdit.MENU_CLEAR
+             */
+            val CLEAR: MenuItems get() = MenuItems(3L)
+            /**
+             * Selects the whole `LineEdit` text.
+             *
+             * Generated from Godot docs: LineEdit.MENU_SELECT_ALL
+             */
+            val SELECT_ALL: MenuItems get() = MenuItems(4L)
+            /**
+             * Undoes the previous action.
+             *
+             * Generated from Godot docs: LineEdit.MENU_UNDO
+             */
+            val UNDO: MenuItems get() = MenuItems(5L)
+            /**
+             * Reverse the last undo action.
+             *
+             * Generated from Godot docs: LineEdit.MENU_REDO
+             */
+            val REDO: MenuItems get() = MenuItems(6L)
+            /**
+             * ID of "Text Writing Direction" submenu.
+             *
+             * Generated from Godot docs: LineEdit.MENU_SUBMENU_TEXT_DIR
+             */
+            val SUBMENU_TEXT_DIR: MenuItems get() = MenuItems(7L)
+            /**
+             * Sets text direction to inherited.
+             *
+             * Generated from Godot docs: LineEdit.MENU_DIR_INHERITED
+             */
+            val DIR_INHERITED: MenuItems get() = MenuItems(8L)
+            /**
+             * Sets text direction to automatic.
+             *
+             * Generated from Godot docs: LineEdit.MENU_DIR_AUTO
+             */
+            val DIR_AUTO: MenuItems get() = MenuItems(9L)
+            /**
+             * Sets text direction to left-to-right.
+             *
+             * Generated from Godot docs: LineEdit.MENU_DIR_LTR
+             */
+            val DIR_LTR: MenuItems get() = MenuItems(10L)
+            /**
+             * Sets text direction to right-to-left.
+             *
+             * Generated from Godot docs: LineEdit.MENU_DIR_RTL
+             */
+            val DIR_RTL: MenuItems get() = MenuItems(11L)
+            /**
+             * Toggles control character display.
+             *
+             * Generated from Godot docs: LineEdit.MENU_DISPLAY_UCC
+             */
+            val DISPLAY_UCC: MenuItems get() = MenuItems(12L)
+            /**
+             * ID of "Insert Control Character" submenu.
+             *
+             * Generated from Godot docs: LineEdit.MENU_SUBMENU_INSERT_UCC
+             */
+            val SUBMENU_INSERT_UCC: MenuItems get() = MenuItems(13L)
+            /**
+             * Inserts left-to-right mark (LRM) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_LRM
+             */
+            val INSERT_LRM: MenuItems get() = MenuItems(14L)
+            /**
+             * Inserts right-to-left mark (RLM) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_RLM
+             */
+            val INSERT_RLM: MenuItems get() = MenuItems(15L)
+            /**
+             * Inserts start of left-to-right embedding (LRE) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_LRE
+             */
+            val INSERT_LRE: MenuItems get() = MenuItems(16L)
+            /**
+             * Inserts start of right-to-left embedding (RLE) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_RLE
+             */
+            val INSERT_RLE: MenuItems get() = MenuItems(17L)
+            /**
+             * Inserts start of left-to-right override (LRO) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_LRO
+             */
+            val INSERT_LRO: MenuItems get() = MenuItems(18L)
+            /**
+             * Inserts start of right-to-left override (RLO) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_RLO
+             */
+            val INSERT_RLO: MenuItems get() = MenuItems(19L)
+            /**
+             * Inserts pop direction formatting (PDF) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_PDF
+             */
+            val INSERT_PDF: MenuItems get() = MenuItems(20L)
+            /**
+             * Inserts Arabic letter mark (ALM) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_ALM
+             */
+            val INSERT_ALM: MenuItems get() = MenuItems(21L)
+            /**
+             * Inserts left-to-right isolate (LRI) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_LRI
+             */
+            val INSERT_LRI: MenuItems get() = MenuItems(22L)
+            /**
+             * Inserts right-to-left isolate (RLI) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_RLI
+             */
+            val INSERT_RLI: MenuItems get() = MenuItems(23L)
+            /**
+             * Inserts first strong isolate (FSI) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_FSI
+             */
+            val INSERT_FSI: MenuItems get() = MenuItems(24L)
+            /**
+             * Inserts pop direction isolate (PDI) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_PDI
+             */
+            val INSERT_PDI: MenuItems get() = MenuItems(25L)
+            /**
+             * Inserts zero width joiner (ZWJ) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_ZWJ
+             */
+            val INSERT_ZWJ: MenuItems get() = MenuItems(26L)
+            /**
+             * Inserts zero width non-joiner (ZWNJ) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_ZWNJ
+             */
+            val INSERT_ZWNJ: MenuItems get() = MenuItems(27L)
+            /**
+             * Inserts word joiner (WJ) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_WJ
+             */
+            val INSERT_WJ: MenuItems get() = MenuItems(28L)
+            /**
+             * Inserts soft hyphen (SHY) character.
+             *
+             * Generated from Godot docs: LineEdit.MENU_INSERT_SHY
+             */
+            val INSERT_SHY: MenuItems get() = MenuItems(29L)
+            /**
+             * Opens system emoji and symbol picker.
+             *
+             * Generated from Godot docs: LineEdit.MENU_EMOJI_AND_SYMBOL
+             */
+            val EMOJI_AND_SYMBOL: MenuItems get() = MenuItems(30L)
+            /**
+             * Represents the size of the `MenuItems` enum.
+             *
+             * Generated from Godot docs: LineEdit.MENU_MAX
+             */
+            val MAX: MenuItems get() = MenuItems(31L)
+        }
+    }
 
+    @JvmInline
+    value class VirtualKeyboardType(val value: Long) {
+        companion object {
+            /**
+             * Default text virtual keyboard.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_DEFAULT
+             */
+            val DEFAULT: VirtualKeyboardType get() = VirtualKeyboardType(0L)
+            /**
+             * Multiline virtual keyboard.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_MULTILINE
+             */
+            val MULTILINE: VirtualKeyboardType get() = VirtualKeyboardType(1L)
+            /**
+             * Virtual number keypad, useful for PIN entry.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_NUMBER
+             */
+            val NUMBER: VirtualKeyboardType get() = VirtualKeyboardType(2L)
+            /**
+             * Virtual number keypad, useful for entering fractional numbers.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_NUMBER_DECIMAL
+             */
+            val NUMBER_DECIMAL: VirtualKeyboardType get() = VirtualKeyboardType(3L)
+            /**
+             * Virtual phone number keypad.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_PHONE
+             */
+            val PHONE: VirtualKeyboardType get() = VirtualKeyboardType(4L)
+            /**
+             * Virtual keyboard with additional keys to assist with typing email addresses.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_EMAIL_ADDRESS
+             */
+            val EMAIL_ADDRESS: VirtualKeyboardType get() = VirtualKeyboardType(5L)
+            /**
+             * Virtual keyboard for entering a password. On most platforms, this should disable autocomplete
+             * and autocapitalization. Note: This is not supported on Web. Instead, this behaves identically to
+             * `KEYBOARD_TYPE_DEFAULT`.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_PASSWORD
+             */
+            val PASSWORD: VirtualKeyboardType get() = VirtualKeyboardType(6L)
+            /**
+             * Virtual keyboard with additional keys to assist with typing URLs.
+             *
+             * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_URL
+             */
+            val URL: VirtualKeyboardType get() = VirtualKeyboardType(7L)
+        }
+    }
+
+    @JvmInline
+    value class ExpandMode(val value: Long) {
+        companion object {
+            /**
+             * Use the original size for the right icon.
+             *
+             * Generated from Godot docs: LineEdit.EXPAND_MODE_ORIGINAL_SIZE
+             */
+            val ORIGINAL_SIZE: ExpandMode get() = ExpandMode(0L)
+            /**
+             * Scale the right icon's size to match the size of the text.
+             *
+             * Generated from Godot docs: LineEdit.EXPAND_MODE_FIT_TO_TEXT
+             */
+            val FIT_TO_TEXT: ExpandMode get() = ExpandMode(1L)
+            /**
+             * Scale the right icon to fit the LineEdit.
+             *
+             * Generated from Godot docs: LineEdit.EXPAND_MODE_FIT_TO_LINE_EDIT
+             */
+            val FIT_TO_LINE_EDIT: ExpandMode get() = ExpandMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LineEdit? =
             wrap(handle.segment)

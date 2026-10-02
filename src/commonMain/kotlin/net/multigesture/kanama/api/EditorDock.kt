@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -73,13 +74,13 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         @JvmName("setDockShortcutProperty")
         set(value) = setDockShortcut(value)
 
-    var defaultSlot: Long
+    var defaultSlot: EditorDock.DockSlot
         @JvmName("defaultSlotProperty")
         get() = getDefaultSlot()
         @JvmName("setDefaultSlotProperty")
         set(value) = setDefaultSlot(value)
 
-    var availableLayouts: Long
+    var availableLayouts: EditorDock.DockLayout
         @JvmName("availableLayoutsProperty")
         get() = getAvailableLayouts()
         @JvmName("setAvailableLayoutsProperty")
@@ -315,8 +316,8 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      *
      * Generated from Godot docs: EditorDock.set_default_slot
      */
-    fun setDefaultSlot(slot: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultSlotBind, segment, slot)
+    fun setDefaultSlot(slot: EditorDock.DockSlot) {
+        ObjectCalls.ptrcallWithLongArg(setDefaultSlotBind, segment, slot.value)
     }
 
     /**
@@ -326,8 +327,8 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      *
      * Generated from Godot docs: EditorDock.get_default_slot
      */
-    fun getDefaultSlot(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultSlotBind, segment)
+    fun getDefaultSlot(): EditorDock.DockSlot {
+        return EditorDock.DockSlot(ObjectCalls.ptrcallNoArgsRetLong(getDefaultSlotBind, segment))
     }
 
     /**
@@ -336,8 +337,8 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      *
      * Generated from Godot docs: EditorDock.set_available_layouts
      */
-    fun setAvailableLayouts(layouts: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAvailableLayoutsBind, segment, layouts)
+    fun setAvailableLayouts(layouts: EditorDock.DockLayout) {
+        ObjectCalls.ptrcallWithLongArg(setAvailableLayoutsBind, segment, layouts.value)
     }
 
     /**
@@ -346,8 +347,8 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      *
      * Generated from Godot docs: EditorDock.get_available_layouts
      */
-    fun getAvailableLayouts(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAvailableLayoutsBind, segment)
+    fun getAvailableLayouts(): EditorDock.DockLayout {
+        return EditorDock.DockLayout(ObjectCalls.ptrcallNoArgsRetLong(getAvailableLayoutsBind, segment))
     }
 
     object Signals {
@@ -355,25 +356,132 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         const val closed: String = "closed"
     }
 
-    companion object {
-        const val DOCK_LAYOUT_VERTICAL: Long = 1L
-        const val DOCK_LAYOUT_HORIZONTAL: Long = 2L
-        const val DOCK_LAYOUT_FLOATING: Long = 4L
-        const val DOCK_LAYOUT_ALL: Long = 7L
-        const val DOCK_SLOT_NONE: Long = -1L
-        const val DOCK_SLOT_LEFT_UL: Long = 0L
-        const val DOCK_SLOT_LEFT_BL: Long = 1L
-        const val DOCK_SLOT_LEFT_UR: Long = 2L
-        const val DOCK_SLOT_LEFT_BR: Long = 3L
-        const val DOCK_SLOT_RIGHT_UL: Long = 4L
-        const val DOCK_SLOT_RIGHT_BL: Long = 5L
-        const val DOCK_SLOT_RIGHT_UR: Long = 6L
-        const val DOCK_SLOT_RIGHT_BR: Long = 7L
-        const val DOCK_SLOT_BOTTOM: Long = 8L
-        const val DOCK_SLOT_BOTTOM_L: Long = 9L
-        const val DOCK_SLOT_BOTTOM_R: Long = 10L
-        const val DOCK_SLOT_MAX: Long = 11L
+    @JvmInline
+    value class DockLayout(val value: Long) {
+        infix fun or(other: DockLayout): DockLayout = DockLayout(value or other.value)
 
+        infix fun and(other: DockLayout): DockLayout = DockLayout(value and other.value)
+
+        infix fun xor(other: DockLayout): DockLayout = DockLayout(value xor other.value)
+
+        fun inv(): DockLayout = DockLayout(value.inv())
+
+        operator fun contains(other: DockLayout): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Allows placing the dock in the vertical dock slots on either side of the editor.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_LAYOUT_VERTICAL
+             */
+            val VERTICAL: DockLayout get() = DockLayout(1L)
+            /**
+             * Allows placing the dock in the horizontal dock slots at the bottom.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_LAYOUT_HORIZONTAL
+             */
+            val HORIZONTAL: DockLayout get() = DockLayout(2L)
+            /**
+             * Allows making the dock floating (opened as a separate window).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_LAYOUT_FLOATING
+             */
+            val FLOATING: DockLayout get() = DockLayout(4L)
+            /**
+             * Allows placing the dock in all available slots.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_LAYOUT_ALL
+             */
+            val ALL: DockLayout get() = DockLayout(7L)
+        }
+    }
+
+    @JvmInline
+    value class DockSlot(val value: Long) {
+        companion object {
+            /**
+             * The dock is closed.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_NONE
+             */
+            val NONE: DockSlot get() = DockSlot(-1L)
+            /**
+             * Dock slot, left side, upper-left (empty in default layout).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_LEFT_UL
+             */
+            val LEFT_UL: DockSlot get() = DockSlot(0L)
+            /**
+             * Dock slot, left side, bottom-left (empty in default layout).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_LEFT_BL
+             */
+            val LEFT_BL: DockSlot get() = DockSlot(1L)
+            /**
+             * Dock slot, left side, upper-right (in default layout includes Scene and Import docks).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_LEFT_UR
+             */
+            val LEFT_UR: DockSlot get() = DockSlot(2L)
+            /**
+             * Dock slot, left side, bottom-right (in default layout includes FileSystem and History docks).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_LEFT_BR
+             */
+            val LEFT_BR: DockSlot get() = DockSlot(3L)
+            /**
+             * Dock slot, right side, upper-left (in default layout includes Inspector, Signal, and Group
+             * docks).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_RIGHT_UL
+             */
+            val RIGHT_UL: DockSlot get() = DockSlot(4L)
+            /**
+             * Dock slot, right side, bottom-left (empty in default layout).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_RIGHT_BL
+             */
+            val RIGHT_BL: DockSlot get() = DockSlot(5L)
+            /**
+             * Dock slot, right side, upper-right (empty in default layout).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_RIGHT_UR
+             */
+            val RIGHT_UR: DockSlot get() = DockSlot(6L)
+            /**
+             * Dock slot, right side, bottom-right (empty in default layout).
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_RIGHT_BR
+             */
+            val RIGHT_BR: DockSlot get() = DockSlot(7L)
+            /**
+             * Bottom panel.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_BOTTOM
+             */
+            val BOTTOM: DockSlot get() = DockSlot(8L)
+            /**
+             * Dock slot at the bottom, below bottom panel, on the left side.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_BOTTOM_L
+             */
+            val BOTTOM_L: DockSlot get() = DockSlot(9L)
+            /**
+             * Dock slot at the bottom, below bottom panel, on the right side.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_BOTTOM_R
+             */
+            val BOTTOM_R: DockSlot get() = DockSlot(10L)
+            /**
+             * Represents the size of the `DockSlot` enum.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_MAX
+             */
+            val MAX: DockSlot get() = DockSlot(11L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorDock? =
             wrap(handle.segment)

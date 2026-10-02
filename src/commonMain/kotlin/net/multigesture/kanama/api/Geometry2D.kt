@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -15,19 +16,6 @@ object Geometry2D {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("Geometry2D")
     }
-
-    const val OPERATION_UNION: Long = 0L
-    const val OPERATION_DIFFERENCE: Long = 1L
-    const val OPERATION_INTERSECTION: Long = 2L
-    const val OPERATION_XOR: Long = 3L
-    const val JOIN_SQUARE: Long = 0L
-    const val JOIN_ROUND: Long = 1L
-    const val JOIN_MITER: Long = 2L
-    const val END_POLYGON: Long = 0L
-    const val END_JOINED: Long = 1L
-    const val END_BUTT: Long = 2L
-    const val END_SQUARE: Long = 3L
-    const val END_ROUND: Long = 4L
 
     /**
      * Returns `true` if `point` is inside the circle or if it's located exactly on the circle's
@@ -290,8 +278,8 @@ object Geometry2D {
      * Generated from Godot docs: Geometry2D.offset_polygon
      */
     @JvmStatic
-    fun offsetPolygon(polygon: List<Vector2>, delta: Double, joinType: Long = 0L): List<List<Vector2>> {
-        return ObjectCalls.ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList(offsetPolygonBind, singleton, polygon, delta, joinType)
+    fun offsetPolygon(polygon: List<Vector2>, delta: Double, joinType: Geometry2D.PolyJoinType = Geometry2D.PolyJoinType.SQUARE): List<List<Vector2>> {
+        return ObjectCalls.ptrcallWithPackedVector2ListDoubleAndLongArgsRetPackedVector2ListList(offsetPolygonBind, singleton, polygon, delta, joinType.value)
     }
 
     /**
@@ -306,8 +294,8 @@ object Geometry2D {
      * Generated from Godot docs: Geometry2D.offset_polyline
      */
     @JvmStatic
-    fun offsetPolyline(polyline: List<Vector2>, delta: Double, joinType: Long = 0L, endType: Long = 3L): List<List<Vector2>> {
-        return ObjectCalls.ptrcallWithPackedVector2ListDoubleAndTwoLongArgsRetPackedVector2ListList(offsetPolylineBind, singleton, polyline, delta, joinType, endType)
+    fun offsetPolyline(polyline: List<Vector2>, delta: Double, joinType: Geometry2D.PolyJoinType = Geometry2D.PolyJoinType.SQUARE, endType: Geometry2D.PolyEndType = Geometry2D.PolyEndType.SQUARE): List<List<Vector2>> {
+        return ObjectCalls.ptrcallWithPackedVector2ListDoubleAndTwoLongArgsRetPackedVector2ListList(offsetPolylineBind, singleton, polyline, delta, joinType.value, endType.value)
     }
 
     /**
@@ -333,6 +321,99 @@ object Geometry2D {
     @JvmStatic
     fun bresenhamLine(from: Vector2i, to: Vector2i): List<Vector2i> {
         return ObjectCalls.ptrcallWithTwoVector2iArgsRetVector2iList(bresenhamLineBind, singleton, from, to)
+    }
+
+    @JvmInline
+    value class PolyBooleanOperation(val value: Long) {
+        companion object {
+            /**
+             * Create regions where either subject or clip polygons (or both) are filled.
+             *
+             * Generated from Godot docs: Geometry2D.OPERATION_UNION
+             */
+            val UNION: PolyBooleanOperation get() = PolyBooleanOperation(0L)
+            /**
+             * Create regions where subject polygons are filled except where clip polygons are filled.
+             *
+             * Generated from Godot docs: Geometry2D.OPERATION_DIFFERENCE
+             */
+            val DIFFERENCE: PolyBooleanOperation get() = PolyBooleanOperation(1L)
+            /**
+             * Create regions where both subject and clip polygons are filled.
+             *
+             * Generated from Godot docs: Geometry2D.OPERATION_INTERSECTION
+             */
+            val INTERSECTION: PolyBooleanOperation get() = PolyBooleanOperation(2L)
+            /**
+             * Create regions where either subject or clip polygons are filled but not where both are filled.
+             *
+             * Generated from Godot docs: Geometry2D.OPERATION_XOR
+             */
+            val XOR: PolyBooleanOperation get() = PolyBooleanOperation(3L)
+        }
+    }
+
+    @JvmInline
+    value class PolyJoinType(val value: Long) {
+        companion object {
+            /**
+             * Squaring is applied uniformally at all convex edge joins at `1 * delta`.
+             *
+             * Generated from Godot docs: Geometry2D.JOIN_SQUARE
+             */
+            val SQUARE: PolyJoinType get() = PolyJoinType(0L)
+            /**
+             * While flattened paths can never perfectly trace an arc, they are approximated by a series of arc
+             * chords.
+             *
+             * Generated from Godot docs: Geometry2D.JOIN_ROUND
+             */
+            val ROUND: PolyJoinType get() = PolyJoinType(1L)
+            /**
+             * There's a necessary limit to mitered joins since offsetting edges that join at very acute angles
+             * will produce excessively long and narrow "spikes". For any given edge join, when miter
+             * offsetting would exceed that maximum distance, "square" joining is applied.
+             *
+             * Generated from Godot docs: Geometry2D.JOIN_MITER
+             */
+            val MITER: PolyJoinType get() = PolyJoinType(2L)
+        }
+    }
+
+    @JvmInline
+    value class PolyEndType(val value: Long) {
+        companion object {
+            /**
+             * Endpoints are joined using the `PolyJoinType` value and the path filled as a polygon.
+             *
+             * Generated from Godot docs: Geometry2D.END_POLYGON
+             */
+            val POLYGON: PolyEndType get() = PolyEndType(0L)
+            /**
+             * Endpoints are joined using the `PolyJoinType` value and the path filled as a polyline.
+             *
+             * Generated from Godot docs: Geometry2D.END_JOINED
+             */
+            val JOINED: PolyEndType get() = PolyEndType(1L)
+            /**
+             * Endpoints are squared off with no extension.
+             *
+             * Generated from Godot docs: Geometry2D.END_BUTT
+             */
+            val BUTT: PolyEndType get() = PolyEndType(2L)
+            /**
+             * Endpoints are squared off and extended by `delta` units.
+             *
+             * Generated from Godot docs: Geometry2D.END_SQUARE
+             */
+            val SQUARE: PolyEndType get() = PolyEndType(3L)
+            /**
+             * Endpoints are rounded off and extended by `delta` units.
+             *
+             * Generated from Godot docs: Geometry2D.END_ROUND
+             */
+            val ROUND: PolyEndType get() = PolyEndType(4L)
+        }
     }
 
     @JvmStatic

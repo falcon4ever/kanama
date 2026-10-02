@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,13 +18,13 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setBodyTrackerProperty")
         set(value) = setBodyTracker(value)
 
-    var bodyUpdate: Long
+    var bodyUpdate: XRBodyModifier3D.BodyUpdate
         @JvmName("bodyUpdateProperty")
         get() = getBodyUpdate()
         @JvmName("setBodyUpdateProperty")
         set(value) = setBodyUpdate(value)
 
-    var boneUpdate: Long
+    var boneUpdate: XRBodyModifier3D.BoneUpdate
         @JvmName("boneUpdateProperty")
         get() = getBoneUpdate()
         @JvmName("setBoneUpdateProperty")
@@ -54,8 +55,8 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: XRBodyModifier3D.set_body_update
      */
-    fun setBodyUpdate(bodyUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBodyUpdateBind, segment, bodyUpdate)
+    fun setBodyUpdate(bodyUpdate: XRBodyModifier3D.BodyUpdate) {
+        ObjectCalls.ptrcallWithLongArg(setBodyUpdateBind, segment, bodyUpdate.value)
     }
 
     /**
@@ -63,8 +64,8 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: XRBodyModifier3D.get_body_update
      */
-    fun getBodyUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBodyUpdateBind, segment)
+    fun getBodyUpdate(): XRBodyModifier3D.BodyUpdate {
+        return XRBodyModifier3D.BodyUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBodyUpdateBind, segment))
     }
 
     /**
@@ -72,8 +73,8 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: XRBodyModifier3D.set_bone_update
      */
-    fun setBoneUpdate(boneUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate)
+    fun setBoneUpdate(boneUpdate: XRBodyModifier3D.BoneUpdate) {
+        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate.value)
     }
 
     /**
@@ -81,18 +82,69 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: XRBodyModifier3D.get_bone_update
      */
-    fun getBoneUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment)
+    fun getBoneUpdate(): XRBodyModifier3D.BoneUpdate {
+        return XRBodyModifier3D.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment))
+    }
+
+    @JvmInline
+    value class BodyUpdate(val value: Long) {
+        infix fun or(other: BodyUpdate): BodyUpdate = BodyUpdate(value or other.value)
+
+        infix fun and(other: BodyUpdate): BodyUpdate = BodyUpdate(value and other.value)
+
+        infix fun xor(other: BodyUpdate): BodyUpdate = BodyUpdate(value xor other.value)
+
+        fun inv(): BodyUpdate = BodyUpdate(value.inv())
+
+        operator fun contains(other: BodyUpdate): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * The skeleton's upper body joints are updated.
+             *
+             * Generated from Godot docs: XRBodyModifier3D.BODY_UPDATE_UPPER_BODY
+             */
+            val UPPER_BODY: BodyUpdate get() = BodyUpdate(1L)
+            /**
+             * The skeleton's lower body joints are updated.
+             *
+             * Generated from Godot docs: XRBodyModifier3D.BODY_UPDATE_LOWER_BODY
+             */
+            val LOWER_BODY: BodyUpdate get() = BodyUpdate(2L)
+            /**
+             * The skeleton's hand joints are updated.
+             *
+             * Generated from Godot docs: XRBodyModifier3D.BODY_UPDATE_HANDS
+             */
+            val HANDS: BodyUpdate get() = BodyUpdate(4L)
+        }
+    }
+
+    @JvmInline
+    value class BoneUpdate(val value: Long) {
+        companion object {
+            /**
+             * The skeleton's bones are fully updated (both position and rotation) to match the tracked bones.
+             *
+             * Generated from Godot docs: XRBodyModifier3D.BONE_UPDATE_FULL
+             */
+            val FULL: BoneUpdate get() = BoneUpdate(0L)
+            /**
+             * The skeleton's bones are only rotated to align with the tracked bones, preserving bone length.
+             *
+             * Generated from Godot docs: XRBodyModifier3D.BONE_UPDATE_ROTATION_ONLY
+             */
+            val ROTATION_ONLY: BoneUpdate get() = BoneUpdate(1L)
+            /**
+             * Represents the size of the `BoneUpdate` enum.
+             *
+             * Generated from Godot docs: XRBodyModifier3D.BONE_UPDATE_MAX
+             */
+            val MAX: BoneUpdate get() = BoneUpdate(2L)
+        }
     }
 
     companion object {
-        const val BODY_UPDATE_UPPER_BODY: Long = 1L
-        const val BODY_UPDATE_LOWER_BODY: Long = 2L
-        const val BODY_UPDATE_HANDS: Long = 4L
-        const val BONE_UPDATE_FULL: Long = 0L
-        const val BONE_UPDATE_ROTATION_ONLY: Long = 1L
-        const val BONE_UPDATE_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRBodyModifier3D? =
             wrap(handle.segment)

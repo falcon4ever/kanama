@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -42,13 +43,13 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
         @JvmName("setPriorityProperty")
         set(value) = setPriority(value)
 
-    var switchMode: Long
+    var switchMode: AnimationNodeStateMachineTransition.SwitchMode
         @JvmName("switchModeProperty")
         get() = getSwitchMode()
         @JvmName("setSwitchModeProperty")
         set(value) = setSwitchMode(value)
 
-    var advanceMode: Long
+    var advanceMode: AnimationNodeStateMachineTransition.AdvanceMode
         @JvmName("advanceModeProperty")
         get() = getAdvanceMode()
         @JvmName("setAdvanceModeProperty")
@@ -71,9 +72,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_switch_mode
      */
-    fun setSwitchMode(mode: Long) {
+    fun setSwitchMode(mode: AnimationNodeStateMachineTransition.SwitchMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setSwitchModeBind, segment, mode.value)
     }
 
     /**
@@ -81,9 +82,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_switch_mode
      */
-    fun getSwitchMode(): Long {
+    fun getSwitchMode(): AnimationNodeStateMachineTransition.SwitchMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, segment)
+        return AnimationNodeStateMachineTransition.SwitchMode(ObjectCalls.ptrcallNoArgsRetLong(getSwitchModeBind, segment))
     }
 
     /**
@@ -93,9 +94,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_mode
      */
-    fun setAdvanceMode(mode: Long) {
+    fun setAdvanceMode(mode: AnimationNodeStateMachineTransition.AdvanceMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setAdvanceModeBind, segment, mode.value)
     }
 
     /**
@@ -105,9 +106,9 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_mode
      */
-    fun getAdvanceMode(): Long {
+    fun getAdvanceMode(): AnimationNodeStateMachineTransition.AdvanceMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, segment)
+        return AnimationNodeStateMachineTransition.AdvanceMode(ObjectCalls.ptrcallNoArgsRetLong(getAdvanceModeBind, segment))
     }
 
     /**
@@ -280,14 +281,59 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
         const val advanceConditionChanged: String = "advance_condition_changed"
     }
 
-    companion object {
-        const val SWITCH_MODE_IMMEDIATE: Long = 0L
-        const val SWITCH_MODE_SYNC: Long = 1L
-        const val SWITCH_MODE_AT_END: Long = 2L
-        const val ADVANCE_MODE_DISABLED: Long = 0L
-        const val ADVANCE_MODE_ENABLED: Long = 1L
-        const val ADVANCE_MODE_AUTO: Long = 2L
+    @JvmInline
+    value class SwitchMode(val value: Long) {
+        companion object {
+            /**
+             * Switch to the next state immediately. The current state will end and blend into the beginning of
+             * the new one.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachineTransition.SWITCH_MODE_IMMEDIATE
+             */
+            val IMMEDIATE: SwitchMode get() = SwitchMode(0L)
+            /**
+             * Switch to the next state immediately, but will seek the new state to the playback position of
+             * the old state.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachineTransition.SWITCH_MODE_SYNC
+             */
+            val SYNC: SwitchMode get() = SwitchMode(1L)
+            /**
+             * Wait for the current state playback to end, then switch to the beginning of the next state
+             * animation.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachineTransition.SWITCH_MODE_AT_END
+             */
+            val AT_END: SwitchMode get() = SwitchMode(2L)
+        }
+    }
 
+    @JvmInline
+    value class AdvanceMode(val value: Long) {
+        companion object {
+            /**
+             * Don't use this transition.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachineTransition.ADVANCE_MODE_DISABLED
+             */
+            val DISABLED: AdvanceMode get() = AdvanceMode(0L)
+            /**
+             * Only use this transition during `AnimationNodeStateMachinePlayback.travel`.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachineTransition.ADVANCE_MODE_ENABLED
+             */
+            val ENABLED: AdvanceMode get() = AdvanceMode(1L)
+            /**
+             * Automatically use this transition if the `advance_condition` and `advance_expression` checks are
+             * `true` (if assigned).
+             *
+             * Generated from Godot docs: AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
+             */
+            val AUTO: AdvanceMode get() = AdvanceMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeStateMachineTransition? =
             wrap(handle.segment)

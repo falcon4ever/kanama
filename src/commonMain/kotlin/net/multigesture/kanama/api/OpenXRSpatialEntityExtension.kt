@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,12 +13,12 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: OpenXRSpatialEntityExtension
  */
 class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
-    fun supportsCapability(capability: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(supportsCapabilityBind, segment, capability)
+    fun supportsCapability(capability: OpenXRSpatialEntityExtension.Capability): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(supportsCapabilityBind, segment, capability.value)
     }
 
-    fun supportsComponentType(capability: Long, componentType: Long): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(supportsComponentTypeBind, segment, capability, componentType)
+    fun supportsComponentType(capability: OpenXRSpatialEntityExtension.Capability, componentType: OpenXRSpatialEntityExtension.ComponentType): Boolean {
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(supportsComponentTypeBind, segment, capability.value, componentType.value)
     }
 
     fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase?, userCallback: GodotCallable): OpenXRFutureResult? {
@@ -120,25 +121,36 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
         const val spatialDiscoveryRecommended: String = "spatial_discovery_recommended"
     }
 
-    companion object {
-        const val CAPABILITY_PLANE_TRACKING: Long = 1000741000L
-        const val CAPABILITY_MARKER_TRACKING_QR_CODE: Long = 1000743000L
-        const val CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE: Long = 1000743001L
-        const val CAPABILITY_MARKER_TRACKING_ARUCO_MARKER: Long = 1000743002L
-        const val CAPABILITY_MARKER_TRACKING_APRIL_TAG: Long = 1000743003L
-        const val CAPABILITY_ANCHOR: Long = 1000762000L
-        const val COMPONENT_TYPE_BOUNDED_2D: Long = 1L
-        const val COMPONENT_TYPE_BOUNDED_3D: Long = 2L
-        const val COMPONENT_TYPE_PARENT: Long = 3L
-        const val COMPONENT_TYPE_MESH_3D: Long = 4L
-        const val COMPONENT_TYPE_PLANE_ALIGNMENT: Long = 1000741000L
-        const val COMPONENT_TYPE_MESH_2D: Long = 1000741001L
-        const val COMPONENT_TYPE_POLYGON_2D: Long = 1000741002L
-        const val COMPONENT_TYPE_PLANE_SEMANTIC_LABEL: Long = 1000741003L
-        const val COMPONENT_TYPE_MARKER: Long = 1000743000L
-        const val COMPONENT_TYPE_ANCHOR: Long = 1000762000L
-        const val COMPONENT_TYPE_PERSISTENCE: Long = 1000763000L
+    @JvmInline
+    value class Capability(val value: Long) {
+        companion object {
+            val PLANE_TRACKING: Capability get() = Capability(1000741000L)
+            val MARKER_TRACKING_QR_CODE: Capability get() = Capability(1000743000L)
+            val MARKER_TRACKING_MICRO_QR_CODE: Capability get() = Capability(1000743001L)
+            val MARKER_TRACKING_ARUCO_MARKER: Capability get() = Capability(1000743002L)
+            val MARKER_TRACKING_APRIL_TAG: Capability get() = Capability(1000743003L)
+            val ANCHOR: Capability get() = Capability(1000762000L)
+        }
+    }
 
+    @JvmInline
+    value class ComponentType(val value: Long) {
+        companion object {
+            val BOUNDED_2D: ComponentType get() = ComponentType(1L)
+            val BOUNDED_3D: ComponentType get() = ComponentType(2L)
+            val PARENT: ComponentType get() = ComponentType(3L)
+            val MESH_3D: ComponentType get() = ComponentType(4L)
+            val PLANE_ALIGNMENT: ComponentType get() = ComponentType(1000741000L)
+            val MESH_2D: ComponentType get() = ComponentType(1000741001L)
+            val POLYGON_2D: ComponentType get() = ComponentType(1000741002L)
+            val PLANE_SEMANTIC_LABEL: ComponentType get() = ComponentType(1000741003L)
+            val MARKER: ComponentType get() = ComponentType(1000743000L)
+            val ANCHOR: ComponentType get() = ComponentType(1000762000L)
+            val PERSISTENCE: ComponentType get() = ComponentType(1000763000L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialEntityExtension? =
             wrap(handle.segment)

@@ -9,13 +9,13 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeReroute
  */
 class VisualShaderNodeReroute(handle: GodotHandle) : VisualShaderNode(handle) {
-    val portType: Long
+    val portType: VisualShaderNode.PortType
         @JvmName("portTypeProperty")
         get() = getPortType()
 
-    fun getPortType(): Long {
+    fun getPortType(): VisualShaderNode.PortType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPortTypeBind, segment)
+        return VisualShaderNode.PortType(ObjectCalls.ptrcallNoArgsRetLong(getPortTypeBind, segment))
     }
 
     companion object {

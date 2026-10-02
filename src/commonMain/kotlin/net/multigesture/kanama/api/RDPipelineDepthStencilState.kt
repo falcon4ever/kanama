@@ -23,7 +23,7 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setEnableDepthWriteProperty")
         set(value) = setEnableDepthWrite(value)
 
-    var depthCompareOperator: Long
+    var depthCompareOperator: RenderingDevice.CompareOperator
         @JvmName("depthCompareOperatorProperty")
         get() = getDepthCompareOperator()
         @JvmName("setDepthCompareOperatorProperty")
@@ -53,25 +53,25 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setEnableStencilProperty")
         set(value) = setEnableStencil(value)
 
-    var frontOpFail: Long
+    var frontOpFail: RenderingDevice.StencilOperation
         @JvmName("frontOpFailProperty")
         get() = getFrontOpFail()
         @JvmName("setFrontOpFailProperty")
         set(value) = setFrontOpFail(value)
 
-    var frontOpPass: Long
+    var frontOpPass: RenderingDevice.StencilOperation
         @JvmName("frontOpPassProperty")
         get() = getFrontOpPass()
         @JvmName("setFrontOpPassProperty")
         set(value) = setFrontOpPass(value)
 
-    var frontOpDepthFail: Long
+    var frontOpDepthFail: RenderingDevice.StencilOperation
         @JvmName("frontOpDepthFailProperty")
         get() = getFrontOpDepthFail()
         @JvmName("setFrontOpDepthFailProperty")
         set(value) = setFrontOpDepthFail(value)
 
-    var frontOpCompare: Long
+    var frontOpCompare: RenderingDevice.CompareOperator
         @JvmName("frontOpCompareProperty")
         get() = getFrontOpCompare()
         @JvmName("setFrontOpCompareProperty")
@@ -95,25 +95,25 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setFrontOpReferenceProperty")
         set(value) = setFrontOpReference(value)
 
-    var backOpFail: Long
+    var backOpFail: RenderingDevice.StencilOperation
         @JvmName("backOpFailProperty")
         get() = getBackOpFail()
         @JvmName("setBackOpFailProperty")
         set(value) = setBackOpFail(value)
 
-    var backOpPass: Long
+    var backOpPass: RenderingDevice.StencilOperation
         @JvmName("backOpPassProperty")
         get() = getBackOpPass()
         @JvmName("setBackOpPassProperty")
         set(value) = setBackOpPass(value)
 
-    var backOpDepthFail: Long
+    var backOpDepthFail: RenderingDevice.StencilOperation
         @JvmName("backOpDepthFailProperty")
         get() = getBackOpDepthFail()
         @JvmName("setBackOpDepthFailProperty")
         set(value) = setBackOpDepthFail(value)
 
-    var backOpCompare: Long
+    var backOpCompare: RenderingDevice.CompareOperator
         @JvmName("backOpCompareProperty")
         get() = getBackOpCompare()
         @JvmName("setBackOpCompareProperty")
@@ -190,9 +190,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_depth_compare_operator
      */
-    fun setDepthCompareOperator(pMember: Long) {
+    fun setDepthCompareOperator(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthCompareOperatorBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setDepthCompareOperatorBind, segment, pMember.value)
     }
 
     /**
@@ -200,9 +200,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_depth_compare_operator
      */
-    fun getDepthCompareOperator(): Long {
+    fun getDepthCompareOperator(): RenderingDevice.CompareOperator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDepthCompareOperatorBind, segment)
+        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(getDepthCompareOperatorBind, segment))
     }
 
     /**
@@ -296,9 +296,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_fail
      */
-    fun setFrontOpFail(pMember: Long) {
+    fun setFrontOpFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpFailBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpFailBind, segment, pMember.value)
     }
 
     /**
@@ -306,9 +306,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_fail
      */
-    fun getFrontOpFail(): Long {
+    fun getFrontOpFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpFailBind, segment)
+        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(getFrontOpFailBind, segment))
     }
 
     /**
@@ -316,9 +316,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_pass
      */
-    fun setFrontOpPass(pMember: Long) {
+    fun setFrontOpPass(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpPassBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpPassBind, segment, pMember.value)
     }
 
     /**
@@ -326,9 +326,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_pass
      */
-    fun getFrontOpPass(): Long {
+    fun getFrontOpPass(): RenderingDevice.StencilOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpPassBind, segment)
+        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(getFrontOpPassBind, segment))
     }
 
     /**
@@ -337,9 +337,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_depth_fail
      */
-    fun setFrontOpDepthFail(pMember: Long) {
+    fun setFrontOpDepthFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpDepthFailBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpDepthFailBind, segment, pMember.value)
     }
 
     /**
@@ -348,9 +348,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_depth_fail
      */
-    fun getFrontOpDepthFail(): Long {
+    fun getFrontOpDepthFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpDepthFailBind, segment)
+        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(getFrontOpDepthFailBind, segment))
     }
 
     /**
@@ -358,9 +358,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_front_op_compare
      */
-    fun setFrontOpCompare(pMember: Long) {
+    fun setFrontOpCompare(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontOpCompareBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontOpCompareBind, segment, pMember.value)
     }
 
     /**
@@ -368,9 +368,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_front_op_compare
      */
-    fun getFrontOpCompare(): Long {
+    fun getFrontOpCompare(): RenderingDevice.CompareOperator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontOpCompareBind, segment)
+        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(getFrontOpCompareBind, segment))
     }
 
     /**
@@ -438,9 +438,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_fail
      */
-    fun setBackOpFail(pMember: Long) {
+    fun setBackOpFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpFailBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpFailBind, segment, pMember.value)
     }
 
     /**
@@ -448,9 +448,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_fail
      */
-    fun getBackOpFail(): Long {
+    fun getBackOpFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpFailBind, segment)
+        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(getBackOpFailBind, segment))
     }
 
     /**
@@ -458,9 +458,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_pass
      */
-    fun setBackOpPass(pMember: Long) {
+    fun setBackOpPass(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpPassBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpPassBind, segment, pMember.value)
     }
 
     /**
@@ -468,9 +468,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_pass
      */
-    fun getBackOpPass(): Long {
+    fun getBackOpPass(): RenderingDevice.StencilOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpPassBind, segment)
+        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(getBackOpPassBind, segment))
     }
 
     /**
@@ -479,9 +479,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_depth_fail
      */
-    fun setBackOpDepthFail(pMember: Long) {
+    fun setBackOpDepthFail(pMember: RenderingDevice.StencilOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpDepthFailBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpDepthFailBind, segment, pMember.value)
     }
 
     /**
@@ -490,9 +490,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_depth_fail
      */
-    fun getBackOpDepthFail(): Long {
+    fun getBackOpDepthFail(): RenderingDevice.StencilOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpDepthFailBind, segment)
+        return RenderingDevice.StencilOperation(ObjectCalls.ptrcallNoArgsRetLong(getBackOpDepthFailBind, segment))
     }
 
     /**
@@ -500,9 +500,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.set_back_op_compare
      */
-    fun setBackOpCompare(pMember: Long) {
+    fun setBackOpCompare(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackOpCompareBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBackOpCompareBind, segment, pMember.value)
     }
 
     /**
@@ -510,9 +510,9 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineDepthStencilState.get_back_op_compare
      */
-    fun getBackOpCompare(): Long {
+    fun getBackOpCompare(): RenderingDevice.CompareOperator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackOpCompareBind, segment)
+        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(getBackOpCompareBind, segment))
     }
 
     /**

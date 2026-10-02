@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -70,19 +71,19 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setSnap2dVerticesToPixelProperty")
         set(value) = setSnap2dVerticesToPixel(value)
 
-    var msaa2d: Long
+    var msaa2d: Viewport.MSAA
         @JvmName("msaa2dProperty")
         get() = getMsaa2d()
         @JvmName("setMsaa2dProperty")
         set(value) = setMsaa2d(value)
 
-    var msaa3d: Long
+    var msaa3d: Viewport.MSAA
         @JvmName("msaa3dProperty")
         get() = getMsaa3d()
         @JvmName("setMsaa3dProperty")
         set(value) = setMsaa3d(value)
 
-    var screenSpaceAa: Long
+    var screenSpaceAa: Viewport.ScreenSpaceAA
         @JvmName("screenSpaceAaProperty")
         get() = getScreenSpaceAa()
         @JvmName("setScreenSpaceAaProperty")
@@ -112,7 +113,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setMeshLodThresholdProperty")
         set(value) = setMeshLodThreshold(value)
 
-    var debugDraw: Long
+    var debugDraw: Viewport.DebugDraw
         @JvmName("debugDrawProperty")
         get() = getDebugDraw()
         @JvmName("setDebugDrawProperty")
@@ -124,7 +125,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setUseHdr2dProperty")
         set(value) = setUseHdr2d(value)
 
-    var scaling3dMode: Long
+    var scaling3dMode: Viewport.Scaling3DMode
         @JvmName("scaling3dModeProperty")
         get() = getScaling3dMode()
         @JvmName("setScaling3dModeProperty")
@@ -142,7 +143,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setTextureMipmapBiasProperty")
         set(value) = setTextureMipmapBias(value)
 
-    var anisotropicFilteringLevel: Long
+    var anisotropicFilteringLevel: Viewport.AnisotropicFiltering
         @JvmName("anisotropicFilteringLevelProperty")
         get() = getAnisotropicFilteringLevel()
         @JvmName("setAnisotropicFilteringLevelProperty")
@@ -154,13 +155,13 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setFsrSharpnessProperty")
         set(value) = setFsrSharpness(value)
 
-    var vrsMode: Long
+    var vrsMode: Viewport.VRSMode
         @JvmName("vrsModeProperty")
         get() = getVrsMode()
         @JvmName("setVrsModeProperty")
         set(value) = setVrsMode(value)
 
-    var vrsUpdateMode: Long
+    var vrsUpdateMode: Viewport.VRSUpdateMode
         @JvmName("vrsUpdateModeProperty")
         get() = getVrsUpdateMode()
         @JvmName("setVrsUpdateModeProperty")
@@ -172,13 +173,13 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setVrsTextureProperty")
         set(value) = setVrsTexture(value)
 
-    var canvasItemDefaultTextureFilter: Long
+    var canvasItemDefaultTextureFilter: Viewport.DefaultCanvasItemTextureFilter
         @JvmName("canvasItemDefaultTextureFilterProperty")
         get() = getDefaultCanvasItemTextureFilter()
         @JvmName("setCanvasItemDefaultTextureFilterProperty")
         set(value) = setDefaultCanvasItemTextureFilter(value)
 
-    var canvasItemDefaultTextureRepeat: Long
+    var canvasItemDefaultTextureRepeat: Viewport.DefaultCanvasItemTextureRepeat
         @JvmName("canvasItemDefaultTextureRepeatProperty")
         get() = getDefaultCanvasItemTextureRepeat()
         @JvmName("setCanvasItemDefaultTextureRepeatProperty")
@@ -238,13 +239,13 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setGuiDragThresholdProperty")
         set(value) = setDragThreshold(value)
 
-    var sdfOversize: Long
+    var sdfOversize: Viewport.SDFOversize
         @JvmName("sdfOversizeProperty")
         get() = getSdfOversize()
         @JvmName("setSdfOversizeProperty")
         set(value) = setSdfOversize(value)
 
-    var sdfScale: Long
+    var sdfScale: Viewport.SDFScale
         @JvmName("sdfScaleProperty")
         get() = getSdfScale()
         @JvmName("setSdfScaleProperty")
@@ -262,25 +263,25 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         @JvmName("setPositionalShadowAtlas16BitsProperty")
         set(value) = setPositionalShadowAtlas16Bits(value)
 
-    var positionalShadowAtlasQuad0: Long
+    var positionalShadowAtlasQuad0: Viewport.PositionalShadowAtlasQuadrantSubdiv
         @JvmName("positionalShadowAtlasQuad0Property")
         get() = getPositionalShadowAtlasQuadrantSubdiv(0)
         @JvmName("setPositionalShadowAtlasQuad0Property")
         set(value) = setPositionalShadowAtlasQuadrantSubdiv(0, value)
 
-    var positionalShadowAtlasQuad1: Long
+    var positionalShadowAtlasQuad1: Viewport.PositionalShadowAtlasQuadrantSubdiv
         @JvmName("positionalShadowAtlasQuad1Property")
         get() = getPositionalShadowAtlasQuadrantSubdiv(1)
         @JvmName("setPositionalShadowAtlasQuad1Property")
         set(value) = setPositionalShadowAtlasQuadrantSubdiv(1, value)
 
-    var positionalShadowAtlasQuad2: Long
+    var positionalShadowAtlasQuad2: Viewport.PositionalShadowAtlasQuadrantSubdiv
         @JvmName("positionalShadowAtlasQuad2Property")
         get() = getPositionalShadowAtlasQuadrantSubdiv(2)
         @JvmName("setPositionalShadowAtlasQuad2Property")
         set(value) = setPositionalShadowAtlasQuadrantSubdiv(2, value)
 
-    var positionalShadowAtlasQuad3: Long
+    var positionalShadowAtlasQuad3: Viewport.PositionalShadowAtlasQuadrantSubdiv
         @JvmName("positionalShadowAtlasQuad3Property")
         get() = getPositionalShadowAtlasQuadrantSubdiv(3)
         @JvmName("setPositionalShadowAtlasQuad3Property")
@@ -494,8 +495,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_msaa_2d
      */
-    fun setMsaa2d(msaa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, segment, msaa)
+    fun setMsaa2d(msaa: Viewport.MSAA) {
+        ObjectCalls.ptrcallWithLongArg(setMsaa2dBind, segment, msaa.value)
     }
 
     /**
@@ -508,8 +509,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_msaa_2d
      */
-    fun getMsaa2d(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, segment)
+    fun getMsaa2d(): Viewport.MSAA {
+        return Viewport.MSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa2dBind, segment))
     }
 
     /**
@@ -523,8 +524,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_msaa_3d
      */
-    fun setMsaa3d(msaa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa)
+    fun setMsaa3d(msaa: Viewport.MSAA) {
+        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa.value)
     }
 
     /**
@@ -538,8 +539,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_msaa_3d
      */
-    fun getMsaa3d(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
+    fun getMsaa3d(): Viewport.MSAA {
+        return Viewport.MSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment))
     }
 
     /**
@@ -552,8 +553,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_screen_space_aa
      */
-    fun setScreenSpaceAa(screenSpaceAa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa)
+    fun setScreenSpaceAa(screenSpaceAa: Viewport.ScreenSpaceAA) {
+        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa.value)
     }
 
     /**
@@ -566,8 +567,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_screen_space_aa
      */
-    fun getScreenSpaceAa(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
+    fun getScreenSpaceAa(): Viewport.ScreenSpaceAA {
+        return Viewport.ScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment))
     }
 
     /**
@@ -677,8 +678,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_debug_draw
      */
-    fun setDebugDraw(debugDraw: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, segment, debugDraw)
+    fun setDebugDraw(debugDraw: Viewport.DebugDraw) {
+        ObjectCalls.ptrcallWithLongArg(setDebugDrawBind, segment, debugDraw.value)
     }
 
     /**
@@ -686,8 +687,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_debug_draw
      */
-    fun getDebugDraw(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, segment)
+    fun getDebugDraw(): Viewport.DebugDraw {
+        return Viewport.DebugDraw(ObjectCalls.ptrcallNoArgsRetLong(getDebugDrawBind, segment))
     }
 
     /**
@@ -746,8 +747,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_render_info
      */
-    fun getRenderInfo(type: Long, info: Long): Int {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, segment, type, info)
+    fun getRenderInfo(type: Viewport.RenderInfoType, info: Viewport.RenderInfo): Int {
+        return ObjectCalls.ptrcallWithTwoLongArgsRetInt(getRenderInfoBind, segment, type.value, info.value)
     }
 
     /**
@@ -1175,8 +1176,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_quadrant_subdiv
      */
-    fun setPositionalShadowAtlasQuadrantSubdiv(quadrant: Int, subdiv: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant, subdiv)
+    fun setPositionalShadowAtlasQuadrantSubdiv(quadrant: Int, subdiv: Viewport.PositionalShadowAtlasQuadrantSubdiv) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant, subdiv.value)
     }
 
     /**
@@ -1184,8 +1185,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_quadrant_subdiv
      */
-    fun getPositionalShadowAtlasQuadrantSubdiv(quadrant: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant)
+    fun getPositionalShadowAtlasQuadrantSubdiv(quadrant: Int): Viewport.PositionalShadowAtlasQuadrantSubdiv {
+        return Viewport.PositionalShadowAtlasQuadrantSubdiv(ObjectCalls.ptrcallWithIntArgRetLong(getPositionalShadowAtlasQuadrantSubdivBind, segment, quadrant))
     }
 
     /**
@@ -1241,8 +1242,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_default_canvas_item_texture_filter
      */
-    fun setDefaultCanvasItemTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, segment, mode)
+    fun setDefaultCanvasItemTextureFilter(mode: Viewport.DefaultCanvasItemTextureFilter) {
+        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -1250,8 +1251,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_default_canvas_item_texture_filter
      */
-    fun getDefaultCanvasItemTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, segment)
+    fun getDefaultCanvasItemTextureFilter(): Viewport.DefaultCanvasItemTextureFilter {
+        return Viewport.DefaultCanvasItemTextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureFilterBind, segment))
     }
 
     /**
@@ -1350,8 +1351,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_default_canvas_item_texture_repeat
      */
-    fun setDefaultCanvasItemTextureRepeat(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, segment, mode)
+    fun setDefaultCanvasItemTextureRepeat(mode: Viewport.DefaultCanvasItemTextureRepeat) {
+        ObjectCalls.ptrcallWithLongArg(setDefaultCanvasItemTextureRepeatBind, segment, mode.value)
     }
 
     /**
@@ -1359,8 +1360,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_default_canvas_item_texture_repeat
      */
-    fun getDefaultCanvasItemTextureRepeat(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, segment)
+    fun getDefaultCanvasItemTextureRepeat(): Viewport.DefaultCanvasItemTextureRepeat {
+        return Viewport.DefaultCanvasItemTextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(getDefaultCanvasItemTextureRepeatBind, segment))
     }
 
     /**
@@ -1375,8 +1376,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_sdf_oversize
      */
-    fun setSdfOversize(oversize: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, segment, oversize)
+    fun setSdfOversize(oversize: Viewport.SDFOversize) {
+        ObjectCalls.ptrcallWithLongArg(setSdfOversizeBind, segment, oversize.value)
     }
 
     /**
@@ -1391,8 +1392,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_sdf_oversize
      */
-    fun getSdfOversize(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, segment)
+    fun getSdfOversize(): Viewport.SDFOversize {
+        return Viewport.SDFOversize(ObjectCalls.ptrcallNoArgsRetLong(getSdfOversizeBind, segment))
     }
 
     /**
@@ -1401,8 +1402,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_sdf_scale
      */
-    fun setSdfScale(scale: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, segment, scale)
+    fun setSdfScale(scale: Viewport.SDFScale) {
+        ObjectCalls.ptrcallWithLongArg(setSdfScaleBind, segment, scale.value)
     }
 
     /**
@@ -1411,8 +1412,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_sdf_scale
      */
-    fun getSdfScale(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, segment)
+    fun getSdfScale(): Viewport.SDFScale {
+        return Viewport.SDFScale(ObjectCalls.ptrcallNoArgsRetLong(getSdfScaleBind, segment))
     }
 
     /**
@@ -1633,8 +1634,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_scaling_3d_mode
      */
-    fun setScaling3dMode(scaling3dMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode)
+    fun setScaling3dMode(scaling3dMode: Viewport.Scaling3DMode) {
+        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode.value)
     }
 
     /**
@@ -1647,8 +1648,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_scaling_3d_mode
      */
-    fun getScaling3dMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
+    fun getScaling3dMode(): Viewport.Scaling3DMode {
+        return Viewport.Scaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment))
     }
 
     /**
@@ -1774,8 +1775,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_anisotropic_filtering_level
      */
-    fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel)
+    fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Viewport.AnisotropicFiltering) {
+        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel.value)
     }
 
     /**
@@ -1797,8 +1798,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_anisotropic_filtering_level
      */
-    fun getAnisotropicFilteringLevel(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment)
+    fun getAnisotropicFilteringLevel(): Viewport.AnisotropicFiltering {
+        return Viewport.AnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment))
     }
 
     /**
@@ -1807,8 +1808,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_vrs_mode
      */
-    fun setVrsMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVrsModeBind, segment, mode)
+    fun setVrsMode(mode: Viewport.VRSMode) {
+        ObjectCalls.ptrcallWithLongArg(setVrsModeBind, segment, mode.value)
     }
 
     /**
@@ -1817,8 +1818,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_vrs_mode
      */
-    fun getVrsMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, segment)
+    fun getVrsMode(): Viewport.VRSMode {
+        return Viewport.VRSMode(ObjectCalls.ptrcallNoArgsRetLong(getVrsModeBind, segment))
     }
 
     /**
@@ -1829,8 +1830,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.set_vrs_update_mode
      */
-    fun setVrsUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, segment, mode)
+    fun setVrsUpdateMode(mode: Viewport.VRSUpdateMode) {
+        ObjectCalls.ptrcallWithLongArg(setVrsUpdateModeBind, segment, mode.value)
     }
 
     /**
@@ -1841,8 +1842,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Viewport.get_vrs_update_mode
      */
-    fun getVrsUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, segment)
+    fun getVrsUpdateMode(): Viewport.VRSUpdateMode {
+        return Viewport.VRSUpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getVrsUpdateModeBind, segment))
     }
 
     /**
@@ -1880,103 +1881,777 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         const val guiFocusChanged: String = "gui_focus_changed"
     }
 
-    companion object {
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_DISABLED: Long = 0L
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_1: Long = 1L
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_4: Long = 2L
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_16: Long = 3L
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_64: Long = 4L
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_256: Long = 5L
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_1024: Long = 6L
-        const val SHADOW_ATLAS_QUADRANT_SUBDIV_MAX: Long = 7L
-        const val SCALING_3D_MODE_BILINEAR: Long = 0L
-        const val SCALING_3D_MODE_FSR: Long = 1L
-        const val SCALING_3D_MODE_FSR2: Long = 2L
-        const val SCALING_3D_MODE_METALFX_SPATIAL: Long = 3L
-        const val SCALING_3D_MODE_METALFX_TEMPORAL: Long = 4L
-        const val SCALING_3D_MODE_NEAREST: Long = 5L
-        const val SCALING_3D_MODE_MAX: Long = 6L
-        const val MSAA_DISABLED: Long = 0L
-        const val MSAA_2X: Long = 1L
-        const val MSAA_4X: Long = 2L
-        const val MSAA_8X: Long = 3L
-        const val MSAA_MAX: Long = 4L
-        const val ANISOTROPY_DISABLED: Long = 0L
-        const val ANISOTROPY_2X: Long = 1L
-        const val ANISOTROPY_4X: Long = 2L
-        const val ANISOTROPY_8X: Long = 3L
-        const val ANISOTROPY_16X: Long = 4L
-        const val ANISOTROPY_MAX: Long = 5L
-        const val SCREEN_SPACE_AA_DISABLED: Long = 0L
-        const val SCREEN_SPACE_AA_FXAA: Long = 1L
-        const val SCREEN_SPACE_AA_SMAA: Long = 2L
-        const val SCREEN_SPACE_AA_MAX: Long = 3L
-        const val RENDER_INFO_OBJECTS_IN_FRAME: Long = 0L
-        const val RENDER_INFO_PRIMITIVES_IN_FRAME: Long = 1L
-        const val RENDER_INFO_DRAW_CALLS_IN_FRAME: Long = 2L
-        const val RENDER_INFO_MAX: Long = 3L
-        const val RENDER_INFO_TYPE_VISIBLE: Long = 0L
-        const val RENDER_INFO_TYPE_SHADOW: Long = 1L
-        const val RENDER_INFO_TYPE_CANVAS: Long = 2L
-        const val RENDER_INFO_TYPE_MAX: Long = 3L
-        const val DEBUG_DRAW_DISABLED: Long = 0L
-        const val DEBUG_DRAW_UNSHADED: Long = 1L
-        const val DEBUG_DRAW_LIGHTING: Long = 2L
-        const val DEBUG_DRAW_OVERDRAW: Long = 3L
-        const val DEBUG_DRAW_WIREFRAME: Long = 4L
-        const val DEBUG_DRAW_NORMAL_BUFFER: Long = 5L
-        const val DEBUG_DRAW_VOXEL_GI_ALBEDO: Long = 6L
-        const val DEBUG_DRAW_VOXEL_GI_LIGHTING: Long = 7L
-        const val DEBUG_DRAW_VOXEL_GI_EMISSION: Long = 8L
-        const val DEBUG_DRAW_SHADOW_ATLAS: Long = 9L
-        const val DEBUG_DRAW_DIRECTIONAL_SHADOW_ATLAS: Long = 10L
-        const val DEBUG_DRAW_SCENE_LUMINANCE: Long = 11L
-        const val DEBUG_DRAW_SSAO: Long = 12L
-        const val DEBUG_DRAW_SSIL: Long = 13L
-        const val DEBUG_DRAW_PSSM_SPLITS: Long = 14L
-        const val DEBUG_DRAW_DECAL_ATLAS: Long = 15L
-        const val DEBUG_DRAW_SDFGI: Long = 16L
-        const val DEBUG_DRAW_SDFGI_PROBES: Long = 17L
-        const val DEBUG_DRAW_GI_BUFFER: Long = 18L
-        const val DEBUG_DRAW_DISABLE_LOD: Long = 19L
-        const val DEBUG_DRAW_CLUSTER_OMNI_LIGHTS: Long = 20L
-        const val DEBUG_DRAW_CLUSTER_SPOT_LIGHTS: Long = 21L
-        const val DEBUG_DRAW_CLUSTER_DECALS: Long = 22L
-        const val DEBUG_DRAW_CLUSTER_REFLECTION_PROBES: Long = 23L
-        const val DEBUG_DRAW_OCCLUDERS: Long = 24L
-        const val DEBUG_DRAW_MOTION_VECTORS: Long = 25L
-        const val DEBUG_DRAW_INTERNAL_BUFFER: Long = 26L
-        const val DEBUG_DRAW_CLUSTER_AREA_LIGHTS: Long = 27L
-        const val DEBUG_DRAW_AREA_LIGHT_ATLAS: Long = 28L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST: Long = 0L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR: Long = 1L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS: Long = 2L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS: Long = 3L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_PARENT_NODE: Long = 4L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_MAX: Long = 5L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_DISABLED: Long = 0L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_ENABLED: Long = 1L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_MIRROR: Long = 2L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_PARENT_NODE: Long = 3L
-        const val DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_MAX: Long = 4L
-        const val SDF_OVERSIZE_100_PERCENT: Long = 0L
-        const val SDF_OVERSIZE_120_PERCENT: Long = 1L
-        const val SDF_OVERSIZE_150_PERCENT: Long = 2L
-        const val SDF_OVERSIZE_200_PERCENT: Long = 3L
-        const val SDF_OVERSIZE_MAX: Long = 4L
-        const val SDF_SCALE_100_PERCENT: Long = 0L
-        const val SDF_SCALE_50_PERCENT: Long = 1L
-        const val SDF_SCALE_25_PERCENT: Long = 2L
-        const val SDF_SCALE_MAX: Long = 3L
-        const val VRS_DISABLED: Long = 0L
-        const val VRS_TEXTURE: Long = 1L
-        const val VRS_XR: Long = 2L
-        const val VRS_MAX: Long = 3L
-        const val VRS_UPDATE_DISABLED: Long = 0L
-        const val VRS_UPDATE_ONCE: Long = 1L
-        const val VRS_UPDATE_ALWAYS: Long = 2L
-        const val VRS_UPDATE_MAX: Long = 3L
+    @JvmInline
+    value class PositionalShadowAtlasQuadrantSubdiv(val value: Long) {
+        companion object {
+            /**
+             * This quadrant will not be used.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_DISABLED
+             */
+            val DISABLED: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(0L)
+            /**
+             * This quadrant will only be used by one shadow map.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_1
+             */
+            val SUBDIV_1: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(1L)
+            /**
+             * This quadrant will be split in 4 and used by up to 4 shadow maps.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_4
+             */
+            val SUBDIV_4: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(2L)
+            /**
+             * This quadrant will be split 16 ways and used by up to 16 shadow maps.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_16
+             */
+            val SUBDIV_16: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(3L)
+            /**
+             * This quadrant will be split 64 ways and used by up to 64 shadow maps.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_64
+             */
+            val SUBDIV_64: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(4L)
+            /**
+             * This quadrant will be split 256 ways and used by up to 256 shadow maps. Unless the
+             * `positional_shadow_atlas_size` is very high, the shadows in this quadrant will be very low
+             * resolution.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_256
+             */
+            val SUBDIV_256: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(5L)
+            /**
+             * This quadrant will be split 1024 ways and used by up to 1024 shadow maps. Unless the
+             * `positional_shadow_atlas_size` is very high, the shadows in this quadrant will be very low
+             * resolution.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_1024
+             */
+            val SUBDIV_1024: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(6L)
+            /**
+             * Represents the size of the `PositionalShadowAtlasQuadrantSubdiv` enum.
+             *
+             * Generated from Godot docs: Viewport.SHADOW_ATLAS_QUADRANT_SUBDIV_MAX
+             */
+            val MAX: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(7L)
+        }
+    }
 
+    @JvmInline
+    value class Scaling3DMode(val value: Long) {
+        companion object {
+            /**
+             * Use bilinear scaling for the viewport's 3D buffer. The amount of scaling can be set using
+             * `scaling_3d_scale`. Values less than `1.0` will result in undersampling while values greater
+             * than `1.0` will result in supersampling. A value of `1.0` disables scaling.
+             *
+             * Generated from Godot docs: Viewport.SCALING_3D_MODE_BILINEAR
+             */
+            val BILINEAR: Scaling3DMode get() = Scaling3DMode(0L)
+            /**
+             * Use AMD FidelityFX Super Resolution 1.0 upscaling for the viewport's 3D buffer. The amount of
+             * scaling can be set using `scaling_3d_scale`. Values less than `1.0` will result in the viewport
+             * being upscaled using FSR. Values greater than `1.0` are not supported and bilinear downsampling
+             * will be used instead. A value of `1.0` disables scaling.
+             *
+             * Generated from Godot docs: Viewport.SCALING_3D_MODE_FSR
+             */
+            val FSR: Scaling3DMode get() = Scaling3DMode(1L)
+            /**
+             * Use AMD FidelityFX Super Resolution 2.2 upscaling for the viewport's 3D buffer. The amount of
+             * scaling can be set using `Viewport.scaling_3d_scale`. Values less than `1.0` will result in the
+             * viewport being upscaled using FSR2. Values greater than `1.0` are not supported and bilinear
+             * downsampling will be used instead. A value of `1.0` will use FSR2 at native resolution as a TAA
+             * solution.
+             *
+             * Generated from Godot docs: Viewport.SCALING_3D_MODE_FSR2
+             */
+            val FSR2: Scaling3DMode get() = Scaling3DMode(2L)
+            /**
+             * Use the MetalFX spatial upscaler
+             * (https://developer.apple.com/documentation/metalfx/mtlfxspatialscaler#overview) for the
+             * viewport's 3D buffer. The amount of scaling can be set using `scaling_3d_scale`. Values less
+             * than `1.0` will result in the viewport being upscaled using MetalFX. Values greater than `1.0`
+             * are not supported and bilinear downsampling will be used instead. A value of `1.0` disables
+             * scaling. More information: MetalFX (https://developer.apple.com/documentation/metalfx). Note:
+             * Only supported when the Metal rendering driver is in use, which limits this scaling mode to
+             * macOS and iOS.
+             *
+             * Generated from Godot docs: Viewport.SCALING_3D_MODE_METALFX_SPATIAL
+             */
+            val METALFX_SPATIAL: Scaling3DMode get() = Scaling3DMode(3L)
+            /**
+             * Use the MetalFX temporal upscaler
+             * (https://developer.apple.com/documentation/metalfx/mtlfxtemporalscaler#overview) for the
+             * viewport's 3D buffer. The amount of scaling can be set using `scaling_3d_scale`. To determine
+             * the minimum input scale, use the `RenderingDevice.limit_get` method with
+             * `RenderingDevice.LIMIT_METALFX_TEMPORAL_SCALER_MIN_SCALE`. Values less than `1.0` will result in
+             * the viewport being upscaled using MetalFX. Values greater than `1.0` are not supported and
+             * bilinear downsampling will be used instead. A value of `1.0` will use MetalFX at native
+             * resolution as a TAA solution. More information: MetalFX
+             * (https://developer.apple.com/documentation/metalfx). Note: Only supported when the Metal
+             * rendering driver is in use, which limits this scaling mode to macOS and iOS.
+             *
+             * Generated from Godot docs: Viewport.SCALING_3D_MODE_METALFX_TEMPORAL
+             */
+            val METALFX_TEMPORAL: Scaling3DMode get() = Scaling3DMode(4L)
+            /**
+             * Use nearest-neighbor filtering for the viewport's 3D buffer. This looks crisper than
+             * `SCALING_3D_MODE_BILINEAR` and has no additional rendering cost. The amount of scaling can be
+             * set using `scaling_3d_scale`. Values greater than `1.0` are not supported and bilinear
+             * downsampling will be used instead. A value of `1.0` disables scaling. Note: When using the
+             * Nearest scaling mode, to avoid uneven pixel scaling, it's highly recommended to use a value
+             * equal to an integer divisor with a dividend of `1`. For example, it's best to use a scale of
+             * `0.5` (1/2), `0.3333` (1/3), `0.25` (1/4), `0.2` (1/5), and so on.
+             *
+             * Generated from Godot docs: Viewport.SCALING_3D_MODE_NEAREST
+             */
+            val NEAREST: Scaling3DMode get() = Scaling3DMode(5L)
+            /**
+             * Represents the size of the `Scaling3DMode` enum.
+             *
+             * Generated from Godot docs: Viewport.SCALING_3D_MODE_MAX
+             */
+            val MAX: Scaling3DMode get() = Scaling3DMode(6L)
+        }
+    }
+
+    @JvmInline
+    value class MSAA(val value: Long) {
+        companion object {
+            /**
+             * Multisample antialiasing mode disabled. This is the default value, and is also the fastest
+             * setting.
+             *
+             * Generated from Godot docs: Viewport.MSAA_DISABLED
+             */
+            val DISABLED: MSAA get() = MSAA(0L)
+            /**
+             * Use 2× Multisample Antialiasing. This has a moderate performance cost. It helps reduce aliasing
+             * noticeably, but 4× MSAA still looks substantially better.
+             *
+             * Generated from Godot docs: Viewport.MSAA_2X
+             */
+            val MSAA_2X: MSAA get() = MSAA(1L)
+            /**
+             * Use 4× Multisample Antialiasing. This has a significant performance cost, and is generally a
+             * good compromise between performance and quality.
+             *
+             * Generated from Godot docs: Viewport.MSAA_4X
+             */
+            val MSAA_4X: MSAA get() = MSAA(2L)
+            /**
+             * Use 8× Multisample Antialiasing. This has a very high performance cost. The difference between
+             * 4× and 8× MSAA may not always be visible in real gameplay conditions. Likely unsupported on
+             * low-end and older hardware.
+             *
+             * Generated from Godot docs: Viewport.MSAA_8X
+             */
+            val MSAA_8X: MSAA get() = MSAA(3L)
+            /**
+             * Represents the size of the `MSAA` enum.
+             *
+             * Generated from Godot docs: Viewport.MSAA_MAX
+             */
+            val MAX: MSAA get() = MSAA(4L)
+        }
+    }
+
+    @JvmInline
+    value class AnisotropicFiltering(val value: Long) {
+        companion object {
+            /**
+             * Anisotropic filtering is disabled.
+             *
+             * Generated from Godot docs: Viewport.ANISOTROPY_DISABLED
+             */
+            val DISABLED: AnisotropicFiltering get() = AnisotropicFiltering(0L)
+            /**
+             * Use 2× anisotropic filtering.
+             *
+             * Generated from Godot docs: Viewport.ANISOTROPY_2X
+             */
+            val ANISOTROPY_2X: AnisotropicFiltering get() = AnisotropicFiltering(1L)
+            /**
+             * Use 4× anisotropic filtering. This is the default value.
+             *
+             * Generated from Godot docs: Viewport.ANISOTROPY_4X
+             */
+            val ANISOTROPY_4X: AnisotropicFiltering get() = AnisotropicFiltering(2L)
+            /**
+             * Use 8× anisotropic filtering.
+             *
+             * Generated from Godot docs: Viewport.ANISOTROPY_8X
+             */
+            val ANISOTROPY_8X: AnisotropicFiltering get() = AnisotropicFiltering(3L)
+            /**
+             * Use 16× anisotropic filtering.
+             *
+             * Generated from Godot docs: Viewport.ANISOTROPY_16X
+             */
+            val ANISOTROPY_16X: AnisotropicFiltering get() = AnisotropicFiltering(4L)
+            /**
+             * Represents the size of the `AnisotropicFiltering` enum.
+             *
+             * Generated from Godot docs: Viewport.ANISOTROPY_MAX
+             */
+            val MAX: AnisotropicFiltering get() = AnisotropicFiltering(5L)
+        }
+    }
+
+    @JvmInline
+    value class ScreenSpaceAA(val value: Long) {
+        companion object {
+            /**
+             * Do not perform any antialiasing in the full screen post-process.
+             *
+             * Generated from Godot docs: Viewport.SCREEN_SPACE_AA_DISABLED
+             */
+            val DISABLED: ScreenSpaceAA get() = ScreenSpaceAA(0L)
+            /**
+             * Use fast approximate antialiasing. FXAA is a popular screen-space antialiasing method, which is
+             * fast but will make the image look blurry, especially at lower resolutions. It can still work
+             * relatively well at large resolutions such as 1440p and 4K.
+             *
+             * Generated from Godot docs: Viewport.SCREEN_SPACE_AA_FXAA
+             */
+            val FXAA: ScreenSpaceAA get() = ScreenSpaceAA(1L)
+            /**
+             * Use subpixel morphological antialiasing. SMAA may produce clearer results than FXAA, but at a
+             * slightly higher performance cost.
+             *
+             * Generated from Godot docs: Viewport.SCREEN_SPACE_AA_SMAA
+             */
+            val SMAA: ScreenSpaceAA get() = ScreenSpaceAA(2L)
+            /**
+             * Represents the size of the `ScreenSpaceAA` enum.
+             *
+             * Generated from Godot docs: Viewport.SCREEN_SPACE_AA_MAX
+             */
+            val MAX: ScreenSpaceAA get() = ScreenSpaceAA(3L)
+        }
+    }
+
+    @JvmInline
+    value class RenderInfo(val value: Long) {
+        companion object {
+            /**
+             * Amount of objects in frame.
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_OBJECTS_IN_FRAME
+             */
+            val OBJECTS_IN_FRAME: RenderInfo get() = RenderInfo(0L)
+            /**
+             * Amount of vertices in frame.
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_PRIMITIVES_IN_FRAME
+             */
+            val PRIMITIVES_IN_FRAME: RenderInfo get() = RenderInfo(1L)
+            /**
+             * Amount of draw calls in frame.
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME
+             */
+            val DRAW_CALLS_IN_FRAME: RenderInfo get() = RenderInfo(2L)
+            /**
+             * Represents the size of the `RenderInfo` enum.
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_MAX
+             */
+            val MAX: RenderInfo get() = RenderInfo(3L)
+        }
+    }
+
+    @JvmInline
+    value class RenderInfoType(val value: Long) {
+        companion object {
+            /**
+             * Visible render pass (excluding shadows).
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_TYPE_VISIBLE
+             */
+            val VISIBLE: RenderInfoType get() = RenderInfoType(0L)
+            /**
+             * Shadow render pass. Objects will be rendered several times depending on the number of amounts of
+             * lights with shadows and the number of directional shadow splits.
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_TYPE_SHADOW
+             */
+            val SHADOW: RenderInfoType get() = RenderInfoType(1L)
+            /**
+             * Canvas item rendering. This includes all 2D rendering.
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_TYPE_CANVAS
+             */
+            val CANVAS: RenderInfoType get() = RenderInfoType(2L)
+            /**
+             * Represents the size of the `RenderInfoType` enum.
+             *
+             * Generated from Godot docs: Viewport.RENDER_INFO_TYPE_MAX
+             */
+            val MAX: RenderInfoType get() = RenderInfoType(3L)
+        }
+    }
+
+    @JvmInline
+    value class DebugDraw(val value: Long) {
+        companion object {
+            /**
+             * Objects are displayed normally.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_DISABLED
+             */
+            val DISABLED: DebugDraw get() = DebugDraw(0L)
+            /**
+             * Objects are displayed without light information.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_UNSHADED
+             */
+            val UNSHADED: DebugDraw get() = DebugDraw(1L)
+            /**
+             * Objects are displayed without textures and only with lighting information. Note: When using this
+             * debug draw mode, custom shaders are ignored since all materials in the scene temporarily use a
+             * debug material. This means the result from custom shader functions (such as vertex displacement)
+             * won't be visible anymore when using this debug draw mode.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_LIGHTING
+             */
+            val LIGHTING: DebugDraw get() = DebugDraw(2L)
+            /**
+             * Objects are displayed semi-transparent with additive blending so you can see where they are
+             * drawing over top of one another. A higher overdraw means you are wasting performance on drawing
+             * pixels that are being hidden behind others. Note: When using this debug draw mode, custom
+             * shaders are ignored since all materials in the scene temporarily use a debug material. This
+             * means the result from custom shader functions (such as vertex displacement) won't be visible
+             * anymore when using this debug draw mode.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_OVERDRAW
+             */
+            val OVERDRAW: DebugDraw get() = DebugDraw(3L)
+            /**
+             * Objects are displayed as wireframe models. Note: `RenderingServer.set_debug_generate_wireframes`
+             * must be called before loading any meshes for wireframes to be visible when using the
+             * Compatibility renderer. Note: In the Compatibility renderer, backfaces are always visible when
+             * using wireframe rendering. In the Forward+ and Mobile renderers, wireframes follow the
+             * material's backface culling properties instead.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_WIREFRAME
+             */
+            val WIREFRAME: DebugDraw get() = DebugDraw(4L)
+            /**
+             * Objects are displayed without lighting information and their textures replaced by normal
+             * mapping. Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_NORMAL_BUFFER
+             */
+            val NORMAL_BUFFER: DebugDraw get() = DebugDraw(5L)
+            /**
+             * Objects are displayed with only the albedo value from `VoxelGI`s. Requires at least one visible
+             * `VoxelGI` node that has been baked to have a visible effect. Note: Only supported when using the
+             * Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_VOXEL_GI_ALBEDO
+             */
+            val VOXEL_GI_ALBEDO: DebugDraw get() = DebugDraw(6L)
+            /**
+             * Objects are displayed with only the lighting value from `VoxelGI`s. Requires at least one
+             * visible `VoxelGI` node that has been baked to have a visible effect. Note: Only supported when
+             * using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_VOXEL_GI_LIGHTING
+             */
+            val VOXEL_GI_LIGHTING: DebugDraw get() = DebugDraw(7L)
+            /**
+             * Objects are displayed with only the emission color from `VoxelGI`s. Requires at least one
+             * visible `VoxelGI` node that has been baked to have a visible effect. Note: Only supported when
+             * using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_VOXEL_GI_EMISSION
+             */
+            val VOXEL_GI_EMISSION: DebugDraw get() = DebugDraw(8L)
+            /**
+             * Draws the shadow atlas that stores shadows from `OmniLight3D`s and `SpotLight3D`s in the upper
+             * left quadrant of the `Viewport`.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_SHADOW_ATLAS
+             */
+            val SHADOW_ATLAS: DebugDraw get() = DebugDraw(9L)
+            /**
+             * Draws the shadow atlas that stores shadows from `DirectionalLight3D`s in the upper left quadrant
+             * of the `Viewport`.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_DIRECTIONAL_SHADOW_ATLAS
+             */
+            val DIRECTIONAL_SHADOW_ATLAS: DebugDraw get() = DebugDraw(10L)
+            /**
+             * Draws the scene luminance buffer (if available) in the upper left quadrant of the `Viewport`.
+             * Note: Only supported when using the Forward+ or Mobile rendering methods.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_SCENE_LUMINANCE
+             */
+            val SCENE_LUMINANCE: DebugDraw get() = DebugDraw(11L)
+            /**
+             * Draws the screen-space ambient occlusion texture instead of the scene so that you can clearly
+             * see how it is affecting objects. In order for this display mode to work, you must have
+             * `Environment.ssao_enabled` set in your `WorldEnvironment`. Note: Only supported when using the
+             * Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_SSAO
+             */
+            val SSAO: DebugDraw get() = DebugDraw(12L)
+            /**
+             * Draws the screen-space indirect lighting texture instead of the scene so that you can clearly
+             * see how it is affecting objects. In order for this display mode to work, you must have
+             * `Environment.ssil_enabled` set in your `WorldEnvironment`. Note: Only supported when using the
+             * Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_SSIL
+             */
+            val SSIL: DebugDraw get() = DebugDraw(13L)
+            /**
+             * Colors each PSSM split for the `DirectionalLight3D`s in the scene a different color so you can
+             * see where the splits are. In order (from closest to furthest from the camera), they are colored
+             * red, green, blue, and yellow. Note: When using this debug draw mode, custom shaders are ignored
+             * since all materials in the scene temporarily use a debug material. This means the result from
+             * custom shader functions (such as vertex displacement) won't be visible anymore when using this
+             * debug draw mode. Note: Only supported when using the Forward+ or Mobile rendering methods.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_PSSM_SPLITS
+             */
+            val PSSM_SPLITS: DebugDraw get() = DebugDraw(14L)
+            /**
+             * Draws the decal atlas used by `Decal`s and light projector textures in the upper left quadrant
+             * of the `Viewport`. Note: Only supported when using the Forward+ or Mobile rendering methods.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_DECAL_ATLAS
+             */
+            val DECAL_ATLAS: DebugDraw get() = DebugDraw(15L)
+            /**
+             * Draws the cascades used to render signed distance field global illumination (SDFGI). Does
+             * nothing if the current environment's `Environment.sdfgi_enabled` is `false`. Note: Only
+             * supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_SDFGI
+             */
+            val SDFGI: DebugDraw get() = DebugDraw(16L)
+            /**
+             * Draws the probes used for signed distance field global illumination (SDFGI). When in the editor,
+             * left-clicking a probe will display additional bright dots that show its occlusion information. A
+             * white dot means the light is not occluded at all at the dot's position, while a red dot means
+             * the light is fully occluded. Intermediate values are possible. Does nothing if the current
+             * environment's `Environment.sdfgi_enabled` is `false`. Note: Only supported when using the
+             * Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_SDFGI_PROBES
+             */
+            val SDFGI_PROBES: DebugDraw get() = DebugDraw(17L)
+            /**
+             * Draws the buffer used for global illumination from `VoxelGI` or SDFGI. Requires `VoxelGI` (at
+             * least one visible baked VoxelGI node) or SDFGI (`Environment.sdfgi_enabled`) to be enabled to
+             * have a visible effect. Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_GI_BUFFER
+             */
+            val GI_BUFFER: DebugDraw get() = DebugDraw(18L)
+            /**
+             * Draws all of the objects at their highest polycount regardless of their distance from the
+             * camera. No low level of detail (LOD) is applied.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_DISABLE_LOD
+             */
+            val DISABLE_LOD: DebugDraw get() = DebugDraw(19L)
+            /**
+             * Draws the cluster used by `OmniLight3D` nodes to optimize light rendering. Note: Only supported
+             * when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_CLUSTER_OMNI_LIGHTS
+             */
+            val CLUSTER_OMNI_LIGHTS: DebugDraw get() = DebugDraw(20L)
+            /**
+             * Draws the cluster used by `SpotLight3D` nodes to optimize light rendering. Note: Only supported
+             * when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_CLUSTER_SPOT_LIGHTS
+             */
+            val CLUSTER_SPOT_LIGHTS: DebugDraw get() = DebugDraw(21L)
+            /**
+             * Draws the cluster used by `Decal` nodes to optimize decal rendering. Note: Only supported when
+             * using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_CLUSTER_DECALS
+             */
+            val CLUSTER_DECALS: DebugDraw get() = DebugDraw(22L)
+            /**
+             * Draws the cluster used by `ReflectionProbe` nodes to optimize reflection probes. Note: Only
+             * supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_CLUSTER_REFLECTION_PROBES
+             */
+            val CLUSTER_REFLECTION_PROBES: DebugDraw get() = DebugDraw(23L)
+            /**
+             * Draws the buffer used for occlusion culling. Note: Only supported when using the Forward+ or
+             * Mobile rendering methods.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_OCCLUDERS
+             */
+            val OCCLUDERS: DebugDraw get() = DebugDraw(24L)
+            /**
+             * Draws vector lines over the viewport to indicate the movement of pixels between frames. Note:
+             * Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_MOTION_VECTORS
+             */
+            val MOTION_VECTORS: DebugDraw get() = DebugDraw(25L)
+            /**
+             * Draws the internal resolution buffer of the scene in linear colorspace before tonemapping or
+             * post-processing is applied. Note: Only supported when using the Forward+ or Mobile rendering
+             * methods.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_INTERNAL_BUFFER
+             */
+            val INTERNAL_BUFFER: DebugDraw get() = DebugDraw(26L)
+            /**
+             * Draws the cluster used by `AreaLight3D` nodes to optimize light rendering. Note: Only supported
+             * when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_CLUSTER_AREA_LIGHTS
+             */
+            val CLUSTER_AREA_LIGHTS: DebugDraw get() = DebugDraw(27L)
+            /**
+             * Draws the atlas used by `AreaLight3D` nodes in the upper left quadrant of the `Viewport`. Note:
+             * Only supported when using the Forward+ or Mobile rendering method.
+             *
+             * Generated from Godot docs: Viewport.DEBUG_DRAW_AREA_LIGHT_ATLAS
+             */
+            val AREA_LIGHT_ATLAS: DebugDraw get() = DebugDraw(28L)
+        }
+    }
+
+    @JvmInline
+    value class DefaultCanvasItemTextureFilter(val value: Long) {
+        companion object {
+            /**
+             * The texture filter reads from the nearest pixel only. This makes the texture look pixelated from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+             */
+            val NEAREST: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(0L)
+            /**
+             * The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR
+             */
+            val LINEAR: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(1L)
+            /**
+             * The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look smooth from up close, and smooth from a distance. Use this for non-pixel
+             * art textures that may be viewed at a low scale (e.g. due to `Camera2D` zoom or sprite scaling),
+             * as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+             */
+            val LINEAR_WITH_MIPMAPS: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(2L)
+            /**
+             * The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look pixelated from up close, and smooth from a distance. Use this for
+             * non-pixel art textures that may be viewed at a low scale (e.g. due to `Camera2D` zoom or sprite
+             * scaling), as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+             */
+            val NEAREST_WITH_MIPMAPS: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(3L)
+            /**
+             * The `Viewport` will inherit the filter from its parent `CanvasItem` or `Viewport`.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_PARENT_NODE
+             */
+            val PARENT_NODE: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(4L)
+            /**
+             * Represents the size of the `DefaultCanvasItemTextureFilter` enum.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_MAX
+             */
+            val MAX: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(5L)
+        }
+    }
+
+    @JvmInline
+    value class DefaultCanvasItemTextureRepeat(val value: Long) {
+        companion object {
+            /**
+             * Disables textures repeating. Instead, when reading UVs outside the 0-1 range, the value will be
+             * clamped to the edge of the texture, resulting in a stretched out look at the borders of the
+             * texture.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_DISABLED
+             */
+            val DISABLED: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(0L)
+            /**
+             * Enables the texture to repeat when UV coordinates are outside the 0-1 range. If using one of the
+             * linear filtering modes, this can result in artifacts at the edges of a texture when the sampler
+             * filters across the edges of the texture.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_ENABLED
+             */
+            val ENABLED: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(1L)
+            /**
+             * Flip the texture when repeating so that the edge lines up instead of abruptly changing.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_MIRROR
+             */
+            val MIRROR: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(2L)
+            /**
+             * The `Viewport` will inherit the repeat mode from its parent `CanvasItem` or `Viewport`.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_PARENT_NODE
+             */
+            val PARENT_NODE: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(3L)
+            /**
+             * Represents the size of the `DefaultCanvasItemTextureRepeat` enum.
+             *
+             * Generated from Godot docs: Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_MAX
+             */
+            val MAX: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(4L)
+        }
+    }
+
+    @JvmInline
+    value class SDFOversize(val value: Long) {
+        companion object {
+            /**
+             * The signed distance field only covers the viewport's own rectangle.
+             *
+             * Generated from Godot docs: Viewport.SDF_OVERSIZE_100_PERCENT
+             */
+            val OVERSIZE_100_PERCENT: SDFOversize get() = SDFOversize(0L)
+            /**
+             * The signed distance field is expanded to cover 20% of the viewport's size around the borders.
+             *
+             * Generated from Godot docs: Viewport.SDF_OVERSIZE_120_PERCENT
+             */
+            val OVERSIZE_120_PERCENT: SDFOversize get() = SDFOversize(1L)
+            /**
+             * The signed distance field is expanded to cover 50% of the viewport's size around the borders.
+             *
+             * Generated from Godot docs: Viewport.SDF_OVERSIZE_150_PERCENT
+             */
+            val OVERSIZE_150_PERCENT: SDFOversize get() = SDFOversize(2L)
+            /**
+             * The signed distance field is expanded to cover 100% (double) of the viewport's size around the
+             * borders.
+             *
+             * Generated from Godot docs: Viewport.SDF_OVERSIZE_200_PERCENT
+             */
+            val OVERSIZE_200_PERCENT: SDFOversize get() = SDFOversize(3L)
+            /**
+             * Represents the size of the `SDFOversize` enum.
+             *
+             * Generated from Godot docs: Viewport.SDF_OVERSIZE_MAX
+             */
+            val MAX: SDFOversize get() = SDFOversize(4L)
+        }
+    }
+
+    @JvmInline
+    value class SDFScale(val value: Long) {
+        companion object {
+            /**
+             * The signed distance field is rendered at full resolution.
+             *
+             * Generated from Godot docs: Viewport.SDF_SCALE_100_PERCENT
+             */
+            val SCALE_100_PERCENT: SDFScale get() = SDFScale(0L)
+            /**
+             * The signed distance field is rendered at half the resolution of this viewport.
+             *
+             * Generated from Godot docs: Viewport.SDF_SCALE_50_PERCENT
+             */
+            val SCALE_50_PERCENT: SDFScale get() = SDFScale(1L)
+            /**
+             * The signed distance field is rendered at a quarter the resolution of this viewport.
+             *
+             * Generated from Godot docs: Viewport.SDF_SCALE_25_PERCENT
+             */
+            val SCALE_25_PERCENT: SDFScale get() = SDFScale(2L)
+            /**
+             * Represents the size of the `SDFScale` enum.
+             *
+             * Generated from Godot docs: Viewport.SDF_SCALE_MAX
+             */
+            val MAX: SDFScale get() = SDFScale(3L)
+        }
+    }
+
+    @JvmInline
+    value class VRSMode(val value: Long) {
+        companion object {
+            /**
+             * Variable Rate Shading is disabled.
+             *
+             * Generated from Godot docs: Viewport.VRS_DISABLED
+             */
+            val DISABLED: VRSMode get() = VRSMode(0L)
+            /**
+             * Variable Rate Shading uses a texture. Note, for stereoscopic use a texture atlas with a texture
+             * for each view.
+             *
+             * Generated from Godot docs: Viewport.VRS_TEXTURE
+             */
+            val TEXTURE: VRSMode get() = VRSMode(1L)
+            /**
+             * Variable Rate Shading's texture is supplied by the primary `XRInterface`.
+             *
+             * Generated from Godot docs: Viewport.VRS_XR
+             */
+            val XR: VRSMode get() = VRSMode(2L)
+            /**
+             * Represents the size of the `VRSMode` enum.
+             *
+             * Generated from Godot docs: Viewport.VRS_MAX
+             */
+            val MAX: VRSMode get() = VRSMode(3L)
+        }
+    }
+
+    @JvmInline
+    value class VRSUpdateMode(val value: Long) {
+        companion object {
+            /**
+             * The input texture for variable rate shading will not be processed.
+             *
+             * Generated from Godot docs: Viewport.VRS_UPDATE_DISABLED
+             */
+            val DISABLED: VRSUpdateMode get() = VRSUpdateMode(0L)
+            /**
+             * The input texture for variable rate shading will be processed once.
+             *
+             * Generated from Godot docs: Viewport.VRS_UPDATE_ONCE
+             */
+            val ONCE: VRSUpdateMode get() = VRSUpdateMode(1L)
+            /**
+             * The input texture for variable rate shading will be processed each frame.
+             *
+             * Generated from Godot docs: Viewport.VRS_UPDATE_ALWAYS
+             */
+            val ALWAYS: VRSUpdateMode get() = VRSUpdateMode(2L)
+            /**
+             * Represents the size of the `VRSUpdateMode` enum.
+             *
+             * Generated from Godot docs: Viewport.VRS_UPDATE_MAX
+             */
+            val MAX: VRSUpdateMode get() = VRSUpdateMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Viewport? =
             wrap(handle.segment)

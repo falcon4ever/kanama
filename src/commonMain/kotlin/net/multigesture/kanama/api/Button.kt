@@ -30,25 +30,25 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setFlatProperty")
         set(value) = setFlat(value)
 
-    var alignment: Long
+    var alignment: HorizontalAlignment
         @JvmName("alignmentProperty")
         get() = getTextAlignment()
         @JvmName("setAlignmentProperty")
         set(value) = setTextAlignment(value)
 
-    var textOverrunBehavior: Long
+    var textOverrunBehavior: TextServer.OverrunBehavior
         @JvmName("textOverrunBehaviorProperty")
         get() = getTextOverrunBehavior()
         @JvmName("setTextOverrunBehaviorProperty")
         set(value) = setTextOverrunBehavior(value)
 
-    var autowrapMode: Long
+    var autowrapMode: TextServer.AutowrapMode
         @JvmName("autowrapModeProperty")
         get() = getAutowrapMode()
         @JvmName("setAutowrapModeProperty")
         set(value) = setAutowrapMode(value)
 
-    var autowrapTrimFlags: Long
+    var autowrapTrimFlags: TextServer.LineBreakFlag
         @JvmName("autowrapTrimFlagsProperty")
         get() = getAutowrapTrimFlags()
         @JvmName("setAutowrapTrimFlagsProperty")
@@ -60,13 +60,13 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setClipTextProperty")
         set(value) = setClipText(value)
 
-    var iconAlignment: Long
+    var iconAlignment: HorizontalAlignment
         @JvmName("iconAlignmentProperty")
         get() = getIconAlignment()
         @JvmName("setIconAlignmentProperty")
         set(value) = setIconAlignment(value)
 
-    var verticalIconAlignment: Long
+    var verticalIconAlignment: VerticalAlignment
         @JvmName("verticalIconAlignmentProperty")
         get() = getVerticalIconAlignment()
         @JvmName("setVerticalIconAlignmentProperty")
@@ -78,7 +78,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setExpandIconProperty")
         set(value) = setExpandIcon(value)
 
-    var textDirection: Long
+    var textDirection: Control.TextDirection
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -113,8 +113,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.set_text_overrun_behavior
      */
-    fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
+    fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -122,8 +122,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.get_text_overrun_behavior
      */
-    fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
+    fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -132,8 +132,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.set_autowrap_mode
      */
-    fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
+    fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -142,8 +142,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.get_autowrap_mode
      */
-    fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
+    fun getAutowrapMode(): TextServer.AutowrapMode {
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
     }
 
     /**
@@ -152,8 +152,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.set_autowrap_trim_flags
      */
-    fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
+    fun setAutowrapTrimFlags(autowrapTrimFlags: TextServer.LineBreakFlag) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
     }
 
     /**
@@ -162,8 +162,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.get_autowrap_trim_flags
      */
-    fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
+    fun getAutowrapTrimFlags(): TextServer.LineBreakFlag {
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment))
     }
 
     /**
@@ -171,8 +171,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -180,8 +180,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -271,8 +271,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.set_text_alignment
      */
-    fun setTextAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextAlignmentBind, segment, alignment)
+    fun setTextAlignment(alignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setTextAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -280,8 +280,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.get_text_alignment
      */
-    fun getTextAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextAlignmentBind, segment)
+    fun getTextAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getTextAlignmentBind, segment))
     }
 
     /**
@@ -291,8 +291,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.set_icon_alignment
      */
-    fun setIconAlignment(iconAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconAlignmentBind, segment, iconAlignment)
+    fun setIconAlignment(iconAlignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setIconAlignmentBind, segment, iconAlignment.value)
     }
 
     /**
@@ -302,8 +302,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.get_icon_alignment
      */
-    fun getIconAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getIconAlignmentBind, segment)
+    fun getIconAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getIconAlignmentBind, segment))
     }
 
     /**
@@ -313,8 +313,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.set_vertical_icon_alignment
      */
-    fun setVerticalIconAlignment(verticalIconAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalIconAlignmentBind, segment, verticalIconAlignment)
+    fun setVerticalIconAlignment(verticalIconAlignment: VerticalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setVerticalIconAlignmentBind, segment, verticalIconAlignment.value)
     }
 
     /**
@@ -324,8 +324,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: Button.get_vertical_icon_alignment
      */
-    fun getVerticalIconAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalIconAlignmentBind, segment)
+    fun getVerticalIconAlignment(): VerticalAlignment {
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalIconAlignmentBind, segment))
     }
 
     /**

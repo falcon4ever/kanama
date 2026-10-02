@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -15,15 +16,35 @@ class EditorToaster(handle: GodotHandle) : HBoxContainer(handle) {
      *
      * Generated from Godot docs: EditorToaster.push_toast
      */
-    fun pushToast(message: String, severity: Long = 0L, tooltip: String = "") {
-        ObjectCalls.ptrcallWithStringLongStringArgs(pushToastBind, segment, message, severity, tooltip)
+    fun pushToast(message: String, severity: EditorToaster.Severity = EditorToaster.Severity.INFO, tooltip: String = "") {
+        ObjectCalls.ptrcallWithStringLongStringArgs(pushToastBind, segment, message, severity.value, tooltip)
+    }
+
+    @JvmInline
+    value class Severity(val value: Long) {
+        companion object {
+            /**
+             * Toast will display with an INFO severity.
+             *
+             * Generated from Godot docs: EditorToaster.SEVERITY_INFO
+             */
+            val INFO: Severity get() = Severity(0L)
+            /**
+             * Toast will display with a WARNING severity and have a corresponding color.
+             *
+             * Generated from Godot docs: EditorToaster.SEVERITY_WARNING
+             */
+            val WARNING: Severity get() = Severity(1L)
+            /**
+             * Toast will display with an ERROR severity and have a corresponding color.
+             *
+             * Generated from Godot docs: EditorToaster.SEVERITY_ERROR
+             */
+            val ERROR: Severity get() = Severity(2L)
+        }
     }
 
     companion object {
-        const val SEVERITY_INFO: Long = 0L
-        const val SEVERITY_WARNING: Long = 1L
-        const val SEVERITY_ERROR: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorToaster? =
             wrap(handle.segment)

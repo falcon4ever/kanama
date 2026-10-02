@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -13,26 +14,6 @@ object Time {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("Time")
     }
-
-    const val MONTH_JANUARY: Long = 1L
-    const val MONTH_FEBRUARY: Long = 2L
-    const val MONTH_MARCH: Long = 3L
-    const val MONTH_APRIL: Long = 4L
-    const val MONTH_MAY: Long = 5L
-    const val MONTH_JUNE: Long = 6L
-    const val MONTH_JULY: Long = 7L
-    const val MONTH_AUGUST: Long = 8L
-    const val MONTH_SEPTEMBER: Long = 9L
-    const val MONTH_OCTOBER: Long = 10L
-    const val MONTH_NOVEMBER: Long = 11L
-    const val MONTH_DECEMBER: Long = 12L
-    const val WEEKDAY_SUNDAY: Long = 0L
-    const val WEEKDAY_MONDAY: Long = 1L
-    const val WEEKDAY_TUESDAY: Long = 2L
-    const val WEEKDAY_WEDNESDAY: Long = 3L
-    const val WEEKDAY_THURSDAY: Long = 4L
-    const val WEEKDAY_FRIDAY: Long = 5L
-    const val WEEKDAY_SATURDAY: Long = 6L
 
     @JvmStatic
     fun getDateTimeDictFromUnixTime(unixTime: Long): Map<String, Any?> {
@@ -216,6 +197,132 @@ object Time {
     @JvmStatic
     fun getTicksUsec(): Long {
         return ObjectCalls.ptrcallNoArgsRetLong(getTicksUsecBind, singleton)
+    }
+
+    @JvmInline
+    value class Month(val value: Long) {
+        companion object {
+            /**
+             * The month of January, represented numerically as `01`.
+             *
+             * Generated from Godot docs: Time.MONTH_JANUARY
+             */
+            val JANUARY: Month get() = Month(1L)
+            /**
+             * The month of February, represented numerically as `02`.
+             *
+             * Generated from Godot docs: Time.MONTH_FEBRUARY
+             */
+            val FEBRUARY: Month get() = Month(2L)
+            /**
+             * The month of March, represented numerically as `03`.
+             *
+             * Generated from Godot docs: Time.MONTH_MARCH
+             */
+            val MARCH: Month get() = Month(3L)
+            /**
+             * The month of April, represented numerically as `04`.
+             *
+             * Generated from Godot docs: Time.MONTH_APRIL
+             */
+            val APRIL: Month get() = Month(4L)
+            /**
+             * The month of May, represented numerically as `05`.
+             *
+             * Generated from Godot docs: Time.MONTH_MAY
+             */
+            val MAY: Month get() = Month(5L)
+            /**
+             * The month of June, represented numerically as `06`.
+             *
+             * Generated from Godot docs: Time.MONTH_JUNE
+             */
+            val JUNE: Month get() = Month(6L)
+            /**
+             * The month of July, represented numerically as `07`.
+             *
+             * Generated from Godot docs: Time.MONTH_JULY
+             */
+            val JULY: Month get() = Month(7L)
+            /**
+             * The month of August, represented numerically as `08`.
+             *
+             * Generated from Godot docs: Time.MONTH_AUGUST
+             */
+            val AUGUST: Month get() = Month(8L)
+            /**
+             * The month of September, represented numerically as `09`.
+             *
+             * Generated from Godot docs: Time.MONTH_SEPTEMBER
+             */
+            val SEPTEMBER: Month get() = Month(9L)
+            /**
+             * The month of October, represented numerically as `10`.
+             *
+             * Generated from Godot docs: Time.MONTH_OCTOBER
+             */
+            val OCTOBER: Month get() = Month(10L)
+            /**
+             * The month of November, represented numerically as `11`.
+             *
+             * Generated from Godot docs: Time.MONTH_NOVEMBER
+             */
+            val NOVEMBER: Month get() = Month(11L)
+            /**
+             * The month of December, represented numerically as `12`.
+             *
+             * Generated from Godot docs: Time.MONTH_DECEMBER
+             */
+            val DECEMBER: Month get() = Month(12L)
+        }
+    }
+
+    @JvmInline
+    value class Weekday(val value: Long) {
+        companion object {
+            /**
+             * The day of the week Sunday, represented numerically as `0`.
+             *
+             * Generated from Godot docs: Time.WEEKDAY_SUNDAY
+             */
+            val SUNDAY: Weekday get() = Weekday(0L)
+            /**
+             * The day of the week Monday, represented numerically as `1`.
+             *
+             * Generated from Godot docs: Time.WEEKDAY_MONDAY
+             */
+            val MONDAY: Weekday get() = Weekday(1L)
+            /**
+             * The day of the week Tuesday, represented numerically as `2`.
+             *
+             * Generated from Godot docs: Time.WEEKDAY_TUESDAY
+             */
+            val TUESDAY: Weekday get() = Weekday(2L)
+            /**
+             * The day of the week Wednesday, represented numerically as `3`.
+             *
+             * Generated from Godot docs: Time.WEEKDAY_WEDNESDAY
+             */
+            val WEDNESDAY: Weekday get() = Weekday(3L)
+            /**
+             * The day of the week Thursday, represented numerically as `4`.
+             *
+             * Generated from Godot docs: Time.WEEKDAY_THURSDAY
+             */
+            val THURSDAY: Weekday get() = Weekday(4L)
+            /**
+             * The day of the week Friday, represented numerically as `5`.
+             *
+             * Generated from Godot docs: Time.WEEKDAY_FRIDAY
+             */
+            val FRIDAY: Weekday get() = Weekday(5L)
+            /**
+             * The day of the week Saturday, represented numerically as `6`.
+             *
+             * Generated from Godot docs: Time.WEEKDAY_SATURDAY
+             */
+            val SATURDAY: Weekday get() = Weekday(6L)
+        }
     }
 
     @JvmStatic

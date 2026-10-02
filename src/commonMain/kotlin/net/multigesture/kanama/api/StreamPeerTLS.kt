@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -27,9 +28,9 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerTLS.accept_stream
      */
-    fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): Long {
+    fun acceptStream(stream: StreamPeer?, serverOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithTwoObjectArgsRetLong(acceptStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -40,9 +41,9 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerTLS.connect_to_stream
      */
-    fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): Long {
+    fun connectToStream(stream: StreamPeer?, commonName: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, commonName, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -50,9 +51,9 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerTLS.get_status
      */
-    fun getStatus(): Long {
+    fun getStatus(): StreamPeerTLS.Status {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
+        return StreamPeerTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
     }
 
     /**
@@ -80,13 +81,44 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
         ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, segment)
     }
 
-    companion object {
-        const val STATUS_DISCONNECTED: Long = 0L
-        const val STATUS_HANDSHAKING: Long = 1L
-        const val STATUS_CONNECTED: Long = 2L
-        const val STATUS_ERROR: Long = 3L
-        const val STATUS_ERROR_HOSTNAME_MISMATCH: Long = 4L
+    @JvmInline
+    value class Status(val value: Long) {
+        companion object {
+            /**
+             * A status representing a `StreamPeerTLS` that is disconnected.
+             *
+             * Generated from Godot docs: StreamPeerTLS.STATUS_DISCONNECTED
+             */
+            val DISCONNECTED: Status get() = Status(0L)
+            /**
+             * A status representing a `StreamPeerTLS` during handshaking.
+             *
+             * Generated from Godot docs: StreamPeerTLS.STATUS_HANDSHAKING
+             */
+            val HANDSHAKING: Status get() = Status(1L)
+            /**
+             * A status representing a `StreamPeerTLS` that is connected to a host.
+             *
+             * Generated from Godot docs: StreamPeerTLS.STATUS_CONNECTED
+             */
+            val CONNECTED: Status get() = Status(2L)
+            /**
+             * A status representing a `StreamPeerTLS` in error state.
+             *
+             * Generated from Godot docs: StreamPeerTLS.STATUS_ERROR
+             */
+            val ERROR: Status get() = Status(3L)
+            /**
+             * An error status that shows a mismatch in the TLS certificate domain presented by the host and
+             * the domain requested for validation.
+             *
+             * Generated from Godot docs: StreamPeerTLS.STATUS_ERROR_HOSTNAME_MISMATCH
+             */
+            val ERROR_HOSTNAME_MISMATCH: Status get() = Status(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerTLS? =
             wrap(handle.segment)

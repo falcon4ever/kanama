@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -37,19 +38,19 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
         @JvmName("setNavigationLayersProperty")
         set(value) = setNavigationLayers(value)
 
-    var pathfindingAlgorithm: Long
+    var pathfindingAlgorithm: NavigationPathQueryParameters3D.PathfindingAlgorithm
         @JvmName("pathfindingAlgorithmProperty")
         get() = getPathfindingAlgorithm()
         @JvmName("setPathfindingAlgorithmProperty")
         set(value) = setPathfindingAlgorithm(value)
 
-    var pathPostprocessing: Long
+    var pathPostprocessing: NavigationPathQueryParameters3D.PathPostProcessing
         @JvmName("pathPostprocessingProperty")
         get() = getPathPostprocessing()
         @JvmName("setPathPostprocessingProperty")
         set(value) = setPathPostprocessing(value)
 
-    var metadataFlags: Long
+    var metadataFlags: NavigationPathQueryParameters3D.PathMetadataFlags
         @JvmName("metadataFlagsProperty")
         get() = getMetadataFlags()
         @JvmName("setMetadataFlagsProperty")
@@ -108,9 +109,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_pathfinding_algorithm
      */
-    fun setPathfindingAlgorithm(pathfindingAlgorithm: Long) {
+    fun setPathfindingAlgorithm(pathfindingAlgorithm: NavigationPathQueryParameters3D.PathfindingAlgorithm) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm)
+        ObjectCalls.ptrcallWithLongArg(setPathfindingAlgorithmBind, segment, pathfindingAlgorithm.value)
     }
 
     /**
@@ -118,9 +119,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_pathfinding_algorithm
      */
-    fun getPathfindingAlgorithm(): Long {
+    fun getPathfindingAlgorithm(): NavigationPathQueryParameters3D.PathfindingAlgorithm {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment)
+        return NavigationPathQueryParameters3D.PathfindingAlgorithm(ObjectCalls.ptrcallNoArgsRetLong(getPathfindingAlgorithmBind, segment))
     }
 
     /**
@@ -128,9 +129,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_path_postprocessing
      */
-    fun setPathPostprocessing(pathPostprocessing: Long) {
+    fun setPathPostprocessing(pathPostprocessing: NavigationPathQueryParameters3D.PathPostProcessing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing)
+        ObjectCalls.ptrcallWithLongArg(setPathPostprocessingBind, segment, pathPostprocessing.value)
     }
 
     /**
@@ -138,9 +139,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_path_postprocessing
      */
-    fun getPathPostprocessing(): Long {
+    fun getPathPostprocessing(): NavigationPathQueryParameters3D.PathPostProcessing {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment)
+        return NavigationPathQueryParameters3D.PathPostProcessing(ObjectCalls.ptrcallNoArgsRetLong(getPathPostprocessingBind, segment))
     }
 
     /**
@@ -228,9 +229,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_metadata_flags
      */
-    fun setMetadataFlags(flags: Long) {
+    fun setMetadataFlags(flags: NavigationPathQueryParameters3D.PathMetadataFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMetadataFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithLongArg(setMetadataFlagsBind, segment, flags.value)
     }
 
     /**
@@ -238,9 +239,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_metadata_flags
      */
-    fun getMetadataFlags(): Long {
+    fun getMetadataFlags(): NavigationPathQueryParameters3D.PathMetadataFlags {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMetadataFlagsBind, segment)
+        return NavigationPathQueryParameters3D.PathMetadataFlags(ObjectCalls.ptrcallNoArgsRetLong(getMetadataFlagsBind, segment))
     }
 
     /**
@@ -459,17 +460,98 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, segment)
     }
 
-    companion object {
-        const val PATHFINDING_ALGORITHM_ASTAR: Long = 0L
-        const val PATH_POSTPROCESSING_CORRIDORFUNNEL: Long = 0L
-        const val PATH_POSTPROCESSING_EDGECENTERED: Long = 1L
-        const val PATH_POSTPROCESSING_NONE: Long = 2L
-        const val PATH_METADATA_INCLUDE_NONE: Long = 0L
-        const val PATH_METADATA_INCLUDE_TYPES: Long = 1L
-        const val PATH_METADATA_INCLUDE_RIDS: Long = 2L
-        const val PATH_METADATA_INCLUDE_OWNERS: Long = 4L
-        const val PATH_METADATA_INCLUDE_ALL: Long = 7L
+    @JvmInline
+    value class PathfindingAlgorithm(val value: Long) {
+        companion object {
+            /**
+             * The path query uses the default A* pathfinding algorithm.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATHFINDING_ALGORITHM_ASTAR
+             */
+            val ASTAR: PathfindingAlgorithm get() = PathfindingAlgorithm(0L)
+        }
+    }
 
+    @JvmInline
+    value class PathPostProcessing(val value: Long) {
+        companion object {
+            /**
+             * Applies a funnel algorithm to the raw path corridor found by the pathfinding algorithm. This
+             * will result in the shortest path possible inside the path corridor. This postprocessing very
+             * much depends on the navigation mesh polygon layout and the created corridor. Especially tile- or
+             * gridbased layouts can face artificial corners with diagonal movement due to a jagged path
+             * corridor imposed by the cell shapes.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_POSTPROCESSING_CORRIDORFUNNEL
+             */
+            val CORRIDORFUNNEL: PathPostProcessing get() = PathPostProcessing(0L)
+            /**
+             * Centers every path position in the middle of the traveled navigation mesh polygon edge. This
+             * creates better paths for tile- or gridbased layouts that restrict the movement to the cells
+             * center.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_POSTPROCESSING_EDGECENTERED
+             */
+            val EDGECENTERED: PathPostProcessing get() = PathPostProcessing(1L)
+            /**
+             * Applies no postprocessing and returns the raw path corridor as found by the pathfinding
+             * algorithm.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_POSTPROCESSING_NONE
+             */
+            val NONE: PathPostProcessing get() = PathPostProcessing(2L)
+        }
+    }
+
+    @JvmInline
+    value class PathMetadataFlags(val value: Long) {
+        infix fun or(other: PathMetadataFlags): PathMetadataFlags = PathMetadataFlags(value or other.value)
+
+        infix fun and(other: PathMetadataFlags): PathMetadataFlags = PathMetadataFlags(value and other.value)
+
+        infix fun xor(other: PathMetadataFlags): PathMetadataFlags = PathMetadataFlags(value xor other.value)
+
+        fun inv(): PathMetadataFlags = PathMetadataFlags(value.inv())
+
+        operator fun contains(other: PathMetadataFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Don't include any additional metadata about the returned path.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_METADATA_INCLUDE_NONE
+             */
+            val NONE: PathMetadataFlags get() = PathMetadataFlags(0L)
+            /**
+             * Include the type of navigation primitive (region or link) that each point of the path goes
+             * through.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_METADATA_INCLUDE_TYPES
+             */
+            val TYPES: PathMetadataFlags get() = PathMetadataFlags(1L)
+            /**
+             * Include the `RID`s of the regions and links that each point of the path goes through.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_METADATA_INCLUDE_RIDS
+             */
+            val RIDS: PathMetadataFlags get() = PathMetadataFlags(2L)
+            /**
+             * Include the `ObjectID`s of the `Object`s which manage the regions and links each point of the
+             * path goes through.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_METADATA_INCLUDE_OWNERS
+             */
+            val OWNERS: PathMetadataFlags get() = PathMetadataFlags(4L)
+            /**
+             * Include all available metadata about the returned path.
+             *
+             * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_METADATA_INCLUDE_ALL
+             */
+            val ALL: PathMetadataFlags get() = PathMetadataFlags(7L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationPathQueryParameters3D? =
             wrap(handle.segment)

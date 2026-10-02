@@ -18,9 +18,9 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      *
      * Generated from Godot docs: StreamPeerTCP.bind
      */
-    fun bind(port: Int, host: String = "*"): Long {
+    fun bind(port: Int, host: String = "*"): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, segment, port, host)
+        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(bindBind, segment, port, host))
     }
 
     /**
@@ -29,9 +29,9 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
      *
      * Generated from Godot docs: StreamPeerTCP.connect_to_host
      */
-    fun connectToHost(host: String, port: Int): Long {
+    fun connectToHost(host: String, port: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port)
+        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port))
     }
 
     /**

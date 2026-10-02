@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -15,8 +16,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_x
      */
-    fun setParamX(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamXBind, segment, param, value)
+    fun setParamX(param: Generic6DOFJoint3D.Param, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamXBind, segment, param.value, value)
     }
 
     /**
@@ -24,8 +25,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_x
      */
-    fun getParamX(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamXBind, segment, param)
+    fun getParamX(param: Generic6DOFJoint3D.Param): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamXBind, segment, param.value)
     }
 
     /**
@@ -33,8 +34,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_y
      */
-    fun setParamY(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamYBind, segment, param, value)
+    fun setParamY(param: Generic6DOFJoint3D.Param, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamYBind, segment, param.value, value)
     }
 
     /**
@@ -42,8 +43,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_y
      */
-    fun getParamY(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamYBind, segment, param)
+    fun getParamY(param: Generic6DOFJoint3D.Param): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamYBind, segment, param.value)
     }
 
     /**
@@ -51,8 +52,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_z
      */
-    fun setParamZ(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamZBind, segment, param, value)
+    fun setParamZ(param: Generic6DOFJoint3D.Param, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamZBind, segment, param.value, value)
     }
 
     /**
@@ -60,8 +61,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_z
      */
-    fun getParamZ(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamZBind, segment, param)
+    fun getParamZ(param: Generic6DOFJoint3D.Param): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamZBind, segment, param.value)
     }
 
     /**
@@ -70,8 +71,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_x
      */
-    fun setFlagX(flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagXBind, segment, flag, value)
+    fun setFlagX(flag: Generic6DOFJoint3D.Flag, value: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagXBind, segment, flag.value, value)
     }
 
     /**
@@ -80,8 +81,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_x
      */
-    fun getFlagX(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagXBind, segment, flag)
+    fun getFlagX(flag: Generic6DOFJoint3D.Flag): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagXBind, segment, flag.value)
     }
 
     /**
@@ -90,8 +91,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_y
      */
-    fun setFlagY(flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagYBind, segment, flag, value)
+    fun setFlagY(flag: Generic6DOFJoint3D.Flag, value: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagYBind, segment, flag.value, value)
     }
 
     /**
@@ -100,8 +101,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_y
      */
-    fun getFlagY(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagYBind, segment, flag)
+    fun getFlagY(flag: Generic6DOFJoint3D.Flag): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagYBind, segment, flag.value)
     }
 
     /**
@@ -110,8 +111,8 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_z
      */
-    fun setFlagZ(flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagZBind, segment, flag, value)
+    fun setFlagZ(flag: Generic6DOFJoint3D.Flag, value: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagZBind, segment, flag.value, value)
     }
 
     /**
@@ -120,42 +121,164 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_z
      */
-    fun getFlagZ(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagZBind, segment, flag)
+    fun getFlagZ(flag: Generic6DOFJoint3D.Flag): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagZBind, segment, flag.value)
+    }
+
+    @JvmInline
+    value class Param(val value: Long) {
+        companion object {
+            /**
+             * The minimum difference between the pivot points' axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_LOWER_LIMIT
+             */
+            val LINEAR_LOWER_LIMIT: Param get() = Param(0L)
+            /**
+             * The maximum difference between the pivot points' axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_UPPER_LIMIT
+             */
+            val LINEAR_UPPER_LIMIT: Param get() = Param(1L)
+            /**
+             * A factor applied to the movement across the axes. The lower, the slower the movement.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_LIMIT_SOFTNESS
+             */
+            val LINEAR_LIMIT_SOFTNESS: Param get() = Param(2L)
+            /**
+             * The amount of restitution on the axes' movement. The lower, the more momentum gets lost.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_RESTITUTION
+             */
+            val LINEAR_RESTITUTION: Param get() = Param(3L)
+            /**
+             * The amount of damping that happens at the linear motion across the axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_DAMPING
+             */
+            val LINEAR_DAMPING: Param get() = Param(4L)
+            /**
+             * The velocity the linear motor will try to reach.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_MOTOR_TARGET_VELOCITY
+             */
+            val LINEAR_MOTOR_TARGET_VELOCITY: Param get() = Param(5L)
+            /**
+             * The maximum force the linear motor will apply while trying to reach the velocity target.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_MOTOR_FORCE_LIMIT
+             */
+            val LINEAR_MOTOR_FORCE_LIMIT: Param get() = Param(6L)
+            val LINEAR_SPRING_STIFFNESS: Param get() = Param(7L)
+            val LINEAR_SPRING_DAMPING: Param get() = Param(8L)
+            val LINEAR_SPRING_EQUILIBRIUM_POINT: Param get() = Param(9L)
+            /**
+             * The minimum rotation in negative direction to break loose and rotate around the axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_LOWER_LIMIT
+             */
+            val ANGULAR_LOWER_LIMIT: Param get() = Param(10L)
+            /**
+             * The minimum rotation in positive direction to break loose and rotate around the axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_UPPER_LIMIT
+             */
+            val ANGULAR_UPPER_LIMIT: Param get() = Param(11L)
+            /**
+             * The speed of all rotations across the axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_LIMIT_SOFTNESS
+             */
+            val ANGULAR_LIMIT_SOFTNESS: Param get() = Param(12L)
+            /**
+             * The amount of rotational damping across the axes. The lower, the more damping occurs.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_DAMPING
+             */
+            val ANGULAR_DAMPING: Param get() = Param(13L)
+            /**
+             * The amount of rotational restitution across the axes. The lower, the more restitution occurs.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_RESTITUTION
+             */
+            val ANGULAR_RESTITUTION: Param get() = Param(14L)
+            /**
+             * The maximum amount of force that can occur, when rotating around the axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_FORCE_LIMIT
+             */
+            val ANGULAR_FORCE_LIMIT: Param get() = Param(15L)
+            /**
+             * When rotating across the axes, this error tolerance factor defines how much the correction gets
+             * slowed down. The lower, the slower.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_ERP
+             */
+            val ANGULAR_ERP: Param get() = Param(16L)
+            /**
+             * Target speed for the motor at the axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_MOTOR_TARGET_VELOCITY
+             */
+            val ANGULAR_MOTOR_TARGET_VELOCITY: Param get() = Param(17L)
+            /**
+             * Maximum acceleration for the motor at the axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_MOTOR_FORCE_LIMIT
+             */
+            val ANGULAR_MOTOR_FORCE_LIMIT: Param get() = Param(18L)
+            val ANGULAR_SPRING_STIFFNESS: Param get() = Param(19L)
+            val ANGULAR_SPRING_DAMPING: Param get() = Param(20L)
+            val ANGULAR_SPRING_EQUILIBRIUM_POINT: Param get() = Param(21L)
+            /**
+             * Represents the size of the `Param` enum.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_MAX
+             */
+            val MAX: Param get() = Param(22L)
+        }
+    }
+
+    @JvmInline
+    value class Flag(val value: Long) {
+        companion object {
+            /**
+             * If enabled, linear motion is possible within the given limits.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.FLAG_ENABLE_LINEAR_LIMIT
+             */
+            val ENABLE_LINEAR_LIMIT: Flag get() = Flag(0L)
+            /**
+             * If enabled, rotational motion is possible within the given limits.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.FLAG_ENABLE_ANGULAR_LIMIT
+             */
+            val ENABLE_ANGULAR_LIMIT: Flag get() = Flag(1L)
+            val ENABLE_LINEAR_SPRING: Flag get() = Flag(3L)
+            val ENABLE_ANGULAR_SPRING: Flag get() = Flag(2L)
+            /**
+             * If enabled, there is a rotational motor across these axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.FLAG_ENABLE_MOTOR
+             */
+            val ENABLE_MOTOR: Flag get() = Flag(4L)
+            /**
+             * If enabled, there is a linear motor across these axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.FLAG_ENABLE_LINEAR_MOTOR
+             */
+            val ENABLE_LINEAR_MOTOR: Flag get() = Flag(5L)
+            /**
+             * Represents the size of the `Flag` enum.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.FLAG_MAX
+             */
+            val MAX: Flag get() = Flag(6L)
+        }
     }
 
     companion object {
-        const val PARAM_LINEAR_LOWER_LIMIT: Long = 0L
-        const val PARAM_LINEAR_UPPER_LIMIT: Long = 1L
-        const val PARAM_LINEAR_LIMIT_SOFTNESS: Long = 2L
-        const val PARAM_LINEAR_RESTITUTION: Long = 3L
-        const val PARAM_LINEAR_DAMPING: Long = 4L
-        const val PARAM_LINEAR_MOTOR_TARGET_VELOCITY: Long = 5L
-        const val PARAM_LINEAR_MOTOR_FORCE_LIMIT: Long = 6L
-        const val PARAM_LINEAR_SPRING_STIFFNESS: Long = 7L
-        const val PARAM_LINEAR_SPRING_DAMPING: Long = 8L
-        const val PARAM_LINEAR_SPRING_EQUILIBRIUM_POINT: Long = 9L
-        const val PARAM_ANGULAR_LOWER_LIMIT: Long = 10L
-        const val PARAM_ANGULAR_UPPER_LIMIT: Long = 11L
-        const val PARAM_ANGULAR_LIMIT_SOFTNESS: Long = 12L
-        const val PARAM_ANGULAR_DAMPING: Long = 13L
-        const val PARAM_ANGULAR_RESTITUTION: Long = 14L
-        const val PARAM_ANGULAR_FORCE_LIMIT: Long = 15L
-        const val PARAM_ANGULAR_ERP: Long = 16L
-        const val PARAM_ANGULAR_MOTOR_TARGET_VELOCITY: Long = 17L
-        const val PARAM_ANGULAR_MOTOR_FORCE_LIMIT: Long = 18L
-        const val PARAM_ANGULAR_SPRING_STIFFNESS: Long = 19L
-        const val PARAM_ANGULAR_SPRING_DAMPING: Long = 20L
-        const val PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT: Long = 21L
-        const val PARAM_MAX: Long = 22L
-        const val FLAG_ENABLE_LINEAR_LIMIT: Long = 0L
-        const val FLAG_ENABLE_ANGULAR_LIMIT: Long = 1L
-        const val FLAG_ENABLE_LINEAR_SPRING: Long = 3L
-        const val FLAG_ENABLE_ANGULAR_SPRING: Long = 2L
-        const val FLAG_ENABLE_MOTOR: Long = 4L
-        const val FLAG_ENABLE_LINEAR_MOTOR: Long = 5L
-        const val FLAG_MAX: Long = 6L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Generic6DOFJoint3D? =
             wrap(handle.segment)

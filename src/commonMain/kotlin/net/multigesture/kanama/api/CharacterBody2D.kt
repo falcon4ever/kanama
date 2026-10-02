@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: CharacterBody2D
  */
 class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
-    var motionMode: Long
+    var motionMode: CharacterBody2D.MotionMode
         @JvmName("motionModeProperty")
         get() = getMotionMode()
         @JvmName("setMotionModeProperty")
@@ -78,7 +79,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         @JvmName("setFloorSnapLengthProperty")
         set(value) = setFloorSnapLength(value)
 
-    var platformOnLeave: Long
+    var platformOnLeave: CharacterBody2D.PlatformOnLeave
         @JvmName("platformOnLeaveProperty")
         get() = getPlatformOnLeave()
         @JvmName("setPlatformOnLeaveProperty")
@@ -436,8 +437,8 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: CharacterBody2D.set_motion_mode
      */
-    fun setMotionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMotionModeBind, segment, mode)
+    fun setMotionMode(mode: CharacterBody2D.MotionMode) {
+        ObjectCalls.ptrcallWithLongArg(setMotionModeBind, segment, mode.value)
     }
 
     /**
@@ -445,8 +446,8 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: CharacterBody2D.get_motion_mode
      */
-    fun getMotionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMotionModeBind, segment)
+    fun getMotionMode(): CharacterBody2D.MotionMode {
+        return CharacterBody2D.MotionMode(ObjectCalls.ptrcallNoArgsRetLong(getMotionModeBind, segment))
     }
 
     /**
@@ -455,8 +456,8 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: CharacterBody2D.set_platform_on_leave
      */
-    fun setPlatformOnLeave(onLeaveApplyVelocity: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPlatformOnLeaveBind, segment, onLeaveApplyVelocity)
+    fun setPlatformOnLeave(onLeaveApplyVelocity: CharacterBody2D.PlatformOnLeave) {
+        ObjectCalls.ptrcallWithLongArg(setPlatformOnLeaveBind, segment, onLeaveApplyVelocity.value)
     }
 
     /**
@@ -465,8 +466,8 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: CharacterBody2D.get_platform_on_leave
      */
-    fun getPlatformOnLeave(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlatformOnLeaveBind, segment)
+    fun getPlatformOnLeave(): CharacterBody2D.PlatformOnLeave {
+        return CharacterBody2D.PlatformOnLeave(ObjectCalls.ptrcallNoArgsRetLong(getPlatformOnLeaveBind, segment))
     }
 
     /**
@@ -642,13 +643,54 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         return KinematicCollision2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
     }
 
-    companion object {
-        const val MOTION_MODE_GROUNDED: Long = 0L
-        const val MOTION_MODE_FLOATING: Long = 1L
-        const val PLATFORM_ON_LEAVE_ADD_VELOCITY: Long = 0L
-        const val PLATFORM_ON_LEAVE_ADD_UPWARD_VELOCITY: Long = 1L
-        const val PLATFORM_ON_LEAVE_DO_NOTHING: Long = 2L
+    @JvmInline
+    value class MotionMode(val value: Long) {
+        companion object {
+            /**
+             * Apply when notions of walls, ceiling and floor are relevant. In this mode the body motion will
+             * react to slopes (acceleration/slowdown). This mode is suitable for sided games like platformers.
+             *
+             * Generated from Godot docs: CharacterBody2D.MOTION_MODE_GROUNDED
+             */
+            val GROUNDED: MotionMode get() = MotionMode(0L)
+            /**
+             * Apply when there is no notion of floor or ceiling. All collisions will be reported as `on_wall`.
+             * In this mode, when you slide, the speed will always be constant. This mode is suitable for
+             * top-down games.
+             *
+             * Generated from Godot docs: CharacterBody2D.MOTION_MODE_FLOATING
+             */
+            val FLOATING: MotionMode get() = MotionMode(1L)
+        }
+    }
 
+    @JvmInline
+    value class PlatformOnLeave(val value: Long) {
+        companion object {
+            /**
+             * Add the last platform velocity to the `velocity` when you leave a moving platform.
+             *
+             * Generated from Godot docs: CharacterBody2D.PLATFORM_ON_LEAVE_ADD_VELOCITY
+             */
+            val ADD_VELOCITY: PlatformOnLeave get() = PlatformOnLeave(0L)
+            /**
+             * Add the last platform velocity to the `velocity` when you leave a moving platform, but any
+             * downward motion is ignored. It's useful to keep full jump height even when the platform is
+             * moving down.
+             *
+             * Generated from Godot docs: CharacterBody2D.PLATFORM_ON_LEAVE_ADD_UPWARD_VELOCITY
+             */
+            val ADD_UPWARD_VELOCITY: PlatformOnLeave get() = PlatformOnLeave(1L)
+            /**
+             * Do nothing when leaving a platform.
+             *
+             * Generated from Godot docs: CharacterBody2D.PLATFORM_ON_LEAVE_DO_NOTHING
+             */
+            val DO_NOTHING: PlatformOnLeave get() = PlatformOnLeave(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CharacterBody2D? =
             wrap(handle.segment)

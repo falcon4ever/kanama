@@ -37,9 +37,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PacketPeer.put_var
      */
-    fun putVar(varValue: Any?, fullObjects: Boolean = false): Long {
+    fun putVar(varValue: Any?, fullObjects: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(putVarBind, segment, varValue, fullObjects)
+        return GodotError(ObjectCalls.ptrcallWithVariantAndBoolArgRetLong(putVarBind, segment, varValue, fullObjects))
     }
 
     /**
@@ -57,9 +57,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PacketPeer.put_packet
      */
-    fun putPacket(buffer: ByteArray): Long {
+    fun putPacket(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putPacketBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(putPacketBind, segment, buffer))
     }
 
     /**
@@ -67,9 +67,9 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PacketPeer.get_packet_error
      */
-    fun getPacketError(): Long {
+    fun getPacketError(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(getPacketErrorBind, segment))
     }
 
     /**

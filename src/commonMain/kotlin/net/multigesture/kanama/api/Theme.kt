@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -629,9 +630,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Theme.set_theme_item
      */
-    fun setThemeItem(dataType: Long, name: String, themeType: String, value: Any?) {
+    fun setThemeItem(dataType: Theme.DataType, name: String, themeType: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(setThemeItemBind, segment, dataType, name, themeType, value)
+        ObjectCalls.ptrcallWithLongAndTwoStringNameAndVariantArg(setThemeItemBind, segment, dataType.value, name, themeType, value)
     }
 
     /**
@@ -642,9 +643,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Theme.get_theme_item
      */
-    fun getThemeItem(dataType: Long, name: String, themeType: String): Any? {
+    fun getThemeItem(dataType: Theme.DataType, name: String, themeType: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, segment, dataType, name, themeType)
+        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetVariantScalar(getThemeItemBind, segment, dataType.value, name, themeType)
     }
 
     /**
@@ -655,9 +656,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Theme.has_theme_item
      */
-    fun hasThemeItem(dataType: Long, name: String, themeType: String): Boolean {
+    fun hasThemeItem(dataType: Theme.DataType, name: String, themeType: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(hasThemeItemBind, segment, dataType, name, themeType)
+        return ObjectCalls.ptrcallWithLongAndTwoStringNameArgsRetBool(hasThemeItemBind, segment, dataType.value, name, themeType)
     }
 
     /**
@@ -669,9 +670,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Theme.rename_theme_item
      */
-    fun renameThemeItem(dataType: Long, oldName: String, name: String, themeType: String) {
+    fun renameThemeItem(dataType: Theme.DataType, oldName: String, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(renameThemeItemBind, segment, dataType, oldName, name, themeType)
+        ObjectCalls.ptrcallWithLongAndThreeStringNameArgs(renameThemeItemBind, segment, dataType.value, oldName, name, themeType)
     }
 
     /**
@@ -682,9 +683,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Theme.clear_theme_item
      */
-    fun clearThemeItem(dataType: Long, name: String, themeType: String) {
+    fun clearThemeItem(dataType: Theme.DataType, name: String, themeType: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(clearThemeItemBind, segment, dataType, name, themeType)
+        ObjectCalls.ptrcallWithLongAndTwoStringNameArgs(clearThemeItemBind, segment, dataType.value, name, themeType)
     }
 
     /**
@@ -695,9 +696,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Theme.get_theme_item_list
      */
-    fun getThemeItemList(dataType: Long, themeType: String): List<String> {
+    fun getThemeItemList(dataType: Theme.DataType, themeType: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(getThemeItemListBind, segment, dataType, themeType)
+        return ObjectCalls.ptrcallWithLongAndStringArgRetPackedStringList(getThemeItemListBind, segment, dataType.value, themeType)
     }
 
     /**
@@ -707,9 +708,9 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Theme.get_theme_item_type_list
      */
-    fun getThemeItemTypeList(dataType: Long): List<String> {
+    fun getThemeItemTypeList(dataType: Theme.DataType): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(getThemeItemTypeListBind, segment, dataType)
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(getThemeItemTypeListBind, segment, dataType.value)
     }
 
     /**
@@ -839,15 +840,55 @@ class Theme(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
-    companion object {
-        const val DATA_TYPE_COLOR: Long = 0L
-        const val DATA_TYPE_CONSTANT: Long = 1L
-        const val DATA_TYPE_FONT: Long = 2L
-        const val DATA_TYPE_FONT_SIZE: Long = 3L
-        const val DATA_TYPE_ICON: Long = 4L
-        const val DATA_TYPE_STYLEBOX: Long = 5L
-        const val DATA_TYPE_MAX: Long = 6L
+    @JvmInline
+    value class DataType(val value: Long) {
+        companion object {
+            /**
+             * Theme's `Color` item type.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_COLOR
+             */
+            val COLOR: DataType get() = DataType(0L)
+            /**
+             * Theme's constant item type.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_CONSTANT
+             */
+            val CONSTANT: DataType get() = DataType(1L)
+            /**
+             * Theme's `Font` item type.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_FONT
+             */
+            val FONT: DataType get() = DataType(2L)
+            /**
+             * Theme's font size item type.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_FONT_SIZE
+             */
+            val FONT_SIZE: DataType get() = DataType(3L)
+            /**
+             * Theme's icon `Texture2D` item type.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_ICON
+             */
+            val ICON: DataType get() = DataType(4L)
+            /**
+             * Theme's `StyleBox` item type.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_STYLEBOX
+             */
+            val STYLEBOX: DataType get() = DataType(5L)
+            /**
+             * Maximum value for the DataType enum.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_MAX
+             */
+            val MAX: DataType get() = DataType(6L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Theme? =
             wrap(handle.segment)

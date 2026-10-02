@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -160,10 +161,25 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
-    companion object {
-        const val PATH_SEGMENT_TYPE_REGION: Long = 0L
-        const val PATH_SEGMENT_TYPE_LINK: Long = 1L
+    @JvmInline
+    value class PathSegmentType(val value: Long) {
+        companion object {
+            /**
+             * This segment of the path goes through a region.
+             *
+             * Generated from Godot docs: NavigationPathQueryResult3D.PATH_SEGMENT_TYPE_REGION
+             */
+            val REGION: PathSegmentType get() = PathSegmentType(0L)
+            /**
+             * This segment of the path goes through a link.
+             *
+             * Generated from Godot docs: NavigationPathQueryResult3D.PATH_SEGMENT_TYPE_LINK
+             */
+            val LINK: PathSegmentType get() = PathSegmentType(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationPathQueryResult3D? =
             wrap(handle.segment)

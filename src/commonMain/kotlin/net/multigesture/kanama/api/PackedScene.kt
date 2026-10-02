@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -16,9 +17,9 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: PackedScene.pack
      */
-    fun pack(path: Node): Long {
+    fun pack(path: Node): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(packBind, segment, path.segment)
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(packBind, segment, path.segment))
     }
 
     /**
@@ -27,9 +28,9 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: PackedScene.instantiate
      */
-    fun instantiate(editState: Long = 0L): Node? {
+    fun instantiate(editState: PackedScene.GenEditState = PackedScene.GenEditState.DISABLED): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(instantiateBind, segment, editState))
+        return Node.wrap(ObjectCalls.ptrcallWithLongArgRetObject(instantiateBind, segment, editState.value))
     }
 
     /**
@@ -52,12 +53,40 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
         return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, segment))
     }
 
-    companion object {
-        const val GEN_EDIT_STATE_DISABLED: Long = 0L
-        const val GEN_EDIT_STATE_INSTANCE: Long = 1L
-        const val GEN_EDIT_STATE_MAIN: Long = 2L
-        const val GEN_EDIT_STATE_MAIN_INHERITED: Long = 3L
+    @JvmInline
+    value class GenEditState(val value: Long) {
+        companion object {
+            /**
+             * If passed to `instantiate`, blocks edits to the scene state.
+             *
+             * Generated from Godot docs: PackedScene.GEN_EDIT_STATE_DISABLED
+             */
+            val DISABLED: GenEditState get() = GenEditState(0L)
+            /**
+             * If passed to `instantiate`, provides local scene resources to the local scene. Note: Only
+             * available in editor builds.
+             *
+             * Generated from Godot docs: PackedScene.GEN_EDIT_STATE_INSTANCE
+             */
+            val INSTANCE: GenEditState get() = GenEditState(1L)
+            /**
+             * If passed to `instantiate`, provides local scene resources to the local scene. Only the main
+             * scene should receive the main edit state. Note: Only available in editor builds.
+             *
+             * Generated from Godot docs: PackedScene.GEN_EDIT_STATE_MAIN
+             */
+            val MAIN: GenEditState get() = GenEditState(2L)
+            /**
+             * It's similar to `GEN_EDIT_STATE_MAIN`, but for the case where the scene is being instantiated to
+             * be the base of another one. Note: Only available in editor builds.
+             *
+             * Generated from Godot docs: PackedScene.GEN_EDIT_STATE_MAIN_INHERITED
+             */
+            val MAIN_INHERITED: GenEditState get() = GenEditState(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PackedScene? =
             wrap(handle.segment)

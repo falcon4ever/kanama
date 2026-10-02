@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -19,7 +20,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
-    var resolution: Long
+    var resolution: GPUParticlesCollisionSDF3D.Resolution
         @JvmName("resolutionProperty")
         get() = getResolution()
         @JvmName("setResolutionProperty")
@@ -73,8 +74,8 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      *
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_resolution
      */
-    fun setResolution(resolution: Long) {
-        ObjectCalls.ptrcallWithLongArg(setResolutionBind, segment, resolution)
+    fun setResolution(resolution: GPUParticlesCollisionSDF3D.Resolution) {
+        ObjectCalls.ptrcallWithLongArg(setResolutionBind, segment, resolution.value)
     }
 
     /**
@@ -87,8 +88,8 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      *
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_resolution
      */
-    fun getResolution(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, segment)
+    fun getResolution(): GPUParticlesCollisionSDF3D.Resolution {
+        return GPUParticlesCollisionSDF3D.Resolution(ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, segment))
     }
 
     /**
@@ -177,15 +178,55 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
         return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, segment, layerNumber)
     }
 
-    companion object {
-        const val RESOLUTION_16: Long = 0L
-        const val RESOLUTION_32: Long = 1L
-        const val RESOLUTION_64: Long = 2L
-        const val RESOLUTION_128: Long = 3L
-        const val RESOLUTION_256: Long = 4L
-        const val RESOLUTION_512: Long = 5L
-        const val RESOLUTION_MAX: Long = 6L
+    @JvmInline
+    value class Resolution(val value: Long) {
+        companion object {
+            /**
+             * Bake a 16×16×16 signed distance field. This is the fastest option, but also the least precise.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionSDF3D.RESOLUTION_16
+             */
+            val RESOLUTION_16: Resolution get() = Resolution(0L)
+            /**
+             * Bake a 32×32×32 signed distance field.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionSDF3D.RESOLUTION_32
+             */
+            val RESOLUTION_32: Resolution get() = Resolution(1L)
+            /**
+             * Bake a 64×64×64 signed distance field.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionSDF3D.RESOLUTION_64
+             */
+            val RESOLUTION_64: Resolution get() = Resolution(2L)
+            /**
+             * Bake a 128×128×128 signed distance field.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionSDF3D.RESOLUTION_128
+             */
+            val RESOLUTION_128: Resolution get() = Resolution(3L)
+            /**
+             * Bake a 256×256×256 signed distance field.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionSDF3D.RESOLUTION_256
+             */
+            val RESOLUTION_256: Resolution get() = Resolution(4L)
+            /**
+             * Bake a 512×512×512 signed distance field. This is the slowest option, but also the most precise.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionSDF3D.RESOLUTION_512
+             */
+            val RESOLUTION_512: Resolution get() = Resolution(5L)
+            /**
+             * Represents the size of the `Resolution` enum.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionSDF3D.RESOLUTION_MAX
+             */
+            val MAX: Resolution get() = Resolution(6L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GPUParticlesCollisionSDF3D? =
             wrap(handle.segment)

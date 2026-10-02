@@ -516,8 +516,8 @@ object Engine {
      * Generated from Godot docs: Engine.register_script_language
      */
     @JvmStatic
-    fun registerScriptLanguage(language: ScriptLanguage): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(registerScriptLanguageBind, singleton, language.segment)
+    fun registerScriptLanguage(language: ScriptLanguage): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(registerScriptLanguageBind, singleton, language.segment))
     }
 
     /**
@@ -527,8 +527,8 @@ object Engine {
      * Generated from Godot docs: Engine.unregister_script_language
      */
     @JvmStatic
-    fun unregisterScriptLanguage(language: ScriptLanguage): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(unregisterScriptLanguageBind, singleton, language.segment)
+    fun unregisterScriptLanguage(language: ScriptLanguage): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(unregisterScriptLanguageBind, singleton, language.segment))
     }
 
     /**

@@ -204,11 +204,11 @@ object DirAccess {
 
     // Error-returning variant: the open error must be read AFTER the failed open (an eagerly
     // evaluated fallback would capture the error state of a previous, unrelated open).
-    private fun withOpenDirOrOpenError(path: String, block: (MemorySegment) -> Long): Long {
+    private fun withOpenDirOrOpenError(path: String, block: (MemorySegment) -> Long): GodotError {
         val dir = ObjectCalls.ptrcallWithStringArgRetObject(openBind, MemorySegment.NULL, path)
         if (dir.address() == 0L) return getOpenError()
         return try {
-            block(dir)
+            GodotError(block(dir))
         } finally {
             ObjectCalls.destroyObject(dir)
         }
@@ -238,8 +238,8 @@ object DirAccess {
      * Generated from Godot docs: DirAccess.get_open_error
      */
     @JvmStatic
-    fun getOpenError(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getOpenErrorBind, MemorySegment.NULL)
+    fun getOpenError(): GodotError =
+        GodotError(ObjectCalls.ptrcallNoArgsRetLong(getOpenErrorBind, MemorySegment.NULL))
 
     /**
      * Creates a new `DirAccess` object and opens an existing directory of the filesystem. The `path`
@@ -352,7 +352,7 @@ object DirAccess {
         }
 
     @JvmStatic
-    fun changeDirAt(directoryPath: String, toDir: String): Long =
+    fun changeDirAt(directoryPath: String, toDir: String): GodotError =
         withOpenDirOrOpenError(directoryPath) { dir ->
             ObjectCalls.ptrcallWithStringArgRetLong(changeDirBind, dir, toDir)
         }
@@ -496,8 +496,8 @@ object DirAccess {
      * Generated from Godot docs: DirAccess.remove_absolute
      */
     @JvmStatic
-    fun removeAbsolute(path: String): Long =
-        ObjectCalls.ptrcallWithStringArgRetLong(removeAbsoluteBind, MemorySegment.NULL, path)
+    fun removeAbsolute(path: String): GodotError =
+        GodotError(ObjectCalls.ptrcallWithStringArgRetLong(removeAbsoluteBind, MemorySegment.NULL, path))
 
     /**
      * Static version of `make_dir`. Supports only absolute paths.
@@ -505,8 +505,8 @@ object DirAccess {
      * Generated from Godot docs: DirAccess.make_dir_absolute
      */
     @JvmStatic
-    fun makeDirAbsolute(path: String): Long =
-        ObjectCalls.ptrcallWithStringArgRetLong(makeDirAbsoluteBind, MemorySegment.NULL, path)
+    fun makeDirAbsolute(path: String): GodotError =
+        GodotError(ObjectCalls.ptrcallWithStringArgRetLong(makeDirAbsoluteBind, MemorySegment.NULL, path))
 
     /**
      * Static version of `make_dir_recursive`. Supports only absolute paths.
@@ -514,23 +514,23 @@ object DirAccess {
      * Generated from Godot docs: DirAccess.make_dir_recursive_absolute
      */
     @JvmStatic
-    fun makeDirRecursiveAbsolute(path: String): Long =
-        ObjectCalls.ptrcallWithStringArgRetLong(makeDirRecursiveAbsoluteBind, MemorySegment.NULL, path)
+    fun makeDirRecursiveAbsolute(path: String): GodotError =
+        GodotError(ObjectCalls.ptrcallWithStringArgRetLong(makeDirRecursiveAbsoluteBind, MemorySegment.NULL, path))
 
     @JvmStatic
-    fun makeDirAt(directoryPath: String, path: String): Long =
+    fun makeDirAt(directoryPath: String, path: String): GodotError =
         withOpenDirOrOpenError(directoryPath) { dir ->
             ObjectCalls.ptrcallWithStringArgRetLong(makeDirBind, dir, path)
         }
 
     @JvmStatic
-    fun makeDirRecursiveAt(directoryPath: String, path: String): Long =
+    fun makeDirRecursiveAt(directoryPath: String, path: String): GodotError =
         withOpenDirOrOpenError(directoryPath) { dir ->
             ObjectCalls.ptrcallWithStringArgRetLong(makeDirRecursiveBind, dir, path)
         }
 
     @JvmStatic
-    fun removeAt(directoryPath: String, path: String): Long =
+    fun removeAt(directoryPath: String, path: String): GodotError =
         withOpenDirOrOpenError(directoryPath) { dir ->
             ObjectCalls.ptrcallWithStringArgRetLong(removeBind, dir, path)
         }
@@ -541,8 +541,8 @@ object DirAccess {
      * Generated from Godot docs: DirAccess.copy_absolute
      */
     @JvmStatic
-    fun copyAbsolute(from: String, to: String, chmodFlags: Int = -1): Long =
-        ObjectCalls.ptrcallWithTwoStringAndIntArgsRetLong(copyAbsoluteBind, MemorySegment.NULL, from, to, chmodFlags)
+    fun copyAbsolute(from: String, to: String, chmodFlags: Int = -1): GodotError =
+        GodotError(ObjectCalls.ptrcallWithTwoStringAndIntArgsRetLong(copyAbsoluteBind, MemorySegment.NULL, from, to, chmodFlags))
 
     /**
      * Static version of `rename`. Supports only absolute paths.
@@ -550,23 +550,23 @@ object DirAccess {
      * Generated from Godot docs: DirAccess.rename_absolute
      */
     @JvmStatic
-    fun renameAbsolute(from: String, to: String): Long =
-        ObjectCalls.ptrcallWithTwoStringArgsRetLong(renameAbsoluteBind, MemorySegment.NULL, from, to)
+    fun renameAbsolute(from: String, to: String): GodotError =
+        GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(renameAbsoluteBind, MemorySegment.NULL, from, to))
 
     @JvmStatic
-    fun copyAt(directoryPath: String, from: String, to: String, chmodFlags: Int = -1): Long =
+    fun copyAt(directoryPath: String, from: String, to: String, chmodFlags: Int = -1): GodotError =
         withOpenDirOrOpenError(directoryPath) { dir ->
             ObjectCalls.ptrcallWithTwoStringAndIntArgsRetLong(copyBind, dir, from, to, chmodFlags)
         }
 
     @JvmStatic
-    fun renameAt(directoryPath: String, from: String, to: String): Long =
+    fun renameAt(directoryPath: String, from: String, to: String): GodotError =
         withOpenDirOrOpenError(directoryPath) { dir ->
             ObjectCalls.ptrcallWithTwoStringArgsRetLong(renameBind, dir, from, to)
         }
 
     @JvmStatic
-    fun createLinkAt(directoryPath: String, source: String, target: String): Long =
+    fun createLinkAt(directoryPath: String, source: String, target: String): GodotError =
         withOpenDirOrOpenError(directoryPath) { dir ->
             ObjectCalls.ptrcallWithTwoStringArgsRetLong(createLinkBind, dir, source, target)
         }

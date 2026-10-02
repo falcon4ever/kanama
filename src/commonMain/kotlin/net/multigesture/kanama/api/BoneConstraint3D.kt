@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -70,8 +71,8 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: BoneConstraint3D.set_reference_type
      */
-    fun setReferenceType(index: Int, type: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTypeBind, segment, index, type)
+    fun setReferenceType(index: Int, type: BoneConstraint3D.ReferenceType) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTypeBind, segment, index, type.value)
     }
 
     /**
@@ -79,8 +80,8 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: BoneConstraint3D.get_reference_type
      */
-    fun getReferenceType(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTypeBind, segment, index)
+    fun getReferenceType(index: Int): BoneConstraint3D.ReferenceType {
+        return BoneConstraint3D.ReferenceType(ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTypeBind, segment, index))
     }
 
     /**
@@ -170,10 +171,27 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         ObjectCalls.ptrcallNoArgs(clearSettingBind, segment)
     }
 
-    companion object {
-        const val REFERENCE_TYPE_BONE: Long = 0L
-        const val REFERENCE_TYPE_NODE: Long = 1L
+    @JvmInline
+    value class ReferenceType(val value: Long) {
+        companion object {
+            /**
+             * The reference target is a bone. In this case, the reference target spaces is local space.
+             *
+             * Generated from Godot docs: BoneConstraint3D.REFERENCE_TYPE_BONE
+             */
+            val BONE: ReferenceType get() = ReferenceType(0L)
+            /**
+             * The reference target is a `Node3D`. In this case, the reference target spaces is model space. In
+             * other words, the reference target's coordinates are treated as if it were placed directly under
+             * `Skeleton3D` which parent of the `BoneConstraint3D`.
+             *
+             * Generated from Godot docs: BoneConstraint3D.REFERENCE_TYPE_NODE
+             */
+            val NODE: ReferenceType get() = ReferenceType(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BoneConstraint3D? =
             wrap(handle.segment)

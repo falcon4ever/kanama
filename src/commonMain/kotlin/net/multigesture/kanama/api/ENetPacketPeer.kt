@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -38,9 +39,9 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
-    fun send(channel: Int, packet: ByteArray, flags: Int): Long {
+    fun send(channel: Int, packet: ByteArray, flags: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(sendBind, segment, channel, packet, flags)
+        return GodotError(ObjectCalls.ptrcallWithIntByteArrayIntArgsRetLong(sendBind, segment, channel, packet, flags))
     }
 
     fun throttleConfigure(interval: Int, acceleration: Int, deceleration: Int) {
@@ -68,14 +69,14 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getRemotePortBind, segment)
     }
 
-    fun getStatistic(statistic: Long): Double {
+    fun getStatistic(statistic: ENetPacketPeer.PeerStatistic): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getStatisticBind, segment, statistic)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getStatisticBind, segment, statistic.value)
     }
 
-    fun getState(): Long {
+    fun getState(): ENetPacketPeer.PeerState {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStateBind, segment)
+        return ENetPacketPeer.PeerState(ObjectCalls.ptrcallNoArgsRetLong(getStateBind, segment))
     }
 
     fun getChannels(): Int {
@@ -88,36 +89,48 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
     }
 
+    @JvmInline
+    value class PeerState(val value: Long) {
+        companion object {
+            val DISCONNECTED: PeerState get() = PeerState(0L)
+            val CONNECTING: PeerState get() = PeerState(1L)
+            val ACKNOWLEDGING_CONNECT: PeerState get() = PeerState(2L)
+            val CONNECTION_PENDING: PeerState get() = PeerState(3L)
+            val CONNECTION_SUCCEEDED: PeerState get() = PeerState(4L)
+            val CONNECTED: PeerState get() = PeerState(5L)
+            val DISCONNECT_LATER: PeerState get() = PeerState(6L)
+            val DISCONNECTING: PeerState get() = PeerState(7L)
+            val ACKNOWLEDGING_DISCONNECT: PeerState get() = PeerState(8L)
+            val ZOMBIE: PeerState get() = PeerState(9L)
+        }
+    }
+
+    @JvmInline
+    value class PeerStatistic(val value: Long) {
+        companion object {
+            val PACKET_LOSS: PeerStatistic get() = PeerStatistic(0L)
+            val PACKET_LOSS_VARIANCE: PeerStatistic get() = PeerStatistic(1L)
+            val PACKET_LOSS_EPOCH: PeerStatistic get() = PeerStatistic(2L)
+            val ROUND_TRIP_TIME: PeerStatistic get() = PeerStatistic(3L)
+            val ROUND_TRIP_TIME_VARIANCE: PeerStatistic get() = PeerStatistic(4L)
+            val LAST_ROUND_TRIP_TIME: PeerStatistic get() = PeerStatistic(5L)
+            val LAST_ROUND_TRIP_TIME_VARIANCE: PeerStatistic get() = PeerStatistic(6L)
+            val PACKET_THROTTLE: PeerStatistic get() = PeerStatistic(7L)
+            val PACKET_THROTTLE_LIMIT: PeerStatistic get() = PeerStatistic(8L)
+            val PACKET_THROTTLE_COUNTER: PeerStatistic get() = PeerStatistic(9L)
+            val PACKET_THROTTLE_EPOCH: PeerStatistic get() = PeerStatistic(10L)
+            val PACKET_THROTTLE_ACCELERATION: PeerStatistic get() = PeerStatistic(11L)
+            val PACKET_THROTTLE_DECELERATION: PeerStatistic get() = PeerStatistic(12L)
+            val PACKET_THROTTLE_INTERVAL: PeerStatistic get() = PeerStatistic(13L)
+        }
+    }
+
     companion object {
         const val PACKET_LOSS_SCALE: Long = 65536L
         const val PACKET_THROTTLE_SCALE: Long = 32L
         const val FLAG_RELIABLE: Long = 1L
         const val FLAG_UNSEQUENCED: Long = 2L
         const val FLAG_UNRELIABLE_FRAGMENT: Long = 8L
-        const val STATE_DISCONNECTED: Long = 0L
-        const val STATE_CONNECTING: Long = 1L
-        const val STATE_ACKNOWLEDGING_CONNECT: Long = 2L
-        const val STATE_CONNECTION_PENDING: Long = 3L
-        const val STATE_CONNECTION_SUCCEEDED: Long = 4L
-        const val STATE_CONNECTED: Long = 5L
-        const val STATE_DISCONNECT_LATER: Long = 6L
-        const val STATE_DISCONNECTING: Long = 7L
-        const val STATE_ACKNOWLEDGING_DISCONNECT: Long = 8L
-        const val STATE_ZOMBIE: Long = 9L
-        const val PEER_PACKET_LOSS: Long = 0L
-        const val PEER_PACKET_LOSS_VARIANCE: Long = 1L
-        const val PEER_PACKET_LOSS_EPOCH: Long = 2L
-        const val PEER_ROUND_TRIP_TIME: Long = 3L
-        const val PEER_ROUND_TRIP_TIME_VARIANCE: Long = 4L
-        const val PEER_LAST_ROUND_TRIP_TIME: Long = 5L
-        const val PEER_LAST_ROUND_TRIP_TIME_VARIANCE: Long = 6L
-        const val PEER_PACKET_THROTTLE: Long = 7L
-        const val PEER_PACKET_THROTTLE_LIMIT: Long = 8L
-        const val PEER_PACKET_THROTTLE_COUNTER: Long = 9L
-        const val PEER_PACKET_THROTTLE_EPOCH: Long = 10L
-        const val PEER_PACKET_THROTTLE_ACCELERATION: Long = 11L
-        const val PEER_PACKET_THROTTLE_DECELERATION: Long = 12L
-        const val PEER_PACKET_THROTTLE_INTERVAL: Long = 13L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ENetPacketPeer? =

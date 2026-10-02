@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         @JvmName("setHasTrackingDataProperty")
         set(value) = setHasTrackingData(value)
 
-    var handTrackingSource: Long
+    var handTrackingSource: XRHandTracker.HandTrackingSource
         @JvmName("handTrackingSourceProperty")
         get() = getHandTrackingSource()
         @JvmName("setHandTrackingSourceProperty")
@@ -50,9 +51,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.set_hand_tracking_source
      */
-    fun setHandTrackingSource(source: Long) {
+    fun setHandTrackingSource(source: XRHandTracker.HandTrackingSource) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, segment, source)
+        ObjectCalls.ptrcallWithLongArg(setHandTrackingSourceBind, segment, source.value)
     }
 
     /**
@@ -60,9 +61,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.get_hand_tracking_source
      */
-    fun getHandTrackingSource(): Long {
+    fun getHandTrackingSource(): XRHandTracker.HandTrackingSource {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, segment)
+        return XRHandTracker.HandTrackingSource(ObjectCalls.ptrcallNoArgsRetLong(getHandTrackingSourceBind, segment))
     }
 
     /**
@@ -70,9 +71,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.set_hand_joint_flags
      */
-    fun setHandJointFlags(joint: Long, flags: Long) {
+    fun setHandJointFlags(joint: XRHandTracker.HandJoint, flags: XRHandTracker.HandJointFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, segment, joint, flags)
+        ObjectCalls.ptrcallWithTwoLongArgs(setHandJointFlagsBind, segment, joint.value, flags.value)
     }
 
     /**
@@ -80,9 +81,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.get_hand_joint_flags
      */
-    fun getHandJointFlags(joint: Long): Long {
+    fun getHandJointFlags(joint: XRHandTracker.HandJoint): XRHandTracker.HandJointFlags {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, segment, joint)
+        return XRHandTracker.HandJointFlags(ObjectCalls.ptrcallWithLongArgRetLong(getHandJointFlagsBind, segment, joint.value))
     }
 
     /**
@@ -90,9 +91,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.set_hand_joint_transform
      */
-    fun setHandJointTransform(joint: Long, transform: Transform3D) {
+    fun setHandJointTransform(joint: XRHandTracker.HandJoint, transform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, segment, joint, transform)
+        ObjectCalls.ptrcallWithLongAndTransform3DArg(setHandJointTransformBind, segment, joint.value, transform)
     }
 
     /**
@@ -100,9 +101,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.get_hand_joint_transform
      */
-    fun getHandJointTransform(joint: Long): Transform3D {
+    fun getHandJointTransform(joint: XRHandTracker.HandJoint): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, segment, joint)
+        return ObjectCalls.ptrcallWithLongArgRetTransform3D(getHandJointTransformBind, segment, joint.value)
     }
 
     /**
@@ -110,9 +111,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.set_hand_joint_radius
      */
-    fun setHandJointRadius(joint: Long, radius: Double) {
+    fun setHandJointRadius(joint: XRHandTracker.HandJoint, radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, segment, joint, radius)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setHandJointRadiusBind, segment, joint.value, radius)
     }
 
     /**
@@ -120,9 +121,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.get_hand_joint_radius
      */
-    fun getHandJointRadius(joint: Long): Double {
+    fun getHandJointRadius(joint: XRHandTracker.HandJoint): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, segment, joint)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getHandJointRadiusBind, segment, joint.value)
     }
 
     /**
@@ -130,9 +131,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.set_hand_joint_linear_velocity
      */
-    fun setHandJointLinearVelocity(joint: Long, linearVelocity: Vector3) {
+    fun setHandJointLinearVelocity(joint: XRHandTracker.HandJoint, linearVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, segment, joint, linearVelocity)
+        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointLinearVelocityBind, segment, joint.value, linearVelocity)
     }
 
     /**
@@ -140,9 +141,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.get_hand_joint_linear_velocity
      */
-    fun getHandJointLinearVelocity(joint: Long): Vector3 {
+    fun getHandJointLinearVelocity(joint: XRHandTracker.HandJoint): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, segment, joint)
+        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointLinearVelocityBind, segment, joint.value)
     }
 
     /**
@@ -150,9 +151,9 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.set_hand_joint_angular_velocity
      */
-    fun setHandJointAngularVelocity(joint: Long, angularVelocity: Vector3) {
+    fun setHandJointAngularVelocity(joint: XRHandTracker.HandJoint, angularVelocity: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, segment, joint, angularVelocity)
+        ObjectCalls.ptrcallWithLongAndVector3Arg(setHandJointAngularVelocityBind, segment, joint.value, angularVelocity)
     }
 
     /**
@@ -160,51 +161,273 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
      *
      * Generated from Godot docs: XRHandTracker.get_hand_joint_angular_velocity
      */
-    fun getHandJointAngularVelocity(joint: Long): Vector3 {
+    fun getHandJointAngularVelocity(joint: XRHandTracker.HandJoint): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, segment, joint)
+        return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, segment, joint.value)
+    }
+
+    @JvmInline
+    value class HandTrackingSource(val value: Long) {
+        companion object {
+            /**
+             * The source of hand tracking data is unknown.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_TRACKING_SOURCE_UNKNOWN
+             */
+            val UNKNOWN: HandTrackingSource get() = HandTrackingSource(0L)
+            /**
+             * The source of hand tracking data is unobstructed, meaning that an accurate method of hand
+             * tracking is used. These include optical hand tracking, data gloves, etc.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_TRACKING_SOURCE_UNOBSTRUCTED
+             */
+            val UNOBSTRUCTED: HandTrackingSource get() = HandTrackingSource(1L)
+            /**
+             * The source of hand tracking data is a controller, meaning that joint positions are inferred from
+             * controller inputs.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_TRACKING_SOURCE_CONTROLLER
+             */
+            val CONTROLLER: HandTrackingSource get() = HandTrackingSource(2L)
+            /**
+             * No hand tracking data is tracked, this either means the hand is obscured, the controller is
+             * turned off, or tracking is not supported for the current input type.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_TRACKING_SOURCE_NOT_TRACKED
+             */
+            val NOT_TRACKED: HandTrackingSource get() = HandTrackingSource(3L)
+            /**
+             * Represents the size of the `HandTrackingSource` enum.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_TRACKING_SOURCE_MAX
+             */
+            val MAX: HandTrackingSource get() = HandTrackingSource(4L)
+        }
+    }
+
+    @JvmInline
+    value class HandJoint(val value: Long) {
+        companion object {
+            /**
+             * Palm joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_PALM
+             */
+            val PALM: HandJoint get() = HandJoint(0L)
+            /**
+             * Wrist joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_WRIST
+             */
+            val WRIST: HandJoint get() = HandJoint(1L)
+            /**
+             * Thumb metacarpal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_THUMB_METACARPAL
+             */
+            val THUMB_METACARPAL: HandJoint get() = HandJoint(2L)
+            /**
+             * Thumb phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_THUMB_PHALANX_PROXIMAL
+             */
+            val THUMB_PHALANX_PROXIMAL: HandJoint get() = HandJoint(3L)
+            /**
+             * Thumb phalanx distal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_THUMB_PHALANX_DISTAL
+             */
+            val THUMB_PHALANX_DISTAL: HandJoint get() = HandJoint(4L)
+            /**
+             * Thumb tip joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_THUMB_TIP
+             */
+            val THUMB_TIP: HandJoint get() = HandJoint(5L)
+            /**
+             * Index finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_INDEX_FINGER_METACARPAL
+             */
+            val INDEX_FINGER_METACARPAL: HandJoint get() = HandJoint(6L)
+            /**
+             * Index finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_INDEX_FINGER_PHALANX_PROXIMAL
+             */
+            val INDEX_FINGER_PHALANX_PROXIMAL: HandJoint get() = HandJoint(7L)
+            /**
+             * Index finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_INDEX_FINGER_PHALANX_INTERMEDIATE
+             */
+            val INDEX_FINGER_PHALANX_INTERMEDIATE: HandJoint get() = HandJoint(8L)
+            /**
+             * Index finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_INDEX_FINGER_PHALANX_DISTAL
+             */
+            val INDEX_FINGER_PHALANX_DISTAL: HandJoint get() = HandJoint(9L)
+            /**
+             * Index finger tip joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_INDEX_FINGER_TIP
+             */
+            val INDEX_FINGER_TIP: HandJoint get() = HandJoint(10L)
+            /**
+             * Middle finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_MIDDLE_FINGER_METACARPAL
+             */
+            val MIDDLE_FINGER_METACARPAL: HandJoint get() = HandJoint(11L)
+            /**
+             * Middle finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_MIDDLE_FINGER_PHALANX_PROXIMAL
+             */
+            val MIDDLE_FINGER_PHALANX_PROXIMAL: HandJoint get() = HandJoint(12L)
+            /**
+             * Middle finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_MIDDLE_FINGER_PHALANX_INTERMEDIATE
+             */
+            val MIDDLE_FINGER_PHALANX_INTERMEDIATE: HandJoint get() = HandJoint(13L)
+            /**
+             * Middle finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_MIDDLE_FINGER_PHALANX_DISTAL
+             */
+            val MIDDLE_FINGER_PHALANX_DISTAL: HandJoint get() = HandJoint(14L)
+            /**
+             * Middle finger tip joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_MIDDLE_FINGER_TIP
+             */
+            val MIDDLE_FINGER_TIP: HandJoint get() = HandJoint(15L)
+            /**
+             * Ring finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_RING_FINGER_METACARPAL
+             */
+            val RING_FINGER_METACARPAL: HandJoint get() = HandJoint(16L)
+            /**
+             * Ring finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_RING_FINGER_PHALANX_PROXIMAL
+             */
+            val RING_FINGER_PHALANX_PROXIMAL: HandJoint get() = HandJoint(17L)
+            /**
+             * Ring finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_RING_FINGER_PHALANX_INTERMEDIATE
+             */
+            val RING_FINGER_PHALANX_INTERMEDIATE: HandJoint get() = HandJoint(18L)
+            /**
+             * Ring finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_RING_FINGER_PHALANX_DISTAL
+             */
+            val RING_FINGER_PHALANX_DISTAL: HandJoint get() = HandJoint(19L)
+            /**
+             * Ring finger tip joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_RING_FINGER_TIP
+             */
+            val RING_FINGER_TIP: HandJoint get() = HandJoint(20L)
+            /**
+             * Pinky finger metacarpal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_PINKY_FINGER_METACARPAL
+             */
+            val PINKY_FINGER_METACARPAL: HandJoint get() = HandJoint(21L)
+            /**
+             * Pinky finger phalanx proximal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_PINKY_FINGER_PHALANX_PROXIMAL
+             */
+            val PINKY_FINGER_PHALANX_PROXIMAL: HandJoint get() = HandJoint(22L)
+            /**
+             * Pinky finger phalanx intermediate joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_PINKY_FINGER_PHALANX_INTERMEDIATE
+             */
+            val PINKY_FINGER_PHALANX_INTERMEDIATE: HandJoint get() = HandJoint(23L)
+            /**
+             * Pinky finger phalanx distal joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_PINKY_FINGER_PHALANX_DISTAL
+             */
+            val PINKY_FINGER_PHALANX_DISTAL: HandJoint get() = HandJoint(24L)
+            /**
+             * Pinky finger tip joint.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_PINKY_FINGER_TIP
+             */
+            val PINKY_FINGER_TIP: HandJoint get() = HandJoint(25L)
+            /**
+             * Represents the size of the `HandJoint` enum.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_MAX
+             */
+            val MAX: HandJoint get() = HandJoint(26L)
+        }
+    }
+
+    @JvmInline
+    value class HandJointFlags(val value: Long) {
+        infix fun or(other: HandJointFlags): HandJointFlags = HandJointFlags(value or other.value)
+
+        infix fun and(other: HandJointFlags): HandJointFlags = HandJointFlags(value and other.value)
+
+        infix fun xor(other: HandJointFlags): HandJointFlags = HandJointFlags(value xor other.value)
+
+        fun inv(): HandJointFlags = HandJointFlags(value.inv())
+
+        operator fun contains(other: HandJointFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * The hand joint's orientation data is valid.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_FLAG_ORIENTATION_VALID
+             */
+            val ORIENTATION_VALID: HandJointFlags get() = HandJointFlags(1L)
+            /**
+             * The hand joint's orientation is actively tracked. May not be set if tracking has been
+             * temporarily lost.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_FLAG_ORIENTATION_TRACKED
+             */
+            val ORIENTATION_TRACKED: HandJointFlags get() = HandJointFlags(2L)
+            /**
+             * The hand joint's position data is valid.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_FLAG_POSITION_VALID
+             */
+            val POSITION_VALID: HandJointFlags get() = HandJointFlags(4L)
+            /**
+             * The hand joint's position is actively tracked. May not be set if tracking has been temporarily
+             * lost.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_FLAG_POSITION_TRACKED
+             */
+            val POSITION_TRACKED: HandJointFlags get() = HandJointFlags(8L)
+            /**
+             * The hand joint's linear velocity data is valid.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_FLAG_LINEAR_VELOCITY_VALID
+             */
+            val LINEAR_VELOCITY_VALID: HandJointFlags get() = HandJointFlags(16L)
+            /**
+             * The hand joint's angular velocity data is valid.
+             *
+             * Generated from Godot docs: XRHandTracker.HAND_JOINT_FLAG_ANGULAR_VELOCITY_VALID
+             */
+            val ANGULAR_VELOCITY_VALID: HandJointFlags get() = HandJointFlags(32L)
+        }
     }
 
     companion object {
-        const val HAND_TRACKING_SOURCE_UNKNOWN: Long = 0L
-        const val HAND_TRACKING_SOURCE_UNOBSTRUCTED: Long = 1L
-        const val HAND_TRACKING_SOURCE_CONTROLLER: Long = 2L
-        const val HAND_TRACKING_SOURCE_NOT_TRACKED: Long = 3L
-        const val HAND_TRACKING_SOURCE_MAX: Long = 4L
-        const val HAND_JOINT_PALM: Long = 0L
-        const val HAND_JOINT_WRIST: Long = 1L
-        const val HAND_JOINT_THUMB_METACARPAL: Long = 2L
-        const val HAND_JOINT_THUMB_PHALANX_PROXIMAL: Long = 3L
-        const val HAND_JOINT_THUMB_PHALANX_DISTAL: Long = 4L
-        const val HAND_JOINT_THUMB_TIP: Long = 5L
-        const val HAND_JOINT_INDEX_FINGER_METACARPAL: Long = 6L
-        const val HAND_JOINT_INDEX_FINGER_PHALANX_PROXIMAL: Long = 7L
-        const val HAND_JOINT_INDEX_FINGER_PHALANX_INTERMEDIATE: Long = 8L
-        const val HAND_JOINT_INDEX_FINGER_PHALANX_DISTAL: Long = 9L
-        const val HAND_JOINT_INDEX_FINGER_TIP: Long = 10L
-        const val HAND_JOINT_MIDDLE_FINGER_METACARPAL: Long = 11L
-        const val HAND_JOINT_MIDDLE_FINGER_PHALANX_PROXIMAL: Long = 12L
-        const val HAND_JOINT_MIDDLE_FINGER_PHALANX_INTERMEDIATE: Long = 13L
-        const val HAND_JOINT_MIDDLE_FINGER_PHALANX_DISTAL: Long = 14L
-        const val HAND_JOINT_MIDDLE_FINGER_TIP: Long = 15L
-        const val HAND_JOINT_RING_FINGER_METACARPAL: Long = 16L
-        const val HAND_JOINT_RING_FINGER_PHALANX_PROXIMAL: Long = 17L
-        const val HAND_JOINT_RING_FINGER_PHALANX_INTERMEDIATE: Long = 18L
-        const val HAND_JOINT_RING_FINGER_PHALANX_DISTAL: Long = 19L
-        const val HAND_JOINT_RING_FINGER_TIP: Long = 20L
-        const val HAND_JOINT_PINKY_FINGER_METACARPAL: Long = 21L
-        const val HAND_JOINT_PINKY_FINGER_PHALANX_PROXIMAL: Long = 22L
-        const val HAND_JOINT_PINKY_FINGER_PHALANX_INTERMEDIATE: Long = 23L
-        const val HAND_JOINT_PINKY_FINGER_PHALANX_DISTAL: Long = 24L
-        const val HAND_JOINT_PINKY_FINGER_TIP: Long = 25L
-        const val HAND_JOINT_MAX: Long = 26L
-        const val HAND_JOINT_FLAG_ORIENTATION_VALID: Long = 1L
-        const val HAND_JOINT_FLAG_ORIENTATION_TRACKED: Long = 2L
-        const val HAND_JOINT_FLAG_POSITION_VALID: Long = 4L
-        const val HAND_JOINT_FLAG_POSITION_TRACKED: Long = 8L
-        const val HAND_JOINT_FLAG_LINEAR_VELOCITY_VALID: Long = 16L
-        const val HAND_JOINT_FLAG_ANGULAR_VELOCITY_VALID: Long = 32L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRHandTracker? =
             wrap(handle.segment)

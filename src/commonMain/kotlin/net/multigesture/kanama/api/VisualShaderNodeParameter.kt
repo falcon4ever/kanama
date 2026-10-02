@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -15,7 +16,7 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
         @JvmName("setParameterNameProperty")
         set(value) = setParameterName(value)
 
-    var qualifier: Long
+    var qualifier: VisualShaderNodeParameter.Qualifier
         @JvmName("qualifierProperty")
         get() = getQualifier()
         @JvmName("setQualifierProperty")
@@ -37,14 +38,14 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
         return ObjectCalls.ptrcallNoArgsRetString(getParameterNameBind, segment)
     }
 
-    fun setQualifier(qualifier: Long) {
+    fun setQualifier(qualifier: VisualShaderNodeParameter.Qualifier) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setQualifierBind, segment, qualifier)
+        ObjectCalls.ptrcallWithLongArg(setQualifierBind, segment, qualifier.value)
     }
 
-    fun getQualifier(): Long {
+    fun getQualifier(): VisualShaderNodeParameter.Qualifier {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getQualifierBind, segment)
+        return VisualShaderNodeParameter.Qualifier(ObjectCalls.ptrcallNoArgsRetLong(getQualifierBind, segment))
     }
 
     fun setInstanceIndex(instanceIndex: Int) {
@@ -57,13 +58,18 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
         return ObjectCalls.ptrcallNoArgsRetInt(getInstanceIndexBind, segment)
     }
 
-    companion object {
-        const val QUAL_NONE: Long = 0L
-        const val QUAL_GLOBAL: Long = 1L
-        const val QUAL_INSTANCE: Long = 2L
-        const val QUAL_INSTANCE_INDEX: Long = 3L
-        const val QUAL_MAX: Long = 4L
+    @JvmInline
+    value class Qualifier(val value: Long) {
+        companion object {
+            val NONE: Qualifier get() = Qualifier(0L)
+            val GLOBAL: Qualifier get() = Qualifier(1L)
+            val INSTANCE: Qualifier get() = Qualifier(2L)
+            val INSTANCE_INDEX: Qualifier get() = Qualifier(3L)
+            val MAX: Qualifier get() = Qualifier(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParameter? =
             wrap(handle.segment)

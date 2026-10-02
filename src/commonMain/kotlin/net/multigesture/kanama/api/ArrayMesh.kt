@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Transform3D
  * Generated from Godot docs: ArrayMesh
  */
 class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
-    var blendShapeMode: Long
+    var blendShapeMode: Mesh.BlendShapeMode
         @JvmName("blendShapeModeProperty")
         get() = getBlendShapeMode()
         @JvmName("setBlendShapeModeProperty")
@@ -88,9 +88,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.set_blend_shape_mode
      */
-    fun setBlendShapeMode(mode: Long) {
+    fun setBlendShapeMode(mode: Mesh.BlendShapeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode.value)
     }
 
     /**
@@ -98,9 +98,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.get_blend_shape_mode
      */
-    fun getBlendShapeMode(): Long {
+    fun getBlendShapeMode(): Mesh.BlendShapeMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment)
+        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment))
     }
 
     /**
@@ -131,9 +131,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.add_surface_from_arrays
      */
-    fun addSurfaceFromArrays(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Long = 0L) {
+    fun addSurfaceFromArrays(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Mesh.ArrayFormat = Mesh.ArrayFormat(0L)) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, segment, primitive, arrays, blendShapes, lods, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, segment, primitive.value, arrays, blendShapes, lods, flags.value)
     }
 
     /**
@@ -233,9 +233,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.surface_get_format
      */
-    fun surfaceGetFormat(surfIdx: Int): Long {
+    fun surfaceGetFormat(surfIdx: Int): Mesh.ArrayFormat {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, segment, surfIdx)
+        return Mesh.ArrayFormat(ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, segment, surfIdx))
     }
 
     /**
@@ -243,9 +243,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.surface_get_primitive_type
      */
-    fun surfaceGetPrimitiveType(surfIdx: Int): Long {
+    fun surfaceGetPrimitiveType(surfIdx: Int): Mesh.PrimitiveType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, segment, surfIdx)
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, segment, surfIdx))
     }
 
     /**
@@ -294,9 +294,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.lightmap_unwrap
      */
-    fun lightmapUnwrap(transform: Transform3D, texelSize: Double): Long {
+    fun lightmapUnwrap(transform: Transform3D, texelSize: Double): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, segment, transform, texelSize)
+        return GodotError(ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, segment, transform, texelSize))
     }
 
     /**

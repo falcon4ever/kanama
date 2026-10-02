@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -38,7 +39,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setCellSizeProperty")
         set(value) = setCellSize(value)
 
-    var cellShape: Long
+    var cellShape: AStarGrid2D.CellShape
         @JvmName("cellShapeProperty")
         get() = getCellShape()
         @JvmName("setCellShapeProperty")
@@ -50,19 +51,19 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setJumpingEnabledProperty")
         set(value) = setJumpingEnabled(value)
 
-    var defaultComputeHeuristic: Long
+    var defaultComputeHeuristic: AStarGrid2D.Heuristic
         @JvmName("defaultComputeHeuristicProperty")
         get() = getDefaultComputeHeuristic()
         @JvmName("setDefaultComputeHeuristicProperty")
         set(value) = setDefaultComputeHeuristic(value)
 
-    var defaultEstimateHeuristic: Long
+    var defaultEstimateHeuristic: AStarGrid2D.Heuristic
         @JvmName("defaultEstimateHeuristicProperty")
         get() = getDefaultEstimateHeuristic()
         @JvmName("setDefaultEstimateHeuristicProperty")
         set(value) = setDefaultEstimateHeuristic(value)
 
-    var diagonalMode: Long
+    var diagonalMode: AStarGrid2D.DiagonalMode
         @JvmName("diagonalModeProperty")
         get() = getDiagonalMode()
         @JvmName("setDiagonalModeProperty")
@@ -164,9 +165,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.set_cell_shape
      */
-    fun setCellShape(cellShape: Long) {
+    fun setCellShape(cellShape: AStarGrid2D.CellShape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellShapeBind, segment, cellShape)
+        ObjectCalls.ptrcallWithLongArg(setCellShapeBind, segment, cellShape.value)
     }
 
     /**
@@ -175,9 +176,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.get_cell_shape
      */
-    fun getCellShape(): Long {
+    fun getCellShape(): AStarGrid2D.CellShape {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, segment)
+        return AStarGrid2D.CellShape(ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, segment))
     }
 
     /**
@@ -255,9 +256,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.set_diagonal_mode
      */
-    fun setDiagonalMode(mode: Long) {
+    fun setDiagonalMode(mode: AStarGrid2D.DiagonalMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, segment, mode.value)
     }
 
     /**
@@ -266,9 +267,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.get_diagonal_mode
      */
-    fun getDiagonalMode(): Long {
+    fun getDiagonalMode(): AStarGrid2D.DiagonalMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, segment)
+        return AStarGrid2D.DiagonalMode(ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, segment))
     }
 
     /**
@@ -277,9 +278,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.set_default_compute_heuristic
      */
-    fun setDefaultComputeHeuristic(heuristic: Long) {
+    fun setDefaultComputeHeuristic(heuristic: AStarGrid2D.Heuristic) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, segment, heuristic)
+        ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, segment, heuristic.value)
     }
 
     /**
@@ -288,9 +289,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.get_default_compute_heuristic
      */
-    fun getDefaultComputeHeuristic(): Long {
+    fun getDefaultComputeHeuristic(): AStarGrid2D.Heuristic {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, segment)
+        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, segment))
     }
 
     /**
@@ -299,9 +300,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.set_default_estimate_heuristic
      */
-    fun setDefaultEstimateHeuristic(heuristic: Long) {
+    fun setDefaultEstimateHeuristic(heuristic: AStarGrid2D.Heuristic) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, segment, heuristic)
+        ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, segment, heuristic.value)
     }
 
     /**
@@ -310,9 +311,9 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: AStarGrid2D.get_default_estimate_heuristic
      */
-    fun getDefaultEstimateHeuristic(): Long {
+    fun getDefaultEstimateHeuristic(): AStarGrid2D.Heuristic {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, segment)
+        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, segment))
     }
 
     /**
@@ -447,22 +448,117 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, segment, fromId, toId, allowPartialPath)
     }
 
-    companion object {
-        const val HEURISTIC_EUCLIDEAN: Long = 0L
-        const val HEURISTIC_MANHATTAN: Long = 1L
-        const val HEURISTIC_OCTILE: Long = 2L
-        const val HEURISTIC_CHEBYSHEV: Long = 3L
-        const val HEURISTIC_MAX: Long = 4L
-        const val DIAGONAL_MODE_ALWAYS: Long = 0L
-        const val DIAGONAL_MODE_NEVER: Long = 1L
-        const val DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE: Long = 2L
-        const val DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES: Long = 3L
-        const val DIAGONAL_MODE_MAX: Long = 4L
-        const val CELL_SHAPE_SQUARE: Long = 0L
-        const val CELL_SHAPE_ISOMETRIC_RIGHT: Long = 1L
-        const val CELL_SHAPE_ISOMETRIC_DOWN: Long = 2L
-        const val CELL_SHAPE_MAX: Long = 3L
+    @JvmInline
+    value class Heuristic(val value: Long) {
+        companion object {
+            /**
+             * The Euclidean heuristic (https://en.wikipedia.org/wiki/Euclidean_distance) to be used for the
+             * pathfinding using the following formula:
+             *
+             * Generated from Godot docs: AStarGrid2D.HEURISTIC_EUCLIDEAN
+             */
+            val EUCLIDEAN: Heuristic get() = Heuristic(0L)
+            /**
+             * The Manhattan heuristic (https://en.wikipedia.org/wiki/Taxicab_geometry) to be used for the
+             * pathfinding using the following formula:
+             *
+             * Generated from Godot docs: AStarGrid2D.HEURISTIC_MANHATTAN
+             */
+            val MANHATTAN: Heuristic get() = Heuristic(1L)
+            /**
+             * The Octile heuristic to be used for the pathfinding using the following formula:
+             *
+             * Generated from Godot docs: AStarGrid2D.HEURISTIC_OCTILE
+             */
+            val OCTILE: Heuristic get() = Heuristic(2L)
+            /**
+             * The Chebyshev heuristic (https://en.wikipedia.org/wiki/Chebyshev_distance) to be used for the
+             * pathfinding using the following formula:
+             *
+             * Generated from Godot docs: AStarGrid2D.HEURISTIC_CHEBYSHEV
+             */
+            val CHEBYSHEV: Heuristic get() = Heuristic(3L)
+            /**
+             * Represents the size of the `Heuristic` enum.
+             *
+             * Generated from Godot docs: AStarGrid2D.HEURISTIC_MAX
+             */
+            val MAX: Heuristic get() = Heuristic(4L)
+        }
+    }
 
+    @JvmInline
+    value class DiagonalMode(val value: Long) {
+        companion object {
+            /**
+             * The pathfinding algorithm will ignore solid neighbors around the target cell and allow passing
+             * using diagonals.
+             *
+             * Generated from Godot docs: AStarGrid2D.DIAGONAL_MODE_ALWAYS
+             */
+            val ALWAYS: DiagonalMode get() = DiagonalMode(0L)
+            /**
+             * The pathfinding algorithm will ignore all diagonals and the way will be always orthogonal.
+             *
+             * Generated from Godot docs: AStarGrid2D.DIAGONAL_MODE_NEVER
+             */
+            val NEVER: DiagonalMode get() = DiagonalMode(1L)
+            /**
+             * The pathfinding algorithm will avoid using diagonals if at least two obstacles have been placed
+             * around the neighboring cells of the specific path segment.
+             *
+             * Generated from Godot docs: AStarGrid2D.DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE
+             */
+            val AT_LEAST_ONE_WALKABLE: DiagonalMode get() = DiagonalMode(2L)
+            /**
+             * The pathfinding algorithm will avoid using diagonals if any obstacle has been placed around the
+             * neighboring cells of the specific path segment.
+             *
+             * Generated from Godot docs: AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+             */
+            val ONLY_IF_NO_OBSTACLES: DiagonalMode get() = DiagonalMode(3L)
+            /**
+             * Represents the size of the `DiagonalMode` enum.
+             *
+             * Generated from Godot docs: AStarGrid2D.DIAGONAL_MODE_MAX
+             */
+            val MAX: DiagonalMode get() = DiagonalMode(4L)
+        }
+    }
+
+    @JvmInline
+    value class CellShape(val value: Long) {
+        companion object {
+            /**
+             * Rectangular cell shape.
+             *
+             * Generated from Godot docs: AStarGrid2D.CELL_SHAPE_SQUARE
+             */
+            val SQUARE: CellShape get() = CellShape(0L)
+            /**
+             * Diamond cell shape (for isometric look). Cell coordinates layout where the horizontal axis goes
+             * up-right, and the vertical one goes down-right.
+             *
+             * Generated from Godot docs: AStarGrid2D.CELL_SHAPE_ISOMETRIC_RIGHT
+             */
+            val ISOMETRIC_RIGHT: CellShape get() = CellShape(1L)
+            /**
+             * Diamond cell shape (for isometric look). Cell coordinates layout where the horizontal axis goes
+             * down-right, and the vertical one goes down-left.
+             *
+             * Generated from Godot docs: AStarGrid2D.CELL_SHAPE_ISOMETRIC_DOWN
+             */
+            val ISOMETRIC_DOWN: CellShape get() = CellShape(2L)
+            /**
+             * Represents the size of the `CellShape` enum.
+             *
+             * Generated from Godot docs: AStarGrid2D.CELL_SHAPE_MAX
+             */
+            val MAX: CellShape get() = CellShape(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AStarGrid2D? =
             wrap(handle.segment)

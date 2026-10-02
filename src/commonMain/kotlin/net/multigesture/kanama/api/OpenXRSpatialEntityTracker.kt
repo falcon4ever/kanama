@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -17,7 +18,7 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
         @JvmName("setEntityProperty")
         set(value) = setEntity(value)
 
-    var spatialTrackingState: Long
+    var spatialTrackingState: OpenXRSpatialEntityTracker.EntityTrackingState
         @JvmName("spatialTrackingStateProperty")
         get() = getSpatialTrackingState()
         @JvmName("setSpatialTrackingStateProperty")
@@ -43,14 +44,14 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
         return ObjectCalls.ptrcallNoArgsRetRID(getEntityBind, segment)
     }
 
-    fun setSpatialTrackingState(spatialTrackingState: Long) {
+    fun setSpatialTrackingState(spatialTrackingState: OpenXRSpatialEntityTracker.EntityTrackingState) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSpatialTrackingStateBind, segment, spatialTrackingState)
+        ObjectCalls.ptrcallWithLongArg(setSpatialTrackingStateBind, segment, spatialTrackingState.value)
     }
 
-    fun getSpatialTrackingState(): Long {
+    fun getSpatialTrackingState(): OpenXRSpatialEntityTracker.EntityTrackingState {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSpatialTrackingStateBind, segment)
+        return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallNoArgsRetLong(getSpatialTrackingStateBind, segment))
     }
 
     fun getNext(): OpenXRStructureBase? {
@@ -73,11 +74,16 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
         const val spatialTrackingStateChanged: String = "spatial_tracking_state_changed"
     }
 
-    companion object {
-        const val ENTITY_TRACKING_STATE_STOPPED: Long = 1L
-        const val ENTITY_TRACKING_STATE_PAUSED: Long = 2L
-        const val ENTITY_TRACKING_STATE_TRACKING: Long = 3L
+    @JvmInline
+    value class EntityTrackingState(val value: Long) {
+        companion object {
+            val STOPPED: EntityTrackingState get() = EntityTrackingState(1L)
+            val PAUSED: EntityTrackingState get() = EntityTrackingState(2L)
+            val TRACKING: EntityTrackingState get() = EntityTrackingState(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialEntityTracker? =
             wrap(handle.segment)

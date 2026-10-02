@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,18 +19,6 @@ object NativeMenu {
         ObjectCalls.getSingleton("NativeMenu")
     }
 
-    const val FEATURE_GLOBAL_MENU: Long = 0L
-    const val FEATURE_POPUP_MENU: Long = 1L
-    const val FEATURE_OPEN_CLOSE_CALLBACK: Long = 2L
-    const val FEATURE_HOVER_CALLBACK: Long = 3L
-    const val FEATURE_KEY_CALLBACK: Long = 4L
-    const val INVALID_MENU_ID: Long = 0L
-    const val MAIN_MENU_ID: Long = 1L
-    const val APPLICATION_MENU_ID: Long = 2L
-    const val WINDOW_MENU_ID: Long = 3L
-    const val HELP_MENU_ID: Long = 4L
-    const val DOCK_MENU_ID: Long = 5L
-
     /**
      * Returns `true` if the specified `feature` is supported by the current `NativeMenu`, `false`
      * otherwise. Note: This method is implemented on macOS and Windows.
@@ -37,8 +26,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.has_feature
      */
     @JvmStatic
-    fun hasFeature(feature: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature)
+    fun hasFeature(feature: NativeMenu.Feature): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature.value)
     }
 
     /**
@@ -48,8 +37,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.has_system_menu
      */
     @JvmStatic
-    fun hasSystemMenu(menuId: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasSystemMenuBind, singleton, menuId)
+    fun hasSystemMenu(menuId: NativeMenu.SystemMenus): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasSystemMenuBind, singleton, menuId.value)
     }
 
     /**
@@ -58,8 +47,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.get_system_menu
      */
     @JvmStatic
-    fun getSystemMenu(menuId: Long): RID {
-        return ObjectCalls.ptrcallWithLongArgRetRID(getSystemMenuBind, singleton, menuId)
+    fun getSystemMenu(menuId: NativeMenu.SystemMenus): RID {
+        return ObjectCalls.ptrcallWithLongArgRetRID(getSystemMenuBind, singleton, menuId.value)
     }
 
     /**
@@ -68,8 +57,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.get_system_menu_name
      */
     @JvmStatic
-    fun getSystemMenuName(menuId: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuNameBind, singleton, menuId)
+    fun getSystemMenuName(menuId: NativeMenu.SystemMenus): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuNameBind, singleton, menuId.value)
     }
 
     /**
@@ -78,8 +67,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.get_system_menu_text
      */
     @JvmStatic
-    fun getSystemMenuText(menuId: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuTextBind, singleton, menuId)
+    fun getSystemMenuText(menuId: NativeMenu.SystemMenus): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getSystemMenuTextBind, singleton, menuId.value)
     }
 
     /**
@@ -88,8 +77,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.set_system_menu_text
      */
     @JvmStatic
-    fun setSystemMenuText(menuId: Long, name: String) {
-        ObjectCalls.ptrcallWithLongAndStringArg(setSystemMenuTextBind, singleton, menuId, name)
+    fun setSystemMenuText(menuId: NativeMenu.SystemMenus, name: String) {
+        ObjectCalls.ptrcallWithLongAndStringArg(setSystemMenuTextBind, singleton, menuId.value, name)
     }
 
     /**
@@ -256,8 +245,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.add_item
      */
     @JvmStatic
-    fun addItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun addItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -274,8 +263,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.add_check_item
      */
     @JvmStatic
-    fun addCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun addCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -292,8 +281,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.add_icon_item
      */
     @JvmStatic
-    fun addIconItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun addIconItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -310,8 +299,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.add_icon_check_item
      */
     @JvmStatic
-    fun addIconCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun addIconCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -330,8 +319,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.add_radio_check_item
      */
     @JvmStatic
-    fun addRadioCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addRadioCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun addRadioCheckItem(rid: RID, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoCallableVariantLongIntArgsRetInt(addRadioCheckItemBind, singleton, rid, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -350,8 +339,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.add_icon_radio_check_item
      */
     @JvmStatic
-    fun addIconRadioCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun addIconRadioCheckItem(rid: RID, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDObjectStringTwoCallableVariantLongIntArgsRetInt(addIconRadioCheckItemBind, singleton, rid, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -371,8 +360,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.add_multistate_item
      */
     @JvmStatic
-    fun addMultistateItem(rid: RID, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(addMultistateItemBind, singleton, rid, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun addMultistateItem(rid: RID, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithRIDStringTwoIntTwoCallableVariantLongIntArgsRetInt(addMultistateItemBind, singleton, rid, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -519,8 +508,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.get_item_accelerator
      */
     @JvmStatic
-    fun getItemAccelerator(rid: RID, idx: Int): Long {
-        return ObjectCalls.ptrcallWithRIDAndIntArgRetLong(getItemAcceleratorBind, singleton, rid, idx)
+    fun getItemAccelerator(rid: RID, idx: Int): Key {
+        return Key(ObjectCalls.ptrcallWithRIDAndIntArgRetLong(getItemAcceleratorBind, singleton, rid, idx))
     }
 
     /**
@@ -716,8 +705,8 @@ object NativeMenu {
      * Generated from Godot docs: NativeMenu.set_item_accelerator
      */
     @JvmStatic
-    fun setItemAccelerator(rid: RID, idx: Int, keycode: Long) {
-        ObjectCalls.ptrcallWithRIDIntLongArgs(setItemAcceleratorBind, singleton, rid, idx, keycode)
+    fun setItemAccelerator(rid: RID, idx: Int, keycode: Key) {
+        ObjectCalls.ptrcallWithRIDIntLongArgs(setItemAcceleratorBind, singleton, rid, idx, keycode.value)
     }
 
     /**
@@ -852,6 +841,86 @@ object NativeMenu {
     @JvmStatic
     fun clear(rid: RID) {
         ObjectCalls.ptrcallWithRIDArg(clearBind, singleton, rid)
+    }
+
+    @JvmInline
+    value class Feature(val value: Long) {
+        companion object {
+            /**
+             * `NativeMenu` supports native global main menu.
+             *
+             * Generated from Godot docs: NativeMenu.FEATURE_GLOBAL_MENU
+             */
+            val GLOBAL_MENU: Feature get() = Feature(0L)
+            /**
+             * `NativeMenu` supports native popup menus.
+             *
+             * Generated from Godot docs: NativeMenu.FEATURE_POPUP_MENU
+             */
+            val POPUP_MENU: Feature get() = Feature(1L)
+            /**
+             * `NativeMenu` supports menu open and close callbacks.
+             *
+             * Generated from Godot docs: NativeMenu.FEATURE_OPEN_CLOSE_CALLBACK
+             */
+            val OPEN_CLOSE_CALLBACK: Feature get() = Feature(2L)
+            /**
+             * `NativeMenu` supports menu item hover callback.
+             *
+             * Generated from Godot docs: NativeMenu.FEATURE_HOVER_CALLBACK
+             */
+            val HOVER_CALLBACK: Feature get() = Feature(3L)
+            /**
+             * `NativeMenu` supports menu item accelerator/key callback.
+             *
+             * Generated from Godot docs: NativeMenu.FEATURE_KEY_CALLBACK
+             */
+            val KEY_CALLBACK: Feature get() = Feature(4L)
+        }
+    }
+
+    @JvmInline
+    value class SystemMenus(val value: Long) {
+        companion object {
+            /**
+             * Invalid special system menu ID.
+             *
+             * Generated from Godot docs: NativeMenu.INVALID_MENU_ID
+             */
+            val INVALID_MENU_ID: SystemMenus get() = SystemMenus(0L)
+            /**
+             * Global main menu ID.
+             *
+             * Generated from Godot docs: NativeMenu.MAIN_MENU_ID
+             */
+            val MAIN_MENU_ID: SystemMenus get() = SystemMenus(1L)
+            /**
+             * Application (first menu after "Apple" menu on macOS) menu ID.
+             *
+             * Generated from Godot docs: NativeMenu.APPLICATION_MENU_ID
+             */
+            val APPLICATION_MENU_ID: SystemMenus get() = SystemMenus(2L)
+            /**
+             * "Window" menu ID (on macOS this menu includes standard window control items and a list of open
+             * windows).
+             *
+             * Generated from Godot docs: NativeMenu.WINDOW_MENU_ID
+             */
+            val WINDOW_MENU_ID: SystemMenus get() = SystemMenus(3L)
+            /**
+             * "Help" menu ID (on macOS this menu includes help search bar).
+             *
+             * Generated from Godot docs: NativeMenu.HELP_MENU_ID
+             */
+            val HELP_MENU_ID: SystemMenus get() = SystemMenus(4L)
+            /**
+             * Dock icon right-click menu ID (on macOS this menu include standard application control items and
+             * a list of open windows).
+             *
+             * Generated from Godot docs: NativeMenu.DOCK_MENU_ID
+             */
+            val DOCK_MENU_ID: SystemMenus get() = SystemMenus(5L)
+        }
     }
 
     @JvmStatic

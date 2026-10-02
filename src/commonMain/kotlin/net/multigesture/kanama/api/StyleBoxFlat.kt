@@ -33,27 +33,27 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
 
     var borderWidthLeft: Int
         @JvmName("borderWidthLeftProperty")
-        get() = getBorderWidth(0L)
+        get() = getBorderWidth(Side.LEFT)
         @JvmName("setBorderWidthLeftProperty")
-        set(value) = setBorderWidth(0L, value)
+        set(value) = setBorderWidth(Side.LEFT, value)
 
     var borderWidthTop: Int
         @JvmName("borderWidthTopProperty")
-        get() = getBorderWidth(1L)
+        get() = getBorderWidth(Side.TOP)
         @JvmName("setBorderWidthTopProperty")
-        set(value) = setBorderWidth(1L, value)
+        set(value) = setBorderWidth(Side.TOP, value)
 
     var borderWidthRight: Int
         @JvmName("borderWidthRightProperty")
-        get() = getBorderWidth(2L)
+        get() = getBorderWidth(Side.RIGHT)
         @JvmName("setBorderWidthRightProperty")
-        set(value) = setBorderWidth(2L, value)
+        set(value) = setBorderWidth(Side.RIGHT, value)
 
     var borderWidthBottom: Int
         @JvmName("borderWidthBottomProperty")
-        get() = getBorderWidth(3L)
+        get() = getBorderWidth(Side.BOTTOM)
         @JvmName("setBorderWidthBottomProperty")
-        set(value) = setBorderWidth(3L, value)
+        set(value) = setBorderWidth(Side.BOTTOM, value)
 
     var borderColor: Color
         @JvmName("borderColorProperty")
@@ -69,27 +69,27 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
 
     var cornerRadiusTopLeft: Int
         @JvmName("cornerRadiusTopLeftProperty")
-        get() = getCornerRadius(0L)
+        get() = getCornerRadius(Corner.TOP_LEFT)
         @JvmName("setCornerRadiusTopLeftProperty")
-        set(value) = setCornerRadius(0L, value)
+        set(value) = setCornerRadius(Corner.TOP_LEFT, value)
 
     var cornerRadiusTopRight: Int
         @JvmName("cornerRadiusTopRightProperty")
-        get() = getCornerRadius(1L)
+        get() = getCornerRadius(Corner.TOP_RIGHT)
         @JvmName("setCornerRadiusTopRightProperty")
-        set(value) = setCornerRadius(1L, value)
+        set(value) = setCornerRadius(Corner.TOP_RIGHT, value)
 
     var cornerRadiusBottomRight: Int
         @JvmName("cornerRadiusBottomRightProperty")
-        get() = getCornerRadius(2L)
+        get() = getCornerRadius(Corner.BOTTOM_RIGHT)
         @JvmName("setCornerRadiusBottomRightProperty")
-        set(value) = setCornerRadius(2L, value)
+        set(value) = setCornerRadius(Corner.BOTTOM_RIGHT, value)
 
     var cornerRadiusBottomLeft: Int
         @JvmName("cornerRadiusBottomLeftProperty")
-        get() = getCornerRadius(3L)
+        get() = getCornerRadius(Corner.BOTTOM_LEFT)
         @JvmName("setCornerRadiusBottomLeftProperty")
-        set(value) = setCornerRadius(3L, value)
+        set(value) = setCornerRadius(Corner.BOTTOM_LEFT, value)
 
     var cornerDetail: Int
         @JvmName("cornerDetailProperty")
@@ -99,27 +99,27 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
 
     var expandMarginLeft: Double
         @JvmName("expandMarginLeftProperty")
-        get() = getExpandMargin(0L)
+        get() = getExpandMargin(Side.LEFT)
         @JvmName("setExpandMarginLeftProperty")
-        set(value) = setExpandMargin(0L, value)
+        set(value) = setExpandMargin(Side.LEFT, value)
 
     var expandMarginTop: Double
         @JvmName("expandMarginTopProperty")
-        get() = getExpandMargin(1L)
+        get() = getExpandMargin(Side.TOP)
         @JvmName("setExpandMarginTopProperty")
-        set(value) = setExpandMargin(1L, value)
+        set(value) = setExpandMargin(Side.TOP, value)
 
     var expandMarginRight: Double
         @JvmName("expandMarginRightProperty")
-        get() = getExpandMargin(2L)
+        get() = getExpandMargin(Side.RIGHT)
         @JvmName("setExpandMarginRightProperty")
-        set(value) = setExpandMargin(2L, value)
+        set(value) = setExpandMargin(Side.RIGHT, value)
 
     var expandMarginBottom: Double
         @JvmName("expandMarginBottomProperty")
-        get() = getExpandMargin(3L)
+        get() = getExpandMargin(Side.BOTTOM)
         @JvmName("setExpandMarginBottomProperty")
-        set(value) = setExpandMargin(3L, value)
+        set(value) = setExpandMargin(Side.BOTTOM, value)
 
     var shadowColor: Color
         @JvmName("shadowColorProperty")
@@ -216,9 +216,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxFlat.set_border_width
      */
-    fun setBorderWidth(margin: Long, width: Int) {
+    fun setBorderWidth(margin: Side, width: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setBorderWidthBind, segment, margin, width)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setBorderWidthBind, segment, margin.value, width)
     }
 
     /**
@@ -226,9 +226,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxFlat.get_border_width
      */
-    fun getBorderWidth(margin: Long): Int {
+    fun getBorderWidth(margin: Side): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getBorderWidthBind, segment, margin)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getBorderWidthBind, segment, margin.value)
     }
 
     /**
@@ -266,9 +266,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxFlat.set_corner_radius
      */
-    fun setCornerRadius(corner: Long, radius: Int) {
+    fun setCornerRadius(corner: Corner, radius: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setCornerRadiusBind, segment, corner, radius)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setCornerRadiusBind, segment, corner.value, radius)
     }
 
     /**
@@ -276,9 +276,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxFlat.get_corner_radius
      */
-    fun getCornerRadius(corner: Long): Int {
+    fun getCornerRadius(corner: Corner): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getCornerRadiusBind, segment, corner)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getCornerRadiusBind, segment, corner.value)
     }
 
     /**
@@ -290,9 +290,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxFlat.set_expand_margin
      */
-    fun setExpandMargin(margin: Long, size: Double) {
+    fun setExpandMargin(margin: Side, size: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin, size)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setExpandMarginBind, segment, margin.value, size)
     }
 
     /**
@@ -314,9 +314,9 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
      *
      * Generated from Godot docs: StyleBoxFlat.get_expand_margin
      */
-    fun getExpandMargin(margin: Long): Double {
+    fun getExpandMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getExpandMarginBind, segment, margin.value)
     }
 
     /**

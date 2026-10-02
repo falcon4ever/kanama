@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -16,8 +17,8 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: HingeJoint3D.set_param
      */
-    fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
+    fun setParam(param: HingeJoint3D.Param, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
     }
 
     /**
@@ -25,8 +26,8 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: HingeJoint3D.get_param
      */
-    fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
+    fun getParam(param: HingeJoint3D.Param): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
     }
 
     /**
@@ -34,8 +35,8 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: HingeJoint3D.set_flag
      */
-    fun setFlag(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag, enabled)
+    fun setFlag(flag: HingeJoint3D.Flag, enabled: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -43,24 +44,91 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: HingeJoint3D.get_flag
      */
-    fun getFlag(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag)
+    fun getFlag(flag: HingeJoint3D.Flag): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag.value)
+    }
+
+    @JvmInline
+    value class Param(val value: Long) {
+        companion object {
+            /**
+             * The speed with which the two bodies get pulled together when they move in different directions.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_BIAS
+             */
+            val BIAS: Param get() = Param(0L)
+            /**
+             * The maximum rotation. Only active if `angular_limit/enable` is `true`.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_LIMIT_UPPER
+             */
+            val LIMIT_UPPER: Param get() = Param(1L)
+            /**
+             * The minimum rotation. Only active if `angular_limit/enable` is `true`.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_LIMIT_LOWER
+             */
+            val LIMIT_LOWER: Param get() = Param(2L)
+            /**
+             * The speed with which the rotation across the axis perpendicular to the hinge gets corrected.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_LIMIT_BIAS
+             */
+            val LIMIT_BIAS: Param get() = Param(3L)
+            val LIMIT_SOFTNESS: Param get() = Param(4L)
+            /**
+             * The lower this value, the more the rotation gets slowed down.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_LIMIT_RELAXATION
+             */
+            val LIMIT_RELAXATION: Param get() = Param(5L)
+            /**
+             * Target speed for the motor.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_MOTOR_TARGET_VELOCITY
+             */
+            val MOTOR_TARGET_VELOCITY: Param get() = Param(6L)
+            /**
+             * Maximum acceleration for the motor.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_MOTOR_MAX_IMPULSE
+             */
+            val MOTOR_MAX_IMPULSE: Param get() = Param(7L)
+            /**
+             * Represents the size of the `Param` enum.
+             *
+             * Generated from Godot docs: HingeJoint3D.PARAM_MAX
+             */
+            val MAX: Param get() = Param(8L)
+        }
+    }
+
+    @JvmInline
+    value class Flag(val value: Long) {
+        companion object {
+            /**
+             * If `true`, the hinges maximum and minimum rotation, defined by `angular_limit/lower` and
+             * `angular_limit/upper` has effects.
+             *
+             * Generated from Godot docs: HingeJoint3D.FLAG_USE_LIMIT
+             */
+            val USE_LIMIT: Flag get() = Flag(0L)
+            /**
+             * When activated, a motor turns the hinge.
+             *
+             * Generated from Godot docs: HingeJoint3D.FLAG_ENABLE_MOTOR
+             */
+            val ENABLE_MOTOR: Flag get() = Flag(1L)
+            /**
+             * Represents the size of the `Flag` enum.
+             *
+             * Generated from Godot docs: HingeJoint3D.FLAG_MAX
+             */
+            val MAX: Flag get() = Flag(2L)
+        }
     }
 
     companion object {
-        const val PARAM_BIAS: Long = 0L
-        const val PARAM_LIMIT_UPPER: Long = 1L
-        const val PARAM_LIMIT_LOWER: Long = 2L
-        const val PARAM_LIMIT_BIAS: Long = 3L
-        const val PARAM_LIMIT_SOFTNESS: Long = 4L
-        const val PARAM_LIMIT_RELAXATION: Long = 5L
-        const val PARAM_MOTOR_TARGET_VELOCITY: Long = 6L
-        const val PARAM_MOTOR_MAX_IMPULSE: Long = 7L
-        const val PARAM_MAX: Long = 8L
-        const val FLAG_USE_LIMIT: Long = 0L
-        const val FLAG_ENABLE_MOTOR: Long = 1L
-        const val FLAG_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): HingeJoint3D? =
             wrap(handle.segment)

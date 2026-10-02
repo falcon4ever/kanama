@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: CollisionPolygon2D
  */
 class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
-    var buildMode: Long
+    var buildMode: CollisionPolygon2D.BuildMode
         @JvmName("buildModeProperty")
         get() = getBuildMode()
         @JvmName("setBuildModeProperty")
@@ -75,8 +76,8 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CollisionPolygon2D.set_build_mode
      */
-    fun setBuildMode(buildMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBuildModeBind, segment, buildMode)
+    fun setBuildMode(buildMode: CollisionPolygon2D.BuildMode) {
+        ObjectCalls.ptrcallWithLongArg(setBuildModeBind, segment, buildMode.value)
     }
 
     /**
@@ -84,8 +85,8 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CollisionPolygon2D.get_build_mode
      */
-    fun getBuildMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBuildModeBind, segment)
+    fun getBuildMode(): CollisionPolygon2D.BuildMode {
+        return CollisionPolygon2D.BuildMode(ObjectCalls.ptrcallNoArgsRetLong(getBuildModeBind, segment))
     }
 
     /**
@@ -170,10 +171,30 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, segment)
     }
 
-    companion object {
-        const val BUILD_SOLIDS: Long = 0L
-        const val BUILD_SEGMENTS: Long = 1L
+    @JvmInline
+    value class BuildMode(val value: Long) {
+        companion object {
+            /**
+             * Collisions will include the polygon and its contained area. In this mode the node has the same
+             * effect as several `ConvexPolygonShape2D` nodes, one for each convex shape in the convex
+             * decomposition of the polygon (but without the overhead of multiple nodes).
+             *
+             * Generated from Godot docs: CollisionPolygon2D.BUILD_SOLIDS
+             */
+            val SOLIDS: BuildMode get() = BuildMode(0L)
+            /**
+             * Collisions will only include the polygon edges. In this mode the node has the same effect as a
+             * single `ConcavePolygonShape2D` made of segments, with the restriction that each segment (after
+             * the first one) starts where the previous one ends, and the last one ends where the first one
+             * starts (forming a closed but hollow polygon).
+             *
+             * Generated from Godot docs: CollisionPolygon2D.BUILD_SEGMENTS
+             */
+            val SEGMENTS: BuildMode get() = BuildMode(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CollisionPolygon2D? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -86,9 +87,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorFeatureProfile.set_disable_feature
      */
-    fun setDisableFeature(feature: Long, disable: Boolean) {
+    fun setDisableFeature(feature: EditorFeatureProfile.Feature, disable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDisableFeatureBind, segment, feature, disable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setDisableFeatureBind, segment, feature.value, disable)
     }
 
     /**
@@ -97,9 +98,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorFeatureProfile.is_feature_disabled
      */
-    fun isFeatureDisabled(feature: Long): Boolean {
+    fun isFeatureDisabled(feature: EditorFeatureProfile.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isFeatureDisabledBind, segment, feature)
+        return ObjectCalls.ptrcallWithLongArgRetBool(isFeatureDisabledBind, segment, feature.value)
     }
 
     /**
@@ -107,9 +108,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorFeatureProfile.get_feature_name
      */
-    fun getFeatureName(feature: Long): String {
+    fun getFeatureName(feature: EditorFeatureProfile.Feature): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getFeatureNameBind, segment, feature)
+        return ObjectCalls.ptrcallWithLongArgRetString(getFeatureNameBind, segment, feature.value)
     }
 
     /**
@@ -121,9 +122,9 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorFeatureProfile.save_to_file
      */
-    fun saveToFile(path: String): Long {
+    fun saveToFile(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveToFileBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveToFileBind, segment, path))
     }
 
     /**
@@ -135,25 +136,97 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorFeatureProfile.load_from_file
      */
-    fun loadFromFile(path: String): Long {
+    fun loadFromFile(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, segment, path))
+    }
+
+    @JvmInline
+    value class Feature(val value: Long) {
+        companion object {
+            /**
+             * The 3D editor. If this feature is disabled, the 3D editor won't display but 3D nodes will still
+             * display in the Create New Node dialog.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_3D
+             */
+            val FEATURE_3D: Feature get() = Feature(0L)
+            /**
+             * The Script tab, which contains the script editor and class reference browser. If this feature is
+             * disabled, the Script tab won't display.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_SCRIPT
+             */
+            val SCRIPT: Feature get() = Feature(1L)
+            /**
+             * The Asset Store tab. If this feature is disabled, the Asset Store tab won't display.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_ASSET_LIB
+             */
+            val ASSET_LIB: Feature get() = Feature(2L)
+            /**
+             * Scene tree editing. If this feature is disabled, the Scene tree dock will still be visible but
+             * will be read-only.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_SCENE_TREE
+             */
+            val SCENE_TREE: Feature get() = Feature(3L)
+            /**
+             * The Node dock. If this feature is disabled, signals and groups won't be visible and modifiable
+             * from the editor.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_NODE_DOCK
+             */
+            val NODE_DOCK: Feature get() = Feature(4L)
+            /**
+             * The FileSystem dock. If this feature is disabled, the FileSystem dock won't be visible.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_FILESYSTEM_DOCK
+             */
+            val FILESYSTEM_DOCK: Feature get() = Feature(5L)
+            /**
+             * The Import dock. If this feature is disabled, the Import dock won't be visible.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_IMPORT_DOCK
+             */
+            val IMPORT_DOCK: Feature get() = Feature(6L)
+            /**
+             * The History dock. If this feature is disabled, the History dock won't be visible.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_HISTORY_DOCK
+             */
+            val HISTORY_DOCK: Feature get() = Feature(7L)
+            /**
+             * The Game tab, which allows embedding the game window and selecting nodes by clicking inside of
+             * it. If this feature is disabled, the Game tab won't display.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_GAME
+             */
+            val GAME: Feature get() = Feature(8L)
+            /**
+             * The Signals dock. If this feature is disabled, signals won't be visible and modifiable from the
+             * editor.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_SIGNALS_DOCK
+             */
+            val SIGNALS_DOCK: Feature get() = Feature(9L)
+            /**
+             * The Groups dock. If this feature is disabled, groups won't be visible and modifiable from the
+             * editor.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_GROUPS_DOCK
+             */
+            val GROUPS_DOCK: Feature get() = Feature(10L)
+            /**
+             * Represents the size of the `Feature` enum.
+             *
+             * Generated from Godot docs: EditorFeatureProfile.FEATURE_MAX
+             */
+            val MAX: Feature get() = Feature(11L)
+        }
     }
 
     companion object {
-        const val FEATURE_3D: Long = 0L
-        const val FEATURE_SCRIPT: Long = 1L
-        const val FEATURE_ASSET_LIB: Long = 2L
-        const val FEATURE_SCENE_TREE: Long = 3L
-        const val FEATURE_NODE_DOCK: Long = 4L
-        const val FEATURE_FILESYSTEM_DOCK: Long = 5L
-        const val FEATURE_IMPORT_DOCK: Long = 6L
-        const val FEATURE_HISTORY_DOCK: Long = 7L
-        const val FEATURE_GAME: Long = 8L
-        const val FEATURE_SIGNALS_DOCK: Long = 9L
-        const val FEATURE_GROUPS_DOCK: Long = 10L
-        const val FEATURE_MAX: Long = 11L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorFeatureProfile? =
             wrap(handle.segment)

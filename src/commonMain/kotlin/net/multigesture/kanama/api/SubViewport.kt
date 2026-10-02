@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,13 +37,13 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
         @JvmName("setViewCountProperty")
         set(value) = setViewCount(value)
 
-    var renderTargetClearMode: Long
+    var renderTargetClearMode: SubViewport.ClearMode
         @JvmName("renderTargetClearModeProperty")
         get() = getClearMode()
         @JvmName("setRenderTargetClearModeProperty")
         set(value) = setClearMode(value)
 
-    var renderTargetUpdateMode: Long
+    var renderTargetUpdateMode: SubViewport.UpdateMode
         @JvmName("renderTargetUpdateModeProperty")
         get() = getUpdateMode()
         @JvmName("setRenderTargetUpdateModeProperty")
@@ -133,8 +134,8 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: SubViewport.set_update_mode
      */
-    fun setUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode)
+    fun setUpdateMode(mode: SubViewport.UpdateMode) {
+        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode.value)
     }
 
     /**
@@ -142,8 +143,8 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: SubViewport.get_update_mode
      */
-    fun getUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment)
+    fun getUpdateMode(): SubViewport.UpdateMode {
+        return SubViewport.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment))
     }
 
     /**
@@ -152,8 +153,8 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: SubViewport.set_clear_mode
      */
-    fun setClearMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setClearModeBind, segment, mode)
+    fun setClearMode(mode: SubViewport.ClearMode) {
+        ObjectCalls.ptrcallWithLongArg(setClearModeBind, segment, mode.value)
     }
 
     /**
@@ -162,20 +163,71 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: SubViewport.get_clear_mode
      */
-    fun getClearMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getClearModeBind, segment)
+    fun getClearMode(): SubViewport.ClearMode {
+        return SubViewport.ClearMode(ObjectCalls.ptrcallNoArgsRetLong(getClearModeBind, segment))
+    }
+
+    @JvmInline
+    value class ClearMode(val value: Long) {
+        companion object {
+            /**
+             * Always clear the render target before drawing.
+             *
+             * Generated from Godot docs: SubViewport.CLEAR_MODE_ALWAYS
+             */
+            val ALWAYS: ClearMode get() = ClearMode(0L)
+            /**
+             * Never clear the render target.
+             *
+             * Generated from Godot docs: SubViewport.CLEAR_MODE_NEVER
+             */
+            val NEVER: ClearMode get() = ClearMode(1L)
+            /**
+             * Clear the render target on the next frame, then switch to `CLEAR_MODE_NEVER`.
+             *
+             * Generated from Godot docs: SubViewport.CLEAR_MODE_ONCE
+             */
+            val ONCE: ClearMode get() = ClearMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class UpdateMode(val value: Long) {
+        companion object {
+            /**
+             * Do not update the render target.
+             *
+             * Generated from Godot docs: SubViewport.UPDATE_DISABLED
+             */
+            val DISABLED: UpdateMode get() = UpdateMode(0L)
+            /**
+             * Update the render target once, then switch to `UPDATE_DISABLED`.
+             *
+             * Generated from Godot docs: SubViewport.UPDATE_ONCE
+             */
+            val ONCE: UpdateMode get() = UpdateMode(1L)
+            /**
+             * Update the render target only when it is visible. This is the default value.
+             *
+             * Generated from Godot docs: SubViewport.UPDATE_WHEN_VISIBLE
+             */
+            val WHEN_VISIBLE: UpdateMode get() = UpdateMode(2L)
+            /**
+             * Update the render target only when its parent is visible.
+             *
+             * Generated from Godot docs: SubViewport.UPDATE_WHEN_PARENT_VISIBLE
+             */
+            val WHEN_PARENT_VISIBLE: UpdateMode get() = UpdateMode(3L)
+            /**
+             * Always update the render target.
+             *
+             * Generated from Godot docs: SubViewport.UPDATE_ALWAYS
+             */
+            val ALWAYS: UpdateMode get() = UpdateMode(4L)
+        }
     }
 
     companion object {
-        const val CLEAR_MODE_ALWAYS: Long = 0L
-        const val CLEAR_MODE_NEVER: Long = 1L
-        const val CLEAR_MODE_ONCE: Long = 2L
-        const val UPDATE_DISABLED: Long = 0L
-        const val UPDATE_ONCE: Long = 1L
-        const val UPDATE_WHEN_VISIBLE: Long = 2L
-        const val UPDATE_WHEN_PARENT_VISIBLE: Long = 3L
-        const val UPDATE_ALWAYS: Long = 4L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SubViewport? =
             wrap(handle.segment)

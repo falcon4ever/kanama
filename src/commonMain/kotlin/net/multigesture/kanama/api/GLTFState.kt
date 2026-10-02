@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -178,7 +179,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         @JvmName("setAnimationsProperty")
         set(value) = setAnimations(value)
 
-    var handleBinaryImageMode: Long
+    var handleBinaryImageMode: GLTFState.HandleBinaryImageMode
         @JvmName("handleBinaryImageModeProperty")
         get() = getHandleBinaryImageMode()
         @JvmName("setHandleBinaryImageModeProperty")
@@ -521,14 +522,14 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
-    fun getHandleBinaryImageMode(): Long {
+    fun getHandleBinaryImageMode(): GLTFState.HandleBinaryImageMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHandleBinaryImageModeBind, segment)
+        return GLTFState.HandleBinaryImageMode(ObjectCalls.ptrcallNoArgsRetLong(getHandleBinaryImageModeBind, segment))
     }
 
-    fun setHandleBinaryImageMode(method: Long) {
+    fun setHandleBinaryImageMode(method: GLTFState.HandleBinaryImageMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHandleBinaryImageModeBind, segment, method)
+        ObjectCalls.ptrcallWithLongArg(setHandleBinaryImageModeBind, segment, method.value)
     }
 
     fun setBakeFps(value: Double) {
@@ -551,15 +552,21 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithIntArg(setHandleBinaryImageBind, segment, method)
     }
 
+    @JvmInline
+    value class HandleBinaryImageMode(val value: Long) {
+        companion object {
+            val DISCARD_TEXTURES: HandleBinaryImageMode get() = HandleBinaryImageMode(0L)
+            val EXTRACT_TEXTURES: HandleBinaryImageMode get() = HandleBinaryImageMode(1L)
+            val EMBED_AS_BASISU: HandleBinaryImageMode get() = HandleBinaryImageMode(2L)
+            val EMBED_AS_UNCOMPRESSED: HandleBinaryImageMode get() = HandleBinaryImageMode(3L)
+        }
+    }
+
     companion object {
         const val HANDLE_BINARY_DISCARD_TEXTURES: Long = 0L
         const val HANDLE_BINARY_EXTRACT_TEXTURES: Long = 1L
         const val HANDLE_BINARY_EMBED_AS_BASISU: Long = 2L
         const val HANDLE_BINARY_EMBED_AS_UNCOMPRESSED: Long = 3L
-        const val HANDLE_BINARY_IMAGE_MODE_DISCARD_TEXTURES: Long = 0L
-        const val HANDLE_BINARY_IMAGE_MODE_EXTRACT_TEXTURES: Long = 1L
-        const val HANDLE_BINARY_IMAGE_MODE_EMBED_AS_BASISU: Long = 2L
-        const val HANDLE_BINARY_IMAGE_MODE_EMBED_AS_UNCOMPRESSED: Long = 3L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFState? =

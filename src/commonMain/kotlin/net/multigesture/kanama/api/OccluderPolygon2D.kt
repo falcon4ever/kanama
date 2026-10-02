@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
         @JvmName("setPolygonClosedProperty")
         set(value) = setPolygonClosed(value)
 
-    var cullMode: Long
+    var cullMode: OccluderPolygon2D.CullMode
         @JvmName("cullModeProperty")
         get() = getCullMode()
         @JvmName("setCullModeProperty")
@@ -45,9 +46,9 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: OccluderPolygon2D.set_cull_mode
      */
-    fun setCullMode(cullMode: Long) {
+    fun setCullMode(cullMode: OccluderPolygon2D.CullMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, cullMode)
+        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, cullMode.value)
     }
 
     /**
@@ -55,9 +56,9 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: OccluderPolygon2D.get_cull_mode
      */
-    fun getCullMode(): Long {
+    fun getCullMode(): OccluderPolygon2D.CullMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment)
+        return OccluderPolygon2D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment))
     }
 
     /**
@@ -80,11 +81,31 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
-    companion object {
-        const val CULL_DISABLED: Long = 0L
-        const val CULL_CLOCKWISE: Long = 1L
-        const val CULL_COUNTER_CLOCKWISE: Long = 2L
+    @JvmInline
+    value class CullMode(val value: Long) {
+        companion object {
+            /**
+             * Culling is disabled. See `cull_mode`.
+             *
+             * Generated from Godot docs: OccluderPolygon2D.CULL_DISABLED
+             */
+            val DISABLED: CullMode get() = CullMode(0L)
+            /**
+             * Culling is performed in the clockwise direction. See `cull_mode`.
+             *
+             * Generated from Godot docs: OccluderPolygon2D.CULL_CLOCKWISE
+             */
+            val CLOCKWISE: CullMode get() = CullMode(1L)
+            /**
+             * Culling is performed in the counterclockwise direction. See `cull_mode`.
+             *
+             * Generated from Godot docs: OccluderPolygon2D.CULL_COUNTER_CLOCKWISE
+             */
+            val COUNTER_CLOCKWISE: CullMode get() = CullMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OccluderPolygon2D? =
             wrap(handle.segment)

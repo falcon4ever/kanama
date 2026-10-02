@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,7 +13,7 @@ import net.multigesture.kanama.types.NodePath
  * Generated from Godot docs: VisibleOnScreenEnabler3D
  */
 class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(handle) {
-    var enableMode: Long
+    var enableMode: VisibleOnScreenEnabler3D.EnableMode
         @JvmName("enableModeProperty")
         get() = getEnableMode()
         @JvmName("setEnableModeProperty")
@@ -30,8 +31,8 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
      *
      * Generated from Godot docs: VisibleOnScreenEnabler3D.set_enable_mode
      */
-    fun setEnableMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnableModeBind, segment, mode)
+    fun setEnableMode(mode: VisibleOnScreenEnabler3D.EnableMode) {
+        ObjectCalls.ptrcallWithLongArg(setEnableModeBind, segment, mode.value)
     }
 
     /**
@@ -40,8 +41,8 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
      *
      * Generated from Godot docs: VisibleOnScreenEnabler3D.get_enable_mode
      */
-    fun getEnableMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnableModeBind, segment)
+    fun getEnableMode(): VisibleOnScreenEnabler3D.EnableMode {
+        return VisibleOnScreenEnabler3D.EnableMode(ObjectCalls.ptrcallNoArgsRetLong(getEnableModeBind, segment))
     }
 
     /**
@@ -68,11 +69,31 @@ class VisibleOnScreenEnabler3D(handle: GodotHandle) : VisibleOnScreenNotifier3D(
         return ObjectCalls.ptrcallNoArgsRetNodePath(getEnableNodePathBind, segment)
     }
 
-    companion object {
-        const val ENABLE_MODE_INHERIT: Long = 0L
-        const val ENABLE_MODE_ALWAYS: Long = 1L
-        const val ENABLE_MODE_WHEN_PAUSED: Long = 2L
+    @JvmInline
+    value class EnableMode(val value: Long) {
+        companion object {
+            /**
+             * Corresponds to `Node.PROCESS_MODE_INHERIT`.
+             *
+             * Generated from Godot docs: VisibleOnScreenEnabler3D.ENABLE_MODE_INHERIT
+             */
+            val INHERIT: EnableMode get() = EnableMode(0L)
+            /**
+             * Corresponds to `Node.PROCESS_MODE_ALWAYS`.
+             *
+             * Generated from Godot docs: VisibleOnScreenEnabler3D.ENABLE_MODE_ALWAYS
+             */
+            val ALWAYS: EnableMode get() = EnableMode(1L)
+            /**
+             * Corresponds to `Node.PROCESS_MODE_WHEN_PAUSED`.
+             *
+             * Generated from Godot docs: VisibleOnScreenEnabler3D.ENABLE_MODE_WHEN_PAUSED
+             */
+            val WHEN_PAUSED: EnableMode get() = EnableMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisibleOnScreenEnabler3D? =
             wrap(handle.segment)

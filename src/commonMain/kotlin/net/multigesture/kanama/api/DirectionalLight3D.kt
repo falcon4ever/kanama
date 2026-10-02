@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: DirectionalLight3D
  */
 class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
-    var directionalShadowMode: Long
+    var directionalShadowMode: DirectionalLight3D.ShadowMode
         @JvmName("directionalShadowModeProperty")
         get() = getShadowMode()
         @JvmName("setDirectionalShadowModeProperty")
@@ -19,21 +20,21 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
 
     var directionalShadowSplit1: Double
         @JvmName("directionalShadowSplit1Property")
-        get() = getParam(10L)
+        get() = getParam(Light3D.Param.SHADOW_SPLIT_1_OFFSET)
         @JvmName("setDirectionalShadowSplit1Property")
-        set(value) = setParam(10L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_SPLIT_1_OFFSET, value)
 
     var directionalShadowSplit2: Double
         @JvmName("directionalShadowSplit2Property")
-        get() = getParam(11L)
+        get() = getParam(Light3D.Param.SHADOW_SPLIT_2_OFFSET)
         @JvmName("setDirectionalShadowSplit2Property")
-        set(value) = setParam(11L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_SPLIT_2_OFFSET, value)
 
     var directionalShadowSplit3: Double
         @JvmName("directionalShadowSplit3Property")
-        get() = getParam(12L)
+        get() = getParam(Light3D.Param.SHADOW_SPLIT_3_OFFSET)
         @JvmName("setDirectionalShadowSplit3Property")
-        set(value) = setParam(12L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_SPLIT_3_OFFSET, value)
 
     var directionalShadowBlendSplits: Boolean
         @JvmName("directionalShadowBlendSplitsProperty")
@@ -43,23 +44,23 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
 
     var directionalShadowFadeStart: Double
         @JvmName("directionalShadowFadeStartProperty")
-        get() = getParam(13L)
+        get() = getParam(Light3D.Param.SHADOW_FADE_START)
         @JvmName("setDirectionalShadowFadeStartProperty")
-        set(value) = setParam(13L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_FADE_START, value)
 
     var directionalShadowMaxDistance: Double
         @JvmName("directionalShadowMaxDistanceProperty")
-        get() = getParam(9L)
+        get() = getParam(Light3D.Param.SHADOW_MAX_DISTANCE)
         @JvmName("setDirectionalShadowMaxDistanceProperty")
-        set(value) = setParam(9L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_MAX_DISTANCE, value)
 
     var directionalShadowPancakeSize: Double
         @JvmName("directionalShadowPancakeSizeProperty")
-        get() = getParam(16L)
+        get() = getParam(Light3D.Param.SHADOW_PANCAKE_SIZE)
         @JvmName("setDirectionalShadowPancakeSizeProperty")
-        set(value) = setParam(16L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_PANCAKE_SIZE, value)
 
-    var skyMode: Long
+    var skyMode: DirectionalLight3D.SkyMode
         @JvmName("skyModeProperty")
         get() = getSkyMode()
         @JvmName("setSkyModeProperty")
@@ -70,8 +71,8 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      *
      * Generated from Godot docs: DirectionalLight3D.set_shadow_mode
      */
-    fun setShadowMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode)
+    fun setShadowMode(mode: DirectionalLight3D.ShadowMode) {
+        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode.value)
     }
 
     /**
@@ -79,8 +80,8 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      *
      * Generated from Godot docs: DirectionalLight3D.get_shadow_mode
      */
-    fun getShadowMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment)
+    fun getShadowMode(): DirectionalLight3D.ShadowMode {
+        return DirectionalLight3D.ShadowMode(ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment))
     }
 
     /**
@@ -111,8 +112,8 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      *
      * Generated from Godot docs: DirectionalLight3D.set_sky_mode
      */
-    fun setSkyMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSkyModeBind, segment, mode)
+    fun setSkyMode(mode: DirectionalLight3D.SkyMode) {
+        ObjectCalls.ptrcallWithLongArg(setSkyModeBind, segment, mode.value)
     }
 
     /**
@@ -121,18 +122,66 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      *
      * Generated from Godot docs: DirectionalLight3D.get_sky_mode
      */
-    fun getSkyMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkyModeBind, segment)
+    fun getSkyMode(): DirectionalLight3D.SkyMode {
+        return DirectionalLight3D.SkyMode(ObjectCalls.ptrcallNoArgsRetLong(getSkyModeBind, segment))
+    }
+
+    @JvmInline
+    value class ShadowMode(val value: Long) {
+        companion object {
+            /**
+             * Renders the entire scene's shadow map from an orthogonal point of view. This is the fastest
+             * directional shadow mode. May result in blurrier shadows on close objects.
+             *
+             * Generated from Godot docs: DirectionalLight3D.SHADOW_ORTHOGONAL
+             */
+            val ORTHOGONAL: ShadowMode get() = ShadowMode(0L)
+            /**
+             * Splits the view frustum in 2 areas, each with its own shadow map. This shadow mode is a
+             * compromise between `SHADOW_ORTHOGONAL` and `SHADOW_PARALLEL_4_SPLITS` in terms of performance.
+             *
+             * Generated from Godot docs: DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+             */
+            val PARALLEL_2_SPLITS: ShadowMode get() = ShadowMode(1L)
+            /**
+             * Splits the view frustum in 4 areas, each with its own shadow map. This is the slowest
+             * directional shadow mode.
+             *
+             * Generated from Godot docs: DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+             */
+            val PARALLEL_4_SPLITS: ShadowMode get() = ShadowMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class SkyMode(val value: Long) {
+        companion object {
+            /**
+             * Makes the light visible in both scene lighting and sky rendering.
+             *
+             * Generated from Godot docs: DirectionalLight3D.SKY_MODE_LIGHT_AND_SKY
+             */
+            val LIGHT_AND_SKY: SkyMode get() = SkyMode(0L)
+            /**
+             * Makes the light visible in scene lighting only (including direct lighting and global
+             * illumination). When using this mode, the light will not be visible from sky shaders.
+             *
+             * Generated from Godot docs: DirectionalLight3D.SKY_MODE_LIGHT_ONLY
+             */
+            val LIGHT_ONLY: SkyMode get() = SkyMode(1L)
+            /**
+             * Makes the light visible to sky shaders only. When using this mode the light will not cast light
+             * into the scene (either through direct lighting or through global illumination), but can be
+             * accessed through sky shaders. This can be useful, for example, when you want to control sky
+             * effects without illuminating the scene (during a night cycle, for example).
+             *
+             * Generated from Godot docs: DirectionalLight3D.SKY_MODE_SKY_ONLY
+             */
+            val SKY_ONLY: SkyMode get() = SkyMode(2L)
+        }
     }
 
     companion object {
-        const val SHADOW_ORTHOGONAL: Long = 0L
-        const val SHADOW_PARALLEL_2_SPLITS: Long = 1L
-        const val SHADOW_PARALLEL_4_SPLITS: Long = 2L
-        const val SKY_MODE_LIGHT_AND_SKY: Long = 0L
-        const val SKY_MODE_LIGHT_ONLY: Long = 1L
-        const val SKY_MODE_SKY_ONLY: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): DirectionalLight3D? =
             wrap(handle.segment)

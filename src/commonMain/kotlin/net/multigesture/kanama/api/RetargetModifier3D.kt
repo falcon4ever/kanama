@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -25,7 +26,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setUseGlobalPoseProperty")
         set(value) = setUseGlobalPose(value)
 
-    var enable: Long
+    var enable: RetargetModifier3D.TransformFlag
         @JvmName("enableProperty")
         get() = getEnableFlags()
         @JvmName("setEnableProperty")
@@ -87,8 +88,8 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: RetargetModifier3D.set_enable_flags
      */
-    fun setEnableFlags(enableFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnableFlagsBind, segment, enableFlags)
+    fun setEnableFlags(enableFlags: RetargetModifier3D.TransformFlag) {
+        ObjectCalls.ptrcallWithLongArg(setEnableFlagsBind, segment, enableFlags.value)
     }
 
     /**
@@ -97,8 +98,8 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: RetargetModifier3D.get_enable_flags
      */
-    fun getEnableFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnableFlagsBind, segment)
+    fun getEnableFlags(): RetargetModifier3D.TransformFlag {
+        return RetargetModifier3D.TransformFlag(ObjectCalls.ptrcallNoArgsRetLong(getEnableFlagsBind, segment))
     }
 
     /**
@@ -155,12 +156,47 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isScaleEnabledBind, segment)
     }
 
-    companion object {
-        const val TRANSFORM_FLAG_POSITION: Long = 1L
-        const val TRANSFORM_FLAG_ROTATION: Long = 2L
-        const val TRANSFORM_FLAG_SCALE: Long = 4L
-        const val TRANSFORM_FLAG_ALL: Long = 7L
+    @JvmInline
+    value class TransformFlag(val value: Long) {
+        infix fun or(other: TransformFlag): TransformFlag = TransformFlag(value or other.value)
 
+        infix fun and(other: TransformFlag): TransformFlag = TransformFlag(value and other.value)
+
+        infix fun xor(other: TransformFlag): TransformFlag = TransformFlag(value xor other.value)
+
+        fun inv(): TransformFlag = TransformFlag(value.inv())
+
+        operator fun contains(other: TransformFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * If set, allows to retarget the position.
+             *
+             * Generated from Godot docs: RetargetModifier3D.TRANSFORM_FLAG_POSITION
+             */
+            val POSITION: TransformFlag get() = TransformFlag(1L)
+            /**
+             * If set, allows to retarget the rotation.
+             *
+             * Generated from Godot docs: RetargetModifier3D.TRANSFORM_FLAG_ROTATION
+             */
+            val ROTATION: TransformFlag get() = TransformFlag(2L)
+            /**
+             * If set, allows to retarget the scale.
+             *
+             * Generated from Godot docs: RetargetModifier3D.TRANSFORM_FLAG_SCALE
+             */
+            val SCALE: TransformFlag get() = TransformFlag(4L)
+            /**
+             * If set, allows to retarget the position/rotation/scale.
+             *
+             * Generated from Godot docs: RetargetModifier3D.TRANSFORM_FLAG_ALL
+             */
+            val ALL: TransformFlag get() = TransformFlag(7L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RetargetModifier3D? =
             wrap(handle.segment)

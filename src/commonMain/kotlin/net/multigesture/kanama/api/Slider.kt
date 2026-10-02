@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -35,7 +36,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
         @JvmName("setTicksOnBordersProperty")
         set(value) = setTicksOnBorders(value)
 
-    var ticksPosition: Long
+    var ticksPosition: Slider.TickPosition
         @JvmName("ticksPositionProperty")
         get() = getTicksPosition()
         @JvmName("setTicksPositionProperty")
@@ -84,8 +85,8 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: Slider.get_ticks_position
      */
-    fun getTicksPosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, segment)
+    fun getTicksPosition(): Slider.TickPosition {
+        return Slider.TickPosition(ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, segment))
     }
 
     /**
@@ -93,8 +94,8 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: Slider.set_ticks_position
      */
-    fun setTicksPosition(ticksOnBorder: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, segment, ticksOnBorder)
+    fun setTicksPosition(ticksOnBorder: Slider.TickPosition) {
+        ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, segment, ticksOnBorder.value)
     }
 
     /**
@@ -138,12 +139,37 @@ open class Slider(handle: GodotHandle) : Range(handle) {
         const val dragEnded: String = "drag_ended"
     }
 
-    companion object {
-        const val TICK_POSITION_BOTTOM_RIGHT: Long = 0L
-        const val TICK_POSITION_TOP_LEFT: Long = 1L
-        const val TICK_POSITION_BOTH: Long = 2L
-        const val TICK_POSITION_CENTER: Long = 3L
+    @JvmInline
+    value class TickPosition(val value: Long) {
+        companion object {
+            /**
+             * Places the ticks at the bottom of the `HSlider`, or right of the `VSlider`.
+             *
+             * Generated from Godot docs: Slider.TICK_POSITION_BOTTOM_RIGHT
+             */
+            val BOTTOM_RIGHT: TickPosition get() = TickPosition(0L)
+            /**
+             * Places the ticks at the top of the `HSlider`, or left of the `VSlider`.
+             *
+             * Generated from Godot docs: Slider.TICK_POSITION_TOP_LEFT
+             */
+            val TOP_LEFT: TickPosition get() = TickPosition(1L)
+            /**
+             * Places the ticks at the both sides of the slider.
+             *
+             * Generated from Godot docs: Slider.TICK_POSITION_BOTH
+             */
+            val BOTH: TickPosition get() = TickPosition(2L)
+            /**
+             * Places the ticks at the center of the slider.
+             *
+             * Generated from Godot docs: Slider.TICK_POSITION_CENTER
+             */
+            val CENTER: TickPosition get() = TickPosition(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Slider? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setShowGridProperty")
         set(value) = setShowGrid(value)
 
-    var gridPattern: Long
+    var gridPattern: GraphEdit.GridPattern
         @JvmName("gridPatternProperty")
         get() = getGridPattern()
         @JvmName("setGridPatternProperty")
@@ -43,7 +44,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setSnappingDistanceProperty")
         set(value) = setSnappingDistance(value)
 
-    var panningScheme: Long
+    var panningScheme: GraphEdit.PanningScheme
         @JvmName("panningSchemeProperty")
         get() = getPanningScheme()
         @JvmName("setPanningSchemeProperty")
@@ -171,8 +172,8 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: GraphEdit.connect_node
      */
-    fun connectNode(fromNode: String, fromPort: Int, toNode: String, toPort: Int, keepAlive: Boolean = false): Long {
-        return ObjectCalls.ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(connectNodeBind, segment, fromNode, fromPort, toNode, toPort, keepAlive)
+    fun connectNode(fromNode: String, fromPort: Int, toNode: String, toPort: Int, keepAlive: Boolean = false): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringNameIntStringNameIntBoolArgsRetLong(connectNodeBind, segment, fromNode, fromPort, toNode, toPort, keepAlive))
     }
 
     /**
@@ -432,8 +433,8 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: GraphEdit.set_panning_scheme
      */
-    fun setPanningScheme(scheme: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPanningSchemeBind, segment, scheme)
+    fun setPanningScheme(scheme: GraphEdit.PanningScheme) {
+        ObjectCalls.ptrcallWithLongArg(setPanningSchemeBind, segment, scheme.value)
     }
 
     /**
@@ -441,8 +442,8 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: GraphEdit.get_panning_scheme
      */
-    fun getPanningScheme(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPanningSchemeBind, segment)
+    fun getPanningScheme(): GraphEdit.PanningScheme {
+        return GraphEdit.PanningScheme(ObjectCalls.ptrcallNoArgsRetLong(getPanningSchemeBind, segment))
     }
 
     /**
@@ -540,8 +541,8 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: GraphEdit.set_grid_pattern
      */
-    fun setGridPattern(pattern: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGridPatternBind, segment, pattern)
+    fun setGridPattern(pattern: GraphEdit.GridPattern) {
+        ObjectCalls.ptrcallWithLongArg(setGridPatternBind, segment, pattern.value)
     }
 
     /**
@@ -549,8 +550,8 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: GraphEdit.get_grid_pattern
      */
-    fun getGridPattern(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGridPatternBind, segment)
+    fun getGridPattern(): GraphEdit.GridPattern {
+        return GraphEdit.GridPattern(ObjectCalls.ptrcallNoArgsRetLong(getGridPatternBind, segment))
     }
 
     /**
@@ -900,12 +901,43 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         const val scrollOffsetChanged: String = "scroll_offset_changed"
     }
 
-    companion object {
-        const val SCROLL_ZOOMS: Long = 0L
-        const val SCROLL_PANS: Long = 1L
-        const val GRID_PATTERN_LINES: Long = 0L
-        const val GRID_PATTERN_DOTS: Long = 1L
+    @JvmInline
+    value class PanningScheme(val value: Long) {
+        companion object {
+            /**
+             * Mouse Wheel will zoom, Ctrl + Mouse Wheel will move the view.
+             *
+             * Generated from Godot docs: GraphEdit.SCROLL_ZOOMS
+             */
+            val ZOOMS: PanningScheme get() = PanningScheme(0L)
+            /**
+             * Mouse Wheel will move the view, Ctrl + Mouse Wheel will zoom.
+             *
+             * Generated from Godot docs: GraphEdit.SCROLL_PANS
+             */
+            val PANS: PanningScheme get() = PanningScheme(1L)
+        }
+    }
 
+    @JvmInline
+    value class GridPattern(val value: Long) {
+        companion object {
+            /**
+             * Draw the grid using solid lines.
+             *
+             * Generated from Godot docs: GraphEdit.GRID_PATTERN_LINES
+             */
+            val LINES: GridPattern get() = GridPattern(0L)
+            /**
+             * Draw the grid using dots.
+             *
+             * Generated from Godot docs: GraphEdit.GRID_PATTERN_DOTS
+             */
+            val DOTS: GridPattern get() = GridPattern(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GraphEdit? =
             wrap(handle.segment)

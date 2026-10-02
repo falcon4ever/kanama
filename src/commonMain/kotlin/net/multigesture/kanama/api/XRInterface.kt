@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,11 +22,11 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setInterfaceIsPrimaryProperty")
         set(value) = setPrimary(value)
 
-    val xrPlayAreaMode: Long
+    val xrPlayAreaMode: XRInterface.PlayAreaMode
         @JvmName("xrPlayAreaModeProperty")
         get() = getPlayAreaMode()
 
-    val environmentBlendMode: Long
+    val environmentBlendMode: XRInterface.EnvironmentBlendMode
         @JvmName("environmentBlendModeProperty")
         get() = getEnvironmentBlendMode()
 
@@ -136,9 +137,9 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRInterface.get_tracking_status
      */
-    fun getTrackingStatus(): Long {
+    fun getTrackingStatus(): XRInterface.TrackingStatus {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, segment)
+        return XRInterface.TrackingStatus(ObjectCalls.ptrcallNoArgsRetLong(getTrackingStatusBind, segment))
     }
 
     /**
@@ -183,9 +184,9 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRInterface.supports_play_area_mode
      */
-    fun supportsPlayAreaMode(mode: Long): Boolean {
+    fun supportsPlayAreaMode(mode: XRInterface.PlayAreaMode): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, segment, mode)
+        return ObjectCalls.ptrcallWithLongArgRetBool(supportsPlayAreaModeBind, segment, mode.value)
     }
 
     /**
@@ -193,9 +194,9 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRInterface.get_play_area_mode
      */
-    fun getPlayAreaMode(): Long {
+    fun getPlayAreaMode(): XRInterface.PlayAreaMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, segment)
+        return XRInterface.PlayAreaMode(ObjectCalls.ptrcallNoArgsRetLong(getPlayAreaModeBind, segment))
     }
 
     /**
@@ -203,9 +204,9 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRInterface.set_play_area_mode
      */
-    fun setPlayAreaMode(mode: Long): Boolean {
+    fun setPlayAreaMode(mode: XRInterface.PlayAreaMode): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, segment, mode)
+        return ObjectCalls.ptrcallWithLongArgRetBool(setPlayAreaModeBind, segment, mode.value)
     }
 
     /**
@@ -332,9 +333,9 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRInterface.set_environment_blend_mode
      */
-    fun setEnvironmentBlendMode(mode: Long): Boolean {
+    fun setEnvironmentBlendMode(mode: XRInterface.EnvironmentBlendMode): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, segment, mode)
+        return ObjectCalls.ptrcallWithLongArgRetBool(setEnvironmentBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -343,41 +344,203 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRInterface.get_environment_blend_mode
      */
-    fun getEnvironmentBlendMode(): Long {
+    fun getEnvironmentBlendMode(): XRInterface.EnvironmentBlendMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, segment)
+        return XRInterface.EnvironmentBlendMode(ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, segment))
     }
 
     object Signals {
         const val playAreaChanged: String = "play_area_changed"
     }
 
-    companion object {
-        const val XR_NONE: Long = 0L
-        const val XR_MONO: Long = 1L
-        const val XR_STEREO: Long = 2L
-        const val XR_QUAD: Long = 4L
-        const val XR_VR: Long = 8L
-        const val XR_AR: Long = 16L
-        const val XR_EXTERNAL: Long = 32L
-        const val XR_NORMAL_TRACKING: Long = 0L
-        const val XR_EXCESSIVE_MOTION: Long = 1L
-        const val XR_INSUFFICIENT_FEATURES: Long = 2L
-        const val XR_UNKNOWN_TRACKING: Long = 3L
-        const val XR_NOT_TRACKING: Long = 4L
-        const val XR_PLAY_AREA_UNKNOWN: Long = 0L
-        const val XR_PLAY_AREA_3DOF: Long = 1L
-        const val XR_PLAY_AREA_SITTING: Long = 2L
-        const val XR_PLAY_AREA_ROOMSCALE: Long = 3L
-        const val XR_PLAY_AREA_STAGE: Long = 4L
-        const val XR_PLAY_AREA_CUSTOM: Long = 2147483647L
-        const val XR_ENV_BLEND_MODE_OPAQUE: Long = 0L
-        const val XR_ENV_BLEND_MODE_ADDITIVE: Long = 1L
-        const val XR_ENV_BLEND_MODE_ALPHA_BLEND: Long = 2L
-        const val XR_VRS_TEXTURE_FORMAT_UNIFIED: Long = 0L
-        const val XR_VRS_TEXTURE_FORMAT_FRAGMENT_SHADING_RATE: Long = 1L
-        const val XR_VRS_TEXTURE_FORMAT_FRAGMENT_DENSITY_MAP: Long = 2L
+    @JvmInline
+    value class Capabilities(val value: Long) {
+        companion object {
+            /**
+             * No XR capabilities.
+             *
+             * Generated from Godot docs: XRInterface.XR_NONE
+             */
+            val NONE: Capabilities get() = Capabilities(0L)
+            /**
+             * This interface can work with normal rendering output (non-HMD based AR).
+             *
+             * Generated from Godot docs: XRInterface.XR_MONO
+             */
+            val MONO: Capabilities get() = Capabilities(1L)
+            /**
+             * This interface supports stereoscopic rendering.
+             *
+             * Generated from Godot docs: XRInterface.XR_STEREO
+             */
+            val STEREO: Capabilities get() = Capabilities(2L)
+            /**
+             * This interface supports quad rendering (not yet supported by Godot).
+             *
+             * Generated from Godot docs: XRInterface.XR_QUAD
+             */
+            val QUAD: Capabilities get() = Capabilities(4L)
+            /**
+             * This interface supports VR.
+             *
+             * Generated from Godot docs: XRInterface.XR_VR
+             */
+            val VR: Capabilities get() = Capabilities(8L)
+            /**
+             * This interface supports AR (video background and real world tracking).
+             *
+             * Generated from Godot docs: XRInterface.XR_AR
+             */
+            val AR: Capabilities get() = Capabilities(16L)
+            /**
+             * This interface outputs to an external device. If the main viewport is used, the on screen output
+             * is an unmodified buffer of either the left or right eye (stretched if the viewport size is not
+             * changed to the same aspect ratio of `get_render_target_size`). Using a separate viewport node
+             * frees up the main viewport for other purposes.
+             *
+             * Generated from Godot docs: XRInterface.XR_EXTERNAL
+             */
+            val EXTERNAL: Capabilities get() = Capabilities(32L)
+        }
+    }
 
+    @JvmInline
+    value class TrackingStatus(val value: Long) {
+        companion object {
+            /**
+             * Tracking is behaving as expected.
+             *
+             * Generated from Godot docs: XRInterface.XR_NORMAL_TRACKING
+             */
+            val NORMAL_TRACKING: TrackingStatus get() = TrackingStatus(0L)
+            /**
+             * Tracking is hindered by excessive motion (the player is moving faster than tracking can keep
+             * up).
+             *
+             * Generated from Godot docs: XRInterface.XR_EXCESSIVE_MOTION
+             */
+            val EXCESSIVE_MOTION: TrackingStatus get() = TrackingStatus(1L)
+            /**
+             * Tracking is hindered by insufficient features, it's too dark (for camera-based tracking), player
+             * is blocked, etc.
+             *
+             * Generated from Godot docs: XRInterface.XR_INSUFFICIENT_FEATURES
+             */
+            val INSUFFICIENT_FEATURES: TrackingStatus get() = TrackingStatus(2L)
+            /**
+             * We don't know the status of the tracking or this interface does not provide feedback.
+             *
+             * Generated from Godot docs: XRInterface.XR_UNKNOWN_TRACKING
+             */
+            val UNKNOWN_TRACKING: TrackingStatus get() = TrackingStatus(3L)
+            /**
+             * Tracking is not functional (camera not plugged in or obscured, lighthouses turned off, etc.).
+             *
+             * Generated from Godot docs: XRInterface.XR_NOT_TRACKING
+             */
+            val NOT_TRACKING: TrackingStatus get() = TrackingStatus(4L)
+        }
+    }
+
+    @JvmInline
+    value class PlayAreaMode(val value: Long) {
+        companion object {
+            /**
+             * Play area mode not set or not available.
+             *
+             * Generated from Godot docs: XRInterface.XR_PLAY_AREA_UNKNOWN
+             */
+            val UNKNOWN: PlayAreaMode get() = PlayAreaMode(0L)
+            /**
+             * Play area only supports orientation tracking, no positional tracking, area will center around
+             * player.
+             *
+             * Generated from Godot docs: XRInterface.XR_PLAY_AREA_3DOF
+             */
+            val AREA_3DOF: PlayAreaMode get() = PlayAreaMode(1L)
+            /**
+             * Player is in seated position, limited positional tracking, fixed guardian around player.
+             *
+             * Generated from Godot docs: XRInterface.XR_PLAY_AREA_SITTING
+             */
+            val SITTING: PlayAreaMode get() = PlayAreaMode(2L)
+            /**
+             * Player is free to move around, full positional tracking.
+             *
+             * Generated from Godot docs: XRInterface.XR_PLAY_AREA_ROOMSCALE
+             */
+            val ROOMSCALE: PlayAreaMode get() = PlayAreaMode(3L)
+            /**
+             * Same as `XR_PLAY_AREA_ROOMSCALE` but origin point is fixed to the center of the physical space.
+             * In this mode, system-level recentering may be disabled, requiring the use of
+             * `XRServer.center_on_hmd`.
+             *
+             * Generated from Godot docs: XRInterface.XR_PLAY_AREA_STAGE
+             */
+            val STAGE: PlayAreaMode get() = PlayAreaMode(4L)
+            /**
+             * Custom play area set by a GDExtension.
+             *
+             * Generated from Godot docs: XRInterface.XR_PLAY_AREA_CUSTOM
+             */
+            val CUSTOM: PlayAreaMode get() = PlayAreaMode(2147483647L)
+        }
+    }
+
+    @JvmInline
+    value class EnvironmentBlendMode(val value: Long) {
+        companion object {
+            /**
+             * Opaque blend mode. This is typically used for VR devices.
+             *
+             * Generated from Godot docs: XRInterface.XR_ENV_BLEND_MODE_OPAQUE
+             */
+            val OPAQUE: EnvironmentBlendMode get() = EnvironmentBlendMode(0L)
+            /**
+             * Additive blend mode. This is typically used for AR devices or VR devices with passthrough.
+             *
+             * Generated from Godot docs: XRInterface.XR_ENV_BLEND_MODE_ADDITIVE
+             */
+            val ADDITIVE: EnvironmentBlendMode get() = EnvironmentBlendMode(1L)
+            /**
+             * Alpha blend mode. This is typically used for AR or VR devices with passthrough capabilities. The
+             * alpha channel controls how much of the passthrough is visible. Alpha of 0.0 means the
+             * passthrough is visible and this pixel works in ADDITIVE mode. Alpha of 1.0 means that the
+             * passthrough is not visible and this pixel works in OPAQUE mode.
+             *
+             * Generated from Godot docs: XRInterface.XR_ENV_BLEND_MODE_ALPHA_BLEND
+             */
+            val ALPHA_BLEND: EnvironmentBlendMode get() = EnvironmentBlendMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class VRSTextureFormat(val value: Long) {
+        companion object {
+            /**
+             * The texture format is the same as returned by `XRVRS.make_vrs_texture`.
+             *
+             * Generated from Godot docs: XRInterface.XR_VRS_TEXTURE_FORMAT_UNIFIED
+             */
+            val UNIFIED: VRSTextureFormat get() = VRSTextureFormat(0L)
+            /**
+             * The texture format is the same as expected by the Vulkan `VK_KHR_fragment_shading_rate`
+             * extension.
+             *
+             * Generated from Godot docs: XRInterface.XR_VRS_TEXTURE_FORMAT_FRAGMENT_SHADING_RATE
+             */
+            val FRAGMENT_SHADING_RATE: VRSTextureFormat get() = VRSTextureFormat(1L)
+            /**
+             * The texture format is the same as expected by the Vulkan `VK_EXT_fragment_density_map`
+             * extension.
+             *
+             * Generated from Godot docs: XRInterface.XR_VRS_TEXTURE_FORMAT_FRAGMENT_DENSITY_MAP
+             */
+            val FRAGMENT_DENSITY_MAP: VRSTextureFormat get() = VRSTextureFormat(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRInterface? =
             wrap(handle.segment)

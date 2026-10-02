@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: RDPipelineMultisampleState
  */
 class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
-    var sampleCount: Long
+    var sampleCount: RenderingDevice.TextureSamples
         @JvmName("sampleCountProperty")
         get() = getSampleCount()
         @JvmName("setSampleCountProperty")
@@ -53,9 +53,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineMultisampleState.set_sample_count
      */
-    fun setSampleCount(pMember: Long) {
+    fun setSampleCount(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSampleCountBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSampleCountBind, segment, pMember.value)
     }
 
     /**
@@ -64,9 +64,9 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineMultisampleState.get_sample_count
      */
-    fun getSampleCount(): Long {
+    fun getSampleCount(): RenderingDevice.TextureSamples {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, segment)
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getSampleCountBind, segment))
     }
 
     /**

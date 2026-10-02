@@ -11,7 +11,7 @@ import net.multigesture.kanama.types.Color
  * Generated from Godot docs: LightmapGI
  */
 class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
-    var quality: Long
+    var quality: LightmapGI.BakeQuality
         @JvmName("qualityProperty")
         get() = getBakeQuality()
         @JvmName("setQualityProperty")
@@ -47,7 +47,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setDirectionalProperty")
         set(value) = setDirectional(value)
 
-    var shadowmaskMode: Long
+    var shadowmaskMode: LightmapGIData.ShadowmaskMode
         @JvmName("shadowmaskModeProperty")
         get() = getShadowmaskMode()
         @JvmName("setShadowmaskModeProperty")
@@ -101,7 +101,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setMaxTextureSizeProperty")
         set(value) = setMaxTextureSize(value)
 
-    var environmentMode: Long
+    var environmentMode: LightmapGI.EnvironmentMode
         @JvmName("environmentModeProperty")
         get() = getEnvironmentMode()
         @JvmName("setEnvironmentModeProperty")
@@ -131,7 +131,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setCameraAttributesProperty")
         set(value) = setCameraAttributes(value)
 
-    var generateProbesSubdiv: Long
+    var generateProbesSubdiv: LightmapGI.GenerateProbes
         @JvmName("generateProbesSubdivProperty")
         get() = getGenerateProbes()
         @JvmName("setGenerateProbesSubdivProperty")
@@ -151,12 +151,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         return LightmapGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, segment))
     }
 
-    fun setBakeQuality(bakeQuality: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, segment, bakeQuality)
+    fun setBakeQuality(bakeQuality: LightmapGI.BakeQuality) {
+        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, segment, bakeQuality.value)
     }
 
-    fun getBakeQuality(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, segment)
+    fun getBakeQuality(): LightmapGI.BakeQuality {
+        return LightmapGI.BakeQuality(ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, segment))
     }
 
     fun setBounces(bounces: Int) {
@@ -175,12 +175,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBounceIndirectEnergyBind, segment)
     }
 
-    fun setGenerateProbes(subdivision: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, segment, subdivision)
+    fun setGenerateProbes(subdivision: LightmapGI.GenerateProbes) {
+        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, segment, subdivision.value)
     }
 
-    fun getGenerateProbes(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, segment)
+    fun getGenerateProbes(): LightmapGI.GenerateProbes {
+        return LightmapGI.GenerateProbes(ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, segment))
     }
 
     fun setBias(bias: Double) {
@@ -191,12 +191,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, segment)
     }
 
-    fun setEnvironmentMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, segment, mode)
+    fun setEnvironmentMode(mode: LightmapGI.EnvironmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, segment, mode.value)
     }
 
-    fun getEnvironmentMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, segment)
+    fun getEnvironmentMode(): LightmapGI.EnvironmentMode {
+        return LightmapGI.EnvironmentMode(ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, segment))
     }
 
     fun setEnvironmentCustomSky(sky: Sky?) {
@@ -295,12 +295,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isDirectionalBind, segment)
     }
 
-    fun setShadowmaskMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, segment, mode)
+    fun setShadowmaskMode(mode: LightmapGIData.ShadowmaskMode) {
+        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, segment, mode.value)
     }
 
-    fun getShadowmaskMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, segment)
+    fun getShadowmaskMode(): LightmapGIData.ShadowmaskMode {
+        return LightmapGIData.ShadowmaskMode(ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, segment))
     }
 
     fun setUseTextureForBounces(useTextureForBounces: Boolean) {
@@ -319,33 +319,52 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
-    companion object {
-        const val BAKE_QUALITY_LOW: Long = 0L
-        const val BAKE_QUALITY_MEDIUM: Long = 1L
-        const val BAKE_QUALITY_HIGH: Long = 2L
-        const val BAKE_QUALITY_ULTRA: Long = 3L
-        const val GENERATE_PROBES_DISABLED: Long = 0L
-        const val GENERATE_PROBES_SUBDIV_4: Long = 1L
-        const val GENERATE_PROBES_SUBDIV_8: Long = 2L
-        const val GENERATE_PROBES_SUBDIV_16: Long = 3L
-        const val GENERATE_PROBES_SUBDIV_32: Long = 4L
-        const val BAKE_ERROR_OK: Long = 0L
-        const val BAKE_ERROR_NO_SCENE_ROOT: Long = 1L
-        const val BAKE_ERROR_FOREIGN_DATA: Long = 2L
-        const val BAKE_ERROR_NO_LIGHTMAPPER: Long = 3L
-        const val BAKE_ERROR_NO_SAVE_PATH: Long = 4L
-        const val BAKE_ERROR_NO_MESHES: Long = 5L
-        const val BAKE_ERROR_MESHES_INVALID: Long = 6L
-        const val BAKE_ERROR_CANT_CREATE_IMAGE: Long = 7L
-        const val BAKE_ERROR_USER_ABORTED: Long = 8L
-        const val BAKE_ERROR_TEXTURE_SIZE_TOO_SMALL: Long = 9L
-        const val BAKE_ERROR_LIGHTMAP_TOO_SMALL: Long = 10L
-        const val BAKE_ERROR_ATLAS_TOO_SMALL: Long = 11L
-        const val ENVIRONMENT_MODE_DISABLED: Long = 0L
-        const val ENVIRONMENT_MODE_SCENE: Long = 1L
-        const val ENVIRONMENT_MODE_CUSTOM_SKY: Long = 2L
-        const val ENVIRONMENT_MODE_CUSTOM_COLOR: Long = 3L
+    value class BakeQuality(val value: Long) {
+        companion object {
+            val LOW: BakeQuality get() = BakeQuality(0L)
+            val MEDIUM: BakeQuality get() = BakeQuality(1L)
+            val HIGH: BakeQuality get() = BakeQuality(2L)
+            val ULTRA: BakeQuality get() = BakeQuality(3L)
+        }
+    }
 
+    value class GenerateProbes(val value: Long) {
+        companion object {
+            val DISABLED: GenerateProbes get() = GenerateProbes(0L)
+            val SUBDIV_4: GenerateProbes get() = GenerateProbes(1L)
+            val SUBDIV_8: GenerateProbes get() = GenerateProbes(2L)
+            val SUBDIV_16: GenerateProbes get() = GenerateProbes(3L)
+            val SUBDIV_32: GenerateProbes get() = GenerateProbes(4L)
+        }
+    }
+
+    value class BakeError(val value: Long) {
+        companion object {
+            val OK: BakeError get() = BakeError(0L)
+            val NO_SCENE_ROOT: BakeError get() = BakeError(1L)
+            val FOREIGN_DATA: BakeError get() = BakeError(2L)
+            val NO_LIGHTMAPPER: BakeError get() = BakeError(3L)
+            val NO_SAVE_PATH: BakeError get() = BakeError(4L)
+            val NO_MESHES: BakeError get() = BakeError(5L)
+            val MESHES_INVALID: BakeError get() = BakeError(6L)
+            val CANT_CREATE_IMAGE: BakeError get() = BakeError(7L)
+            val USER_ABORTED: BakeError get() = BakeError(8L)
+            val TEXTURE_SIZE_TOO_SMALL: BakeError get() = BakeError(9L)
+            val LIGHTMAP_TOO_SMALL: BakeError get() = BakeError(10L)
+            val ATLAS_TOO_SMALL: BakeError get() = BakeError(11L)
+        }
+    }
+
+    value class EnvironmentMode(val value: Long) {
+        companion object {
+            val DISABLED: EnvironmentMode get() = EnvironmentMode(0L)
+            val SCENE: EnvironmentMode get() = EnvironmentMode(1L)
+            val CUSTOM_SKY: EnvironmentMode get() = EnvironmentMode(2L)
+            val CUSTOM_COLOR: EnvironmentMode get() = EnvironmentMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LightmapGI? =
             wrap(handle.segment)

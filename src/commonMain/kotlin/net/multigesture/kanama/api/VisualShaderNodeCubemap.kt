@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -10,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeCubemap
  */
 class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
-    var source: Long
+    var source: VisualShaderNodeCubemap.Source
         @JvmName("sourceProperty")
         get() = getSource()
         @JvmName("setSourceProperty")
@@ -22,20 +23,20 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setCubeMapProperty")
         set(value) = setCubeMap(value)
 
-    var textureType: Long
+    var textureType: VisualShaderNodeCubemap.TextureType
         @JvmName("textureTypeProperty")
         get() = getTextureType()
         @JvmName("setTextureTypeProperty")
         set(value) = setTextureType(value)
 
-    fun setSource(value: Long) {
+    fun setSource(value: VisualShaderNodeCubemap.Source) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value)
+        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value.value)
     }
 
-    fun getSource(): Long {
+    fun getSource(): VisualShaderNodeCubemap.Source {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment)
+        return VisualShaderNodeCubemap.Source(ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment))
     }
 
     fun setCubeMap(value: TextureLayered?) {
@@ -48,25 +49,36 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
         return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCubeMapBind, segment))
     }
 
-    fun setTextureType(value: Long) {
+    fun setTextureType(value: VisualShaderNodeCubemap.TextureType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, value)
+        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, value.value)
     }
 
-    fun getTextureType(): Long {
+    fun getTextureType(): VisualShaderNodeCubemap.TextureType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment)
+        return VisualShaderNodeCubemap.TextureType(ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment))
+    }
+
+    @JvmInline
+    value class Source(val value: Long) {
+        companion object {
+            val TEXTURE: Source get() = Source(0L)
+            val PORT: Source get() = Source(1L)
+            val MAX: Source get() = Source(2L)
+        }
+    }
+
+    @JvmInline
+    value class TextureType(val value: Long) {
+        companion object {
+            val DATA: TextureType get() = TextureType(0L)
+            val COLOR: TextureType get() = TextureType(1L)
+            val NORMAL_MAP: TextureType get() = TextureType(2L)
+            val MAX: TextureType get() = TextureType(3L)
+        }
     }
 
     companion object {
-        const val SOURCE_TEXTURE: Long = 0L
-        const val SOURCE_PORT: Long = 1L
-        const val SOURCE_MAX: Long = 2L
-        const val TYPE_DATA: Long = 0L
-        const val TYPE_COLOR: Long = 1L
-        const val TYPE_NORMAL_MAP: Long = 2L
-        const val TYPE_MAX: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCubemap? =
             wrap(handle.segment)

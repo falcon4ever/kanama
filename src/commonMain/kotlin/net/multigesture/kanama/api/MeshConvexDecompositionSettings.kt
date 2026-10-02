@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -65,7 +66,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
         @JvmName("setNormalizeMeshProperty")
         set(value) = setNormalizeMesh(value)
 
-    var mode: Long
+    var mode: MeshConvexDecompositionSettings.Mode
         @JvmName("modeProperty")
         get() = getMode()
         @JvmName("setModeProperty")
@@ -276,9 +277,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: MeshConvexDecompositionSettings.set_mode
      */
-    fun setMode(mode: Long) {
+    fun setMode(mode: MeshConvexDecompositionSettings.Mode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
     }
 
     /**
@@ -286,9 +287,9 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: MeshConvexDecompositionSettings.get_mode
      */
-    fun getMode(): Long {
+    fun getMode(): MeshConvexDecompositionSettings.Mode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
+        return MeshConvexDecompositionSettings.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
     }
 
     /**
@@ -353,10 +354,25 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
         return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, segment)
     }
 
-    companion object {
-        const val CONVEX_DECOMPOSITION_MODE_VOXEL: Long = 0L
-        const val CONVEX_DECOMPOSITION_MODE_TETRAHEDRON: Long = 1L
+    @JvmInline
+    value class Mode(val value: Long) {
+        companion object {
+            /**
+             * Constant for voxel-based approximate convex decomposition.
+             *
+             * Generated from Godot docs: MeshConvexDecompositionSettings.CONVEX_DECOMPOSITION_MODE_VOXEL
+             */
+            val VOXEL: Mode get() = Mode(0L)
+            /**
+             * Constant for tetrahedron-based approximate convex decomposition.
+             *
+             * Generated from Godot docs: MeshConvexDecompositionSettings.CONVEX_DECOMPOSITION_MODE_TETRAHEDRON
+             */
+            val TETRAHEDRON: Mode get() = Mode(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MeshConvexDecompositionSettings? =
             wrap(handle.segment)

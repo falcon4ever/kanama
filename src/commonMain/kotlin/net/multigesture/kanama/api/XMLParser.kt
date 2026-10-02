@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -15,9 +16,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XMLParser.read
      */
-    fun read(): Long {
+    fun read(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(readBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(readBind, segment))
     }
 
     /**
@@ -25,9 +26,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XMLParser.get_node_type
      */
-    fun getNodeType(): Long {
+    fun getNodeType(): XMLParser.NodeType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, segment)
+        return XMLParser.NodeType(ObjectCalls.ptrcallNoArgsRetLong(getNodeTypeBind, segment))
     }
 
     /**
@@ -165,9 +166,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XMLParser.seek
      */
-    fun seek(position: Long): Long {
+    fun seek(position: Long): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(seekBind, segment, position)
+        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(seekBind, segment, position))
     }
 
     /**
@@ -175,9 +176,9 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XMLParser.open
      */
-    fun open(file: String): Long {
+    fun open(file: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(openBind, segment, file)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(openBind, segment, file))
     }
 
     /**
@@ -185,20 +186,60 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XMLParser.open_buffer
      */
-    fun openBuffer(buffer: ByteArray): Long {
+    fun openBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, segment, buffer))
+    }
+
+    @JvmInline
+    value class NodeType(val value: Long) {
+        companion object {
+            /**
+             * There's no node (no file or buffer opened).
+             *
+             * Generated from Godot docs: XMLParser.NODE_NONE
+             */
+            val NONE: NodeType get() = NodeType(0L)
+            /**
+             * An element node type, also known as a tag, e.g. `<title>`.
+             *
+             * Generated from Godot docs: XMLParser.NODE_ELEMENT
+             */
+            val ELEMENT: NodeType get() = NodeType(1L)
+            /**
+             * An end of element node type, e.g. `</title>`.
+             *
+             * Generated from Godot docs: XMLParser.NODE_ELEMENT_END
+             */
+            val ELEMENT_END: NodeType get() = NodeType(2L)
+            /**
+             * A text node type, i.e. text that is not inside an element. This includes whitespace.
+             *
+             * Generated from Godot docs: XMLParser.NODE_TEXT
+             */
+            val TEXT: NodeType get() = NodeType(3L)
+            /**
+             * A comment node type, e.g. `<!--A comment-->`.
+             *
+             * Generated from Godot docs: XMLParser.NODE_COMMENT
+             */
+            val COMMENT: NodeType get() = NodeType(4L)
+            /**
+             * A node type for CDATA (Character Data) sections, e.g. `<![CDATA[CDATA section]]>`.
+             *
+             * Generated from Godot docs: XMLParser.NODE_CDATA
+             */
+            val CDATA: NodeType get() = NodeType(5L)
+            /**
+             * An unknown node type.
+             *
+             * Generated from Godot docs: XMLParser.NODE_UNKNOWN
+             */
+            val UNKNOWN: NodeType get() = NodeType(6L)
+        }
     }
 
     companion object {
-        const val NODE_NONE: Long = 0L
-        const val NODE_ELEMENT: Long = 1L
-        const val NODE_ELEMENT_END: Long = 2L
-        const val NODE_TEXT: Long = 3L
-        const val NODE_COMMENT: Long = 4L
-        const val NODE_CDATA: Long = 5L
-        const val NODE_UNKNOWN: Long = 6L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XMLParser? =
             wrap(handle.segment)

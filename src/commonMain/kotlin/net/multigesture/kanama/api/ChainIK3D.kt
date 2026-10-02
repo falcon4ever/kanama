@@ -110,8 +110,8 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      *
      * Generated from Godot docs: ChainIK3D.set_end_bone_direction
      */
-    fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
+    fun setEndBoneDirection(index: Int, boneDirection: SkeletonModifier3D.BoneDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection.value)
     }
 
     /**
@@ -120,8 +120,8 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      *
      * Generated from Godot docs: ChainIK3D.get_end_bone_direction
      */
-    fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
+    fun getEndBoneDirection(index: Int): SkeletonModifier3D.BoneDirection {
+        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index))
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeBillboard
  */
 class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) {
-    var billboardType: Long
+    var billboardType: VisualShaderNodeBillboard.BillboardType
         @JvmName("billboardTypeProperty")
         get() = getBillboardType()
         @JvmName("setBillboardTypeProperty")
@@ -21,14 +22,14 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
         @JvmName("setKeepScaleProperty")
         set(value) = setKeepScaleEnabled(value)
 
-    fun setBillboardType(billboardType: Long) {
+    fun setBillboardType(billboardType: VisualShaderNodeBillboard.BillboardType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBillboardTypeBind, segment, billboardType)
+        ObjectCalls.ptrcallWithLongArg(setBillboardTypeBind, segment, billboardType.value)
     }
 
-    fun getBillboardType(): Long {
+    fun getBillboardType(): VisualShaderNodeBillboard.BillboardType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardTypeBind, segment)
+        return VisualShaderNodeBillboard.BillboardType(ObjectCalls.ptrcallNoArgsRetLong(getBillboardTypeBind, segment))
     }
 
     fun setKeepScaleEnabled(enabled: Boolean) {
@@ -41,13 +42,18 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
         return ObjectCalls.ptrcallNoArgsRetBool(isKeepScaleEnabledBind, segment)
     }
 
-    companion object {
-        const val BILLBOARD_TYPE_DISABLED: Long = 0L
-        const val BILLBOARD_TYPE_ENABLED: Long = 1L
-        const val BILLBOARD_TYPE_FIXED_Y: Long = 2L
-        const val BILLBOARD_TYPE_PARTICLES: Long = 3L
-        const val BILLBOARD_TYPE_MAX: Long = 4L
+    @JvmInline
+    value class BillboardType(val value: Long) {
+        companion object {
+            val DISABLED: BillboardType get() = BillboardType(0L)
+            val ENABLED: BillboardType get() = BillboardType(1L)
+            val FIXED_Y: BillboardType get() = BillboardType(2L)
+            val PARTICLES: BillboardType get() = BillboardType(3L)
+            val MAX: BillboardType get() = BillboardType(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeBillboard? =
             wrap(handle.segment)

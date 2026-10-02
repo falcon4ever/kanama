@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -7,6 +8,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector3
 
 /**
  * 2D sprite node in 3D environment.
@@ -50,13 +52,13 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setPixelSizeProperty")
         set(value) = setPixelSize(value)
 
-    var axis: Long
+    var axis: Vector3.Axis
         @JvmName("axisProperty")
         get() = getAxis()
         @JvmName("setAxisProperty")
         set(value) = setAxis(value)
 
-    var billboard: Long
+    var billboard: BaseMaterial3D.BillboardMode
         @JvmName("billboardProperty")
         get() = getBillboardMode()
         @JvmName("setBillboardProperty")
@@ -64,35 +66,35 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     var transparent: Boolean
         @JvmName("transparentProperty")
-        get() = getDrawFlag(0L)
+        get() = getDrawFlag(SpriteBase3D.DrawFlags.TRANSPARENT)
         @JvmName("setTransparentProperty")
-        set(value) = setDrawFlag(0L, value)
+        set(value) = setDrawFlag(SpriteBase3D.DrawFlags.TRANSPARENT, value)
 
     var shaded: Boolean
         @JvmName("shadedProperty")
-        get() = getDrawFlag(1L)
+        get() = getDrawFlag(SpriteBase3D.DrawFlags.SHADED)
         @JvmName("setShadedProperty")
-        set(value) = setDrawFlag(1L, value)
+        set(value) = setDrawFlag(SpriteBase3D.DrawFlags.SHADED, value)
 
     var doubleSided: Boolean
         @JvmName("doubleSidedProperty")
-        get() = getDrawFlag(2L)
+        get() = getDrawFlag(SpriteBase3D.DrawFlags.DOUBLE_SIDED)
         @JvmName("setDoubleSidedProperty")
-        set(value) = setDrawFlag(2L, value)
+        set(value) = setDrawFlag(SpriteBase3D.DrawFlags.DOUBLE_SIDED, value)
 
     var noDepthTest: Boolean
         @JvmName("noDepthTestProperty")
-        get() = getDrawFlag(3L)
+        get() = getDrawFlag(SpriteBase3D.DrawFlags.DISABLE_DEPTH_TEST)
         @JvmName("setNoDepthTestProperty")
-        set(value) = setDrawFlag(3L, value)
+        set(value) = setDrawFlag(SpriteBase3D.DrawFlags.DISABLE_DEPTH_TEST, value)
 
     var fixedSize: Boolean
         @JvmName("fixedSizeProperty")
-        get() = getDrawFlag(4L)
+        get() = getDrawFlag(SpriteBase3D.DrawFlags.FIXED_SIZE)
         @JvmName("setFixedSizeProperty")
-        set(value) = setDrawFlag(4L, value)
+        set(value) = setDrawFlag(SpriteBase3D.DrawFlags.FIXED_SIZE, value)
 
-    var alphaCut: Long
+    var alphaCut: SpriteBase3D.AlphaCutMode
         @JvmName("alphaCutProperty")
         get() = getAlphaCutMode()
         @JvmName("setAlphaCutProperty")
@@ -110,7 +112,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setAlphaHashScaleProperty")
         set(value) = setAlphaHashScale(value)
 
-    var alphaAntialiasingMode: Long
+    var alphaAntialiasingMode: BaseMaterial3D.AlphaAntiAliasing
         @JvmName("alphaAntialiasingModeProperty")
         get() = getAlphaAntialiasing()
         @JvmName("setAlphaAntialiasingModeProperty")
@@ -122,7 +124,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setAlphaAntialiasingEdgeProperty")
         set(value) = setAlphaAntialiasingEdge(value)
 
-    var textureFilter: Long
+    var textureFilter: BaseMaterial3D.TextureFilter
         @JvmName("textureFilterProperty")
         get() = getTextureFilter()
         @JvmName("setTextureFilterProperty")
@@ -289,8 +291,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.set_axis
      */
-    fun setAxis(axis: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis)
+    fun setAxis(axis: Vector3.Axis) {
+        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis.value)
     }
 
     /**
@@ -298,8 +300,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.get_axis
      */
-    fun getAxis(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment)
+    fun getAxis(): Vector3.Axis {
+        return Vector3.Axis(ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment))
     }
 
     /**
@@ -308,8 +310,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.set_draw_flag
      */
-    fun setDrawFlag(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag, enabled)
+    fun setDrawFlag(flag: SpriteBase3D.DrawFlags, enabled: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -318,8 +320,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.get_draw_flag
      */
-    fun getDrawFlag(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag)
+    fun getDrawFlag(flag: SpriteBase3D.DrawFlags): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag.value)
     }
 
     /**
@@ -327,8 +329,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.set_alpha_cut_mode
      */
-    fun setAlphaCutMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode)
+    fun setAlphaCutMode(mode: SpriteBase3D.AlphaCutMode) {
+        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode.value)
     }
 
     /**
@@ -336,8 +338,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.get_alpha_cut_mode
      */
-    fun getAlphaCutMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment)
+    fun getAlphaCutMode(): SpriteBase3D.AlphaCutMode {
+        return SpriteBase3D.AlphaCutMode(ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment))
     }
 
     /**
@@ -381,8 +383,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.set_alpha_antialiasing
      */
-    fun setAlphaAntialiasing(alphaAa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa)
+    fun setAlphaAntialiasing(alphaAa: BaseMaterial3D.AlphaAntiAliasing) {
+        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa.value)
     }
 
     /**
@@ -390,8 +392,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.get_alpha_antialiasing
      */
-    fun getAlphaAntialiasing(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment)
+    fun getAlphaAntialiasing(): BaseMaterial3D.AlphaAntiAliasing {
+        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment))
     }
 
     /**
@@ -421,8 +423,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.set_billboard_mode
      */
-    fun setBillboardMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode)
+    fun setBillboardMode(mode: BaseMaterial3D.BillboardMode) {
+        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode.value)
     }
 
     /**
@@ -434,8 +436,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.get_billboard_mode
      */
-    fun getBillboardMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment)
+    fun getBillboardMode(): BaseMaterial3D.BillboardMode {
+        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment))
     }
 
     /**
@@ -445,8 +447,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.set_texture_filter
      */
-    fun setTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
+    fun setTextureFilter(mode: BaseMaterial3D.TextureFilter) {
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -456,8 +458,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: SpriteBase3D.get_texture_filter
      */
-    fun getTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
+    fun getTextureFilter(): BaseMaterial3D.TextureFilter {
+        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
     }
 
     /**
@@ -479,18 +481,90 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
-    companion object {
-        const val FLAG_TRANSPARENT: Long = 0L
-        const val FLAG_SHADED: Long = 1L
-        const val FLAG_DOUBLE_SIDED: Long = 2L
-        const val FLAG_DISABLE_DEPTH_TEST: Long = 3L
-        const val FLAG_FIXED_SIZE: Long = 4L
-        const val FLAG_MAX: Long = 5L
-        const val ALPHA_CUT_DISABLED: Long = 0L
-        const val ALPHA_CUT_DISCARD: Long = 1L
-        const val ALPHA_CUT_OPAQUE_PREPASS: Long = 2L
-        const val ALPHA_CUT_HASH: Long = 3L
+    @JvmInline
+    value class DrawFlags(val value: Long) {
+        companion object {
+            /**
+             * If set, the texture's transparency and the opacity are used to make those parts of the sprite
+             * invisible.
+             *
+             * Generated from Godot docs: SpriteBase3D.FLAG_TRANSPARENT
+             */
+            val TRANSPARENT: DrawFlags get() = DrawFlags(0L)
+            /**
+             * If set, lights in the environment affect the sprite.
+             *
+             * Generated from Godot docs: SpriteBase3D.FLAG_SHADED
+             */
+            val SHADED: DrawFlags get() = DrawFlags(1L)
+            /**
+             * If set, texture can be seen from the back as well. If not, the texture is invisible when looking
+             * at it from behind.
+             *
+             * Generated from Godot docs: SpriteBase3D.FLAG_DOUBLE_SIDED
+             */
+            val DOUBLE_SIDED: DrawFlags get() = DrawFlags(2L)
+            /**
+             * Disables the depth test, so this object is drawn on top of all others. However, objects drawn
+             * after it in the draw order may cover it.
+             *
+             * Generated from Godot docs: SpriteBase3D.FLAG_DISABLE_DEPTH_TEST
+             */
+            val DISABLE_DEPTH_TEST: DrawFlags get() = DrawFlags(3L)
+            /**
+             * Label is scaled by depth so that it always appears the same size on screen.
+             *
+             * Generated from Godot docs: SpriteBase3D.FLAG_FIXED_SIZE
+             */
+            val FIXED_SIZE: DrawFlags get() = DrawFlags(4L)
+            /**
+             * Represents the size of the `DrawFlags` enum.
+             *
+             * Generated from Godot docs: SpriteBase3D.FLAG_MAX
+             */
+            val MAX: DrawFlags get() = DrawFlags(5L)
+        }
+    }
 
+    @JvmInline
+    value class AlphaCutMode(val value: Long) {
+        companion object {
+            /**
+             * This mode performs standard alpha blending. It can display translucent areas, but transparency
+             * sorting issues may be visible when multiple transparent materials are overlapping.
+             *
+             * Generated from Godot docs: SpriteBase3D.ALPHA_CUT_DISABLED
+             */
+            val DISABLED: AlphaCutMode get() = AlphaCutMode(0L)
+            /**
+             * This mode only allows fully transparent or fully opaque pixels. Harsh edges will be visible
+             * unless some form of screen-space antialiasing is enabled (see
+             * `ProjectSettings.rendering/anti_aliasing/quality/screen_space_aa`). On the bright side, this
+             * mode doesn't suffer from transparency sorting issues when multiple transparent materials are
+             * overlapping. This mode is also known as alpha testing or 1-bit transparency.
+             *
+             * Generated from Godot docs: SpriteBase3D.ALPHA_CUT_DISCARD
+             */
+            val DISCARD: AlphaCutMode get() = AlphaCutMode(1L)
+            /**
+             * This mode draws fully opaque pixels in the depth prepass. This is slower than
+             * `ALPHA_CUT_DISABLED` or `ALPHA_CUT_DISCARD`, but it allows displaying translucent areas and
+             * smooth edges while using proper sorting.
+             *
+             * Generated from Godot docs: SpriteBase3D.ALPHA_CUT_OPAQUE_PREPASS
+             */
+            val OPAQUE_PREPASS: AlphaCutMode get() = AlphaCutMode(2L)
+            /**
+             * This mode draws cuts off all values below a spatially-deterministic threshold, the rest will
+             * remain opaque.
+             *
+             * Generated from Godot docs: SpriteBase3D.ALPHA_CUT_HASH
+             */
+            val HASH: AlphaCutMode get() = AlphaCutMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SpriteBase3D? =
             wrap(handle.segment)

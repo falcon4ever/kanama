@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: AudioEffectDistortion
  */
 class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
-    var mode: Long
+    var mode: AudioEffectDistortion.Mode
         @JvmName("modeProperty")
         get() = getMode()
         @JvmName("setModeProperty")
@@ -47,9 +48,9 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectDistortion.set_mode
      */
-    fun setMode(mode: Long) {
+    fun setMode(mode: AudioEffectDistortion.Mode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
     }
 
     /**
@@ -57,9 +58,9 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectDistortion.get_mode
      */
-    fun getMode(): Long {
+    fun getMode(): AudioEffectDistortion.Mode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
+        return AudioEffectDistortion.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
     }
 
     /**
@@ -146,13 +147,49 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, segment)
     }
 
-    companion object {
-        const val MODE_CLIP: Long = 0L
-        const val MODE_ATAN: Long = 1L
-        const val MODE_LOFI: Long = 2L
-        const val MODE_OVERDRIVE: Long = 3L
-        const val MODE_WAVESHAPE: Long = 4L
+    @JvmInline
+    value class Mode(val value: Long) {
+        companion object {
+            /**
+             * Flattens the waveform at 0 dB in a sharp manner. `drive` increases amplitude of samples
+             * exponentially. This mode functions as a hard clipper if `drive` is set to 0, and is the only
+             * mode that clips audio signals at 0 dB.
+             *
+             * Generated from Godot docs: AudioEffectDistortion.MODE_CLIP
+             */
+            val CLIP: Mode get() = Mode(0L)
+            /**
+             * Flattens the waveform in a smooth manner, following an arctangent curve. The audio decreases in
+             * volume, before flattening peaks to `PI * 4.0` (linear value), if it was normalized beforehand.
+             *
+             * Generated from Godot docs: AudioEffectDistortion.MODE_ATAN
+             */
+            val ATAN: Mode get() = Mode(1L)
+            /**
+             * Decreases audio bit depth to achieve a low-resolution audio signal, going from 16-bit to 2-bit.
+             * Can be used to emulate the sound of early digital audio devices.
+             *
+             * Generated from Godot docs: AudioEffectDistortion.MODE_LOFI
+             */
+            val LOFI: Mode get() = Mode(2L)
+            /**
+             * Emulates the warm distortion produced by a field effect transistor, which is commonly used in
+             * solid-state musical instrument amplifiers. `drive` has no effect in this mode.
+             *
+             * Generated from Godot docs: AudioEffectDistortion.MODE_OVERDRIVE
+             */
+            val OVERDRIVE: Mode get() = Mode(3L)
+            /**
+             * Flattens the waveform in a smooth manner, until it reaches a sharp peak at `drive = 1`,
+             * following a generic absolute sigmoid function.
+             *
+             * Generated from Godot docs: AudioEffectDistortion.MODE_WAVESHAPE
+             */
+            val WAVESHAPE: Mode get() = Mode(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectDistortion? =
             wrap(handle.segment)

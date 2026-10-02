@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -22,9 +23,9 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      *
      * Generated from Godot docs: XRFaceTracker.get_blend_shape
      */
-    fun getBlendShape(blendShape: Long): Double {
+    fun getBlendShape(blendShape: XRFaceTracker.BlendShapeEntry): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, segment, blendShape)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getBlendShapeBind, segment, blendShape.value)
     }
 
     /**
@@ -32,9 +33,9 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
      *
      * Generated from Godot docs: XRFaceTracker.set_blend_shape
      */
-    fun setBlendShape(blendShape: Long, weight: Double) {
+    fun setBlendShape(blendShape: XRFaceTracker.BlendShapeEntry, weight: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, segment, blendShape, weight)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setBlendShapeBind, segment, blendShape.value, weight)
     }
 
     /**
@@ -57,152 +58,877 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, segment, weights)
     }
 
-    companion object {
-        const val FT_EYE_LOOK_OUT_RIGHT: Long = 0L
-        const val FT_EYE_LOOK_IN_RIGHT: Long = 1L
-        const val FT_EYE_LOOK_UP_RIGHT: Long = 2L
-        const val FT_EYE_LOOK_DOWN_RIGHT: Long = 3L
-        const val FT_EYE_LOOK_OUT_LEFT: Long = 4L
-        const val FT_EYE_LOOK_IN_LEFT: Long = 5L
-        const val FT_EYE_LOOK_UP_LEFT: Long = 6L
-        const val FT_EYE_LOOK_DOWN_LEFT: Long = 7L
-        const val FT_EYE_CLOSED_RIGHT: Long = 8L
-        const val FT_EYE_CLOSED_LEFT: Long = 9L
-        const val FT_EYE_SQUINT_RIGHT: Long = 10L
-        const val FT_EYE_SQUINT_LEFT: Long = 11L
-        const val FT_EYE_WIDE_RIGHT: Long = 12L
-        const val FT_EYE_WIDE_LEFT: Long = 13L
-        const val FT_EYE_DILATION_RIGHT: Long = 14L
-        const val FT_EYE_DILATION_LEFT: Long = 15L
-        const val FT_EYE_CONSTRICT_RIGHT: Long = 16L
-        const val FT_EYE_CONSTRICT_LEFT: Long = 17L
-        const val FT_BROW_PINCH_RIGHT: Long = 18L
-        const val FT_BROW_PINCH_LEFT: Long = 19L
-        const val FT_BROW_LOWERER_RIGHT: Long = 20L
-        const val FT_BROW_LOWERER_LEFT: Long = 21L
-        const val FT_BROW_INNER_UP_RIGHT: Long = 22L
-        const val FT_BROW_INNER_UP_LEFT: Long = 23L
-        const val FT_BROW_OUTER_UP_RIGHT: Long = 24L
-        const val FT_BROW_OUTER_UP_LEFT: Long = 25L
-        const val FT_NOSE_SNEER_RIGHT: Long = 26L
-        const val FT_NOSE_SNEER_LEFT: Long = 27L
-        const val FT_NASAL_DILATION_RIGHT: Long = 28L
-        const val FT_NASAL_DILATION_LEFT: Long = 29L
-        const val FT_NASAL_CONSTRICT_RIGHT: Long = 30L
-        const val FT_NASAL_CONSTRICT_LEFT: Long = 31L
-        const val FT_CHEEK_SQUINT_RIGHT: Long = 32L
-        const val FT_CHEEK_SQUINT_LEFT: Long = 33L
-        const val FT_CHEEK_PUFF_RIGHT: Long = 34L
-        const val FT_CHEEK_PUFF_LEFT: Long = 35L
-        const val FT_CHEEK_SUCK_RIGHT: Long = 36L
-        const val FT_CHEEK_SUCK_LEFT: Long = 37L
-        const val FT_JAW_OPEN: Long = 38L
-        const val FT_MOUTH_CLOSED: Long = 39L
-        const val FT_JAW_RIGHT: Long = 40L
-        const val FT_JAW_LEFT: Long = 41L
-        const val FT_JAW_FORWARD: Long = 42L
-        const val FT_JAW_BACKWARD: Long = 43L
-        const val FT_JAW_CLENCH: Long = 44L
-        const val FT_JAW_MANDIBLE_RAISE: Long = 45L
-        const val FT_LIP_SUCK_UPPER_RIGHT: Long = 46L
-        const val FT_LIP_SUCK_UPPER_LEFT: Long = 47L
-        const val FT_LIP_SUCK_LOWER_RIGHT: Long = 48L
-        const val FT_LIP_SUCK_LOWER_LEFT: Long = 49L
-        const val FT_LIP_SUCK_CORNER_RIGHT: Long = 50L
-        const val FT_LIP_SUCK_CORNER_LEFT: Long = 51L
-        const val FT_LIP_FUNNEL_UPPER_RIGHT: Long = 52L
-        const val FT_LIP_FUNNEL_UPPER_LEFT: Long = 53L
-        const val FT_LIP_FUNNEL_LOWER_RIGHT: Long = 54L
-        const val FT_LIP_FUNNEL_LOWER_LEFT: Long = 55L
-        const val FT_LIP_PUCKER_UPPER_RIGHT: Long = 56L
-        const val FT_LIP_PUCKER_UPPER_LEFT: Long = 57L
-        const val FT_LIP_PUCKER_LOWER_RIGHT: Long = 58L
-        const val FT_LIP_PUCKER_LOWER_LEFT: Long = 59L
-        const val FT_MOUTH_UPPER_UP_RIGHT: Long = 60L
-        const val FT_MOUTH_UPPER_UP_LEFT: Long = 61L
-        const val FT_MOUTH_LOWER_DOWN_RIGHT: Long = 62L
-        const val FT_MOUTH_LOWER_DOWN_LEFT: Long = 63L
-        const val FT_MOUTH_UPPER_DEEPEN_RIGHT: Long = 64L
-        const val FT_MOUTH_UPPER_DEEPEN_LEFT: Long = 65L
-        const val FT_MOUTH_UPPER_RIGHT: Long = 66L
-        const val FT_MOUTH_UPPER_LEFT: Long = 67L
-        const val FT_MOUTH_LOWER_RIGHT: Long = 68L
-        const val FT_MOUTH_LOWER_LEFT: Long = 69L
-        const val FT_MOUTH_CORNER_PULL_RIGHT: Long = 70L
-        const val FT_MOUTH_CORNER_PULL_LEFT: Long = 71L
-        const val FT_MOUTH_CORNER_SLANT_RIGHT: Long = 72L
-        const val FT_MOUTH_CORNER_SLANT_LEFT: Long = 73L
-        const val FT_MOUTH_FROWN_RIGHT: Long = 74L
-        const val FT_MOUTH_FROWN_LEFT: Long = 75L
-        const val FT_MOUTH_STRETCH_RIGHT: Long = 76L
-        const val FT_MOUTH_STRETCH_LEFT: Long = 77L
-        const val FT_MOUTH_DIMPLE_RIGHT: Long = 78L
-        const val FT_MOUTH_DIMPLE_LEFT: Long = 79L
-        const val FT_MOUTH_RAISER_UPPER: Long = 80L
-        const val FT_MOUTH_RAISER_LOWER: Long = 81L
-        const val FT_MOUTH_PRESS_RIGHT: Long = 82L
-        const val FT_MOUTH_PRESS_LEFT: Long = 83L
-        const val FT_MOUTH_TIGHTENER_RIGHT: Long = 84L
-        const val FT_MOUTH_TIGHTENER_LEFT: Long = 85L
-        const val FT_TONGUE_OUT: Long = 86L
-        const val FT_TONGUE_UP: Long = 87L
-        const val FT_TONGUE_DOWN: Long = 88L
-        const val FT_TONGUE_RIGHT: Long = 89L
-        const val FT_TONGUE_LEFT: Long = 90L
-        const val FT_TONGUE_ROLL: Long = 91L
-        const val FT_TONGUE_BLEND_DOWN: Long = 92L
-        const val FT_TONGUE_CURL_UP: Long = 93L
-        const val FT_TONGUE_SQUISH: Long = 94L
-        const val FT_TONGUE_FLAT: Long = 95L
-        const val FT_TONGUE_TWIST_RIGHT: Long = 96L
-        const val FT_TONGUE_TWIST_LEFT: Long = 97L
-        const val FT_SOFT_PALATE_CLOSE: Long = 98L
-        const val FT_THROAT_SWALLOW: Long = 99L
-        const val FT_NECK_FLEX_RIGHT: Long = 100L
-        const val FT_NECK_FLEX_LEFT: Long = 101L
-        const val FT_EYE_CLOSED: Long = 102L
-        const val FT_EYE_WIDE: Long = 103L
-        const val FT_EYE_SQUINT: Long = 104L
-        const val FT_EYE_DILATION: Long = 105L
-        const val FT_EYE_CONSTRICT: Long = 106L
-        const val FT_BROW_DOWN_RIGHT: Long = 107L
-        const val FT_BROW_DOWN_LEFT: Long = 108L
-        const val FT_BROW_DOWN: Long = 109L
-        const val FT_BROW_UP_RIGHT: Long = 110L
-        const val FT_BROW_UP_LEFT: Long = 111L
-        const val FT_BROW_UP: Long = 112L
-        const val FT_NOSE_SNEER: Long = 113L
-        const val FT_NASAL_DILATION: Long = 114L
-        const val FT_NASAL_CONSTRICT: Long = 115L
-        const val FT_CHEEK_PUFF: Long = 116L
-        const val FT_CHEEK_SUCK: Long = 117L
-        const val FT_CHEEK_SQUINT: Long = 118L
-        const val FT_LIP_SUCK_UPPER: Long = 119L
-        const val FT_LIP_SUCK_LOWER: Long = 120L
-        const val FT_LIP_SUCK: Long = 121L
-        const val FT_LIP_FUNNEL_UPPER: Long = 122L
-        const val FT_LIP_FUNNEL_LOWER: Long = 123L
-        const val FT_LIP_FUNNEL: Long = 124L
-        const val FT_LIP_PUCKER_UPPER: Long = 125L
-        const val FT_LIP_PUCKER_LOWER: Long = 126L
-        const val FT_LIP_PUCKER: Long = 127L
-        const val FT_MOUTH_UPPER_UP: Long = 128L
-        const val FT_MOUTH_LOWER_DOWN: Long = 129L
-        const val FT_MOUTH_OPEN: Long = 130L
-        const val FT_MOUTH_RIGHT: Long = 131L
-        const val FT_MOUTH_LEFT: Long = 132L
-        const val FT_MOUTH_SMILE_RIGHT: Long = 133L
-        const val FT_MOUTH_SMILE_LEFT: Long = 134L
-        const val FT_MOUTH_SMILE: Long = 135L
-        const val FT_MOUTH_SAD_RIGHT: Long = 136L
-        const val FT_MOUTH_SAD_LEFT: Long = 137L
-        const val FT_MOUTH_SAD: Long = 138L
-        const val FT_MOUTH_STRETCH: Long = 139L
-        const val FT_MOUTH_DIMPLE: Long = 140L
-        const val FT_MOUTH_TIGHTENER: Long = 141L
-        const val FT_MOUTH_PRESS: Long = 142L
-        const val FT_MAX: Long = 143L
+    @JvmInline
+    value class BlendShapeEntry(val value: Long) {
+        companion object {
+            /**
+             * Right eye looks outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_OUT_RIGHT
+             */
+            val EYE_LOOK_OUT_RIGHT: BlendShapeEntry get() = BlendShapeEntry(0L)
+            /**
+             * Right eye looks inwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_IN_RIGHT
+             */
+            val EYE_LOOK_IN_RIGHT: BlendShapeEntry get() = BlendShapeEntry(1L)
+            /**
+             * Right eye looks upwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_UP_RIGHT
+             */
+            val EYE_LOOK_UP_RIGHT: BlendShapeEntry get() = BlendShapeEntry(2L)
+            /**
+             * Right eye looks downwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_DOWN_RIGHT
+             */
+            val EYE_LOOK_DOWN_RIGHT: BlendShapeEntry get() = BlendShapeEntry(3L)
+            /**
+             * Left eye looks outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_OUT_LEFT
+             */
+            val EYE_LOOK_OUT_LEFT: BlendShapeEntry get() = BlendShapeEntry(4L)
+            /**
+             * Left eye looks inwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_IN_LEFT
+             */
+            val EYE_LOOK_IN_LEFT: BlendShapeEntry get() = BlendShapeEntry(5L)
+            /**
+             * Left eye looks upwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_UP_LEFT
+             */
+            val EYE_LOOK_UP_LEFT: BlendShapeEntry get() = BlendShapeEntry(6L)
+            /**
+             * Left eye looks downwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_LOOK_DOWN_LEFT
+             */
+            val EYE_LOOK_DOWN_LEFT: BlendShapeEntry get() = BlendShapeEntry(7L)
+            /**
+             * Closes the right eyelid.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_CLOSED_RIGHT
+             */
+            val EYE_CLOSED_RIGHT: BlendShapeEntry get() = BlendShapeEntry(8L)
+            /**
+             * Closes the left eyelid.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_CLOSED_LEFT
+             */
+            val EYE_CLOSED_LEFT: BlendShapeEntry get() = BlendShapeEntry(9L)
+            /**
+             * Squeezes the right eye socket muscles.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_SQUINT_RIGHT
+             */
+            val EYE_SQUINT_RIGHT: BlendShapeEntry get() = BlendShapeEntry(10L)
+            /**
+             * Squeezes the left eye socket muscles.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_SQUINT_LEFT
+             */
+            val EYE_SQUINT_LEFT: BlendShapeEntry get() = BlendShapeEntry(11L)
+            /**
+             * Right eyelid widens beyond relaxed.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_WIDE_RIGHT
+             */
+            val EYE_WIDE_RIGHT: BlendShapeEntry get() = BlendShapeEntry(12L)
+            /**
+             * Left eyelid widens beyond relaxed.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_WIDE_LEFT
+             */
+            val EYE_WIDE_LEFT: BlendShapeEntry get() = BlendShapeEntry(13L)
+            /**
+             * Dilates the right eye pupil.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_DILATION_RIGHT
+             */
+            val EYE_DILATION_RIGHT: BlendShapeEntry get() = BlendShapeEntry(14L)
+            /**
+             * Dilates the left eye pupil.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_DILATION_LEFT
+             */
+            val EYE_DILATION_LEFT: BlendShapeEntry get() = BlendShapeEntry(15L)
+            /**
+             * Constricts the right eye pupil.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_CONSTRICT_RIGHT
+             */
+            val EYE_CONSTRICT_RIGHT: BlendShapeEntry get() = BlendShapeEntry(16L)
+            /**
+             * Constricts the left eye pupil.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_CONSTRICT_LEFT
+             */
+            val EYE_CONSTRICT_LEFT: BlendShapeEntry get() = BlendShapeEntry(17L)
+            /**
+             * Right eyebrow pinches in.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_PINCH_RIGHT
+             */
+            val BROW_PINCH_RIGHT: BlendShapeEntry get() = BlendShapeEntry(18L)
+            /**
+             * Left eyebrow pinches in.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_PINCH_LEFT
+             */
+            val BROW_PINCH_LEFT: BlendShapeEntry get() = BlendShapeEntry(19L)
+            /**
+             * Outer right eyebrow pulls down.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_LOWERER_RIGHT
+             */
+            val BROW_LOWERER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(20L)
+            /**
+             * Outer left eyebrow pulls down.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_LOWERER_LEFT
+             */
+            val BROW_LOWERER_LEFT: BlendShapeEntry get() = BlendShapeEntry(21L)
+            /**
+             * Inner right eyebrow pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_INNER_UP_RIGHT
+             */
+            val BROW_INNER_UP_RIGHT: BlendShapeEntry get() = BlendShapeEntry(22L)
+            /**
+             * Inner left eyebrow pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_INNER_UP_LEFT
+             */
+            val BROW_INNER_UP_LEFT: BlendShapeEntry get() = BlendShapeEntry(23L)
+            /**
+             * Outer right eyebrow pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_OUTER_UP_RIGHT
+             */
+            val BROW_OUTER_UP_RIGHT: BlendShapeEntry get() = BlendShapeEntry(24L)
+            /**
+             * Outer left eyebrow pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_OUTER_UP_LEFT
+             */
+            val BROW_OUTER_UP_LEFT: BlendShapeEntry get() = BlendShapeEntry(25L)
+            /**
+             * Right side face sneers.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NOSE_SNEER_RIGHT
+             */
+            val NOSE_SNEER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(26L)
+            /**
+             * Left side face sneers.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NOSE_SNEER_LEFT
+             */
+            val NOSE_SNEER_LEFT: BlendShapeEntry get() = BlendShapeEntry(27L)
+            /**
+             * Right side nose canal dilates.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NASAL_DILATION_RIGHT
+             */
+            val NASAL_DILATION_RIGHT: BlendShapeEntry get() = BlendShapeEntry(28L)
+            /**
+             * Left side nose canal dilates.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NASAL_DILATION_LEFT
+             */
+            val NASAL_DILATION_LEFT: BlendShapeEntry get() = BlendShapeEntry(29L)
+            /**
+             * Right side nose canal constricts.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NASAL_CONSTRICT_RIGHT
+             */
+            val NASAL_CONSTRICT_RIGHT: BlendShapeEntry get() = BlendShapeEntry(30L)
+            /**
+             * Left side nose canal constricts.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NASAL_CONSTRICT_LEFT
+             */
+            val NASAL_CONSTRICT_LEFT: BlendShapeEntry get() = BlendShapeEntry(31L)
+            /**
+             * Raises the right side cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_SQUINT_RIGHT
+             */
+            val CHEEK_SQUINT_RIGHT: BlendShapeEntry get() = BlendShapeEntry(32L)
+            /**
+             * Raises the left side cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_SQUINT_LEFT
+             */
+            val CHEEK_SQUINT_LEFT: BlendShapeEntry get() = BlendShapeEntry(33L)
+            /**
+             * Puffs the right side cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_PUFF_RIGHT
+             */
+            val CHEEK_PUFF_RIGHT: BlendShapeEntry get() = BlendShapeEntry(34L)
+            /**
+             * Puffs the left side cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_PUFF_LEFT
+             */
+            val CHEEK_PUFF_LEFT: BlendShapeEntry get() = BlendShapeEntry(35L)
+            /**
+             * Sucks in the right side cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_SUCK_RIGHT
+             */
+            val CHEEK_SUCK_RIGHT: BlendShapeEntry get() = BlendShapeEntry(36L)
+            /**
+             * Sucks in the left side cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_SUCK_LEFT
+             */
+            val CHEEK_SUCK_LEFT: BlendShapeEntry get() = BlendShapeEntry(37L)
+            /**
+             * Opens jawbone.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_JAW_OPEN
+             */
+            val JAW_OPEN: BlendShapeEntry get() = BlendShapeEntry(38L)
+            /**
+             * Closes the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_CLOSED
+             */
+            val MOUTH_CLOSED: BlendShapeEntry get() = BlendShapeEntry(39L)
+            /**
+             * Pushes jawbone right.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_JAW_RIGHT
+             */
+            val JAW_RIGHT: BlendShapeEntry get() = BlendShapeEntry(40L)
+            /**
+             * Pushes jawbone left.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_JAW_LEFT
+             */
+            val JAW_LEFT: BlendShapeEntry get() = BlendShapeEntry(41L)
+            /**
+             * Pushes jawbone forward.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_JAW_FORWARD
+             */
+            val JAW_FORWARD: BlendShapeEntry get() = BlendShapeEntry(42L)
+            /**
+             * Pushes jawbone backward.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_JAW_BACKWARD
+             */
+            val JAW_BACKWARD: BlendShapeEntry get() = BlendShapeEntry(43L)
+            /**
+             * Flexes jaw muscles.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_JAW_CLENCH
+             */
+            val JAW_CLENCH: BlendShapeEntry get() = BlendShapeEntry(44L)
+            /**
+             * Raises the jawbone.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_JAW_MANDIBLE_RAISE
+             */
+            val JAW_MANDIBLE_RAISE: BlendShapeEntry get() = BlendShapeEntry(45L)
+            /**
+             * Upper right lip part tucks in the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_UPPER_RIGHT
+             */
+            val LIP_SUCK_UPPER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(46L)
+            /**
+             * Upper left lip part tucks in the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_UPPER_LEFT
+             */
+            val LIP_SUCK_UPPER_LEFT: BlendShapeEntry get() = BlendShapeEntry(47L)
+            /**
+             * Lower right lip part tucks in the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_LOWER_RIGHT
+             */
+            val LIP_SUCK_LOWER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(48L)
+            /**
+             * Lower left lip part tucks in the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_LOWER_LEFT
+             */
+            val LIP_SUCK_LOWER_LEFT: BlendShapeEntry get() = BlendShapeEntry(49L)
+            /**
+             * Right lip corner folds into the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_CORNER_RIGHT
+             */
+            val LIP_SUCK_CORNER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(50L)
+            /**
+             * Left lip corner folds into the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_CORNER_LEFT
+             */
+            val LIP_SUCK_CORNER_LEFT: BlendShapeEntry get() = BlendShapeEntry(51L)
+            /**
+             * Upper right lip part pushes into a funnel.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_FUNNEL_UPPER_RIGHT
+             */
+            val LIP_FUNNEL_UPPER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(52L)
+            /**
+             * Upper left lip part pushes into a funnel.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_FUNNEL_UPPER_LEFT
+             */
+            val LIP_FUNNEL_UPPER_LEFT: BlendShapeEntry get() = BlendShapeEntry(53L)
+            /**
+             * Lower right lip part pushes into a funnel.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_FUNNEL_LOWER_RIGHT
+             */
+            val LIP_FUNNEL_LOWER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(54L)
+            /**
+             * Lower left lip part pushes into a funnel.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_FUNNEL_LOWER_LEFT
+             */
+            val LIP_FUNNEL_LOWER_LEFT: BlendShapeEntry get() = BlendShapeEntry(55L)
+            /**
+             * Upper right lip part pushes outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_PUCKER_UPPER_RIGHT
+             */
+            val LIP_PUCKER_UPPER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(56L)
+            /**
+             * Upper left lip part pushes outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_PUCKER_UPPER_LEFT
+             */
+            val LIP_PUCKER_UPPER_LEFT: BlendShapeEntry get() = BlendShapeEntry(57L)
+            /**
+             * Lower right lip part pushes outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_PUCKER_LOWER_RIGHT
+             */
+            val LIP_PUCKER_LOWER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(58L)
+            /**
+             * Lower left lip part pushes outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_PUCKER_LOWER_LEFT
+             */
+            val LIP_PUCKER_LOWER_LEFT: BlendShapeEntry get() = BlendShapeEntry(59L)
+            /**
+             * Upper right part of the lip pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_UPPER_UP_RIGHT
+             */
+            val MOUTH_UPPER_UP_RIGHT: BlendShapeEntry get() = BlendShapeEntry(60L)
+            /**
+             * Upper left part of the lip pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_UPPER_UP_LEFT
+             */
+            val MOUTH_UPPER_UP_LEFT: BlendShapeEntry get() = BlendShapeEntry(61L)
+            /**
+             * Lower right part of the lip pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_LOWER_DOWN_RIGHT
+             */
+            val MOUTH_LOWER_DOWN_RIGHT: BlendShapeEntry get() = BlendShapeEntry(62L)
+            /**
+             * Lower left part of the lip pulls up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_LOWER_DOWN_LEFT
+             */
+            val MOUTH_LOWER_DOWN_LEFT: BlendShapeEntry get() = BlendShapeEntry(63L)
+            /**
+             * Upper right lip part pushes in the cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_UPPER_DEEPEN_RIGHT
+             */
+            val MOUTH_UPPER_DEEPEN_RIGHT: BlendShapeEntry get() = BlendShapeEntry(64L)
+            /**
+             * Upper left lip part pushes in the cheek.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_UPPER_DEEPEN_LEFT
+             */
+            val MOUTH_UPPER_DEEPEN_LEFT: BlendShapeEntry get() = BlendShapeEntry(65L)
+            /**
+             * Moves upper lip right.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_UPPER_RIGHT
+             */
+            val MOUTH_UPPER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(66L)
+            /**
+             * Moves upper lip left.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_UPPER_LEFT
+             */
+            val MOUTH_UPPER_LEFT: BlendShapeEntry get() = BlendShapeEntry(67L)
+            /**
+             * Moves lower lip right.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_LOWER_RIGHT
+             */
+            val MOUTH_LOWER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(68L)
+            /**
+             * Moves lower lip left.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_LOWER_LEFT
+             */
+            val MOUTH_LOWER_LEFT: BlendShapeEntry get() = BlendShapeEntry(69L)
+            /**
+             * Right lip corner pulls diagonally up and out.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_CORNER_PULL_RIGHT
+             */
+            val MOUTH_CORNER_PULL_RIGHT: BlendShapeEntry get() = BlendShapeEntry(70L)
+            /**
+             * Left lip corner pulls diagonally up and out.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_CORNER_PULL_LEFT
+             */
+            val MOUTH_CORNER_PULL_LEFT: BlendShapeEntry get() = BlendShapeEntry(71L)
+            /**
+             * Right corner lip slants up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_CORNER_SLANT_RIGHT
+             */
+            val MOUTH_CORNER_SLANT_RIGHT: BlendShapeEntry get() = BlendShapeEntry(72L)
+            /**
+             * Left corner lip slants up.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_CORNER_SLANT_LEFT
+             */
+            val MOUTH_CORNER_SLANT_LEFT: BlendShapeEntry get() = BlendShapeEntry(73L)
+            /**
+             * Right corner lip pulls down.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_FROWN_RIGHT
+             */
+            val MOUTH_FROWN_RIGHT: BlendShapeEntry get() = BlendShapeEntry(74L)
+            /**
+             * Left corner lip pulls down.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_FROWN_LEFT
+             */
+            val MOUTH_FROWN_LEFT: BlendShapeEntry get() = BlendShapeEntry(75L)
+            /**
+             * Mouth corner lip pulls out and down.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_STRETCH_RIGHT
+             */
+            val MOUTH_STRETCH_RIGHT: BlendShapeEntry get() = BlendShapeEntry(76L)
+            /**
+             * Mouth corner lip pulls out and down.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_STRETCH_LEFT
+             */
+            val MOUTH_STRETCH_LEFT: BlendShapeEntry get() = BlendShapeEntry(77L)
+            /**
+             * Right lip corner is pushed backwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_DIMPLE_RIGHT
+             */
+            val MOUTH_DIMPLE_RIGHT: BlendShapeEntry get() = BlendShapeEntry(78L)
+            /**
+             * Left lip corner is pushed backwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_DIMPLE_LEFT
+             */
+            val MOUTH_DIMPLE_LEFT: BlendShapeEntry get() = BlendShapeEntry(79L)
+            /**
+             * Raises and slightly pushes out the upper mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_RAISER_UPPER
+             */
+            val MOUTH_RAISER_UPPER: BlendShapeEntry get() = BlendShapeEntry(80L)
+            /**
+             * Raises and slightly pushes out the lower mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_RAISER_LOWER
+             */
+            val MOUTH_RAISER_LOWER: BlendShapeEntry get() = BlendShapeEntry(81L)
+            /**
+             * Right side lips press and flatten together vertically.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_PRESS_RIGHT
+             */
+            val MOUTH_PRESS_RIGHT: BlendShapeEntry get() = BlendShapeEntry(82L)
+            /**
+             * Left side lips press and flatten together vertically.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_PRESS_LEFT
+             */
+            val MOUTH_PRESS_LEFT: BlendShapeEntry get() = BlendShapeEntry(83L)
+            /**
+             * Right side lips squeeze together horizontally.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_TIGHTENER_RIGHT
+             */
+            val MOUTH_TIGHTENER_RIGHT: BlendShapeEntry get() = BlendShapeEntry(84L)
+            /**
+             * Left side lips squeeze together horizontally.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_TIGHTENER_LEFT
+             */
+            val MOUTH_TIGHTENER_LEFT: BlendShapeEntry get() = BlendShapeEntry(85L)
+            /**
+             * Tongue visibly sticks out of the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_OUT
+             */
+            val TONGUE_OUT: BlendShapeEntry get() = BlendShapeEntry(86L)
+            /**
+             * Tongue points upwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_UP
+             */
+            val TONGUE_UP: BlendShapeEntry get() = BlendShapeEntry(87L)
+            /**
+             * Tongue points downwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_DOWN
+             */
+            val TONGUE_DOWN: BlendShapeEntry get() = BlendShapeEntry(88L)
+            /**
+             * Tongue points right.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_RIGHT
+             */
+            val TONGUE_RIGHT: BlendShapeEntry get() = BlendShapeEntry(89L)
+            /**
+             * Tongue points left.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_LEFT
+             */
+            val TONGUE_LEFT: BlendShapeEntry get() = BlendShapeEntry(90L)
+            /**
+             * Sides of the tongue funnel, creating a roll.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_ROLL
+             */
+            val TONGUE_ROLL: BlendShapeEntry get() = BlendShapeEntry(91L)
+            /**
+             * Tongue arches up then down inside the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_BLEND_DOWN
+             */
+            val TONGUE_BLEND_DOWN: BlendShapeEntry get() = BlendShapeEntry(92L)
+            /**
+             * Tongue arches down then up inside the mouth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_CURL_UP
+             */
+            val TONGUE_CURL_UP: BlendShapeEntry get() = BlendShapeEntry(93L)
+            /**
+             * Tongue squishes together and thickens.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_SQUISH
+             */
+            val TONGUE_SQUISH: BlendShapeEntry get() = BlendShapeEntry(94L)
+            /**
+             * Tongue flattens and thins out.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_FLAT
+             */
+            val TONGUE_FLAT: BlendShapeEntry get() = BlendShapeEntry(95L)
+            /**
+             * Tongue tip rotates clockwise, with the rest following gradually.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_TWIST_RIGHT
+             */
+            val TONGUE_TWIST_RIGHT: BlendShapeEntry get() = BlendShapeEntry(96L)
+            /**
+             * Tongue tip rotates counter-clockwise, with the rest following gradually.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_TONGUE_TWIST_LEFT
+             */
+            val TONGUE_TWIST_LEFT: BlendShapeEntry get() = BlendShapeEntry(97L)
+            /**
+             * Inner mouth throat closes.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_SOFT_PALATE_CLOSE
+             */
+            val SOFT_PALATE_CLOSE: BlendShapeEntry get() = BlendShapeEntry(98L)
+            /**
+             * The Adam's apple visibly swallows.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_THROAT_SWALLOW
+             */
+            val THROAT_SWALLOW: BlendShapeEntry get() = BlendShapeEntry(99L)
+            /**
+             * Right side neck visibly flexes.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NECK_FLEX_RIGHT
+             */
+            val NECK_FLEX_RIGHT: BlendShapeEntry get() = BlendShapeEntry(100L)
+            /**
+             * Left side neck visibly flexes.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NECK_FLEX_LEFT
+             */
+            val NECK_FLEX_LEFT: BlendShapeEntry get() = BlendShapeEntry(101L)
+            /**
+             * Closes both eye lids.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_CLOSED
+             */
+            val EYE_CLOSED: BlendShapeEntry get() = BlendShapeEntry(102L)
+            /**
+             * Widens both eye lids.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_WIDE
+             */
+            val EYE_WIDE: BlendShapeEntry get() = BlendShapeEntry(103L)
+            /**
+             * Squints both eye lids.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_SQUINT
+             */
+            val EYE_SQUINT: BlendShapeEntry get() = BlendShapeEntry(104L)
+            /**
+             * Dilates both pupils.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_DILATION
+             */
+            val EYE_DILATION: BlendShapeEntry get() = BlendShapeEntry(105L)
+            /**
+             * Constricts both pupils.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_EYE_CONSTRICT
+             */
+            val EYE_CONSTRICT: BlendShapeEntry get() = BlendShapeEntry(106L)
+            /**
+             * Pulls the right eyebrow down and in.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_DOWN_RIGHT
+             */
+            val BROW_DOWN_RIGHT: BlendShapeEntry get() = BlendShapeEntry(107L)
+            /**
+             * Pulls the left eyebrow down and in.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_DOWN_LEFT
+             */
+            val BROW_DOWN_LEFT: BlendShapeEntry get() = BlendShapeEntry(108L)
+            /**
+             * Pulls both eyebrows down and in.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_DOWN
+             */
+            val BROW_DOWN: BlendShapeEntry get() = BlendShapeEntry(109L)
+            /**
+             * Right brow appears worried.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_UP_RIGHT
+             */
+            val BROW_UP_RIGHT: BlendShapeEntry get() = BlendShapeEntry(110L)
+            /**
+             * Left brow appears worried.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_UP_LEFT
+             */
+            val BROW_UP_LEFT: BlendShapeEntry get() = BlendShapeEntry(111L)
+            /**
+             * Both brows appear worried.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_BROW_UP
+             */
+            val BROW_UP: BlendShapeEntry get() = BlendShapeEntry(112L)
+            /**
+             * Entire face sneers.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NOSE_SNEER
+             */
+            val NOSE_SNEER: BlendShapeEntry get() = BlendShapeEntry(113L)
+            /**
+             * Both nose canals dilate.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NASAL_DILATION
+             */
+            val NASAL_DILATION: BlendShapeEntry get() = BlendShapeEntry(114L)
+            /**
+             * Both nose canals constrict.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_NASAL_CONSTRICT
+             */
+            val NASAL_CONSTRICT: BlendShapeEntry get() = BlendShapeEntry(115L)
+            /**
+             * Puffs both cheeks.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_PUFF
+             */
+            val CHEEK_PUFF: BlendShapeEntry get() = BlendShapeEntry(116L)
+            /**
+             * Sucks in both cheeks.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_SUCK
+             */
+            val CHEEK_SUCK: BlendShapeEntry get() = BlendShapeEntry(117L)
+            /**
+             * Raises both cheeks.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_CHEEK_SQUINT
+             */
+            val CHEEK_SQUINT: BlendShapeEntry get() = BlendShapeEntry(118L)
+            /**
+             * Tucks in the upper lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_UPPER
+             */
+            val LIP_SUCK_UPPER: BlendShapeEntry get() = BlendShapeEntry(119L)
+            /**
+             * Tucks in the lower lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK_LOWER
+             */
+            val LIP_SUCK_LOWER: BlendShapeEntry get() = BlendShapeEntry(120L)
+            /**
+             * Tucks in both lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_SUCK
+             */
+            val LIP_SUCK: BlendShapeEntry get() = BlendShapeEntry(121L)
+            /**
+             * Funnels in the upper lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_FUNNEL_UPPER
+             */
+            val LIP_FUNNEL_UPPER: BlendShapeEntry get() = BlendShapeEntry(122L)
+            /**
+             * Funnels in the lower lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_FUNNEL_LOWER
+             */
+            val LIP_FUNNEL_LOWER: BlendShapeEntry get() = BlendShapeEntry(123L)
+            /**
+             * Funnels in both lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_FUNNEL
+             */
+            val LIP_FUNNEL: BlendShapeEntry get() = BlendShapeEntry(124L)
+            /**
+             * Upper lip part pushes outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_PUCKER_UPPER
+             */
+            val LIP_PUCKER_UPPER: BlendShapeEntry get() = BlendShapeEntry(125L)
+            /**
+             * Lower lip part pushes outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_PUCKER_LOWER
+             */
+            val LIP_PUCKER_LOWER: BlendShapeEntry get() = BlendShapeEntry(126L)
+            /**
+             * Lips push outwards.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_LIP_PUCKER
+             */
+            val LIP_PUCKER: BlendShapeEntry get() = BlendShapeEntry(127L)
+            /**
+             * Raises the upper lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_UPPER_UP
+             */
+            val MOUTH_UPPER_UP: BlendShapeEntry get() = BlendShapeEntry(128L)
+            /**
+             * Lowers the lower lips.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_LOWER_DOWN
+             */
+            val MOUTH_LOWER_DOWN: BlendShapeEntry get() = BlendShapeEntry(129L)
+            /**
+             * Mouth opens, revealing teeth.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_OPEN
+             */
+            val MOUTH_OPEN: BlendShapeEntry get() = BlendShapeEntry(130L)
+            /**
+             * Moves mouth right.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_RIGHT
+             */
+            val MOUTH_RIGHT: BlendShapeEntry get() = BlendShapeEntry(131L)
+            /**
+             * Moves mouth left.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_LEFT
+             */
+            val MOUTH_LEFT: BlendShapeEntry get() = BlendShapeEntry(132L)
+            /**
+             * Right side of the mouth smiles.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_SMILE_RIGHT
+             */
+            val MOUTH_SMILE_RIGHT: BlendShapeEntry get() = BlendShapeEntry(133L)
+            /**
+             * Left side of the mouth smiles.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_SMILE_LEFT
+             */
+            val MOUTH_SMILE_LEFT: BlendShapeEntry get() = BlendShapeEntry(134L)
+            /**
+             * Mouth expresses a smile.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_SMILE
+             */
+            val MOUTH_SMILE: BlendShapeEntry get() = BlendShapeEntry(135L)
+            /**
+             * Right side of the mouth expresses sadness.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_SAD_RIGHT
+             */
+            val MOUTH_SAD_RIGHT: BlendShapeEntry get() = BlendShapeEntry(136L)
+            /**
+             * Left side of the mouth expresses sadness.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_SAD_LEFT
+             */
+            val MOUTH_SAD_LEFT: BlendShapeEntry get() = BlendShapeEntry(137L)
+            /**
+             * Mouth expresses sadness.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_SAD
+             */
+            val MOUTH_SAD: BlendShapeEntry get() = BlendShapeEntry(138L)
+            /**
+             * Mouth stretches.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_STRETCH
+             */
+            val MOUTH_STRETCH: BlendShapeEntry get() = BlendShapeEntry(139L)
+            /**
+             * Lip corners dimple.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_DIMPLE
+             */
+            val MOUTH_DIMPLE: BlendShapeEntry get() = BlendShapeEntry(140L)
+            /**
+             * Mouth tightens.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_TIGHTENER
+             */
+            val MOUTH_TIGHTENER: BlendShapeEntry get() = BlendShapeEntry(141L)
+            /**
+             * Mouth presses together.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MOUTH_PRESS
+             */
+            val MOUTH_PRESS: BlendShapeEntry get() = BlendShapeEntry(142L)
+            /**
+             * Represents the size of the `BlendShapeEntry` enum.
+             *
+             * Generated from Godot docs: XRFaceTracker.FT_MAX
+             */
+            val MAX: BlendShapeEntry get() = BlendShapeEntry(143L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRFaceTracker? =
             wrap(handle.segment)

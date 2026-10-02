@@ -130,6 +130,16 @@ interface KanamaCoroutineOwner {
 }
 
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
+    // ===== BEGIN GENERATED ENUMS: AudioStreamPlayer (scripts/generate_api_wrapper.py — do not edit) =====
+    value class MixTarget(val value: Long) {
+        companion object {
+            val STEREO: MixTarget get() = MixTarget(0L)
+            val SURROUND: MixTarget get() = MixTarget(1L)
+            val CENTER: MixTarget get() = MixTarget(2L)
+        }
+    }
+    // ===== END GENERATED ENUMS: AudioStreamPlayer =====
+
     fun setStreamFromPath(path: String) {
         ResourceLoader.loadAudioStream(path)?.use { stream ->
             setStream(stream)
@@ -179,11 +189,67 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
 // types are the generated shared classes (task 117 P2'): Tweener, PropertyTweener, MethodTweener
 // and CallbackTweener are one generated class each now, carrying their own fluent
 // setTrans/setEase/setDelay/from with the generator's self-return collapse.
-class Tween(handle: GodotHandle) : RefCounted(handle) {
+actual class Tween(handle: GodotHandle) : RefCounted(handle) {
+    // ===== BEGIN GENERATED ENUMS: Tween (scripts/generate_api_wrapper.py — do not edit) =====
+    actual value class TweenProcessMode
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            actual val PHYSICS: TweenProcessMode get() = TweenProcessMode(0L)
+            actual val IDLE: TweenProcessMode get() = TweenProcessMode(1L)
+        }
+    }
+
+    actual value class TweenPauseMode
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            actual val BOUND: TweenPauseMode get() = TweenPauseMode(0L)
+            actual val STOP: TweenPauseMode get() = TweenPauseMode(1L)
+            actual val PROCESS: TweenPauseMode get() = TweenPauseMode(2L)
+        }
+    }
+
+    actual value class TransitionType
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            actual val LINEAR: TransitionType get() = TransitionType(0L)
+            actual val SINE: TransitionType get() = TransitionType(1L)
+            actual val QUINT: TransitionType get() = TransitionType(2L)
+            actual val QUART: TransitionType get() = TransitionType(3L)
+            actual val QUAD: TransitionType get() = TransitionType(4L)
+            actual val EXPO: TransitionType get() = TransitionType(5L)
+            actual val ELASTIC: TransitionType get() = TransitionType(6L)
+            actual val CUBIC: TransitionType get() = TransitionType(7L)
+            actual val CIRC: TransitionType get() = TransitionType(8L)
+            actual val BOUNCE: TransitionType get() = TransitionType(9L)
+            actual val BACK: TransitionType get() = TransitionType(10L)
+            actual val SPRING: TransitionType get() = TransitionType(11L)
+        }
+    }
+
+    actual value class EaseType
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            actual val IN: EaseType get() = EaseType(0L)
+            actual val OUT: EaseType get() = EaseType(1L)
+            actual val IN_OUT: EaseType get() = EaseType(2L)
+            actual val OUT_IN: EaseType get() = EaseType(3L)
+        }
+    }
+    // ===== END GENERATED ENUMS: Tween =====
+
     fun setParallel(parallel: Boolean): Tween {
         releaseIosFluentSelf(
             segment,
             IosGodot.tweenSetParallel(segment.address(), if (parallel) 1 else 0),
+            "Tween.set_parallel",
         )
         return this
     }
@@ -193,34 +259,42 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
         releaseIosFluentSelf(
             segment,
             ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment).address(),
+            "Tween.bind_node",
         )
         return this
     }
 
     // Tween.set_ease(ease) — ptrcall (int arg, returns self). Tween-level default ease (distinct
     // from Tweener.setEase, which configures an individual tweener).
-    fun setEase(ease: Long): Tween {
+    fun setEase(ease: Tween.EaseType): Tween {
         releaseIosFluentSelf(
             segment,
-            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease).address(),
+            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value).address(),
+            "Tween.set_ease",
         )
         return this
     }
 
     // Tween.tween_callback(Callable(target, method)). Routed through the C shim (Callable arg).
-    fun tweenCallback(target: GodotObject, method: String): CallbackTweener? =
-        IosGodot.tweenTweenCallback(segment.address(), target.segment.address(), method)
-            .takeIf { it != 0L }
-            ?.let { CallbackTweener(GodotHandle(MemorySegment.ofAddress(it))) }
+    fun tweenCallback(target: GodotObject, method: String): CallbackTweener =
+        requireGodotReturn(
+            IosGodot.tweenTweenCallback(segment.address(), target.segment.address(), method)
+                .takeIf { it != 0L }
+                ?.let { CallbackTweener(GodotHandle(MemorySegment.ofAddress(it))) },
+            "Tween.tween_callback",
+        )
 
     // Tween.tween_method(Callable(target, method), from, to, duration) — animates [from]->[to] over
     // [duration], calling target.method(value) each frame. Callable arg → routed through the C shim.
-    fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): MethodTweener? =
-        IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
-            .takeIf { it != 0L }
-            ?.let { MethodTweener(GodotHandle(MemorySegment.ofAddress(it))) }
+    fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): MethodTweener =
+        requireGodotReturn(
+            IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
+                .takeIf { it != 0L }
+                ?.let { MethodTweener(GodotHandle(MemorySegment.ofAddress(it))) },
+            "Tween.tween_method",
+        )
 
-    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener? {
+    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener {
         val addr = segment.address()
         val targetAddr = target.segment.address()
         return when (finalValue) {
@@ -228,6 +302,7 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
             is Color -> IosGodot.tweenTweenPropertyColor(addr, targetAddr, property, finalValue.r.toDouble(), finalValue.g.toDouble(), finalValue.b.toDouble(), finalValue.a.toDouble(), duration)
             else -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, 0.0, 0.0, duration)
         }.takeIf { it != 0L }?.let { PropertyTweener(GodotHandle(MemorySegment.ofAddress(it))) }
+            .let { requireGodotReturn(it, "Tween.tween_property") }
     }
 
     fun kill() {
@@ -239,20 +314,15 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     }
 
     companion object {
-        const val TRANS_BACK = 10L
-        const val TRANS_ELASTIC = 6L
-        const val EASE_IN = 0L
-        const val EASE_OUT = 1L
-        const val EASE_IN_OUT = 2L
-        const val EASE_OUT_IN = 3L
 
         private val bindNodeBind by lazy { ObjectCalls.getMethodBind("Tween", "bind_node", 2946786331L) }
         private val setEaseBind by lazy { ObjectCalls.getMethodBind("Tween", "set_ease", 1208117252L) }
     }
 }
 
-private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long) {
-    if (returned == 0L) return
+// `meta: "required"` (task 128 A): a null fluent return throws instead of being ignored.
+private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long, godotMethod: String) {
+    if (returned == 0L) requireGodotReturn<Any>(null, godotMethod)
     check(returned == receiver.address()) {
         "Godot fluent RefCounted call returned a different object"
     }
@@ -260,9 +330,9 @@ private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long) {
 }
 
 class InputEventMouseButton(handle: GodotHandle) : GodotObject(handle) {
-    fun getButtonIndex(): Long =
-        if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(segment.address())
-        else MOUSE_BUTTON_LEFT
+    fun getButtonIndex(): MouseButton =
+        MouseButton(if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(segment.address())
+        else MouseButton.LEFT.value)
 
     fun isPressed(): Boolean =
         IosGodot.inputEventIsPressed(segment.address())
@@ -271,9 +341,6 @@ class InputEventMouseButton(handle: GodotHandle) : GodotObject(handle) {
         IosGodot.inputEventIsReleased(segment.address())
 
     companion object {
-        const val MOUSE_BUTTON_LEFT = 1L
-        const val MOUSE_BUTTON_RIGHT = 2L
-        const val MOUSE_BUTTON_MIDDLE = 3L
 
         fun from(value: GodotObject): InputEventMouseButton? =
             if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle)
@@ -361,6 +428,27 @@ object Mathf {
 // shim and wrap the result to the concrete type. The generator emits no typed-load sugar, so this
 // stays bespoke.
 object ResourceLoader {
+    // ===== BEGIN GENERATED ENUMS: ResourceLoader (scripts/generate_api_wrapper.py — do not edit) =====
+    value class ThreadLoadStatus(val value: Long) {
+        companion object {
+            val INVALID_RESOURCE: ThreadLoadStatus get() = ThreadLoadStatus(0L)
+            val IN_PROGRESS: ThreadLoadStatus get() = ThreadLoadStatus(1L)
+            val FAILED: ThreadLoadStatus get() = ThreadLoadStatus(2L)
+            val LOADED: ThreadLoadStatus get() = ThreadLoadStatus(3L)
+        }
+    }
+
+    value class CacheMode(val value: Long) {
+        companion object {
+            val IGNORE: CacheMode get() = CacheMode(0L)
+            val REUSE: CacheMode get() = CacheMode(1L)
+            val REPLACE: CacheMode get() = CacheMode(2L)
+            val IGNORE_DEEP: CacheMode get() = CacheMode(3L)
+            val REPLACE_DEEP: CacheMode get() = CacheMode(4L)
+        }
+    }
+    // ===== END GENERATED ENUMS: ResourceLoader =====
+
     fun load(path: String): Resource? =
         IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let {
             Resource(GodotHandle(MemorySegment.ofAddress(it)))
@@ -386,13 +474,12 @@ object ResourceLoader {
             LightmapGIData(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
-    const val THREAD_LOAD_INVALID_RESOURCE = 0L
-    const val THREAD_LOAD_IN_PROGRESS = 1L
-    const val THREAD_LOAD_FAILED = 2L
-    const val THREAD_LOAD_LOADED = 3L
-    const val CACHE_MODE_REUSE = 1L
 
-    data class ThreadLoadStatus(val status: Long, val progress: Double?)
+    /**
+     * [loadThreadedGetStatusWithProgress]'s result (named `ThreadLoadStatus` before task 128 A, when
+     * that name became Godot's enum `ResourceLoader.ThreadLoadStatus`).
+     */
+    data class ThreadLoadProgress(val status: ResourceLoader.ThreadLoadStatus, val progress: Double?)
 
     // Threaded loading: the request goes through the generic Variant call path (int return decodes
     // cleanly). The status poll ptrcalls load_threaded_get_status with the optional progress
@@ -401,17 +488,17 @@ object ResourceLoader {
         path: String,
         typeHint: String = "",
         useSubThreads: Boolean = false,
-        cacheMode: Long = CACHE_MODE_REUSE,
-    ): Long =
-        (ObjectCalls.callWithVariantArgs(loadThreadedRequestBind, singleton, listOf(path, typeHint, useSubThreads, cacheMode)) as? Number)?.toLong()
-            ?: THREAD_LOAD_INVALID_RESOURCE
+        cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+    ): GodotError =
+        GodotError((ObjectCalls.callWithVariantArgs(loadThreadedRequestBind, singleton, listOf(path, typeHint, useSubThreads, cacheMode.value)) as? Number)?.toLong()
+            ?: 0L)
 
-    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadProgress {
         val (status, progress) = ObjectCalls.ptrcallLoadStatusWithProgress(loadThreadedGetStatusBind, singleton, path)
         return if (status < 0) {
-            ThreadLoadStatus(THREAD_LOAD_INVALID_RESOURCE, null)
+            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus.INVALID_RESOURCE, null)
         } else {
-            ThreadLoadStatus(status, progress)
+            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus(status), progress)
         }
     }
 

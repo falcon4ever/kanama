@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,14 +10,14 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: ENetConnection
  */
 class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
-    fun createHostBound(bindAddress: String, bindPort: Int, maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
+    fun createHostBound(bindAddress: String, bindPort: Int, maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createHostBoundBind, segment, bindAddress, bindPort, maxPeers, maxChannels, inBandwidth, outBandwidth)
+        return GodotError(ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createHostBoundBind, segment, bindAddress, bindPort, maxPeers, maxChannels, inBandwidth, outBandwidth))
     }
 
-    fun createHost(maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
+    fun createHost(maxPeers: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithFourIntArgsRetLong(createHostBind, segment, maxPeers, maxChannels, inBandwidth, outBandwidth)
+        return GodotError(ObjectCalls.ptrcallWithFourIntArgsRetLong(createHostBind, segment, maxPeers, maxChannels, inBandwidth, outBandwidth))
     }
 
     fun destroy() {
@@ -54,19 +55,19 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithIntByteArrayIntArgs(broadcastBind, segment, channel, packet, flags)
     }
 
-    fun compress(mode: Long) {
+    fun compress(mode: ENetConnection.CompressionMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(compressBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(compressBind, segment, mode.value)
     }
 
-    fun dtlsServerSetup(serverOptions: TLSOptions?): Long {
+    fun dtlsServerSetup(serverOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(dtlsServerSetupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(dtlsServerSetupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
-    fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): Long {
+    fun dtlsClientSetup(hostname: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(dtlsClientSetupBind, segment, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun refuseNewConnections(refuse: Boolean) {
@@ -74,9 +75,9 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithBoolArg(refuseNewConnectionsBind, segment, refuse)
     }
 
-    fun popStatistic(statistic: Long): Double {
+    fun popStatistic(statistic: ENetConnection.HostStatistic): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(popStatisticBind, segment, statistic)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(popStatisticBind, segment, statistic.value)
     }
 
     fun getMaxChannels(): Int {
@@ -99,22 +100,39 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithStringIntByteArrayArgs(socketSendBind, segment, destinationAddress, destinationPort, packet)
     }
 
-    companion object {
-        const val COMPRESS_NONE: Long = 0L
-        const val COMPRESS_RANGE_CODER: Long = 1L
-        const val COMPRESS_FASTLZ: Long = 2L
-        const val COMPRESS_ZLIB: Long = 3L
-        const val COMPRESS_ZSTD: Long = 4L
-        const val EVENT_ERROR: Long = -1L
-        const val EVENT_NONE: Long = 0L
-        const val EVENT_CONNECT: Long = 1L
-        const val EVENT_DISCONNECT: Long = 2L
-        const val EVENT_RECEIVE: Long = 3L
-        const val HOST_TOTAL_SENT_DATA: Long = 0L
-        const val HOST_TOTAL_SENT_PACKETS: Long = 1L
-        const val HOST_TOTAL_RECEIVED_DATA: Long = 2L
-        const val HOST_TOTAL_RECEIVED_PACKETS: Long = 3L
+    @JvmInline
+    value class CompressionMode(val value: Long) {
+        companion object {
+            val NONE: CompressionMode get() = CompressionMode(0L)
+            val RANGE_CODER: CompressionMode get() = CompressionMode(1L)
+            val FASTLZ: CompressionMode get() = CompressionMode(2L)
+            val ZLIB: CompressionMode get() = CompressionMode(3L)
+            val ZSTD: CompressionMode get() = CompressionMode(4L)
+        }
+    }
 
+    @JvmInline
+    value class EventType(val value: Long) {
+        companion object {
+            val ERROR: EventType get() = EventType(-1L)
+            val NONE: EventType get() = EventType(0L)
+            val CONNECT: EventType get() = EventType(1L)
+            val DISCONNECT: EventType get() = EventType(2L)
+            val RECEIVE: EventType get() = EventType(3L)
+        }
+    }
+
+    @JvmInline
+    value class HostStatistic(val value: Long) {
+        companion object {
+            val SENT_DATA: HostStatistic get() = HostStatistic(0L)
+            val SENT_PACKETS: HostStatistic get() = HostStatistic(1L)
+            val RECEIVED_DATA: HostStatistic get() = HostStatistic(2L)
+            val RECEIVED_PACKETS: HostStatistic get() = HostStatistic(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ENetConnection? =
             wrap(handle.segment)

@@ -15,29 +15,29 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: SurfaceTool
  */
 class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
-    fun setSkinWeightCount(count: Long) {
+    fun setSkinWeightCount(count: SurfaceTool.SkinWeightCount) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, segment, count)
+        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, segment, count.value)
     }
 
-    fun getSkinWeightCount(): Long {
+    fun getSkinWeightCount(): SurfaceTool.SkinWeightCount {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, segment)
+        return SurfaceTool.SkinWeightCount(ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, segment))
     }
 
-    fun setCustomFormat(channelIndex: Int, format: Long) {
+    fun setCustomFormat(channelIndex: Int, format: SurfaceTool.CustomFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, segment, channelIndex, format)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, segment, channelIndex, format.value)
     }
 
-    fun getCustomFormat(channelIndex: Int): Long {
+    fun getCustomFormat(channelIndex: Int): SurfaceTool.CustomFormat {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, segment, channelIndex)
+        return SurfaceTool.CustomFormat(ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, segment, channelIndex))
     }
 
-    fun begin(primitive: Long) {
+    fun begin(primitive: Mesh.PrimitiveType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(beginBind, segment, primitive)
+        ObjectCalls.ptrcallWithLongArg(beginBind, segment, primitive.value)
     }
 
     fun addVertex(vertex: Vector3) {
@@ -140,9 +140,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
-    fun getPrimitiveType(): Long {
+    fun getPrimitiveType(): Mesh.PrimitiveType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, segment)
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, segment))
     }
 
     fun clear() {
@@ -155,9 +155,9 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithObjectAndIntArg(createFromBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL, surface)
     }
 
-    fun createFromArrays(arrays: List<Any?>, primitiveType: Long = 3L) {
+    fun createFromArrays(arrays: List<Any?>, primitiveType: Mesh.PrimitiveType = Mesh.PrimitiveType.TRIANGLES) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, segment, arrays, primitiveType)
+        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, segment, arrays, primitiveType.value)
     }
 
     fun createFromBlendShape(existing: Mesh?, surface: Int, blendShape: String) {
@@ -184,19 +184,28 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
     fun commit(): ArrayMesh? = commit(null)
 
-    companion object {
-        const val CUSTOM_RGBA8_UNORM: Long = 0L
-        const val CUSTOM_RGBA8_SNORM: Long = 1L
-        const val CUSTOM_RG_HALF: Long = 2L
-        const val CUSTOM_RGBA_HALF: Long = 3L
-        const val CUSTOM_R_FLOAT: Long = 4L
-        const val CUSTOM_RG_FLOAT: Long = 5L
-        const val CUSTOM_RGB_FLOAT: Long = 6L
-        const val CUSTOM_RGBA_FLOAT: Long = 7L
-        const val CUSTOM_MAX: Long = 8L
-        const val SKIN_4_WEIGHTS: Long = 0L
-        const val SKIN_8_WEIGHTS: Long = 1L
+    value class CustomFormat(val value: Long) {
+        companion object {
+            val RGBA8_UNORM: CustomFormat get() = CustomFormat(0L)
+            val RGBA8_SNORM: CustomFormat get() = CustomFormat(1L)
+            val RG_HALF: CustomFormat get() = CustomFormat(2L)
+            val RGBA_HALF: CustomFormat get() = CustomFormat(3L)
+            val R_FLOAT: CustomFormat get() = CustomFormat(4L)
+            val RG_FLOAT: CustomFormat get() = CustomFormat(5L)
+            val RGB_FLOAT: CustomFormat get() = CustomFormat(6L)
+            val RGBA_FLOAT: CustomFormat get() = CustomFormat(7L)
+            val MAX: CustomFormat get() = CustomFormat(8L)
+        }
+    }
 
+    value class SkinWeightCount(val value: Long) {
+        companion object {
+            val SKIN_4_WEIGHTS: SkinWeightCount get() = SkinWeightCount(0L)
+            val SKIN_8_WEIGHTS: SkinWeightCount get() = SkinWeightCount(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SurfaceTool? =
             wrap(handle.segment)

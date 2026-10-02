@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setDraggingEnabledProperty")
         set(value) = setDraggingEnabled(value)
 
-    var draggerVisibility: Long
+    var draggerVisibility: SplitContainer.DraggerVisibility
         @JvmName("draggerVisibilityProperty")
         get() = getDraggerVisibility()
         @JvmName("setDraggerVisibilityProperty")
@@ -159,8 +160,8 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: SplitContainer.set_dragger_visibility
      */
-    fun setDraggerVisibility(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDraggerVisibilityBind, segment, mode)
+    fun setDraggerVisibility(mode: SplitContainer.DraggerVisibility) {
+        ObjectCalls.ptrcallWithLongArg(setDraggerVisibilityBind, segment, mode.value)
     }
 
     /**
@@ -169,8 +170,8 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: SplitContainer.get_dragger_visibility
      */
-    fun getDraggerVisibility(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDraggerVisibilityBind, segment)
+    fun getDraggerVisibility(): SplitContainer.DraggerVisibility {
+        return SplitContainer.DraggerVisibility(ObjectCalls.ptrcallNoArgsRetLong(getDraggerVisibilityBind, segment))
     }
 
     /**
@@ -388,11 +389,35 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
         const val dragEnded: String = "drag_ended"
     }
 
-    companion object {
-        const val DRAGGER_VISIBLE: Long = 0L
-        const val DRAGGER_HIDDEN: Long = 1L
-        const val DRAGGER_HIDDEN_COLLAPSED: Long = 2L
+    @JvmInline
+    value class DraggerVisibility(val value: Long) {
+        companion object {
+            /**
+             * The split dragger icon is always visible when `autohide` is `false`, otherwise visible only when
+             * the cursor hovers it. The size of the grabber icon determines the minimum `separation`. The
+             * dragger icon is automatically hidden if the length of the grabber icon is longer than the split
+             * bar.
+             *
+             * Generated from Godot docs: SplitContainer.DRAGGER_VISIBLE
+             */
+            val VISIBLE: DraggerVisibility get() = DraggerVisibility(0L)
+            /**
+             * The split dragger icon is never visible regardless of the value of `autohide`. The size of the
+             * grabber icon determines the minimum `separation`.
+             *
+             * Generated from Godot docs: SplitContainer.DRAGGER_HIDDEN
+             */
+            val HIDDEN: DraggerVisibility get() = DraggerVisibility(1L)
+            /**
+             * The split dragger icon is not visible, and the split bar is collapsed to zero thickness.
+             *
+             * Generated from Godot docs: SplitContainer.DRAGGER_HIDDEN_COLLAPSED
+             */
+            val HIDDEN_COLLAPSED: DraggerVisibility get() = DraggerVisibility(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SplitContainer? =
             wrap(handle.segment)

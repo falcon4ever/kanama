@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,75 +10,92 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeCompare
  */
 class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
-    var type: Long
+    var type: VisualShaderNodeCompare.ComparisonType
         @JvmName("typeProperty")
         get() = getComparisonType()
         @JvmName("setTypeProperty")
         set(value) = setComparisonType(value)
 
-    var function: Long
+    var function: VisualShaderNodeCompare.Function
         @JvmName("functionProperty")
         get() = getFunction()
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
-    var condition: Long
+    var condition: VisualShaderNodeCompare.Condition
         @JvmName("conditionProperty")
         get() = getCondition()
         @JvmName("setConditionProperty")
         set(value) = setCondition(value)
 
-    fun setComparisonType(type: Long) {
+    fun setComparisonType(type: VisualShaderNodeCompare.ComparisonType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setComparisonTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setComparisonTypeBind, segment, type.value)
     }
 
-    fun getComparisonType(): Long {
+    fun getComparisonType(): VisualShaderNodeCompare.ComparisonType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getComparisonTypeBind, segment)
+        return VisualShaderNodeCompare.ComparisonType(ObjectCalls.ptrcallNoArgsRetLong(getComparisonTypeBind, segment))
     }
 
-    fun setFunction(func: Long) {
+    fun setFunction(func: VisualShaderNodeCompare.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
     }
 
-    fun getFunction(): Long {
+    fun getFunction(): VisualShaderNodeCompare.Function {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
+        return VisualShaderNodeCompare.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
     }
 
-    fun setCondition(condition: Long) {
+    fun setCondition(condition: VisualShaderNodeCompare.Condition) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setConditionBind, segment, condition)
+        ObjectCalls.ptrcallWithLongArg(setConditionBind, segment, condition.value)
     }
 
-    fun getCondition(): Long {
+    fun getCondition(): VisualShaderNodeCompare.Condition {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getConditionBind, segment)
+        return VisualShaderNodeCompare.Condition(ObjectCalls.ptrcallNoArgsRetLong(getConditionBind, segment))
+    }
+
+    @JvmInline
+    value class ComparisonType(val value: Long) {
+        companion object {
+            val SCALAR: ComparisonType get() = ComparisonType(0L)
+            val SCALAR_INT: ComparisonType get() = ComparisonType(1L)
+            val SCALAR_UINT: ComparisonType get() = ComparisonType(2L)
+            val VECTOR_2D: ComparisonType get() = ComparisonType(3L)
+            val VECTOR_3D: ComparisonType get() = ComparisonType(4L)
+            val VECTOR_4D: ComparisonType get() = ComparisonType(5L)
+            val BOOLEAN: ComparisonType get() = ComparisonType(6L)
+            val TRANSFORM: ComparisonType get() = ComparisonType(7L)
+            val MAX: ComparisonType get() = ComparisonType(8L)
+        }
+    }
+
+    @JvmInline
+    value class Function(val value: Long) {
+        companion object {
+            val EQUAL: Function get() = Function(0L)
+            val NOT_EQUAL: Function get() = Function(1L)
+            val GREATER_THAN: Function get() = Function(2L)
+            val GREATER_THAN_EQUAL: Function get() = Function(3L)
+            val LESS_THAN: Function get() = Function(4L)
+            val LESS_THAN_EQUAL: Function get() = Function(5L)
+            val MAX: Function get() = Function(6L)
+        }
+    }
+
+    @JvmInline
+    value class Condition(val value: Long) {
+        companion object {
+            val ALL: Condition get() = Condition(0L)
+            val ANY: Condition get() = Condition(1L)
+            val MAX: Condition get() = Condition(2L)
+        }
     }
 
     companion object {
-        const val CTYPE_SCALAR: Long = 0L
-        const val CTYPE_SCALAR_INT: Long = 1L
-        const val CTYPE_SCALAR_UINT: Long = 2L
-        const val CTYPE_VECTOR_2D: Long = 3L
-        const val CTYPE_VECTOR_3D: Long = 4L
-        const val CTYPE_VECTOR_4D: Long = 5L
-        const val CTYPE_BOOLEAN: Long = 6L
-        const val CTYPE_TRANSFORM: Long = 7L
-        const val CTYPE_MAX: Long = 8L
-        const val FUNC_EQUAL: Long = 0L
-        const val FUNC_NOT_EQUAL: Long = 1L
-        const val FUNC_GREATER_THAN: Long = 2L
-        const val FUNC_GREATER_THAN_EQUAL: Long = 3L
-        const val FUNC_LESS_THAN: Long = 4L
-        const val FUNC_LESS_THAN_EQUAL: Long = 5L
-        const val FUNC_MAX: Long = 6L
-        const val COND_ALL: Long = 0L
-        const val COND_ANY: Long = 1L
-        const val COND_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCompare? =
             wrap(handle.segment)

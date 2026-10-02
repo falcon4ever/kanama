@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,13 +19,13 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
-    var resolution: Long
+    var resolution: GPUParticlesCollisionHeightField3D.Resolution
         @JvmName("resolutionProperty")
         get() = getResolution()
         @JvmName("setResolutionProperty")
         set(value) = setResolution(value)
 
-    var updateMode: Long
+    var updateMode: GPUParticlesCollisionHeightField3D.UpdateMode
         @JvmName("updateModeProperty")
         get() = getUpdateMode()
         @JvmName("setUpdateModeProperty")
@@ -69,8 +70,8 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      *
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_resolution
      */
-    fun setResolution(resolution: Long) {
-        ObjectCalls.ptrcallWithLongArg(setResolutionBind, segment, resolution)
+    fun setResolution(resolution: GPUParticlesCollisionHeightField3D.Resolution) {
+        ObjectCalls.ptrcallWithLongArg(setResolutionBind, segment, resolution.value)
     }
 
     /**
@@ -80,8 +81,8 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      *
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_resolution
      */
-    fun getResolution(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, segment)
+    fun getResolution(): GPUParticlesCollisionHeightField3D.Resolution {
+        return GPUParticlesCollisionHeightField3D.Resolution(ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, segment))
     }
 
     /**
@@ -89,8 +90,8 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      *
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_update_mode
      */
-    fun setUpdateMode(updateMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, updateMode)
+    fun setUpdateMode(updateMode: GPUParticlesCollisionHeightField3D.UpdateMode) {
+        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, updateMode.value)
     }
 
     /**
@@ -98,8 +99,8 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
      *
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_update_mode
      */
-    fun getUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment)
+    fun getUpdateMode(): GPUParticlesCollisionHeightField3D.UpdateMode {
+        return GPUParticlesCollisionHeightField3D.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment))
     }
 
     /**
@@ -180,17 +181,80 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
         return ObjectCalls.ptrcallNoArgsRetBool(isFollowCameraEnabledBind, segment)
     }
 
-    companion object {
-        const val RESOLUTION_256: Long = 0L
-        const val RESOLUTION_512: Long = 1L
-        const val RESOLUTION_1024: Long = 2L
-        const val RESOLUTION_2048: Long = 3L
-        const val RESOLUTION_4096: Long = 4L
-        const val RESOLUTION_8192: Long = 5L
-        const val RESOLUTION_MAX: Long = 6L
-        const val UPDATE_MODE_WHEN_MOVED: Long = 0L
-        const val UPDATE_MODE_ALWAYS: Long = 1L
+    @JvmInline
+    value class Resolution(val value: Long) {
+        companion object {
+            /**
+             * Generate a 256×256 heightmap. Intended for small-scale scenes, or larger scenes with no distant
+             * particles.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.RESOLUTION_256
+             */
+            val RESOLUTION_256: Resolution get() = Resolution(0L)
+            /**
+             * Generate a 512×512 heightmap. Intended for medium-scale scenes, or larger scenes with no distant
+             * particles.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.RESOLUTION_512
+             */
+            val RESOLUTION_512: Resolution get() = Resolution(1L)
+            /**
+             * Generate a 1024×1024 heightmap. Intended for large scenes with distant particles.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.RESOLUTION_1024
+             */
+            val RESOLUTION_1024: Resolution get() = Resolution(2L)
+            /**
+             * Generate a 2048×2048 heightmap. Intended for very large scenes with distant particles.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.RESOLUTION_2048
+             */
+            val RESOLUTION_2048: Resolution get() = Resolution(3L)
+            /**
+             * Generate a 4096×4096 heightmap. Intended for huge scenes with distant particles.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.RESOLUTION_4096
+             */
+            val RESOLUTION_4096: Resolution get() = Resolution(4L)
+            /**
+             * Generate a 8192×8192 heightmap. Intended for gigantic scenes with distant particles.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.RESOLUTION_8192
+             */
+            val RESOLUTION_8192: Resolution get() = Resolution(5L)
+            /**
+             * Represents the size of the `Resolution` enum.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.RESOLUTION_MAX
+             */
+            val MAX: Resolution get() = Resolution(6L)
+        }
+    }
 
+    @JvmInline
+    value class UpdateMode(val value: Long) {
+        companion object {
+            /**
+             * Only update the heightmap when the `GPUParticlesCollisionHeightField3D` node is moved, or when
+             * the camera moves if `follow_camera_enabled` is `true`. An update can be forced by slightly
+             * moving the `GPUParticlesCollisionHeightField3D` in any direction, or by calling
+             * `RenderingServer.particles_collision_height_field_update`.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.UPDATE_MODE_WHEN_MOVED
+             */
+            val WHEN_MOVED: UpdateMode get() = UpdateMode(0L)
+            /**
+             * Update the heightmap every frame. This has a significant performance cost. This update should
+             * only be used when geometry that particles can collide with changes significantly during
+             * gameplay.
+             *
+             * Generated from Godot docs: GPUParticlesCollisionHeightField3D.UPDATE_MODE_ALWAYS
+             */
+            val ALWAYS: UpdateMode get() = UpdateMode(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GPUParticlesCollisionHeightField3D? =
             wrap(handle.segment)

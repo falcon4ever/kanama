@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -47,13 +48,13 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setScrollVerticalCustomStepProperty")
         set(value) = setVerticalCustomStep(value)
 
-    var horizontalScrollMode: Long
+    var horizontalScrollMode: ScrollContainer.ScrollMode
         @JvmName("horizontalScrollModeProperty")
         get() = getHorizontalScrollMode()
         @JvmName("setHorizontalScrollModeProperty")
         set(value) = setHorizontalScrollMode(value)
 
-    var verticalScrollMode: Long
+    var verticalScrollMode: ScrollContainer.ScrollMode
         @JvmName("verticalScrollModeProperty")
         get() = getVerticalScrollMode()
         @JvmName("setVerticalScrollModeProperty")
@@ -71,7 +72,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setScrollDeadzoneProperty")
         set(value) = setDeadzone(value)
 
-    var scrollHintMode: Long
+    var scrollHintMode: ScrollContainer.ScrollHintMode
         @JvmName("scrollHintModeProperty")
         get() = getScrollHintMode()
         @JvmName("setScrollHintModeProperty")
@@ -170,8 +171,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: ScrollContainer.set_horizontal_scroll_mode
      */
-    fun setHorizontalScrollMode(enable: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalScrollModeBind, segment, enable)
+    fun setHorizontalScrollMode(enable: ScrollContainer.ScrollMode) {
+        ObjectCalls.ptrcallWithLongArg(setHorizontalScrollModeBind, segment, enable.value)
     }
 
     /**
@@ -179,8 +180,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: ScrollContainer.get_horizontal_scroll_mode
      */
-    fun getHorizontalScrollMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalScrollModeBind, segment)
+    fun getHorizontalScrollMode(): ScrollContainer.ScrollMode {
+        return ScrollContainer.ScrollMode(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalScrollModeBind, segment))
     }
 
     /**
@@ -188,8 +189,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: ScrollContainer.set_vertical_scroll_mode
      */
-    fun setVerticalScrollMode(enable: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalScrollModeBind, segment, enable)
+    fun setVerticalScrollMode(enable: ScrollContainer.ScrollMode) {
+        ObjectCalls.ptrcallWithLongArg(setVerticalScrollModeBind, segment, enable.value)
     }
 
     /**
@@ -197,8 +198,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: ScrollContainer.get_vertical_scroll_mode
      */
-    fun getVerticalScrollMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalScrollModeBind, segment)
+    fun getVerticalScrollMode(): ScrollContainer.ScrollMode {
+        return ScrollContainer.ScrollMode(ObjectCalls.ptrcallNoArgsRetLong(getVerticalScrollModeBind, segment))
     }
 
     /**
@@ -248,8 +249,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: ScrollContainer.set_scroll_hint_mode
      */
-    fun setScrollHintMode(scrollHintMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode)
+    fun setScrollHintMode(scrollHintMode: ScrollContainer.ScrollHintMode) {
+        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode.value)
     }
 
     /**
@@ -259,8 +260,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: ScrollContainer.get_scroll_hint_mode
      */
-    fun getScrollHintMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment)
+    fun getScrollHintMode(): ScrollContainer.ScrollHintMode {
+        return ScrollContainer.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment))
     }
 
     /**
@@ -358,18 +359,85 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
         const val scrollEnded: String = "scroll_ended"
     }
 
-    companion object {
-        const val SCROLL_MODE_DISABLED: Long = 0L
-        const val SCROLL_MODE_AUTO: Long = 1L
-        const val SCROLL_MODE_SHOW_ALWAYS: Long = 2L
-        const val SCROLL_MODE_SHOW_NEVER: Long = 3L
-        const val SCROLL_MODE_RESERVE: Long = 4L
-        const val SCROLL_MODE_MAXIMIZE_FIRST: Long = 5L
-        const val SCROLL_HINT_MODE_DISABLED: Long = 0L
-        const val SCROLL_HINT_MODE_ALL: Long = 1L
-        const val SCROLL_HINT_MODE_TOP_AND_LEFT: Long = 2L
-        const val SCROLL_HINT_MODE_BOTTOM_AND_RIGHT: Long = 3L
+    @JvmInline
+    value class ScrollMode(val value: Long) {
+        companion object {
+            /**
+             * Scrolling disabled, scrollbar will be invisible.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_MODE_DISABLED
+             */
+            val DISABLED: ScrollMode get() = ScrollMode(0L)
+            /**
+             * Scrolling enabled, scrollbar will be visible only if necessary, i.e. container's content is
+             * bigger than the container.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_MODE_AUTO
+             */
+            val AUTO: ScrollMode get() = ScrollMode(1L)
+            /**
+             * Scrolling enabled, scrollbar will be always visible.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
+             */
+            val SHOW_ALWAYS: ScrollMode get() = ScrollMode(2L)
+            /**
+             * Scrolling enabled, scrollbar will be hidden.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_MODE_SHOW_NEVER
+             */
+            val SHOW_NEVER: ScrollMode get() = ScrollMode(3L)
+            /**
+             * Combines `SCROLL_MODE_AUTO` and `SCROLL_MODE_SHOW_ALWAYS`. The scrollbar is only visible if
+             * necessary, but the content size is adjusted as if it was always visible. It's useful for
+             * ensuring that content size stays the same regardless if the scrollbar is visible.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_MODE_RESERVE
+             */
+            val RESERVE: ScrollMode get() = ScrollMode(4L)
+            /**
+             * Behaves like `SCROLL_MODE_AUTO`, but makes the `ScrollContainer` report a minimum size based on
+             * its content (limited by `Control.custom_maximum_size` when set on the corresponding axis). This
+             * allows it to grow first and only start scrolling once constrained.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_MODE_MAXIMIZE_FIRST
+             */
+            val MAXIMIZE_FIRST: ScrollMode get() = ScrollMode(5L)
+        }
+    }
 
+    @JvmInline
+    value class ScrollHintMode(val value: Long) {
+        companion object {
+            /**
+             * Scroll hints will never be shown.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_DISABLED
+             */
+            val DISABLED: ScrollHintMode get() = ScrollHintMode(0L)
+            /**
+             * Scroll hints will be shown at the top and bottom (if vertical), or left and right (if
+             * horizontal).
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_ALL
+             */
+            val ALL: ScrollHintMode get() = ScrollHintMode(1L)
+            /**
+             * Scroll hints will be shown at the top (if vertical), or the left (if horizontal).
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_TOP_AND_LEFT
+             */
+            val TOP_AND_LEFT: ScrollHintMode get() = ScrollHintMode(2L)
+            /**
+             * Scroll hints will be shown at the bottom (if horizontal), or the right (if horizontal).
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_BOTTOM_AND_RIGHT
+             */
+            val BOTTOM_AND_RIGHT: ScrollHintMode get() = ScrollHintMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ScrollContainer? =
             wrap(handle.segment)

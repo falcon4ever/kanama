@@ -8,14 +8,14 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: ZIPReader
  */
 class ZIPReader(handle: GodotHandle) : RefCounted(handle) {
-    fun open(path: String): Long {
+    fun open(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(openBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(openBind, segment, path))
     }
 
-    fun closeArchive(): Long {
+    fun closeArchive(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, segment))
     }
 
     fun getFiles(): List<String> {

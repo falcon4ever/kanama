@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -113,37 +114,42 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isDiscoverIpv6Bind, segment)
     }
 
-    companion object {
-        const val UPNP_RESULT_SUCCESS: Long = 0L
-        const val UPNP_RESULT_NOT_AUTHORIZED: Long = 1L
-        const val UPNP_RESULT_PORT_MAPPING_NOT_FOUND: Long = 2L
-        const val UPNP_RESULT_INCONSISTENT_PARAMETERS: Long = 3L
-        const val UPNP_RESULT_NO_SUCH_ENTRY_IN_ARRAY: Long = 4L
-        const val UPNP_RESULT_ACTION_FAILED: Long = 5L
-        const val UPNP_RESULT_SRC_IP_WILDCARD_NOT_PERMITTED: Long = 6L
-        const val UPNP_RESULT_EXT_PORT_WILDCARD_NOT_PERMITTED: Long = 7L
-        const val UPNP_RESULT_INT_PORT_WILDCARD_NOT_PERMITTED: Long = 8L
-        const val UPNP_RESULT_REMOTE_HOST_MUST_BE_WILDCARD: Long = 9L
-        const val UPNP_RESULT_EXT_PORT_MUST_BE_WILDCARD: Long = 10L
-        const val UPNP_RESULT_NO_PORT_MAPS_AVAILABLE: Long = 11L
-        const val UPNP_RESULT_CONFLICT_WITH_OTHER_MECHANISM: Long = 12L
-        const val UPNP_RESULT_CONFLICT_WITH_OTHER_MAPPING: Long = 13L
-        const val UPNP_RESULT_SAME_PORT_VALUES_REQUIRED: Long = 14L
-        const val UPNP_RESULT_ONLY_PERMANENT_LEASE_SUPPORTED: Long = 15L
-        const val UPNP_RESULT_INVALID_GATEWAY: Long = 16L
-        const val UPNP_RESULT_INVALID_PORT: Long = 17L
-        const val UPNP_RESULT_INVALID_PROTOCOL: Long = 18L
-        const val UPNP_RESULT_INVALID_DURATION: Long = 19L
-        const val UPNP_RESULT_INVALID_ARGS: Long = 20L
-        const val UPNP_RESULT_INVALID_RESPONSE: Long = 21L
-        const val UPNP_RESULT_INVALID_PARAM: Long = 22L
-        const val UPNP_RESULT_HTTP_ERROR: Long = 23L
-        const val UPNP_RESULT_SOCKET_ERROR: Long = 24L
-        const val UPNP_RESULT_MEM_ALLOC_ERROR: Long = 25L
-        const val UPNP_RESULT_NO_GATEWAY: Long = 26L
-        const val UPNP_RESULT_NO_DEVICES: Long = 27L
-        const val UPNP_RESULT_UNKNOWN_ERROR: Long = 28L
+    @JvmInline
+    value class UPNPResult(val value: Long) {
+        companion object {
+            val SUCCESS: UPNPResult get() = UPNPResult(0L)
+            val NOT_AUTHORIZED: UPNPResult get() = UPNPResult(1L)
+            val PORT_MAPPING_NOT_FOUND: UPNPResult get() = UPNPResult(2L)
+            val INCONSISTENT_PARAMETERS: UPNPResult get() = UPNPResult(3L)
+            val NO_SUCH_ENTRY_IN_ARRAY: UPNPResult get() = UPNPResult(4L)
+            val ACTION_FAILED: UPNPResult get() = UPNPResult(5L)
+            val SRC_IP_WILDCARD_NOT_PERMITTED: UPNPResult get() = UPNPResult(6L)
+            val EXT_PORT_WILDCARD_NOT_PERMITTED: UPNPResult get() = UPNPResult(7L)
+            val INT_PORT_WILDCARD_NOT_PERMITTED: UPNPResult get() = UPNPResult(8L)
+            val REMOTE_HOST_MUST_BE_WILDCARD: UPNPResult get() = UPNPResult(9L)
+            val EXT_PORT_MUST_BE_WILDCARD: UPNPResult get() = UPNPResult(10L)
+            val NO_PORT_MAPS_AVAILABLE: UPNPResult get() = UPNPResult(11L)
+            val CONFLICT_WITH_OTHER_MECHANISM: UPNPResult get() = UPNPResult(12L)
+            val CONFLICT_WITH_OTHER_MAPPING: UPNPResult get() = UPNPResult(13L)
+            val SAME_PORT_VALUES_REQUIRED: UPNPResult get() = UPNPResult(14L)
+            val ONLY_PERMANENT_LEASE_SUPPORTED: UPNPResult get() = UPNPResult(15L)
+            val INVALID_GATEWAY: UPNPResult get() = UPNPResult(16L)
+            val INVALID_PORT: UPNPResult get() = UPNPResult(17L)
+            val INVALID_PROTOCOL: UPNPResult get() = UPNPResult(18L)
+            val INVALID_DURATION: UPNPResult get() = UPNPResult(19L)
+            val INVALID_ARGS: UPNPResult get() = UPNPResult(20L)
+            val INVALID_RESPONSE: UPNPResult get() = UPNPResult(21L)
+            val INVALID_PARAM: UPNPResult get() = UPNPResult(22L)
+            val HTTP_ERROR: UPNPResult get() = UPNPResult(23L)
+            val SOCKET_ERROR: UPNPResult get() = UPNPResult(24L)
+            val MEM_ALLOC_ERROR: UPNPResult get() = UPNPResult(25L)
+            val NO_GATEWAY: UPNPResult get() = UPNPResult(26L)
+            val NO_DEVICES: UPNPResult get() = UPNPResult(27L)
+            val UNKNOWN_ERROR: UPNPResult get() = UPNPResult(28L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UPNP? =
             wrap(handle.segment)

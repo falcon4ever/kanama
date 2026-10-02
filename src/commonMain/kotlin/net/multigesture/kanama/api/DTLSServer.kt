@@ -16,9 +16,9 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: DTLSServer.setup
      */
-    fun setup(serverOptions: TLSOptions?): Long {
+    fun setup(serverOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(setupBind, segment, serverOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**

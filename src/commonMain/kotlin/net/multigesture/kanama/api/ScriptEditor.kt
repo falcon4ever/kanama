@@ -166,8 +166,8 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      *
      * Generated from Godot docs: ScriptEditor.close_file
      */
-    fun closeFile(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(closeFileBind, segment, path)
+    fun closeFile(path: String): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(closeFileBind, segment, path))
     }
 
     object Signals {

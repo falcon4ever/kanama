@@ -38,8 +38,8 @@ class OpenXRRenderModelExtension(handle: GodotHandle) : OpenXRExtensionWrapper(h
         return ObjectCalls.ptrcallWithRIDArgRetString(renderModelGetTopLevelPathBind, segment, renderModel)
     }
 
-    fun renderModelGetConfidence(renderModel: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(renderModelGetConfidenceBind, segment, renderModel)
+    fun renderModelGetConfidence(renderModel: RID): XRPose.TrackingConfidence {
+        return XRPose.TrackingConfidence(ObjectCalls.ptrcallWithRIDArgRetLong(renderModelGetConfidenceBind, segment, renderModel))
     }
 
     fun renderModelGetRootTransform(renderModel: RID): Transform3D {

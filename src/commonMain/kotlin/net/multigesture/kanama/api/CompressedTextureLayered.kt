@@ -20,9 +20,9 @@ open class CompressedTextureLayered(handle: GodotHandle) : TextureLayered(handle
      *
      * Generated from Godot docs: CompressedTextureLayered.load
      */
-    fun load(path: String): Long {
+    fun load(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
     }
 
     /**

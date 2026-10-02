@@ -29,9 +29,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: MeshDataTool.create_from_surface
      */
-    fun createFromSurface(mesh: ArrayMesh?, surface: Int): Long {
+    fun createFromSurface(mesh: ArrayMesh?, surface: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface))
     }
 
     /**
@@ -39,9 +39,9 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: MeshDataTool.commit_to_surface
      */
-    fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): Long {
+    fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags))
     }
 
     /**

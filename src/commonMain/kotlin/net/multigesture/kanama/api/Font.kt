@@ -163,9 +163,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.get_font_style
      */
-    fun getFontStyle(): Long {
+    fun getFontStyle(): TextServer.FontStyle {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, segment)
+        return TextServer.FontStyle(ObjectCalls.ptrcallNoArgsRetLong(getFontStyleBind, segment))
     }
 
     /**
@@ -229,9 +229,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.get_spacing
      */
-    fun getSpacing(spacing: Long): Int {
+    fun getSpacing(spacing: TextServer.SpacingType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, segment, spacing)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getSpacingBind, segment, spacing.value)
     }
 
     /**
@@ -262,9 +262,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.get_string_size
      */
-    fun getStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
+    fun getStringSize(text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(getStringSizeBind, segment, text, alignment, width, fontSize, justificationFlags, direction, orientation)
+        return ObjectCalls.ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2(getStringSizeBind, segment, text, alignment.value, width, fontSize, justificationFlags.value, direction.value, orientation.value)
     }
 
     /**
@@ -273,9 +273,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.get_multiline_string_size
      */
-    fun getMultilineStringSize(text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L): Vector2 {
+    fun getMultilineStringSize(text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(getMultilineStringSizeBind, segment, text, alignment, width, fontSize, maxLines, brkFlags, justificationFlags, direction, orientation)
+        return ObjectCalls.ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(getMultilineStringSizeBind, segment, text, alignment.value, width, fontSize, maxLines, brkFlags.value, justificationFlags.value, direction.value, orientation.value)
     }
 
     /**
@@ -287,9 +287,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.draw_string
      */
-    fun drawString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+    fun drawString(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, canvasItem, pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -302,9 +302,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.draw_multiline_string
      */
-    fun drawMultilineString(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+    fun drawMultilineString(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, canvasItem, pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -316,9 +316,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.draw_string_outline
      */
-    fun drawStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+    fun drawStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, canvasItem, pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -331,9 +331,9 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Font.draw_multiline_string_outline
      */
-    fun drawMultilineStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
+    fun drawMultilineStringOutline(canvasItem: RID, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, canvasItem, pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, canvasItem, pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**

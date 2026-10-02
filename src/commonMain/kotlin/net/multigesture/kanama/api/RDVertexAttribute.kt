@@ -29,7 +29,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setOffsetProperty")
         set(value) = setOffset(value)
 
-    var format: Long
+    var format: RenderingDevice.DataFormat
         @JvmName("formatProperty")
         get() = getFormat()
         @JvmName("setFormatProperty")
@@ -41,7 +41,7 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setStrideProperty")
         set(value) = setStride(value)
 
-    var frequency: Long
+    var frequency: RenderingDevice.VertexFrequency
         @JvmName("frequencyProperty")
         get() = getFrequency()
         @JvmName("setFrequencyProperty")
@@ -120,9 +120,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDVertexAttribute.set_format
      */
-    fun setFormat(pMember: Long) {
+    fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember.value)
     }
 
     /**
@@ -130,9 +130,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDVertexAttribute.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**
@@ -160,9 +160,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDVertexAttribute.set_frequency
      */
-    fun setFrequency(pMember: Long) {
+    fun setFrequency(pMember: RenderingDevice.VertexFrequency) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrequencyBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrequencyBind, segment, pMember.value)
     }
 
     /**
@@ -170,9 +170,9 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDVertexAttribute.get_frequency
      */
-    fun getFrequency(): Long {
+    fun getFrequency(): RenderingDevice.VertexFrequency {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, segment)
+        return RenderingDevice.VertexFrequency(ObjectCalls.ptrcallNoArgsRetLong(getFrequencyBind, segment))
     }
 
     companion object {

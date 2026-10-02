@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -9,9 +10,9 @@ import net.multigesture.kanama.types.RID
  * Generated from Godot docs: OpenXRSpatialComponentMarkerList
  */
 class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
-    fun getMarkerType(index: Long): Long {
+    fun getMarkerType(index: Long): OpenXRSpatialComponentMarkerList.MarkerType {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getMarkerTypeBind, segment, index)
+        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallWithLongArgRetLong(getMarkerTypeBind, segment, index))
     }
 
     fun getMarkerId(index: Long): Long {
@@ -24,14 +25,19 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
         return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(getMarkerDataBind, segment, snapshot, index)
     }
 
-    companion object {
-        const val MARKER_TYPE_UNKNOWN: Long = 0L
-        const val MARKER_TYPE_QRCODE: Long = 1L
-        const val MARKER_TYPE_MICRO_QRCODE: Long = 2L
-        const val MARKER_TYPE_ARUCO: Long = 3L
-        const val MARKER_TYPE_APRIL_TAG: Long = 4L
-        const val MARKER_TYPE_MAX: Long = 5L
+    @JvmInline
+    value class MarkerType(val value: Long) {
+        companion object {
+            val UNKNOWN: MarkerType get() = MarkerType(0L)
+            val QRCODE: MarkerType get() = MarkerType(1L)
+            val MICRO_QRCODE: MarkerType get() = MarkerType(2L)
+            val ARUCO: MarkerType get() = MarkerType(3L)
+            val APRIL_TAG: MarkerType get() = MarkerType(4L)
+            val MAX: MarkerType get() = MarkerType(5L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentMarkerList? =
             wrap(handle.segment)

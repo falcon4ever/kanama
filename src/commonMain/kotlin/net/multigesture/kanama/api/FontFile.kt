@@ -34,13 +34,13 @@ class FontFile(handle: GodotHandle) : Font(handle) {
         @JvmName("setDisableEmbeddedBitmapsProperty")
         set(value) = setDisableEmbeddedBitmaps(value)
 
-    var antialiasing: Long
+    var antialiasing: TextServer.FontAntialiasing
         @JvmName("antialiasingProperty")
         get() = getAntialiasing()
         @JvmName("setAntialiasingProperty")
         set(value) = setAntialiasing(value)
 
-    var subpixelPositioning: Long
+    var subpixelPositioning: TextServer.SubpixelPositioning
         @JvmName("subpixelPositioningProperty")
         get() = getSubpixelPositioning()
         @JvmName("setSubpixelPositioningProperty")
@@ -88,7 +88,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
         @JvmName("setModulateColorGlyphsProperty")
         set(value) = setModulateColorGlyphs(value)
 
-    var hinting: Long
+    var hinting: TextServer.Hinting
         @JvmName("hintingProperty")
         get() = getHinting()
         @JvmName("setHintingProperty")
@@ -100,7 +100,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
         @JvmName("setFixedSizeProperty")
         set(value) = setFixedSize(value)
 
-    var fixedSizeScaleMode: Long
+    var fixedSizeScaleMode: TextServer.FixedSizeScaleMode
         @JvmName("fixedSizeScaleModeProperty")
         get() = getFixedSizeScaleMode()
         @JvmName("setFixedSizeScaleModeProperty")
@@ -125,9 +125,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.load_bitmap_font
      */
-    fun loadBitmapFont(path: String): Long {
+    fun loadBitmapFont(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, segment, path))
     }
 
     /**
@@ -138,9 +138,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.load_dynamic_font
      */
-    fun loadDynamicFont(path: String): Long {
+    fun loadDynamicFont(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, segment, path))
     }
 
     /**
@@ -188,9 +188,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.set_font_style
      */
-    fun setFontStyle(style: Long) {
+    fun setFontStyle(style: TextServer.FontStyle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFontStyleBind, segment, style)
+        ObjectCalls.ptrcallWithLongArg(setFontStyleBind, segment, style.value)
     }
 
     /**
@@ -219,9 +219,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.set_antialiasing
      */
-    fun setAntialiasing(antialiasing: Long) {
+    fun setAntialiasing(antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing)
+        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing.value)
     }
 
     /**
@@ -229,9 +229,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.get_antialiasing
      */
-    fun getAntialiasing(): Long {
+    fun getAntialiasing(): TextServer.FontAntialiasing {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment)
+        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment))
     }
 
     /**
@@ -393,9 +393,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.set_fixed_size_scale_mode
      */
-    fun setFixedSizeScaleMode(fixedSizeScaleMode: Long) {
+    fun setFixedSizeScaleMode(fixedSizeScaleMode: TextServer.FixedSizeScaleMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, segment, fixedSizeScaleMode)
+        ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, segment, fixedSizeScaleMode.value)
     }
 
     /**
@@ -403,9 +403,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.get_fixed_size_scale_mode
      */
-    fun getFixedSizeScaleMode(): Long {
+    fun getFixedSizeScaleMode(): TextServer.FixedSizeScaleMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, segment)
+        return TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, segment))
     }
 
     /**
@@ -477,9 +477,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.set_hinting
      */
-    fun setHinting(hinting: Long) {
+    fun setHinting(hinting: TextServer.Hinting) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting)
+        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting.value)
     }
 
     /**
@@ -487,9 +487,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.get_hinting
      */
-    fun getHinting(): Long {
+    fun getHinting(): TextServer.Hinting {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment)
+        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment))
     }
 
     /**
@@ -500,9 +500,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.set_subpixel_positioning
      */
-    fun setSubpixelPositioning(subpixelPositioning: Long) {
+    fun setSubpixelPositioning(subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning)
+        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning.value)
     }
 
     /**
@@ -513,9 +513,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.get_subpixel_positioning
      */
-    fun getSubpixelPositioning(): Long {
+    fun getSubpixelPositioning(): TextServer.SubpixelPositioning {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment)
+        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment))
     }
 
     /**
@@ -698,9 +698,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.set_extra_spacing
      */
-    fun setExtraSpacing(cacheIndex: Int, spacing: Long, value: Long) {
+    fun setExtraSpacing(cacheIndex: Int, spacing: TextServer.SpacingType, value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, segment, cacheIndex, spacing, value)
+        ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, segment, cacheIndex, spacing.value, value)
     }
 
     /**
@@ -708,9 +708,9 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontFile.get_extra_spacing
      */
-    fun getExtraSpacing(cacheIndex: Int, spacing: Long): Long {
+    fun getExtraSpacing(cacheIndex: Int, spacing: TextServer.SpacingType): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, segment, cacheIndex, spacing)
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, segment, cacheIndex, spacing.value)
     }
 
     /**

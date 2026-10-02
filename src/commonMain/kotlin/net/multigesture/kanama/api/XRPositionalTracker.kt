@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
         @JvmName("setProfileProperty")
         set(value) = setTrackerProfile(value)
 
-    var hand: Long
+    var hand: XRPositionalTracker.TrackerHand
         @JvmName("handProperty")
         get() = getTrackerHand()
         @JvmName("setHandProperty")
@@ -52,9 +53,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      *
      * Generated from Godot docs: XRPositionalTracker.get_tracker_hand
      */
-    fun getTrackerHand(): Long {
+    fun getTrackerHand(): XRPositionalTracker.TrackerHand {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment)
+        return XRPositionalTracker.TrackerHand(ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment))
     }
 
     /**
@@ -62,9 +63,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      *
      * Generated from Godot docs: XRPositionalTracker.set_tracker_hand
      */
-    fun setTrackerHand(hand: Long) {
+    fun setTrackerHand(hand: XRPositionalTracker.TrackerHand) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackerHandBind, segment, hand)
+        ObjectCalls.ptrcallWithLongArg(setTrackerHandBind, segment, hand.value)
     }
 
     /**
@@ -104,9 +105,9 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      *
      * Generated from Godot docs: XRPositionalTracker.set_pose
      */
-    fun setPose(name: String, transform: Transform3D, linearVelocity: Vector3, angularVelocity: Vector3, trackingConfidence: Long) {
+    fun setPose(name: String, transform: Transform3D, linearVelocity: Vector3, angularVelocity: Vector3, trackingConfidence: XRPose.TrackingConfidence) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameTransform3DTwoVector3LongArgs(setPoseBind, segment, name, transform, linearVelocity, angularVelocity, trackingConfidence)
+        ObjectCalls.ptrcallWithStringNameTransform3DTwoVector3LongArgs(setPoseBind, segment, name, transform, linearVelocity, angularVelocity, trackingConfidence.value)
     }
 
     /**
@@ -141,12 +142,37 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
         const val profileChanged: String = "profile_changed"
     }
 
-    companion object {
-        const val TRACKER_HAND_UNKNOWN: Long = 0L
-        const val TRACKER_HAND_LEFT: Long = 1L
-        const val TRACKER_HAND_RIGHT: Long = 2L
-        const val TRACKER_HAND_MAX: Long = 3L
+    @JvmInline
+    value class TrackerHand(val value: Long) {
+        companion object {
+            /**
+             * The hand this tracker is held in is unknown or not applicable.
+             *
+             * Generated from Godot docs: XRPositionalTracker.TRACKER_HAND_UNKNOWN
+             */
+            val UNKNOWN: TrackerHand get() = TrackerHand(0L)
+            /**
+             * This tracker is the left hand controller.
+             *
+             * Generated from Godot docs: XRPositionalTracker.TRACKER_HAND_LEFT
+             */
+            val LEFT: TrackerHand get() = TrackerHand(1L)
+            /**
+             * This tracker is the right hand controller.
+             *
+             * Generated from Godot docs: XRPositionalTracker.TRACKER_HAND_RIGHT
+             */
+            val RIGHT: TrackerHand get() = TrackerHand(2L)
+            /**
+             * Represents the size of the `TrackerHand` enum.
+             *
+             * Generated from Godot docs: XRPositionalTracker.TRACKER_HAND_MAX
+             */
+            val MAX: TrackerHand get() = TrackerHand(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRPositionalTracker? =
             wrap(handle.segment)

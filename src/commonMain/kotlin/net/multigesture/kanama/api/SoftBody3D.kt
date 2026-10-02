@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -80,7 +81,7 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
         @JvmName("setRayPickableProperty")
         set(value) = setRayPickable(value)
 
-    var disableMode: Long
+    var disableMode: SoftBody3D.DisableMode
         @JvmName("disableModeProperty")
         get() = getDisableMode()
         @JvmName("setDisableModeProperty")
@@ -210,8 +211,8 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
      *
      * Generated from Godot docs: SoftBody3D.set_disable_mode
      */
-    fun setDisableMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode)
+    fun setDisableMode(mode: SoftBody3D.DisableMode) {
+        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode.value)
     }
 
     /**
@@ -219,8 +220,8 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
      *
      * Generated from Godot docs: SoftBody3D.get_disable_mode
      */
-    fun getDisableMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment)
+    fun getDisableMode(): SoftBody3D.DisableMode {
+        return SoftBody3D.DisableMode(ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment))
     }
 
     /**
@@ -480,10 +481,28 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isRayPickableBind, segment)
     }
 
-    companion object {
-        const val DISABLE_MODE_REMOVE: Long = 0L
-        const val DISABLE_MODE_KEEP_ACTIVE: Long = 1L
+    @JvmInline
+    value class DisableMode(val value: Long) {
+        companion object {
+            /**
+             * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, remove from the physics
+             * simulation to stop all physics interactions with this `SoftBody3D`. Automatically re-added to
+             * the physics simulation when the `Node` is processed again.
+             *
+             * Generated from Godot docs: SoftBody3D.DISABLE_MODE_REMOVE
+             */
+            val REMOVE: DisableMode get() = DisableMode(0L)
+            /**
+             * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, do not affect the physics
+             * simulation.
+             *
+             * Generated from Godot docs: SoftBody3D.DISABLE_MODE_KEEP_ACTIVE
+             */
+            val KEEP_ACTIVE: DisableMode get() = DisableMode(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SoftBody3D? =
             wrap(handle.segment)

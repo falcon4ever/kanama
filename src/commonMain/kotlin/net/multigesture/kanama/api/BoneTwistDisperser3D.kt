@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -189,8 +190,8 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: BoneTwistDisperser3D.set_end_bone_direction
      */
-    fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
+    fun setEndBoneDirection(index: Int, boneDirection: SkeletonModifier3D.BoneDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection.value)
     }
 
     /**
@@ -199,8 +200,8 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: BoneTwistDisperser3D.get_end_bone_direction
      */
-    fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
+    fun getEndBoneDirection(index: Int): SkeletonModifier3D.BoneDirection {
+        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index))
     }
 
     /**
@@ -252,8 +253,8 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: BoneTwistDisperser3D.set_disperse_mode
      */
-    fun setDisperseMode(index: Int, disperseMode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setDisperseModeBind, segment, index, disperseMode)
+    fun setDisperseMode(index: Int, disperseMode: BoneTwistDisperser3D.DisperseMode) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setDisperseModeBind, segment, index, disperseMode.value)
     }
 
     /**
@@ -261,8 +262,8 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: BoneTwistDisperser3D.get_disperse_mode
      */
-    fun getDisperseMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getDisperseModeBind, segment, index)
+    fun getDisperseMode(index: Int): BoneTwistDisperser3D.DisperseMode {
+        return BoneTwistDisperser3D.DisperseMode(ObjectCalls.ptrcallWithIntArgRetLong(getDisperseModeBind, segment, index))
     }
 
     /**
@@ -353,11 +354,36 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, segment, index)
     }
 
-    companion object {
-        const val DISPERSE_MODE_EVEN: Long = 0L
-        const val DISPERSE_MODE_WEIGHTED: Long = 1L
-        const val DISPERSE_MODE_CUSTOM: Long = 2L
+    @JvmInline
+    value class DisperseMode(val value: Long) {
+        companion object {
+            /**
+             * Assign amounts so that they monotonically increase from `0.0` to `1.0`, ensuring all weights are
+             * equal. For example, with five joints, the amounts would be `0.2`, `0.4`, `0.6`, `0.8`, and `1.0`
+             * starting from the root bone.
+             *
+             * Generated from Godot docs: BoneTwistDisperser3D.DISPERSE_MODE_EVEN
+             */
+            val EVEN: DisperseMode get() = DisperseMode(0L)
+            /**
+             * Assign amounts so that they monotonically increase from `0.0` to `1.0`, based on the length of
+             * the bones between joint segments. See also `set_weight_position`.
+             *
+             * Generated from Godot docs: BoneTwistDisperser3D.DISPERSE_MODE_WEIGHTED
+             */
+            val WEIGHTED: DisperseMode get() = DisperseMode(1L)
+            /**
+             * You can assign arbitrary amounts to the joint list. See also `set_joint_twist_amount`. When
+             * `is_end_bone_extended` is `false`, a child of the reference bone exists solely to determine the
+             * twist axis, so its custom amount has absolutely no effect at all.
+             *
+             * Generated from Godot docs: BoneTwistDisperser3D.DISPERSE_MODE_CUSTOM
+             */
+            val CUSTOM: DisperseMode get() = DisperseMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BoneTwistDisperser3D? =
             wrap(handle.segment)

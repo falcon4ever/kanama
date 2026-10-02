@@ -41926,6 +41926,33 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     check("callable-args-x3 (ptrcallWithThreeCallableArgs)", ctrl.address() != 0L)
   }
 
+  // Typed Godot enums (task 128 A): one enum setter/getter pair and one bitfield round trip through
+  // the generated wrappers' real ptrcall path (`.value` at the argument boundary, `X(raw)` at the
+  // return). A detached Node starts at ProcessMode.INHERIT (0) and no thread-message flags (0), so
+  // a
+  // no-op setter or a getter that returns 0 fails both rows.
+  run {
+    val node = net.multigesture.kanama.api.Node(GodotHandle(ObjectCalls.constructObject("Node")))
+    node.setProcessMode(net.multigesture.kanama.api.Node.ProcessMode.ALWAYS)
+    val mode = node.getProcessMode()
+    check(
+      "typed-enum(Node.setProcessMode/getProcessMode ALWAYS round-trip)",
+      mode == net.multigesture.kanama.api.Node.ProcessMode.ALWAYS && mode.value == 3L,
+    )
+    val flags =
+      net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES or
+        net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_PHYSICS
+    node.setProcessThreadMessages(flags)
+    val back = node.getProcessThreadMessages()
+    check(
+      "typed-bitfield(Node.setProcessThreadMessages/get MESSAGES|MESSAGES_PHYSICS round-trip)",
+      back.value == 3L &&
+        net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_PHYSICS in back &&
+        back == net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_ALL,
+    )
+    ObjectCalls.destroyObject(node.segment)
+  }
+
   // RefCounted return-slot ownership (task 31 iOS mirror): every RefCounted-typed ptrcall
   // return transfers a +1 reference the wrapper owns (meta:"required" included — measured on
   // 4.7-stable, task 31). duplicate() hands back a fresh Resource whose only reference is the
@@ -41956,14 +41983,14 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     }
     net.multigesture.kanama.api.InputMap.actionEraseEvents(action)
     val key = net.multigesture.kanama.api.InputEventKey.create()
-    key.setKeycode(65L) // KEY_A
+    key.setKeycode(net.multigesture.kanama.api.Key.A)
     // construct_object3 already claimed the reference: the fresh event's refcount reads exactly 1
     // (a re-added init_ref claim would over-reference to 2 and leak).
     check("t61-create-owns-plus1", key.getReferenceCount() == 1)
     net.multigesture.kanama.api.InputMap.actionAddEvent(action, key) // engine takes its own +1
     key.close() // releases the wrapper's +1; pre-fix this freed the engine's event (rc 1 -> 0)
     val probe = net.multigesture.kanama.api.InputEventKey.create()
-    probe.setKeycode(65L)
+    probe.setKeycode(net.multigesture.kanama.api.Key.A)
     // The event survived the close and is still held by InputMap (an equal event is found).
     check(
       "t61-create-close-survives-handoff",
@@ -42029,7 +42056,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         2,
         2,
         false,
-        net.multigesture.kanama.api.Image.FORMAT_RGBA8,
+        net.multigesture.kanama.api.Image.Format.RGBA8,
         ByteArray(16),
       )
     check("shared-static(Image.createFromData -> non-null)", fromData != null)
@@ -42042,7 +42069,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         4,
         3,
         false,
-        net.multigesture.kanama.api.Image.FORMAT_RGBA8,
+        net.multigesture.kanama.api.Image.Format.RGBA8,
       )
     check("shared-static(Image.create -> non-null)", created != null)
     check("shared-static(Image.create width == 4)", created?.getWidth() == 4)
@@ -42192,7 +42219,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       val connectError = root.connect("kanama_p3_user", target, method)
       check(
         "root(connect user signal -> OK and isConnected)",
-        connectError == 0L && root.isConnected("kanama_p3_user", target, method),
+        connectError == net.multigesture.kanama.api.GodotError.OK &&
+          root.isConnected("kanama_p3_user", target, method),
       )
       root.disconnect("kanama_p3_user", target, method)
       check(
@@ -42256,7 +42284,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       val receivedLong = longArgs
       check(
         "root(emitSignal Long fast path -> lambda received 5)",
-        longConnection.error == 0L &&
+        longConnection.error == net.multigesture.kanama.api.GodotError.OK &&
           receivedLong != null &&
           receivedLong.size == 1 &&
           (receivedLong[0] as? Number)?.toLong() == 5L,
@@ -42297,7 +42325,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       val receivedPair = pairArgs
       check(
         "root(emitSignal two args, Variant path -> lambda received (_, 2))",
-        pairConnection.error == 0L &&
+        pairConnection.error == net.multigesture.kanama.api.GodotError.OK &&
           receivedPair != null &&
           receivedPair.size == 2 &&
           (receivedPair[1] as? Number)?.toLong() == 2L,

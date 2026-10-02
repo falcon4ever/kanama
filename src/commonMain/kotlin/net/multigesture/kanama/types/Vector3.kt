@@ -2,6 +2,7 @@
 
 package net.multigesture.kanama.types
 
+import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.sqrt
 import net.multigesture.kanama.binding.runtime.BArg
@@ -45,6 +46,23 @@ data class Vector3(
    */
   val z: real_t,
 ) {
+  // ===== BEGIN GENERATED ENUMS: Vector3 (scripts/generate_api_wrapper.py — do not edit) =====
+  @JvmInline
+  value class Axis(val value: Long) {
+    companion object {
+      val X: Axis
+        get() = Axis(0L)
+
+      val Y: Axis
+        get() = Axis(1L)
+
+      val Z: Axis
+        get() = Axis(2L)
+    }
+  }
+
+  // ===== END GENERATED ENUMS: Vector3 =====
+
   constructor(
     x: Number,
     y: Number,

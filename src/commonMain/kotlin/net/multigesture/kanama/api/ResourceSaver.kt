@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -14,15 +15,6 @@ object ResourceSaver {
         ObjectCalls.getSingleton("ResourceSaver")
     }
 
-    const val FLAG_NONE: Long = 0L
-    const val FLAG_RELATIVE_PATHS: Long = 1L
-    const val FLAG_BUNDLE_RESOURCES: Long = 2L
-    const val FLAG_CHANGE_PATH: Long = 4L
-    const val FLAG_OMIT_EDITOR_PROPERTIES: Long = 8L
-    const val FLAG_SAVE_BIG_ENDIAN: Long = 16L
-    const val FLAG_COMPRESS: Long = 32L
-    const val FLAG_REPLACE_SUBRESOURCE_PATHS: Long = 64L
-
     /**
      * Saves a resource to disk to the given path, using a `ResourceFormatSaver` that recognizes the
      * resource object. If `path` is empty, `ResourceSaver` will try to use `Resource.resource_path`.
@@ -33,8 +25,8 @@ object ResourceSaver {
      * Generated from Godot docs: ResourceSaver.save
      */
     @JvmStatic
-    fun save(resource: Resource, path: String = "", flags: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource.requireOpenHandle(), path, flags)
+    fun save(resource: Resource, path: String = "", flags: ResourceSaver.SaverFlags = ResourceSaver.SaverFlags.NONE): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectStringLongArgsRetLong(saveBind, singleton, resource.requireOpenHandle(), path, flags.value))
     }
 
     /**
@@ -45,8 +37,8 @@ object ResourceSaver {
      * Generated from Godot docs: ResourceSaver.set_uid
      */
     @JvmStatic
-    fun setUid(resource: String, uid: Long): Long {
-        return ObjectCalls.ptrcallWithStringAndLongArgRetLong(setUidBind, singleton, resource, uid)
+    fun setUid(resource: String, uid: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(setUidBind, singleton, resource, uid))
     }
 
     /**
@@ -91,6 +83,71 @@ object ResourceSaver {
     @JvmStatic
     fun getResourceIdForPath(path: String, generate: Boolean = false): Long {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(getResourceIdForPathBind, singleton, path, generate)
+    }
+
+    @JvmInline
+    value class SaverFlags(val value: Long) {
+        infix fun or(other: SaverFlags): SaverFlags = SaverFlags(value or other.value)
+
+        infix fun and(other: SaverFlags): SaverFlags = SaverFlags(value and other.value)
+
+        infix fun xor(other: SaverFlags): SaverFlags = SaverFlags(value xor other.value)
+
+        fun inv(): SaverFlags = SaverFlags(value.inv())
+
+        operator fun contains(other: SaverFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * No resource saving option.
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_NONE
+             */
+            val NONE: SaverFlags get() = SaverFlags(0L)
+            /**
+             * Save the resource with a path relative to the scene which uses it.
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_RELATIVE_PATHS
+             */
+            val RELATIVE_PATHS: SaverFlags get() = SaverFlags(1L)
+            /**
+             * Bundles external resources.
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_BUNDLE_RESOURCES
+             */
+            val BUNDLE_RESOURCES: SaverFlags get() = SaverFlags(2L)
+            /**
+             * Changes the `Resource.resource_path` of the saved resource to match its new location.
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_CHANGE_PATH
+             */
+            val CHANGE_PATH: SaverFlags get() = SaverFlags(4L)
+            /**
+             * Do not save editor-specific metadata (identified by their `__editor` prefix).
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_OMIT_EDITOR_PROPERTIES
+             */
+            val OMIT_EDITOR_PROPERTIES: SaverFlags get() = SaverFlags(8L)
+            /**
+             * Save as big endian (see `FileAccess.big_endian`).
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_SAVE_BIG_ENDIAN
+             */
+            val SAVE_BIG_ENDIAN: SaverFlags get() = SaverFlags(16L)
+            /**
+             * Compress the resource on save using `FileAccess.COMPRESSION_ZSTD`. Only available for binary
+             * resource types.
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_COMPRESS
+             */
+            val COMPRESS: SaverFlags get() = SaverFlags(32L)
+            /**
+             * Take over the paths of the saved subresources (see `Resource.take_over_path`).
+             *
+             * Generated from Godot docs: ResourceSaver.FLAG_REPLACE_SUBRESOURCE_PATHS
+             */
+            val REPLACE_SUBRESOURCE_PATHS: SaverFlags get() = SaverFlags(64L)
+        }
     }
 
     @JvmStatic

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: OpenXRRenderModelManager
  */
 class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
-    var tracker: Long
+    var tracker: OpenXRRenderModelManager.RenderModelTracker
         @JvmName("trackerProperty")
         get() = getTracker()
         @JvmName("setTrackerProperty")
@@ -21,12 +22,12 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setMakeLocalToPoseProperty")
         set(value) = setMakeLocalToPose(value)
 
-    fun getTracker(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerBind, segment)
+    fun getTracker(): OpenXRRenderModelManager.RenderModelTracker {
+        return OpenXRRenderModelManager.RenderModelTracker(ObjectCalls.ptrcallNoArgsRetLong(getTrackerBind, segment))
     }
 
-    fun setTracker(tracker: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTrackerBind, segment, tracker)
+    fun setTracker(tracker: OpenXRRenderModelManager.RenderModelTracker) {
+        ObjectCalls.ptrcallWithLongArg(setTrackerBind, segment, tracker.value)
     }
 
     fun getMakeLocalToPose(): String {
@@ -42,12 +43,17 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
         const val renderModelRemoved: String = "render_model_removed"
     }
 
-    companion object {
-        const val RENDER_MODEL_TRACKER_ANY: Long = 0L
-        const val RENDER_MODEL_TRACKER_NONE_SET: Long = 1L
-        const val RENDER_MODEL_TRACKER_LEFT_HAND: Long = 2L
-        const val RENDER_MODEL_TRACKER_RIGHT_HAND: Long = 3L
+    @JvmInline
+    value class RenderModelTracker(val value: Long) {
+        companion object {
+            val ANY: RenderModelTracker get() = RenderModelTracker(0L)
+            val NONE_SET: RenderModelTracker get() = RenderModelTracker(1L)
+            val LEFT_HAND: RenderModelTracker get() = RenderModelTracker(2L)
+            val RIGHT_HAND: RenderModelTracker get() = RenderModelTracker(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRRenderModelManager? =
             wrap(handle.segment)

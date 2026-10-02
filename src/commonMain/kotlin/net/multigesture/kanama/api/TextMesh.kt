@@ -31,13 +31,13 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmName("setFontSizeProperty")
         set(value) = setFontSize(value)
 
-    var horizontalAlignment: Long
+    var horizontalAlignment: HorizontalAlignment
         @JvmName("horizontalAlignmentProperty")
         get() = getHorizontalAlignment()
         @JvmName("setHorizontalAlignmentProperty")
         set(value) = setHorizontalAlignment(value)
 
-    var verticalAlignment: Long
+    var verticalAlignment: VerticalAlignment
         @JvmName("verticalAlignmentProperty")
         get() = getVerticalAlignment()
         @JvmName("setVerticalAlignmentProperty")
@@ -55,13 +55,13 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmName("setLineSpacingProperty")
         set(value) = setLineSpacing(value)
 
-    var autowrapMode: Long
+    var autowrapMode: TextServer.AutowrapMode
         @JvmName("autowrapModeProperty")
         get() = getAutowrapMode()
         @JvmName("setAutowrapModeProperty")
         set(value) = setAutowrapMode(value)
 
-    var justificationFlags: Long
+    var justificationFlags: TextServer.JustificationFlag
         @JvmName("justificationFlagsProperty")
         get() = getJustificationFlags()
         @JvmName("setJustificationFlagsProperty")
@@ -97,7 +97,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmName("setOffsetProperty")
         set(value) = setOffset(value)
 
-    var textDirection: Long
+    var textDirection: TextServer.Direction
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -109,7 +109,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    var structuredTextBidiOverride: Long
+    var structuredTextBidiOverride: TextServer.StructuredTextParser
         @JvmName("structuredTextBidiOverrideProperty")
         get() = getStructuredTextBidiOverride()
         @JvmName("setStructuredTextBidiOverrideProperty")
@@ -127,9 +127,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.set_horizontal_alignment
      */
-    fun setHorizontalAlignment(alignment: Long) {
+    fun setHorizontalAlignment(alignment: HorizontalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -138,9 +138,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.get_horizontal_alignment
      */
-    fun getHorizontalAlignment(): Long {
+    fun getHorizontalAlignment(): HorizontalAlignment {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -148,9 +148,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.set_vertical_alignment
      */
-    fun setVerticalAlignment(alignment: Long) {
+    fun setVerticalAlignment(alignment: VerticalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -158,9 +158,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.get_vertical_alignment
      */
-    fun getVerticalAlignment(): Long {
+    fun getVerticalAlignment(): VerticalAlignment {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment))
     }
 
     /**
@@ -266,9 +266,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.set_autowrap_mode
      */
-    fun setAutowrapMode(autowrapMode: Long) {
+    fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -278,9 +278,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.get_autowrap_mode
      */
-    fun getAutowrapMode(): Long {
+    fun getAutowrapMode(): TextServer.AutowrapMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
     }
 
     /**
@@ -288,9 +288,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.set_justification_flags
      */
-    fun setJustificationFlags(justificationFlags: Long) {
+    fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags.value)
     }
 
     /**
@@ -298,9 +298,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.get_justification_flags
      */
-    fun getJustificationFlags(): Long {
+    fun getJustificationFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
     }
 
     /**
@@ -426,9 +426,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
+    fun setTextDirection(direction: TextServer.Direction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -436,9 +436,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.get_text_direction
      */
-    fun getTextDirection(): Long {
+    fun getTextDirection(): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -468,9 +468,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.set_structured_text_bidi_override
      */
-    fun setStructuredTextBidiOverride(parser: Long) {
+    fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -478,9 +478,9 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: TextMesh.get_structured_text_bidi_override
      */
-    fun getStructuredTextBidiOverride(): Long {
+    fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
     }
 
     /**

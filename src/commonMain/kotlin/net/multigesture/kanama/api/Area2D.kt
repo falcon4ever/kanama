@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         @JvmName("setPriorityProperty")
         set(value) = setPriority(value)
 
-    var gravitySpaceOverride: Long
+    var gravitySpaceOverride: Area2D.SpaceOverride
         @JvmName("gravitySpaceOverrideProperty")
         get() = getGravitySpaceOverrideMode()
         @JvmName("setGravitySpaceOverrideProperty")
@@ -66,7 +67,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         @JvmName("setGravityProperty")
         set(value) = setGravity(value)
 
-    var linearDampSpaceOverride: Long
+    var linearDampSpaceOverride: Area2D.SpaceOverride
         @JvmName("linearDampSpaceOverrideProperty")
         get() = getLinearDampSpaceOverrideMode()
         @JvmName("setLinearDampSpaceOverrideProperty")
@@ -78,7 +79,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         @JvmName("setLinearDampProperty")
         set(value) = setLinearDamp(value)
 
-    var angularDampSpaceOverride: Long
+    var angularDampSpaceOverride: Area2D.SpaceOverride
         @JvmName("angularDampSpaceOverrideProperty")
         get() = getAngularDampSpaceOverrideMode()
         @JvmName("setAngularDampSpaceOverrideProperty")
@@ -107,8 +108,8 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      *
      * Generated from Godot docs: Area2D.set_gravity_space_override_mode
      */
-    fun setGravitySpaceOverrideMode(spaceOverrideMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, segment, spaceOverrideMode)
+    fun setGravitySpaceOverrideMode(spaceOverrideMode: Area2D.SpaceOverride) {
+        ObjectCalls.ptrcallWithLongArg(setGravitySpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -116,8 +117,8 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      *
      * Generated from Godot docs: Area2D.get_gravity_space_override_mode
      */
-    fun getGravitySpaceOverrideMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, segment)
+    fun getGravitySpaceOverrideMode(): Area2D.SpaceOverride {
+        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getGravitySpaceOverrideModeBind, segment))
     }
 
     /**
@@ -231,8 +232,8 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      *
      * Generated from Godot docs: Area2D.set_linear_damp_space_override_mode
      */
-    fun setLinearDampSpaceOverrideMode(spaceOverrideMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, segment, spaceOverrideMode)
+    fun setLinearDampSpaceOverrideMode(spaceOverrideMode: Area2D.SpaceOverride) {
+        ObjectCalls.ptrcallWithLongArg(setLinearDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -240,8 +241,8 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      *
      * Generated from Godot docs: Area2D.get_linear_damp_space_override_mode
      */
-    fun getLinearDampSpaceOverrideMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, segment)
+    fun getLinearDampSpaceOverrideMode(): Area2D.SpaceOverride {
+        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampSpaceOverrideModeBind, segment))
     }
 
     /**
@@ -249,8 +250,8 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      *
      * Generated from Godot docs: Area2D.set_angular_damp_space_override_mode
      */
-    fun setAngularDampSpaceOverrideMode(spaceOverrideMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, segment, spaceOverrideMode)
+    fun setAngularDampSpaceOverrideMode(spaceOverrideMode: Area2D.SpaceOverride) {
+        ObjectCalls.ptrcallWithLongArg(setAngularDampSpaceOverrideModeBind, segment, spaceOverrideMode.value)
     }
 
     /**
@@ -258,8 +259,8 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
      *
      * Generated from Godot docs: Area2D.get_angular_damp_space_override_mode
      */
-    fun getAngularDampSpaceOverrideMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, segment)
+    fun getAngularDampSpaceOverrideMode(): Area2D.SpaceOverride {
+        return Area2D.SpaceOverride(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampSpaceOverrideModeBind, segment))
     }
 
     /**
@@ -483,13 +484,46 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         const val areaExited: String = "area_exited"
     }
 
-    companion object {
-        const val SPACE_OVERRIDE_DISABLED: Long = 0L
-        const val SPACE_OVERRIDE_COMBINE: Long = 1L
-        const val SPACE_OVERRIDE_COMBINE_REPLACE: Long = 2L
-        const val SPACE_OVERRIDE_REPLACE: Long = 3L
-        const val SPACE_OVERRIDE_REPLACE_COMBINE: Long = 4L
+    @JvmInline
+    value class SpaceOverride(val value: Long) {
+        companion object {
+            /**
+             * This area does not affect gravity/damping.
+             *
+             * Generated from Godot docs: Area2D.SPACE_OVERRIDE_DISABLED
+             */
+            val DISABLED: SpaceOverride get() = SpaceOverride(0L)
+            /**
+             * This area adds its gravity/damping values to whatever has been calculated so far (in `priority`
+             * order).
+             *
+             * Generated from Godot docs: Area2D.SPACE_OVERRIDE_COMBINE
+             */
+            val COMBINE: SpaceOverride get() = SpaceOverride(1L)
+            /**
+             * This area adds its gravity/damping values to whatever has been calculated so far (in `priority`
+             * order), ignoring any lower priority areas.
+             *
+             * Generated from Godot docs: Area2D.SPACE_OVERRIDE_COMBINE_REPLACE
+             */
+            val COMBINE_REPLACE: SpaceOverride get() = SpaceOverride(2L)
+            /**
+             * This area replaces any gravity/damping, even the defaults, ignoring any lower priority areas.
+             *
+             * Generated from Godot docs: Area2D.SPACE_OVERRIDE_REPLACE
+             */
+            val REPLACE: SpaceOverride get() = SpaceOverride(3L)
+            /**
+             * This area replaces any gravity/damping calculated so far (in `priority` order), but keeps
+             * calculating the rest of the areas.
+             *
+             * Generated from Godot docs: Area2D.SPACE_OVERRIDE_REPLACE_COMBINE
+             */
+            val REPLACE_COMBINE: SpaceOverride get() = SpaceOverride(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Area2D? =
             wrap(handle.segment)

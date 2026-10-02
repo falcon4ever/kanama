@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -10,7 +11,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: FastNoiseLite
  */
 class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
-    var noiseType: Long
+    var noiseType: FastNoiseLite.NoiseType
         @JvmName("noiseTypeProperty")
         get() = getNoiseType()
         @JvmName("setNoiseTypeProperty")
@@ -34,7 +35,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmName("setOffsetProperty")
         set(value) = setOffset(value)
 
-    var fractalType: Long
+    var fractalType: FastNoiseLite.FractalType
         @JvmName("fractalTypeProperty")
         get() = getFractalType()
         @JvmName("setFractalTypeProperty")
@@ -70,7 +71,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmName("setFractalPingPongStrengthProperty")
         set(value) = setFractalPingPongStrength(value)
 
-    var cellularDistanceFunction: Long
+    var cellularDistanceFunction: FastNoiseLite.CellularDistanceFunction
         @JvmName("cellularDistanceFunctionProperty")
         get() = getCellularDistanceFunction()
         @JvmName("setCellularDistanceFunctionProperty")
@@ -82,7 +83,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmName("setCellularJitterProperty")
         set(value) = setCellularJitter(value)
 
-    var cellularReturnType: Long
+    var cellularReturnType: FastNoiseLite.CellularReturnType
         @JvmName("cellularReturnTypeProperty")
         get() = getCellularReturnType()
         @JvmName("setCellularReturnTypeProperty")
@@ -94,7 +95,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmName("setDomainWarpEnabledProperty")
         set(value) = setDomainWarpEnabled(value)
 
-    var domainWarpType: Long
+    var domainWarpType: FastNoiseLite.DomainWarpType
         @JvmName("domainWarpTypeProperty")
         get() = getDomainWarpType()
         @JvmName("setDomainWarpTypeProperty")
@@ -112,7 +113,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmName("setDomainWarpFrequencyProperty")
         set(value) = setDomainWarpFrequency(value)
 
-    var domainWarpFractalType: Long
+    var domainWarpFractalType: FastNoiseLite.DomainWarpFractalType
         @JvmName("domainWarpFractalTypeProperty")
         get() = getDomainWarpFractalType()
         @JvmName("setDomainWarpFractalTypeProperty")
@@ -136,14 +137,14 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmName("setDomainWarpFractalGainProperty")
         set(value) = setDomainWarpFractalGain(value)
 
-    fun setNoiseType(type: Long) {
+    fun setNoiseType(type: FastNoiseLite.NoiseType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setNoiseTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setNoiseTypeBind, segment, type.value)
     }
 
-    fun getNoiseType(): Long {
+    fun getNoiseType(): FastNoiseLite.NoiseType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getNoiseTypeBind, segment)
+        return FastNoiseLite.NoiseType(ObjectCalls.ptrcallNoArgsRetLong(getNoiseTypeBind, segment))
     }
 
     fun setSeed(seed: Int) {
@@ -176,14 +177,14 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         return ObjectCalls.ptrcallNoArgsRetVector3(getOffsetBind, segment)
     }
 
-    fun setFractalType(type: Long) {
+    fun setFractalType(type: FastNoiseLite.FractalType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFractalTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setFractalTypeBind, segment, type.value)
     }
 
-    fun getFractalType(): Long {
+    fun getFractalType(): FastNoiseLite.FractalType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFractalTypeBind, segment)
+        return FastNoiseLite.FractalType(ObjectCalls.ptrcallNoArgsRetLong(getFractalTypeBind, segment))
     }
 
     fun setFractalOctaves(octaveCount: Int) {
@@ -236,14 +237,14 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFractalPingPongStrengthBind, segment)
     }
 
-    fun setCellularDistanceFunction(func: Long) {
+    fun setCellularDistanceFunction(func: FastNoiseLite.CellularDistanceFunction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellularDistanceFunctionBind, segment, func)
+        ObjectCalls.ptrcallWithLongArg(setCellularDistanceFunctionBind, segment, func.value)
     }
 
-    fun getCellularDistanceFunction(): Long {
+    fun getCellularDistanceFunction(): FastNoiseLite.CellularDistanceFunction {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCellularDistanceFunctionBind, segment)
+        return FastNoiseLite.CellularDistanceFunction(ObjectCalls.ptrcallNoArgsRetLong(getCellularDistanceFunctionBind, segment))
     }
 
     fun setCellularJitter(jitter: Double) {
@@ -256,14 +257,14 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCellularJitterBind, segment)
     }
 
-    fun setCellularReturnType(ret: Long) {
+    fun setCellularReturnType(ret: FastNoiseLite.CellularReturnType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellularReturnTypeBind, segment, ret)
+        ObjectCalls.ptrcallWithLongArg(setCellularReturnTypeBind, segment, ret.value)
     }
 
-    fun getCellularReturnType(): Long {
+    fun getCellularReturnType(): FastNoiseLite.CellularReturnType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCellularReturnTypeBind, segment)
+        return FastNoiseLite.CellularReturnType(ObjectCalls.ptrcallNoArgsRetLong(getCellularReturnTypeBind, segment))
     }
 
     fun setDomainWarpEnabled(domainWarpEnabled: Boolean) {
@@ -276,14 +277,14 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isDomainWarpEnabledBind, segment)
     }
 
-    fun setDomainWarpType(domainWarpType: Long) {
+    fun setDomainWarpType(domainWarpType: FastNoiseLite.DomainWarpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDomainWarpTypeBind, segment, domainWarpType)
+        ObjectCalls.ptrcallWithLongArg(setDomainWarpTypeBind, segment, domainWarpType.value)
     }
 
-    fun getDomainWarpType(): Long {
+    fun getDomainWarpType(): FastNoiseLite.DomainWarpType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpTypeBind, segment)
+        return FastNoiseLite.DomainWarpType(ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpTypeBind, segment))
     }
 
     fun setDomainWarpAmplitude(domainWarpAmplitude: Double) {
@@ -306,14 +307,14 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFrequencyBind, segment)
     }
 
-    fun setDomainWarpFractalType(domainWarpFractalType: Long) {
+    fun setDomainWarpFractalType(domainWarpFractalType: FastNoiseLite.DomainWarpFractalType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDomainWarpFractalTypeBind, segment, domainWarpFractalType)
+        ObjectCalls.ptrcallWithLongArg(setDomainWarpFractalTypeBind, segment, domainWarpFractalType.value)
     }
 
-    fun getDomainWarpFractalType(): Long {
+    fun getDomainWarpFractalType(): FastNoiseLite.DomainWarpFractalType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpFractalTypeBind, segment)
+        return FastNoiseLite.DomainWarpFractalType(ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpFractalTypeBind, segment))
     }
 
     fun setDomainWarpFractalOctaves(domainWarpOctaveCount: Int) {
@@ -346,35 +347,70 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFractalGainBind, segment)
     }
 
-    companion object {
-        const val TYPE_VALUE: Long = 5L
-        const val TYPE_VALUE_CUBIC: Long = 4L
-        const val TYPE_PERLIN: Long = 3L
-        const val TYPE_CELLULAR: Long = 2L
-        const val TYPE_SIMPLEX: Long = 0L
-        const val TYPE_SIMPLEX_SMOOTH: Long = 1L
-        const val FRACTAL_NONE: Long = 0L
-        const val FRACTAL_FBM: Long = 1L
-        const val FRACTAL_RIDGED: Long = 2L
-        const val FRACTAL_PING_PONG: Long = 3L
-        const val DISTANCE_EUCLIDEAN: Long = 0L
-        const val DISTANCE_EUCLIDEAN_SQUARED: Long = 1L
-        const val DISTANCE_MANHATTAN: Long = 2L
-        const val DISTANCE_HYBRID: Long = 3L
-        const val RETURN_CELL_VALUE: Long = 0L
-        const val RETURN_DISTANCE: Long = 1L
-        const val RETURN_DISTANCE2: Long = 2L
-        const val RETURN_DISTANCE2_ADD: Long = 3L
-        const val RETURN_DISTANCE2_SUB: Long = 4L
-        const val RETURN_DISTANCE2_MUL: Long = 5L
-        const val RETURN_DISTANCE2_DIV: Long = 6L
-        const val DOMAIN_WARP_SIMPLEX: Long = 0L
-        const val DOMAIN_WARP_SIMPLEX_REDUCED: Long = 1L
-        const val DOMAIN_WARP_BASIC_GRID: Long = 2L
-        const val DOMAIN_WARP_FRACTAL_NONE: Long = 0L
-        const val DOMAIN_WARP_FRACTAL_PROGRESSIVE: Long = 1L
-        const val DOMAIN_WARP_FRACTAL_INDEPENDENT: Long = 2L
+    @JvmInline
+    value class NoiseType(val value: Long) {
+        companion object {
+            val VALUE: NoiseType get() = NoiseType(5L)
+            val VALUE_CUBIC: NoiseType get() = NoiseType(4L)
+            val PERLIN: NoiseType get() = NoiseType(3L)
+            val CELLULAR: NoiseType get() = NoiseType(2L)
+            val SIMPLEX: NoiseType get() = NoiseType(0L)
+            val SIMPLEX_SMOOTH: NoiseType get() = NoiseType(1L)
+        }
+    }
 
+    @JvmInline
+    value class FractalType(val value: Long) {
+        companion object {
+            val NONE: FractalType get() = FractalType(0L)
+            val FBM: FractalType get() = FractalType(1L)
+            val RIDGED: FractalType get() = FractalType(2L)
+            val PING_PONG: FractalType get() = FractalType(3L)
+        }
+    }
+
+    @JvmInline
+    value class CellularDistanceFunction(val value: Long) {
+        companion object {
+            val EUCLIDEAN: CellularDistanceFunction get() = CellularDistanceFunction(0L)
+            val EUCLIDEAN_SQUARED: CellularDistanceFunction get() = CellularDistanceFunction(1L)
+            val MANHATTAN: CellularDistanceFunction get() = CellularDistanceFunction(2L)
+            val HYBRID: CellularDistanceFunction get() = CellularDistanceFunction(3L)
+        }
+    }
+
+    @JvmInline
+    value class CellularReturnType(val value: Long) {
+        companion object {
+            val CELL_VALUE: CellularReturnType get() = CellularReturnType(0L)
+            val DISTANCE: CellularReturnType get() = CellularReturnType(1L)
+            val DISTANCE2: CellularReturnType get() = CellularReturnType(2L)
+            val DISTANCE2_ADD: CellularReturnType get() = CellularReturnType(3L)
+            val DISTANCE2_SUB: CellularReturnType get() = CellularReturnType(4L)
+            val DISTANCE2_MUL: CellularReturnType get() = CellularReturnType(5L)
+            val DISTANCE2_DIV: CellularReturnType get() = CellularReturnType(6L)
+        }
+    }
+
+    @JvmInline
+    value class DomainWarpType(val value: Long) {
+        companion object {
+            val SIMPLEX: DomainWarpType get() = DomainWarpType(0L)
+            val SIMPLEX_REDUCED: DomainWarpType get() = DomainWarpType(1L)
+            val BASIC_GRID: DomainWarpType get() = DomainWarpType(2L)
+        }
+    }
+
+    @JvmInline
+    value class DomainWarpFractalType(val value: Long) {
+        companion object {
+            val NONE: DomainWarpFractalType get() = DomainWarpFractalType(0L)
+            val PROGRESSIVE: DomainWarpFractalType get() = DomainWarpFractalType(1L)
+            val INDEPENDENT: DomainWarpFractalType get() = DomainWarpFractalType(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FastNoiseLite? =
             wrap(handle.segment)

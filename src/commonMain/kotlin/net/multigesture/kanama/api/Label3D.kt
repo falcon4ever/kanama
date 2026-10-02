@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -26,7 +27,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setOffsetProperty")
         set(value) = setOffset(value)
 
-    var billboard: Long
+    var billboard: BaseMaterial3D.BillboardMode
         @JvmName("billboardProperty")
         get() = getBillboardMode()
         @JvmName("setBillboardProperty")
@@ -34,29 +35,29 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     var shaded: Boolean
         @JvmName("shadedProperty")
-        get() = getDrawFlag(0L)
+        get() = getDrawFlag(Label3D.DrawFlags.SHADED)
         @JvmName("setShadedProperty")
-        set(value) = setDrawFlag(0L, value)
+        set(value) = setDrawFlag(Label3D.DrawFlags.SHADED, value)
 
     var doubleSided: Boolean
         @JvmName("doubleSidedProperty")
-        get() = getDrawFlag(1L)
+        get() = getDrawFlag(Label3D.DrawFlags.DOUBLE_SIDED)
         @JvmName("setDoubleSidedProperty")
-        set(value) = setDrawFlag(1L, value)
+        set(value) = setDrawFlag(Label3D.DrawFlags.DOUBLE_SIDED, value)
 
     var noDepthTest: Boolean
         @JvmName("noDepthTestProperty")
-        get() = getDrawFlag(2L)
+        get() = getDrawFlag(Label3D.DrawFlags.DISABLE_DEPTH_TEST)
         @JvmName("setNoDepthTestProperty")
-        set(value) = setDrawFlag(2L, value)
+        set(value) = setDrawFlag(Label3D.DrawFlags.DISABLE_DEPTH_TEST, value)
 
     var fixedSize: Boolean
         @JvmName("fixedSizeProperty")
-        get() = getDrawFlag(3L)
+        get() = getDrawFlag(Label3D.DrawFlags.FIXED_SIZE)
         @JvmName("setFixedSizeProperty")
-        set(value) = setDrawFlag(3L, value)
+        set(value) = setDrawFlag(Label3D.DrawFlags.FIXED_SIZE, value)
 
-    var alphaCut: Long
+    var alphaCut: Label3D.AlphaCutMode
         @JvmName("alphaCutProperty")
         get() = getAlphaCutMode()
         @JvmName("setAlphaCutProperty")
@@ -74,7 +75,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setAlphaHashScaleProperty")
         set(value) = setAlphaHashScale(value)
 
-    var alphaAntialiasingMode: Long
+    var alphaAntialiasingMode: BaseMaterial3D.AlphaAntiAliasing
         @JvmName("alphaAntialiasingModeProperty")
         get() = getAlphaAntialiasing()
         @JvmName("setAlphaAntialiasingModeProperty")
@@ -86,7 +87,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setAlphaAntialiasingEdgeProperty")
         set(value) = setAlphaAntialiasingEdge(value)
 
-    var textureFilter: Long
+    var textureFilter: BaseMaterial3D.TextureFilter
         @JvmName("textureFilterProperty")
         get() = getTextureFilter()
         @JvmName("setTextureFilterProperty")
@@ -140,13 +141,13 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setOutlineSizeProperty")
         set(value) = setOutlineSize(value)
 
-    var horizontalAlignment: Long
+    var horizontalAlignment: HorizontalAlignment
         @JvmName("horizontalAlignmentProperty")
         get() = getHorizontalAlignment()
         @JvmName("setHorizontalAlignmentProperty")
         set(value) = setHorizontalAlignment(value)
 
-    var verticalAlignment: Long
+    var verticalAlignment: VerticalAlignment
         @JvmName("verticalAlignmentProperty")
         get() = getVerticalAlignment()
         @JvmName("setVerticalAlignmentProperty")
@@ -164,19 +165,19 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setLineSpacingProperty")
         set(value) = setLineSpacing(value)
 
-    var autowrapMode: Long
+    var autowrapMode: TextServer.AutowrapMode
         @JvmName("autowrapModeProperty")
         get() = getAutowrapMode()
         @JvmName("setAutowrapModeProperty")
         set(value) = setAutowrapMode(value)
 
-    var autowrapTrimFlags: Long
+    var autowrapTrimFlags: TextServer.LineBreakFlag
         @JvmName("autowrapTrimFlagsProperty")
         get() = getAutowrapTrimFlags()
         @JvmName("setAutowrapTrimFlagsProperty")
         set(value) = setAutowrapTrimFlags(value)
 
-    var justificationFlags: Long
+    var justificationFlags: TextServer.JustificationFlag
         @JvmName("justificationFlagsProperty")
         get() = getJustificationFlags()
         @JvmName("setJustificationFlagsProperty")
@@ -188,7 +189,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setWidthProperty")
         set(value) = setWidth(value)
 
-    var textDirection: Long
+    var textDirection: TextServer.Direction
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -200,7 +201,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    var structuredTextBidiOverride: Long
+    var structuredTextBidiOverride: TextServer.StructuredTextParser
         @JvmName("structuredTextBidiOverrideProperty")
         get() = getStructuredTextBidiOverride()
         @JvmName("setStructuredTextBidiOverrideProperty")
@@ -218,8 +219,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_horizontal_alignment
      */
-    fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
+    fun setHorizontalAlignment(alignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -228,8 +229,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_horizontal_alignment
      */
-    fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
+    fun getHorizontalAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -237,8 +238,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_vertical_alignment
      */
-    fun setVerticalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
+    fun setVerticalAlignment(alignment: VerticalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -246,8 +247,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_vertical_alignment
      */
-    fun getVerticalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
+    fun getVerticalAlignment(): VerticalAlignment {
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment))
     }
 
     /**
@@ -309,8 +310,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: TextServer.Direction) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -318,8 +319,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): TextServer.Direction {
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -347,8 +348,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_structured_text_bidi_override
      */
-    fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
+    fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -356,8 +357,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_structured_text_bidi_override
      */
-    fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
+    fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -533,8 +534,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_autowrap_mode
      */
-    fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
+    fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -544,8 +545,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_autowrap_mode
      */
-    fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
+    fun getAutowrapMode(): TextServer.AutowrapMode {
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
     }
 
     /**
@@ -554,8 +555,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_autowrap_trim_flags
      */
-    fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
+    fun setAutowrapTrimFlags(autowrapTrimFlags: TextServer.LineBreakFlag) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
     }
 
     /**
@@ -564,8 +565,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_autowrap_trim_flags
      */
-    fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
+    fun getAutowrapTrimFlags(): TextServer.LineBreakFlag {
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment))
     }
 
     /**
@@ -573,8 +574,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_justification_flags
      */
-    fun setJustificationFlags(justificationFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
+    fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags.value)
     }
 
     /**
@@ -582,8 +583,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_justification_flags
      */
-    fun getJustificationFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
+    fun getJustificationFlags(): TextServer.JustificationFlag {
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
     }
 
     /**
@@ -647,8 +648,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_draw_flag
      */
-    fun setDrawFlag(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag, enabled)
+    fun setDrawFlag(flag: Label3D.DrawFlags, enabled: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -656,8 +657,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_draw_flag
      */
-    fun getDrawFlag(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag)
+    fun getDrawFlag(flag: Label3D.DrawFlags): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag.value)
     }
 
     /**
@@ -665,8 +666,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_billboard_mode
      */
-    fun setBillboardMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode)
+    fun setBillboardMode(mode: BaseMaterial3D.BillboardMode) {
+        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode.value)
     }
 
     /**
@@ -674,8 +675,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_billboard_mode
      */
-    fun getBillboardMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment)
+    fun getBillboardMode(): BaseMaterial3D.BillboardMode {
+        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment))
     }
 
     /**
@@ -683,8 +684,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_alpha_cut_mode
      */
-    fun setAlphaCutMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode)
+    fun setAlphaCutMode(mode: Label3D.AlphaCutMode) {
+        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode.value)
     }
 
     /**
@@ -692,8 +693,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_alpha_cut_mode
      */
-    fun getAlphaCutMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment)
+    fun getAlphaCutMode(): Label3D.AlphaCutMode {
+        return Label3D.AlphaCutMode(ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment))
     }
 
     /**
@@ -737,8 +738,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_alpha_antialiasing
      */
-    fun setAlphaAntialiasing(alphaAa: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa)
+    fun setAlphaAntialiasing(alphaAa: BaseMaterial3D.AlphaAntiAliasing) {
+        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa.value)
     }
 
     /**
@@ -746,8 +747,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_alpha_antialiasing
      */
-    fun getAlphaAntialiasing(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment)
+    fun getAlphaAntialiasing(): BaseMaterial3D.AlphaAntiAliasing {
+        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment))
     }
 
     /**
@@ -773,8 +774,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.set_texture_filter
      */
-    fun setTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
+    fun setTextureFilter(mode: BaseMaterial3D.TextureFilter) {
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -782,8 +783,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: Label3D.get_texture_filter
      */
-    fun getTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
+    fun getTextureFilter(): BaseMaterial3D.TextureFilter {
+        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
     }
 
     /**
@@ -796,17 +797,89 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
-    companion object {
-        const val FLAG_SHADED: Long = 0L
-        const val FLAG_DOUBLE_SIDED: Long = 1L
-        const val FLAG_DISABLE_DEPTH_TEST: Long = 2L
-        const val FLAG_FIXED_SIZE: Long = 3L
-        const val FLAG_MAX: Long = 4L
-        const val ALPHA_CUT_DISABLED: Long = 0L
-        const val ALPHA_CUT_DISCARD: Long = 1L
-        const val ALPHA_CUT_OPAQUE_PREPASS: Long = 2L
-        const val ALPHA_CUT_HASH: Long = 3L
+    @JvmInline
+    value class DrawFlags(val value: Long) {
+        companion object {
+            /**
+             * If set, lights in the environment affect the label.
+             *
+             * Generated from Godot docs: Label3D.FLAG_SHADED
+             */
+            val SHADED: DrawFlags get() = DrawFlags(0L)
+            /**
+             * If set, text can be seen from the back as well. If not, the text is invisible when looking at it
+             * from behind.
+             *
+             * Generated from Godot docs: Label3D.FLAG_DOUBLE_SIDED
+             */
+            val DOUBLE_SIDED: DrawFlags get() = DrawFlags(1L)
+            /**
+             * Disables the depth test, so this object is drawn on top of all others. However, objects drawn
+             * after it in the draw order may cover it.
+             *
+             * Generated from Godot docs: Label3D.FLAG_DISABLE_DEPTH_TEST
+             */
+            val DISABLE_DEPTH_TEST: DrawFlags get() = DrawFlags(2L)
+            /**
+             * Label is scaled by depth so that it always appears the same size on screen.
+             *
+             * Generated from Godot docs: Label3D.FLAG_FIXED_SIZE
+             */
+            val FIXED_SIZE: DrawFlags get() = DrawFlags(3L)
+            /**
+             * Represents the size of the `DrawFlags` enum.
+             *
+             * Generated from Godot docs: Label3D.FLAG_MAX
+             */
+            val MAX: DrawFlags get() = DrawFlags(4L)
+        }
+    }
 
+    @JvmInline
+    value class AlphaCutMode(val value: Long) {
+        companion object {
+            /**
+             * This mode performs standard alpha blending. It can display translucent areas, but transparency
+             * sorting issues may be visible when multiple transparent materials are overlapping.
+             * `GeometryInstance3D.cast_shadow` has no effect when this transparency mode is used; the
+             * `Label3D` will never cast shadows.
+             *
+             * Generated from Godot docs: Label3D.ALPHA_CUT_DISABLED
+             */
+            val DISABLED: AlphaCutMode get() = AlphaCutMode(0L)
+            /**
+             * This mode only allows fully transparent or fully opaque pixels. Harsh edges will be visible
+             * unless some form of screen-space antialiasing is enabled (see
+             * `ProjectSettings.rendering/anti_aliasing/quality/screen_space_aa`). This mode is also known as
+             * alpha testing or 1-bit transparency. Note: This mode might have issues with anti-aliased fonts
+             * and outlines, try adjusting `alpha_scissor_threshold` or using MSDF font. Note: When using text
+             * with overlapping glyphs (e.g., cursive scripts), this mode might have transparency sorting
+             * issues between the main text and the outline.
+             *
+             * Generated from Godot docs: Label3D.ALPHA_CUT_DISCARD
+             */
+            val DISCARD: AlphaCutMode get() = AlphaCutMode(1L)
+            /**
+             * This mode draws fully opaque pixels in the depth prepass. This is slower than
+             * `ALPHA_CUT_DISABLED` or `ALPHA_CUT_DISCARD`, but it allows displaying translucent areas and
+             * smooth edges while using proper sorting. Note: When using text with overlapping glyphs (e.g.,
+             * cursive scripts), this mode might have transparency sorting issues between the main text and the
+             * outline.
+             *
+             * Generated from Godot docs: Label3D.ALPHA_CUT_OPAQUE_PREPASS
+             */
+            val OPAQUE_PREPASS: AlphaCutMode get() = AlphaCutMode(2L)
+            /**
+             * This mode draws cuts off all values below a spatially-deterministic threshold, the rest will
+             * remain opaque.
+             *
+             * Generated from Godot docs: Label3D.ALPHA_CUT_HASH
+             */
+            val HASH: AlphaCutMode get() = AlphaCutMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Label3D? =
             wrap(handle.segment)

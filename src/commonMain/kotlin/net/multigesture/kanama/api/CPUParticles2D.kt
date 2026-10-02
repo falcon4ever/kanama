@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -104,13 +105,13 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setLocalCoordsProperty")
         set(value) = setUseLocalCoordinates(value)
 
-    var drawOrder: Long
+    var drawOrder: CPUParticles2D.DrawOrder
         @JvmName("drawOrderProperty")
         get() = getDrawOrder()
         @JvmName("setDrawOrderProperty")
         set(value) = setDrawOrder(value)
 
-    var emissionShape: Long
+    var emissionShape: CPUParticles2D.EmissionShape
         @JvmName("emissionShapeProperty")
         get() = getEmissionShape()
         @JvmName("setEmissionShapeProperty")
@@ -160,9 +161,9 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
 
     var particleFlagAlignY: Boolean
         @JvmName("particleFlagAlignYProperty")
-        get() = getParticleFlag(0L)
+        get() = getParticleFlag(CPUParticles2D.ParticleFlags.ALIGN_Y_TO_VELOCITY)
         @JvmName("setParticleFlagAlignYProperty")
-        set(value) = setParticleFlag(0L, value)
+        set(value) = setParticleFlag(CPUParticles2D.ParticleFlags.ALIGN_Y_TO_VELOCITY, value)
 
     var direction: Vector2
         @JvmName("directionProperty")
@@ -184,159 +185,159 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
 
     var initialVelocityMin: Double
         @JvmName("initialVelocityMinProperty")
-        get() = getParamMin(0L)
+        get() = getParamMin(CPUParticles2D.Parameter.INITIAL_LINEAR_VELOCITY)
         @JvmName("setInitialVelocityMinProperty")
-        set(value) = setParamMin(0L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.INITIAL_LINEAR_VELOCITY, value)
 
     var initialVelocityMax: Double
         @JvmName("initialVelocityMaxProperty")
-        get() = getParamMax(0L)
+        get() = getParamMax(CPUParticles2D.Parameter.INITIAL_LINEAR_VELOCITY)
         @JvmName("setInitialVelocityMaxProperty")
-        set(value) = setParamMax(0L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.INITIAL_LINEAR_VELOCITY, value)
 
     var angularVelocityMin: Double
         @JvmName("angularVelocityMinProperty")
-        get() = getParamMin(1L)
+        get() = getParamMin(CPUParticles2D.Parameter.ANGULAR_VELOCITY)
         @JvmName("setAngularVelocityMinProperty")
-        set(value) = setParamMin(1L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.ANGULAR_VELOCITY, value)
 
     var angularVelocityMax: Double
         @JvmName("angularVelocityMaxProperty")
-        get() = getParamMax(1L)
+        get() = getParamMax(CPUParticles2D.Parameter.ANGULAR_VELOCITY)
         @JvmName("setAngularVelocityMaxProperty")
-        set(value) = setParamMax(1L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.ANGULAR_VELOCITY, value)
 
     var angularVelocityCurve: Curve?
         @JvmName("angularVelocityCurveProperty")
-        get() = getParamCurve(1L)
+        get() = getParamCurve(CPUParticles2D.Parameter.ANGULAR_VELOCITY)
         @JvmName("setAngularVelocityCurveProperty")
-        set(value) = setParamCurve(1L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.ANGULAR_VELOCITY, value)
 
     var orbitVelocityMin: Double
         @JvmName("orbitVelocityMinProperty")
-        get() = getParamMin(2L)
+        get() = getParamMin(CPUParticles2D.Parameter.ORBIT_VELOCITY)
         @JvmName("setOrbitVelocityMinProperty")
-        set(value) = setParamMin(2L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.ORBIT_VELOCITY, value)
 
     var orbitVelocityMax: Double
         @JvmName("orbitVelocityMaxProperty")
-        get() = getParamMax(2L)
+        get() = getParamMax(CPUParticles2D.Parameter.ORBIT_VELOCITY)
         @JvmName("setOrbitVelocityMaxProperty")
-        set(value) = setParamMax(2L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.ORBIT_VELOCITY, value)
 
     var orbitVelocityCurve: Curve?
         @JvmName("orbitVelocityCurveProperty")
-        get() = getParamCurve(2L)
+        get() = getParamCurve(CPUParticles2D.Parameter.ORBIT_VELOCITY)
         @JvmName("setOrbitVelocityCurveProperty")
-        set(value) = setParamCurve(2L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.ORBIT_VELOCITY, value)
 
     var linearAccelMin: Double
         @JvmName("linearAccelMinProperty")
-        get() = getParamMin(3L)
+        get() = getParamMin(CPUParticles2D.Parameter.LINEAR_ACCEL)
         @JvmName("setLinearAccelMinProperty")
-        set(value) = setParamMin(3L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.LINEAR_ACCEL, value)
 
     var linearAccelMax: Double
         @JvmName("linearAccelMaxProperty")
-        get() = getParamMax(3L)
+        get() = getParamMax(CPUParticles2D.Parameter.LINEAR_ACCEL)
         @JvmName("setLinearAccelMaxProperty")
-        set(value) = setParamMax(3L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.LINEAR_ACCEL, value)
 
     var linearAccelCurve: Curve?
         @JvmName("linearAccelCurveProperty")
-        get() = getParamCurve(3L)
+        get() = getParamCurve(CPUParticles2D.Parameter.LINEAR_ACCEL)
         @JvmName("setLinearAccelCurveProperty")
-        set(value) = setParamCurve(3L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.LINEAR_ACCEL, value)
 
     var radialAccelMin: Double
         @JvmName("radialAccelMinProperty")
-        get() = getParamMin(4L)
+        get() = getParamMin(CPUParticles2D.Parameter.RADIAL_ACCEL)
         @JvmName("setRadialAccelMinProperty")
-        set(value) = setParamMin(4L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.RADIAL_ACCEL, value)
 
     var radialAccelMax: Double
         @JvmName("radialAccelMaxProperty")
-        get() = getParamMax(4L)
+        get() = getParamMax(CPUParticles2D.Parameter.RADIAL_ACCEL)
         @JvmName("setRadialAccelMaxProperty")
-        set(value) = setParamMax(4L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.RADIAL_ACCEL, value)
 
     var radialAccelCurve: Curve?
         @JvmName("radialAccelCurveProperty")
-        get() = getParamCurve(4L)
+        get() = getParamCurve(CPUParticles2D.Parameter.RADIAL_ACCEL)
         @JvmName("setRadialAccelCurveProperty")
-        set(value) = setParamCurve(4L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.RADIAL_ACCEL, value)
 
     var tangentialAccelMin: Double
         @JvmName("tangentialAccelMinProperty")
-        get() = getParamMin(5L)
+        get() = getParamMin(CPUParticles2D.Parameter.TANGENTIAL_ACCEL)
         @JvmName("setTangentialAccelMinProperty")
-        set(value) = setParamMin(5L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.TANGENTIAL_ACCEL, value)
 
     var tangentialAccelMax: Double
         @JvmName("tangentialAccelMaxProperty")
-        get() = getParamMax(5L)
+        get() = getParamMax(CPUParticles2D.Parameter.TANGENTIAL_ACCEL)
         @JvmName("setTangentialAccelMaxProperty")
-        set(value) = setParamMax(5L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.TANGENTIAL_ACCEL, value)
 
     var tangentialAccelCurve: Curve?
         @JvmName("tangentialAccelCurveProperty")
-        get() = getParamCurve(5L)
+        get() = getParamCurve(CPUParticles2D.Parameter.TANGENTIAL_ACCEL)
         @JvmName("setTangentialAccelCurveProperty")
-        set(value) = setParamCurve(5L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.TANGENTIAL_ACCEL, value)
 
     var dampingMin: Double
         @JvmName("dampingMinProperty")
-        get() = getParamMin(6L)
+        get() = getParamMin(CPUParticles2D.Parameter.DAMPING)
         @JvmName("setDampingMinProperty")
-        set(value) = setParamMin(6L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.DAMPING, value)
 
     var dampingMax: Double
         @JvmName("dampingMaxProperty")
-        get() = getParamMax(6L)
+        get() = getParamMax(CPUParticles2D.Parameter.DAMPING)
         @JvmName("setDampingMaxProperty")
-        set(value) = setParamMax(6L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.DAMPING, value)
 
     var dampingCurve: Curve?
         @JvmName("dampingCurveProperty")
-        get() = getParamCurve(6L)
+        get() = getParamCurve(CPUParticles2D.Parameter.DAMPING)
         @JvmName("setDampingCurveProperty")
-        set(value) = setParamCurve(6L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.DAMPING, value)
 
     var angleMin: Double
         @JvmName("angleMinProperty")
-        get() = getParamMin(7L)
+        get() = getParamMin(CPUParticles2D.Parameter.ANGLE)
         @JvmName("setAngleMinProperty")
-        set(value) = setParamMin(7L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.ANGLE, value)
 
     var angleMax: Double
         @JvmName("angleMaxProperty")
-        get() = getParamMax(7L)
+        get() = getParamMax(CPUParticles2D.Parameter.ANGLE)
         @JvmName("setAngleMaxProperty")
-        set(value) = setParamMax(7L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.ANGLE, value)
 
     var angleCurve: Curve?
         @JvmName("angleCurveProperty")
-        get() = getParamCurve(7L)
+        get() = getParamCurve(CPUParticles2D.Parameter.ANGLE)
         @JvmName("setAngleCurveProperty")
-        set(value) = setParamCurve(7L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.ANGLE, value)
 
     var scaleAmountMin: Double
         @JvmName("scaleAmountMinProperty")
-        get() = getParamMin(8L)
+        get() = getParamMin(CPUParticles2D.Parameter.SCALE)
         @JvmName("setScaleAmountMinProperty")
-        set(value) = setParamMin(8L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.SCALE, value)
 
     var scaleAmountMax: Double
         @JvmName("scaleAmountMaxProperty")
-        get() = getParamMax(8L)
+        get() = getParamMax(CPUParticles2D.Parameter.SCALE)
         @JvmName("setScaleAmountMaxProperty")
-        set(value) = setParamMax(8L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.SCALE, value)
 
     var scaleAmountCurve: Curve?
         @JvmName("scaleAmountCurveProperty")
-        get() = getParamCurve(8L)
+        get() = getParamCurve(CPUParticles2D.Parameter.SCALE)
         @JvmName("setScaleAmountCurveProperty")
-        set(value) = setParamCurve(8L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.SCALE, value)
 
     var splitScale: Boolean
         @JvmName("splitScaleProperty")
@@ -376,57 +377,57 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
 
     var hueVariationMin: Double
         @JvmName("hueVariationMinProperty")
-        get() = getParamMin(9L)
+        get() = getParamMin(CPUParticles2D.Parameter.HUE_VARIATION)
         @JvmName("setHueVariationMinProperty")
-        set(value) = setParamMin(9L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.HUE_VARIATION, value)
 
     var hueVariationMax: Double
         @JvmName("hueVariationMaxProperty")
-        get() = getParamMax(9L)
+        get() = getParamMax(CPUParticles2D.Parameter.HUE_VARIATION)
         @JvmName("setHueVariationMaxProperty")
-        set(value) = setParamMax(9L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.HUE_VARIATION, value)
 
     var hueVariationCurve: Curve?
         @JvmName("hueVariationCurveProperty")
-        get() = getParamCurve(9L)
+        get() = getParamCurve(CPUParticles2D.Parameter.HUE_VARIATION)
         @JvmName("setHueVariationCurveProperty")
-        set(value) = setParamCurve(9L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.HUE_VARIATION, value)
 
     var animSpeedMin: Double
         @JvmName("animSpeedMinProperty")
-        get() = getParamMin(10L)
+        get() = getParamMin(CPUParticles2D.Parameter.ANIM_SPEED)
         @JvmName("setAnimSpeedMinProperty")
-        set(value) = setParamMin(10L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.ANIM_SPEED, value)
 
     var animSpeedMax: Double
         @JvmName("animSpeedMaxProperty")
-        get() = getParamMax(10L)
+        get() = getParamMax(CPUParticles2D.Parameter.ANIM_SPEED)
         @JvmName("setAnimSpeedMaxProperty")
-        set(value) = setParamMax(10L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.ANIM_SPEED, value)
 
     var animSpeedCurve: Curve?
         @JvmName("animSpeedCurveProperty")
-        get() = getParamCurve(10L)
+        get() = getParamCurve(CPUParticles2D.Parameter.ANIM_SPEED)
         @JvmName("setAnimSpeedCurveProperty")
-        set(value) = setParamCurve(10L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.ANIM_SPEED, value)
 
     var animOffsetMin: Double
         @JvmName("animOffsetMinProperty")
-        get() = getParamMin(11L)
+        get() = getParamMin(CPUParticles2D.Parameter.ANIM_OFFSET)
         @JvmName("setAnimOffsetMinProperty")
-        set(value) = setParamMin(11L, value)
+        set(value) = setParamMin(CPUParticles2D.Parameter.ANIM_OFFSET, value)
 
     var animOffsetMax: Double
         @JvmName("animOffsetMaxProperty")
-        get() = getParamMax(11L)
+        get() = getParamMax(CPUParticles2D.Parameter.ANIM_OFFSET)
         @JvmName("setAnimOffsetMaxProperty")
-        set(value) = setParamMax(11L, value)
+        set(value) = setParamMax(CPUParticles2D.Parameter.ANIM_OFFSET, value)
 
     var animOffsetCurve: Curve?
         @JvmName("animOffsetCurveProperty")
-        get() = getParamCurve(11L)
+        get() = getParamCurve(CPUParticles2D.Parameter.ANIM_OFFSET)
         @JvmName("setAnimOffsetCurveProperty")
-        set(value) = setParamCurve(11L, value)
+        set(value) = setParamCurve(CPUParticles2D.Parameter.ANIM_OFFSET, value)
 
     /**
      * If `true`, particles are being emitted. `emitting` can be used to start and stop particles from
@@ -726,8 +727,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.set_draw_order
      */
-    fun setDrawOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order)
+    fun setDrawOrder(order: CPUParticles2D.DrawOrder) {
+        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order.value)
     }
 
     /**
@@ -735,8 +736,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.get_draw_order
      */
-    fun getDrawOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment)
+    fun getDrawOrder(): CPUParticles2D.DrawOrder {
+        return CPUParticles2D.DrawOrder(ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment))
     }
 
     /**
@@ -808,8 +809,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.set_param_min
      */
-    fun setParamMin(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param, value)
+    fun setParamMin(param: CPUParticles2D.Parameter, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMinBind, segment, param.value, value)
     }
 
     /**
@@ -817,8 +818,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.get_param_min
      */
-    fun getParamMin(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param)
+    fun getParamMin(param: CPUParticles2D.Parameter): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMinBind, segment, param.value)
     }
 
     /**
@@ -827,8 +828,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.set_param_max
      */
-    fun setParamMax(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param, value)
+    fun setParamMax(param: CPUParticles2D.Parameter, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamMaxBind, segment, param.value, value)
     }
 
     /**
@@ -837,8 +838,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.get_param_max
      */
-    fun getParamMax(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param)
+    fun getParamMax(param: CPUParticles2D.Parameter): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamMaxBind, segment, param.value)
     }
 
     /**
@@ -846,8 +847,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.set_param_curve
      */
-    fun setParamCurve(param: Long, curve: Curve?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param, curve?.requireOpenHandle() ?: NULL_SEGMENT)
+    fun setParamCurve(param: CPUParticles2D.Parameter, curve: Curve?) {
+        ObjectCalls.ptrcallWithLongAndObjectArg(setParamCurveBind, segment, param.value, curve?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -855,8 +856,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.get_param_curve
      */
-    fun getParamCurve(param: Long): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param))
+    fun getParamCurve(param: CPUParticles2D.Parameter): Curve? {
+        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param.value))
     }
 
     /**
@@ -920,8 +921,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.set_particle_flag
      */
-    fun setParticleFlag(particleFlag: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag, enable)
+    fun setParticleFlag(particleFlag: CPUParticles2D.ParticleFlags, enable: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setParticleFlagBind, segment, particleFlag.value, enable)
     }
 
     /**
@@ -929,8 +930,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.get_particle_flag
      */
-    fun getParticleFlag(particleFlag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag)
+    fun getParticleFlag(particleFlag: CPUParticles2D.ParticleFlags): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getParticleFlagBind, segment, particleFlag.value)
     }
 
     /**
@@ -938,8 +939,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_shape
      */
-    fun setEmissionShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape)
+    fun setEmissionShape(shape: CPUParticles2D.EmissionShape) {
+        ObjectCalls.ptrcallWithLongArg(setEmissionShapeBind, segment, shape.value)
     }
 
     /**
@@ -947,8 +948,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_shape
      */
-    fun getEmissionShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment)
+    fun getEmissionShape(): CPUParticles2D.EmissionShape {
+        return CPUParticles2D.EmissionShape(ObjectCalls.ptrcallNoArgsRetLong(getEmissionShapeBind, segment))
     }
 
     /**
@@ -1173,35 +1174,206 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         const val finished: String = "finished"
     }
 
-    companion object {
-        const val DRAW_ORDER_INDEX: Long = 0L
-        const val DRAW_ORDER_LIFETIME: Long = 1L
-        const val PARAM_INITIAL_LINEAR_VELOCITY: Long = 0L
-        const val PARAM_ANGULAR_VELOCITY: Long = 1L
-        const val PARAM_ORBIT_VELOCITY: Long = 2L
-        const val PARAM_LINEAR_ACCEL: Long = 3L
-        const val PARAM_RADIAL_ACCEL: Long = 4L
-        const val PARAM_TANGENTIAL_ACCEL: Long = 5L
-        const val PARAM_DAMPING: Long = 6L
-        const val PARAM_ANGLE: Long = 7L
-        const val PARAM_SCALE: Long = 8L
-        const val PARAM_HUE_VARIATION: Long = 9L
-        const val PARAM_ANIM_SPEED: Long = 10L
-        const val PARAM_ANIM_OFFSET: Long = 11L
-        const val PARAM_MAX: Long = 12L
-        const val PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY: Long = 0L
-        const val PARTICLE_FLAG_ROTATE_Y: Long = 1L
-        const val PARTICLE_FLAG_DISABLE_Z: Long = 2L
-        const val PARTICLE_FLAG_MAX: Long = 3L
-        const val EMISSION_SHAPE_POINT: Long = 0L
-        const val EMISSION_SHAPE_SPHERE: Long = 1L
-        const val EMISSION_SHAPE_SPHERE_SURFACE: Long = 2L
-        const val EMISSION_SHAPE_RECTANGLE: Long = 3L
-        const val EMISSION_SHAPE_POINTS: Long = 4L
-        const val EMISSION_SHAPE_DIRECTED_POINTS: Long = 5L
-        const val EMISSION_SHAPE_RING: Long = 6L
-        const val EMISSION_SHAPE_MAX: Long = 7L
+    @JvmInline
+    value class DrawOrder(val value: Long) {
+        companion object {
+            /**
+             * Particles are drawn in the order emitted.
+             *
+             * Generated from Godot docs: CPUParticles2D.DRAW_ORDER_INDEX
+             */
+            val INDEX: DrawOrder get() = DrawOrder(0L)
+            /**
+             * Particles are drawn in order of remaining lifetime. In other words, the particle with the
+             * highest lifetime is drawn at the front.
+             *
+             * Generated from Godot docs: CPUParticles2D.DRAW_ORDER_LIFETIME
+             */
+            val LIFETIME: DrawOrder get() = DrawOrder(1L)
+        }
+    }
 
+    @JvmInline
+    value class Parameter(val value: Long) {
+        companion object {
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set initial velocity
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_INITIAL_LINEAR_VELOCITY
+             */
+            val INITIAL_LINEAR_VELOCITY: Parameter get() = Parameter(0L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set angular velocity
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_ANGULAR_VELOCITY
+             */
+            val ANGULAR_VELOCITY: Parameter get() = Parameter(1L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set orbital velocity
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_ORBIT_VELOCITY
+             */
+            val ORBIT_VELOCITY: Parameter get() = Parameter(2L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set linear acceleration
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_LINEAR_ACCEL
+             */
+            val LINEAR_ACCEL: Parameter get() = Parameter(3L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set radial acceleration
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_RADIAL_ACCEL
+             */
+            val RADIAL_ACCEL: Parameter get() = Parameter(4L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set tangential acceleration
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_TANGENTIAL_ACCEL
+             */
+            val TANGENTIAL_ACCEL: Parameter get() = Parameter(5L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set damping properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_DAMPING
+             */
+            val DAMPING: Parameter get() = Parameter(6L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set angle properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_ANGLE
+             */
+            val ANGLE: Parameter get() = Parameter(7L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set scale properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_SCALE
+             */
+            val SCALE: Parameter get() = Parameter(8L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set hue variation
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_HUE_VARIATION
+             */
+            val HUE_VARIATION: Parameter get() = Parameter(9L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set animation speed
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_ANIM_SPEED
+             */
+            val ANIM_SPEED: Parameter get() = Parameter(10L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set animation offset
+             * properties.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_ANIM_OFFSET
+             */
+            val ANIM_OFFSET: Parameter get() = Parameter(11L)
+            /**
+             * Represents the size of the `Parameter` enum.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARAM_MAX
+             */
+            val MAX: Parameter get() = Parameter(12L)
+        }
+    }
+
+    @JvmInline
+    value class ParticleFlags(val value: Long) {
+        companion object {
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_align_y`.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY
+             */
+            val ALIGN_Y_TO_VELOCITY: ParticleFlags get() = ParticleFlags(0L)
+            /**
+             * Present for consistency with 3D particle nodes, not used in 2D.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARTICLE_FLAG_ROTATE_Y
+             */
+            val ROTATE_Y: ParticleFlags get() = ParticleFlags(1L)
+            /**
+             * Present for consistency with 3D particle nodes, not used in 2D.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARTICLE_FLAG_DISABLE_Z
+             */
+            val DISABLE_Z: ParticleFlags get() = ParticleFlags(2L)
+            /**
+             * Represents the size of the `ParticleFlags` enum.
+             *
+             * Generated from Godot docs: CPUParticles2D.PARTICLE_FLAG_MAX
+             */
+            val MAX: ParticleFlags get() = ParticleFlags(3L)
+        }
+    }
+
+    @JvmInline
+    value class EmissionShape(val value: Long) {
+        companion object {
+            /**
+             * All particles will be emitted from a single point.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_POINT
+             */
+            val POINT: EmissionShape get() = EmissionShape(0L)
+            /**
+             * Particles will be emitted in the volume of a sphere flattened to two dimensions.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_SPHERE
+             */
+            val SPHERE: EmissionShape get() = EmissionShape(1L)
+            /**
+             * Particles will be emitted on the surface of a sphere flattened to two dimensions.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_SPHERE_SURFACE
+             */
+            val SPHERE_SURFACE: EmissionShape get() = EmissionShape(2L)
+            /**
+             * Particles will be emitted in the area of a rectangle.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+             */
+            val RECTANGLE: EmissionShape get() = EmissionShape(3L)
+            /**
+             * Particles will be emitted at a position chosen randomly among `emission_points`. Particle color
+             * will be modulated by `emission_colors`.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_POINTS
+             */
+            val POINTS: EmissionShape get() = EmissionShape(4L)
+            /**
+             * Particles will be emitted at a position chosen randomly among `emission_points`. Particle
+             * velocity and rotation will be set based on `emission_normals`. Particle color will be modulated
+             * by `emission_colors`.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_DIRECTED_POINTS
+             */
+            val DIRECTED_POINTS: EmissionShape get() = EmissionShape(5L)
+            /**
+             * Particles will be emitted in the area of a ring parameterized by its outer and inner radius.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_RING
+             */
+            val RING: EmissionShape get() = EmissionShape(6L)
+            /**
+             * Represents the size of the `EmissionShape` enum.
+             *
+             * Generated from Godot docs: CPUParticles2D.EMISSION_SHAPE_MAX
+             */
+            val MAX: EmissionShape get() = EmissionShape(7L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CPUParticles2D? =
             wrap(handle.segment)

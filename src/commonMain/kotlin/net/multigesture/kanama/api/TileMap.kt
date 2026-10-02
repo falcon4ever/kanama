@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -35,13 +36,13 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setCollisionAnimatableProperty")
         set(value) = setCollisionAnimatable(value)
 
-    var collisionVisibilityMode: Long
+    var collisionVisibilityMode: TileMap.VisibilityMode
         @JvmName("collisionVisibilityModeProperty")
         get() = getCollisionVisibilityMode()
         @JvmName("setCollisionVisibilityModeProperty")
         set(value) = setCollisionVisibilityMode(value)
 
-    var navigationVisibilityMode: Long
+    var navigationVisibilityMode: TileMap.VisibilityMode
         @JvmName("navigationVisibilityModeProperty")
         get() = getNavigationVisibilityMode()
         @JvmName("setNavigationVisibilityModeProperty")
@@ -364,8 +365,8 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TileMap.set_collision_visibility_mode
      */
-    fun setCollisionVisibilityMode(collisionVisibilityMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, collisionVisibilityMode)
+    fun setCollisionVisibilityMode(collisionVisibilityMode: TileMap.VisibilityMode) {
+        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, collisionVisibilityMode.value)
     }
 
     /**
@@ -374,8 +375,8 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TileMap.get_collision_visibility_mode
      */
-    fun getCollisionVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment)
+    fun getCollisionVisibilityMode(): TileMap.VisibilityMode {
+        return TileMap.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment))
     }
 
     /**
@@ -384,8 +385,8 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TileMap.set_navigation_visibility_mode
      */
-    fun setNavigationVisibilityMode(navigationVisibilityMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setNavigationVisibilityModeBind, segment, navigationVisibilityMode)
+    fun setNavigationVisibilityMode(navigationVisibilityMode: TileMap.VisibilityMode) {
+        ObjectCalls.ptrcallWithLongArg(setNavigationVisibilityModeBind, segment, navigationVisibilityMode.value)
     }
 
     /**
@@ -394,8 +395,8 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TileMap.get_navigation_visibility_mode
      */
-    fun getNavigationVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, segment)
+    fun getNavigationVisibilityMode(): TileMap.VisibilityMode {
+        return TileMap.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, segment))
     }
 
     /**
@@ -720,19 +721,39 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TileMap.get_neighbor_cell
      */
-    fun getNeighborCell(coords: Vector2i, neighbor: Long): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, segment, coords, neighbor)
+    fun getNeighborCell(coords: Vector2i, neighbor: TileSet.CellNeighbor): Vector2i {
+        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, segment, coords, neighbor.value)
     }
 
     object Signals {
         const val changed: String = "changed"
     }
 
-    companion object {
-        const val VISIBILITY_MODE_DEFAULT: Long = 0L
-        const val VISIBILITY_MODE_FORCE_HIDE: Long = 2L
-        const val VISIBILITY_MODE_FORCE_SHOW: Long = 1L
+    @JvmInline
+    value class VisibilityMode(val value: Long) {
+        companion object {
+            /**
+             * Use the debug settings to determine visibility.
+             *
+             * Generated from Godot docs: TileMap.VISIBILITY_MODE_DEFAULT
+             */
+            val DEFAULT: VisibilityMode get() = VisibilityMode(0L)
+            /**
+             * Always hide.
+             *
+             * Generated from Godot docs: TileMap.VISIBILITY_MODE_FORCE_HIDE
+             */
+            val FORCE_HIDE: VisibilityMode get() = VisibilityMode(2L)
+            /**
+             * Always show.
+             *
+             * Generated from Godot docs: TileMap.VISIBILITY_MODE_FORCE_SHOW
+             */
+            val FORCE_SHOW: VisibilityMode get() = VisibilityMode(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileMap? =
             wrap(handle.segment)

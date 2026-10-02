@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -42,7 +43,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         @JvmName("multiplayerProperty")
         get() = getMultiplayer()
 
-    var processMode: Long
+    var processMode: Node.ProcessMode
         @JvmName("processModeProperty")
         get() = getProcessMode()
         @JvmName("setProcessModeProperty")
@@ -60,7 +61,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         @JvmName("setProcessPhysicsPriorityProperty")
         set(value) = setPhysicsProcessPriority(value)
 
-    var processThreadGroup: Long
+    var processThreadGroup: Node.ProcessThreadGroup
         @JvmName("processThreadGroupProperty")
         get() = getProcessThreadGroup()
         @JvmName("setProcessThreadGroupProperty")
@@ -72,19 +73,19 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         @JvmName("setProcessThreadGroupOrderProperty")
         set(value) = setProcessThreadGroupOrder(value)
 
-    var processThreadMessages: Long
+    var processThreadMessages: Node.ProcessThreadMessages
         @JvmName("processThreadMessagesProperty")
         get() = getProcessThreadMessages()
         @JvmName("setProcessThreadMessagesProperty")
         set(value) = setProcessThreadMessages(value)
 
-    var physicsInterpolationMode: Long
+    var physicsInterpolationMode: Node.PhysicsInterpolationMode
         @JvmName("physicsInterpolationModeProperty")
         get() = getPhysicsInterpolationMode()
         @JvmName("setPhysicsInterpolationModeProperty")
         set(value) = setPhysicsInterpolationMode(value)
 
-    var autoTranslateMode: Long
+    var autoTranslateMode: Node.AutoTranslateMode
         @JvmName("autoTranslateModeProperty")
         get() = getAutoTranslateMode()
         @JvmName("setAutoTranslateModeProperty")
@@ -155,8 +156,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.add_child
      */
-    fun addChild(node: Node, forceReadableName: Boolean = false, internalValue: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectBoolLongArgs(addChildBind, segment, node.segment, forceReadableName, internalValue)
+    fun addChild(node: Node, forceReadableName: Boolean = false, internalValue: Node.InternalMode = Node.InternalMode.DISABLED) {
+        ObjectCalls.ptrcallWithObjectBoolLongArgs(addChildBind, segment, node.segment, forceReadableName, internalValue.value)
     }
 
     /**
@@ -792,8 +793,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.set_process_mode
      */
-    fun setProcessMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, segment, mode)
+    fun setProcessMode(mode: Node.ProcessMode) {
+        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, segment, mode.value)
     }
 
     /**
@@ -802,8 +803,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.get_process_mode
      */
-    fun getProcessMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, segment)
+    fun getProcessMode(): Node.ProcessMode {
+        return Node.ProcessMode(ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, segment))
     }
 
     /**
@@ -845,8 +846,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.set_process_thread_group
      */
-    fun setProcessThreadGroup(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadGroupBind, segment, mode)
+    fun setProcessThreadGroup(mode: Node.ProcessThreadGroup) {
+        ObjectCalls.ptrcallWithLongArg(setProcessThreadGroupBind, segment, mode.value)
     }
 
     /**
@@ -871,8 +872,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.get_process_thread_group
      */
-    fun getProcessThreadGroup(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadGroupBind, segment)
+    fun getProcessThreadGroup(): Node.ProcessThreadGroup {
+        return Node.ProcessThreadGroup(ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadGroupBind, segment))
     }
 
     /**
@@ -882,8 +883,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.set_process_thread_messages
      */
-    fun setProcessThreadMessages(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessThreadMessagesBind, segment, flags)
+    fun setProcessThreadMessages(flags: Node.ProcessThreadMessages) {
+        ObjectCalls.ptrcallWithLongArg(setProcessThreadMessagesBind, segment, flags.value)
     }
 
     /**
@@ -893,8 +894,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.get_process_thread_messages
      */
-    fun getProcessThreadMessages(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadMessagesBind, segment)
+    fun getProcessThreadMessages(): Node.ProcessThreadMessages {
+        return Node.ProcessThreadMessages(ObjectCalls.ptrcallNoArgsRetLong(getProcessThreadMessagesBind, segment))
     }
 
     /**
@@ -1018,8 +1019,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.set_physics_interpolation_mode
      */
-    fun setPhysicsInterpolationMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationModeBind, segment, mode)
+    fun setPhysicsInterpolationMode(mode: Node.PhysicsInterpolationMode) {
+        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationModeBind, segment, mode.value)
     }
 
     /**
@@ -1035,8 +1036,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.get_physics_interpolation_mode
      */
-    fun getPhysicsInterpolationMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationModeBind, segment)
+    fun getPhysicsInterpolationMode(): Node.PhysicsInterpolationMode {
+        return Node.PhysicsInterpolationMode(ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationModeBind, segment))
     }
 
     /**
@@ -1087,8 +1088,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.set_auto_translate_mode
      */
-    fun setAutoTranslateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoTranslateModeBind, segment, mode)
+    fun setAutoTranslateMode(mode: Node.AutoTranslateMode) {
+        ObjectCalls.ptrcallWithLongArg(setAutoTranslateModeBind, segment, mode.value)
     }
 
     /**
@@ -1100,8 +1101,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.get_auto_translate_mode
      */
-    fun getAutoTranslateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoTranslateModeBind, segment)
+    fun getAutoTranslateMode(): Node.AutoTranslateMode {
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallNoArgsRetLong(getAutoTranslateModeBind, segment))
     }
 
     /**
@@ -1437,8 +1438,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.rpc
      */
-    fun rpc(method: String, vararg extraArgs: Any?): Long {
-        return (ObjectCalls.callWithVariantArgs(rpcBind, segment, listOf(method, *extraArgs)) as Number).toLong()
+    fun rpc(method: String, vararg extraArgs: Any?): GodotError {
+        return GodotError((ObjectCalls.callWithVariantArgs(rpcBind, segment, listOf(method, *extraArgs)) as Number).toLong())
     }
 
     /**
@@ -1450,8 +1451,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: Node.rpc_id
      */
-    fun rpcId(peerId: Long, method: String, vararg extraArgs: Any?): Long {
-        return (ObjectCalls.callWithVariantArgs(rpcIdBind, segment, listOf(peerId, method, *extraArgs)) as Number).toLong()
+    fun rpcId(peerId: Long, method: String, vararg extraArgs: Any?): GodotError {
+        return GodotError((ObjectCalls.callWithVariantArgs(rpcIdBind, segment, listOf(peerId, method, *extraArgs)) as Number).toLong())
     }
 
     /**
@@ -1691,7 +1692,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * (KanamaProcessor.kt / IosScriptCodeEmitter.kt), so its name and signature are load-bearing.
      */
     fun callLocalRpc(method: String, vararg extraArgs: Any?) {
-        if (rpc(method, *extraArgs) != 0L) {
+        if (rpc(method, *extraArgs) != GodotError.OK) {
             call(method, *extraArgs)
         }
     }
@@ -1714,6 +1715,235 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         const val replacingBy: String = "replacing_by"
         const val editorDescriptionChanged: String = "editor_description_changed"
         const val editorStateChanged: String = "editor_state_changed"
+    }
+
+    @JvmInline
+    value class ProcessMode(val value: Long) {
+        companion object {
+            /**
+             * Inherits `process_mode` from the node's parent. This is the default for any newly created node.
+             *
+             * Generated from Godot docs: Node.PROCESS_MODE_INHERIT
+             */
+            val INHERIT: ProcessMode get() = ProcessMode(0L)
+            /**
+             * Processes when `SceneTree.paused` is `false`. This is the inverse of `PROCESS_MODE_WHEN_PAUSED`,
+             * and the default for the root node.
+             *
+             * Generated from Godot docs: Node.PROCESS_MODE_PAUSABLE
+             */
+            val PAUSABLE: ProcessMode get() = ProcessMode(1L)
+            /**
+             * Processes only when `SceneTree.paused` is `true`. This is the inverse of
+             * `PROCESS_MODE_PAUSABLE`.
+             *
+             * Generated from Godot docs: Node.PROCESS_MODE_WHEN_PAUSED
+             */
+            val WHEN_PAUSED: ProcessMode get() = ProcessMode(2L)
+            /**
+             * Always processes. Keeps processing, ignoring `SceneTree.paused`. This is the inverse of
+             * `PROCESS_MODE_DISABLED`.
+             *
+             * Generated from Godot docs: Node.PROCESS_MODE_ALWAYS
+             */
+            val ALWAYS: ProcessMode get() = ProcessMode(3L)
+            /**
+             * Never processes. Completely disables processing, ignoring `SceneTree.paused`. This is the
+             * inverse of `PROCESS_MODE_ALWAYS`.
+             *
+             * Generated from Godot docs: Node.PROCESS_MODE_DISABLED
+             */
+            val DISABLED: ProcessMode get() = ProcessMode(4L)
+        }
+    }
+
+    @JvmInline
+    value class ProcessThreadGroup(val value: Long) {
+        companion object {
+            /**
+             * Process this node based on the thread group mode of the first parent (or grandparent) node that
+             * has a thread group mode that is not inherit. See `process_thread_group` for more information.
+             *
+             * Generated from Godot docs: Node.PROCESS_THREAD_GROUP_INHERIT
+             */
+            val INHERIT: ProcessThreadGroup get() = ProcessThreadGroup(0L)
+            /**
+             * Process this node (and child nodes set to inherit) on the main thread. See
+             * `process_thread_group` for more information.
+             *
+             * Generated from Godot docs: Node.PROCESS_THREAD_GROUP_MAIN_THREAD
+             */
+            val MAIN_THREAD: ProcessThreadGroup get() = ProcessThreadGroup(1L)
+            /**
+             * Process this node (and child nodes set to inherit) on a sub-thread. See `process_thread_group`
+             * for more information.
+             *
+             * Generated from Godot docs: Node.PROCESS_THREAD_GROUP_SUB_THREAD
+             */
+            val SUB_THREAD: ProcessThreadGroup get() = ProcessThreadGroup(2L)
+        }
+    }
+
+    @JvmInline
+    value class ProcessThreadMessages(val value: Long) {
+        infix fun or(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value or other.value)
+
+        infix fun and(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value and other.value)
+
+        infix fun xor(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value xor other.value)
+
+        fun inv(): ProcessThreadMessages = ProcessThreadMessages(value.inv())
+
+        operator fun contains(other: ProcessThreadMessages): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Allows this node to process threaded messages created with `call_deferred_thread_group` right
+             * before `_process` is called.
+             *
+             * Generated from Godot docs: Node.FLAG_PROCESS_THREAD_MESSAGES
+             */
+            val MESSAGES: ProcessThreadMessages get() = ProcessThreadMessages(1L)
+            /**
+             * Allows this node to process threaded messages created with `call_deferred_thread_group` right
+             * before `_physics_process` is called.
+             *
+             * Generated from Godot docs: Node.FLAG_PROCESS_THREAD_MESSAGES_PHYSICS
+             */
+            val MESSAGES_PHYSICS: ProcessThreadMessages get() = ProcessThreadMessages(2L)
+            /**
+             * Allows this node to process threaded messages created with `call_deferred_thread_group` right
+             * before either `_process` or `_physics_process` are called.
+             *
+             * Generated from Godot docs: Node.FLAG_PROCESS_THREAD_MESSAGES_ALL
+             */
+            val MESSAGES_ALL: ProcessThreadMessages get() = ProcessThreadMessages(3L)
+        }
+    }
+
+    @JvmInline
+    value class PhysicsInterpolationMode(val value: Long) {
+        companion object {
+            /**
+             * Inherits `physics_interpolation_mode` from the node's parent. This is the default for any newly
+             * created node.
+             *
+             * Generated from Godot docs: Node.PHYSICS_INTERPOLATION_MODE_INHERIT
+             */
+            val INHERIT: PhysicsInterpolationMode get() = PhysicsInterpolationMode(0L)
+            /**
+             * Enables physics interpolation for this node and for children set to
+             * `PHYSICS_INTERPOLATION_MODE_INHERIT`. This is the default for the root node.
+             *
+             * Generated from Godot docs: Node.PHYSICS_INTERPOLATION_MODE_ON
+             */
+            val ON: PhysicsInterpolationMode get() = PhysicsInterpolationMode(1L)
+            /**
+             * Disables physics interpolation for this node and for children set to
+             * `PHYSICS_INTERPOLATION_MODE_INHERIT`.
+             *
+             * Generated from Godot docs: Node.PHYSICS_INTERPOLATION_MODE_OFF
+             */
+            val OFF: PhysicsInterpolationMode get() = PhysicsInterpolationMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class DuplicateFlags(val value: Long) {
+        companion object {
+            /**
+             * Duplicate the node's signal connections that are connected with the `Object.CONNECT_PERSIST`
+             * flag.
+             *
+             * Generated from Godot docs: Node.DUPLICATE_SIGNALS
+             */
+            val SIGNALS: DuplicateFlags get() = DuplicateFlags(1L)
+            /**
+             * Duplicate the node's groups.
+             *
+             * Generated from Godot docs: Node.DUPLICATE_GROUPS
+             */
+            val GROUPS: DuplicateFlags get() = DuplicateFlags(2L)
+            /**
+             * Duplicate the node's script (also overriding the duplicated children's scripts, if combined with
+             * `DUPLICATE_USE_INSTANTIATION`).
+             *
+             * Generated from Godot docs: Node.DUPLICATE_SCRIPTS
+             */
+            val SCRIPTS: DuplicateFlags get() = DuplicateFlags(4L)
+            /**
+             * Duplicate using `PackedScene.instantiate`. If the node comes from a scene saved on disk, reuses
+             * `PackedScene.instantiate` as the base for the duplicated node and its children.
+             *
+             * Generated from Godot docs: Node.DUPLICATE_USE_INSTANTIATION
+             */
+            val USE_INSTANTIATION: DuplicateFlags get() = DuplicateFlags(8L)
+            /**
+             * Duplicate also non-serializable variables (i.e. without `@GlobalScope.PROPERTY_USAGE_STORAGE`).
+             *
+             * Generated from Godot docs: Node.DUPLICATE_INTERNAL_STATE
+             */
+            val INTERNAL_STATE: DuplicateFlags get() = DuplicateFlags(16L)
+            /**
+             * Duplicate using default flags. This constant is useful to add or remove a single flag.
+             *
+             * Generated from Godot docs: Node.DUPLICATE_DEFAULT
+             */
+            val DEFAULT: DuplicateFlags get() = DuplicateFlags(15L)
+        }
+    }
+
+    @JvmInline
+    value class InternalMode(val value: Long) {
+        companion object {
+            /**
+             * The node will not be internal.
+             *
+             * Generated from Godot docs: Node.INTERNAL_MODE_DISABLED
+             */
+            val DISABLED: InternalMode get() = InternalMode(0L)
+            /**
+             * The node will be placed at the beginning of the parent's children, before any non-internal
+             * sibling.
+             *
+             * Generated from Godot docs: Node.INTERNAL_MODE_FRONT
+             */
+            val FRONT: InternalMode get() = InternalMode(1L)
+            /**
+             * The node will be placed at the end of the parent's children, after any non-internal sibling.
+             *
+             * Generated from Godot docs: Node.INTERNAL_MODE_BACK
+             */
+            val BACK: InternalMode get() = InternalMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class AutoTranslateMode(val value: Long) {
+        companion object {
+            /**
+             * Inherits `auto_translate_mode` from the node's parent. This is the default for any newly created
+             * node.
+             *
+             * Generated from Godot docs: Node.AUTO_TRANSLATE_MODE_INHERIT
+             */
+            val INHERIT: AutoTranslateMode get() = AutoTranslateMode(0L)
+            /**
+             * Always automatically translate. This is the inverse of `AUTO_TRANSLATE_MODE_DISABLED`, and the
+             * default for the root node.
+             *
+             * Generated from Godot docs: Node.AUTO_TRANSLATE_MODE_ALWAYS
+             */
+            val ALWAYS: AutoTranslateMode get() = AutoTranslateMode(1L)
+            /**
+             * Never automatically translate. This is the inverse of `AUTO_TRANSLATE_MODE_ALWAYS`. String
+             * parsing for translation template generation will be skipped for this node and children that are
+             * set to `AUTO_TRANSLATE_MODE_INHERIT`.
+             *
+             * Generated from Godot docs: Node.AUTO_TRANSLATE_MODE_DISABLED
+             */
+            val DISABLED: AutoTranslateMode get() = AutoTranslateMode(2L)
+        }
     }
 
     companion object {
@@ -1787,32 +2017,6 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         const val NOTIFICATION_APPLICATION_PIP_MODE_EXITED: Long = 2020L
         const val NOTIFICATION_ACCESSIBILITY_UPDATE: Long = 3000L
         const val NOTIFICATION_ACCESSIBILITY_INVALIDATE: Long = 3001L
-        const val PROCESS_MODE_INHERIT: Long = 0L
-        const val PROCESS_MODE_PAUSABLE: Long = 1L
-        const val PROCESS_MODE_WHEN_PAUSED: Long = 2L
-        const val PROCESS_MODE_ALWAYS: Long = 3L
-        const val PROCESS_MODE_DISABLED: Long = 4L
-        const val PROCESS_THREAD_GROUP_INHERIT: Long = 0L
-        const val PROCESS_THREAD_GROUP_MAIN_THREAD: Long = 1L
-        const val PROCESS_THREAD_GROUP_SUB_THREAD: Long = 2L
-        const val FLAG_PROCESS_THREAD_MESSAGES: Long = 1L
-        const val FLAG_PROCESS_THREAD_MESSAGES_PHYSICS: Long = 2L
-        const val FLAG_PROCESS_THREAD_MESSAGES_ALL: Long = 3L
-        const val PHYSICS_INTERPOLATION_MODE_INHERIT: Long = 0L
-        const val PHYSICS_INTERPOLATION_MODE_ON: Long = 1L
-        const val PHYSICS_INTERPOLATION_MODE_OFF: Long = 2L
-        const val DUPLICATE_SIGNALS: Long = 1L
-        const val DUPLICATE_GROUPS: Long = 2L
-        const val DUPLICATE_SCRIPTS: Long = 4L
-        const val DUPLICATE_USE_INSTANTIATION: Long = 8L
-        const val DUPLICATE_INTERNAL_STATE: Long = 16L
-        const val DUPLICATE_DEFAULT: Long = 15L
-        const val INTERNAL_MODE_DISABLED: Long = 0L
-        const val INTERNAL_MODE_FRONT: Long = 1L
-        const val INTERNAL_MODE_BACK: Long = 2L
-        const val AUTO_TRANSLATE_MODE_INHERIT: Long = 0L
-        const val AUTO_TRANSLATE_MODE_ALWAYS: Long = 1L
-        const val AUTO_TRANSLATE_MODE_DISABLED: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Node? =

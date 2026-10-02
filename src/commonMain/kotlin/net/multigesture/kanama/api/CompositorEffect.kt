@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
         @JvmName("setEnabledProperty")
         set(value) = setEnabled(value)
 
-    var effectCallbackType: Long
+    var effectCallbackType: CompositorEffect.EffectCallbackType
         @JvmName("effectCallbackTypeProperty")
         get() = getEffectCallbackType()
         @JvmName("setEffectCallbackTypeProperty")
@@ -79,9 +80,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: CompositorEffect.set_effect_callback_type
      */
-    fun setEffectCallbackType(effectCallbackType: Long) {
+    fun setEffectCallbackType(effectCallbackType: CompositorEffect.EffectCallbackType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, segment, effectCallbackType)
+        ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, segment, effectCallbackType.value)
     }
 
     /**
@@ -90,9 +91,9 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: CompositorEffect.get_effect_callback_type
      */
-    fun getEffectCallbackType(): Long {
+    fun getEffectCallbackType(): CompositorEffect.EffectCallbackType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, segment)
+        return CompositorEffect.EffectCallbackType(ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, segment))
     }
 
     /**
@@ -207,14 +208,53 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, segment)
     }
 
-    companion object {
-        const val EFFECT_CALLBACK_TYPE_PRE_OPAQUE: Long = 0L
-        const val EFFECT_CALLBACK_TYPE_POST_OPAQUE: Long = 1L
-        const val EFFECT_CALLBACK_TYPE_POST_SKY: Long = 2L
-        const val EFFECT_CALLBACK_TYPE_PRE_TRANSPARENT: Long = 3L
-        const val EFFECT_CALLBACK_TYPE_POST_TRANSPARENT: Long = 4L
-        const val EFFECT_CALLBACK_TYPE_MAX: Long = 5L
+    @JvmInline
+    value class EffectCallbackType(val value: Long) {
+        companion object {
+            /**
+             * The callback is called before our opaque rendering pass, but after depth prepass (if
+             * applicable).
+             *
+             * Generated from Godot docs: CompositorEffect.EFFECT_CALLBACK_TYPE_PRE_OPAQUE
+             */
+            val PRE_OPAQUE: EffectCallbackType get() = EffectCallbackType(0L)
+            /**
+             * The callback is called after our opaque rendering pass, but before our sky is rendered.
+             *
+             * Generated from Godot docs: CompositorEffect.EFFECT_CALLBACK_TYPE_POST_OPAQUE
+             */
+            val POST_OPAQUE: EffectCallbackType get() = EffectCallbackType(1L)
+            /**
+             * The callback is called after our sky is rendered, but before our back buffers are created (and
+             * if enabled, before subsurface scattering and/or screen space reflections).
+             *
+             * Generated from Godot docs: CompositorEffect.EFFECT_CALLBACK_TYPE_POST_SKY
+             */
+            val POST_SKY: EffectCallbackType get() = EffectCallbackType(2L)
+            /**
+             * The callback is called before our transparent rendering pass, but after our sky is rendered and
+             * we've created our back buffers.
+             *
+             * Generated from Godot docs: CompositorEffect.EFFECT_CALLBACK_TYPE_PRE_TRANSPARENT
+             */
+            val PRE_TRANSPARENT: EffectCallbackType get() = EffectCallbackType(3L)
+            /**
+             * The callback is called after our transparent rendering pass, but before any built-in
+             * post-processing effects and output to our render target.
+             *
+             * Generated from Godot docs: CompositorEffect.EFFECT_CALLBACK_TYPE_POST_TRANSPARENT
+             */
+            val POST_TRANSPARENT: EffectCallbackType get() = EffectCallbackType(4L)
+            /**
+             * Represents the size of the `EffectCallbackType` enum.
+             *
+             * Generated from Godot docs: CompositorEffect.EFFECT_CALLBACK_TYPE_MAX
+             */
+            val MAX: EffectCallbackType get() = EffectCallbackType(5L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CompositorEffect? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,9 +19,9 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: DrawableTexture2D.set_format
      */
-    fun setFormat(format: Long) {
+    fun setFormat(format: DrawableTexture2D.DrawableFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format.value)
     }
 
     /**
@@ -48,9 +49,9 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: DrawableTexture2D.setup
      */
-    fun setup(width: Int, height: Int, format: Long, color: Color, useMipmaps: Boolean = false) {
+    fun setup(width: Int, height: Int, format: DrawableTexture2D.DrawableFormat, color: Color, useMipmaps: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, segment, width, height, format, color, useMipmaps)
+        ObjectCalls.ptrcallWithTwoIntLongColorBoolArgs(setupBind, segment, width, height, format.value, color, useMipmaps)
     }
 
     /**
@@ -89,12 +90,40 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
         ObjectCalls.ptrcallNoArgs(generateMipmapsBind, segment)
     }
 
-    companion object {
-        const val DRAWABLE_FORMAT_RGBA8: Long = 0L
-        const val DRAWABLE_FORMAT_RGBA8_SRGB: Long = 1L
-        const val DRAWABLE_FORMAT_RGBAH: Long = 2L
-        const val DRAWABLE_FORMAT_RGBAF: Long = 3L
+    @JvmInline
+    value class DrawableFormat(val value: Long) {
+        companion object {
+            /**
+             * OpenGL texture format RGBA with four components, each with a bitdepth of 8.
+             *
+             * Generated from Godot docs: DrawableTexture2D.DRAWABLE_FORMAT_RGBA8
+             */
+            val RGBA8: DrawableFormat get() = DrawableFormat(0L)
+            /**
+             * OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, an
+             * sRGB to linear color space conversion is performed.
+             *
+             * Generated from Godot docs: DrawableTexture2D.DRAWABLE_FORMAT_RGBA8_SRGB
+             */
+            val RGBA8_SRGB: DrawableFormat get() = DrawableFormat(1L)
+            /**
+             * OpenGL texture format GL_RGBA16F where there are four components, each a 16-bit "half-precision"
+             * floating-point value.
+             *
+             * Generated from Godot docs: DrawableTexture2D.DRAWABLE_FORMAT_RGBAH
+             */
+            val RGBAH: DrawableFormat get() = DrawableFormat(2L)
+            /**
+             * OpenGL texture format GL_RGBA32F where there are four components, each a 32-bit floating-point
+             * value.
+             *
+             * Generated from Godot docs: DrawableTexture2D.DRAWABLE_FORMAT_RGBAF
+             */
+            val RGBAF: DrawableFormat get() = DrawableFormat(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): DrawableTexture2D? =
             wrap(handle.segment)

@@ -9,11 +9,181 @@ import java.lang.foreign.MemorySegment
  *
  * Generated from Godot docs: FileAccess
  */
-object FileAccess {
+actual object FileAccess {
+    // ===== BEGIN GENERATED ENUMS: FileAccess (scripts/generate_api_wrapper.py — do not edit) =====
+    @JvmInline
+    actual value class ModeFlags
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            /**
+             * Opens the file for read operations. The file cursor is positioned at the beginning of the file.
+             *
+             * Generated from Godot docs: FileAccess.READ
+             */
+            actual val READ: ModeFlags get() = ModeFlags(1L)
+            /**
+             * Opens the file for write operations. If the file exists, it is truncated to zero length and its
+             * contents are cleared. Otherwise, it is created. Note: When creating a file it must be in an
+             * already existing directory. To recursively create directories for a file path, see
+             * `DirAccess.make_dir_recursive`.
+             *
+             * Generated from Godot docs: FileAccess.WRITE
+             */
+            actual val WRITE: ModeFlags get() = ModeFlags(2L)
+            /**
+             * Opens the file for read and write operations. Does not truncate the file. The file cursor is
+             * positioned at the beginning of the file.
+             *
+             * Generated from Godot docs: FileAccess.READ_WRITE
+             */
+            actual val READ_WRITE: ModeFlags get() = ModeFlags(3L)
+            /**
+             * Opens the file for read and write operations. If the file exists, it is truncated to zero length
+             * and its contents are cleared. Otherwise, it is created. The file cursor is positioned at the
+             * beginning of the file. Note: When creating a file it must be in an already existing directory.
+             * To recursively create directories for a file path, see `DirAccess.make_dir_recursive`.
+             *
+             * Generated from Godot docs: FileAccess.WRITE_READ
+             */
+            actual val WRITE_READ: ModeFlags get() = ModeFlags(7L)
+        }
+    }
 
-    const val READ = 1L
-    const val WRITE = 2L
-    const val READ_WRITE = 3L
+    @JvmInline
+    actual value class CompressionMode
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual companion object {
+            /**
+             * Uses the FastLZ (https://fastlz.org/) compression method.
+             *
+             * Generated from Godot docs: FileAccess.COMPRESSION_FASTLZ
+             */
+            actual val FASTLZ: CompressionMode get() = CompressionMode(0L)
+            /**
+             * Uses the DEFLATE (https://en.wikipedia.org/wiki/DEFLATE) compression method.
+             *
+             * Generated from Godot docs: FileAccess.COMPRESSION_DEFLATE
+             */
+            actual val DEFLATE: CompressionMode get() = CompressionMode(1L)
+            /**
+             * Uses the Zstandard (https://facebook.github.io/zstd/) compression method.
+             *
+             * Generated from Godot docs: FileAccess.COMPRESSION_ZSTD
+             */
+            actual val ZSTD: CompressionMode get() = CompressionMode(2L)
+            /**
+             * Uses the gzip (https://www.gzip.org/) compression method.
+             *
+             * Generated from Godot docs: FileAccess.COMPRESSION_GZIP
+             */
+            actual val GZIP: CompressionMode get() = CompressionMode(3L)
+            /**
+             * Uses the brotli (https://github.com/google/brotli) compression method (only decompression is
+             * supported).
+             *
+             * Generated from Godot docs: FileAccess.COMPRESSION_BROTLI
+             */
+            actual val BROTLI: CompressionMode get() = CompressionMode(4L)
+        }
+    }
+
+    @JvmInline
+    actual value class UnixPermissionFlags
+    actual constructor(
+        actual val value: Long,
+    ) {
+        actual infix fun or(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value or other.value)
+
+        actual infix fun and(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value and other.value)
+
+        actual infix fun xor(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value xor other.value)
+
+        actual fun inv(): UnixPermissionFlags = UnixPermissionFlags(value.inv())
+
+        actual operator fun contains(other: UnixPermissionFlags): Boolean = (value and other.value) == other.value
+
+        actual companion object {
+            /**
+             * Read for owner bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_READ_OWNER
+             */
+            actual val READ_OWNER: UnixPermissionFlags get() = UnixPermissionFlags(256L)
+            /**
+             * Write for owner bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_WRITE_OWNER
+             */
+            actual val WRITE_OWNER: UnixPermissionFlags get() = UnixPermissionFlags(128L)
+            /**
+             * Execute for owner bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_EXECUTE_OWNER
+             */
+            actual val EXECUTE_OWNER: UnixPermissionFlags get() = UnixPermissionFlags(64L)
+            /**
+             * Read for group bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_READ_GROUP
+             */
+            actual val READ_GROUP: UnixPermissionFlags get() = UnixPermissionFlags(32L)
+            /**
+             * Write for group bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_WRITE_GROUP
+             */
+            actual val WRITE_GROUP: UnixPermissionFlags get() = UnixPermissionFlags(16L)
+            /**
+             * Execute for group bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_EXECUTE_GROUP
+             */
+            actual val EXECUTE_GROUP: UnixPermissionFlags get() = UnixPermissionFlags(8L)
+            /**
+             * Read for other bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_READ_OTHER
+             */
+            actual val READ_OTHER: UnixPermissionFlags get() = UnixPermissionFlags(4L)
+            /**
+             * Write for other bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_WRITE_OTHER
+             */
+            actual val WRITE_OTHER: UnixPermissionFlags get() = UnixPermissionFlags(2L)
+            /**
+             * Execute for other bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_EXECUTE_OTHER
+             */
+            actual val EXECUTE_OTHER: UnixPermissionFlags get() = UnixPermissionFlags(1L)
+            /**
+             * Set user id on execution bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_SET_USER_ID
+             */
+            actual val SET_USER_ID: UnixPermissionFlags get() = UnixPermissionFlags(2048L)
+            /**
+             * Set group id on execution bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_SET_GROUP_ID
+             */
+            actual val SET_GROUP_ID: UnixPermissionFlags get() = UnixPermissionFlags(1024L)
+            /**
+             * Restricted deletion (sticky) bit.
+             *
+             * Generated from Godot docs: FileAccess.UNIX_RESTRICTED_DELETE
+             */
+            actual val RESTRICTED_DELETE: UnixPermissionFlags get() = UnixPermissionFlags(512L)
+        }
+    }
+    // ===== END GENERATED ENUMS: FileAccess =====
+
+
     private const val NOARGS_ERROR_HASH = 166280745L
     private const val NOARGS_VOID_HASH = 3218959716L
     private const val NOARGS_STRING_HASH = 201670096L
@@ -300,7 +470,7 @@ object FileAccess {
     }
 
     private fun <T> withOpenFileRead(path: String, fallback: T, block: (MemorySegment) -> T): T {
-        val file = ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, READ)
+        val file = ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, FileAccess.ModeFlags.READ.value)
         if (file.address() == 0L) return fallback
         return try {
             block(file)
@@ -310,8 +480,8 @@ object FileAccess {
         }
     }
 
-    private fun <T> withOpenFile(path: String, mode: Long, fallback: T, block: (MemorySegment) -> T): T {
-        val file = ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, mode)
+    private fun <T> withOpenFile(path: String, mode: FileAccess.ModeFlags, fallback: T, block: (MemorySegment) -> T): T {
+        val file = ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, mode.value)
         if (file.address() == 0L) return fallback
         return try {
             block(file)
@@ -323,11 +493,11 @@ object FileAccess {
 
     // Error-returning variant: the open error must be read AFTER the failed open (an eagerly
     // evaluated fallback would capture the error state of a previous, unrelated open).
-    private fun withOpenFileOrOpenError(path: String, mode: Long, block: (MemorySegment) -> Long): Long {
-        val file = ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, mode)
+    private fun withOpenFileOrOpenError(path: String, mode: FileAccess.ModeFlags, block: (MemorySegment) -> Long): GodotError {
+        val file = ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, mode.value)
         if (file.address() == 0L) return getOpenError()
         return try {
-            block(file)
+            GodotError(block(file))
         } finally {
             ObjectCalls.ptrcallNoArgs(closeBind, file)
             ObjectCalls.destroyObject(file)
@@ -387,8 +557,8 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.get_open_error
      */
     @JvmStatic
-    fun getOpenError(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getOpenErrorBind, MemorySegment.NULL)
+    fun getOpenError(): GodotError =
+        GodotError(ObjectCalls.ptrcallNoArgsRetLong(getOpenErrorBind, MemorySegment.NULL))
 
     /**
      * Creates a new `FileAccess` object and opens the file for writing or reading, depending on the
@@ -398,8 +568,8 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.open
      */
     @JvmStatic
-    fun open(path: String, flags: Long): FileAccessHandle? =
-        FileAccessHandle.wrap(ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, flags))
+    fun open(path: String, flags: FileAccess.ModeFlags): FileAccessHandle? =
+        FileAccessHandle.wrap(ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, flags.value))
 
     /**
      * Creates a new `FileAccess` object and opens an encrypted file in write or read mode. You need to
@@ -412,7 +582,7 @@ object FileAccess {
     @JvmStatic
     fun openEncrypted(
         path: String,
-        modeFlags: Long,
+        modeFlags: FileAccess.ModeFlags,
         key: ByteArray,
         iv: ByteArray = ByteArray(0),
     ): FileAccessHandle? =
@@ -421,7 +591,7 @@ object FileAccess {
                 openEncryptedBind,
                 MemorySegment.NULL,
                 path,
-                modeFlags,
+                modeFlags.value,
                 key,
                 iv,
             ),
@@ -435,13 +605,13 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.open_encrypted_with_pass
      */
     @JvmStatic
-    fun openEncryptedWithPass(path: String, modeFlags: Long, pass: String): FileAccessHandle? =
+    fun openEncryptedWithPass(path: String, modeFlags: FileAccess.ModeFlags, pass: String): FileAccessHandle? =
         FileAccessHandle.wrap(
             ObjectCalls.ptrcallWithStringLongStringArgsRetObject(
                 openEncryptedWithPassBind,
                 MemorySegment.NULL,
                 path,
-                modeFlags,
+                modeFlags.value,
                 pass,
             ),
         )
@@ -456,14 +626,14 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.open_compressed
      */
     @JvmStatic
-    fun openCompressed(path: String, modeFlags: Long, compressionMode: Long = 0L): FileAccessHandle? =
+    fun openCompressed(path: String, modeFlags: FileAccess.ModeFlags, compressionMode: FileAccess.CompressionMode = FileAccess.CompressionMode.FASTLZ): FileAccessHandle? =
         FileAccessHandle.wrap(
             ObjectCalls.ptrcallWithStringTwoLongArgsRetObject(
                 openCompressedBind,
                 MemorySegment.NULL,
                 path,
-                modeFlags,
-                compressionMode,
+                modeFlags.value,
+                compressionMode.value,
             ),
         )
 
@@ -477,12 +647,12 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.create_temp
      */
     @JvmStatic
-    fun createTemp(modeFlags: Long, prefix: String = "", extension: String = "", keep: Boolean = false): FileAccessHandle? =
+    fun createTemp(modeFlags: FileAccess.ModeFlags, prefix: String = "", extension: String = "", keep: Boolean = false): FileAccessHandle? =
         FileAccessHandle.wrap(
             ObjectCalls.ptrcallWithLongTwoStringBoolArgsRetObject(
                 createTempBind,
                 MemorySegment.NULL,
-                modeFlags,
+                modeFlags.value,
                 prefix,
                 extension,
                 keep,
@@ -544,8 +714,8 @@ object FileAccess {
         }
 
     @JvmStatic
-    fun getErrorFor(path: String): Long =
-        withOpenFileOrOpenError(path, READ) { file ->
+    fun getErrorFor(path: String): GodotError =
+        withOpenFileOrOpenError(path, FileAccess.ModeFlags.READ) { file ->
             ObjectCalls.ptrcallNoArgsRetLong(getErrorBind, file)
         }
 
@@ -646,7 +816,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeString(path: String, text: String): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             val ok = ObjectCalls.ptrcallWithStringArgRetBool(storeStringBind, file, text)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
             ok
@@ -654,7 +824,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeLine(path: String, line: String): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             val ok = ObjectCalls.ptrcallWithStringArgRetBool(storeLineBind, file, line)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
             ok
@@ -662,7 +832,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeBytes(path: String, bytes: ByteArray): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             val ok = ObjectCalls.ptrcallWithByteArrayArgRetBool(storeBufferBind, file, bytes)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
             ok
@@ -670,7 +840,7 @@ object FileAccess {
 
     @JvmStatic
     fun write8(path: String, value: Long): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             val ok = ObjectCalls.ptrcallWithIntArgRetBool(store8Bind, file, BuiltinTypes.requireUInt8(value))
             ObjectCalls.ptrcallNoArgs(flushBind, file)
             ok
@@ -678,7 +848,7 @@ object FileAccess {
 
     @JvmStatic
     fun write16(path: String, value: Long, bigEndian: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, file, bigEndian)
             val ok = ObjectCalls.ptrcallWithIntArgRetBool(store16Bind, file, BuiltinTypes.requireUInt16(value))
             ObjectCalls.ptrcallNoArgs(flushBind, file)
@@ -687,7 +857,7 @@ object FileAccess {
 
     @JvmStatic
     fun write32(path: String, value: Long, bigEndian: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, file, bigEndian)
             val ok = ObjectCalls.ptrcallWithUInt32ArgRetBool(store32Bind, file, value)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
@@ -696,7 +866,7 @@ object FileAccess {
 
     @JvmStatic
     fun write64(path: String, value: Long, bigEndian: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, file, bigEndian)
             val ok = ObjectCalls.ptrcallWithLongArgRetBool(store64Bind, file, value)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
@@ -705,7 +875,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeFloat(path: String, value: Double, bigEndian: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, file, bigEndian)
             val ok = ObjectCalls.ptrcallWithDoubleArgRetBool(storeFloatBind, file, value)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
@@ -714,7 +884,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeDouble(path: String, value: Double, bigEndian: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, file, bigEndian)
             val ok = ObjectCalls.ptrcallWithDoubleArgRetBool(storeDoubleBind, file, value)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
@@ -723,7 +893,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeHalf(path: String, value: Double, bigEndian: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, file, bigEndian)
             val ok = ObjectCalls.ptrcallWithDoubleArgRetBool(storeHalfBind, file, value)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
@@ -732,7 +902,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeReal(path: String, value: Double, bigEndian: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             ObjectCalls.ptrcallWithBoolArg(setBigEndianBind, file, bigEndian)
             val ok = ObjectCalls.ptrcallWithDoubleArgRetBool(storeRealBind, file, value)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
@@ -741,7 +911,7 @@ object FileAccess {
 
     @JvmStatic
     fun writePascalString(path: String, value: String): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             val ok = ObjectCalls.ptrcallWithStringArgRetBool(storePascalStringBind, file, value)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
             ok
@@ -749,7 +919,7 @@ object FileAccess {
 
     @JvmStatic
     fun writeCsvLine(path: String, values: List<String>, delimiter: String = ","): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             val ok = ObjectCalls.ptrcallWithPackedStringListAndStringArgsRetBool(storeCsvLineBind, file, values, delimiter)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
             ok
@@ -757,15 +927,15 @@ object FileAccess {
 
     @JvmStatic
     fun writeVar(path: String, value: Any?, fullObjects: Boolean = false): Boolean =
-        withOpenFile(path, WRITE, false) { file ->
+        withOpenFile(path, FileAccess.ModeFlags.WRITE, false) { file ->
             val ok = ObjectCalls.ptrcallWithVariantAndBoolArgRetBool(storeVarBind, file, value, fullObjects)
             ObjectCalls.ptrcallNoArgs(flushBind, file)
             ok
         }
 
     @JvmStatic
-    fun resizeFile(path: String, length: Long): Long =
-        withOpenFileOrOpenError(path, READ_WRITE) { file ->
+    fun resizeFile(path: String, length: Long): GodotError =
+        withOpenFileOrOpenError(path, FileAccess.ModeFlags.READ_WRITE) { file ->
             ObjectCalls.ptrcallWithLongArgRetLong(resizeBind, file, length)
         }
 
@@ -859,8 +1029,8 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.get_unix_permissions
      */
     @JvmStatic
-    fun getUnixPermissions(path: String): Long =
-        ObjectCalls.ptrcallWithStringArgRetLong(getUnixPermissionsBind, MemorySegment.NULL, path)
+    fun getUnixPermissions(path: String): FileAccess.UnixPermissionFlags =
+        FileAccess.UnixPermissionFlags(ObjectCalls.ptrcallWithStringArgRetLong(getUnixPermissionsBind, MemorySegment.NULL, path))
 
     /**
      * Returns `true` if the hidden attribute is set on the file at the given path. Note: This method
@@ -937,14 +1107,14 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.set_extended_attribute
      */
     @JvmStatic
-    fun setExtendedAttribute(path: String, attribute: String, bytes: ByteArray): Long =
-        ObjectCalls.ptrcallWithTwoStringAndByteArrayArgsRetLong(
+    fun setExtendedAttribute(path: String, attribute: String, bytes: ByteArray): GodotError =
+        GodotError(ObjectCalls.ptrcallWithTwoStringAndByteArrayArgsRetLong(
             setExtendedAttributeBind,
             MemorySegment.NULL,
             path,
             attribute,
             bytes,
-        )
+        ))
 
     /**
      * Writes file extended attribute with name `attribute_name` as a UTF-8 encoded string. Note: This
@@ -957,14 +1127,14 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.set_extended_attribute_string
      */
     @JvmStatic
-    fun setExtendedAttributeString(path: String, attribute: String, value: String): Long =
-        ObjectCalls.ptrcallWithThreeStringArgsRetLong(
+    fun setExtendedAttributeString(path: String, attribute: String, value: String): GodotError =
+        GodotError(ObjectCalls.ptrcallWithThreeStringArgsRetLong(
             setExtendedAttributeStringBind,
             MemorySegment.NULL,
             path,
             attribute,
             value,
-        )
+        ))
 
     /**
      * Removes file extended attribute with name `attribute_name`. Note: This method is implemented on
@@ -976,8 +1146,8 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.remove_extended_attribute
      */
     @JvmStatic
-    fun removeExtendedAttribute(path: String, attribute: String): Long =
-        ObjectCalls.ptrcallWithTwoStringArgsRetLong(removeExtendedAttributeBind, MemorySegment.NULL, path, attribute)
+    fun removeExtendedAttribute(path: String, attribute: String): GodotError =
+        GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(removeExtendedAttributeBind, MemorySegment.NULL, path, attribute))
 
     /**
      * Sets file hidden attribute. Note: This method is implemented on iOS, BSD, macOS, and Windows.
@@ -985,8 +1155,8 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.set_hidden_attribute
      */
     @JvmStatic
-    fun setHiddenAttribute(path: String, hidden: Boolean): Long =
-        ObjectCalls.ptrcallWithStringAndBoolArgRetLong(setHiddenAttributeBind, MemorySegment.NULL, path, hidden)
+    fun setHiddenAttribute(path: String, hidden: Boolean): GodotError =
+        GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(setHiddenAttributeBind, MemorySegment.NULL, path, hidden))
 
     /**
      * Sets file read only attribute. Note: This method is implemented on iOS, BSD, macOS, and Windows.
@@ -994,8 +1164,8 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.set_read_only_attribute
      */
     @JvmStatic
-    fun setReadOnlyAttribute(path: String, readOnly: Boolean): Long =
-        ObjectCalls.ptrcallWithStringAndBoolArgRetLong(setReadOnlyAttributeBind, MemorySegment.NULL, path, readOnly)
+    fun setReadOnlyAttribute(path: String, readOnly: Boolean): GodotError =
+        GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(setReadOnlyAttributeBind, MemorySegment.NULL, path, readOnly))
 
     /**
      * Sets file UNIX permissions. Note: This method is implemented on iOS, Linux/BSD, and macOS.
@@ -1003,7 +1173,7 @@ object FileAccess {
      * Generated from Godot docs: FileAccess.set_unix_permissions
      */
     @JvmStatic
-    fun setUnixPermissions(path: String, permissions: Long): Long =
-        ObjectCalls.ptrcallWithStringAndLongArgRetLong(setUnixPermissionsBind, MemorySegment.NULL, path, permissions)
+    fun setUnixPermissions(path: String, permissions: FileAccess.UnixPermissionFlags): GodotError =
+        GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(setUnixPermissionsBind, MemorySegment.NULL, path, permissions.value))
 
 }

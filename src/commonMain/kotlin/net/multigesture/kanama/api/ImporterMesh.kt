@@ -49,9 +49,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.set_blend_shape_mode
      */
-    fun setBlendShapeMode(mode: Long) {
+    fun setBlendShapeMode(mode: Mesh.BlendShapeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode.value)
     }
 
     /**
@@ -59,9 +59,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.get_blend_shape_mode
      */
-    fun getBlendShapeMode(): Long {
+    fun getBlendShapeMode(): Mesh.BlendShapeMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment)
+        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment))
     }
 
     /**
@@ -92,9 +92,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.add_surface
      */
-    fun addSurface(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
+    fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive.value, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
     }
 
     /**
@@ -112,9 +112,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.get_surface_primitive_type
      */
-    fun getSurfacePrimitiveType(surfaceIdx: Int): Long {
+    fun getSurfacePrimitiveType(surfaceIdx: Int): Mesh.PrimitiveType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, segment, surfaceIdx)
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, segment, surfaceIdx))
     }
 
     /**

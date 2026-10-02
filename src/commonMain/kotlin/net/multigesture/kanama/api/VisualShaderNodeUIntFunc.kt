@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,27 +10,32 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeUIntFunc
  */
 class VisualShaderNodeUIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
-    var function: Long
+    var function: VisualShaderNodeUIntFunc.Function
         @JvmName("functionProperty")
         get() = getFunction()
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
-    fun setFunction(func: Long) {
+    fun setFunction(func: VisualShaderNodeUIntFunc.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
     }
 
-    fun getFunction(): Long {
+    fun getFunction(): VisualShaderNodeUIntFunc.Function {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
+        return VisualShaderNodeUIntFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
+    }
+
+    @JvmInline
+    value class Function(val value: Long) {
+        companion object {
+            val NEGATE: Function get() = Function(0L)
+            val BITWISE_NOT: Function get() = Function(1L)
+            val MAX: Function get() = Function(2L)
+        }
     }
 
     companion object {
-        const val FUNC_NEGATE: Long = 0L
-        const val FUNC_BITWISE_NOT: Long = 1L
-        const val FUNC_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeUIntFunc? =
             wrap(handle.segment)

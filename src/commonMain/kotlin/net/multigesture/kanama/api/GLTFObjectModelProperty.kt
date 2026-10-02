@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -29,7 +30,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setNodePathsProperty")
         set(value) = setNodePaths(value)
 
-    var objectModelType: Long
+    var objectModelType: GLTFObjectModelProperty.GLTFObjectModelType
         @JvmName("objectModelTypeProperty")
         get() = getObjectModelType()
         @JvmName("setObjectModelTypeProperty")
@@ -41,7 +42,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setJsonPointersProperty")
         set(value) = setJsonPointers(value)
 
-    var variantType: Long
+    var variantType: VariantType
         @JvmName("variantTypeProperty")
         get() = getVariantType()
         @JvmName("setVariantTypeProperty")
@@ -57,9 +58,9 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithNodePathStringNameArgs(appendPathToPropertyBind, segment, nodePath, propName)
     }
 
-    fun getAccessorType(): Long {
+    fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment)
+        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment))
     }
 
     fun getGltfToGodotExpression(): Expression? {
@@ -97,14 +98,14 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithNodePathListArg(setNodePathsBind, segment, nodePaths)
     }
 
-    fun getObjectModelType(): Long {
+    fun getObjectModelType(): GLTFObjectModelProperty.GLTFObjectModelType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getObjectModelTypeBind, segment)
+        return GLTFObjectModelProperty.GLTFObjectModelType(ObjectCalls.ptrcallNoArgsRetLong(getObjectModelTypeBind, segment))
     }
 
-    fun setObjectModelType(type: Long) {
+    fun setObjectModelType(type: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setObjectModelTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setObjectModelTypeBind, segment, type.value)
     }
 
     fun getJsonPointers(): List<List<String>> {
@@ -122,34 +123,39 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithPackedStringListListArg(setJsonPointersBind, segment, jsonPointers)
     }
 
-    fun getVariantType(): Long {
+    fun getVariantType(): VariantType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVariantTypeBind, segment)
+        return VariantType(ObjectCalls.ptrcallNoArgsRetLong(getVariantTypeBind, segment))
     }
 
-    fun setVariantType(variantType: Long) {
+    fun setVariantType(variantType: VariantType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVariantTypeBind, segment, variantType)
+        ObjectCalls.ptrcallWithLongArg(setVariantTypeBind, segment, variantType.value)
     }
 
-    fun setTypes(variantType: Long, objModelType: Long) {
+    fun setTypes(variantType: VariantType, objModelType: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setTypesBind, segment, variantType, objModelType)
+        ObjectCalls.ptrcallWithTwoLongArgs(setTypesBind, segment, variantType.value, objModelType.value)
+    }
+
+    @JvmInline
+    value class GLTFObjectModelType(val value: Long) {
+        companion object {
+            val UNKNOWN: GLTFObjectModelType get() = GLTFObjectModelType(0L)
+            val BOOL: GLTFObjectModelType get() = GLTFObjectModelType(1L)
+            val FLOAT: GLTFObjectModelType get() = GLTFObjectModelType(2L)
+            val FLOAT_ARRAY: GLTFObjectModelType get() = GLTFObjectModelType(3L)
+            val FLOAT2: GLTFObjectModelType get() = GLTFObjectModelType(4L)
+            val FLOAT3: GLTFObjectModelType get() = GLTFObjectModelType(5L)
+            val FLOAT4: GLTFObjectModelType get() = GLTFObjectModelType(6L)
+            val FLOAT2X2: GLTFObjectModelType get() = GLTFObjectModelType(7L)
+            val FLOAT3X3: GLTFObjectModelType get() = GLTFObjectModelType(8L)
+            val FLOAT4X4: GLTFObjectModelType get() = GLTFObjectModelType(9L)
+            val INT: GLTFObjectModelType get() = GLTFObjectModelType(10L)
+        }
     }
 
     companion object {
-        const val GLTF_OBJECT_MODEL_TYPE_UNKNOWN: Long = 0L
-        const val GLTF_OBJECT_MODEL_TYPE_BOOL: Long = 1L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT: Long = 2L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT_ARRAY: Long = 3L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT2: Long = 4L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT3: Long = 5L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT4: Long = 6L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT2X2: Long = 7L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT3X3: Long = 8L
-        const val GLTF_OBJECT_MODEL_TYPE_FLOAT4X4: Long = 9L
-        const val GLTF_OBJECT_MODEL_TYPE_INT: Long = 10L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFObjectModelProperty? =
             wrap(handle.segment)

@@ -23,9 +23,9 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: StreamPeer.put_data
      */
-    fun putData(data: ByteArray): Long {
+    fun putData(data: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, segment, data)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(putDataBind, segment, data))
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,155 +19,6 @@ object PhysicsServer3D {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("PhysicsServer3D")
     }
-
-    const val JOINT_TYPE_PIN: Long = 0L
-    const val JOINT_TYPE_HINGE: Long = 1L
-    const val JOINT_TYPE_SLIDER: Long = 2L
-    const val JOINT_TYPE_CONE_TWIST: Long = 3L
-    const val JOINT_TYPE_6DOF: Long = 4L
-    const val JOINT_TYPE_MAX: Long = 5L
-    const val PIN_JOINT_BIAS: Long = 0L
-    const val PIN_JOINT_DAMPING: Long = 1L
-    const val PIN_JOINT_IMPULSE_CLAMP: Long = 2L
-    const val HINGE_JOINT_BIAS: Long = 0L
-    const val HINGE_JOINT_LIMIT_UPPER: Long = 1L
-    const val HINGE_JOINT_LIMIT_LOWER: Long = 2L
-    const val HINGE_JOINT_LIMIT_BIAS: Long = 3L
-    const val HINGE_JOINT_LIMIT_SOFTNESS: Long = 4L
-    const val HINGE_JOINT_LIMIT_RELAXATION: Long = 5L
-    const val HINGE_JOINT_MOTOR_TARGET_VELOCITY: Long = 6L
-    const val HINGE_JOINT_MOTOR_MAX_IMPULSE: Long = 7L
-    const val HINGE_JOINT_FLAG_USE_LIMIT: Long = 0L
-    const val HINGE_JOINT_FLAG_ENABLE_MOTOR: Long = 1L
-    const val SLIDER_JOINT_LINEAR_LIMIT_UPPER: Long = 0L
-    const val SLIDER_JOINT_LINEAR_LIMIT_LOWER: Long = 1L
-    const val SLIDER_JOINT_LINEAR_LIMIT_SOFTNESS: Long = 2L
-    const val SLIDER_JOINT_LINEAR_LIMIT_RESTITUTION: Long = 3L
-    const val SLIDER_JOINT_LINEAR_LIMIT_DAMPING: Long = 4L
-    const val SLIDER_JOINT_LINEAR_MOTION_SOFTNESS: Long = 5L
-    const val SLIDER_JOINT_LINEAR_MOTION_RESTITUTION: Long = 6L
-    const val SLIDER_JOINT_LINEAR_MOTION_DAMPING: Long = 7L
-    const val SLIDER_JOINT_LINEAR_ORTHOGONAL_SOFTNESS: Long = 8L
-    const val SLIDER_JOINT_LINEAR_ORTHOGONAL_RESTITUTION: Long = 9L
-    const val SLIDER_JOINT_LINEAR_ORTHOGONAL_DAMPING: Long = 10L
-    const val SLIDER_JOINT_ANGULAR_LIMIT_UPPER: Long = 11L
-    const val SLIDER_JOINT_ANGULAR_LIMIT_LOWER: Long = 12L
-    const val SLIDER_JOINT_ANGULAR_LIMIT_SOFTNESS: Long = 13L
-    const val SLIDER_JOINT_ANGULAR_LIMIT_RESTITUTION: Long = 14L
-    const val SLIDER_JOINT_ANGULAR_LIMIT_DAMPING: Long = 15L
-    const val SLIDER_JOINT_ANGULAR_MOTION_SOFTNESS: Long = 16L
-    const val SLIDER_JOINT_ANGULAR_MOTION_RESTITUTION: Long = 17L
-    const val SLIDER_JOINT_ANGULAR_MOTION_DAMPING: Long = 18L
-    const val SLIDER_JOINT_ANGULAR_ORTHOGONAL_SOFTNESS: Long = 19L
-    const val SLIDER_JOINT_ANGULAR_ORTHOGONAL_RESTITUTION: Long = 20L
-    const val SLIDER_JOINT_ANGULAR_ORTHOGONAL_DAMPING: Long = 21L
-    const val SLIDER_JOINT_MAX: Long = 22L
-    const val CONE_TWIST_JOINT_SWING_SPAN: Long = 0L
-    const val CONE_TWIST_JOINT_TWIST_SPAN: Long = 1L
-    const val CONE_TWIST_JOINT_BIAS: Long = 2L
-    const val CONE_TWIST_JOINT_SOFTNESS: Long = 3L
-    const val CONE_TWIST_JOINT_RELAXATION: Long = 4L
-    const val G6DOF_JOINT_LINEAR_LOWER_LIMIT: Long = 0L
-    const val G6DOF_JOINT_LINEAR_UPPER_LIMIT: Long = 1L
-    const val G6DOF_JOINT_LINEAR_LIMIT_SOFTNESS: Long = 2L
-    const val G6DOF_JOINT_LINEAR_RESTITUTION: Long = 3L
-    const val G6DOF_JOINT_LINEAR_DAMPING: Long = 4L
-    const val G6DOF_JOINT_LINEAR_MOTOR_TARGET_VELOCITY: Long = 5L
-    const val G6DOF_JOINT_LINEAR_MOTOR_FORCE_LIMIT: Long = 6L
-    const val G6DOF_JOINT_LINEAR_SPRING_STIFFNESS: Long = 7L
-    const val G6DOF_JOINT_LINEAR_SPRING_DAMPING: Long = 8L
-    const val G6DOF_JOINT_LINEAR_SPRING_EQUILIBRIUM_POINT: Long = 9L
-    const val G6DOF_JOINT_ANGULAR_LOWER_LIMIT: Long = 10L
-    const val G6DOF_JOINT_ANGULAR_UPPER_LIMIT: Long = 11L
-    const val G6DOF_JOINT_ANGULAR_LIMIT_SOFTNESS: Long = 12L
-    const val G6DOF_JOINT_ANGULAR_DAMPING: Long = 13L
-    const val G6DOF_JOINT_ANGULAR_RESTITUTION: Long = 14L
-    const val G6DOF_JOINT_ANGULAR_FORCE_LIMIT: Long = 15L
-    const val G6DOF_JOINT_ANGULAR_ERP: Long = 16L
-    const val G6DOF_JOINT_ANGULAR_MOTOR_TARGET_VELOCITY: Long = 17L
-    const val G6DOF_JOINT_ANGULAR_MOTOR_FORCE_LIMIT: Long = 18L
-    const val G6DOF_JOINT_ANGULAR_SPRING_STIFFNESS: Long = 19L
-    const val G6DOF_JOINT_ANGULAR_SPRING_DAMPING: Long = 20L
-    const val G6DOF_JOINT_ANGULAR_SPRING_EQUILIBRIUM_POINT: Long = 21L
-    const val G6DOF_JOINT_MAX: Long = 22L
-    const val G6DOF_JOINT_FLAG_ENABLE_LINEAR_LIMIT: Long = 0L
-    const val G6DOF_JOINT_FLAG_ENABLE_ANGULAR_LIMIT: Long = 1L
-    const val G6DOF_JOINT_FLAG_ENABLE_ANGULAR_SPRING: Long = 2L
-    const val G6DOF_JOINT_FLAG_ENABLE_LINEAR_SPRING: Long = 3L
-    const val G6DOF_JOINT_FLAG_ENABLE_MOTOR: Long = 4L
-    const val G6DOF_JOINT_FLAG_ENABLE_LINEAR_MOTOR: Long = 5L
-    const val G6DOF_JOINT_FLAG_MAX: Long = 6L
-    const val SHAPE_WORLD_BOUNDARY: Long = 0L
-    const val SHAPE_SEPARATION_RAY: Long = 1L
-    const val SHAPE_SPHERE: Long = 2L
-    const val SHAPE_BOX: Long = 3L
-    const val SHAPE_CAPSULE: Long = 4L
-    const val SHAPE_CYLINDER: Long = 5L
-    const val SHAPE_CONVEX_POLYGON: Long = 6L
-    const val SHAPE_CONCAVE_POLYGON: Long = 7L
-    const val SHAPE_HEIGHTMAP: Long = 8L
-    const val SHAPE_SOFT_BODY: Long = 9L
-    const val SHAPE_CUSTOM: Long = 10L
-    const val AREA_PARAM_GRAVITY_OVERRIDE_MODE: Long = 0L
-    const val AREA_PARAM_GRAVITY: Long = 1L
-    const val AREA_PARAM_GRAVITY_VECTOR: Long = 2L
-    const val AREA_PARAM_GRAVITY_IS_POINT: Long = 3L
-    const val AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE: Long = 4L
-    const val AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE: Long = 5L
-    const val AREA_PARAM_LINEAR_DAMP: Long = 6L
-    const val AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE: Long = 7L
-    const val AREA_PARAM_ANGULAR_DAMP: Long = 8L
-    const val AREA_PARAM_PRIORITY: Long = 9L
-    const val AREA_PARAM_WIND_FORCE_MAGNITUDE: Long = 10L
-    const val AREA_PARAM_WIND_SOURCE: Long = 11L
-    const val AREA_PARAM_WIND_DIRECTION: Long = 12L
-    const val AREA_PARAM_WIND_ATTENUATION_FACTOR: Long = 13L
-    const val AREA_SPACE_OVERRIDE_DISABLED: Long = 0L
-    const val AREA_SPACE_OVERRIDE_COMBINE: Long = 1L
-    const val AREA_SPACE_OVERRIDE_COMBINE_REPLACE: Long = 2L
-    const val AREA_SPACE_OVERRIDE_REPLACE: Long = 3L
-    const val AREA_SPACE_OVERRIDE_REPLACE_COMBINE: Long = 4L
-    const val BODY_MODE_STATIC: Long = 0L
-    const val BODY_MODE_KINEMATIC: Long = 1L
-    const val BODY_MODE_RIGID: Long = 2L
-    const val BODY_MODE_RIGID_LINEAR: Long = 3L
-    const val BODY_PARAM_BOUNCE: Long = 0L
-    const val BODY_PARAM_FRICTION: Long = 1L
-    const val BODY_PARAM_MASS: Long = 2L
-    const val BODY_PARAM_INERTIA: Long = 3L
-    const val BODY_PARAM_CENTER_OF_MASS: Long = 4L
-    const val BODY_PARAM_GRAVITY_SCALE: Long = 5L
-    const val BODY_PARAM_LINEAR_DAMP_MODE: Long = 6L
-    const val BODY_PARAM_ANGULAR_DAMP_MODE: Long = 7L
-    const val BODY_PARAM_LINEAR_DAMP: Long = 8L
-    const val BODY_PARAM_ANGULAR_DAMP: Long = 9L
-    const val BODY_PARAM_MAX: Long = 10L
-    const val BODY_DAMP_MODE_COMBINE: Long = 0L
-    const val BODY_DAMP_MODE_REPLACE: Long = 1L
-    const val BODY_STATE_TRANSFORM: Long = 0L
-    const val BODY_STATE_LINEAR_VELOCITY: Long = 1L
-    const val BODY_STATE_ANGULAR_VELOCITY: Long = 2L
-    const val BODY_STATE_SLEEPING: Long = 3L
-    const val BODY_STATE_CAN_SLEEP: Long = 4L
-    const val AREA_BODY_ADDED: Long = 0L
-    const val AREA_BODY_REMOVED: Long = 1L
-    const val INFO_ACTIVE_OBJECTS: Long = 0L
-    const val INFO_COLLISION_PAIRS: Long = 1L
-    const val INFO_ISLAND_COUNT: Long = 2L
-    const val SPACE_PARAM_CONTACT_RECYCLE_RADIUS: Long = 0L
-    const val SPACE_PARAM_CONTACT_MAX_SEPARATION: Long = 1L
-    const val SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION: Long = 2L
-    const val SPACE_PARAM_CONTACT_DEFAULT_BIAS: Long = 3L
-    const val SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD: Long = 4L
-    const val SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD: Long = 5L
-    const val SPACE_PARAM_BODY_TIME_TO_SLEEP: Long = 6L
-    const val SPACE_PARAM_SOLVER_ITERATIONS: Long = 7L
-    const val BODY_AXIS_LINEAR_X: Long = 1L
-    const val BODY_AXIS_LINEAR_Y: Long = 2L
-    const val BODY_AXIS_LINEAR_Z: Long = 4L
-    const val BODY_AXIS_ANGULAR_X: Long = 8L
-    const val BODY_AXIS_ANGULAR_Y: Long = 16L
-    const val BODY_AXIS_ANGULAR_Z: Long = 32L
 
     /**
      * Creates a 3D world boundary shape in the physics server, and returns the `RID` that identifies
@@ -323,8 +175,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.shape_get_type
      */
     @JvmStatic
-    fun shapeGetType(shape: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapeGetTypeBind, singleton, shape)
+    fun shapeGetType(shape: RID): PhysicsServer3D.ShapeType {
+        return PhysicsServer3D.ShapeType(ObjectCalls.ptrcallWithRIDArgRetLong(shapeGetTypeBind, singleton, shape))
     }
 
     /**
@@ -389,8 +241,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.space_set_param
      */
     @JvmStatic
-    fun spaceSetParam(space: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(spaceSetParamBind, singleton, space, param, value)
+    fun spaceSetParam(space: RID, param: PhysicsServer3D.SpaceParameter, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(spaceSetParamBind, singleton, space, param.value, value)
     }
 
     /**
@@ -399,8 +251,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.space_get_param
      */
     @JvmStatic
-    fun spaceGetParam(space: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(spaceGetParamBind, singleton, space, param)
+    fun spaceGetParam(space: RID, param: PhysicsServer3D.SpaceParameter): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(spaceGetParamBind, singleton, space, param.value)
     }
 
     /**
@@ -582,8 +434,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.area_set_param
      */
     @JvmStatic
-    fun areaSetParam(area: RID, param: Long, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param, value)
+    fun areaSetParam(area: RID, param: PhysicsServer3D.AreaParameter, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(areaSetParamBind, singleton, area, param.value, value)
     }
 
     /**
@@ -603,8 +455,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.area_get_param
      */
     @JvmStatic
-    fun areaGetParam(area: RID, param: Long): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param)
+    fun areaGetParam(area: RID, param: PhysicsServer3D.AreaParameter): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(areaGetParamBind, singleton, area, param.value)
     }
 
     /**
@@ -728,8 +580,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.body_set_mode
      */
     @JvmStatic
-    fun bodySetMode(body: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetModeBind, singleton, body, mode)
+    fun bodySetMode(body: RID, mode: PhysicsServer3D.BodyMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(bodySetModeBind, singleton, body, mode.value)
     }
 
     /**
@@ -738,8 +590,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.body_get_mode
      */
     @JvmStatic
-    fun bodyGetMode(body: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetModeBind, singleton, body)
+    fun bodyGetMode(body: RID): PhysicsServer3D.BodyMode {
+        return PhysicsServer3D.BodyMode(ObjectCalls.ptrcallWithRIDArgRetLong(bodyGetModeBind, singleton, body))
     }
 
     /**
@@ -937,8 +789,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.body_set_param
      */
     @JvmStatic
-    fun bodySetParam(body: RID, param: Long, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param, value)
+    fun bodySetParam(body: RID, param: PhysicsServer3D.BodyParameter, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetParamBind, singleton, body, param.value, value)
     }
 
     /**
@@ -948,8 +800,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.body_get_param
      */
     @JvmStatic
-    fun bodyGetParam(body: RID, param: Long): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param)
+    fun bodyGetParam(body: RID, param: PhysicsServer3D.BodyParameter): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetParamBind, singleton, body, param.value)
     }
 
     /**
@@ -969,8 +821,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.body_set_state
      */
     @JvmStatic
-    fun bodySetState(body: RID, state: Long, value: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state, value)
+    fun bodySetState(body: RID, state: PhysicsServer3D.BodyState, value: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(bodySetStateBind, singleton, body, state.value, value)
     }
 
     /**
@@ -979,8 +831,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.body_get_state
      */
     @JvmStatic
-    fun bodyGetState(body: RID, state: Long): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state)
+    fun bodyGetState(body: RID, state: PhysicsServer3D.BodyState): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(bodyGetStateBind, singleton, body, state.value)
     }
 
     /**
@@ -1147,13 +999,13 @@ object PhysicsServer3D {
     }
 
     @JvmStatic
-    fun bodySetAxisLock(body: RID, axis: Long, lock: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(bodySetAxisLockBind, singleton, body, axis, lock)
+    fun bodySetAxisLock(body: RID, axis: PhysicsServer3D.BodyAxis, lock: Boolean) {
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(bodySetAxisLockBind, singleton, body, axis.value, lock)
     }
 
     @JvmStatic
-    fun bodyIsAxisLocked(body: RID, axis: Long): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(bodyIsAxisLockedBind, singleton, body, axis)
+    fun bodyIsAxisLocked(body: RID, axis: PhysicsServer3D.BodyAxis): Boolean {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(bodyIsAxisLockedBind, singleton, body, axis.value)
     }
 
     /**
@@ -1418,8 +1270,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.soft_body_set_state
      */
     @JvmStatic
-    fun softBodySetState(body: RID, state: Long, variant: Any?) {
-        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(softBodySetStateBind, singleton, body, state, variant)
+    fun softBodySetState(body: RID, state: PhysicsServer3D.BodyState, variant: Any?) {
+        ObjectCalls.ptrcallWithRIDLongAndVariantArgs(softBodySetStateBind, singleton, body, state.value, variant)
     }
 
     /**
@@ -1430,8 +1282,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.soft_body_get_state
      */
     @JvmStatic
-    fun softBodyGetState(body: RID, state: Long): Any? {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(softBodyGetStateBind, singleton, body, state)
+    fun softBodyGetState(body: RID, state: PhysicsServer3D.BodyState): Any? {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetVariantScalar(softBodyGetStateBind, singleton, body, state.value)
     }
 
     /**
@@ -1719,8 +1571,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.pin_joint_set_param
      */
     @JvmStatic
-    fun pinJointSetParam(joint: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(pinJointSetParamBind, singleton, joint, param, value)
+    fun pinJointSetParam(joint: RID, param: PhysicsServer3D.PinJointParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(pinJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1729,8 +1581,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.pin_joint_get_param
      */
     @JvmStatic
-    fun pinJointGetParam(joint: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(pinJointGetParamBind, singleton, joint, param)
+    fun pinJointGetParam(joint: RID, param: PhysicsServer3D.PinJointParam): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(pinJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1784,8 +1636,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.hinge_joint_set_param
      */
     @JvmStatic
-    fun hingeJointSetParam(joint: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(hingeJointSetParamBind, singleton, joint, param, value)
+    fun hingeJointSetParam(joint: RID, param: PhysicsServer3D.HingeJointParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(hingeJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1794,8 +1646,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.hinge_joint_get_param
      */
     @JvmStatic
-    fun hingeJointGetParam(joint: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(hingeJointGetParamBind, singleton, joint, param)
+    fun hingeJointGetParam(joint: RID, param: PhysicsServer3D.HingeJointParam): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(hingeJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1804,8 +1656,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.hinge_joint_set_flag
      */
     @JvmStatic
-    fun hingeJointSetFlag(joint: RID, flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(hingeJointSetFlagBind, singleton, joint, flag, enabled)
+    fun hingeJointSetFlag(joint: RID, flag: PhysicsServer3D.HingeJointFlag, enabled: Boolean) {
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(hingeJointSetFlagBind, singleton, joint, flag.value, enabled)
     }
 
     /**
@@ -1814,8 +1666,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.hinge_joint_get_flag
      */
     @JvmStatic
-    fun hingeJointGetFlag(joint: RID, flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(hingeJointGetFlagBind, singleton, joint, flag)
+    fun hingeJointGetFlag(joint: RID, flag: PhysicsServer3D.HingeJointFlag): Boolean {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetBool(hingeJointGetFlagBind, singleton, joint, flag.value)
     }
 
     @JvmStatic
@@ -1829,8 +1681,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.slider_joint_set_param
      */
     @JvmStatic
-    fun sliderJointSetParam(joint: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(sliderJointSetParamBind, singleton, joint, param, value)
+    fun sliderJointSetParam(joint: RID, param: PhysicsServer3D.SliderJointParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(sliderJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1839,8 +1691,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.slider_joint_get_param
      */
     @JvmStatic
-    fun sliderJointGetParam(joint: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(sliderJointGetParamBind, singleton, joint, param)
+    fun sliderJointGetParam(joint: RID, param: PhysicsServer3D.SliderJointParam): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(sliderJointGetParamBind, singleton, joint, param.value)
     }
 
     @JvmStatic
@@ -1854,8 +1706,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.cone_twist_joint_set_param
      */
     @JvmStatic
-    fun coneTwistJointSetParam(joint: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(coneTwistJointSetParamBind, singleton, joint, param, value)
+    fun coneTwistJointSetParam(joint: RID, param: PhysicsServer3D.ConeTwistJointParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(coneTwistJointSetParamBind, singleton, joint, param.value, value)
     }
 
     /**
@@ -1864,8 +1716,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.cone_twist_joint_get_param
      */
     @JvmStatic
-    fun coneTwistJointGetParam(joint: RID, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(coneTwistJointGetParamBind, singleton, joint, param)
+    fun coneTwistJointGetParam(joint: RID, param: PhysicsServer3D.ConeTwistJointParam): Double {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetDouble(coneTwistJointGetParamBind, singleton, joint, param.value)
     }
 
     /**
@@ -1874,8 +1726,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.joint_get_type
      */
     @JvmStatic
-    fun jointGetType(joint: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(jointGetTypeBind, singleton, joint)
+    fun jointGetType(joint: RID): PhysicsServer3D.JointType {
+        return PhysicsServer3D.JointType(ObjectCalls.ptrcallWithRIDArgRetLong(jointGetTypeBind, singleton, joint))
     }
 
     /**
@@ -1937,8 +1789,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_set_param
      */
     @JvmStatic
-    fun generic6dofJointSetParam(joint: RID, axis: Long, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDTwoLongDoubleArgs(generic6dofJointSetParamBind, singleton, joint, axis, param, value)
+    fun generic6dofJointSetParam(joint: RID, axis: Vector3.Axis, param: PhysicsServer3D.G6DOFJointAxisParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDTwoLongDoubleArgs(generic6dofJointSetParamBind, singleton, joint, axis.value, param.value, value)
     }
 
     /**
@@ -1947,8 +1799,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_get_param
      */
     @JvmStatic
-    fun generic6dofJointGetParam(joint: RID, axis: Long, param: Long): Double {
-        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetDouble(generic6dofJointGetParamBind, singleton, joint, axis, param)
+    fun generic6dofJointGetParam(joint: RID, axis: Vector3.Axis, param: PhysicsServer3D.G6DOFJointAxisParam): Double {
+        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetDouble(generic6dofJointGetParamBind, singleton, joint, axis.value, param.value)
     }
 
     /**
@@ -1957,8 +1809,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_set_flag
      */
     @JvmStatic
-    fun generic6dofJointSetFlag(joint: RID, axis: Long, flag: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithRIDTwoLongBoolArgs(generic6dofJointSetFlagBind, singleton, joint, axis, flag, enable)
+    fun generic6dofJointSetFlag(joint: RID, axis: Vector3.Axis, flag: PhysicsServer3D.G6DOFJointAxisFlag, enable: Boolean) {
+        ObjectCalls.ptrcallWithRIDTwoLongBoolArgs(generic6dofJointSetFlagBind, singleton, joint, axis.value, flag.value, enable)
     }
 
     /**
@@ -1967,8 +1819,8 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_get_flag
      */
     @JvmStatic
-    fun generic6dofJointGetFlag(joint: RID, axis: Long, flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetBool(generic6dofJointGetFlagBind, singleton, joint, axis, flag)
+    fun generic6dofJointGetFlag(joint: RID, axis: Vector3.Axis, flag: PhysicsServer3D.G6DOFJointAxisFlag): Boolean {
+        return ObjectCalls.ptrcallWithRIDTwoLongArgsRetBool(generic6dofJointGetFlagBind, singleton, joint, axis.value, flag.value)
     }
 
     /**
@@ -1998,8 +1850,1034 @@ object PhysicsServer3D {
      * Generated from Godot docs: PhysicsServer3D.get_process_info
      */
     @JvmStatic
-    fun getProcessInfo(processInfo: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo)
+    fun getProcessInfo(processInfo: PhysicsServer3D.ProcessInfo): Int {
+        return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
+    }
+
+    @JvmInline
+    value class JointType(val value: Long) {
+        companion object {
+            /**
+             * The `Joint3D` is a `PinJoint3D`.
+             *
+             * Generated from Godot docs: PhysicsServer3D.JOINT_TYPE_PIN
+             */
+            val PIN: JointType get() = JointType(0L)
+            /**
+             * The `Joint3D` is a `HingeJoint3D`.
+             *
+             * Generated from Godot docs: PhysicsServer3D.JOINT_TYPE_HINGE
+             */
+            val HINGE: JointType get() = JointType(1L)
+            /**
+             * The `Joint3D` is a `SliderJoint3D`.
+             *
+             * Generated from Godot docs: PhysicsServer3D.JOINT_TYPE_SLIDER
+             */
+            val SLIDER: JointType get() = JointType(2L)
+            /**
+             * The `Joint3D` is a `ConeTwistJoint3D`.
+             *
+             * Generated from Godot docs: PhysicsServer3D.JOINT_TYPE_CONE_TWIST
+             */
+            val CONE_TWIST: JointType get() = JointType(3L)
+            /**
+             * The `Joint3D` is a `Generic6DOFJoint3D`.
+             *
+             * Generated from Godot docs: PhysicsServer3D.JOINT_TYPE_6DOF
+             */
+            val TYPE_6DOF: JointType get() = JointType(4L)
+            /**
+             * Represents the size of the `JointType` enum.
+             *
+             * Generated from Godot docs: PhysicsServer3D.JOINT_TYPE_MAX
+             */
+            val MAX: JointType get() = JointType(5L)
+        }
+    }
+
+    @JvmInline
+    value class PinJointParam(val value: Long) {
+        companion object {
+            /**
+             * The strength with which the pinned objects try to stay in positional relation to each other. The
+             * higher, the stronger. Note: Only supported when using GodotPhysics3D. This parameter is ignored
+             * when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.PIN_JOINT_BIAS
+             */
+            val BIAS: PinJointParam get() = PinJointParam(0L)
+            /**
+             * The strength with which the pinned objects try to stay in velocity relation to each other. The
+             * higher, the stronger. Note: Only supported when using GodotPhysics3D. This parameter is ignored
+             * when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.PIN_JOINT_DAMPING
+             */
+            val DAMPING: PinJointParam get() = PinJointParam(1L)
+            /**
+             * If above 0, this value is the maximum value for an impulse that this Joint3D puts on its ends.
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.PIN_JOINT_IMPULSE_CLAMP
+             */
+            val IMPULSE_CLAMP: PinJointParam get() = PinJointParam(2L)
+        }
+    }
+
+    @JvmInline
+    value class HingeJointParam(val value: Long) {
+        companion object {
+            /**
+             * The speed with which the two bodies get pulled together when they move in different directions.
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_BIAS
+             */
+            val BIAS: HingeJointParam get() = HingeJointParam(0L)
+            /**
+             * The maximum rotation across the Hinge.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_LIMIT_UPPER
+             */
+            val LIMIT_UPPER: HingeJointParam get() = HingeJointParam(1L)
+            /**
+             * The minimum rotation across the Hinge.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_LIMIT_LOWER
+             */
+            val LIMIT_LOWER: HingeJointParam get() = HingeJointParam(2L)
+            /**
+             * The speed with which the rotation across the axis perpendicular to the hinge gets corrected.
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_LIMIT_BIAS
+             */
+            val LIMIT_BIAS: HingeJointParam get() = HingeJointParam(3L)
+            /**
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_LIMIT_SOFTNESS
+             */
+            val LIMIT_SOFTNESS: HingeJointParam get() = HingeJointParam(4L)
+            /**
+             * The lower this value, the more the rotation gets slowed down. Note: Only supported when using
+             * GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_LIMIT_RELAXATION
+             */
+            val LIMIT_RELAXATION: HingeJointParam get() = HingeJointParam(5L)
+            /**
+             * Target speed for the motor.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_MOTOR_TARGET_VELOCITY
+             */
+            val MOTOR_TARGET_VELOCITY: HingeJointParam get() = HingeJointParam(6L)
+            /**
+             * Maximum acceleration for the motor.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_MOTOR_MAX_IMPULSE
+             */
+            val MOTOR_MAX_IMPULSE: HingeJointParam get() = HingeJointParam(7L)
+        }
+    }
+
+    @JvmInline
+    value class HingeJointFlag(val value: Long) {
+        companion object {
+            /**
+             * If `true`, the Hinge has a maximum and a minimum rotation.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_FLAG_USE_LIMIT
+             */
+            val USE_LIMIT: HingeJointFlag get() = HingeJointFlag(0L)
+            /**
+             * If `true`, a motor turns the Hinge.
+             *
+             * Generated from Godot docs: PhysicsServer3D.HINGE_JOINT_FLAG_ENABLE_MOTOR
+             */
+            val ENABLE_MOTOR: HingeJointFlag get() = HingeJointFlag(1L)
+        }
+    }
+
+    @JvmInline
+    value class SliderJointParam(val value: Long) {
+        companion object {
+            /**
+             * The maximum difference between the pivot points on their X axis before damping happens.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_LIMIT_UPPER
+             */
+            val LINEAR_LIMIT_UPPER: SliderJointParam get() = SliderJointParam(0L)
+            /**
+             * The minimum difference between the pivot points on their X axis before damping happens.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_LIMIT_LOWER
+             */
+            val LINEAR_LIMIT_LOWER: SliderJointParam get() = SliderJointParam(1L)
+            /**
+             * A factor applied to the movement across the slider axis once the limits get surpassed. The
+             * lower, the slower the movement. Note: Only supported when using GodotPhysics3D. This parameter
+             * is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_LIMIT_SOFTNESS
+             */
+            val LINEAR_LIMIT_SOFTNESS: SliderJointParam get() = SliderJointParam(2L)
+            /**
+             * The amount of restitution once the limits are surpassed. The lower, the more velocity-energy
+             * gets lost. Note: Only supported when using GodotPhysics3D. This parameter is ignored when using
+             * Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_LIMIT_RESTITUTION
+             */
+            val LINEAR_LIMIT_RESTITUTION: SliderJointParam get() = SliderJointParam(3L)
+            /**
+             * The amount of damping once the slider limits are surpassed. Note: Only supported when using
+             * GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_LIMIT_DAMPING
+             */
+            val LINEAR_LIMIT_DAMPING: SliderJointParam get() = SliderJointParam(4L)
+            /**
+             * A factor applied to the movement across the slider axis as long as the slider is in the limits.
+             * The lower, the slower the movement. Note: Only supported when using GodotPhysics3D. This
+             * parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_MOTION_SOFTNESS
+             */
+            val LINEAR_MOTION_SOFTNESS: SliderJointParam get() = SliderJointParam(5L)
+            /**
+             * The amount of restitution inside the slider limits. Note: Only supported when using
+             * GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_MOTION_RESTITUTION
+             */
+            val LINEAR_MOTION_RESTITUTION: SliderJointParam get() = SliderJointParam(6L)
+            /**
+             * The amount of damping inside the slider limits. Note: Only supported when using GodotPhysics3D.
+             * This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_MOTION_DAMPING
+             */
+            val LINEAR_MOTION_DAMPING: SliderJointParam get() = SliderJointParam(7L)
+            /**
+             * A factor applied to the movement across axes orthogonal to the slider. Note: Only supported when
+             * using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_ORTHOGONAL_SOFTNESS
+             */
+            val LINEAR_ORTHOGONAL_SOFTNESS: SliderJointParam get() = SliderJointParam(8L)
+            /**
+             * The amount of restitution when movement is across axes orthogonal to the slider. Note: Only
+             * supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_ORTHOGONAL_RESTITUTION
+             */
+            val LINEAR_ORTHOGONAL_RESTITUTION: SliderJointParam get() = SliderJointParam(9L)
+            /**
+             * The amount of damping when movement is across axes orthogonal to the slider. Note: Only
+             * supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_LINEAR_ORTHOGONAL_DAMPING
+             */
+            val LINEAR_ORTHOGONAL_DAMPING: SliderJointParam get() = SliderJointParam(10L)
+            /**
+             * The upper limit of rotation in the slider. Note: Only supported when using GodotPhysics3D. This
+             * parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_LIMIT_UPPER
+             */
+            val ANGULAR_LIMIT_UPPER: SliderJointParam get() = SliderJointParam(11L)
+            /**
+             * The lower limit of rotation in the slider. Note: Only supported when using GodotPhysics3D. This
+             * parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_LIMIT_LOWER
+             */
+            val ANGULAR_LIMIT_LOWER: SliderJointParam get() = SliderJointParam(12L)
+            /**
+             * A factor applied to the all rotation once the limit is surpassed. Note: Only supported when
+             * using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_LIMIT_SOFTNESS
+             */
+            val ANGULAR_LIMIT_SOFTNESS: SliderJointParam get() = SliderJointParam(13L)
+            /**
+             * The amount of restitution of the rotation when the limit is surpassed. Note: Only supported when
+             * using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_LIMIT_RESTITUTION
+             */
+            val ANGULAR_LIMIT_RESTITUTION: SliderJointParam get() = SliderJointParam(14L)
+            /**
+             * The amount of damping of the rotation when the limit is surpassed. Note: Only supported when
+             * using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_LIMIT_DAMPING
+             */
+            val ANGULAR_LIMIT_DAMPING: SliderJointParam get() = SliderJointParam(15L)
+            /**
+             * A factor that gets applied to the all rotation in the limits. Note: Only supported when using
+             * GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_MOTION_SOFTNESS
+             */
+            val ANGULAR_MOTION_SOFTNESS: SliderJointParam get() = SliderJointParam(16L)
+            /**
+             * The amount of restitution of the rotation in the limits. Note: Only supported when using
+             * GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_MOTION_RESTITUTION
+             */
+            val ANGULAR_MOTION_RESTITUTION: SliderJointParam get() = SliderJointParam(17L)
+            /**
+             * The amount of damping of the rotation in the limits. Note: Only supported when using
+             * GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_MOTION_DAMPING
+             */
+            val ANGULAR_MOTION_DAMPING: SliderJointParam get() = SliderJointParam(18L)
+            /**
+             * A factor that gets applied to the all rotation across axes orthogonal to the slider. Note: Only
+             * supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_ORTHOGONAL_SOFTNESS
+             */
+            val ANGULAR_ORTHOGONAL_SOFTNESS: SliderJointParam get() = SliderJointParam(19L)
+            /**
+             * The amount of restitution of the rotation across axes orthogonal to the slider. Note: Only
+             * supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_ORTHOGONAL_RESTITUTION
+             */
+            val ANGULAR_ORTHOGONAL_RESTITUTION: SliderJointParam get() = SliderJointParam(20L)
+            /**
+             * The amount of damping of the rotation across axes orthogonal to the slider. Note: Only supported
+             * when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_ANGULAR_ORTHOGONAL_DAMPING
+             */
+            val ANGULAR_ORTHOGONAL_DAMPING: SliderJointParam get() = SliderJointParam(21L)
+            /**
+             * Represents the size of the `SliderJointParam` enum.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SLIDER_JOINT_MAX
+             */
+            val MAX: SliderJointParam get() = SliderJointParam(22L)
+        }
+    }
+
+    @JvmInline
+    value class ConeTwistJointParam(val value: Long) {
+        companion object {
+            /**
+             * Swing is rotation from side to side, around the axis perpendicular to the twist axis. The swing
+             * span defines, how much rotation will not get corrected along the swing axis. Could be defined as
+             * looseness in the `ConeTwistJoint3D`. If below 0.05, this behavior is locked.
+             *
+             * Generated from Godot docs: PhysicsServer3D.CONE_TWIST_JOINT_SWING_SPAN
+             */
+            val SWING_SPAN: ConeTwistJointParam get() = ConeTwistJointParam(0L)
+            /**
+             * Twist is the rotation around the twist axis, this value defined how far the joint can twist.
+             * Twist is locked if below 0.05.
+             *
+             * Generated from Godot docs: PhysicsServer3D.CONE_TWIST_JOINT_TWIST_SPAN
+             */
+            val TWIST_SPAN: ConeTwistJointParam get() = ConeTwistJointParam(1L)
+            /**
+             * The speed with which the swing or twist will take place. The higher, the faster. Note: Only
+             * supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.CONE_TWIST_JOINT_BIAS
+             */
+            val BIAS: ConeTwistJointParam get() = ConeTwistJointParam(2L)
+            /**
+             * The ease with which the Joint3D twists, if it's too low, it takes more force to twist the joint.
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.CONE_TWIST_JOINT_SOFTNESS
+             */
+            val SOFTNESS: ConeTwistJointParam get() = ConeTwistJointParam(3L)
+            /**
+             * Defines, how fast the swing- and twist-speed-difference on both sides gets synced. Note: Only
+             * supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.CONE_TWIST_JOINT_RELAXATION
+             */
+            val RELAXATION: ConeTwistJointParam get() = ConeTwistJointParam(4L)
+        }
+    }
+
+    @JvmInline
+    value class G6DOFJointAxisParam(val value: Long) {
+        companion object {
+            /**
+             * The minimum difference between the pivot points' axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_LOWER_LIMIT
+             */
+            val LINEAR_LOWER_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(0L)
+            /**
+             * The maximum difference between the pivot points' axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_UPPER_LIMIT
+             */
+            val LINEAR_UPPER_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(1L)
+            /**
+             * A factor that gets applied to the movement across the axes. The lower, the slower the movement.
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_LIMIT_SOFTNESS
+             */
+            val LINEAR_LIMIT_SOFTNESS: G6DOFJointAxisParam get() = G6DOFJointAxisParam(2L)
+            /**
+             * The amount of restitution on the axes movement. The lower, the more velocity-energy gets lost.
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_RESTITUTION
+             */
+            val LINEAR_RESTITUTION: G6DOFJointAxisParam get() = G6DOFJointAxisParam(3L)
+            /**
+             * The amount of damping that happens at the linear motion across the axes. Note: Only supported
+             * when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_DAMPING
+             */
+            val LINEAR_DAMPING: G6DOFJointAxisParam get() = G6DOFJointAxisParam(4L)
+            /**
+             * The velocity that the joint's linear motor will attempt to reach.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_MOTOR_TARGET_VELOCITY
+             */
+            val LINEAR_MOTOR_TARGET_VELOCITY: G6DOFJointAxisParam get() = G6DOFJointAxisParam(5L)
+            /**
+             * The maximum force that the linear motor can apply while trying to reach the target velocity.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_MOTOR_FORCE_LIMIT
+             */
+            val LINEAR_MOTOR_FORCE_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(6L)
+            val LINEAR_SPRING_STIFFNESS: G6DOFJointAxisParam get() = G6DOFJointAxisParam(7L)
+            val LINEAR_SPRING_DAMPING: G6DOFJointAxisParam get() = G6DOFJointAxisParam(8L)
+            val LINEAR_SPRING_EQUILIBRIUM_POINT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(9L)
+            /**
+             * The minimum rotation in negative direction to break loose and rotate around the axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_LOWER_LIMIT
+             */
+            val ANGULAR_LOWER_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(10L)
+            /**
+             * The minimum rotation in positive direction to break loose and rotate around the axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_UPPER_LIMIT
+             */
+            val ANGULAR_UPPER_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(11L)
+            /**
+             * A factor that gets multiplied onto all rotations across the axes. Note: Only supported when
+             * using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_LIMIT_SOFTNESS
+             */
+            val ANGULAR_LIMIT_SOFTNESS: G6DOFJointAxisParam get() = G6DOFJointAxisParam(12L)
+            /**
+             * The amount of rotational damping across the axes. The lower, the more damping occurs. Note: Only
+             * supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_DAMPING
+             */
+            val ANGULAR_DAMPING: G6DOFJointAxisParam get() = G6DOFJointAxisParam(13L)
+            /**
+             * The amount of rotational restitution across the axes. The lower, the more restitution occurs.
+             * Note: Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt
+             * Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_RESTITUTION
+             */
+            val ANGULAR_RESTITUTION: G6DOFJointAxisParam get() = G6DOFJointAxisParam(14L)
+            /**
+             * The maximum amount of force that can occur, when rotating around the axes. Note: Only supported
+             * when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_FORCE_LIMIT
+             */
+            val ANGULAR_FORCE_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(15L)
+            /**
+             * When correcting the crossing of limits in rotation across the axes, this error tolerance factor
+             * defines how much the correction gets slowed down. The lower, the slower. Note: Only supported
+             * when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_ERP
+             */
+            val ANGULAR_ERP: G6DOFJointAxisParam get() = G6DOFJointAxisParam(16L)
+            /**
+             * Target speed for the motor at the axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_MOTOR_TARGET_VELOCITY
+             */
+            val ANGULAR_MOTOR_TARGET_VELOCITY: G6DOFJointAxisParam get() = G6DOFJointAxisParam(17L)
+            /**
+             * Maximum acceleration for the motor at the axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_MOTOR_FORCE_LIMIT
+             */
+            val ANGULAR_MOTOR_FORCE_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(18L)
+            val ANGULAR_SPRING_STIFFNESS: G6DOFJointAxisParam get() = G6DOFJointAxisParam(19L)
+            val ANGULAR_SPRING_DAMPING: G6DOFJointAxisParam get() = G6DOFJointAxisParam(20L)
+            val ANGULAR_SPRING_EQUILIBRIUM_POINT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(21L)
+            /**
+             * Represents the size of the `G6DOFJointAxisParam` enum.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_MAX
+             */
+            val MAX: G6DOFJointAxisParam get() = G6DOFJointAxisParam(22L)
+        }
+    }
+
+    @JvmInline
+    value class G6DOFJointAxisFlag(val value: Long) {
+        companion object {
+            /**
+             * If set, linear motion is possible within the given limits.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_LINEAR_LIMIT
+             */
+            val ENABLE_LINEAR_LIMIT: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(0L)
+            /**
+             * If set, rotational motion is possible.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_ANGULAR_LIMIT
+             */
+            val ENABLE_ANGULAR_LIMIT: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(1L)
+            val ENABLE_ANGULAR_SPRING: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(2L)
+            val ENABLE_LINEAR_SPRING: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(3L)
+            /**
+             * If set, there is a rotational motor across these axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_MOTOR
+             */
+            val ENABLE_MOTOR: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(4L)
+            /**
+             * If set, there is a linear motor on this axis that targets a specific velocity.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_LINEAR_MOTOR
+             */
+            val ENABLE_LINEAR_MOTOR: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(5L)
+            /**
+             * Represents the size of the `G6DOFJointAxisFlag` enum.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_FLAG_MAX
+             */
+            val MAX: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(6L)
+        }
+    }
+
+    @JvmInline
+    value class ShapeType(val value: Long) {
+        companion object {
+            /**
+             * Constant for creating a world boundary shape (used by the `WorldBoundaryShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_WORLD_BOUNDARY
+             */
+            val WORLD_BOUNDARY: ShapeType get() = ShapeType(0L)
+            /**
+             * Constant for creating a separation ray shape (used by the `SeparationRayShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_SEPARATION_RAY
+             */
+            val SEPARATION_RAY: ShapeType get() = ShapeType(1L)
+            /**
+             * Constant for creating a sphere shape (used by the `SphereShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_SPHERE
+             */
+            val SPHERE: ShapeType get() = ShapeType(2L)
+            /**
+             * Constant for creating a box shape (used by the `BoxShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_BOX
+             */
+            val BOX: ShapeType get() = ShapeType(3L)
+            /**
+             * Constant for creating a capsule shape (used by the `CapsuleShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_CAPSULE
+             */
+            val CAPSULE: ShapeType get() = ShapeType(4L)
+            /**
+             * Constant for creating a cylinder shape (used by the `CylinderShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_CYLINDER
+             */
+            val CYLINDER: ShapeType get() = ShapeType(5L)
+            /**
+             * Constant for creating a convex polygon shape (used by the `ConvexPolygonShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_CONVEX_POLYGON
+             */
+            val CONVEX_POLYGON: ShapeType get() = ShapeType(6L)
+            /**
+             * Constant for creating a concave polygon (trimesh) shape (used by the `ConcavePolygonShape3D`
+             * resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_CONCAVE_POLYGON
+             */
+            val CONCAVE_POLYGON: ShapeType get() = ShapeType(7L)
+            /**
+             * Constant for creating a heightmap shape (used by the `HeightMapShape3D` resource).
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_HEIGHTMAP
+             */
+            val HEIGHTMAP: ShapeType get() = ShapeType(8L)
+            /**
+             * Constant used internally for a soft body shape. Any attempt to create this kind of shape results
+             * in an error.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_SOFT_BODY
+             */
+            val SOFT_BODY: ShapeType get() = ShapeType(9L)
+            /**
+             * Constant used internally for a custom shape. Any attempt to create this kind of shape results in
+             * an error when using Godot Physics or Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SHAPE_CUSTOM
+             */
+            val CUSTOM: ShapeType get() = ShapeType(10L)
+        }
+    }
+
+    @JvmInline
+    value class AreaParameter(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get gravity override mode in an area. See `AreaSpaceOverrideMode` for possible
+             * values.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_GRAVITY_OVERRIDE_MODE
+             */
+            val GRAVITY_OVERRIDE_MODE: AreaParameter get() = AreaParameter(0L)
+            /**
+             * Constant to set/get gravity strength in an area.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_GRAVITY
+             */
+            val GRAVITY: AreaParameter get() = AreaParameter(1L)
+            /**
+             * Constant to set/get gravity vector/center in an area.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_GRAVITY_VECTOR
+             */
+            val GRAVITY_VECTOR: AreaParameter get() = AreaParameter(2L)
+            /**
+             * Constant to set/get whether the gravity vector of an area is a direction, or a center point.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_GRAVITY_IS_POINT
+             */
+            val GRAVITY_IS_POINT: AreaParameter get() = AreaParameter(3L)
+            /**
+             * Constant to set/get the distance at which the gravity strength is equal to the gravity
+             * controlled by `AREA_PARAM_GRAVITY`. For example, on a planet 100 meters in radius with a surface
+             * gravity of 4.0 m/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity will
+             * have falloff according to the inverse square law, so in the example, at 200 meters from the
+             * center the gravity will be 1.0 m/s² (twice the distance, 1/4th the gravity), at 50 meters it
+             * will be 16.0 m/s² (half the distance, 4x the gravity), and so on. The above is true only when
+             * the unit distance is a positive number. When this is set to 0.0, the gravity will be constant
+             * regardless of distance.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE
+             */
+            val GRAVITY_POINT_UNIT_DISTANCE: AreaParameter get() = AreaParameter(4L)
+            /**
+             * Constant to set/get linear damping override mode in an area. See `AreaSpaceOverrideMode` for
+             * possible values.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE
+             */
+            val LINEAR_DAMP_OVERRIDE_MODE: AreaParameter get() = AreaParameter(5L)
+            /**
+             * Constant to set/get the linear damping factor of an area.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_LINEAR_DAMP
+             */
+            val LINEAR_DAMP: AreaParameter get() = AreaParameter(6L)
+            /**
+             * Constant to set/get angular damping override mode in an area. See `AreaSpaceOverrideMode` for
+             * possible values.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE
+             */
+            val ANGULAR_DAMP_OVERRIDE_MODE: AreaParameter get() = AreaParameter(7L)
+            /**
+             * Constant to set/get the angular damping factor of an area.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_ANGULAR_DAMP
+             */
+            val ANGULAR_DAMP: AreaParameter get() = AreaParameter(8L)
+            /**
+             * Constant to set/get the priority (order of processing) of an area.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_PRIORITY
+             */
+            val PRIORITY: AreaParameter get() = AreaParameter(9L)
+            /**
+             * Constant to set/get the magnitude of area-specific wind force. This wind force only applies to
+             * `SoftBody3D` nodes. Other physics bodies are currently not affected by wind.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_WIND_FORCE_MAGNITUDE
+             */
+            val WIND_FORCE_MAGNITUDE: AreaParameter get() = AreaParameter(10L)
+            /**
+             * Constant to set/get the 3D vector that specifies the origin from which an area-specific wind
+             * blows.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_WIND_SOURCE
+             */
+            val WIND_SOURCE: AreaParameter get() = AreaParameter(11L)
+            /**
+             * Constant to set/get the 3D vector that specifies the direction in which an area-specific wind
+             * blows.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_WIND_DIRECTION
+             */
+            val WIND_DIRECTION: AreaParameter get() = AreaParameter(12L)
+            /**
+             * Constant to set/get the exponential rate at which wind force decreases with distance from its
+             * origin.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_PARAM_WIND_ATTENUATION_FACTOR
+             */
+            val WIND_ATTENUATION_FACTOR: AreaParameter get() = AreaParameter(13L)
+        }
+    }
+
+    @JvmInline
+    value class AreaSpaceOverrideMode(val value: Long) {
+        companion object {
+            /**
+             * This area does not affect gravity/damp. These are generally areas that exist only to detect
+             * collisions, and objects entering or exiting them.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_SPACE_OVERRIDE_DISABLED
+             */
+            val DISABLED: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(0L)
+            /**
+             * This area adds its gravity/damp values to whatever has been calculated so far. This way, many
+             * overlapping areas can combine their physics to make interesting effects.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_SPACE_OVERRIDE_COMBINE
+             */
+            val COMBINE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(1L)
+            /**
+             * This area adds its gravity/damp values to whatever has been calculated so far. Then stops taking
+             * into account the rest of the areas, even the default one.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_SPACE_OVERRIDE_COMBINE_REPLACE
+             */
+            val COMBINE_REPLACE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(2L)
+            /**
+             * This area replaces any gravity/damp, even the default one, and stops taking into account the
+             * rest of the areas.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_SPACE_OVERRIDE_REPLACE
+             */
+            val REPLACE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(3L)
+            /**
+             * This area replaces any gravity/damp calculated so far, but keeps calculating the rest of the
+             * areas, down to the default one.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_SPACE_OVERRIDE_REPLACE_COMBINE
+             */
+            val REPLACE_COMBINE: AreaSpaceOverrideMode get() = AreaSpaceOverrideMode(4L)
+        }
+    }
+
+    @JvmInline
+    value class BodyMode(val value: Long) {
+        companion object {
+            /**
+             * Constant for static bodies. In this mode, a body can be only moved by user code and doesn't
+             * collide with other bodies along its path when moved.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_MODE_STATIC
+             */
+            val STATIC: BodyMode get() = BodyMode(0L)
+            /**
+             * Constant for kinematic bodies. In this mode, a body can be only moved by user code and collides
+             * with other bodies along its path.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_MODE_KINEMATIC
+             */
+            val KINEMATIC: BodyMode get() = BodyMode(1L)
+            /**
+             * Constant for rigid bodies. In this mode, a body can be pushed by other bodies and has forces
+             * applied.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_MODE_RIGID
+             */
+            val RIGID: BodyMode get() = BodyMode(2L)
+            /**
+             * Constant for linear rigid bodies. In this mode, a body can not rotate, and only its linear
+             * velocity is affected by external forces.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_MODE_RIGID_LINEAR
+             */
+            val RIGID_LINEAR: BodyMode get() = BodyMode(3L)
+        }
+    }
+
+    @JvmInline
+    value class BodyParameter(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get a body's bounce factor.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_BOUNCE
+             */
+            val BOUNCE: BodyParameter get() = BodyParameter(0L)
+            /**
+             * Constant to set/get a body's friction.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_FRICTION
+             */
+            val FRICTION: BodyParameter get() = BodyParameter(1L)
+            /**
+             * Constant to set/get a body's mass.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_MASS
+             */
+            val MASS: BodyParameter get() = BodyParameter(2L)
+            /**
+             * Constant to set/get a body's inertia.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_INERTIA
+             */
+            val INERTIA: BodyParameter get() = BodyParameter(3L)
+            /**
+             * Constant to set/get a body's center of mass position in the body's local coordinate system.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_CENTER_OF_MASS
+             */
+            val CENTER_OF_MASS: BodyParameter get() = BodyParameter(4L)
+            /**
+             * Constant to set/get a body's gravity multiplier.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_GRAVITY_SCALE
+             */
+            val GRAVITY_SCALE: BodyParameter get() = BodyParameter(5L)
+            /**
+             * Constant to set/get a body's linear damping mode. See `BodyDampMode` for possible values.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_LINEAR_DAMP_MODE
+             */
+            val LINEAR_DAMP_MODE: BodyParameter get() = BodyParameter(6L)
+            /**
+             * Constant to set/get a body's angular damping mode. See `BodyDampMode` for possible values.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_ANGULAR_DAMP_MODE
+             */
+            val ANGULAR_DAMP_MODE: BodyParameter get() = BodyParameter(7L)
+            /**
+             * Constant to set/get a body's linear damping factor.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_LINEAR_DAMP
+             */
+            val LINEAR_DAMP: BodyParameter get() = BodyParameter(8L)
+            /**
+             * Constant to set/get a body's angular damping factor.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_ANGULAR_DAMP
+             */
+            val ANGULAR_DAMP: BodyParameter get() = BodyParameter(9L)
+            /**
+             * Represents the size of the `BodyParameter` enum.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_PARAM_MAX
+             */
+            val MAX: BodyParameter get() = BodyParameter(10L)
+        }
+    }
+
+    @JvmInline
+    value class BodyDampMode(val value: Long) {
+        companion object {
+            /**
+             * The body's damping value is added to any value set in areas or the default value.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_DAMP_MODE_COMBINE
+             */
+            val COMBINE: BodyDampMode get() = BodyDampMode(0L)
+            /**
+             * The body's damping value replaces any value set in areas or the default value.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_DAMP_MODE_REPLACE
+             */
+            val REPLACE: BodyDampMode get() = BodyDampMode(1L)
+        }
+    }
+
+    @JvmInline
+    value class BodyState(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get the current transform matrix of the body.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_STATE_TRANSFORM
+             */
+            val TRANSFORM: BodyState get() = BodyState(0L)
+            /**
+             * Constant to set/get the current linear velocity of the body.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_STATE_LINEAR_VELOCITY
+             */
+            val LINEAR_VELOCITY: BodyState get() = BodyState(1L)
+            /**
+             * Constant to set/get the current angular velocity of the body.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_STATE_ANGULAR_VELOCITY
+             */
+            val ANGULAR_VELOCITY: BodyState get() = BodyState(2L)
+            /**
+             * Constant to sleep/wake up a body, or to get whether it is sleeping.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_STATE_SLEEPING
+             */
+            val SLEEPING: BodyState get() = BodyState(3L)
+            /**
+             * Constant to set/get whether the body can sleep.
+             *
+             * Generated from Godot docs: PhysicsServer3D.BODY_STATE_CAN_SLEEP
+             */
+            val CAN_SLEEP: BodyState get() = BodyState(4L)
+        }
+    }
+
+    @JvmInline
+    value class AreaBodyStatus(val value: Long) {
+        companion object {
+            /**
+             * The value of the first parameter and area callback function receives, when an object enters one
+             * of its shapes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_BODY_ADDED
+             */
+            val ADDED: AreaBodyStatus get() = AreaBodyStatus(0L)
+            /**
+             * The value of the first parameter and area callback function receives, when an object exits one
+             * of its shapes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.AREA_BODY_REMOVED
+             */
+            val REMOVED: AreaBodyStatus get() = AreaBodyStatus(1L)
+        }
+    }
+
+    @JvmInline
+    value class ProcessInfo(val value: Long) {
+        companion object {
+            /**
+             * Constant to get the number of objects that are not sleeping.
+             *
+             * Generated from Godot docs: PhysicsServer3D.INFO_ACTIVE_OBJECTS
+             */
+            val ACTIVE_OBJECTS: ProcessInfo get() = ProcessInfo(0L)
+            /**
+             * Constant to get the number of possible collisions.
+             *
+             * Generated from Godot docs: PhysicsServer3D.INFO_COLLISION_PAIRS
+             */
+            val COLLISION_PAIRS: ProcessInfo get() = ProcessInfo(1L)
+            /**
+             * Constant to get the number of space regions where a collision could occur.
+             *
+             * Generated from Godot docs: PhysicsServer3D.INFO_ISLAND_COUNT
+             */
+            val ISLAND_COUNT: ProcessInfo get() = ProcessInfo(2L)
+        }
+    }
+
+    @JvmInline
+    value class SpaceParameter(val value: Long) {
+        companion object {
+            /**
+             * Constant to set/get the maximum distance a pair of bodies has to move before their collision
+             * status has to be recalculated.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_CONTACT_RECYCLE_RADIUS
+             */
+            val CONTACT_RECYCLE_RADIUS: SpaceParameter get() = SpaceParameter(0L)
+            /**
+             * Constant to set/get the maximum distance a shape can be from another before they are considered
+             * separated and the contact is discarded.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_CONTACT_MAX_SEPARATION
+             */
+            val CONTACT_MAX_SEPARATION: SpaceParameter get() = SpaceParameter(1L)
+            /**
+             * Constant to set/get the maximum distance a shape can penetrate another shape before it is
+             * considered a collision.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION
+             */
+            val CONTACT_MAX_ALLOWED_PENETRATION: SpaceParameter get() = SpaceParameter(2L)
+            /**
+             * Constant to set/get the default solver bias for all physics contacts. A solver bias is a factor
+             * controlling how much two objects "rebound", after overlapping, to avoid leaving them in that
+             * state because of numerical imprecision.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_CONTACT_DEFAULT_BIAS
+             */
+            val CONTACT_DEFAULT_BIAS: SpaceParameter get() = SpaceParameter(3L)
+            /**
+             * Constant to set/get the threshold linear velocity of activity. A body marked as potentially
+             * inactive for both linear and angular velocity will be put to sleep after the time given. Note:
+             * Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD
+             */
+            val BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD: SpaceParameter get() = SpaceParameter(4L)
+            /**
+             * Constant to set/get the threshold angular velocity of activity. A body marked as potentially
+             * inactive for both linear and angular velocity will be put to sleep after the time given. Note:
+             * Only supported when using GodotPhysics3D. This parameter is ignored when using Jolt Physics.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD
+             */
+            val BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD: SpaceParameter get() = SpaceParameter(5L)
+            /**
+             * Constant to set/get the maximum time of activity. A body marked as potentially inactive for both
+             * linear and angular velocity will be put to sleep after this time.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_BODY_TIME_TO_SLEEP
+             */
+            val BODY_TIME_TO_SLEEP: SpaceParameter get() = SpaceParameter(6L)
+            /**
+             * Constant to set/get the number of solver iterations for contacts and constraints. The greater
+             * the number of iterations, the more accurate the collisions and constraints will be. However, a
+             * greater number of iterations requires more CPU power, which can decrease performance.
+             *
+             * Generated from Godot docs: PhysicsServer3D.SPACE_PARAM_SOLVER_ITERATIONS
+             */
+            val SOLVER_ITERATIONS: SpaceParameter get() = SpaceParameter(7L)
+        }
+    }
+
+    @JvmInline
+    value class BodyAxis(val value: Long) {
+        companion object {
+            val LINEAR_X: BodyAxis get() = BodyAxis(1L)
+            val LINEAR_Y: BodyAxis get() = BodyAxis(2L)
+            val LINEAR_Z: BodyAxis get() = BodyAxis(4L)
+            val ANGULAR_X: BodyAxis get() = BodyAxis(8L)
+            val ANGULAR_Y: BodyAxis get() = BodyAxis(16L)
+            val ANGULAR_Z: BodyAxis get() = BodyAxis(32L)
+        }
     }
 
     @JvmStatic

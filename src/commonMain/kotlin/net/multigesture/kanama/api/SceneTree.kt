@@ -1,10 +1,12 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -57,7 +59,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         @JvmName("currentSceneProperty")
         get() = getCurrentScene()
 
-    val root: Window?
+    val root: Window
         @JvmName("rootProperty")
         get() = getRoot()
 
@@ -82,8 +84,8 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      *
      * Generated from Godot docs: SceneTree.get_root
      */
-    fun getRoot(): Window? {
-        return Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment))
+    fun getRoot(): Window {
+        return requireGodotReturn(Window.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRootBind, segment)), "SceneTree.get_root")
     }
 
     /**
@@ -280,8 +282,8 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      *
      * Generated from Godot docs: SceneTree.create_timer
      */
-    fun createTimer(timeSec: Double, processAlways: Boolean = true, processInPhysics: Boolean = false, ignoreTimeScale: Boolean = false): SceneTreeTimer? {
-        return SceneTreeTimer.wrap(ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale))
+    fun createTimer(timeSec: Double, processAlways: Boolean = true, processInPhysics: Boolean = false, ignoreTimeScale: Boolean = false): SceneTreeTimer {
+        return requireGodotReturn(SceneTreeTimer.wrap(ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale)), "SceneTree.create_timer")
     }
 
     /**
@@ -494,8 +496,8 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      *
      * Generated from Godot docs: SceneTree.change_scene_to_file
      */
-    fun changeSceneToFile(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(changeSceneToFileBind, segment, path)
+    fun changeSceneToFile(path: String): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(changeSceneToFileBind, segment, path))
     }
 
     /**
@@ -506,8 +508,8 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      *
      * Generated from Godot docs: SceneTree.change_scene_to_packed
      */
-    fun changeSceneToPacked(packedScene: PackedScene): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(changeSceneToPackedBind, segment, packedScene.requireOpenHandle())
+    fun changeSceneToPacked(packedScene: PackedScene): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(changeSceneToPackedBind, segment, packedScene.requireOpenHandle()))
     }
 
     /**
@@ -528,8 +530,8 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      *
      * Generated from Godot docs: SceneTree.change_scene_to_node
      */
-    fun changeSceneToNode(node: Node): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(changeSceneToNodeBind, segment, node.segment)
+    fun changeSceneToNode(node: Node): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(changeSceneToNodeBind, segment, node.segment))
     }
 
     /**
@@ -540,8 +542,8 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      *
      * Generated from Godot docs: SceneTree.reload_current_scene
      */
-    fun reloadCurrentScene(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(reloadCurrentSceneBind, segment)
+    fun reloadCurrentScene(): GodotError {
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(reloadCurrentSceneBind, segment))
     }
 
     /**
@@ -575,8 +577,8 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      *
      * Generated from Godot docs: SceneTree.get_multiplayer
      */
-    fun getMultiplayer(forPath: NodePath): MultiplayerAPI? {
-        return MultiplayerAPI.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getMultiplayerBind, segment, forPath))
+    fun getMultiplayer(forPath: NodePath): MultiplayerAPI {
+        return requireGodotReturn(MultiplayerAPI.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getMultiplayerBind, segment, forPath)), "SceneTree.get_multiplayer")
     }
 
     /**
@@ -659,12 +661,42 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         const val physicsFrame: String = "physics_frame"
     }
 
-    companion object {
-        const val GROUP_CALL_DEFAULT: Long = 0L
-        const val GROUP_CALL_REVERSE: Long = 1L
-        const val GROUP_CALL_DEFERRED: Long = 2L
-        const val GROUP_CALL_UNIQUE: Long = 4L
+    @JvmInline
+    value class GroupCallFlags(val value: Long) {
+        companion object {
+            /**
+             * Call nodes within a group with no special behavior (default).
+             *
+             * Generated from Godot docs: SceneTree.GROUP_CALL_DEFAULT
+             */
+            val DEFAULT: GroupCallFlags get() = GroupCallFlags(0L)
+            /**
+             * Call nodes within a group in reverse tree hierarchy order (all nested children are called before
+             * their respective parent nodes).
+             *
+             * Generated from Godot docs: SceneTree.GROUP_CALL_REVERSE
+             */
+            val REVERSE: GroupCallFlags get() = GroupCallFlags(1L)
+            /**
+             * Call nodes within a group at the end of the current frame (can be either process or physics
+             * frame), similar to `Object.call_deferred`.
+             *
+             * Generated from Godot docs: SceneTree.GROUP_CALL_DEFERRED
+             */
+            val DEFERRED: GroupCallFlags get() = GroupCallFlags(2L)
+            /**
+             * Call nodes within a group only once, even if the call is executed many times in the same frame.
+             * Must be combined with `GROUP_CALL_DEFERRED` to work. Note: Different arguments are not taken
+             * into account. Therefore, when the same call is executed with different arguments, only the first
+             * call will be performed.
+             *
+             * Generated from Godot docs: SceneTree.GROUP_CALL_UNIQUE
+             */
+            val UNIQUE: GroupCallFlags get() = GroupCallFlags(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneTree? =
             wrap(handle.segment)
@@ -778,7 +810,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.change_scene_to_file
          */
-        fun changeSceneToFile(path: String): Long = active().changeSceneToFile(path)
+        fun changeSceneToFile(path: String): GodotError = active().changeSceneToFile(path)
 
         /**
          * Reloads the currently active scene, replacing `current_scene` with a new instance of its
@@ -788,7 +820,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.reload_current_scene
          */
-        fun reloadCurrentScene(): Long = active().reloadCurrentScene()
+        fun reloadCurrentScene(): GodotError = active().reloadCurrentScene()
 
         /**
          * If a current scene is loaded, calling this method will unload it.
@@ -919,7 +951,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.change_scene_to_packed
          */
-        fun changeSceneToPacked(packedScene: PackedScene): Long = active().changeSceneToPacked(packedScene)
+        fun changeSceneToPacked(packedScene: PackedScene): GodotError = active().changeSceneToPacked(packedScene)
 
         /**
          * Changes the running scene to the provided `Node`. Useful when you want to set up the new scene
@@ -939,7 +971,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.change_scene_to_node
          */
-        fun changeSceneToNode(node: Node): Long = active().changeSceneToNode(node)
+        fun changeSceneToNode(node: Node): GodotError = active().changeSceneToNode(node)
 
         /**
          * The root of the scene currently being edited in the editor. This is usually a direct child of

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,19 +19,19 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         @JvmName("setModeOverridesTitleProperty")
         set(value) = setModeOverridesTitle(value)
 
-    var fileMode: Long
+    var fileMode: FileDialog.FileMode
         @JvmName("fileModeProperty")
         get() = getFileMode()
         @JvmName("setFileModeProperty")
         set(value) = setFileMode(value)
 
-    var displayMode: Long
+    var displayMode: FileDialog.DisplayMode
         @JvmName("displayModeProperty")
         get() = getDisplayMode()
         @JvmName("setDisplayModeProperty")
         set(value) = setDisplayMode(value)
 
-    var access: Long
+    var access: FileDialog.Access
         @JvmName("accessProperty")
         get() = getAccess()
         @JvmName("setAccessProperty")
@@ -74,57 +75,57 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
     var hiddenFilesToggleEnabled: Boolean
         @JvmName("hiddenFilesToggleEnabledProperty")
-        get() = isCustomizationFlagEnabled(0L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.HIDDEN_FILES)
         @JvmName("setHiddenFilesToggleEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(0L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.HIDDEN_FILES, value)
 
     var fileFilterToggleEnabled: Boolean
         @JvmName("fileFilterToggleEnabledProperty")
-        get() = isCustomizationFlagEnabled(2L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.FILE_FILTER)
         @JvmName("setFileFilterToggleEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(2L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.FILE_FILTER, value)
 
     var fileSortOptionsEnabled: Boolean
         @JvmName("fileSortOptionsEnabledProperty")
-        get() = isCustomizationFlagEnabled(3L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.FILE_SORT)
         @JvmName("setFileSortOptionsEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(3L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.FILE_SORT, value)
 
     var folderCreationEnabled: Boolean
         @JvmName("folderCreationEnabledProperty")
-        get() = isCustomizationFlagEnabled(1L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.CREATE_FOLDER)
         @JvmName("setFolderCreationEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(1L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.CREATE_FOLDER, value)
 
     var favoritesEnabled: Boolean
         @JvmName("favoritesEnabledProperty")
-        get() = isCustomizationFlagEnabled(4L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.FAVORITES)
         @JvmName("setFavoritesEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(4L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.FAVORITES, value)
 
     var recentListEnabled: Boolean
         @JvmName("recentListEnabledProperty")
-        get() = isCustomizationFlagEnabled(5L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.RECENT)
         @JvmName("setRecentListEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(5L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.RECENT, value)
 
     var layoutToggleEnabled: Boolean
         @JvmName("layoutToggleEnabledProperty")
-        get() = isCustomizationFlagEnabled(6L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.LAYOUT)
         @JvmName("setLayoutToggleEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(6L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.LAYOUT, value)
 
     var overwriteWarningEnabled: Boolean
         @JvmName("overwriteWarningEnabledProperty")
-        get() = isCustomizationFlagEnabled(7L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.OVERWRITE_WARNING)
         @JvmName("setOverwriteWarningEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(7L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.OVERWRITE_WARNING, value)
 
     var deletingEnabled: Boolean
         @JvmName("deletingEnabledProperty")
-        get() = isCustomizationFlagEnabled(8L)
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.DELETE)
         @JvmName("setDeletingEnabledProperty")
-        set(value) = setCustomizationFlagEnabled(8L, value)
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.DELETE, value)
 
     var currentDir: String
         @JvmName("currentDirProperty")
@@ -404,8 +405,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.set_file_mode
      */
-    fun setFileMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFileModeBind, segment, mode)
+    fun setFileMode(mode: FileDialog.FileMode) {
+        ObjectCalls.ptrcallWithLongArg(setFileModeBind, segment, mode.value)
     }
 
     /**
@@ -413,8 +414,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.get_file_mode
      */
-    fun getFileMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFileModeBind, segment)
+    fun getFileMode(): FileDialog.FileMode {
+        return FileDialog.FileMode(ObjectCalls.ptrcallNoArgsRetLong(getFileModeBind, segment))
     }
 
     /**
@@ -422,8 +423,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.set_display_mode
      */
-    fun setDisplayMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDisplayModeBind, segment, mode)
+    fun setDisplayMode(mode: FileDialog.DisplayMode) {
+        ObjectCalls.ptrcallWithLongArg(setDisplayModeBind, segment, mode.value)
     }
 
     /**
@@ -431,8 +432,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.get_display_mode
      */
-    fun getDisplayMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDisplayModeBind, segment)
+    fun getDisplayMode(): FileDialog.DisplayMode {
+        return FileDialog.DisplayMode(ObjectCalls.ptrcallNoArgsRetLong(getDisplayModeBind, segment))
     }
 
     /**
@@ -466,8 +467,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.set_access
      */
-    fun setAccess(access: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAccessBind, segment, access)
+    fun setAccess(access: FileDialog.Access) {
+        ObjectCalls.ptrcallWithLongArg(setAccessBind, segment, access.value)
     }
 
     /**
@@ -477,8 +478,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.get_access
      */
-    fun getAccess(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessBind, segment)
+    fun getAccess(): FileDialog.Access {
+        return FileDialog.Access(ObjectCalls.ptrcallNoArgsRetLong(getAccessBind, segment))
     }
 
     /**
@@ -560,8 +561,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.set_customization_flag_enabled
      */
-    fun setCustomizationFlagEnabled(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setCustomizationFlagEnabledBind, segment, flag, enabled)
+    fun setCustomizationFlagEnabled(flag: FileDialog.Customization, enabled: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setCustomizationFlagEnabledBind, segment, flag.value, enabled)
     }
 
     /**
@@ -569,8 +570,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      *
      * Generated from Godot docs: FileDialog.is_customization_flag_enabled
      */
-    fun isCustomizationFlagEnabled(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isCustomizationFlagEnabledBind, segment, flag)
+    fun isCustomizationFlagEnabled(flag: FileDialog.Customization): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isCustomizationFlagEnabledBind, segment, flag.value)
     }
 
     /**
@@ -607,6 +608,151 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         const val filesSelected: String = "files_selected"
         const val dirSelected: String = "dir_selected"
         const val filenameFilterChanged: String = "filename_filter_changed"
+    }
+
+    @JvmInline
+    value class FileMode(val value: Long) {
+        companion object {
+            /**
+             * The dialog allows selecting one, and only one file.
+             *
+             * Generated from Godot docs: FileDialog.FILE_MODE_OPEN_FILE
+             */
+            val OPEN_FILE: FileMode get() = FileMode(0L)
+            /**
+             * The dialog allows selecting multiple files.
+             *
+             * Generated from Godot docs: FileDialog.FILE_MODE_OPEN_FILES
+             */
+            val OPEN_FILES: FileMode get() = FileMode(1L)
+            /**
+             * The dialog only allows selecting a directory, disallowing the selection of any file.
+             *
+             * Generated from Godot docs: FileDialog.FILE_MODE_OPEN_DIR
+             */
+            val OPEN_DIR: FileMode get() = FileMode(2L)
+            /**
+             * The dialog allows selecting one file or directory.
+             *
+             * Generated from Godot docs: FileDialog.FILE_MODE_OPEN_ANY
+             */
+            val OPEN_ANY: FileMode get() = FileMode(3L)
+            /**
+             * The dialog will warn when a file exists.
+             *
+             * Generated from Godot docs: FileDialog.FILE_MODE_SAVE_FILE
+             */
+            val SAVE_FILE: FileMode get() = FileMode(4L)
+        }
+    }
+
+    @JvmInline
+    value class Access(val value: Long) {
+        companion object {
+            /**
+             * The dialog only allows accessing files under the `Resource` path (`res://`).
+             *
+             * Generated from Godot docs: FileDialog.ACCESS_RESOURCES
+             */
+            val RESOURCES: Access get() = Access(0L)
+            /**
+             * The dialog only allows accessing files under user data path (`user://`).
+             *
+             * Generated from Godot docs: FileDialog.ACCESS_USERDATA
+             */
+            val USERDATA: Access get() = Access(1L)
+            /**
+             * The dialog allows accessing files on the whole file system.
+             *
+             * Generated from Godot docs: FileDialog.ACCESS_FILESYSTEM
+             */
+            val FILESYSTEM: Access get() = Access(2L)
+        }
+    }
+
+    @JvmInline
+    value class DisplayMode(val value: Long) {
+        companion object {
+            /**
+             * The dialog displays files as a grid of thumbnails. Use `thumbnail_size` to adjust their size.
+             *
+             * Generated from Godot docs: FileDialog.DISPLAY_THUMBNAILS
+             */
+            val THUMBNAILS: DisplayMode get() = DisplayMode(0L)
+            /**
+             * The dialog displays files as a list of filenames.
+             *
+             * Generated from Godot docs: FileDialog.DISPLAY_LIST
+             */
+            val LIST: DisplayMode get() = DisplayMode(1L)
+        }
+    }
+
+    @JvmInline
+    value class Customization(val value: Long) {
+        companion object {
+            /**
+             * Toggles visibility of the favorite button, and the favorite list on the left side of the dialog.
+             * Equivalent to `hidden_files_toggle_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_HIDDEN_FILES
+             */
+            val HIDDEN_FILES: Customization get() = Customization(0L)
+            /**
+             * If enabled, shows the button for creating new directories (when using `FILE_MODE_OPEN_DIR`,
+             * `FILE_MODE_OPEN_ANY`, or `FILE_MODE_SAVE_FILE`). Equivalent to `folder_creation_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_CREATE_FOLDER
+             */
+            val CREATE_FOLDER: Customization get() = Customization(1L)
+            /**
+             * If enabled, shows the toggle file filter button. Equivalent to `file_filter_toggle_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_FILE_FILTER
+             */
+            val FILE_FILTER: Customization get() = Customization(2L)
+            /**
+             * If enabled, shows the file sorting options button. Equivalent to `file_sort_options_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_FILE_SORT
+             */
+            val FILE_SORT: Customization get() = Customization(3L)
+            /**
+             * If enabled, shows the toggle favorite button and favorite list on the left side of the dialog.
+             * Equivalent to `favorites_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_FAVORITES
+             */
+            val FAVORITES: Customization get() = Customization(4L)
+            /**
+             * If enabled, shows the recent directories list on the left side of the dialog. Equivalent to
+             * `recent_list_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_RECENT
+             */
+            val RECENT: Customization get() = Customization(5L)
+            /**
+             * If enabled, shows the layout switch buttons (list/thumbnails). Equivalent to
+             * `layout_toggle_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_LAYOUT
+             */
+            val LAYOUT: Customization get() = Customization(6L)
+            /**
+             * If enabled, the `FileDialog` will warn the user before overwriting files in save mode.
+             * Equivalent to `overwrite_warning_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_OVERWRITE_WARNING
+             */
+            val OVERWRITE_WARNING: Customization get() = Customization(7L)
+            /**
+             * If enabled, the context menu will show the "Delete" option, which allows moving files and
+             * folders to trash. Equivalent to `deleting_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_DELETE
+             */
+            val DELETE: Customization get() = Customization(8L)
+        }
     }
 
     companion object {
@@ -681,26 +827,6 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         fun setGetThumbnailCallback(callback: GodotCallable) {
             ObjectCalls.ptrcallWithCallableArg(setGetThumbnailCallbackBind, NULL_SEGMENT, callback.target.segment, callback.method)
         }
-
-        const val FILE_MODE_OPEN_FILE: Long = 0L
-        const val FILE_MODE_OPEN_FILES: Long = 1L
-        const val FILE_MODE_OPEN_DIR: Long = 2L
-        const val FILE_MODE_OPEN_ANY: Long = 3L
-        const val FILE_MODE_SAVE_FILE: Long = 4L
-        const val ACCESS_RESOURCES: Long = 0L
-        const val ACCESS_USERDATA: Long = 1L
-        const val ACCESS_FILESYSTEM: Long = 2L
-        const val DISPLAY_THUMBNAILS: Long = 0L
-        const val DISPLAY_LIST: Long = 1L
-        const val CUSTOMIZATION_HIDDEN_FILES: Long = 0L
-        const val CUSTOMIZATION_CREATE_FOLDER: Long = 1L
-        const val CUSTOMIZATION_FILE_FILTER: Long = 2L
-        const val CUSTOMIZATION_FILE_SORT: Long = 3L
-        const val CUSTOMIZATION_FAVORITES: Long = 4L
-        const val CUSTOMIZATION_RECENT: Long = 5L
-        const val CUSTOMIZATION_LAYOUT: Long = 6L
-        const val CUSTOMIZATION_OVERWRITE_WARNING: Long = 7L
-        const val CUSTOMIZATION_DELETE: Long = 8L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FileDialog? =

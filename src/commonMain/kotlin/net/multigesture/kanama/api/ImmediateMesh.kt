@@ -20,9 +20,9 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ImmediateMesh.surface_begin
      */
-    fun surfaceBegin(primitive: Long, material: Material?) {
+    fun surfaceBegin(primitive: Mesh.PrimitiveType, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, segment, primitive, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndObjectArg(surfaceBeginBind, segment, primitive.value, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**

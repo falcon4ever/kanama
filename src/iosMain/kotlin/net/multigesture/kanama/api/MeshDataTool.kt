@@ -18,14 +18,14 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
-    fun createFromSurface(mesh: ArrayMesh?, surface: Int): Long {
+    fun createFromSurface(mesh: ArrayMesh?, surface: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface))
     }
 
-    fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): Long {
+    fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags))
     }
 
     fun getFormat(): Long {

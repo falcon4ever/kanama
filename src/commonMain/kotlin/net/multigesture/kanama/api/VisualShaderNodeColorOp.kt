@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,34 +10,39 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeColorOp
  */
 class VisualShaderNodeColorOp(handle: GodotHandle) : VisualShaderNode(handle) {
-    var operator: Long
+    var operator: VisualShaderNodeColorOp.Operator
         @JvmName("operatorProperty")
         get() = getOperator()
         @JvmName("setOperatorProperty")
         set(value) = setOperator(value)
 
-    fun setOperator(op: Long) {
+    fun setOperator(op: VisualShaderNodeColorOp.Operator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op)
+        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op.value)
     }
 
-    fun getOperator(): Long {
+    fun getOperator(): VisualShaderNodeColorOp.Operator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment)
+        return VisualShaderNodeColorOp.Operator(ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment))
+    }
+
+    @JvmInline
+    value class Operator(val value: Long) {
+        companion object {
+            val SCREEN: Operator get() = Operator(0L)
+            val DIFFERENCE: Operator get() = Operator(1L)
+            val DARKEN: Operator get() = Operator(2L)
+            val LIGHTEN: Operator get() = Operator(3L)
+            val OVERLAY: Operator get() = Operator(4L)
+            val DODGE: Operator get() = Operator(5L)
+            val BURN: Operator get() = Operator(6L)
+            val SOFT_LIGHT: Operator get() = Operator(7L)
+            val HARD_LIGHT: Operator get() = Operator(8L)
+            val MAX: Operator get() = Operator(9L)
+        }
     }
 
     companion object {
-        const val OP_SCREEN: Long = 0L
-        const val OP_DIFFERENCE: Long = 1L
-        const val OP_DARKEN: Long = 2L
-        const val OP_LIGHTEN: Long = 3L
-        const val OP_OVERLAY: Long = 4L
-        const val OP_DODGE: Long = 5L
-        const val OP_BURN: Long = 6L
-        const val OP_SOFT_LIGHT: Long = 7L
-        const val OP_HARD_LIGHT: Long = 8L
-        const val OP_MAX: Long = 9L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeColorOp? =
             wrap(handle.segment)

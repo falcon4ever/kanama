@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -14,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Environment
  */
 class Environment(handle: GodotHandle) : Resource(handle) {
-    var backgroundMode: Long
+    var backgroundMode: Environment.BGMode
         @JvmName("backgroundModeProperty")
         get() = getBackground()
         @JvmName("setBackgroundModeProperty")
@@ -68,7 +69,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         @JvmName("setSkyRotationProperty")
         set(value) = setSkyRotation(value)
 
-    var ambientLightSource: Long
+    var ambientLightSource: Environment.AmbientSource
         @JvmName("ambientLightSourceProperty")
         get() = getAmbientSource()
         @JvmName("setAmbientLightSourceProperty")
@@ -92,13 +93,13 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         @JvmName("setAmbientLightEnergyProperty")
         set(value) = setAmbientLightEnergy(value)
 
-    var reflectedLightSource: Long
+    var reflectedLightSource: Environment.ReflectionSource
         @JvmName("reflectedLightSourceProperty")
         get() = getReflectionSource()
         @JvmName("setReflectedLightSourceProperty")
         set(value) = setReflectionSource(value)
 
-    var tonemapMode: Long
+    var tonemapMode: Environment.ToneMapper
         @JvmName("tonemapModeProperty")
         get() = getTonemapper()
         @JvmName("setTonemapModeProperty")
@@ -290,7 +291,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         @JvmName("setSdfgiMaxDistanceProperty")
         set(value) = setSdfgiMaxDistance(value)
 
-    var sdfgiYScale: Long
+    var sdfgiYScale: Environment.SDFGIYScale
         @JvmName("sdfgiYScaleProperty")
         get() = getSdfgiYScale()
         @JvmName("setSdfgiYScaleProperty")
@@ -350,7 +351,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         @JvmName("setGlowBloomProperty")
         set(value) = setGlowBloom(value)
 
-    var glowBlendMode: Long
+    var glowBlendMode: Environment.GlowBlendMode
         @JvmName("glowBlendModeProperty")
         get() = getGlowBlendMode()
         @JvmName("setGlowBlendModeProperty")
@@ -392,7 +393,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         @JvmName("setFogEnabledProperty")
         set(value) = setFogEnabled(value)
 
-    var fogMode: Long
+    var fogMode: Environment.FogMode
         @JvmName("fogModeProperty")
         get() = getFogMode()
         @JvmName("setFogModeProperty")
@@ -577,9 +578,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.set_background
      */
-    fun setBackground(mode: Long) {
+    fun setBackground(mode: Environment.BGMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBackgroundBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setBackgroundBind, segment, mode.value)
     }
 
     /**
@@ -587,9 +588,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.get_background
      */
-    fun getBackground(): Long {
+    fun getBackground(): Environment.BGMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBackgroundBind, segment)
+        return Environment.BGMode(ObjectCalls.ptrcallNoArgsRetLong(getBackgroundBind, segment))
     }
 
     /**
@@ -789,9 +790,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.set_ambient_source
      */
-    fun setAmbientSource(source: Long) {
+    fun setAmbientSource(source: Environment.AmbientSource) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAmbientSourceBind, segment, source)
+        ObjectCalls.ptrcallWithLongArg(setAmbientSourceBind, segment, source.value)
     }
 
     /**
@@ -799,9 +800,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.get_ambient_source
      */
-    fun getAmbientSource(): Long {
+    fun getAmbientSource(): Environment.AmbientSource {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAmbientSourceBind, segment)
+        return Environment.AmbientSource(ObjectCalls.ptrcallNoArgsRetLong(getAmbientSourceBind, segment))
     }
 
     /**
@@ -861,9 +862,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.set_reflection_source
      */
-    fun setReflectionSource(source: Long) {
+    fun setReflectionSource(source: Environment.ReflectionSource) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setReflectionSourceBind, segment, source)
+        ObjectCalls.ptrcallWithLongArg(setReflectionSourceBind, segment, source.value)
     }
 
     /**
@@ -871,9 +872,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.get_reflection_source
      */
-    fun getReflectionSource(): Long {
+    fun getReflectionSource(): Environment.ReflectionSource {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getReflectionSourceBind, segment)
+        return Environment.ReflectionSource(ObjectCalls.ptrcallNoArgsRetLong(getReflectionSourceBind, segment))
     }
 
     /**
@@ -882,9 +883,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.set_tonemapper
      */
-    fun setTonemapper(mode: Long) {
+    fun setTonemapper(mode: Environment.ToneMapper) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTonemapperBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setTonemapperBind, segment, mode.value)
     }
 
     /**
@@ -893,9 +894,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.get_tonemapper
      */
-    fun getTonemapper(): Long {
+    fun getTonemapper(): Environment.ToneMapper {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTonemapperBind, segment)
+        return Environment.ToneMapper(ObjectCalls.ptrcallNoArgsRetLong(getTonemapperBind, segment))
     }
 
     /**
@@ -1646,9 +1647,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.set_sdfgi_y_scale
      */
-    fun setSdfgiYScale(scale: Long) {
+    fun setSdfgiYScale(scale: Environment.SDFGIYScale) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSdfgiYScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithLongArg(setSdfgiYScaleBind, segment, scale.value)
     }
 
     /**
@@ -1659,9 +1660,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.get_sdfgi_y_scale
      */
-    fun getSdfgiYScale(): Long {
+    fun getSdfgiYScale(): Environment.SDFGIYScale {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSdfgiYScaleBind, segment)
+        return Environment.SDFGIYScale(ObjectCalls.ptrcallNoArgsRetLong(getSdfgiYScaleBind, segment))
     }
 
     /**
@@ -1996,9 +1997,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.set_glow_blend_mode
      */
-    fun setGlowBlendMode(mode: Long) {
+    fun setGlowBlendMode(mode: Environment.GlowBlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setGlowBlendModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setGlowBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -2007,9 +2008,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.get_glow_blend_mode
      */
-    fun getGlowBlendMode(): Long {
+    fun getGlowBlendMode(): Environment.GlowBlendMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getGlowBlendModeBind, segment)
+        return Environment.GlowBlendMode(ObjectCalls.ptrcallNoArgsRetLong(getGlowBlendModeBind, segment))
     }
 
     /**
@@ -2171,9 +2172,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.set_fog_mode
      */
-    fun setFogMode(mode: Long) {
+    fun setFogMode(mode: Environment.FogMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFogModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setFogModeBind, segment, mode.value)
     }
 
     /**
@@ -2181,9 +2182,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Environment.get_fog_mode
      */
-    fun getFogMode(): Long {
+    fun getFogMode(): Environment.FogMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFogModeBind, segment)
+        return Environment.FogMode(ObjectCalls.ptrcallNoArgsRetLong(getFogModeBind, segment))
     }
 
     /**
@@ -2918,37 +2919,261 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, segment))
     }
 
-    companion object {
-        const val BG_CLEAR_COLOR: Long = 0L
-        const val BG_COLOR: Long = 1L
-        const val BG_SKY: Long = 2L
-        const val BG_CANVAS: Long = 3L
-        const val BG_KEEP: Long = 4L
-        const val BG_CAMERA_FEED: Long = 5L
-        const val BG_MAX: Long = 6L
-        const val AMBIENT_SOURCE_BG: Long = 0L
-        const val AMBIENT_SOURCE_DISABLED: Long = 1L
-        const val AMBIENT_SOURCE_COLOR: Long = 2L
-        const val AMBIENT_SOURCE_SKY: Long = 3L
-        const val REFLECTION_SOURCE_BG: Long = 0L
-        const val REFLECTION_SOURCE_DISABLED: Long = 1L
-        const val REFLECTION_SOURCE_SKY: Long = 2L
-        const val TONE_MAPPER_LINEAR: Long = 0L
-        const val TONE_MAPPER_REINHARDT: Long = 1L
-        const val TONE_MAPPER_FILMIC: Long = 2L
-        const val TONE_MAPPER_ACES: Long = 3L
-        const val TONE_MAPPER_AGX: Long = 4L
-        const val GLOW_BLEND_MODE_ADDITIVE: Long = 0L
-        const val GLOW_BLEND_MODE_SCREEN: Long = 1L
-        const val GLOW_BLEND_MODE_SOFTLIGHT: Long = 2L
-        const val GLOW_BLEND_MODE_REPLACE: Long = 3L
-        const val GLOW_BLEND_MODE_MIX: Long = 4L
-        const val FOG_MODE_EXPONENTIAL: Long = 0L
-        const val FOG_MODE_DEPTH: Long = 1L
-        const val SDFGI_Y_SCALE_50_PERCENT: Long = 0L
-        const val SDFGI_Y_SCALE_75_PERCENT: Long = 1L
-        const val SDFGI_Y_SCALE_100_PERCENT: Long = 2L
+    @JvmInline
+    value class BGMode(val value: Long) {
+        companion object {
+            /**
+             * Clears the background using the clear color defined in
+             * `ProjectSettings.rendering/environment/defaults/default_clear_color`.
+             *
+             * Generated from Godot docs: Environment.BG_CLEAR_COLOR
+             */
+            val CLEAR_COLOR: BGMode get() = BGMode(0L)
+            /**
+             * Clears the background using a custom clear color.
+             *
+             * Generated from Godot docs: Environment.BG_COLOR
+             */
+            val COLOR: BGMode get() = BGMode(1L)
+            /**
+             * Displays a user-defined sky in the background.
+             *
+             * Generated from Godot docs: Environment.BG_SKY
+             */
+            val SKY: BGMode get() = BGMode(2L)
+            /**
+             * Displays a `CanvasLayer` in the background.
+             *
+             * Generated from Godot docs: Environment.BG_CANVAS
+             */
+            val CANVAS: BGMode get() = BGMode(3L)
+            /**
+             * Keeps on screen every pixel drawn in the background. This is the fastest background mode, but it
+             * can only be safely used in fully-interior scenes (no visible sky or sky reflections). If enabled
+             * in a scene where the background is visible, "ghost trail" artifacts will be visible when moving
+             * the camera.
+             *
+             * Generated from Godot docs: Environment.BG_KEEP
+             */
+            val KEEP: BGMode get() = BGMode(4L)
+            /**
+             * Displays a camera feed in the background.
+             *
+             * Generated from Godot docs: Environment.BG_CAMERA_FEED
+             */
+            val CAMERA_FEED: BGMode get() = BGMode(5L)
+            /**
+             * Represents the size of the `BGMode` enum.
+             *
+             * Generated from Godot docs: Environment.BG_MAX
+             */
+            val MAX: BGMode get() = BGMode(6L)
+        }
+    }
 
+    @JvmInline
+    value class AmbientSource(val value: Long) {
+        companion object {
+            /**
+             * Gather ambient light from whichever source is specified as the background.
+             *
+             * Generated from Godot docs: Environment.AMBIENT_SOURCE_BG
+             */
+            val BG: AmbientSource get() = AmbientSource(0L)
+            /**
+             * Disable ambient light. This provides a slight performance boost over `AMBIENT_SOURCE_SKY`.
+             *
+             * Generated from Godot docs: Environment.AMBIENT_SOURCE_DISABLED
+             */
+            val DISABLED: AmbientSource get() = AmbientSource(1L)
+            /**
+             * Specify a specific `Color` for ambient light. This provides a slight performance boost over
+             * `AMBIENT_SOURCE_SKY`.
+             *
+             * Generated from Godot docs: Environment.AMBIENT_SOURCE_COLOR
+             */
+            val COLOR: AmbientSource get() = AmbientSource(2L)
+            /**
+             * Gather ambient light from the `Sky` regardless of what the background is.
+             *
+             * Generated from Godot docs: Environment.AMBIENT_SOURCE_SKY
+             */
+            val SKY: AmbientSource get() = AmbientSource(3L)
+        }
+    }
+
+    @JvmInline
+    value class ReflectionSource(val value: Long) {
+        companion object {
+            /**
+             * Use the background for reflections.
+             *
+             * Generated from Godot docs: Environment.REFLECTION_SOURCE_BG
+             */
+            val BG: ReflectionSource get() = ReflectionSource(0L)
+            /**
+             * Disable reflections. This provides a slight performance boost over other options.
+             *
+             * Generated from Godot docs: Environment.REFLECTION_SOURCE_DISABLED
+             */
+            val DISABLED: ReflectionSource get() = ReflectionSource(1L)
+            /**
+             * Use the `Sky` for reflections regardless of what the background is.
+             *
+             * Generated from Godot docs: Environment.REFLECTION_SOURCE_SKY
+             */
+            val SKY: ReflectionSource get() = ReflectionSource(2L)
+        }
+    }
+
+    @JvmInline
+    value class ToneMapper(val value: Long) {
+        companion object {
+            /**
+             * Does not modify color data, resulting in a linear tonemapping curve which unnaturally clips
+             * bright values, causing bright lighting to look blown out. The simplest and fastest tonemapper.
+             *
+             * Generated from Godot docs: Environment.TONE_MAPPER_LINEAR
+             */
+            val LINEAR: ToneMapper get() = ToneMapper(0L)
+            /**
+             * A simple tonemapping curve that rolls off bright values to prevent clipping. This results in an
+             * image that can appear dull and low contrast. Slower than `TONE_MAPPER_LINEAR`. Note: When
+             * `tonemap_white` is left at the default value of `1.0`, `TONE_MAPPER_REINHARDT` produces an
+             * identical image to `TONE_MAPPER_LINEAR`.
+             *
+             * Generated from Godot docs: Environment.TONE_MAPPER_REINHARDT
+             */
+            val REINHARDT: ToneMapper get() = ToneMapper(1L)
+            /**
+             * Uses a film-like tonemapping curve to prevent clipping of bright values and provide better
+             * contrast than `TONE_MAPPER_REINHARDT`. Slightly slower than `TONE_MAPPER_REINHARDT`. Note: This
+             * tonemapper does not support HDR output because it produces output in the SDR range. It is
+             * recommended to use a different tonemapper when rendering to an HDR screen.
+             *
+             * Generated from Godot docs: Environment.TONE_MAPPER_FILMIC
+             */
+            val FILMIC: ToneMapper get() = ToneMapper(2L)
+            /**
+             * Uses a high-contrast film-like tonemapping curve and desaturates bright values for a more
+             * realistic appearance. Slightly slower than `TONE_MAPPER_FILMIC`. Note: This tonemapping operator
+             * is called "ACES Fitted" in Godot 3.x. Note: This tonemapper does not support HDR output because
+             * it produces output in the SDR range. It is recommended to use a different tonemapper when
+             * rendering to an HDR screen.
+             *
+             * Generated from Godot docs: Environment.TONE_MAPPER_ACES
+             */
+            val ACES: ToneMapper get() = ToneMapper(3L)
+            /**
+             * Uses an adjustable film-like tonemapping curve and desaturates bright values for a more
+             * realistic appearance. Better than other tonemappers at maintaining the hue of colors as they
+             * become brighter. The slowest tonemapping option.
+             *
+             * Generated from Godot docs: Environment.TONE_MAPPER_AGX
+             */
+            val AGX: ToneMapper get() = ToneMapper(4L)
+        }
+    }
+
+    @JvmInline
+    value class GlowBlendMode(val value: Long) {
+        companion object {
+            /**
+             * Adds the glow effect to the scene.
+             *
+             * Generated from Godot docs: Environment.GLOW_BLEND_MODE_ADDITIVE
+             */
+            val ADDITIVE: GlowBlendMode get() = GlowBlendMode(0L)
+            /**
+             * Adds the glow effect to the scene after modifying the glow influence based on the scene value;
+             * dark values will be highly influenced by glow and bright values will not be influenced by glow.
+             * This approach avoids bright values becoming overly bright from the glow effect. `tonemap_white`
+             * is used to determine the maximum scene value where the glow should have no influence. When
+             * `tonemap_mode` is set to `TONE_MAPPER_LINEAR` and `Viewport.use_hdr_2d` is `true`, the parent
+             * window's `Window.get_output_max_linear_value` will be used as the maximum scene value.
+             *
+             * Generated from Godot docs: Environment.GLOW_BLEND_MODE_SCREEN
+             */
+            val SCREEN: GlowBlendMode get() = GlowBlendMode(1L)
+            /**
+             * Adds the glow effect to the tonemapped image after modifying the glow influence based on the
+             * image value; dark values and bright values will not be influenced by glow and mid-range values
+             * will be highly influenced by glow. This approach avoids bright values becoming overly bright
+             * from the glow effect. The glow will have the largest influence on image values of `0.25` and
+             * will have no influence when applied to image values greater than `1.0`. Note: This blend mode
+             * does not support HDR output because expects a maximum output value of `1.0`. It is recommended
+             * to use a different blend mode when rendering to an HDR screen.
+             *
+             * Generated from Godot docs: Environment.GLOW_BLEND_MODE_SOFTLIGHT
+             */
+            val SOFTLIGHT: GlowBlendMode get() = GlowBlendMode(2L)
+            /**
+             * Replaces all pixels' color by the glow effect. This can be used to simulate a full-screen blur
+             * effect by tweaking the glow parameters to match the original image's brightness or to preview
+             * glow configuration in the editor.
+             *
+             * Generated from Godot docs: Environment.GLOW_BLEND_MODE_REPLACE
+             */
+            val REPLACE: GlowBlendMode get() = GlowBlendMode(3L)
+            /**
+             * Mixes the glow image with the scene image. Best used with `glow_bloom` to avoid darkening the
+             * scene.
+             *
+             * Generated from Godot docs: Environment.GLOW_BLEND_MODE_MIX
+             */
+            val MIX: GlowBlendMode get() = GlowBlendMode(4L)
+        }
+    }
+
+    @JvmInline
+    value class FogMode(val value: Long) {
+        companion object {
+            /**
+             * Use a physically-based fog model defined primarily by fog density.
+             *
+             * Generated from Godot docs: Environment.FOG_MODE_EXPONENTIAL
+             */
+            val EXPONENTIAL: FogMode get() = FogMode(0L)
+            /**
+             * Use a simple fog model defined by start and end positions and a custom curve. While not
+             * physically accurate, this model can be useful when you need more artistic control.
+             *
+             * Generated from Godot docs: Environment.FOG_MODE_DEPTH
+             */
+            val DEPTH: FogMode get() = FogMode(1L)
+        }
+    }
+
+    @JvmInline
+    value class SDFGIYScale(val value: Long) {
+        companion object {
+            /**
+             * Use 50% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be twice as short as they are
+             * wide. This allows providing increased GI detail and reduced light leaking with thin floors and
+             * ceilings. This is usually the best choice for scenes that don't feature much verticality.
+             *
+             * Generated from Godot docs: Environment.SDFGI_Y_SCALE_50_PERCENT
+             */
+            val SCALE_50_PERCENT: SDFGIYScale get() = SDFGIYScale(0L)
+            /**
+             * Use 75% scale for SDFGI on the Y (vertical) axis. This is a balance between the 50% and 100%
+             * SDFGI Y scales.
+             *
+             * Generated from Godot docs: Environment.SDFGI_Y_SCALE_75_PERCENT
+             */
+            val SCALE_75_PERCENT: SDFGIYScale get() = SDFGIYScale(1L)
+            /**
+             * Use 100% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be as tall as they are wide.
+             * This is usually the best choice for highly vertical scenes. The downside is that light leaking
+             * may become more noticeable with thin floors and ceilings.
+             *
+             * Generated from Godot docs: Environment.SDFGI_Y_SCALE_100_PERCENT
+             */
+            val SCALE_100_PERCENT: SDFGIYScale get() = SDFGIYScale(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Environment? =
             wrap(handle.segment)

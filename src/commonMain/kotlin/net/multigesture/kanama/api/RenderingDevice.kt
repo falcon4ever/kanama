@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -53,8 +54,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_create_shared_from_slice
      */
-    fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType)
+    fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: RenderingDevice.TextureSliceType = RenderingDevice.TextureSliceType.SLICE_2D): RID {
+        return ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType.value)
     }
 
     /**
@@ -64,8 +65,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_create_from_extension
      */
-    fun textureCreateFromExtension(type: Long, format: Long, samples: Long, usageFlags: Long, image: Long, width: Long, height: Long, depth: Long, layers: Long, mipmaps: Long = 1L): RID {
-        return ObjectCalls.ptrcallWithFourLongLongLongLongLongLongArgsRetRID(textureCreateFromExtensionBind, segment, type, format, samples, usageFlags, image, width, height, depth, layers, mipmaps)
+    fun textureCreateFromExtension(type: RenderingDevice.TextureType, format: RenderingDevice.DataFormat, samples: RenderingDevice.TextureSamples, usageFlags: RenderingDevice.TextureUsageBits, image: Long, width: Long, height: Long, depth: Long, layers: Long, mipmaps: Long = 1L): RID {
+        return ObjectCalls.ptrcallWithFourLongLongLongLongLongLongArgsRetRID(textureCreateFromExtensionBind, segment, type.value, format.value, samples.value, usageFlags.value, image, width, height, depth, layers, mipmaps)
     }
 
     /**
@@ -81,8 +82,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_update
      */
-    fun textureUpdate(texture: RID, layer: Long, data: ByteArray): Long {
-        return ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(textureUpdateBind, segment, texture, layer, data)
+    fun textureUpdate(texture: RID, layer: Long, data: ByteArray): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDUInt32ByteArrayArgsRetLong(textureUpdateBind, segment, texture, layer, data))
     }
 
     /**
@@ -116,8 +117,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_get_data_async
      */
-    fun textureGetDataAsync(texture: RID, layer: Long, callback: GodotCallable): Long {
-        return ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(textureGetDataAsyncBind, segment, texture, layer, callback.target.segment, callback.method)
+    fun textureGetDataAsync(texture: RID, layer: Long, callback: GodotCallable): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDUInt32CallableArgsRetLong(textureGetDataAsyncBind, segment, texture, layer, callback.target.segment, callback.method))
     }
 
     /**
@@ -126,8 +127,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_is_format_supported_for_usage
      */
-    fun textureIsFormatSupportedForUsage(format: Long, usageFlags: Long): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(textureIsFormatSupportedForUsageBind, segment, format, usageFlags)
+    fun textureIsFormatSupportedForUsage(format: RenderingDevice.DataFormat, usageFlags: RenderingDevice.TextureUsageBits): Boolean {
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(textureIsFormatSupportedForUsageBind, segment, format.value, usageFlags.value)
     }
 
     /**
@@ -189,8 +190,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_copy
      */
-    fun textureCopy(fromTexture: RID, toTexture: RID, fromPos: Vector3, toPos: Vector3, size: Vector3, srcMipmap: Long, dstMipmap: Long, srcLayer: Long, dstLayer: Long): Long {
-        return ObjectCalls.ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(textureCopyBind, segment, fromTexture, toTexture, fromPos, toPos, size, srcMipmap, dstMipmap, srcLayer, dstLayer)
+    fun textureCopy(fromTexture: RID, toTexture: RID, fromPos: Vector3, toPos: Vector3, size: Vector3, srcMipmap: Long, dstMipmap: Long, srcLayer: Long, dstLayer: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDThreeVector3FourUInt32ArgsRetLong(textureCopyBind, segment, fromTexture, toTexture, fromPos, toPos, size, srcMipmap, dstMipmap, srcLayer, dstLayer))
     }
 
     /**
@@ -205,8 +206,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_clear
      */
-    fun textureClear(texture: RID, color: Color, baseMipmap: Long, mipmapCount: Long, baseLayer: Long, layerCount: Long): Long {
-        return ObjectCalls.ptrcallWithRIDColorFourUInt32ArgsRetLong(textureClearBind, segment, texture, color, baseMipmap, mipmapCount, baseLayer, layerCount)
+    fun textureClear(texture: RID, color: Color, baseMipmap: Long, mipmapCount: Long, baseLayer: Long, layerCount: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDColorFourUInt32ArgsRetLong(textureClearBind, segment, texture, color, baseMipmap, mipmapCount, baseLayer, layerCount))
     }
 
     /**
@@ -227,8 +228,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_resolve_multisample
      */
-    fun textureResolveMultisample(fromTexture: RID, toTexture: RID): Long {
-        return ObjectCalls.ptrcallWithTwoRIDArgsRetLong(textureResolveMultisampleBind, segment, fromTexture, toTexture)
+    fun textureResolveMultisample(fromTexture: RID, toTexture: RID): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDArgsRetLong(textureResolveMultisampleBind, segment, fromTexture, toTexture))
     }
 
     /**
@@ -281,8 +282,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.framebuffer_format_create_empty
      */
-    fun framebufferFormatCreateEmpty(samples: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(framebufferFormatCreateEmptyBind, segment, samples)
+    fun framebufferFormatCreateEmpty(samples: RenderingDevice.TextureSamples = RenderingDevice.TextureSamples.SAMPLES_1): Long {
+        return ObjectCalls.ptrcallWithLongArgRetLong(framebufferFormatCreateEmptyBind, segment, samples.value)
     }
 
     /**
@@ -291,8 +292,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.framebuffer_format_get_texture_samples
      */
-    fun framebufferFormatGetTextureSamples(format: Long, renderPass: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithLongAndUInt32ArgRetLong(framebufferFormatGetTextureSamplesBind, segment, format, renderPass)
+    fun framebufferFormatGetTextureSamples(format: Long, renderPass: Long = 0L): RenderingDevice.TextureSamples {
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallWithLongAndUInt32ArgRetLong(framebufferFormatGetTextureSamplesBind, segment, format, renderPass))
     }
 
     /**
@@ -323,8 +324,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.framebuffer_create_empty
      */
-    fun framebufferCreateEmpty(size: Vector2i, samples: Long = 0L, validateWithFormat: Long = -1L): RID {
-        return ObjectCalls.ptrcallWithVector2iLongLongArgsRetRID(framebufferCreateEmptyBind, segment, size, samples, validateWithFormat)
+    fun framebufferCreateEmpty(size: Vector2i, samples: RenderingDevice.TextureSamples = RenderingDevice.TextureSamples.SAMPLES_1, validateWithFormat: Long = -1L): RID {
+        return ObjectCalls.ptrcallWithVector2iLongLongArgsRetRID(framebufferCreateEmptyBind, segment, size, samples.value, validateWithFormat)
     }
 
     /**
@@ -363,8 +364,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.sampler_is_format_supported_for_filter
      */
-    fun samplerIsFormatSupportedForFilter(format: Long, samplerFilter: Long): Boolean {
-        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(samplerIsFormatSupportedForFilterBind, segment, format, samplerFilter)
+    fun samplerIsFormatSupportedForFilter(format: RenderingDevice.DataFormat, samplerFilter: RenderingDevice.SamplerFilter): Boolean {
+        return ObjectCalls.ptrcallWithTwoLongArgsRetBool(samplerIsFormatSupportedForFilterBind, segment, format.value, samplerFilter.value)
     }
 
     /**
@@ -373,8 +374,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.vertex_buffer_create
      */
-    fun vertexBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(vertexBufferCreateBind, segment, sizeBytes, data, creationBits)
+    fun vertexBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(vertexBufferCreateBind, segment, sizeBytes, data, creationBits.value)
     }
 
     /**
@@ -405,8 +406,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.index_buffer_create
      */
-    fun indexBufferCreate(sizeIndices: Long, format: Long, data: ByteArray, useRestartIndices: Boolean = false, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(indexBufferCreateBind, segment, sizeIndices, format, data, useRestartIndices, creationBits)
+    fun indexBufferCreate(sizeIndices: Long, format: RenderingDevice.IndexBufferFormat, data: ByteArray, useRestartIndices: Boolean = false, creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
+        return ObjectCalls.ptrcallWithUInt32LongPackedByteArrayBoolLongArgsRetRID(indexBufferCreateBind, segment, sizeIndices, format.value, data, useRestartIndices, creationBits.value)
     }
 
     /**
@@ -500,8 +501,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.uniform_buffer_create
      */
-    fun uniformBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(uniformBufferCreateBind, segment, sizeBytes, data, creationBits)
+    fun uniformBufferCreate(sizeBytes: Long, data: ByteArray, creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
+        return ObjectCalls.ptrcallWithUInt32ByteArrayLongArgsRetRID(uniformBufferCreateBind, segment, sizeBytes, data, creationBits.value)
     }
 
     /**
@@ -511,8 +512,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.storage_buffer_create
      */
-    fun storageBufferCreate(sizeBytes: Long, data: ByteArray, usage: Long = 0L, creationBits: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(storageBufferCreateBind, segment, sizeBytes, data, usage, creationBits)
+    fun storageBufferCreate(sizeBytes: Long, data: ByteArray, usage: RenderingDevice.StorageBufferUsage = RenderingDevice.StorageBufferUsage(0L), creationBits: RenderingDevice.BufferCreationBits = RenderingDevice.BufferCreationBits(0L)): RID {
+        return ObjectCalls.ptrcallWithUInt32PackedByteArrayTwoLongArgsRetRID(storageBufferCreateBind, segment, sizeBytes, data, usage.value, creationBits.value)
     }
 
     /**
@@ -521,8 +522,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.texture_buffer_create
      */
-    fun textureBufferCreate(sizeBytes: Long, format: Long, data: ByteArray): RID {
-        return ObjectCalls.ptrcallWithUInt32LongByteArrayArgsRetRID(textureBufferCreateBind, segment, sizeBytes, format, data)
+    fun textureBufferCreate(sizeBytes: Long, format: RenderingDevice.DataFormat, data: ByteArray): RID {
+        return ObjectCalls.ptrcallWithUInt32LongByteArrayArgsRetRID(textureBufferCreateBind, segment, sizeBytes, format.value, data)
     }
 
     /**
@@ -553,8 +554,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.buffer_copy
      */
-    fun bufferCopy(srcBuffer: RID, dstBuffer: RID, srcOffset: Long, dstOffset: Long, size: Long): Long {
-        return ObjectCalls.ptrcallWithTwoRIDThreeUInt32ArgsRetLong(bufferCopyBind, segment, srcBuffer, dstBuffer, srcOffset, dstOffset, size)
+    fun bufferCopy(srcBuffer: RID, dstBuffer: RID, srcOffset: Long, dstOffset: Long, size: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDThreeUInt32ArgsRetLong(bufferCopyBind, segment, srcBuffer, dstBuffer, srcOffset, dstOffset, size))
     }
 
     /**
@@ -565,8 +566,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.buffer_update
      */
-    fun bufferUpdate(buffer: RID, offset: Long, sizeBytes: Long, data: ByteArray): Long {
-        return ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(bufferUpdateBind, segment, buffer, offset, sizeBytes, data)
+    fun bufferUpdate(buffer: RID, offset: Long, sizeBytes: Long, data: ByteArray): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDTwoUInt32PackedByteArrayArgsRetLong(bufferUpdateBind, segment, buffer, offset, sizeBytes, data))
     }
 
     /**
@@ -577,8 +578,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.buffer_clear
      */
-    fun bufferClear(buffer: RID, offset: Long, sizeBytes: Long): Long {
-        return ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetLong(bufferClearBind, segment, buffer, offset, sizeBytes)
+    fun bufferClear(buffer: RID, offset: Long, sizeBytes: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDAndTwoUInt32ArgsRetLong(bufferClearBind, segment, buffer, offset, sizeBytes))
     }
 
     /**
@@ -605,8 +606,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.buffer_get_data_async
      */
-    fun bufferGetDataAsync(buffer: RID, callback: GodotCallable, offsetBytes: Long = 0L, sizeBytes: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(bufferGetDataAsyncBind, segment, buffer, callback.target.segment, callback.method, offsetBytes, sizeBytes)
+    fun bufferGetDataAsync(buffer: RID, callback: GodotCallable, offsetBytes: Long = 0L, sizeBytes: Long = 0L): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDCallableTwoUInt32ArgsRetLong(bufferGetDataAsyncBind, segment, buffer, callback.target.segment, callback.method, offsetBytes, sizeBytes))
     }
 
     /**
@@ -628,8 +629,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.render_pipeline_create
      */
-    fun renderPipelineCreate(shader: RID, framebufferFormat: Long, vertexFormat: Long, primitive: Long, rasterizationState: RDPipelineRasterizationState?, multisampleState: RDPipelineMultisampleState?, stencilState: RDPipelineDepthStencilState?, colorBlendState: RDPipelineColorBlendState?, dynamicStateFlags: Long = 0L, forRenderPass: Long = 0L, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
-        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive, rasterizationState?.requireOpenHandle() ?: NULL_SEGMENT, multisampleState?.requireOpenHandle() ?: NULL_SEGMENT, stencilState?.requireOpenHandle() ?: NULL_SEGMENT, colorBlendState?.requireOpenHandle() ?: NULL_SEGMENT, dynamicStateFlags, forRenderPass, specializationConstants)
+    fun renderPipelineCreate(shader: RID, framebufferFormat: Long, vertexFormat: Long, primitive: RenderingDevice.RenderPrimitive, rasterizationState: RDPipelineRasterizationState?, multisampleState: RDPipelineMultisampleState?, stencilState: RDPipelineDepthStencilState?, colorBlendState: RDPipelineColorBlendState?, dynamicStateFlags: RenderingDevice.PipelineDynamicStateFlags = RenderingDevice.PipelineDynamicStateFlags(0L), forRenderPass: Long = 0L, specializationConstants: List<RDPipelineSpecializationConstant>): RID {
+        return ObjectCalls.ptrcallWithRIDThreeLongFourObjectLongUInt32ObjectListArgsRetRID(renderPipelineCreateBind, segment, shader, framebufferFormat, vertexFormat, primitive.value, rasterizationState?.requireOpenHandle() ?: NULL_SEGMENT, multisampleState?.requireOpenHandle() ?: NULL_SEGMENT, stencilState?.requireOpenHandle() ?: NULL_SEGMENT, colorBlendState?.requireOpenHandle() ?: NULL_SEGMENT, dynamicStateFlags.value, forRenderPass, specializationConstants)
     }
 
     /**
@@ -694,8 +695,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.blas_create
      */
-    fun blasCreate(geometries: List<RDAccelerationStructureGeometry>, flags: Long): RID {
-        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(blasCreateBind, segment, geometries, flags)
+    fun blasCreate(geometries: List<RDAccelerationStructureGeometry>, flags: RenderingDevice.AccelerationStructureFlagBits): RID {
+        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(blasCreateBind, segment, geometries, flags.value)
     }
 
     /**
@@ -705,8 +706,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.tlas_create
      */
-    fun tlasCreate(maxInstanceCount: Long, flags: Long): RID {
-        return ObjectCalls.ptrcallWithUInt32AndLongArgRetRID(tlasCreateBind, segment, maxInstanceCount, flags)
+    fun tlasCreate(maxInstanceCount: Long, flags: RenderingDevice.AccelerationStructureFlagBits): RID {
+        return ObjectCalls.ptrcallWithUInt32AndLongArgRetRID(tlasCreateBind, segment, maxInstanceCount, flags.value)
     }
 
     /**
@@ -714,8 +715,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.blas_build
      */
-    fun blasBuild(blas: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(blasBuildBind, segment, blas)
+    fun blasBuild(blas: RID): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDArgRetLong(blasBuildBind, segment, blas))
     }
 
     /**
@@ -727,8 +728,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.tlas_build
      */
-    fun tlasBuild(tlas: RID, instances: List<RDAccelerationStructureInstance>): Long {
-        return ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(tlasBuildBind, segment, tlas, instances)
+    fun tlasBuild(tlas: RID, instances: List<RDAccelerationStructureInstance>): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDAndObjectListArgsRetLong(tlasBuildBind, segment, tlas, instances))
     }
 
     /**
@@ -752,8 +753,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.hit_sbt_set_pipeline
      */
-    fun hitSbtSetPipeline(hitSbt: RID, raytracingPipeline: RID): Long {
-        return ObjectCalls.ptrcallWithTwoRIDArgsRetLong(hitSbtSetPipelineBind, segment, hitSbt, raytracingPipeline)
+    fun hitSbtSetPipeline(hitSbt: RID, raytracingPipeline: RID): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithTwoRIDArgsRetLong(hitSbtSetPipelineBind, segment, hitSbt, raytracingPipeline))
     }
 
     /**
@@ -778,8 +779,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_free
      */
-    fun hitSbtRangeFree(hitSbt: RID, range: Long): Long {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(hitSbtRangeFreeBind, segment, hitSbt, range)
+    fun hitSbtRangeFree(hitSbt: RID, range: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDAndLongArgRetLong(hitSbtRangeFreeBind, segment, hitSbt, range))
     }
 
     /**
@@ -790,8 +791,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.hit_sbt_range_update
      */
-    fun hitSbtRangeUpdate(hitSbt: RID, range: Long, offset: Long, hitGroupIndices: List<Int>): Long {
-        return ObjectCalls.ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(hitSbtRangeUpdateBind, segment, hitSbt, range, offset, hitGroupIndices)
+    fun hitSbtRangeUpdate(hitSbt: RID, range: Long, offset: Long, hitGroupIndices: List<Int>): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithRIDLongUInt32AndPackedInt32ListArgRetLong(hitSbtRangeUpdateBind, segment, hitSbt, range, offset, hitGroupIndices))
     }
 
     /**
@@ -851,8 +852,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.draw_list_begin
      */
-    fun drawListBegin(framebuffer: RID, drawFlags: Long = 0L, clearColorValues: List<Color>, clearDepthValue: Double = 1.0, clearStencilValue: Long = 0L, region: Rect2, breadcrumb: Long = 0L): Long {
-        return ObjectCalls.ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(drawListBeginBind, segment, framebuffer, drawFlags, clearColorValues, clearDepthValue, clearStencilValue, region, breadcrumb)
+    fun drawListBegin(framebuffer: RID, drawFlags: RenderingDevice.DrawFlags = RenderingDevice.DrawFlags.DEFAULT_ALL, clearColorValues: List<Color>, clearDepthValue: Double = 1.0, clearStencilValue: Long = 0L, region: Rect2, breadcrumb: Long = 0L): Long {
+        return ObjectCalls.ptrcallWithRIDLongPackedColorListDoubleUInt32Rect2UInt32ArgsRetLong(drawListBeginBind, segment, framebuffer, drawFlags.value, clearColorValues, clearDepthValue, clearStencilValue, region, breadcrumb)
     }
 
     /**
@@ -860,8 +861,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.draw_list_begin_split
      */
-    fun drawListBeginSplit(framebuffer: RID, splits: Long, initialColorAction: Long, finalColorAction: Long, initialDepthAction: Long, finalDepthAction: Long, clearColorValues: List<Color>, clearDepth: Double = 1.0, clearStencil: Long = 0L, region: Rect2, storageTextures: List<RID>): List<Long> {
-        return ObjectCalls.ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(drawListBeginSplitBind, segment, framebuffer, splits, initialColorAction, finalColorAction, initialDepthAction, finalDepthAction, clearColorValues, clearDepth, clearStencil, region, storageTextures)
+    fun drawListBeginSplit(framebuffer: RID, splits: Long, initialColorAction: RenderingDevice.InitialAction, finalColorAction: RenderingDevice.FinalAction, initialDepthAction: RenderingDevice.InitialAction, finalDepthAction: RenderingDevice.FinalAction, clearColorValues: List<Color>, clearDepth: Double = 1.0, clearStencil: Long = 0L, region: Rect2, storageTextures: List<RID>): List<Long> {
+        return ObjectCalls.ptrcallWithRIDUInt32FourLongPackedColorListDoubleUInt32Rect2RIDListArgsRetPackedInt64List(drawListBeginSplitBind, segment, framebuffer, splits, initialColorAction.value, finalColorAction.value, initialDepthAction.value, finalDepthAction.value, clearColorValues, clearDepth, clearStencil, region, storageTextures)
     }
 
     /**
@@ -1227,8 +1228,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.has_feature
      */
-    fun hasFeature(feature: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, segment, feature)
+    fun hasFeature(feature: RenderingDevice.Features): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, segment, feature.value)
     }
 
     /**
@@ -1239,8 +1240,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.limit_get
      */
-    fun limitGet(limit: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(limitGetBind, segment, limit)
+    fun limitGet(limit: RenderingDevice.Limit): Long {
+        return ObjectCalls.ptrcallWithLongArgRetLong(limitGetBind, segment, limit.value)
     }
 
     /**
@@ -1280,8 +1281,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.barrier
      */
-    fun barrier(from: Long = 32767L, to: Long = 32767L) {
-        ObjectCalls.ptrcallWithTwoLongArgs(barrierBind, segment, from, to)
+    fun barrier(from: RenderingDevice.BarrierMask = RenderingDevice.BarrierMask.ALL_BARRIERS, to: RenderingDevice.BarrierMask = RenderingDevice.BarrierMask.ALL_BARRIERS) {
+        ObjectCalls.ptrcallWithTwoLongArgs(barrierBind, segment, from.value, to.value)
     }
 
     /**
@@ -1390,8 +1391,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.get_memory_usage
      */
-    fun getMemoryUsage(type: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(getMemoryUsageBind, segment, type)
+    fun getMemoryUsage(type: RenderingDevice.MemoryType): Long {
+        return ObjectCalls.ptrcallWithLongArgRetLong(getMemoryUsageBind, segment, type.value)
     }
 
     /**
@@ -1401,8 +1402,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: RenderingDevice.get_driver_resource
      */
-    fun getDriverResource(resource: Long, rid: RID, index: Long): Long {
-        return ObjectCalls.ptrcallWithLongRIDLongArgsRetLong(getDriverResourceBind, segment, resource, rid, index)
+    fun getDriverResource(resource: RenderingDevice.DriverResource, rid: RID, index: Long): Long {
+        return ObjectCalls.ptrcallWithLongRIDLongArgsRetLong(getDriverResourceBind, segment, resource.value, rid, index)
     }
 
     /**
@@ -1548,581 +1549,3847 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceAllocsByObjectTypeBind, segment, type)
     }
 
+    @JvmInline
+    value class DeviceType(val value: Long) {
+        companion object {
+            /**
+             * Rendering device type does not match any of the other enum values or is unknown.
+             *
+             * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_OTHER
+             */
+            val OTHER: DeviceType get() = DeviceType(0L)
+            /**
+             * Rendering device is an integrated GPU, which is typically (but not always) slower than dedicated
+             * GPUs (`DEVICE_TYPE_DISCRETE_GPU`). On Android and iOS, the rendering device type is always
+             * considered to be `DEVICE_TYPE_INTEGRATED_GPU`.
+             *
+             * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_INTEGRATED_GPU
+             */
+            val INTEGRATED_GPU: DeviceType get() = DeviceType(1L)
+            /**
+             * Rendering device is a dedicated GPU, which is typically (but not always) faster than integrated
+             * GPUs (`DEVICE_TYPE_INTEGRATED_GPU`).
+             *
+             * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_DISCRETE_GPU
+             */
+            val DISCRETE_GPU: DeviceType get() = DeviceType(2L)
+            /**
+             * Rendering device is an emulated GPU in a virtual environment. This is typically much slower than
+             * the host GPU, which means the expected performance level on a dedicated GPU will be roughly
+             * equivalent to `DEVICE_TYPE_INTEGRATED_GPU`. Virtual machine GPU passthrough (such as VFIO) will
+             * not report the device type as `DEVICE_TYPE_VIRTUAL_GPU`. Instead, the host GPU's device type
+             * will be reported as if the GPU was not emulated.
+             *
+             * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_VIRTUAL_GPU
+             */
+            val VIRTUAL_GPU: DeviceType get() = DeviceType(3L)
+            /**
+             * Rendering device is provided by software emulation (such as Lavapipe or SwiftShader
+             * (https://github.com/google/swiftshader)). This is the slowest kind of rendering device
+             * available; it's typically much slower than `DEVICE_TYPE_INTEGRATED_GPU`.
+             *
+             * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_CPU
+             */
+            val CPU: DeviceType get() = DeviceType(4L)
+            /**
+             * Represents the size of the `DeviceType` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_MAX
+             */
+            val MAX: DeviceType get() = DeviceType(5L)
+        }
+    }
+
+    @JvmInline
+    value class DriverResource(val value: Long) {
+        companion object {
+            /**
+             * Specific device object based on a physical device (`rid` parameter is ignored). - Vulkan: Vulkan
+             * device driver resource (`VkDevice`). - D3D12: D3D12 device driver resource (`ID3D12Device`). -
+             * Metal: Metal device driver resource (`MTLDevice`).
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_LOGICAL_DEVICE
+             */
+            val LOGICAL_DEVICE: DriverResource get() = DriverResource(0L)
+            /**
+             * Physical device the specific logical device is based on (`rid` parameter is ignored). - Vulkan:
+             * `VkPhysicalDevice`. - D3D12: `IDXGIAdapter`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_PHYSICAL_DEVICE
+             */
+            val PHYSICAL_DEVICE: DriverResource get() = DriverResource(1L)
+            /**
+             * Top-most graphics API entry object (`rid` parameter is ignored). - Vulkan: `VkInstance`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_TOPMOST_OBJECT
+             */
+            val TOPMOST_OBJECT: DriverResource get() = DriverResource(2L)
+            /**
+             * The main graphics-compute command queue (`rid` parameter is ignored). - Vulkan: `VkQueue`. -
+             * D3D12: `ID3D12CommandQueue`. - Metal: `MTLCommandQueue`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_COMMAND_QUEUE
+             */
+            val COMMAND_QUEUE: DriverResource get() = DriverResource(3L)
+            /**
+             * The specific family the main queue belongs to (`rid` parameter is ignored). - Vulkan: The queue
+             * family index, a `uint32_t`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_QUEUE_FAMILY
+             */
+            val QUEUE_FAMILY: DriverResource get() = DriverResource(4L)
+            /**
+             * - Vulkan: `VkImage`. - D3D12: `ID3D12Resource`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_TEXTURE
+             */
+            val TEXTURE: DriverResource get() = DriverResource(5L)
+            /**
+             * The view of an owned or shared texture. - Vulkan: `VkImageView`. - D3D12: `ID3D12Resource`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_TEXTURE_VIEW
+             */
+            val TEXTURE_VIEW: DriverResource get() = DriverResource(6L)
+            /**
+             * The native id of the data format of the texture. - Vulkan: `VkFormat`. - D3D12: `DXGI_FORMAT`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_TEXTURE_DATA_FORMAT
+             */
+            val TEXTURE_DATA_FORMAT: DriverResource get() = DriverResource(7L)
+            /**
+             * - Vulkan: `VkSampler`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_SAMPLER
+             */
+            val SAMPLER: DriverResource get() = DriverResource(8L)
+            /**
+             * - Vulkan: `VkDescriptorSet`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_UNIFORM_SET
+             */
+            val UNIFORM_SET: DriverResource get() = DriverResource(9L)
+            /**
+             * Buffer of any kind of (storage, vertex, etc.). - Vulkan: `VkBuffer`. - D3D12: `ID3D12Resource`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_BUFFER
+             */
+            val BUFFER: DriverResource get() = DriverResource(10L)
+            /**
+             * - Vulkan: `VkPipeline`. - Metal: `MTLComputePipelineState`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_COMPUTE_PIPELINE
+             */
+            val COMPUTE_PIPELINE: DriverResource get() = DriverResource(11L)
+            /**
+             * - Vulkan: `VkPipeline`. - Metal: `MTLRenderPipelineState`.
+             *
+             * Generated from Godot docs: RenderingDevice.DRIVER_RESOURCE_RENDER_PIPELINE
+             */
+            val RENDER_PIPELINE: DriverResource get() = DriverResource(12L)
+            val VULKAN_DEVICE: DriverResource get() = DriverResource(0L)
+            val VULKAN_PHYSICAL_DEVICE: DriverResource get() = DriverResource(1L)
+            val VULKAN_INSTANCE: DriverResource get() = DriverResource(2L)
+            val VULKAN_QUEUE: DriverResource get() = DriverResource(3L)
+            val VULKAN_QUEUE_FAMILY_INDEX: DriverResource get() = DriverResource(4L)
+            val VULKAN_IMAGE: DriverResource get() = DriverResource(5L)
+            val VULKAN_IMAGE_VIEW: DriverResource get() = DriverResource(6L)
+            val VULKAN_IMAGE_NATIVE_TEXTURE_FORMAT: DriverResource get() = DriverResource(7L)
+            val VULKAN_SAMPLER: DriverResource get() = DriverResource(8L)
+            val VULKAN_DESCRIPTOR_SET: DriverResource get() = DriverResource(9L)
+            val VULKAN_BUFFER: DriverResource get() = DriverResource(10L)
+            val VULKAN_COMPUTE_PIPELINE: DriverResource get() = DriverResource(11L)
+            val VULKAN_RENDER_PIPELINE: DriverResource get() = DriverResource(12L)
+        }
+    }
+
+    @JvmInline
+    value class DataFormat(val value: Long) {
+        companion object {
+            /**
+             * 4-bit-per-channel red/green channel data format, packed into 8 bits. Values are in the `[0.0,
+             * 1.0]` range. Note: More information on all data formats can be found on the Identification of
+             * formats
+             * (https://registry.khronos.org/vulkan/specs/1.1/html/vkspec.html#_identification_of_formats)
+             * section of the Vulkan specification, as well as the VkFormat
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormat.html) enum.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R4G4_UNORM_PACK8
+             */
+            val R4G4_UNORM_PACK8: DataFormat get() = DataFormat(0L)
+            /**
+             * 4-bit-per-channel red/green/blue/alpha channel data format, packed into 16 bits. Values are in
+             * the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R4G4B4A4_UNORM_PACK16
+             */
+            val R4G4B4A4_UNORM_PACK16: DataFormat get() = DataFormat(1L)
+            /**
+             * 4-bit-per-channel blue/green/red/alpha channel data format, packed into 16 bits. Values are in
+             * the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B4G4R4A4_UNORM_PACK16
+             */
+            val B4G4R4A4_UNORM_PACK16: DataFormat get() = DataFormat(2L)
+            /**
+             * Red/green/blue channel data format with 5 bits of red, 6 bits of green and 5 bits of blue,
+             * packed into 16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R5G6B5_UNORM_PACK16
+             */
+            val R5G6B5_UNORM_PACK16: DataFormat get() = DataFormat(3L)
+            /**
+             * Blue/green/red channel data format with 5 bits of blue, 6 bits of green and 5 bits of red,
+             * packed into 16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B5G6R5_UNORM_PACK16
+             */
+            val B5G6R5_UNORM_PACK16: DataFormat get() = DataFormat(4L)
+            /**
+             * Red/green/blue/alpha channel data format with 5 bits of red, 6 bits of green, 5 bits of blue and
+             * 1 bit of alpha, packed into 16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R5G5B5A1_UNORM_PACK16
+             */
+            val R5G5B5A1_UNORM_PACK16: DataFormat get() = DataFormat(5L)
+            /**
+             * Blue/green/red/alpha channel data format with 5 bits of blue, 6 bits of green, 5 bits of red and
+             * 1 bit of alpha, packed into 16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B5G5R5A1_UNORM_PACK16
+             */
+            val B5G5R5A1_UNORM_PACK16: DataFormat get() = DataFormat(6L)
+            /**
+             * Alpha/red/green/blue channel data format with 1 bit of alpha, 5 bits of red, 6 bits of green and
+             * 5 bits of blue, packed into 16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A1R5G5B5_UNORM_PACK16
+             */
+            val A1R5G5B5_UNORM_PACK16: DataFormat get() = DataFormat(7L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8_UNORM
+             */
+            val R8_UNORM: DataFormat get() = DataFormat(8L)
+            /**
+             * 8-bit-per-channel signed floating-point red channel data format with normalized value. Values
+             * are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8_SNORM
+             */
+            val R8_SNORM: DataFormat get() = DataFormat(9L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red channel data format with scaled value (value is
+             * converted from integer to float). Values are in the `[0.0, 255.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8_USCALED
+             */
+            val R8_USCALED: DataFormat get() = DataFormat(10L)
+            /**
+             * 8-bit-per-channel signed floating-point red channel data format with scaled value (value is
+             * converted from integer to float). Values are in the `[-127.0, 127.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8_SSCALED
+             */
+            val R8_SSCALED: DataFormat get() = DataFormat(11L)
+            /**
+             * 8-bit-per-channel unsigned integer red channel data format. Values are in the `[0, 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8_UINT
+             */
+            val R8_UINT: DataFormat get() = DataFormat(12L)
+            /**
+             * 8-bit-per-channel signed integer red channel data format. Values are in the `[-127, 127]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8_SINT
+             */
+            val R8_SINT: DataFormat get() = DataFormat(13L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red channel data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8_SRGB
+             */
+            val R8_SRGB: DataFormat get() = DataFormat(14L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green channel data format with normalized value.
+             * Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8_UNORM
+             */
+            val R8G8_UNORM: DataFormat get() = DataFormat(15L)
+            /**
+             * 8-bit-per-channel signed floating-point red/green channel data format with normalized value.
+             * Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8_SNORM
+             */
+            val R8G8_SNORM: DataFormat get() = DataFormat(16L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green channel data format with scaled value (value
+             * is converted from integer to float). Values are in the `[0.0, 255.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8_USCALED
+             */
+            val R8G8_USCALED: DataFormat get() = DataFormat(17L)
+            /**
+             * 8-bit-per-channel signed floating-point red/green channel data format with scaled value (value
+             * is converted from integer to float). Values are in the `[-127.0, 127.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8_SSCALED
+             */
+            val R8G8_SSCALED: DataFormat get() = DataFormat(18L)
+            /**
+             * 8-bit-per-channel unsigned integer red/green channel data format. Values are in the `[0, 255]`
+             * range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8_UINT
+             */
+            val R8G8_UINT: DataFormat get() = DataFormat(19L)
+            /**
+             * 8-bit-per-channel signed integer red/green channel data format. Values are in the `[-127, 127]`
+             * range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8_SINT
+             */
+            val R8G8_SINT: DataFormat get() = DataFormat(20L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green channel data format with normalized value
+             * and nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8_SRGB
+             */
+            val R8G8_SRGB: DataFormat get() = DataFormat(21L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green/blue channel data format with normalized
+             * value. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8_UNORM
+             */
+            val R8G8B8_UNORM: DataFormat get() = DataFormat(22L)
+            /**
+             * 8-bit-per-channel signed floating-point red/green/blue channel data format with normalized
+             * value. Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8_SNORM
+             */
+            val R8G8B8_SNORM: DataFormat get() = DataFormat(23L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green/blue channel data format with scaled value
+             * (value is converted from integer to float). Values are in the `[0.0, 255.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8_USCALED
+             */
+            val R8G8B8_USCALED: DataFormat get() = DataFormat(24L)
+            /**
+             * 8-bit-per-channel signed floating-point red/green/blue channel data format with scaled value
+             * (value is converted from integer to float). Values are in the `[-127.0, 127.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8_SSCALED
+             */
+            val R8G8B8_SSCALED: DataFormat get() = DataFormat(25L)
+            /**
+             * 8-bit-per-channel unsigned integer red/green/blue channel data format. Values are in the `[0,
+             * 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8_UINT
+             */
+            val R8G8B8_UINT: DataFormat get() = DataFormat(26L)
+            /**
+             * 8-bit-per-channel signed integer red/green/blue channel data format. Values are in the `[-127,
+             * 127]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8_SINT
+             */
+            val R8G8B8_SINT: DataFormat get() = DataFormat(27L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green/blue channel data format with normalized
+             * value and nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8_SRGB
+             */
+            val R8G8B8_SRGB: DataFormat get() = DataFormat(28L)
+            /**
+             * 8-bit-per-channel unsigned floating-point blue/green/red channel data format with normalized
+             * value. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8_UNORM
+             */
+            val B8G8R8_UNORM: DataFormat get() = DataFormat(29L)
+            /**
+             * 8-bit-per-channel signed floating-point blue/green/red channel data format with normalized
+             * value. Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8_SNORM
+             */
+            val B8G8R8_SNORM: DataFormat get() = DataFormat(30L)
+            /**
+             * 8-bit-per-channel unsigned floating-point blue/green/red channel data format with scaled value
+             * (value is converted from integer to float). Values are in the `[0.0, 255.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8_USCALED
+             */
+            val B8G8R8_USCALED: DataFormat get() = DataFormat(31L)
+            /**
+             * 8-bit-per-channel signed floating-point blue/green/red channel data format with scaled value
+             * (value is converted from integer to float). Values are in the `[-127.0, 127.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8_SSCALED
+             */
+            val B8G8R8_SSCALED: DataFormat get() = DataFormat(32L)
+            /**
+             * 8-bit-per-channel unsigned integer blue/green/red channel data format. Values are in the `[0,
+             * 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8_UINT
+             */
+            val B8G8R8_UINT: DataFormat get() = DataFormat(33L)
+            /**
+             * 8-bit-per-channel signed integer blue/green/red channel data format. Values are in the `[-127,
+             * 127]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8_SINT
+             */
+            val B8G8R8_SINT: DataFormat get() = DataFormat(34L)
+            /**
+             * 8-bit-per-channel unsigned floating-point blue/green/red data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8_SRGB
+             */
+            val B8G8R8_SRGB: DataFormat get() = DataFormat(35L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green/blue/alpha channel data format with
+             * normalized value. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8A8_UNORM
+             */
+            val R8G8B8A8_UNORM: DataFormat get() = DataFormat(36L)
+            /**
+             * 8-bit-per-channel signed floating-point red/green/blue/alpha channel data format with normalized
+             * value. Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8A8_SNORM
+             */
+            val R8G8B8A8_SNORM: DataFormat get() = DataFormat(37L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green/blue/alpha channel data format with scaled
+             * value (value is converted from integer to float). Values are in the `[0.0, 255.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8A8_USCALED
+             */
+            val R8G8B8A8_USCALED: DataFormat get() = DataFormat(38L)
+            /**
+             * 8-bit-per-channel signed floating-point red/green/blue/alpha channel data format with scaled
+             * value (value is converted from integer to float). Values are in the `[-127.0, 127.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8A8_SSCALED
+             */
+            val R8G8B8A8_SSCALED: DataFormat get() = DataFormat(39L)
+            /**
+             * 8-bit-per-channel unsigned integer red/green/blue/alpha channel data format. Values are in the
+             * `[0, 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8A8_UINT
+             */
+            val R8G8B8A8_UINT: DataFormat get() = DataFormat(40L)
+            /**
+             * 8-bit-per-channel signed integer red/green/blue/alpha channel data format. Values are in the
+             * `[-127, 127]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8A8_SINT
+             */
+            val R8G8B8A8_SINT: DataFormat get() = DataFormat(41L)
+            /**
+             * 8-bit-per-channel unsigned floating-point red/green/blue/alpha channel data format with
+             * normalized value and nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R8G8B8A8_SRGB
+             */
+            val R8G8B8A8_SRGB: DataFormat get() = DataFormat(42L)
+            /**
+             * 8-bit-per-channel unsigned floating-point blue/green/red/alpha channel data format with
+             * normalized value. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8A8_UNORM
+             */
+            val B8G8R8A8_UNORM: DataFormat get() = DataFormat(43L)
+            /**
+             * 8-bit-per-channel signed floating-point blue/green/red/alpha channel data format with normalized
+             * value. Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8A8_SNORM
+             */
+            val B8G8R8A8_SNORM: DataFormat get() = DataFormat(44L)
+            /**
+             * 8-bit-per-channel unsigned floating-point blue/green/red/alpha channel data format with scaled
+             * value (value is converted from integer to float). Values are in the `[0.0, 255.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8A8_USCALED
+             */
+            val B8G8R8A8_USCALED: DataFormat get() = DataFormat(45L)
+            /**
+             * 8-bit-per-channel signed floating-point blue/green/red/alpha channel data format with scaled
+             * value (value is converted from integer to float). Values are in the `[-127.0, 127.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8A8_SSCALED
+             */
+            val B8G8R8A8_SSCALED: DataFormat get() = DataFormat(46L)
+            /**
+             * 8-bit-per-channel unsigned integer blue/green/red/alpha channel data format. Values are in the
+             * `[0, 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8A8_UINT
+             */
+            val B8G8R8A8_UINT: DataFormat get() = DataFormat(47L)
+            /**
+             * 8-bit-per-channel signed integer blue/green/red/alpha channel data format. Values are in the
+             * `[-127, 127]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8A8_SINT
+             */
+            val B8G8R8A8_SINT: DataFormat get() = DataFormat(48L)
+            /**
+             * 8-bit-per-channel unsigned floating-point blue/green/red/alpha channel data format with
+             * normalized value and nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8A8_SRGB
+             */
+            val B8G8R8A8_SRGB: DataFormat get() = DataFormat(49L)
+            /**
+             * 8-bit-per-channel unsigned floating-point alpha/red/green/blue channel data format with
+             * normalized value, packed in 32 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A8B8G8R8_UNORM_PACK32
+             */
+            val A8B8G8R8_UNORM_PACK32: DataFormat get() = DataFormat(50L)
+            /**
+             * 8-bit-per-channel signed floating-point alpha/red/green/blue channel data format with normalized
+             * value, packed in 32 bits. Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A8B8G8R8_SNORM_PACK32
+             */
+            val A8B8G8R8_SNORM_PACK32: DataFormat get() = DataFormat(51L)
+            /**
+             * 8-bit-per-channel unsigned floating-point alpha/red/green/blue channel data format with scaled
+             * value (value is converted from integer to float), packed in 32 bits. Values are in the `[0.0,
+             * 255.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A8B8G8R8_USCALED_PACK32
+             */
+            val A8B8G8R8_USCALED_PACK32: DataFormat get() = DataFormat(52L)
+            /**
+             * 8-bit-per-channel signed floating-point alpha/red/green/blue channel data format with scaled
+             * value (value is converted from integer to float), packed in 32 bits. Values are in the `[-127.0,
+             * 127.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A8B8G8R8_SSCALED_PACK32
+             */
+            val A8B8G8R8_SSCALED_PACK32: DataFormat get() = DataFormat(53L)
+            /**
+             * 8-bit-per-channel unsigned integer alpha/red/green/blue channel data format, packed in 32 bits.
+             * Values are in the `[0, 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A8B8G8R8_UINT_PACK32
+             */
+            val A8B8G8R8_UINT_PACK32: DataFormat get() = DataFormat(54L)
+            /**
+             * 8-bit-per-channel signed integer alpha/red/green/blue channel data format, packed in 32 bits.
+             * Values are in the `[-127, 127]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A8B8G8R8_SINT_PACK32
+             */
+            val A8B8G8R8_SINT_PACK32: DataFormat get() = DataFormat(55L)
+            /**
+             * 8-bit-per-channel unsigned floating-point alpha/red/green/blue channel data format with
+             * normalized value and nonlinear sRGB encoding, packed in 32 bits. Values are in the `[0.0, 1.0]`
+             * range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A8B8G8R8_SRGB_PACK32
+             */
+            val A8B8G8R8_SRGB_PACK32: DataFormat get() = DataFormat(56L)
+            /**
+             * Unsigned floating-point alpha/red/green/blue channel data format with normalized value, packed
+             * in 32 bits. Format contains 2 bits of alpha, 10 bits of red, 10 bits of green and 10 bits of
+             * blue. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2R10G10B10_UNORM_PACK32
+             */
+            val A2R10G10B10_UNORM_PACK32: DataFormat get() = DataFormat(57L)
+            /**
+             * Signed floating-point alpha/red/green/blue channel data format with normalized value, packed in
+             * 32 bits. Format contains 2 bits of alpha, 10 bits of red, 10 bits of green and 10 bits of blue.
+             * Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2R10G10B10_SNORM_PACK32
+             */
+            val A2R10G10B10_SNORM_PACK32: DataFormat get() = DataFormat(58L)
+            /**
+             * Unsigned floating-point alpha/red/green/blue channel data format with normalized value, packed
+             * in 32 bits. Format contains 2 bits of alpha, 10 bits of red, 10 bits of green and 10 bits of
+             * blue. Values are in the `[0.0, 1023.0]` range for red/green/blue and `[0.0, 3.0]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2R10G10B10_USCALED_PACK32
+             */
+            val A2R10G10B10_USCALED_PACK32: DataFormat get() = DataFormat(59L)
+            /**
+             * Signed floating-point alpha/red/green/blue channel data format with normalized value, packed in
+             * 32 bits. Format contains 2 bits of alpha, 10 bits of red, 10 bits of green and 10 bits of blue.
+             * Values are in the `[-511.0, 511.0]` range for red/green/blue and `[-1.0, 1.0]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2R10G10B10_SSCALED_PACK32
+             */
+            val A2R10G10B10_SSCALED_PACK32: DataFormat get() = DataFormat(60L)
+            /**
+             * Unsigned integer alpha/red/green/blue channel data format with normalized value, packed in 32
+             * bits. Format contains 2 bits of alpha, 10 bits of red, 10 bits of green and 10 bits of blue.
+             * Values are in the `[0, 1023]` range for red/green/blue and `[0, 3]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2R10G10B10_UINT_PACK32
+             */
+            val A2R10G10B10_UINT_PACK32: DataFormat get() = DataFormat(61L)
+            /**
+             * Signed integer alpha/red/green/blue channel data format with normalized value, packed in 32
+             * bits. Format contains 2 bits of alpha, 10 bits of red, 10 bits of green and 10 bits of blue.
+             * Values are in the `[-511, 511]` range for red/green/blue and `[-1, 1]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2R10G10B10_SINT_PACK32
+             */
+            val A2R10G10B10_SINT_PACK32: DataFormat get() = DataFormat(62L)
+            /**
+             * Unsigned floating-point alpha/blue/green/red channel data format with normalized value, packed
+             * in 32 bits. Format contains 2 bits of alpha, 10 bits of blue, 10 bits of green and 10 bits of
+             * red. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2B10G10R10_UNORM_PACK32
+             */
+            val A2B10G10R10_UNORM_PACK32: DataFormat get() = DataFormat(63L)
+            /**
+             * Signed floating-point alpha/blue/green/red channel data format with normalized value, packed in
+             * 32 bits. Format contains 2 bits of alpha, 10 bits of blue, 10 bits of green and 10 bits of red.
+             * Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2B10G10R10_SNORM_PACK32
+             */
+            val A2B10G10R10_SNORM_PACK32: DataFormat get() = DataFormat(64L)
+            /**
+             * Unsigned floating-point alpha/blue/green/red channel data format with normalized value, packed
+             * in 32 bits. Format contains 2 bits of alpha, 10 bits of blue, 10 bits of green and 10 bits of
+             * red. Values are in the `[0.0, 1023.0]` range for blue/green/red and `[0.0, 3.0]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2B10G10R10_USCALED_PACK32
+             */
+            val A2B10G10R10_USCALED_PACK32: DataFormat get() = DataFormat(65L)
+            /**
+             * Signed floating-point alpha/blue/green/red channel data format with normalized value, packed in
+             * 32 bits. Format contains 2 bits of alpha, 10 bits of blue, 10 bits of green and 10 bits of red.
+             * Values are in the `[-511.0, 511.0]` range for blue/green/red and `[-1.0, 1.0]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2B10G10R10_SSCALED_PACK32
+             */
+            val A2B10G10R10_SSCALED_PACK32: DataFormat get() = DataFormat(66L)
+            /**
+             * Unsigned integer alpha/blue/green/red channel data format with normalized value, packed in 32
+             * bits. Format contains 2 bits of alpha, 10 bits of blue, 10 bits of green and 10 bits of red.
+             * Values are in the `[0, 1023]` range for blue/green/red and `[0, 3]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2B10G10R10_UINT_PACK32
+             */
+            val A2B10G10R10_UINT_PACK32: DataFormat get() = DataFormat(67L)
+            /**
+             * Signed integer alpha/blue/green/red channel data format with normalized value, packed in 32
+             * bits. Format contains 2 bits of alpha, 10 bits of blue, 10 bits of green and 10 bits of red.
+             * Values are in the `[-511, 511]` range for blue/green/red and `[-1, 1]` for alpha.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_A2B10G10R10_SINT_PACK32
+             */
+            val A2B10G10R10_SINT_PACK32: DataFormat get() = DataFormat(68L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16_UNORM
+             */
+            val R16_UNORM: DataFormat get() = DataFormat(69L)
+            /**
+             * 16-bit-per-channel signed floating-point red channel data format with normalized value. Values
+             * are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16_SNORM
+             */
+            val R16_SNORM: DataFormat get() = DataFormat(70L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red channel data format with scaled value (value is
+             * converted from integer to float). Values are in the `[0.0, 65535.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16_USCALED
+             */
+            val R16_USCALED: DataFormat get() = DataFormat(71L)
+            /**
+             * 16-bit-per-channel signed floating-point red channel data format with scaled value (value is
+             * converted from integer to float). Values are in the `[-32767.0, 32767.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16_SSCALED
+             */
+            val R16_SSCALED: DataFormat get() = DataFormat(72L)
+            /**
+             * 16-bit-per-channel unsigned integer red channel data format. Values are in the `[0.0, 65535]`
+             * range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16_UINT
+             */
+            val R16_UINT: DataFormat get() = DataFormat(73L)
+            /**
+             * 16-bit-per-channel signed integer red channel data format. Values are in the `[-32767, 32767]`
+             * range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16_SINT
+             */
+            val R16_SINT: DataFormat get() = DataFormat(74L)
+            /**
+             * 16-bit-per-channel signed floating-point red channel data format with the value stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16_SFLOAT
+             */
+            val R16_SFLOAT: DataFormat get() = DataFormat(75L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red/green channel data format with normalized value.
+             * Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16_UNORM
+             */
+            val R16G16_UNORM: DataFormat get() = DataFormat(76L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green channel data format with normalized value.
+             * Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16_SNORM
+             */
+            val R16G16_SNORM: DataFormat get() = DataFormat(77L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red/green channel data format with scaled value
+             * (value is converted from integer to float). Values are in the `[0.0, 65535.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16_USCALED
+             */
+            val R16G16_USCALED: DataFormat get() = DataFormat(78L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green channel data format with scaled value (value
+             * is converted from integer to float). Values are in the `[-32767.0, 32767.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16_SSCALED
+             */
+            val R16G16_SSCALED: DataFormat get() = DataFormat(79L)
+            /**
+             * 16-bit-per-channel unsigned integer red/green channel data format. Values are in the `[0.0,
+             * 65535]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16_UINT
+             */
+            val R16G16_UINT: DataFormat get() = DataFormat(80L)
+            /**
+             * 16-bit-per-channel signed integer red/green channel data format. Values are in the `[-32767,
+             * 32767]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16_SINT
+             */
+            val R16G16_SINT: DataFormat get() = DataFormat(81L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green channel data format with the value stored
+             * as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16_SFLOAT
+             */
+            val R16G16_SFLOAT: DataFormat get() = DataFormat(82L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red/green/blue channel data format with normalized
+             * value. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16_UNORM
+             */
+            val R16G16B16_UNORM: DataFormat get() = DataFormat(83L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green/blue channel data format with normalized
+             * value. Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16_SNORM
+             */
+            val R16G16B16_SNORM: DataFormat get() = DataFormat(84L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red/green/blue channel data format with scaled value
+             * (value is converted from integer to float). Values are in the `[0.0, 65535.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16_USCALED
+             */
+            val R16G16B16_USCALED: DataFormat get() = DataFormat(85L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green/blue channel data format with scaled value
+             * (value is converted from integer to float). Values are in the `[-32767.0, 32767.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16_SSCALED
+             */
+            val R16G16B16_SSCALED: DataFormat get() = DataFormat(86L)
+            /**
+             * 16-bit-per-channel unsigned integer red/green/blue channel data format. Values are in the `[0.0,
+             * 65535]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16_UINT
+             */
+            val R16G16B16_UINT: DataFormat get() = DataFormat(87L)
+            /**
+             * 16-bit-per-channel signed integer red/green/blue channel data format. Values are in the
+             * `[-32767, 32767]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16_SINT
+             */
+            val R16G16B16_SINT: DataFormat get() = DataFormat(88L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green/blue channel data format with the value
+             * stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16_SFLOAT
+             */
+            val R16G16B16_SFLOAT: DataFormat get() = DataFormat(89L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red/green/blue/alpha channel data format with
+             * normalized value. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16A16_UNORM
+             */
+            val R16G16B16A16_UNORM: DataFormat get() = DataFormat(90L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green/blue/alpha channel data format with
+             * normalized value. Values are in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16A16_SNORM
+             */
+            val R16G16B16A16_SNORM: DataFormat get() = DataFormat(91L)
+            /**
+             * 16-bit-per-channel unsigned floating-point red/green/blue/alpha channel data format with scaled
+             * value (value is converted from integer to float). Values are in the `[0.0, 65535.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16A16_USCALED
+             */
+            val R16G16B16A16_USCALED: DataFormat get() = DataFormat(92L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green/blue/alpha channel data format with scaled
+             * value (value is converted from integer to float). Values are in the `[-32767.0, 32767.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16A16_SSCALED
+             */
+            val R16G16B16A16_SSCALED: DataFormat get() = DataFormat(93L)
+            /**
+             * 16-bit-per-channel unsigned integer red/green/blue/alpha channel data format. Values are in the
+             * `[0.0, 65535]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16A16_UINT
+             */
+            val R16G16B16A16_UINT: DataFormat get() = DataFormat(94L)
+            /**
+             * 16-bit-per-channel signed integer red/green/blue/alpha channel data format. Values are in the
+             * `[-32767, 32767]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16A16_SINT
+             */
+            val R16G16B16A16_SINT: DataFormat get() = DataFormat(95L)
+            /**
+             * 16-bit-per-channel signed floating-point red/green/blue/alpha channel data format with the value
+             * stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R16G16B16A16_SFLOAT
+             */
+            val R16G16B16A16_SFLOAT: DataFormat get() = DataFormat(96L)
+            /**
+             * 32-bit-per-channel unsigned integer red channel data format. Values are in the `[0, 2^32 - 1]`
+             * range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32_UINT
+             */
+            val R32_UINT: DataFormat get() = DataFormat(97L)
+            /**
+             * 32-bit-per-channel signed integer red channel data format. Values are in the `[2^31 + 1, 2^31 -
+             * 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32_SINT
+             */
+            val R32_SINT: DataFormat get() = DataFormat(98L)
+            /**
+             * 32-bit-per-channel signed floating-point red channel data format with the value stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32_SFLOAT
+             */
+            val R32_SFLOAT: DataFormat get() = DataFormat(99L)
+            /**
+             * 32-bit-per-channel unsigned integer red/green channel data format. Values are in the `[0, 2^32 -
+             * 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32_UINT
+             */
+            val R32G32_UINT: DataFormat get() = DataFormat(100L)
+            /**
+             * 32-bit-per-channel signed integer red/green channel data format. Values are in the `[2^31 + 1,
+             * 2^31 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32_SINT
+             */
+            val R32G32_SINT: DataFormat get() = DataFormat(101L)
+            /**
+             * 32-bit-per-channel signed floating-point red/green channel data format with the value stored
+             * as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32_SFLOAT
+             */
+            val R32G32_SFLOAT: DataFormat get() = DataFormat(102L)
+            /**
+             * 32-bit-per-channel unsigned integer red/green/blue channel data format. Values are in the `[0,
+             * 2^32 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32B32_UINT
+             */
+            val R32G32B32_UINT: DataFormat get() = DataFormat(103L)
+            /**
+             * 32-bit-per-channel signed integer red/green/blue channel data format. Values are in the `[2^31 +
+             * 1, 2^31 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32B32_SINT
+             */
+            val R32G32B32_SINT: DataFormat get() = DataFormat(104L)
+            /**
+             * 32-bit-per-channel signed floating-point red/green/blue channel data format with the value
+             * stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32B32_SFLOAT
+             */
+            val R32G32B32_SFLOAT: DataFormat get() = DataFormat(105L)
+            /**
+             * 32-bit-per-channel unsigned integer red/green/blue/alpha channel data format. Values are in the
+             * `[0, 2^32 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32B32A32_UINT
+             */
+            val R32G32B32A32_UINT: DataFormat get() = DataFormat(106L)
+            /**
+             * 32-bit-per-channel signed integer red/green/blue/alpha channel data format. Values are in the
+             * `[2^31 + 1, 2^31 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32B32A32_SINT
+             */
+            val R32G32B32A32_SINT: DataFormat get() = DataFormat(107L)
+            /**
+             * 32-bit-per-channel signed floating-point red/green/blue/alpha channel data format with the value
+             * stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
+             */
+            val R32G32B32A32_SFLOAT: DataFormat get() = DataFormat(108L)
+            /**
+             * 64-bit-per-channel unsigned integer red channel data format. Values are in the `[0, 2^64 - 1]`
+             * range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64_UINT
+             */
+            val R64_UINT: DataFormat get() = DataFormat(109L)
+            /**
+             * 64-bit-per-channel signed integer red channel data format. Values are in the `[2^63 + 1, 2^63 -
+             * 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64_SINT
+             */
+            val R64_SINT: DataFormat get() = DataFormat(110L)
+            /**
+             * 64-bit-per-channel signed floating-point red channel data format with the value stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64_SFLOAT
+             */
+            val R64_SFLOAT: DataFormat get() = DataFormat(111L)
+            /**
+             * 64-bit-per-channel unsigned integer red/green channel data format. Values are in the `[0, 2^64 -
+             * 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64_UINT
+             */
+            val R64G64_UINT: DataFormat get() = DataFormat(112L)
+            /**
+             * 64-bit-per-channel signed integer red/green channel data format. Values are in the `[2^63 + 1,
+             * 2^63 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64_SINT
+             */
+            val R64G64_SINT: DataFormat get() = DataFormat(113L)
+            /**
+             * 64-bit-per-channel signed floating-point red/green channel data format with the value stored
+             * as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64_SFLOAT
+             */
+            val R64G64_SFLOAT: DataFormat get() = DataFormat(114L)
+            /**
+             * 64-bit-per-channel unsigned integer red/green/blue channel data format. Values are in the `[0,
+             * 2^64 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64B64_UINT
+             */
+            val R64G64B64_UINT: DataFormat get() = DataFormat(115L)
+            /**
+             * 64-bit-per-channel signed integer red/green/blue channel data format. Values are in the `[2^63 +
+             * 1, 2^63 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64B64_SINT
+             */
+            val R64G64B64_SINT: DataFormat get() = DataFormat(116L)
+            /**
+             * 64-bit-per-channel signed floating-point red/green/blue channel data format with the value
+             * stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64B64_SFLOAT
+             */
+            val R64G64B64_SFLOAT: DataFormat get() = DataFormat(117L)
+            /**
+             * 64-bit-per-channel unsigned integer red/green/blue/alpha channel data format. Values are in the
+             * `[0, 2^64 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64B64A64_UINT
+             */
+            val R64G64B64A64_UINT: DataFormat get() = DataFormat(118L)
+            /**
+             * 64-bit-per-channel signed integer red/green/blue/alpha channel data format. Values are in the
+             * `[2^63 + 1, 2^63 - 1]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64B64A64_SINT
+             */
+            val R64G64B64A64_SINT: DataFormat get() = DataFormat(119L)
+            /**
+             * 64-bit-per-channel signed floating-point red/green/blue/alpha channel data format with the value
+             * stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R64G64B64A64_SFLOAT
+             */
+            val R64G64B64A64_SFLOAT: DataFormat get() = DataFormat(120L)
+            /**
+             * Unsigned floating-point blue/green/red data format with the value stored as-is, packed in 32
+             * bits. The format's precision is 10 bits of blue channel, 11 bits of green channel and 11 bits of
+             * red channel.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B10G11R11_UFLOAT_PACK32
+             */
+            val B10G11R11_UFLOAT_PACK32: DataFormat get() = DataFormat(121L)
+            /**
+             * Unsigned floating-point exposure/blue/green/red data format with the value stored as-is, packed
+             * in 32 bits. The format's precision is 5 bits of exposure, 9 bits of blue channel, 9 bits of
+             * green channel and 9 bits of red channel.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_E5B9G9R9_UFLOAT_PACK32
+             */
+            val E5B9G9R9_UFLOAT_PACK32: DataFormat get() = DataFormat(122L)
+            /**
+             * 16-bit unsigned floating-point depth data format with normalized value. Values are in the `[0.0,
+             * 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_D16_UNORM
+             */
+            val D16_UNORM: DataFormat get() = DataFormat(123L)
+            /**
+             * 24-bit unsigned floating-point depth data format with normalized value, plus 8 unused bits,
+             * packed in 32 bits. Values for depth are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_X8_D24_UNORM_PACK32
+             */
+            val X8_D24_UNORM_PACK32: DataFormat get() = DataFormat(124L)
+            /**
+             * 32-bit signed floating-point depth data format with the value stored as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_D32_SFLOAT
+             */
+            val D32_SFLOAT: DataFormat get() = DataFormat(125L)
+            /**
+             * 8-bit unsigned integer stencil data format.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_S8_UINT
+             */
+            val S8_UINT: DataFormat get() = DataFormat(126L)
+            /**
+             * 16-bit unsigned floating-point depth data format with normalized value, plus 8 bits of stencil
+             * in unsigned integer format. Values for depth are in the `[0.0, 1.0]` range. Values for stencil
+             * are in the `[0, 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_D16_UNORM_S8_UINT
+             */
+            val D16_UNORM_S8_UINT: DataFormat get() = DataFormat(127L)
+            /**
+             * 24-bit unsigned floating-point depth data format with normalized value, plus 8 bits of stencil
+             * in unsigned integer format. Values for depth are in the `[0.0, 1.0]` range. Values for stencil
+             * are in the `[0, 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_D24_UNORM_S8_UINT
+             */
+            val D24_UNORM_S8_UINT: DataFormat get() = DataFormat(128L)
+            /**
+             * 32-bit signed floating-point depth data format with the value stored as-is, plus 8 bits of
+             * stencil in unsigned integer format. Values for stencil are in the `[0, 255]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_D32_SFLOAT_S8_UINT
+             */
+            val D32_SFLOAT_S8_UINT: DataFormat get() = DataFormat(129L)
+            /**
+             * VRAM-compressed unsigned red/green/blue channel data format with normalized value. Values are in
+             * the `[0.0, 1.0]` range. The format's precision is 5 bits of red channel, 6 bits of green channel
+             * and 5 bits of blue channel. Using BC1 texture compression (also known as S3TC DXT1).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC1_RGB_UNORM_BLOCK
+             */
+            val BC1_RGB_UNORM_BLOCK: DataFormat get() = DataFormat(130L)
+            /**
+             * VRAM-compressed unsigned red/green/blue channel data format with normalized value and nonlinear
+             * sRGB encoding. Values are in the `[0.0, 1.0]` range. The format's precision is 5 bits of red
+             * channel, 6 bits of green channel, and 5 bits of blue channel. Using BC1 texture compression
+             * (also known as S3TC DXT1).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC1_RGB_SRGB_BLOCK
+             */
+            val BC1_RGB_SRGB_BLOCK: DataFormat get() = DataFormat(131L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range. The format's precision is 5 bits of red channel, 6 bits of green
+             * channel, 5 bits of blue channel and 1 bit of alpha channel. Using BC1 texture compression (also
+             * known as S3TC DXT1).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC1_RGBA_UNORM_BLOCK
+             */
+            val BC1_RGBA_UNORM_BLOCK: DataFormat get() = DataFormat(132L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range. The format's precision is 5 bits
+             * of red channel, 6 bits of green channel, 5 bits of blue channel, and 1 bit of alpha channel.
+             * Using BC1 texture compression (also known as S3TC DXT1).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC1_RGBA_SRGB_BLOCK
+             */
+            val BC1_RGBA_SRGB_BLOCK: DataFormat get() = DataFormat(133L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range. The format's precision is 5 bits of red channel, 6 bits of green
+             * channel, 5 bits of blue channel and 4 bits of alpha channel. Using BC2 texture compression (also
+             * known as S3TC DXT3).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC2_UNORM_BLOCK
+             */
+            val BC2_UNORM_BLOCK: DataFormat get() = DataFormat(134L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range. The format's precision is 5 bits
+             * of red channel, 6 bits of green channel, 5 bits of blue channel, and 4 bits of alpha channel.
+             * Using BC2 texture compression (also known as S3TC DXT3).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC2_SRGB_BLOCK
+             */
+            val BC2_SRGB_BLOCK: DataFormat get() = DataFormat(135L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range. The format's precision is 5 bits of red channel, 6 bits of green
+             * channel, 5 bits of blue channel and 8 bits of alpha channel. Using BC3 texture compression (also
+             * known as S3TC DXT5).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC3_UNORM_BLOCK
+             */
+            val BC3_UNORM_BLOCK: DataFormat get() = DataFormat(136L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range. The format's precision is 5 bits
+             * of red channel, 6 bits of green channel, 5 bits of blue channel, and 8 bits of alpha channel.
+             * Using BC3 texture compression (also known as S3TC DXT5).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC3_SRGB_BLOCK
+             */
+            val BC3_SRGB_BLOCK: DataFormat get() = DataFormat(137L)
+            /**
+             * VRAM-compressed unsigned red channel data format with normalized value. Values are in the `[0.0,
+             * 1.0]` range. The format's precision is 8 bits of red channel. Using BC4 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC4_UNORM_BLOCK
+             */
+            val BC4_UNORM_BLOCK: DataFormat get() = DataFormat(138L)
+            /**
+             * VRAM-compressed signed red channel data format with normalized value. Values are in the `[-1.0,
+             * 1.0]` range. The format's precision is 8 bits of red channel. Using BC4 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC4_SNORM_BLOCK
+             */
+            val BC4_SNORM_BLOCK: DataFormat get() = DataFormat(139L)
+            /**
+             * VRAM-compressed unsigned red/green channel data format with normalized value. Values are in the
+             * `[0.0, 1.0]` range. The format's precision is 8 bits of red channel and 8 bits of green channel.
+             * Using BC5 texture compression (also known as S3TC RGTC).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC5_UNORM_BLOCK
+             */
+            val BC5_UNORM_BLOCK: DataFormat get() = DataFormat(140L)
+            /**
+             * VRAM-compressed signed red/green channel data format with normalized value. Values are in the
+             * `[-1.0, 1.0]` range. The format's precision is 8 bits of red channel and 8 bits of green
+             * channel. Using BC5 texture compression (also known as S3TC RGTC).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC5_SNORM_BLOCK
+             */
+            val BC5_SNORM_BLOCK: DataFormat get() = DataFormat(141L)
+            /**
+             * VRAM-compressed unsigned red/green/blue channel data format with the floating-point value stored
+             * as-is. The format's precision is between 10 and 13 bits for the red/green/blue channels. Using
+             * BC6H texture compression (also known as BPTC HDR).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC6H_UFLOAT_BLOCK
+             */
+            val BC6H_UFLOAT_BLOCK: DataFormat get() = DataFormat(142L)
+            /**
+             * VRAM-compressed signed red/green/blue channel data format with the floating-point value stored
+             * as-is. The format's precision is between 10 and 13 bits for the red/green/blue channels. Using
+             * BC6H texture compression (also known as BPTC HDR).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC6H_SFLOAT_BLOCK
+             */
+            val BC6H_SFLOAT_BLOCK: DataFormat get() = DataFormat(143L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range. The format's precision is between 4 and 7 bits for the
+             * red/green/blue channels and between 0 and 8 bits for the alpha channel. Also known as BPTC LDR.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC7_UNORM_BLOCK
+             */
+            val BC7_UNORM_BLOCK: DataFormat get() = DataFormat(144L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range. The format's precision is between
+             * 4 and 7 bits for the red/green/blue channels and between 0 and 8 bits for the alpha channel.
+             * Also known as BPTC LDR.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_BC7_SRGB_BLOCK
+             */
+            val BC7_SRGB_BLOCK: DataFormat get() = DataFormat(145L)
+            /**
+             * VRAM-compressed unsigned red/green/blue channel data format with normalized value. Values are in
+             * the `[0.0, 1.0]` range. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_ETC2_R8G8B8_UNORM_BLOCK
+             */
+            val ETC2_R8G8B8_UNORM_BLOCK: DataFormat get() = DataFormat(146L)
+            /**
+             * VRAM-compressed unsigned red/green/blue channel data format with normalized value and nonlinear
+             * sRGB encoding. Values are in the `[0.0, 1.0]` range. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_ETC2_R8G8B8_SRGB_BLOCK
+             */
+            val ETC2_R8G8B8_SRGB_BLOCK: DataFormat get() = DataFormat(147L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range. Red/green/blue use 8 bit of precision each, with alpha using 1
+             * bit of precision. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK
+             */
+            val ETC2_R8G8B8A1_UNORM_BLOCK: DataFormat get() = DataFormat(148L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range. Red/green/blue use 8 bit of
+             * precision each, with alpha using 1 bit of precision. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK
+             */
+            val ETC2_R8G8B8A1_SRGB_BLOCK: DataFormat get() = DataFormat(149L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value. Values
+             * are in the `[0.0, 1.0]` range. Red/green/blue use 8 bits of precision each, with alpha using 8
+             * bits of precision. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK
+             */
+            val ETC2_R8G8B8A8_UNORM_BLOCK: DataFormat get() = DataFormat(150L)
+            /**
+             * VRAM-compressed unsigned red/green/blue/alpha channel data format with normalized value and
+             * nonlinear sRGB encoding. Values are in the `[0.0, 1.0]` range. Red/green/blue use 8 bits of
+             * precision each, with alpha using 8 bits of precision. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK
+             */
+            val ETC2_R8G8B8A8_SRGB_BLOCK: DataFormat get() = DataFormat(151L)
+            /**
+             * 11-bit VRAM-compressed unsigned red channel data format with normalized value. Values are in the
+             * `[0.0, 1.0]` range. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_EAC_R11_UNORM_BLOCK
+             */
+            val EAC_R11_UNORM_BLOCK: DataFormat get() = DataFormat(152L)
+            /**
+             * 11-bit VRAM-compressed signed red channel data format with normalized value. Values are in the
+             * `[-1.0, 1.0]` range. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_EAC_R11_SNORM_BLOCK
+             */
+            val EAC_R11_SNORM_BLOCK: DataFormat get() = DataFormat(153L)
+            /**
+             * 11-bit VRAM-compressed unsigned red/green channel data format with normalized value. Values are
+             * in the `[0.0, 1.0]` range. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_EAC_R11G11_UNORM_BLOCK
+             */
+            val EAC_R11G11_UNORM_BLOCK: DataFormat get() = DataFormat(154L)
+            /**
+             * 11-bit VRAM-compressed signed red/green channel data format with normalized value. Values are in
+             * the `[-1.0, 1.0]` range. Using ETC2 texture compression.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_EAC_R11G11_SNORM_BLOCK
+             */
+            val EAC_R11G11_SNORM_BLOCK: DataFormat get() = DataFormat(155L)
+            val ASTC_4x4_UNORM_BLOCK: DataFormat get() = DataFormat(156L)
+            val ASTC_4x4_SRGB_BLOCK: DataFormat get() = DataFormat(157L)
+            val ASTC_5x4_UNORM_BLOCK: DataFormat get() = DataFormat(158L)
+            val ASTC_5x4_SRGB_BLOCK: DataFormat get() = DataFormat(159L)
+            val ASTC_5x5_UNORM_BLOCK: DataFormat get() = DataFormat(160L)
+            val ASTC_5x5_SRGB_BLOCK: DataFormat get() = DataFormat(161L)
+            val ASTC_6x5_UNORM_BLOCK: DataFormat get() = DataFormat(162L)
+            val ASTC_6x5_SRGB_BLOCK: DataFormat get() = DataFormat(163L)
+            val ASTC_6x6_UNORM_BLOCK: DataFormat get() = DataFormat(164L)
+            val ASTC_6x6_SRGB_BLOCK: DataFormat get() = DataFormat(165L)
+            val ASTC_8x5_UNORM_BLOCK: DataFormat get() = DataFormat(166L)
+            val ASTC_8x5_SRGB_BLOCK: DataFormat get() = DataFormat(167L)
+            val ASTC_8x6_UNORM_BLOCK: DataFormat get() = DataFormat(168L)
+            val ASTC_8x6_SRGB_BLOCK: DataFormat get() = DataFormat(169L)
+            val ASTC_8x8_UNORM_BLOCK: DataFormat get() = DataFormat(170L)
+            val ASTC_8x8_SRGB_BLOCK: DataFormat get() = DataFormat(171L)
+            val ASTC_10x5_UNORM_BLOCK: DataFormat get() = DataFormat(172L)
+            val ASTC_10x5_SRGB_BLOCK: DataFormat get() = DataFormat(173L)
+            val ASTC_10x6_UNORM_BLOCK: DataFormat get() = DataFormat(174L)
+            val ASTC_10x6_SRGB_BLOCK: DataFormat get() = DataFormat(175L)
+            val ASTC_10x8_UNORM_BLOCK: DataFormat get() = DataFormat(176L)
+            val ASTC_10x8_SRGB_BLOCK: DataFormat get() = DataFormat(177L)
+            val ASTC_10x10_UNORM_BLOCK: DataFormat get() = DataFormat(178L)
+            val ASTC_10x10_SRGB_BLOCK: DataFormat get() = DataFormat(179L)
+            val ASTC_12x10_UNORM_BLOCK: DataFormat get() = DataFormat(180L)
+            val ASTC_12x10_SRGB_BLOCK: DataFormat get() = DataFormat(181L)
+            val ASTC_12x12_UNORM_BLOCK: DataFormat get() = DataFormat(182L)
+            val ASTC_12x12_SRGB_BLOCK: DataFormat get() = DataFormat(183L)
+            /**
+             * 8-bit-per-channel unsigned floating-point green/blue/red channel data format with normalized
+             * value. Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved
+             * horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value for the
+             * blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G8B8G8R8_422_UNORM
+             */
+            val G8B8G8R8_422_UNORM: DataFormat get() = DataFormat(184L)
+            /**
+             * 8-bit-per-channel unsigned floating-point blue/green/red channel data format with normalized
+             * value. Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved
+             * horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value for the
+             * blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B8G8R8G8_422_UNORM
+             */
+            val B8G8R8G8_422_UNORM: DataFormat get() = DataFormat(185L)
+            /**
+             * 8-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * stored across 3 separate planes (green + blue + red). Values are in the `[0.0, 1.0]` range. Blue
+             * and red channel data is stored at halved horizontal and vertical resolution (i.e. 2×2 adjacent
+             * pixels will share the same value for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G8_B8_R8_3PLANE_420_UNORM
+             */
+            val G8_B8_R8_3PLANE_420_UNORM: DataFormat get() = DataFormat(186L)
+            /**
+             * 8-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * stored across 2 separate planes (green + blue/red). Values are in the `[0.0, 1.0]` range. Blue
+             * and red channel data is stored at halved horizontal and vertical resolution (i.e. 2×2 adjacent
+             * pixels will share the same value for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G8_B8R8_2PLANE_420_UNORM
+             */
+            val G8_B8R8_2PLANE_420_UNORM: DataFormat get() = DataFormat(187L)
+            /**
+             * 8-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * stored across 2 separate planes (green + blue + red). Values are in the `[0.0, 1.0]` range. Blue
+             * and red channel data is stored at halved horizontal resolution (i.e. 2 horizontally adjacent
+             * pixels will share the same value for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G8_B8_R8_3PLANE_422_UNORM
+             */
+            val G8_B8_R8_3PLANE_422_UNORM: DataFormat get() = DataFormat(188L)
+            /**
+             * 8-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * stored across 2 separate planes (green + blue/red). Values are in the `[0.0, 1.0]` range. Blue
+             * and red channel data is stored at halved horizontal resolution (i.e. 2 horizontally adjacent
+             * pixels will share the same value for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G8_B8R8_2PLANE_422_UNORM
+             */
+            val G8_B8R8_2PLANE_422_UNORM: DataFormat get() = DataFormat(189L)
+            /**
+             * 8-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * stored across 3 separate planes. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G8_B8_R8_3PLANE_444_UNORM
+             */
+            val G8_B8_R8_3PLANE_444_UNORM: DataFormat get() = DataFormat(190L)
+            /**
+             * 10-bit-per-channel unsigned floating-point red channel data with normalized value, plus 6 unused
+             * bits, packed in 16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R10X6_UNORM_PACK16
+             */
+            val R10X6_UNORM_PACK16: DataFormat get() = DataFormat(191L)
+            /**
+             * 10-bit-per-channel unsigned floating-point red/green channel data with normalized value, plus 6
+             * unused bits after each channel, packed in 2×16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R10X6G10X6_UNORM_2PACK16
+             */
+            val R10X6G10X6_UNORM_2PACK16: DataFormat get() = DataFormat(192L)
+            /**
+             * 10-bit-per-channel unsigned floating-point red/green/blue/alpha channel data with normalized
+             * value, plus 6 unused bits after each channel, packed in 4×16 bits. Values are in the `[0.0,
+             * 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16
+             */
+            val R10X6G10X6B10X6A10X6_UNORM_4PACK16: DataFormat get() = DataFormat(193L)
+            /**
+             * 10-bit-per-channel unsigned floating-point green/blue/green/red channel data with normalized
+             * value, plus 6 unused bits after each channel, packed in 4×16 bits. Values are in the `[0.0,
+             * 1.0]` range. Blue and red channel data is stored at halved horizontal resolution (i.e. 2
+             * horizontally adjacent pixels will share the same value for the blue/red channel). The green
+             * channel is listed twice, but contains different values to allow it to be represented at full
+             * resolution.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16
+             */
+            val G10X6B10X6G10X6R10X6_422_UNORM_4PACK16: DataFormat get() = DataFormat(194L)
+            /**
+             * 10-bit-per-channel unsigned floating-point blue/green/red/green channel data with normalized
+             * value, plus 6 unused bits after each channel, packed in 4×16 bits. Values are in the `[0.0,
+             * 1.0]` range. Blue and red channel data is stored at halved horizontal resolution (i.e. 2
+             * horizontally adjacent pixels will share the same value for the blue/red channel). The green
+             * channel is listed twice, but contains different values to allow it to be represented at full
+             * resolution.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16
+             */
+            val B10X6G10X6R10X6G10X6_422_UNORM_4PACK16: DataFormat get() = DataFormat(195L)
+            /**
+             * 10-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 2 separate planes
+             * (green + blue + red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored
+             * at halved horizontal and vertical resolution (i.e. 2×2 adjacent pixels will share the same value
+             * for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16
+             */
+            val G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16: DataFormat get() = DataFormat(196L)
+            /**
+             * 10-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 2 separate planes
+             * (green + blue/red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at
+             * halved horizontal and vertical resolution (i.e. 2×2 adjacent pixels will share the same value
+             * for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16
+             */
+            val G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16: DataFormat get() = DataFormat(197L)
+            /**
+             * 10-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 3 separate planes
+             * (green + blue + red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored
+             * at halved horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value
+             * for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16
+             */
+            val G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16: DataFormat get() = DataFormat(198L)
+            /**
+             * 10-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 3 separate planes
+             * (green + blue/red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at
+             * halved horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value for
+             * the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16
+             */
+            val G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16: DataFormat get() = DataFormat(199L)
+            /**
+             * 10-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 3 separate planes
+             * (green + blue + red). Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16
+             */
+            val G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16: DataFormat get() = DataFormat(200L)
+            /**
+             * 12-bit-per-channel unsigned floating-point red channel data with normalized value, plus 6 unused
+             * bits, packed in 16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R12X4_UNORM_PACK16
+             */
+            val R12X4_UNORM_PACK16: DataFormat get() = DataFormat(201L)
+            /**
+             * 12-bit-per-channel unsigned floating-point red/green channel data with normalized value, plus 6
+             * unused bits after each channel, packed in 2×16 bits. Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R12X4G12X4_UNORM_2PACK16
+             */
+            val R12X4G12X4_UNORM_2PACK16: DataFormat get() = DataFormat(202L)
+            /**
+             * 12-bit-per-channel unsigned floating-point red/green/blue/alpha channel data with normalized
+             * value, plus 6 unused bits after each channel, packed in 4×16 bits. Values are in the `[0.0,
+             * 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16
+             */
+            val R12X4G12X4B12X4A12X4_UNORM_4PACK16: DataFormat get() = DataFormat(203L)
+            /**
+             * 12-bit-per-channel unsigned floating-point green/blue/green/red channel data with normalized
+             * value, plus 6 unused bits after each channel, packed in 4×16 bits. Values are in the `[0.0,
+             * 1.0]` range. Blue and red channel data is stored at halved horizontal resolution (i.e. 2
+             * horizontally adjacent pixels will share the same value for the blue/red channel). The green
+             * channel is listed twice, but contains different values to allow it to be represented at full
+             * resolution.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16
+             */
+            val G12X4B12X4G12X4R12X4_422_UNORM_4PACK16: DataFormat get() = DataFormat(204L)
+            /**
+             * 12-bit-per-channel unsigned floating-point blue/green/red/green channel data with normalized
+             * value, plus 6 unused bits after each channel, packed in 4×16 bits. Values are in the `[0.0,
+             * 1.0]` range. Blue and red channel data is stored at halved horizontal resolution (i.e. 2
+             * horizontally adjacent pixels will share the same value for the blue/red channel). The green
+             * channel is listed twice, but contains different values to allow it to be represented at full
+             * resolution.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16
+             */
+            val B12X4G12X4R12X4G12X4_422_UNORM_4PACK16: DataFormat get() = DataFormat(205L)
+            /**
+             * 12-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 2 separate planes
+             * (green + blue + red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored
+             * at halved horizontal and vertical resolution (i.e. 2×2 adjacent pixels will share the same value
+             * for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16
+             */
+            val G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16: DataFormat get() = DataFormat(206L)
+            /**
+             * 12-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 2 separate planes
+             * (green + blue/red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at
+             * halved horizontal and vertical resolution (i.e. 2×2 adjacent pixels will share the same value
+             * for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16
+             */
+            val G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16: DataFormat get() = DataFormat(207L)
+            /**
+             * 12-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 3 separate planes
+             * (green + blue + red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored
+             * at halved horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value
+             * for the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16
+             */
+            val G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16: DataFormat get() = DataFormat(208L)
+            /**
+             * 12-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 3 separate planes
+             * (green + blue/red). Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at
+             * halved horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value for
+             * the blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16
+             */
+            val G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16: DataFormat get() = DataFormat(209L)
+            /**
+             * 12-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Packed in 3×16 bits and stored across 3 separate planes
+             * (green + blue + red). Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16
+             */
+            val G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16: DataFormat get() = DataFormat(210L)
+            /**
+             * 16-bit-per-channel unsigned floating-point green/blue/red channel data format with normalized
+             * value. Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved
+             * horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value for the
+             * blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G16B16G16R16_422_UNORM
+             */
+            val G16B16G16R16_422_UNORM: DataFormat get() = DataFormat(211L)
+            /**
+             * 16-bit-per-channel unsigned floating-point blue/green/red channel data format with normalized
+             * value. Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved
+             * horizontal resolution (i.e. 2 horizontally adjacent pixels will share the same value for the
+             * blue/red channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_B16G16R16G16_422_UNORM
+             */
+            val B16G16R16G16_422_UNORM: DataFormat get() = DataFormat(212L)
+            /**
+             * 16-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Stored across 2 separate planes (green + blue + red).
+             * Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved horizontal
+             * and vertical resolution (i.e. 2×2 adjacent pixels will share the same value for the blue/red
+             * channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G16_B16_R16_3PLANE_420_UNORM
+             */
+            val G16_B16_R16_3PLANE_420_UNORM: DataFormat get() = DataFormat(213L)
+            /**
+             * 16-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Stored across 2 separate planes (green + blue/red).
+             * Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved horizontal
+             * and vertical resolution (i.e. 2×2 adjacent pixels will share the same value for the blue/red
+             * channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G16_B16R16_2PLANE_420_UNORM
+             */
+            val G16_B16R16_2PLANE_420_UNORM: DataFormat get() = DataFormat(214L)
+            /**
+             * 16-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Stored across 3 separate planes (green + blue + red).
+             * Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved horizontal
+             * resolution (i.e. 2 horizontally adjacent pixels will share the same value for the blue/red
+             * channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G16_B16_R16_3PLANE_422_UNORM
+             */
+            val G16_B16_R16_3PLANE_422_UNORM: DataFormat get() = DataFormat(215L)
+            /**
+             * 16-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Stored across 3 separate planes (green + blue/red).
+             * Values are in the `[0.0, 1.0]` range. Blue and red channel data is stored at halved horizontal
+             * resolution (i.e. 2 horizontally adjacent pixels will share the same value for the blue/red
+             * channel).
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G16_B16R16_2PLANE_422_UNORM
+             */
+            val G16_B16R16_2PLANE_422_UNORM: DataFormat get() = DataFormat(216L)
+            /**
+             * 16-bit-per-channel unsigned floating-point green/blue/red channel data with normalized value,
+             * plus 6 unused bits after each channel. Stored across 3 separate planes (green + blue + red).
+             * Values are in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_G16_B16_R16_3PLANE_444_UNORM
+             */
+            val G16_B16_R16_3PLANE_444_UNORM: DataFormat get() = DataFormat(217L)
+            val ASTC_4x4_SFLOAT_BLOCK: DataFormat get() = DataFormat(218L)
+            val ASTC_5x4_SFLOAT_BLOCK: DataFormat get() = DataFormat(219L)
+            val ASTC_5x5_SFLOAT_BLOCK: DataFormat get() = DataFormat(220L)
+            val ASTC_6x5_SFLOAT_BLOCK: DataFormat get() = DataFormat(221L)
+            val ASTC_6x6_SFLOAT_BLOCK: DataFormat get() = DataFormat(222L)
+            val ASTC_8x5_SFLOAT_BLOCK: DataFormat get() = DataFormat(223L)
+            val ASTC_8x6_SFLOAT_BLOCK: DataFormat get() = DataFormat(224L)
+            val ASTC_8x8_SFLOAT_BLOCK: DataFormat get() = DataFormat(225L)
+            val ASTC_10x5_SFLOAT_BLOCK: DataFormat get() = DataFormat(226L)
+            val ASTC_10x6_SFLOAT_BLOCK: DataFormat get() = DataFormat(227L)
+            val ASTC_10x8_SFLOAT_BLOCK: DataFormat get() = DataFormat(228L)
+            val ASTC_10x10_SFLOAT_BLOCK: DataFormat get() = DataFormat(229L)
+            val ASTC_12x10_SFLOAT_BLOCK: DataFormat get() = DataFormat(230L)
+            val ASTC_12x12_SFLOAT_BLOCK: DataFormat get() = DataFormat(231L)
+            /**
+             * Represents the size of the `DataFormat` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.DATA_FORMAT_MAX
+             */
+            val MAX: DataFormat get() = DataFormat(232L)
+        }
+    }
+
+    @JvmInline
+    value class BarrierMask(val value: Long) {
+        infix fun or(other: BarrierMask): BarrierMask = BarrierMask(value or other.value)
+
+        infix fun and(other: BarrierMask): BarrierMask = BarrierMask(value and other.value)
+
+        infix fun xor(other: BarrierMask): BarrierMask = BarrierMask(value xor other.value)
+
+        fun inv(): BarrierMask = BarrierMask(value.inv())
+
+        operator fun contains(other: BarrierMask): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Vertex shader barrier mask.
+             *
+             * Generated from Godot docs: RenderingDevice.BARRIER_MASK_VERTEX
+             */
+            val VERTEX: BarrierMask get() = BarrierMask(1L)
+            /**
+             * Fragment shader barrier mask.
+             *
+             * Generated from Godot docs: RenderingDevice.BARRIER_MASK_FRAGMENT
+             */
+            val FRAGMENT: BarrierMask get() = BarrierMask(8L)
+            /**
+             * Compute barrier mask.
+             *
+             * Generated from Godot docs: RenderingDevice.BARRIER_MASK_COMPUTE
+             */
+            val COMPUTE: BarrierMask get() = BarrierMask(2L)
+            /**
+             * Transfer barrier mask.
+             *
+             * Generated from Godot docs: RenderingDevice.BARRIER_MASK_TRANSFER
+             */
+            val TRANSFER: BarrierMask get() = BarrierMask(4L)
+            /**
+             * Raster barrier mask (vertex and fragment). Equivalent to `BARRIER_MASK_VERTEX |
+             * BARRIER_MASK_FRAGMENT`.
+             *
+             * Generated from Godot docs: RenderingDevice.BARRIER_MASK_RASTER
+             */
+            val RASTER: BarrierMask get() = BarrierMask(9L)
+            /**
+             * Barrier mask for all types (vertex, fragment, compute, transfer).
+             *
+             * Generated from Godot docs: RenderingDevice.BARRIER_MASK_ALL_BARRIERS
+             */
+            val ALL_BARRIERS: BarrierMask get() = BarrierMask(32767L)
+            /**
+             * No barrier for any type.
+             *
+             * Generated from Godot docs: RenderingDevice.BARRIER_MASK_NO_BARRIER
+             */
+            val NO_BARRIER: BarrierMask get() = BarrierMask(32768L)
+        }
+    }
+
+    @JvmInline
+    value class TextureType(val value: Long) {
+        companion object {
+            /**
+             * 1-dimensional texture.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_1D
+             */
+            val TYPE_1D: TextureType get() = TextureType(0L)
+            /**
+             * 2-dimensional texture.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_2D
+             */
+            val TYPE_2D: TextureType get() = TextureType(1L)
+            /**
+             * 3-dimensional texture.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_3D
+             */
+            val TYPE_3D: TextureType get() = TextureType(2L)
+            /**
+             * `Cubemap` texture.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_CUBE
+             */
+            val CUBE: TextureType get() = TextureType(3L)
+            /**
+             * Array of 1-dimensional textures.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_1D_ARRAY
+             */
+            val TYPE_1D_ARRAY: TextureType get() = TextureType(4L)
+            /**
+             * Array of 2-dimensional textures.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_2D_ARRAY
+             */
+            val TYPE_2D_ARRAY: TextureType get() = TextureType(5L)
+            /**
+             * Array of `Cubemap` textures.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_CUBE_ARRAY
+             */
+            val CUBE_ARRAY: TextureType get() = TextureType(6L)
+            /**
+             * Represents the size of the `TextureType` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_TYPE_MAX
+             */
+            val MAX: TextureType get() = TextureType(7L)
+        }
+    }
+
+    @JvmInline
+    value class TextureSamples(val value: Long) {
+        companion object {
+            /**
+             * Perform 1 texture sample (this is the fastest but lowest-quality for antialiasing).
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_1
+             */
+            val SAMPLES_1: TextureSamples get() = TextureSamples(0L)
+            /**
+             * Perform 2 texture samples.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_2
+             */
+            val SAMPLES_2: TextureSamples get() = TextureSamples(1L)
+            /**
+             * Perform 4 texture samples.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_4
+             */
+            val SAMPLES_4: TextureSamples get() = TextureSamples(2L)
+            /**
+             * Perform 8 texture samples. Not supported on mobile GPUs (including Apple Silicon).
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_8
+             */
+            val SAMPLES_8: TextureSamples get() = TextureSamples(3L)
+            /**
+             * Perform 16 texture samples. Not supported on mobile GPUs and many desktop GPUs.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_16
+             */
+            val SAMPLES_16: TextureSamples get() = TextureSamples(4L)
+            /**
+             * Perform 32 texture samples. Not supported on most GPUs.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_32
+             */
+            val SAMPLES_32: TextureSamples get() = TextureSamples(5L)
+            /**
+             * Perform 64 texture samples (this is the slowest but highest-quality for antialiasing). Not
+             * supported on most GPUs.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_64
+             */
+            val SAMPLES_64: TextureSamples get() = TextureSamples(6L)
+            /**
+             * Represents the size of the `TextureSamples` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SAMPLES_MAX
+             */
+            val MAX: TextureSamples get() = TextureSamples(7L)
+        }
+    }
+
+    @JvmInline
+    value class TextureUsageBits(val value: Long) {
+        infix fun or(other: TextureUsageBits): TextureUsageBits = TextureUsageBits(value or other.value)
+
+        infix fun and(other: TextureUsageBits): TextureUsageBits = TextureUsageBits(value and other.value)
+
+        infix fun xor(other: TextureUsageBits): TextureUsageBits = TextureUsageBits(value xor other.value)
+
+        fun inv(): TextureUsageBits = TextureUsageBits(value.inv())
+
+        operator fun contains(other: TextureUsageBits): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Texture can be sampled.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT
+             */
+            val SAMPLING_BIT: TextureUsageBits get() = TextureUsageBits(1L)
+            /**
+             * Texture can be used as a color attachment in a framebuffer.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_COLOR_ATTACHMENT_BIT
+             */
+            val COLOR_ATTACHMENT_BIT: TextureUsageBits get() = TextureUsageBits(2L)
+            /**
+             * Texture can be used as a depth/stencil attachment in a framebuffer.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+             */
+            val DEPTH_STENCIL_ATTACHMENT_BIT: TextureUsageBits get() = TextureUsageBits(4L)
+            /**
+             * Texture can be used as a depth/stencil resolve attachment in a framebuffer.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_DEPTH_RESOLVE_ATTACHMENT_BIT
+             */
+            val DEPTH_RESOLVE_ATTACHMENT_BIT: TextureUsageBits get() = TextureUsageBits(4096L)
+            /**
+             * Texture can be used as a storage image
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage).
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_STORAGE_BIT
+             */
+            val STORAGE_BIT: TextureUsageBits get() = TextureUsageBits(8L)
+            /**
+             * Texture can be used as a storage image
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage)
+             * with support for atomic operations.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_STORAGE_ATOMIC_BIT
+             */
+            val STORAGE_ATOMIC_BIT: TextureUsageBits get() = TextureUsageBits(16L)
+            /**
+             * Texture can be read back on the CPU using `texture_get_data` faster than without this bit, since
+             * it is always kept in the system memory.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_CPU_READ_BIT
+             */
+            val CPU_READ_BIT: TextureUsageBits get() = TextureUsageBits(32L)
+            /**
+             * Texture can be updated using `texture_update`.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT
+             */
+            val CAN_UPDATE_BIT: TextureUsageBits get() = TextureUsageBits(64L)
+            /**
+             * Texture can be a source for `texture_copy`.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT
+             */
+            val CAN_COPY_FROM_BIT: TextureUsageBits get() = TextureUsageBits(128L)
+            /**
+             * Texture can be a destination for `texture_copy`.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT
+             */
+            val CAN_COPY_TO_BIT: TextureUsageBits get() = TextureUsageBits(256L)
+            /**
+             * Texture can be used as a input attachment
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment)
+             * in a framebuffer.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_USAGE_INPUT_ATTACHMENT_BIT
+             */
+            val INPUT_ATTACHMENT_BIT: TextureUsageBits get() = TextureUsageBits(512L)
+        }
+    }
+
+    @JvmInline
+    value class TextureSwizzle(val value: Long) {
+        companion object {
+            /**
+             * Return the sampled value as-is.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_IDENTITY
+             */
+            val IDENTITY: TextureSwizzle get() = TextureSwizzle(0L)
+            /**
+             * Always return `0.0` when sampling.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_ZERO
+             */
+            val ZERO: TextureSwizzle get() = TextureSwizzle(1L)
+            /**
+             * Always return `1.0` when sampling.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_ONE
+             */
+            val ONE: TextureSwizzle get() = TextureSwizzle(2L)
+            /**
+             * Sample the red color channel.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_R
+             */
+            val R: TextureSwizzle get() = TextureSwizzle(3L)
+            /**
+             * Sample the green color channel.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_G
+             */
+            val G: TextureSwizzle get() = TextureSwizzle(4L)
+            /**
+             * Sample the blue color channel.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_B
+             */
+            val B: TextureSwizzle get() = TextureSwizzle(5L)
+            /**
+             * Sample the alpha channel.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_A
+             */
+            val A: TextureSwizzle get() = TextureSwizzle(6L)
+            /**
+             * Represents the size of the `TextureSwizzle` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SWIZZLE_MAX
+             */
+            val MAX: TextureSwizzle get() = TextureSwizzle(7L)
+        }
+    }
+
+    @JvmInline
+    value class TextureSliceType(val value: Long) {
+        companion object {
+            /**
+             * 2-dimensional texture slice.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SLICE_2D
+             */
+            val SLICE_2D: TextureSliceType get() = TextureSliceType(0L)
+            /**
+             * Cubemap texture slice.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SLICE_CUBEMAP
+             */
+            val CUBEMAP: TextureSliceType get() = TextureSliceType(1L)
+            /**
+             * 3-dimensional texture slice.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SLICE_3D
+             */
+            val SLICE_3D: TextureSliceType get() = TextureSliceType(2L)
+        }
+    }
+
+    @JvmInline
+    value class SamplerFilter(val value: Long) {
+        companion object {
+            /**
+             * Nearest-neighbor sampler filtering. Sampling at higher resolutions than the source will result
+             * in a pixelated look.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_FILTER_NEAREST
+             */
+            val NEAREST: SamplerFilter get() = SamplerFilter(0L)
+            /**
+             * Bilinear sampler filtering. Sampling at higher resolutions than the source will result in a
+             * blurry look.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_FILTER_LINEAR
+             */
+            val LINEAR: SamplerFilter get() = SamplerFilter(1L)
+        }
+    }
+
+    @JvmInline
+    value class SamplerRepeatMode(val value: Long) {
+        companion object {
+            /**
+             * Sample with repeating enabled.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+             */
+            val REPEAT: SamplerRepeatMode get() = SamplerRepeatMode(0L)
+            /**
+             * Sample with mirrored repeating enabled. When sampling outside the `[0.0, 1.0]` range, return a
+             * mirrored version of the sampler. This mirrored version is mirrored again if sampling further
+             * away, with the pattern repeating indefinitely.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_REPEAT_MODE_MIRRORED_REPEAT
+             */
+            val MIRRORED_REPEAT: SamplerRepeatMode get() = SamplerRepeatMode(1L)
+            /**
+             * Sample with repeating disabled. When sampling outside the `[0.0, 1.0]` range, return the color
+             * of the last pixel on the edge.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
+             */
+            val CLAMP_TO_EDGE: SamplerRepeatMode get() = SamplerRepeatMode(2L)
+            /**
+             * Sample with repeating disabled. When sampling outside the `[0.0, 1.0]` range, return the
+             * specified `RDSamplerState.border_color`.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER
+             */
+            val CLAMP_TO_BORDER: SamplerRepeatMode get() = SamplerRepeatMode(3L)
+            /**
+             * Sample with mirrored repeating enabled, but only once. When sampling in the `[-1.0, 0.0]` range,
+             * return a mirrored version of the sampler. When sampling outside the `[-1.0, 1.0]` range, return
+             * the color of the last pixel on the edge.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_REPEAT_MODE_MIRROR_CLAMP_TO_EDGE
+             */
+            val MIRROR_CLAMP_TO_EDGE: SamplerRepeatMode get() = SamplerRepeatMode(4L)
+            /**
+             * Represents the size of the `SamplerRepeatMode` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_REPEAT_MODE_MAX
+             */
+            val MAX: SamplerRepeatMode get() = SamplerRepeatMode(5L)
+        }
+    }
+
+    @JvmInline
+    value class SamplerBorderColor(val value: Long) {
+        companion object {
+            /**
+             * Return a floating-point transparent black color when sampling outside the `[0.0, 1.0]` range.
+             * Only effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
+             */
+            val FLOAT_TRANSPARENT_BLACK: SamplerBorderColor get() = SamplerBorderColor(0L)
+            /**
+             * Return an integer transparent black color when sampling outside the `[0.0, 1.0]` range. Only
+             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_INT_TRANSPARENT_BLACK
+             */
+            val INT_TRANSPARENT_BLACK: SamplerBorderColor get() = SamplerBorderColor(1L)
+            /**
+             * Return a floating-point opaque black color when sampling outside the `[0.0, 1.0]` range. Only
+             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_BLACK
+             */
+            val FLOAT_OPAQUE_BLACK: SamplerBorderColor get() = SamplerBorderColor(2L)
+            /**
+             * Return an integer opaque black color when sampling outside the `[0.0, 1.0]` range. Only
+             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_INT_OPAQUE_BLACK
+             */
+            val INT_OPAQUE_BLACK: SamplerBorderColor get() = SamplerBorderColor(3L)
+            /**
+             * Return a floating-point opaque white color when sampling outside the `[0.0, 1.0]` range. Only
+             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_WHITE
+             */
+            val FLOAT_OPAQUE_WHITE: SamplerBorderColor get() = SamplerBorderColor(4L)
+            /**
+             * Return an integer opaque white color when sampling outside the `[0.0, 1.0]` range. Only
+             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_INT_OPAQUE_WHITE
+             */
+            val INT_OPAQUE_WHITE: SamplerBorderColor get() = SamplerBorderColor(5L)
+            /**
+             * Represents the size of the `SamplerBorderColor` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_MAX
+             */
+            val MAX: SamplerBorderColor get() = SamplerBorderColor(6L)
+        }
+    }
+
+    @JvmInline
+    value class VertexFrequency(val value: Long) {
+        companion object {
+            /**
+             * Vertex attribute addressing is a function of the vertex. This is used to specify the rate at
+             * which vertex attributes are pulled from buffers.
+             *
+             * Generated from Godot docs: RenderingDevice.VERTEX_FREQUENCY_VERTEX
+             */
+            val VERTEX: VertexFrequency get() = VertexFrequency(0L)
+            /**
+             * Vertex attribute addressing is a function of the instance index. This is used to specify the
+             * rate at which vertex attributes are pulled from buffers.
+             *
+             * Generated from Godot docs: RenderingDevice.VERTEX_FREQUENCY_INSTANCE
+             */
+            val INSTANCE: VertexFrequency get() = VertexFrequency(1L)
+        }
+    }
+
+    @JvmInline
+    value class IndexBufferFormat(val value: Long) {
+        companion object {
+            /**
+             * Index buffer in 16-bit unsigned integer format. This limits the maximum index that can be
+             * specified to `65535`.
+             *
+             * Generated from Godot docs: RenderingDevice.INDEX_BUFFER_FORMAT_UINT16
+             */
+            val UINT16: IndexBufferFormat get() = IndexBufferFormat(0L)
+            /**
+             * Index buffer in 32-bit unsigned integer format. This limits the maximum index that can be
+             * specified to `4294967295`.
+             *
+             * Generated from Godot docs: RenderingDevice.INDEX_BUFFER_FORMAT_UINT32
+             */
+            val UINT32: IndexBufferFormat get() = IndexBufferFormat(1L)
+        }
+    }
+
+    @JvmInline
+    value class StorageBufferUsage(val value: Long) {
+        infix fun or(other: StorageBufferUsage): StorageBufferUsage = StorageBufferUsage(value or other.value)
+
+        infix fun and(other: StorageBufferUsage): StorageBufferUsage = StorageBufferUsage(value and other.value)
+
+        infix fun xor(other: StorageBufferUsage): StorageBufferUsage = StorageBufferUsage(value xor other.value)
+
+        fun inv(): StorageBufferUsage = StorageBufferUsage(value.inv())
+
+        operator fun contains(other: StorageBufferUsage): Boolean = (value and other.value) == other.value
+
+        companion object {
+            val INDIRECT: StorageBufferUsage get() = StorageBufferUsage(1L)
+        }
+    }
+
+    @JvmInline
+    value class BufferCreationBits(val value: Long) {
+        infix fun or(other: BufferCreationBits): BufferCreationBits = BufferCreationBits(value or other.value)
+
+        infix fun and(other: BufferCreationBits): BufferCreationBits = BufferCreationBits(value and other.value)
+
+        infix fun xor(other: BufferCreationBits): BufferCreationBits = BufferCreationBits(value xor other.value)
+
+        fun inv(): BufferCreationBits = BufferCreationBits(value.inv())
+
+        operator fun contains(other: BufferCreationBits): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Optionally, set this flag if you wish to use `buffer_get_device_address` functionality. You must
+             * first check the GPU supports it:
+             *
+             * Generated from Godot docs: RenderingDevice.BUFFER_CREATION_DEVICE_ADDRESS_BIT
+             */
+            val DEVICE_ADDRESS_BIT: BufferCreationBits get() = BufferCreationBits(1L)
+            /**
+             * Set this flag so that it is created as storage. This is useful if Compute Shaders need access
+             * (for reading or writing) to the buffer, e.g. skeletal animations are processed in Compute
+             * Shaders which need access to vertex buffers, to be later consumed by vertex shaders as part of
+             * the regular rasterization pipeline.
+             *
+             * Generated from Godot docs: RenderingDevice.BUFFER_CREATION_AS_STORAGE_BIT
+             */
+            val AS_STORAGE_BIT: BufferCreationBits get() = BufferCreationBits(2L)
+            /**
+             * Allows usage of this buffer as input data for an acceleration structure build operation. You
+             * must first check that the GPU supports it:
+             *
+             * Generated from Godot docs: RenderingDevice.BUFFER_CREATION_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT
+             */
+            val ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT: BufferCreationBits get() = BufferCreationBits(8L)
+        }
+    }
+
+    @JvmInline
+    value class AccelerationStructureFlagBits(val value: Long) {
+        infix fun or(other: AccelerationStructureFlagBits): AccelerationStructureFlagBits = AccelerationStructureFlagBits(value or other.value)
+
+        infix fun and(other: AccelerationStructureFlagBits): AccelerationStructureFlagBits = AccelerationStructureFlagBits(value and other.value)
+
+        infix fun xor(other: AccelerationStructureFlagBits): AccelerationStructureFlagBits = AccelerationStructureFlagBits(value xor other.value)
+
+        fun inv(): AccelerationStructureFlagBits = AccelerationStructureFlagBits(value.inv())
+
+        operator fun contains(other: AccelerationStructureFlagBits): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Allows the acceleration structure to be updated after it has been built.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT
+             */
+            val ALLOW_UPDATE_BIT: AccelerationStructureFlagBits get() = AccelerationStructureFlagBits(1L)
+            /**
+             * Allows the acceleration structure to be compacted to reduce memory usage after it has been
+             * built.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT
+             */
+            val ALLOW_COMPACTION_BIT: AccelerationStructureFlagBits get() = AccelerationStructureFlagBits(2L)
+            /**
+             * Prioritizes ray traversal performance over build performance when building the acceleration
+             * structure.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT
+             */
+            val PREFER_FAST_TRACE_BIT: AccelerationStructureFlagBits get() = AccelerationStructureFlagBits(4L)
+            /**
+             * Prioritizes build performance over ray traversal performance when building the acceleration
+             * structure.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT
+             */
+            val PREFER_FAST_BUILD_BIT: AccelerationStructureFlagBits get() = AccelerationStructureFlagBits(8L)
+            /**
+             * Reduces the memory usage of the acceleration structure, potentially at the cost of reduced ray
+             * traversal performance.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_LOW_MEMORY_BIT
+             */
+            val LOW_MEMORY_BIT: AccelerationStructureFlagBits get() = AccelerationStructureFlagBits(16L)
+        }
+    }
+
+    @JvmInline
+    value class AccelerationStructureGeometryFlagBits(val value: Long) {
+        infix fun or(other: AccelerationStructureGeometryFlagBits): AccelerationStructureGeometryFlagBits = AccelerationStructureGeometryFlagBits(value or other.value)
+
+        infix fun and(other: AccelerationStructureGeometryFlagBits): AccelerationStructureGeometryFlagBits = AccelerationStructureGeometryFlagBits(value and other.value)
+
+        infix fun xor(other: AccelerationStructureGeometryFlagBits): AccelerationStructureGeometryFlagBits = AccelerationStructureGeometryFlagBits(value xor other.value)
+
+        fun inv(): AccelerationStructureGeometryFlagBits = AccelerationStructureGeometryFlagBits(value.inv())
+
+        operator fun contains(other: AccelerationStructureGeometryFlagBits): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * An opaque geometry does not invoke the any hit shaders.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_GEOMETRY_OPAQUE_BIT
+             */
+            val OPAQUE_BIT: AccelerationStructureGeometryFlagBits get() = AccelerationStructureGeometryFlagBits(1L)
+            /**
+             * This geometry only calls the any hit shader a single time for each primitive.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT
+             */
+            val NO_DUPLICATE_ANY_HIT_INVOCATION_BIT: AccelerationStructureGeometryFlagBits get() = AccelerationStructureGeometryFlagBits(2L)
+        }
+    }
+
+    @JvmInline
+    value class AccelerationStructureInstanceFlagBits(val value: Long) {
+        infix fun or(other: AccelerationStructureInstanceFlagBits): AccelerationStructureInstanceFlagBits = AccelerationStructureInstanceFlagBits(value or other.value)
+
+        infix fun and(other: AccelerationStructureInstanceFlagBits): AccelerationStructureInstanceFlagBits = AccelerationStructureInstanceFlagBits(value and other.value)
+
+        infix fun xor(other: AccelerationStructureInstanceFlagBits): AccelerationStructureInstanceFlagBits = AccelerationStructureInstanceFlagBits(value xor other.value)
+
+        fun inv(): AccelerationStructureInstanceFlagBits = AccelerationStructureInstanceFlagBits(value.inv())
+
+        operator fun contains(other: AccelerationStructureInstanceFlagBits): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Disables triangle face culling for this instance during ray traversal.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT
+             */
+            val TRIANGLE_FACING_CULL_DISABLE_BIT: AccelerationStructureInstanceFlagBits get() = AccelerationStructureInstanceFlagBits(1L)
+            /**
+             * Flips the triangle facing direction for this instance during ray traversal.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FLIP_FACING_BIT
+             */
+            val TRIANGLE_FLIP_FACING_BIT: AccelerationStructureInstanceFlagBits get() = AccelerationStructureInstanceFlagBits(2L)
+            /**
+             * Forces all geometries in this instance to be treated as opaque, preventing any hit shaders from
+             * being invoked.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_INSTANCE_FORCE_OPAQUE_BIT
+             */
+            val FORCE_OPAQUE_BIT: AccelerationStructureInstanceFlagBits get() = AccelerationStructureInstanceFlagBits(4L)
+            /**
+             * Forces all geometries in this instance to be treated as non-opaque, allowing any hit shaders to
+             * be invoked.
+             *
+             * Generated from Godot docs: RenderingDevice.ACCELERATION_STRUCTURE_INSTANCE_FORCE_NO_OPAQUE_BIT
+             */
+            val FORCE_NO_OPAQUE_BIT: AccelerationStructureInstanceFlagBits get() = AccelerationStructureInstanceFlagBits(8L)
+        }
+    }
+
+    @JvmInline
+    value class UniformType(val value: Long) {
+        companion object {
+            /**
+             * Sampler uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_SAMPLER
+             */
+            val SAMPLER: UniformType get() = UniformType(0L)
+            /**
+             * Sampler uniform with a texture.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE
+             */
+            val SAMPLER_WITH_TEXTURE: UniformType get() = UniformType(1L)
+            /**
+             * Texture uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_TEXTURE
+             */
+            val TEXTURE: UniformType get() = UniformType(2L)
+            /**
+             * Image uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_IMAGE
+             */
+            val IMAGE: UniformType get() = UniformType(3L)
+            /**
+             * Texture buffer uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_TEXTURE_BUFFER
+             */
+            val TEXTURE_BUFFER: UniformType get() = UniformType(4L)
+            /**
+             * Sampler uniform with a texture buffer.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE_BUFFER
+             */
+            val SAMPLER_WITH_TEXTURE_BUFFER: UniformType get() = UniformType(5L)
+            /**
+             * Image buffer uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_IMAGE_BUFFER
+             */
+            val IMAGE_BUFFER: UniformType get() = UniformType(6L)
+            /**
+             * Uniform buffer uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER
+             */
+            val UNIFORM_BUFFER: UniformType get() = UniformType(7L)
+            /**
+             * Storage buffer (https://vkguide.dev/docs/chapter-4/storage_buffers/) uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+             */
+            val STORAGE_BUFFER: UniformType get() = UniformType(8L)
+            /**
+             * Input attachment uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_INPUT_ATTACHMENT
+             */
+            val INPUT_ATTACHMENT: UniformType get() = UniformType(9L)
+            /**
+             * Same as UNIFORM_TYPE_UNIFORM_BUFFER but for buffers created with
+             * BUFFER_CREATION_DYNAMIC_PERSISTENT_BIT. Note: This flag is not available to GD users due to
+             * being too dangerous (i.e. wrong usage can result in visual glitches). It's exposed in case GD
+             * users receive a buffer created with such flag from Godot.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER_DYNAMIC
+             */
+            val UNIFORM_BUFFER_DYNAMIC: UniformType get() = UniformType(10L)
+            /**
+             * Same as UNIFORM_TYPE_STORAGE_BUFFER but for buffers created with
+             * BUFFER_CREATION_DYNAMIC_PERSISTENT_BIT. Note: This flag is not available to GD users due to
+             * being too dangerous (i.e. wrong usage can result in visual glitches). It's exposed in case GD
+             * users receive a buffer created with such flag from Godot.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER_DYNAMIC
+             */
+            val STORAGE_BUFFER_DYNAMIC: UniformType get() = UniformType(11L)
+            /**
+             * Acceleration structure uniform.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_ACCELERATION_STRUCTURE
+             */
+            val ACCELERATION_STRUCTURE: UniformType get() = UniformType(12L)
+            /**
+             * Represents the size of the `UniformType` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.UNIFORM_TYPE_MAX
+             */
+            val MAX: UniformType get() = UniformType(13L)
+        }
+    }
+
+    @JvmInline
+    value class RenderPrimitive(val value: Long) {
+        companion object {
+            /**
+             * Point rendering primitive (with constant size, regardless of distance from camera).
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_POINTS
+             */
+            val POINTS: RenderPrimitive get() = RenderPrimitive(0L)
+            /**
+             * Line list rendering primitive. Lines are drawn separated from each other.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_LINES
+             */
+            val LINES: RenderPrimitive get() = RenderPrimitive(1L)
+            /**
+             * Line list rendering primitive with adjacency.
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-line-lists-with-adjacency)
+             * Note: Adjacency is only useful with geometry shaders, which Godot does not expose.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_LINES_WITH_ADJACENCY
+             */
+            val LINES_WITH_ADJACENCY: RenderPrimitive get() = RenderPrimitive(2L)
+            /**
+             * Line strip rendering primitive. Lines drawn are connected to the previous vertex.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_LINESTRIPS
+             */
+            val LINESTRIPS: RenderPrimitive get() = RenderPrimitive(3L)
+            /**
+             * Line strip rendering primitive with adjacency.
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-line-strips-with-adjacency)
+             * Note: Adjacency is only useful with geometry shaders, which Godot does not expose.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_LINESTRIPS_WITH_ADJACENCY
+             */
+            val LINESTRIPS_WITH_ADJACENCY: RenderPrimitive get() = RenderPrimitive(4L)
+            /**
+             * Triangle list rendering primitive. Triangles are drawn separated from each other.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_TRIANGLES
+             */
+            val TRIANGLES: RenderPrimitive get() = RenderPrimitive(5L)
+            /**
+             * Triangle list rendering primitive with adjacency.
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-triangle-lists-with-adjacency)
+             * Note: Adjacency is only useful with geometry shaders, which Godot does not expose.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_TRIANGLES_WITH_ADJACENCY
+             */
+            val TRIANGLES_WITH_ADJACENCY: RenderPrimitive get() = RenderPrimitive(6L)
+            /**
+             * Triangle strip rendering primitive. Triangles drawn are connected to the previous triangle.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_TRIANGLE_STRIPS
+             */
+            val TRIANGLE_STRIPS: RenderPrimitive get() = RenderPrimitive(7L)
+            /**
+             * Triangle strip rendering primitive with adjacency.
+             * (https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-triangle-strips-with-adjacency)
+             * Note: Adjacency is only useful with geometry shaders, which Godot does not expose.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_TRIANGLE_STRIPS_WITH_AJACENCY
+             */
+            val TRIANGLE_STRIPS_WITH_AJACENCY: RenderPrimitive get() = RenderPrimitive(8L)
+            /**
+             * Triangle strip rendering primitive with primitive restart enabled. Triangles drawn are connected
+             * to the previous triangle, but a primitive restart index can be specified before drawing to
+             * create a second triangle strip after the specified index. Note: Only compatible with indexed
+             * draws.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_TRIANGLE_STRIPS_WITH_RESTART_INDEX
+             */
+            val TRIANGLE_STRIPS_WITH_RESTART_INDEX: RenderPrimitive get() = RenderPrimitive(9L)
+            /**
+             * Tessellation patch rendering primitive. Only useful with tessellation shaders, which can be used
+             * to deform these patches.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_TESSELATION_PATCH
+             */
+            val TESSELATION_PATCH: RenderPrimitive get() = RenderPrimitive(10L)
+            /**
+             * Represents the size of the `RenderPrimitive` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.RENDER_PRIMITIVE_MAX
+             */
+            val MAX: RenderPrimitive get() = RenderPrimitive(11L)
+        }
+    }
+
+    @JvmInline
+    value class PolygonCullMode(val value: Long) {
+        companion object {
+            /**
+             * Do not use polygon front face or backface culling.
+             *
+             * Generated from Godot docs: RenderingDevice.POLYGON_CULL_DISABLED
+             */
+            val DISABLED: PolygonCullMode get() = PolygonCullMode(0L)
+            /**
+             * Use polygon frontface culling (faces pointing towards the camera are hidden).
+             *
+             * Generated from Godot docs: RenderingDevice.POLYGON_CULL_FRONT
+             */
+            val FRONT: PolygonCullMode get() = PolygonCullMode(1L)
+            /**
+             * Use polygon backface culling (faces pointing away from the camera are hidden).
+             *
+             * Generated from Godot docs: RenderingDevice.POLYGON_CULL_BACK
+             */
+            val BACK: PolygonCullMode get() = PolygonCullMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class PolygonFrontFace(val value: Long) {
+        companion object {
+            /**
+             * Clockwise winding order to determine which face of a polygon is its front face.
+             *
+             * Generated from Godot docs: RenderingDevice.POLYGON_FRONT_FACE_CLOCKWISE
+             */
+            val CLOCKWISE: PolygonFrontFace get() = PolygonFrontFace(0L)
+            /**
+             * Counter-clockwise winding order to determine which face of a polygon is its front face.
+             *
+             * Generated from Godot docs: RenderingDevice.POLYGON_FRONT_FACE_COUNTER_CLOCKWISE
+             */
+            val COUNTER_CLOCKWISE: PolygonFrontFace get() = PolygonFrontFace(1L)
+        }
+    }
+
+    @JvmInline
+    value class StencilOperation(val value: Long) {
+        companion object {
+            /**
+             * Keep the current stencil value.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_KEEP
+             */
+            val KEEP: StencilOperation get() = StencilOperation(0L)
+            /**
+             * Set the stencil value to `0`.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_ZERO
+             */
+            val ZERO: StencilOperation get() = StencilOperation(1L)
+            /**
+             * Replace the existing stencil value with the new one.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_REPLACE
+             */
+            val REPLACE: StencilOperation get() = StencilOperation(2L)
+            /**
+             * Increment the existing stencil value and clamp to the maximum representable unsigned value if
+             * reached. Stencil bits are considered as an unsigned integer.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_INCREMENT_AND_CLAMP
+             */
+            val INCREMENT_AND_CLAMP: StencilOperation get() = StencilOperation(3L)
+            /**
+             * Decrement the existing stencil value and clamp to the minimum value if reached. Stencil bits are
+             * considered as an unsigned integer.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_DECREMENT_AND_CLAMP
+             */
+            val DECREMENT_AND_CLAMP: StencilOperation get() = StencilOperation(4L)
+            /**
+             * Bitwise-invert the existing stencil value.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_INVERT
+             */
+            val INVERT: StencilOperation get() = StencilOperation(5L)
+            /**
+             * Increment the stencil value and wrap around to `0` if reaching the maximum representable
+             * unsigned. Stencil bits are considered as an unsigned integer.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_INCREMENT_AND_WRAP
+             */
+            val INCREMENT_AND_WRAP: StencilOperation get() = StencilOperation(6L)
+            /**
+             * Decrement the stencil value and wrap around to the maximum representable unsigned if reaching
+             * the minimum. Stencil bits are considered as an unsigned integer.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_DECREMENT_AND_WRAP
+             */
+            val DECREMENT_AND_WRAP: StencilOperation get() = StencilOperation(7L)
+            /**
+             * Represents the size of the `StencilOperation` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.STENCIL_OP_MAX
+             */
+            val MAX: StencilOperation get() = StencilOperation(8L)
+        }
+    }
+
+    @JvmInline
+    value class CompareOperator(val value: Long) {
+        companion object {
+            /**
+             * "Never" comparison (opposite of `COMPARE_OP_ALWAYS`).
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_NEVER
+             */
+            val NEVER: CompareOperator get() = CompareOperator(0L)
+            /**
+             * "Less than" comparison.
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_LESS
+             */
+            val LESS: CompareOperator get() = CompareOperator(1L)
+            /**
+             * "Equal" comparison.
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_EQUAL
+             */
+            val EQUAL: CompareOperator get() = CompareOperator(2L)
+            /**
+             * "Less than or equal" comparison.
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_LESS_OR_EQUAL
+             */
+            val LESS_OR_EQUAL: CompareOperator get() = CompareOperator(3L)
+            /**
+             * "Greater than" comparison.
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_GREATER
+             */
+            val GREATER: CompareOperator get() = CompareOperator(4L)
+            /**
+             * "Not equal" comparison.
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_NOT_EQUAL
+             */
+            val NOT_EQUAL: CompareOperator get() = CompareOperator(5L)
+            /**
+             * "Greater than or equal" comparison.
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_GREATER_OR_EQUAL
+             */
+            val GREATER_OR_EQUAL: CompareOperator get() = CompareOperator(6L)
+            /**
+             * "Always" comparison (opposite of `COMPARE_OP_NEVER`).
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_ALWAYS
+             */
+            val ALWAYS: CompareOperator get() = CompareOperator(7L)
+            /**
+             * Represents the size of the `CompareOperator` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.COMPARE_OP_MAX
+             */
+            val MAX: CompareOperator get() = CompareOperator(8L)
+        }
+    }
+
+    @JvmInline
+    value class LogicOperation(val value: Long) {
+        companion object {
+            /**
+             * Clear logic operation (result is always `0`). See also `LOGIC_OP_SET`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_CLEAR
+             */
+            val CLEAR: LogicOperation get() = LogicOperation(0L)
+            /**
+             * AND logic operation.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_AND
+             */
+            val AND: LogicOperation get() = LogicOperation(1L)
+            /**
+             * AND logic operation with the destination operand being inverted. See also
+             * `LOGIC_OP_AND_INVERTED`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_AND_REVERSE
+             */
+            val AND_REVERSE: LogicOperation get() = LogicOperation(2L)
+            /**
+             * Copy logic operation (keeps the source value as-is). See also `LOGIC_OP_COPY_INVERTED` and
+             * `LOGIC_OP_NO_OP`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_COPY
+             */
+            val COPY: LogicOperation get() = LogicOperation(3L)
+            /**
+             * AND logic operation with the source operand being inverted. See also `LOGIC_OP_AND_REVERSE`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_AND_INVERTED
+             */
+            val AND_INVERTED: LogicOperation get() = LogicOperation(4L)
+            /**
+             * No-op logic operation (keeps the destination value as-is). See also `LOGIC_OP_COPY`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_NO_OP
+             */
+            val NO_OP: LogicOperation get() = LogicOperation(5L)
+            /**
+             * Exclusive or (XOR) logic operation.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_XOR
+             */
+            val XOR: LogicOperation get() = LogicOperation(6L)
+            /**
+             * OR logic operation.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_OR
+             */
+            val OR: LogicOperation get() = LogicOperation(7L)
+            /**
+             * Not-OR (NOR) logic operation.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_NOR
+             */
+            val NOR: LogicOperation get() = LogicOperation(8L)
+            /**
+             * Not-XOR (XNOR) logic operation.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_EQUIVALENT
+             */
+            val EQUIVALENT: LogicOperation get() = LogicOperation(9L)
+            /**
+             * Invert logic operation.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_INVERT
+             */
+            val INVERT: LogicOperation get() = LogicOperation(10L)
+            /**
+             * OR logic operation with the destination operand being inverted. See also `LOGIC_OP_OR_REVERSE`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_OR_REVERSE
+             */
+            val OR_REVERSE: LogicOperation get() = LogicOperation(11L)
+            /**
+             * NOT logic operation (inverts the value). See also `LOGIC_OP_COPY`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_COPY_INVERTED
+             */
+            val COPY_INVERTED: LogicOperation get() = LogicOperation(12L)
+            /**
+             * OR logic operation with the source operand being inverted. See also `LOGIC_OP_OR_REVERSE`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_OR_INVERTED
+             */
+            val OR_INVERTED: LogicOperation get() = LogicOperation(13L)
+            /**
+             * Not-AND (NAND) logic operation.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_NAND
+             */
+            val NAND: LogicOperation get() = LogicOperation(14L)
+            /**
+             * SET logic operation (result is always `1`). See also `LOGIC_OP_CLEAR`.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_SET
+             */
+            val SET: LogicOperation get() = LogicOperation(15L)
+            /**
+             * Represents the size of the `LogicOperation` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.LOGIC_OP_MAX
+             */
+            val MAX: LogicOperation get() = LogicOperation(16L)
+        }
+    }
+
+    @JvmInline
+    value class BlendFactor(val value: Long) {
+        companion object {
+            /**
+             * Constant `0.0` blend factor.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ZERO
+             */
+            val ZERO: BlendFactor get() = BlendFactor(0L)
+            /**
+             * Constant `1.0` blend factor.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE
+             */
+            val ONE: BlendFactor get() = BlendFactor(1L)
+            /**
+             * Color blend factor is `source color`. Alpha blend factor is `source alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_SRC_COLOR
+             */
+            val SRC_COLOR: BlendFactor get() = BlendFactor(2L)
+            /**
+             * Color blend factor is `1.0 - source color`. Alpha blend factor is `1.0 - source alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_COLOR
+             */
+            val ONE_MINUS_SRC_COLOR: BlendFactor get() = BlendFactor(3L)
+            /**
+             * Color blend factor is `destination color`. Alpha blend factor is `destination alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_DST_COLOR
+             */
+            val DST_COLOR: BlendFactor get() = BlendFactor(4L)
+            /**
+             * Color blend factor is `1.0 - destination color`. Alpha blend factor is `1.0 - destination
+             * alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_DST_COLOR
+             */
+            val ONE_MINUS_DST_COLOR: BlendFactor get() = BlendFactor(5L)
+            /**
+             * Color and alpha blend factor is `source alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_SRC_ALPHA
+             */
+            val SRC_ALPHA: BlendFactor get() = BlendFactor(6L)
+            /**
+             * Color and alpha blend factor is `1.0 - source alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA
+             */
+            val ONE_MINUS_SRC_ALPHA: BlendFactor get() = BlendFactor(7L)
+            /**
+             * Color and alpha blend factor is `destination alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_DST_ALPHA
+             */
+            val DST_ALPHA: BlendFactor get() = BlendFactor(8L)
+            /**
+             * Color and alpha blend factor is `1.0 - destination alpha`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_DST_ALPHA
+             */
+            val ONE_MINUS_DST_ALPHA: BlendFactor get() = BlendFactor(9L)
+            /**
+             * Color blend factor is `blend constant color`. Alpha blend factor is `blend constant alpha` (see
+             * `draw_list_set_blend_constants`).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_CONSTANT_COLOR
+             */
+            val CONSTANT_COLOR: BlendFactor get() = BlendFactor(10L)
+            /**
+             * Color blend factor is `1.0 - blend constant color`. Alpha blend factor is `1.0 - blend constant
+             * alpha` (see `draw_list_set_blend_constants`).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR
+             */
+            val ONE_MINUS_CONSTANT_COLOR: BlendFactor get() = BlendFactor(11L)
+            /**
+             * Color and alpha blend factor is `blend constant alpha` (see `draw_list_set_blend_constants`).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_CONSTANT_ALPHA
+             */
+            val CONSTANT_ALPHA: BlendFactor get() = BlendFactor(12L)
+            /**
+             * Color and alpha blend factor is `1.0 - blend constant alpha` (see
+             * `draw_list_set_blend_constants`).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA
+             */
+            val ONE_MINUS_CONSTANT_ALPHA: BlendFactor get() = BlendFactor(13L)
+            /**
+             * Color blend factor is `min(source alpha, 1.0 - destination alpha)`. Alpha blend factor is `1.0`.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_SRC_ALPHA_SATURATE
+             */
+            val SRC_ALPHA_SATURATE: BlendFactor get() = BlendFactor(14L)
+            /**
+             * Color blend factor is `second source color`. Alpha blend factor is `second source alpha`. Only
+             * relevant for dual-source blending.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_SRC1_COLOR
+             */
+            val SRC1_COLOR: BlendFactor get() = BlendFactor(15L)
+            /**
+             * Color blend factor is `1.0 - second source color`. Alpha blend factor is `1.0 - second source
+             * alpha`. Only relevant for dual-source blending.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC1_COLOR
+             */
+            val ONE_MINUS_SRC1_COLOR: BlendFactor get() = BlendFactor(16L)
+            /**
+             * Color and alpha blend factor is `second source alpha`. Only relevant for dual-source blending.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_SRC1_ALPHA
+             */
+            val SRC1_ALPHA: BlendFactor get() = BlendFactor(17L)
+            /**
+             * Color and alpha blend factor is `1.0 - second source alpha`. Only relevant for dual-source
+             * blending.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA
+             */
+            val ONE_MINUS_SRC1_ALPHA: BlendFactor get() = BlendFactor(18L)
+            /**
+             * Represents the size of the `BlendFactor` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_FACTOR_MAX
+             */
+            val MAX: BlendFactor get() = BlendFactor(19L)
+        }
+    }
+
+    @JvmInline
+    value class BlendOperation(val value: Long) {
+        companion object {
+            /**
+             * Additive blending operation (`source + destination`).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_OP_ADD
+             */
+            val ADD: BlendOperation get() = BlendOperation(0L)
+            /**
+             * Subtractive blending operation (`source - destination`).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_OP_SUBTRACT
+             */
+            val SUBTRACT: BlendOperation get() = BlendOperation(1L)
+            /**
+             * Reverse subtractive blending operation (`destination - source`).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_OP_REVERSE_SUBTRACT
+             */
+            val REVERSE_SUBTRACT: BlendOperation get() = BlendOperation(2L)
+            /**
+             * Minimum blending operation (keep the lowest value of the two).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_OP_MINIMUM
+             */
+            val MINIMUM: BlendOperation get() = BlendOperation(3L)
+            /**
+             * Maximum blending operation (keep the highest value of the two).
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_OP_MAXIMUM
+             */
+            val MAXIMUM: BlendOperation get() = BlendOperation(4L)
+            /**
+             * Represents the size of the `BlendOperation` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.BLEND_OP_MAX
+             */
+            val MAX: BlendOperation get() = BlendOperation(5L)
+        }
+    }
+
+    @JvmInline
+    value class PipelineDynamicStateFlags(val value: Long) {
+        infix fun or(other: PipelineDynamicStateFlags): PipelineDynamicStateFlags = PipelineDynamicStateFlags(value or other.value)
+
+        infix fun and(other: PipelineDynamicStateFlags): PipelineDynamicStateFlags = PipelineDynamicStateFlags(value and other.value)
+
+        infix fun xor(other: PipelineDynamicStateFlags): PipelineDynamicStateFlags = PipelineDynamicStateFlags(value xor other.value)
+
+        fun inv(): PipelineDynamicStateFlags = PipelineDynamicStateFlags(value.inv())
+
+        operator fun contains(other: PipelineDynamicStateFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Allows dynamically changing the width of rendering lines.
+             *
+             * Generated from Godot docs: RenderingDevice.DYNAMIC_STATE_LINE_WIDTH
+             */
+            val LINE_WIDTH: PipelineDynamicStateFlags get() = PipelineDynamicStateFlags(1L)
+            /**
+             * Allows dynamically changing the depth bias.
+             *
+             * Generated from Godot docs: RenderingDevice.DYNAMIC_STATE_DEPTH_BIAS
+             */
+            val DEPTH_BIAS: PipelineDynamicStateFlags get() = PipelineDynamicStateFlags(2L)
+            val BLEND_CONSTANTS: PipelineDynamicStateFlags get() = PipelineDynamicStateFlags(4L)
+            val DEPTH_BOUNDS: PipelineDynamicStateFlags get() = PipelineDynamicStateFlags(8L)
+            val STENCIL_COMPARE_MASK: PipelineDynamicStateFlags get() = PipelineDynamicStateFlags(16L)
+            val STENCIL_WRITE_MASK: PipelineDynamicStateFlags get() = PipelineDynamicStateFlags(32L)
+            val STENCIL_REFERENCE: PipelineDynamicStateFlags get() = PipelineDynamicStateFlags(64L)
+        }
+    }
+
+    @JvmInline
+    value class InitialAction(val value: Long) {
+        companion object {
+            /**
+             * Load the previous contents of the framebuffer.
+             *
+             * Generated from Godot docs: RenderingDevice.INITIAL_ACTION_LOAD
+             */
+            val LOAD: InitialAction get() = InitialAction(0L)
+            /**
+             * Clear the whole framebuffer or its specified region.
+             *
+             * Generated from Godot docs: RenderingDevice.INITIAL_ACTION_CLEAR
+             */
+            val CLEAR: InitialAction get() = InitialAction(1L)
+            /**
+             * Ignore the previous contents of the framebuffer. This is the fastest option if you'll overwrite
+             * all of the pixels and don't need to read any of them.
+             *
+             * Generated from Godot docs: RenderingDevice.INITIAL_ACTION_DISCARD
+             */
+            val DISCARD: InitialAction get() = InitialAction(2L)
+            /**
+             * Represents the size of the `InitialAction` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.INITIAL_ACTION_MAX
+             */
+            val MAX: InitialAction get() = InitialAction(3L)
+            val CLEAR_REGION: InitialAction get() = InitialAction(1L)
+            val CLEAR_REGION_CONTINUE: InitialAction get() = InitialAction(1L)
+            val KEEP: InitialAction get() = InitialAction(0L)
+            val DROP: InitialAction get() = InitialAction(2L)
+            val CONTINUE: InitialAction get() = InitialAction(0L)
+        }
+    }
+
+    @JvmInline
+    value class FinalAction(val value: Long) {
+        companion object {
+            /**
+             * Store the result of the draw list in the framebuffer. This is generally what you want to do.
+             *
+             * Generated from Godot docs: RenderingDevice.FINAL_ACTION_STORE
+             */
+            val STORE: FinalAction get() = FinalAction(0L)
+            /**
+             * Discard the contents of the framebuffer. This is the fastest option if you don't need to use the
+             * results of the draw list.
+             *
+             * Generated from Godot docs: RenderingDevice.FINAL_ACTION_DISCARD
+             */
+            val DISCARD: FinalAction get() = FinalAction(1L)
+            /**
+             * Represents the size of the `FinalAction` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.FINAL_ACTION_MAX
+             */
+            val MAX: FinalAction get() = FinalAction(2L)
+            val READ: FinalAction get() = FinalAction(0L)
+            val CONTINUE: FinalAction get() = FinalAction(0L)
+        }
+    }
+
+    @JvmInline
+    value class ShaderStage(val value: Long) {
+        companion object {
+            /**
+             * Vertex shader stage. This can be used to manipulate vertices from a shader (but not create new
+             * vertices).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_VERTEX
+             */
+            val VERTEX: ShaderStage get() = ShaderStage(0L)
+            /**
+             * Fragment shader stage (called "pixel shader" in Direct3D). This can be used to manipulate pixels
+             * from a shader.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_FRAGMENT
+             */
+            val FRAGMENT: ShaderStage get() = ShaderStage(1L)
+            /**
+             * Tessellation control shader stage. This can be used to create additional geometry from a shader.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_TESSELATION_CONTROL
+             */
+            val TESSELATION_CONTROL: ShaderStage get() = ShaderStage(2L)
+            /**
+             * Tessellation evaluation shader stage. This can be used to create additional geometry from a
+             * shader.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_TESSELATION_EVALUATION
+             */
+            val TESSELATION_EVALUATION: ShaderStage get() = ShaderStage(3L)
+            /**
+             * Compute shader stage. This can be used to run arbitrary computing tasks in a shader, performing
+             * them on the GPU instead of the CPU.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_COMPUTE
+             */
+            val COMPUTE: ShaderStage get() = ShaderStage(4L)
+            /**
+             * Ray generation shader stage. This can be used to generate primary rays.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_RAYGEN
+             */
+            val RAYGEN: ShaderStage get() = ShaderStage(5L)
+            /**
+             * Any hit shader stage. Invoked when ray intersections are not opaque. This can be used to specify
+             * what happens when a ray hits any of the geometry in the scene.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_ANY_HIT
+             */
+            val ANY_HIT: ShaderStage get() = ShaderStage(6L)
+            /**
+             * Closest hit shader stage. This can be used to specify what happens when a ray hits the closest
+             * geometry in the scene.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_CLOSEST_HIT
+             */
+            val CLOSEST_HIT: ShaderStage get() = ShaderStage(7L)
+            /**
+             * Miss shader stage. This can be used to specify what happens if a ray does not hit anything in
+             * the scene.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_MISS
+             */
+            val MISS: ShaderStage get() = ShaderStage(8L)
+            /**
+             * Intersection shader stage. The intersection shader for triangles is built-in. This can be used
+             * to compute ray intersections with primitives that are not triangles.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_INTERSECTION
+             */
+            val INTERSECTION: ShaderStage get() = ShaderStage(9L)
+            /**
+             * Represents the size of the `ShaderStage` enum.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_MAX
+             */
+            val MAX: ShaderStage get() = ShaderStage(10L)
+            /**
+             * Vertex shader stage bit (see also `SHADER_STAGE_VERTEX`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_VERTEX_BIT
+             */
+            val VERTEX_BIT: ShaderStage get() = ShaderStage(1L)
+            /**
+             * Fragment shader stage bit (see also `SHADER_STAGE_FRAGMENT`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_FRAGMENT_BIT
+             */
+            val FRAGMENT_BIT: ShaderStage get() = ShaderStage(2L)
+            /**
+             * Tessellation control shader stage bit (see also `SHADER_STAGE_TESSELATION_CONTROL`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_TESSELATION_CONTROL_BIT
+             */
+            val TESSELATION_CONTROL_BIT: ShaderStage get() = ShaderStage(4L)
+            /**
+             * Tessellation evaluation shader stage bit (see also `SHADER_STAGE_TESSELATION_EVALUATION`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_TESSELATION_EVALUATION_BIT
+             */
+            val TESSELATION_EVALUATION_BIT: ShaderStage get() = ShaderStage(8L)
+            /**
+             * Compute shader stage bit (see also `SHADER_STAGE_COMPUTE`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_COMPUTE_BIT
+             */
+            val COMPUTE_BIT: ShaderStage get() = ShaderStage(16L)
+            /**
+             * Ray generation shader stage bit (see also `SHADER_STAGE_RAYGEN`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_RAYGEN_BIT
+             */
+            val RAYGEN_BIT: ShaderStage get() = ShaderStage(32L)
+            /**
+             * Any hit shader stage bit (see also `SHADER_STAGE_ANY_HIT`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_ANY_HIT_BIT
+             */
+            val ANY_HIT_BIT: ShaderStage get() = ShaderStage(64L)
+            /**
+             * Closest hit shader stage bit (see also `SHADER_STAGE_CLOSEST_HIT`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_CLOSEST_HIT_BIT
+             */
+            val CLOSEST_HIT_BIT: ShaderStage get() = ShaderStage(128L)
+            /**
+             * Miss shader stage bit (see also `SHADER_STAGE_MISS`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_MISS_BIT
+             */
+            val MISS_BIT: ShaderStage get() = ShaderStage(256L)
+            /**
+             * Intersection shader stage bit (see also `SHADER_STAGE_INTERSECTION`).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_STAGE_INTERSECTION_BIT
+             */
+            val INTERSECTION_BIT: ShaderStage get() = ShaderStage(512L)
+        }
+    }
+
+    @JvmInline
+    value class ShaderLanguage(val value: Long) {
+        companion object {
+            /**
+             * Khronos' GLSL shading language (used natively by OpenGL and Vulkan). This is the language used
+             * for core Godot shaders.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_LANGUAGE_GLSL
+             */
+            val GLSL: ShaderLanguage get() = ShaderLanguage(0L)
+            /**
+             * Microsoft's High-Level Shading Language (used natively by Direct3D, but can also be used in
+             * Vulkan).
+             *
+             * Generated from Godot docs: RenderingDevice.SHADER_LANGUAGE_HLSL
+             */
+            val HLSL: ShaderLanguage get() = ShaderLanguage(1L)
+        }
+    }
+
+    @JvmInline
+    value class PipelineSpecializationConstantType(val value: Long) {
+        companion object {
+            /**
+             * Boolean specialization constant.
+             *
+             * Generated from Godot docs: RenderingDevice.PIPELINE_SPECIALIZATION_CONSTANT_TYPE_BOOL
+             */
+            val BOOL: PipelineSpecializationConstantType get() = PipelineSpecializationConstantType(0L)
+            /**
+             * Integer specialization constant.
+             *
+             * Generated from Godot docs: RenderingDevice.PIPELINE_SPECIALIZATION_CONSTANT_TYPE_INT
+             */
+            val INT: PipelineSpecializationConstantType get() = PipelineSpecializationConstantType(1L)
+            /**
+             * Floating-point specialization constant.
+             *
+             * Generated from Godot docs: RenderingDevice.PIPELINE_SPECIALIZATION_CONSTANT_TYPE_FLOAT
+             */
+            val FLOAT: PipelineSpecializationConstantType get() = PipelineSpecializationConstantType(2L)
+        }
+    }
+
+    @JvmInline
+    value class Features(val value: Long) {
+        companion object {
+            /**
+             * Support for MetalFX spatial upscaling.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_METALFX_SPATIAL
+             */
+            val METALFX_SPATIAL: Features get() = Features(3L)
+            /**
+             * Support for MetalFX temporal upscaling.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_METALFX_TEMPORAL
+             */
+            val METALFX_TEMPORAL: Features get() = Features(4L)
+            /**
+             * Features support for buffer device address extension.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_BUFFER_DEVICE_ADDRESS
+             */
+            val BUFFER_DEVICE_ADDRESS: Features get() = Features(6L)
+            /**
+             * Support for 32-bit image atomic operations.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_IMAGE_ATOMIC_32_BIT
+             */
+            val IMAGE_ATOMIC_32_BIT: Features get() = Features(7L)
+            /**
+             * Support for ray query extension.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_RAY_QUERY
+             */
+            val RAY_QUERY: Features get() = Features(11L)
+            /**
+             * Support for raytracing pipeline extension.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_RAYTRACING_PIPELINE
+             */
+            val RAYTRACING_PIPELINE: Features get() = Features(12L)
+            /**
+             * Support for high dynamic range (HDR) output.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_HDR_OUTPUT
+             */
+            val HDR_OUTPUT: Features get() = Features(13L)
+        }
+    }
+
+    @JvmInline
+    value class Limit(val value: Long) {
+        companion object {
+            /**
+             * Maximum number of uniform sets that can be bound at a given time.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_BOUND_UNIFORM_SETS
+             */
+            val MAX_BOUND_UNIFORM_SETS: Limit get() = Limit(0L)
+            /**
+             * Maximum number of color framebuffer attachments that can be used at a given time.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_FRAMEBUFFER_COLOR_ATTACHMENTS
+             */
+            val MAX_FRAMEBUFFER_COLOR_ATTACHMENTS: Limit get() = Limit(1L)
+            /**
+             * Maximum number of textures that can be used per uniform set.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_TEXTURES_PER_UNIFORM_SET
+             */
+            val MAX_TEXTURES_PER_UNIFORM_SET: Limit get() = Limit(2L)
+            /**
+             * Maximum number of samplers that can be used per uniform set.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_SAMPLERS_PER_UNIFORM_SET
+             */
+            val MAX_SAMPLERS_PER_UNIFORM_SET: Limit get() = Limit(3L)
+            /**
+             * Maximum number of storage buffers (https://vkguide.dev/docs/chapter-4/storage_buffers/) per
+             * uniform set.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_STORAGE_BUFFERS_PER_UNIFORM_SET
+             */
+            val MAX_STORAGE_BUFFERS_PER_UNIFORM_SET: Limit get() = Limit(4L)
+            /**
+             * Maximum number of storage images per uniform set.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_STORAGE_IMAGES_PER_UNIFORM_SET
+             */
+            val MAX_STORAGE_IMAGES_PER_UNIFORM_SET: Limit get() = Limit(5L)
+            /**
+             * Maximum number of uniform buffers per uniform set.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_UNIFORM_BUFFERS_PER_UNIFORM_SET
+             */
+            val MAX_UNIFORM_BUFFERS_PER_UNIFORM_SET: Limit get() = Limit(6L)
+            /**
+             * Maximum index for an indexed draw command.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_DRAW_INDEXED_INDEX
+             */
+            val MAX_DRAW_INDEXED_INDEX: Limit get() = Limit(7L)
+            /**
+             * Maximum height of a framebuffer (in pixels).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_FRAMEBUFFER_HEIGHT
+             */
+            val MAX_FRAMEBUFFER_HEIGHT: Limit get() = Limit(8L)
+            /**
+             * Maximum width of a framebuffer (in pixels).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_FRAMEBUFFER_WIDTH
+             */
+            val MAX_FRAMEBUFFER_WIDTH: Limit get() = Limit(9L)
+            /**
+             * Maximum number of texture array layers.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_TEXTURE_ARRAY_LAYERS
+             */
+            val MAX_TEXTURE_ARRAY_LAYERS: Limit get() = Limit(10L)
+            /**
+             * Maximum supported 1-dimensional texture size (in pixels on a single axis).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_TEXTURE_SIZE_1D
+             */
+            val MAX_TEXTURE_SIZE_1D: Limit get() = Limit(11L)
+            /**
+             * Maximum supported 2-dimensional texture size (in pixels on a single axis).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_TEXTURE_SIZE_2D
+             */
+            val MAX_TEXTURE_SIZE_2D: Limit get() = Limit(12L)
+            /**
+             * Maximum supported 3-dimensional texture size (in pixels on a single axis).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_TEXTURE_SIZE_3D
+             */
+            val MAX_TEXTURE_SIZE_3D: Limit get() = Limit(13L)
+            /**
+             * Maximum supported cubemap texture size (in pixels on a single axis of a single face).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_TEXTURE_SIZE_CUBE
+             */
+            val MAX_TEXTURE_SIZE_CUBE: Limit get() = Limit(14L)
+            /**
+             * Maximum number of textures per shader stage.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_TEXTURES_PER_SHADER_STAGE
+             */
+            val MAX_TEXTURES_PER_SHADER_STAGE: Limit get() = Limit(15L)
+            /**
+             * Maximum number of samplers per shader stage.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_SAMPLERS_PER_SHADER_STAGE
+             */
+            val MAX_SAMPLERS_PER_SHADER_STAGE: Limit get() = Limit(16L)
+            /**
+             * Maximum number of storage buffers (https://vkguide.dev/docs/chapter-4/storage_buffers/) per
+             * shader stage.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_STORAGE_BUFFERS_PER_SHADER_STAGE
+             */
+            val MAX_STORAGE_BUFFERS_PER_SHADER_STAGE: Limit get() = Limit(17L)
+            /**
+             * Maximum number of storage images per shader stage.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_STORAGE_IMAGES_PER_SHADER_STAGE
+             */
+            val MAX_STORAGE_IMAGES_PER_SHADER_STAGE: Limit get() = Limit(18L)
+            /**
+             * Maximum number of uniform buffers per uniform set.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_UNIFORM_BUFFERS_PER_SHADER_STAGE
+             */
+            val MAX_UNIFORM_BUFFERS_PER_SHADER_STAGE: Limit get() = Limit(19L)
+            /**
+             * Maximum size of a push constant. A lot of devices are limited to 128 bytes, so try to avoid
+             * exceeding 128 bytes in push constants to ensure compatibility even if your GPU is reporting a
+             * higher value.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_PUSH_CONSTANT_SIZE
+             */
+            val MAX_PUSH_CONSTANT_SIZE: Limit get() = Limit(20L)
+            /**
+             * Maximum size of a uniform buffer.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_UNIFORM_BUFFER_SIZE
+             */
+            val MAX_UNIFORM_BUFFER_SIZE: Limit get() = Limit(21L)
+            /**
+             * Maximum vertex input attribute offset.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_VERTEX_INPUT_ATTRIBUTE_OFFSET
+             */
+            val MAX_VERTEX_INPUT_ATTRIBUTE_OFFSET: Limit get() = Limit(22L)
+            /**
+             * Maximum number of vertex input attributes.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_VERTEX_INPUT_ATTRIBUTES
+             */
+            val MAX_VERTEX_INPUT_ATTRIBUTES: Limit get() = Limit(23L)
+            /**
+             * Maximum number of vertex input bindings.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_VERTEX_INPUT_BINDINGS
+             */
+            val MAX_VERTEX_INPUT_BINDINGS: Limit get() = Limit(24L)
+            /**
+             * Maximum vertex input binding stride.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_VERTEX_INPUT_BINDING_STRIDE
+             */
+            val MAX_VERTEX_INPUT_BINDING_STRIDE: Limit get() = Limit(25L)
+            /**
+             * Minimum uniform buffer offset alignment.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MIN_UNIFORM_BUFFER_OFFSET_ALIGNMENT
+             */
+            val MIN_UNIFORM_BUFFER_OFFSET_ALIGNMENT: Limit get() = Limit(26L)
+            /**
+             * Maximum shared memory size for compute shaders.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_SHARED_MEMORY_SIZE
+             */
+            val MAX_COMPUTE_SHARED_MEMORY_SIZE: Limit get() = Limit(27L)
+            /**
+             * Maximum number of workgroups for compute shaders on the X axis.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_X
+             */
+            val MAX_COMPUTE_WORKGROUP_COUNT_X: Limit get() = Limit(28L)
+            /**
+             * Maximum number of workgroups for compute shaders on the Y axis.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Y
+             */
+            val MAX_COMPUTE_WORKGROUP_COUNT_Y: Limit get() = Limit(29L)
+            /**
+             * Maximum number of workgroups for compute shaders on the Z axis.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Z
+             */
+            val MAX_COMPUTE_WORKGROUP_COUNT_Z: Limit get() = Limit(30L)
+            /**
+             * Maximum number of workgroup invocations for compute shaders.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_INVOCATIONS
+             */
+            val MAX_COMPUTE_WORKGROUP_INVOCATIONS: Limit get() = Limit(31L)
+            /**
+             * Maximum workgroup size for compute shaders on the X axis.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_X
+             */
+            val MAX_COMPUTE_WORKGROUP_SIZE_X: Limit get() = Limit(32L)
+            /**
+             * Maximum workgroup size for compute shaders on the Y axis.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Y
+             */
+            val MAX_COMPUTE_WORKGROUP_SIZE_Y: Limit get() = Limit(33L)
+            /**
+             * Maximum workgroup size for compute shaders on the Z axis.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Z
+             */
+            val MAX_COMPUTE_WORKGROUP_SIZE_Z: Limit get() = Limit(34L)
+            /**
+             * Maximum viewport width (in pixels).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_VIEWPORT_DIMENSIONS_X
+             */
+            val MAX_VIEWPORT_DIMENSIONS_X: Limit get() = Limit(35L)
+            /**
+             * Maximum viewport height (in pixels).
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_MAX_VIEWPORT_DIMENSIONS_Y
+             */
+            val MAX_VIEWPORT_DIMENSIONS_Y: Limit get() = Limit(36L)
+            /**
+             * Returns the smallest value for `ProjectSettings.rendering/scaling_3d/scale` when using the
+             * MetalFX temporal upscaler. Note: The returned value is multiplied by a factor of `1000000` to
+             * preserve 6 digits of precision. It must be divided by `1000000.0` to convert the value to a
+             * floating point number.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_METALFX_TEMPORAL_SCALER_MIN_SCALE
+             */
+            val METALFX_TEMPORAL_SCALER_MIN_SCALE: Limit get() = Limit(46L)
+            /**
+             * Returns the largest value for `ProjectSettings.rendering/scaling_3d/scale` when using the
+             * MetalFX temporal upscaler. Note: The returned value is multiplied by a factor of `1000000` to
+             * preserve 6 digits of precision. It must be divided by `1000000.0` to convert the value to a
+             * floating point number.
+             *
+             * Generated from Godot docs: RenderingDevice.LIMIT_METALFX_TEMPORAL_SCALER_MAX_SCALE
+             */
+            val METALFX_TEMPORAL_SCALER_MAX_SCALE: Limit get() = Limit(47L)
+        }
+    }
+
+    @JvmInline
+    value class MemoryType(val value: Long) {
+        companion object {
+            /**
+             * Memory taken by textures.
+             *
+             * Generated from Godot docs: RenderingDevice.MEMORY_TEXTURES
+             */
+            val TEXTURES: MemoryType get() = MemoryType(0L)
+            /**
+             * Memory taken by buffers.
+             *
+             * Generated from Godot docs: RenderingDevice.MEMORY_BUFFERS
+             */
+            val BUFFERS: MemoryType get() = MemoryType(1L)
+            /**
+             * Total memory taken. This is greater than the sum of `MEMORY_TEXTURES` and `MEMORY_BUFFERS`, as
+             * it also includes miscellaneous memory usage.
+             *
+             * Generated from Godot docs: RenderingDevice.MEMORY_TOTAL
+             */
+            val TOTAL: MemoryType get() = MemoryType(2L)
+        }
+    }
+
+    @JvmInline
+    value class BreadcrumbMarker(val value: Long) {
+        companion object {
+            /**
+             * No breadcrumb marker will be added.
+             *
+             * Generated from Godot docs: RenderingDevice.NONE
+             */
+            val NONE: BreadcrumbMarker get() = BreadcrumbMarker(0L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include
+             * `"REFLECTION_PROBES"` for added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.REFLECTION_PROBES
+             */
+            val REFLECTION_PROBES: BreadcrumbMarker get() = BreadcrumbMarker(65536L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"SKY_PASS"` for
+             * added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.SKY_PASS
+             */
+            val SKY_PASS: BreadcrumbMarker get() = BreadcrumbMarker(131072L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"LIGHTMAPPER_PASS"`
+             * for added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.LIGHTMAPPER_PASS
+             */
+            val LIGHTMAPPER_PASS: BreadcrumbMarker get() = BreadcrumbMarker(196608L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include
+             * `"SHADOW_PASS_DIRECTIONAL"` for added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADOW_PASS_DIRECTIONAL
+             */
+            val SHADOW_PASS_DIRECTIONAL: BreadcrumbMarker get() = BreadcrumbMarker(262144L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"SHADOW_PASS_CUBE"`
+             * for added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.SHADOW_PASS_CUBE
+             */
+            val SHADOW_PASS_CUBE: BreadcrumbMarker get() = BreadcrumbMarker(327680L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"OPAQUE_PASS"` for
+             * added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.OPAQUE_PASS
+             */
+            val OPAQUE_PASS: BreadcrumbMarker get() = BreadcrumbMarker(393216L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"ALPHA_PASS"` for
+             * added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.ALPHA_PASS
+             */
+            val ALPHA_PASS: BreadcrumbMarker get() = BreadcrumbMarker(458752L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"TRANSPARENT_PASS"`
+             * for added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.TRANSPARENT_PASS
+             */
+            val TRANSPARENT_PASS: BreadcrumbMarker get() = BreadcrumbMarker(524288L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include
+             * `"POST_PROCESSING_PASS"` for added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.POST_PROCESSING_PASS
+             */
+            val POST_PROCESSING_PASS: BreadcrumbMarker get() = BreadcrumbMarker(589824L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"BLIT_PASS"` for
+             * added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.BLIT_PASS
+             */
+            val BLIT_PASS: BreadcrumbMarker get() = BreadcrumbMarker(655360L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"UI_PASS"` for
+             * added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.UI_PASS
+             */
+            val UI_PASS: BreadcrumbMarker get() = BreadcrumbMarker(720896L)
+            /**
+             * During a GPU crash in dev or debug mode, Godot's error message will include `"DEBUG_PASS"` for
+             * added context as to when the crash occurred.
+             *
+             * Generated from Godot docs: RenderingDevice.DEBUG_PASS
+             */
+            val DEBUG_PASS: BreadcrumbMarker get() = BreadcrumbMarker(786432L)
+        }
+    }
+
+    @JvmInline
+    value class DrawFlags(val value: Long) {
+        infix fun or(other: DrawFlags): DrawFlags = DrawFlags(value or other.value)
+
+        infix fun and(other: DrawFlags): DrawFlags = DrawFlags(value and other.value)
+
+        infix fun xor(other: DrawFlags): DrawFlags = DrawFlags(value xor other.value)
+
+        fun inv(): DrawFlags = DrawFlags(value.inv())
+
+        operator fun contains(other: DrawFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Do not clear or ignore any attachments.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_DEFAULT_ALL
+             */
+            val DEFAULT_ALL: DrawFlags get() = DrawFlags(0L)
+            /**
+             * Clear the first color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_0
+             */
+            val CLEAR_COLOR_0: DrawFlags get() = DrawFlags(1L)
+            /**
+             * Clear the second color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_1
+             */
+            val CLEAR_COLOR_1: DrawFlags get() = DrawFlags(2L)
+            /**
+             * Clear the third color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_2
+             */
+            val CLEAR_COLOR_2: DrawFlags get() = DrawFlags(4L)
+            /**
+             * Clear the fourth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_3
+             */
+            val CLEAR_COLOR_3: DrawFlags get() = DrawFlags(8L)
+            /**
+             * Clear the fifth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_4
+             */
+            val CLEAR_COLOR_4: DrawFlags get() = DrawFlags(16L)
+            /**
+             * Clear the sixth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_5
+             */
+            val CLEAR_COLOR_5: DrawFlags get() = DrawFlags(32L)
+            /**
+             * Clear the seventh color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_6
+             */
+            val CLEAR_COLOR_6: DrawFlags get() = DrawFlags(64L)
+            /**
+             * Clear the eighth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_7
+             */
+            val CLEAR_COLOR_7: DrawFlags get() = DrawFlags(128L)
+            /**
+             * Mask for clearing all color attachments.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_MASK
+             */
+            val CLEAR_COLOR_MASK: DrawFlags get() = DrawFlags(255L)
+            /**
+             * Clear all color attachments.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_COLOR_ALL
+             */
+            val CLEAR_COLOR_ALL: DrawFlags get() = DrawFlags(255L)
+            /**
+             * Ignore the previous contents of the first color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_0
+             */
+            val IGNORE_COLOR_0: DrawFlags get() = DrawFlags(256L)
+            /**
+             * Ignore the previous contents of the second color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_1
+             */
+            val IGNORE_COLOR_1: DrawFlags get() = DrawFlags(512L)
+            /**
+             * Ignore the previous contents of the third color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_2
+             */
+            val IGNORE_COLOR_2: DrawFlags get() = DrawFlags(1024L)
+            /**
+             * Ignore the previous contents of the fourth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_3
+             */
+            val IGNORE_COLOR_3: DrawFlags get() = DrawFlags(2048L)
+            /**
+             * Ignore the previous contents of the fifth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_4
+             */
+            val IGNORE_COLOR_4: DrawFlags get() = DrawFlags(4096L)
+            /**
+             * Ignore the previous contents of the sixth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_5
+             */
+            val IGNORE_COLOR_5: DrawFlags get() = DrawFlags(8192L)
+            /**
+             * Ignore the previous contents of the seventh color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_6
+             */
+            val IGNORE_COLOR_6: DrawFlags get() = DrawFlags(16384L)
+            /**
+             * Ignore the previous contents of the eighth color attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_7
+             */
+            val IGNORE_COLOR_7: DrawFlags get() = DrawFlags(32768L)
+            /**
+             * Mask for ignoring all the previous contents of the color attachments.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_MASK
+             */
+            val IGNORE_COLOR_MASK: DrawFlags get() = DrawFlags(65280L)
+            /**
+             * Ignore the previous contents of all color attachments.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_COLOR_ALL
+             */
+            val IGNORE_COLOR_ALL: DrawFlags get() = DrawFlags(65280L)
+            /**
+             * Clear the depth attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_DEPTH
+             */
+            val CLEAR_DEPTH: DrawFlags get() = DrawFlags(65536L)
+            /**
+             * Ignore the previous contents of the depth attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_DEPTH
+             */
+            val IGNORE_DEPTH: DrawFlags get() = DrawFlags(131072L)
+            /**
+             * Clear the stencil attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_STENCIL
+             */
+            val CLEAR_STENCIL: DrawFlags get() = DrawFlags(262144L)
+            /**
+             * Ignore the previous contents of the stencil attachment.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_STENCIL
+             */
+            val IGNORE_STENCIL: DrawFlags get() = DrawFlags(524288L)
+            /**
+             * Clear all attachments.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_CLEAR_ALL
+             */
+            val CLEAR_ALL: DrawFlags get() = DrawFlags(327935L)
+            /**
+             * Ignore the previous contents of all attachments.
+             *
+             * Generated from Godot docs: RenderingDevice.DRAW_IGNORE_ALL
+             */
+            val IGNORE_ALL: DrawFlags get() = DrawFlags(720640L)
+        }
+    }
+
     companion object {
         const val INVALID_ID: Long = -1L
         const val INVALID_FORMAT_ID: Long = -1L
-        const val DEVICE_TYPE_OTHER: Long = 0L
-        const val DEVICE_TYPE_INTEGRATED_GPU: Long = 1L
-        const val DEVICE_TYPE_DISCRETE_GPU: Long = 2L
-        const val DEVICE_TYPE_VIRTUAL_GPU: Long = 3L
-        const val DEVICE_TYPE_CPU: Long = 4L
-        const val DEVICE_TYPE_MAX: Long = 5L
-        const val DRIVER_RESOURCE_LOGICAL_DEVICE: Long = 0L
-        const val DRIVER_RESOURCE_PHYSICAL_DEVICE: Long = 1L
-        const val DRIVER_RESOURCE_TOPMOST_OBJECT: Long = 2L
-        const val DRIVER_RESOURCE_COMMAND_QUEUE: Long = 3L
-        const val DRIVER_RESOURCE_QUEUE_FAMILY: Long = 4L
-        const val DRIVER_RESOURCE_TEXTURE: Long = 5L
-        const val DRIVER_RESOURCE_TEXTURE_VIEW: Long = 6L
-        const val DRIVER_RESOURCE_TEXTURE_DATA_FORMAT: Long = 7L
-        const val DRIVER_RESOURCE_SAMPLER: Long = 8L
-        const val DRIVER_RESOURCE_UNIFORM_SET: Long = 9L
-        const val DRIVER_RESOURCE_BUFFER: Long = 10L
-        const val DRIVER_RESOURCE_COMPUTE_PIPELINE: Long = 11L
-        const val DRIVER_RESOURCE_RENDER_PIPELINE: Long = 12L
-        const val DRIVER_RESOURCE_VULKAN_DEVICE: Long = 0L
-        const val DRIVER_RESOURCE_VULKAN_PHYSICAL_DEVICE: Long = 1L
-        const val DRIVER_RESOURCE_VULKAN_INSTANCE: Long = 2L
-        const val DRIVER_RESOURCE_VULKAN_QUEUE: Long = 3L
-        const val DRIVER_RESOURCE_VULKAN_QUEUE_FAMILY_INDEX: Long = 4L
-        const val DRIVER_RESOURCE_VULKAN_IMAGE: Long = 5L
-        const val DRIVER_RESOURCE_VULKAN_IMAGE_VIEW: Long = 6L
-        const val DRIVER_RESOURCE_VULKAN_IMAGE_NATIVE_TEXTURE_FORMAT: Long = 7L
-        const val DRIVER_RESOURCE_VULKAN_SAMPLER: Long = 8L
-        const val DRIVER_RESOURCE_VULKAN_DESCRIPTOR_SET: Long = 9L
-        const val DRIVER_RESOURCE_VULKAN_BUFFER: Long = 10L
-        const val DRIVER_RESOURCE_VULKAN_COMPUTE_PIPELINE: Long = 11L
-        const val DRIVER_RESOURCE_VULKAN_RENDER_PIPELINE: Long = 12L
-        const val DATA_FORMAT_R4G4_UNORM_PACK8: Long = 0L
-        const val DATA_FORMAT_R4G4B4A4_UNORM_PACK16: Long = 1L
-        const val DATA_FORMAT_B4G4R4A4_UNORM_PACK16: Long = 2L
-        const val DATA_FORMAT_R5G6B5_UNORM_PACK16: Long = 3L
-        const val DATA_FORMAT_B5G6R5_UNORM_PACK16: Long = 4L
-        const val DATA_FORMAT_R5G5B5A1_UNORM_PACK16: Long = 5L
-        const val DATA_FORMAT_B5G5R5A1_UNORM_PACK16: Long = 6L
-        const val DATA_FORMAT_A1R5G5B5_UNORM_PACK16: Long = 7L
-        const val DATA_FORMAT_R8_UNORM: Long = 8L
-        const val DATA_FORMAT_R8_SNORM: Long = 9L
-        const val DATA_FORMAT_R8_USCALED: Long = 10L
-        const val DATA_FORMAT_R8_SSCALED: Long = 11L
-        const val DATA_FORMAT_R8_UINT: Long = 12L
-        const val DATA_FORMAT_R8_SINT: Long = 13L
-        const val DATA_FORMAT_R8_SRGB: Long = 14L
-        const val DATA_FORMAT_R8G8_UNORM: Long = 15L
-        const val DATA_FORMAT_R8G8_SNORM: Long = 16L
-        const val DATA_FORMAT_R8G8_USCALED: Long = 17L
-        const val DATA_FORMAT_R8G8_SSCALED: Long = 18L
-        const val DATA_FORMAT_R8G8_UINT: Long = 19L
-        const val DATA_FORMAT_R8G8_SINT: Long = 20L
-        const val DATA_FORMAT_R8G8_SRGB: Long = 21L
-        const val DATA_FORMAT_R8G8B8_UNORM: Long = 22L
-        const val DATA_FORMAT_R8G8B8_SNORM: Long = 23L
-        const val DATA_FORMAT_R8G8B8_USCALED: Long = 24L
-        const val DATA_FORMAT_R8G8B8_SSCALED: Long = 25L
-        const val DATA_FORMAT_R8G8B8_UINT: Long = 26L
-        const val DATA_FORMAT_R8G8B8_SINT: Long = 27L
-        const val DATA_FORMAT_R8G8B8_SRGB: Long = 28L
-        const val DATA_FORMAT_B8G8R8_UNORM: Long = 29L
-        const val DATA_FORMAT_B8G8R8_SNORM: Long = 30L
-        const val DATA_FORMAT_B8G8R8_USCALED: Long = 31L
-        const val DATA_FORMAT_B8G8R8_SSCALED: Long = 32L
-        const val DATA_FORMAT_B8G8R8_UINT: Long = 33L
-        const val DATA_FORMAT_B8G8R8_SINT: Long = 34L
-        const val DATA_FORMAT_B8G8R8_SRGB: Long = 35L
-        const val DATA_FORMAT_R8G8B8A8_UNORM: Long = 36L
-        const val DATA_FORMAT_R8G8B8A8_SNORM: Long = 37L
-        const val DATA_FORMAT_R8G8B8A8_USCALED: Long = 38L
-        const val DATA_FORMAT_R8G8B8A8_SSCALED: Long = 39L
-        const val DATA_FORMAT_R8G8B8A8_UINT: Long = 40L
-        const val DATA_FORMAT_R8G8B8A8_SINT: Long = 41L
-        const val DATA_FORMAT_R8G8B8A8_SRGB: Long = 42L
-        const val DATA_FORMAT_B8G8R8A8_UNORM: Long = 43L
-        const val DATA_FORMAT_B8G8R8A8_SNORM: Long = 44L
-        const val DATA_FORMAT_B8G8R8A8_USCALED: Long = 45L
-        const val DATA_FORMAT_B8G8R8A8_SSCALED: Long = 46L
-        const val DATA_FORMAT_B8G8R8A8_UINT: Long = 47L
-        const val DATA_FORMAT_B8G8R8A8_SINT: Long = 48L
-        const val DATA_FORMAT_B8G8R8A8_SRGB: Long = 49L
-        const val DATA_FORMAT_A8B8G8R8_UNORM_PACK32: Long = 50L
-        const val DATA_FORMAT_A8B8G8R8_SNORM_PACK32: Long = 51L
-        const val DATA_FORMAT_A8B8G8R8_USCALED_PACK32: Long = 52L
-        const val DATA_FORMAT_A8B8G8R8_SSCALED_PACK32: Long = 53L
-        const val DATA_FORMAT_A8B8G8R8_UINT_PACK32: Long = 54L
-        const val DATA_FORMAT_A8B8G8R8_SINT_PACK32: Long = 55L
-        const val DATA_FORMAT_A8B8G8R8_SRGB_PACK32: Long = 56L
-        const val DATA_FORMAT_A2R10G10B10_UNORM_PACK32: Long = 57L
-        const val DATA_FORMAT_A2R10G10B10_SNORM_PACK32: Long = 58L
-        const val DATA_FORMAT_A2R10G10B10_USCALED_PACK32: Long = 59L
-        const val DATA_FORMAT_A2R10G10B10_SSCALED_PACK32: Long = 60L
-        const val DATA_FORMAT_A2R10G10B10_UINT_PACK32: Long = 61L
-        const val DATA_FORMAT_A2R10G10B10_SINT_PACK32: Long = 62L
-        const val DATA_FORMAT_A2B10G10R10_UNORM_PACK32: Long = 63L
-        const val DATA_FORMAT_A2B10G10R10_SNORM_PACK32: Long = 64L
-        const val DATA_FORMAT_A2B10G10R10_USCALED_PACK32: Long = 65L
-        const val DATA_FORMAT_A2B10G10R10_SSCALED_PACK32: Long = 66L
-        const val DATA_FORMAT_A2B10G10R10_UINT_PACK32: Long = 67L
-        const val DATA_FORMAT_A2B10G10R10_SINT_PACK32: Long = 68L
-        const val DATA_FORMAT_R16_UNORM: Long = 69L
-        const val DATA_FORMAT_R16_SNORM: Long = 70L
-        const val DATA_FORMAT_R16_USCALED: Long = 71L
-        const val DATA_FORMAT_R16_SSCALED: Long = 72L
-        const val DATA_FORMAT_R16_UINT: Long = 73L
-        const val DATA_FORMAT_R16_SINT: Long = 74L
-        const val DATA_FORMAT_R16_SFLOAT: Long = 75L
-        const val DATA_FORMAT_R16G16_UNORM: Long = 76L
-        const val DATA_FORMAT_R16G16_SNORM: Long = 77L
-        const val DATA_FORMAT_R16G16_USCALED: Long = 78L
-        const val DATA_FORMAT_R16G16_SSCALED: Long = 79L
-        const val DATA_FORMAT_R16G16_UINT: Long = 80L
-        const val DATA_FORMAT_R16G16_SINT: Long = 81L
-        const val DATA_FORMAT_R16G16_SFLOAT: Long = 82L
-        const val DATA_FORMAT_R16G16B16_UNORM: Long = 83L
-        const val DATA_FORMAT_R16G16B16_SNORM: Long = 84L
-        const val DATA_FORMAT_R16G16B16_USCALED: Long = 85L
-        const val DATA_FORMAT_R16G16B16_SSCALED: Long = 86L
-        const val DATA_FORMAT_R16G16B16_UINT: Long = 87L
-        const val DATA_FORMAT_R16G16B16_SINT: Long = 88L
-        const val DATA_FORMAT_R16G16B16_SFLOAT: Long = 89L
-        const val DATA_FORMAT_R16G16B16A16_UNORM: Long = 90L
-        const val DATA_FORMAT_R16G16B16A16_SNORM: Long = 91L
-        const val DATA_FORMAT_R16G16B16A16_USCALED: Long = 92L
-        const val DATA_FORMAT_R16G16B16A16_SSCALED: Long = 93L
-        const val DATA_FORMAT_R16G16B16A16_UINT: Long = 94L
-        const val DATA_FORMAT_R16G16B16A16_SINT: Long = 95L
-        const val DATA_FORMAT_R16G16B16A16_SFLOAT: Long = 96L
-        const val DATA_FORMAT_R32_UINT: Long = 97L
-        const val DATA_FORMAT_R32_SINT: Long = 98L
-        const val DATA_FORMAT_R32_SFLOAT: Long = 99L
-        const val DATA_FORMAT_R32G32_UINT: Long = 100L
-        const val DATA_FORMAT_R32G32_SINT: Long = 101L
-        const val DATA_FORMAT_R32G32_SFLOAT: Long = 102L
-        const val DATA_FORMAT_R32G32B32_UINT: Long = 103L
-        const val DATA_FORMAT_R32G32B32_SINT: Long = 104L
-        const val DATA_FORMAT_R32G32B32_SFLOAT: Long = 105L
-        const val DATA_FORMAT_R32G32B32A32_UINT: Long = 106L
-        const val DATA_FORMAT_R32G32B32A32_SINT: Long = 107L
-        const val DATA_FORMAT_R32G32B32A32_SFLOAT: Long = 108L
-        const val DATA_FORMAT_R64_UINT: Long = 109L
-        const val DATA_FORMAT_R64_SINT: Long = 110L
-        const val DATA_FORMAT_R64_SFLOAT: Long = 111L
-        const val DATA_FORMAT_R64G64_UINT: Long = 112L
-        const val DATA_FORMAT_R64G64_SINT: Long = 113L
-        const val DATA_FORMAT_R64G64_SFLOAT: Long = 114L
-        const val DATA_FORMAT_R64G64B64_UINT: Long = 115L
-        const val DATA_FORMAT_R64G64B64_SINT: Long = 116L
-        const val DATA_FORMAT_R64G64B64_SFLOAT: Long = 117L
-        const val DATA_FORMAT_R64G64B64A64_UINT: Long = 118L
-        const val DATA_FORMAT_R64G64B64A64_SINT: Long = 119L
-        const val DATA_FORMAT_R64G64B64A64_SFLOAT: Long = 120L
-        const val DATA_FORMAT_B10G11R11_UFLOAT_PACK32: Long = 121L
-        const val DATA_FORMAT_E5B9G9R9_UFLOAT_PACK32: Long = 122L
-        const val DATA_FORMAT_D16_UNORM: Long = 123L
-        const val DATA_FORMAT_X8_D24_UNORM_PACK32: Long = 124L
-        const val DATA_FORMAT_D32_SFLOAT: Long = 125L
-        const val DATA_FORMAT_S8_UINT: Long = 126L
-        const val DATA_FORMAT_D16_UNORM_S8_UINT: Long = 127L
-        const val DATA_FORMAT_D24_UNORM_S8_UINT: Long = 128L
-        const val DATA_FORMAT_D32_SFLOAT_S8_UINT: Long = 129L
-        const val DATA_FORMAT_BC1_RGB_UNORM_BLOCK: Long = 130L
-        const val DATA_FORMAT_BC1_RGB_SRGB_BLOCK: Long = 131L
-        const val DATA_FORMAT_BC1_RGBA_UNORM_BLOCK: Long = 132L
-        const val DATA_FORMAT_BC1_RGBA_SRGB_BLOCK: Long = 133L
-        const val DATA_FORMAT_BC2_UNORM_BLOCK: Long = 134L
-        const val DATA_FORMAT_BC2_SRGB_BLOCK: Long = 135L
-        const val DATA_FORMAT_BC3_UNORM_BLOCK: Long = 136L
-        const val DATA_FORMAT_BC3_SRGB_BLOCK: Long = 137L
-        const val DATA_FORMAT_BC4_UNORM_BLOCK: Long = 138L
-        const val DATA_FORMAT_BC4_SNORM_BLOCK: Long = 139L
-        const val DATA_FORMAT_BC5_UNORM_BLOCK: Long = 140L
-        const val DATA_FORMAT_BC5_SNORM_BLOCK: Long = 141L
-        const val DATA_FORMAT_BC6H_UFLOAT_BLOCK: Long = 142L
-        const val DATA_FORMAT_BC6H_SFLOAT_BLOCK: Long = 143L
-        const val DATA_FORMAT_BC7_UNORM_BLOCK: Long = 144L
-        const val DATA_FORMAT_BC7_SRGB_BLOCK: Long = 145L
-        const val DATA_FORMAT_ETC2_R8G8B8_UNORM_BLOCK: Long = 146L
-        const val DATA_FORMAT_ETC2_R8G8B8_SRGB_BLOCK: Long = 147L
-        const val DATA_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK: Long = 148L
-        const val DATA_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK: Long = 149L
-        const val DATA_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK: Long = 150L
-        const val DATA_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK: Long = 151L
-        const val DATA_FORMAT_EAC_R11_UNORM_BLOCK: Long = 152L
-        const val DATA_FORMAT_EAC_R11_SNORM_BLOCK: Long = 153L
-        const val DATA_FORMAT_EAC_R11G11_UNORM_BLOCK: Long = 154L
-        const val DATA_FORMAT_EAC_R11G11_SNORM_BLOCK: Long = 155L
-        const val DATA_FORMAT_ASTC_4x4_UNORM_BLOCK: Long = 156L
-        const val DATA_FORMAT_ASTC_4x4_SRGB_BLOCK: Long = 157L
-        const val DATA_FORMAT_ASTC_5x4_UNORM_BLOCK: Long = 158L
-        const val DATA_FORMAT_ASTC_5x4_SRGB_BLOCK: Long = 159L
-        const val DATA_FORMAT_ASTC_5x5_UNORM_BLOCK: Long = 160L
-        const val DATA_FORMAT_ASTC_5x5_SRGB_BLOCK: Long = 161L
-        const val DATA_FORMAT_ASTC_6x5_UNORM_BLOCK: Long = 162L
-        const val DATA_FORMAT_ASTC_6x5_SRGB_BLOCK: Long = 163L
-        const val DATA_FORMAT_ASTC_6x6_UNORM_BLOCK: Long = 164L
-        const val DATA_FORMAT_ASTC_6x6_SRGB_BLOCK: Long = 165L
-        const val DATA_FORMAT_ASTC_8x5_UNORM_BLOCK: Long = 166L
-        const val DATA_FORMAT_ASTC_8x5_SRGB_BLOCK: Long = 167L
-        const val DATA_FORMAT_ASTC_8x6_UNORM_BLOCK: Long = 168L
-        const val DATA_FORMAT_ASTC_8x6_SRGB_BLOCK: Long = 169L
-        const val DATA_FORMAT_ASTC_8x8_UNORM_BLOCK: Long = 170L
-        const val DATA_FORMAT_ASTC_8x8_SRGB_BLOCK: Long = 171L
-        const val DATA_FORMAT_ASTC_10x5_UNORM_BLOCK: Long = 172L
-        const val DATA_FORMAT_ASTC_10x5_SRGB_BLOCK: Long = 173L
-        const val DATA_FORMAT_ASTC_10x6_UNORM_BLOCK: Long = 174L
-        const val DATA_FORMAT_ASTC_10x6_SRGB_BLOCK: Long = 175L
-        const val DATA_FORMAT_ASTC_10x8_UNORM_BLOCK: Long = 176L
-        const val DATA_FORMAT_ASTC_10x8_SRGB_BLOCK: Long = 177L
-        const val DATA_FORMAT_ASTC_10x10_UNORM_BLOCK: Long = 178L
-        const val DATA_FORMAT_ASTC_10x10_SRGB_BLOCK: Long = 179L
-        const val DATA_FORMAT_ASTC_12x10_UNORM_BLOCK: Long = 180L
-        const val DATA_FORMAT_ASTC_12x10_SRGB_BLOCK: Long = 181L
-        const val DATA_FORMAT_ASTC_12x12_UNORM_BLOCK: Long = 182L
-        const val DATA_FORMAT_ASTC_12x12_SRGB_BLOCK: Long = 183L
-        const val DATA_FORMAT_G8B8G8R8_422_UNORM: Long = 184L
-        const val DATA_FORMAT_B8G8R8G8_422_UNORM: Long = 185L
-        const val DATA_FORMAT_G8_B8_R8_3PLANE_420_UNORM: Long = 186L
-        const val DATA_FORMAT_G8_B8R8_2PLANE_420_UNORM: Long = 187L
-        const val DATA_FORMAT_G8_B8_R8_3PLANE_422_UNORM: Long = 188L
-        const val DATA_FORMAT_G8_B8R8_2PLANE_422_UNORM: Long = 189L
-        const val DATA_FORMAT_G8_B8_R8_3PLANE_444_UNORM: Long = 190L
-        const val DATA_FORMAT_R10X6_UNORM_PACK16: Long = 191L
-        const val DATA_FORMAT_R10X6G10X6_UNORM_2PACK16: Long = 192L
-        const val DATA_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16: Long = 193L
-        const val DATA_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16: Long = 194L
-        const val DATA_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16: Long = 195L
-        const val DATA_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16: Long = 196L
-        const val DATA_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16: Long = 197L
-        const val DATA_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16: Long = 198L
-        const val DATA_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16: Long = 199L
-        const val DATA_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16: Long = 200L
-        const val DATA_FORMAT_R12X4_UNORM_PACK16: Long = 201L
-        const val DATA_FORMAT_R12X4G12X4_UNORM_2PACK16: Long = 202L
-        const val DATA_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16: Long = 203L
-        const val DATA_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16: Long = 204L
-        const val DATA_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16: Long = 205L
-        const val DATA_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16: Long = 206L
-        const val DATA_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16: Long = 207L
-        const val DATA_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16: Long = 208L
-        const val DATA_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16: Long = 209L
-        const val DATA_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16: Long = 210L
-        const val DATA_FORMAT_G16B16G16R16_422_UNORM: Long = 211L
-        const val DATA_FORMAT_B16G16R16G16_422_UNORM: Long = 212L
-        const val DATA_FORMAT_G16_B16_R16_3PLANE_420_UNORM: Long = 213L
-        const val DATA_FORMAT_G16_B16R16_2PLANE_420_UNORM: Long = 214L
-        const val DATA_FORMAT_G16_B16_R16_3PLANE_422_UNORM: Long = 215L
-        const val DATA_FORMAT_G16_B16R16_2PLANE_422_UNORM: Long = 216L
-        const val DATA_FORMAT_G16_B16_R16_3PLANE_444_UNORM: Long = 217L
-        const val DATA_FORMAT_ASTC_4x4_SFLOAT_BLOCK: Long = 218L
-        const val DATA_FORMAT_ASTC_5x4_SFLOAT_BLOCK: Long = 219L
-        const val DATA_FORMAT_ASTC_5x5_SFLOAT_BLOCK: Long = 220L
-        const val DATA_FORMAT_ASTC_6x5_SFLOAT_BLOCK: Long = 221L
-        const val DATA_FORMAT_ASTC_6x6_SFLOAT_BLOCK: Long = 222L
-        const val DATA_FORMAT_ASTC_8x5_SFLOAT_BLOCK: Long = 223L
-        const val DATA_FORMAT_ASTC_8x6_SFLOAT_BLOCK: Long = 224L
-        const val DATA_FORMAT_ASTC_8x8_SFLOAT_BLOCK: Long = 225L
-        const val DATA_FORMAT_ASTC_10x5_SFLOAT_BLOCK: Long = 226L
-        const val DATA_FORMAT_ASTC_10x6_SFLOAT_BLOCK: Long = 227L
-        const val DATA_FORMAT_ASTC_10x8_SFLOAT_BLOCK: Long = 228L
-        const val DATA_FORMAT_ASTC_10x10_SFLOAT_BLOCK: Long = 229L
-        const val DATA_FORMAT_ASTC_12x10_SFLOAT_BLOCK: Long = 230L
-        const val DATA_FORMAT_ASTC_12x12_SFLOAT_BLOCK: Long = 231L
-        const val DATA_FORMAT_MAX: Long = 232L
-        const val BARRIER_MASK_VERTEX: Long = 1L
-        const val BARRIER_MASK_FRAGMENT: Long = 8L
-        const val BARRIER_MASK_COMPUTE: Long = 2L
-        const val BARRIER_MASK_TRANSFER: Long = 4L
-        const val BARRIER_MASK_RASTER: Long = 9L
-        const val BARRIER_MASK_ALL_BARRIERS: Long = 32767L
-        const val BARRIER_MASK_NO_BARRIER: Long = 32768L
-        const val TEXTURE_TYPE_1D: Long = 0L
-        const val TEXTURE_TYPE_2D: Long = 1L
-        const val TEXTURE_TYPE_3D: Long = 2L
-        const val TEXTURE_TYPE_CUBE: Long = 3L
-        const val TEXTURE_TYPE_1D_ARRAY: Long = 4L
-        const val TEXTURE_TYPE_2D_ARRAY: Long = 5L
-        const val TEXTURE_TYPE_CUBE_ARRAY: Long = 6L
-        const val TEXTURE_TYPE_MAX: Long = 7L
-        const val TEXTURE_SAMPLES_1: Long = 0L
-        const val TEXTURE_SAMPLES_2: Long = 1L
-        const val TEXTURE_SAMPLES_4: Long = 2L
-        const val TEXTURE_SAMPLES_8: Long = 3L
-        const val TEXTURE_SAMPLES_16: Long = 4L
-        const val TEXTURE_SAMPLES_32: Long = 5L
-        const val TEXTURE_SAMPLES_64: Long = 6L
-        const val TEXTURE_SAMPLES_MAX: Long = 7L
-        const val TEXTURE_USAGE_SAMPLING_BIT: Long = 1L
-        const val TEXTURE_USAGE_COLOR_ATTACHMENT_BIT: Long = 2L
-        const val TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT: Long = 4L
-        const val TEXTURE_USAGE_DEPTH_RESOLVE_ATTACHMENT_BIT: Long = 4096L
-        const val TEXTURE_USAGE_STORAGE_BIT: Long = 8L
-        const val TEXTURE_USAGE_STORAGE_ATOMIC_BIT: Long = 16L
-        const val TEXTURE_USAGE_CPU_READ_BIT: Long = 32L
-        const val TEXTURE_USAGE_CAN_UPDATE_BIT: Long = 64L
-        const val TEXTURE_USAGE_CAN_COPY_FROM_BIT: Long = 128L
-        const val TEXTURE_USAGE_CAN_COPY_TO_BIT: Long = 256L
-        const val TEXTURE_USAGE_INPUT_ATTACHMENT_BIT: Long = 512L
-        const val TEXTURE_SWIZZLE_IDENTITY: Long = 0L
-        const val TEXTURE_SWIZZLE_ZERO: Long = 1L
-        const val TEXTURE_SWIZZLE_ONE: Long = 2L
-        const val TEXTURE_SWIZZLE_R: Long = 3L
-        const val TEXTURE_SWIZZLE_G: Long = 4L
-        const val TEXTURE_SWIZZLE_B: Long = 5L
-        const val TEXTURE_SWIZZLE_A: Long = 6L
-        const val TEXTURE_SWIZZLE_MAX: Long = 7L
-        const val TEXTURE_SLICE_2D: Long = 0L
-        const val TEXTURE_SLICE_CUBEMAP: Long = 1L
-        const val TEXTURE_SLICE_3D: Long = 2L
-        const val SAMPLER_FILTER_NEAREST: Long = 0L
-        const val SAMPLER_FILTER_LINEAR: Long = 1L
-        const val SAMPLER_REPEAT_MODE_REPEAT: Long = 0L
-        const val SAMPLER_REPEAT_MODE_MIRRORED_REPEAT: Long = 1L
-        const val SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE: Long = 2L
-        const val SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER: Long = 3L
-        const val SAMPLER_REPEAT_MODE_MIRROR_CLAMP_TO_EDGE: Long = 4L
-        const val SAMPLER_REPEAT_MODE_MAX: Long = 5L
-        const val SAMPLER_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK: Long = 0L
-        const val SAMPLER_BORDER_COLOR_INT_TRANSPARENT_BLACK: Long = 1L
-        const val SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_BLACK: Long = 2L
-        const val SAMPLER_BORDER_COLOR_INT_OPAQUE_BLACK: Long = 3L
-        const val SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_WHITE: Long = 4L
-        const val SAMPLER_BORDER_COLOR_INT_OPAQUE_WHITE: Long = 5L
-        const val SAMPLER_BORDER_COLOR_MAX: Long = 6L
-        const val VERTEX_FREQUENCY_VERTEX: Long = 0L
-        const val VERTEX_FREQUENCY_INSTANCE: Long = 1L
-        const val INDEX_BUFFER_FORMAT_UINT16: Long = 0L
-        const val INDEX_BUFFER_FORMAT_UINT32: Long = 1L
-        const val STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT: Long = 1L
-        const val BUFFER_CREATION_DEVICE_ADDRESS_BIT: Long = 1L
-        const val BUFFER_CREATION_AS_STORAGE_BIT: Long = 2L
-        const val BUFFER_CREATION_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT: Long = 8L
-        const val ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT: Long = 1L
-        const val ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT: Long = 2L
-        const val ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT: Long = 4L
-        const val ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT: Long = 8L
-        const val ACCELERATION_STRUCTURE_LOW_MEMORY_BIT: Long = 16L
-        const val ACCELERATION_STRUCTURE_GEOMETRY_OPAQUE_BIT: Long = 1L
-        const val ACCELERATION_STRUCTURE_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT: Long = 2L
-        const val ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT: Long = 1L
-        const val ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FLIP_FACING_BIT: Long = 2L
-        const val ACCELERATION_STRUCTURE_INSTANCE_FORCE_OPAQUE_BIT: Long = 4L
-        const val ACCELERATION_STRUCTURE_INSTANCE_FORCE_NO_OPAQUE_BIT: Long = 8L
-        const val UNIFORM_TYPE_SAMPLER: Long = 0L
-        const val UNIFORM_TYPE_SAMPLER_WITH_TEXTURE: Long = 1L
-        const val UNIFORM_TYPE_TEXTURE: Long = 2L
-        const val UNIFORM_TYPE_IMAGE: Long = 3L
-        const val UNIFORM_TYPE_TEXTURE_BUFFER: Long = 4L
-        const val UNIFORM_TYPE_SAMPLER_WITH_TEXTURE_BUFFER: Long = 5L
-        const val UNIFORM_TYPE_IMAGE_BUFFER: Long = 6L
-        const val UNIFORM_TYPE_UNIFORM_BUFFER: Long = 7L
-        const val UNIFORM_TYPE_STORAGE_BUFFER: Long = 8L
-        const val UNIFORM_TYPE_INPUT_ATTACHMENT: Long = 9L
-        const val UNIFORM_TYPE_UNIFORM_BUFFER_DYNAMIC: Long = 10L
-        const val UNIFORM_TYPE_STORAGE_BUFFER_DYNAMIC: Long = 11L
-        const val UNIFORM_TYPE_ACCELERATION_STRUCTURE: Long = 12L
-        const val UNIFORM_TYPE_MAX: Long = 13L
-        const val RENDER_PRIMITIVE_POINTS: Long = 0L
-        const val RENDER_PRIMITIVE_LINES: Long = 1L
-        const val RENDER_PRIMITIVE_LINES_WITH_ADJACENCY: Long = 2L
-        const val RENDER_PRIMITIVE_LINESTRIPS: Long = 3L
-        const val RENDER_PRIMITIVE_LINESTRIPS_WITH_ADJACENCY: Long = 4L
-        const val RENDER_PRIMITIVE_TRIANGLES: Long = 5L
-        const val RENDER_PRIMITIVE_TRIANGLES_WITH_ADJACENCY: Long = 6L
-        const val RENDER_PRIMITIVE_TRIANGLE_STRIPS: Long = 7L
-        const val RENDER_PRIMITIVE_TRIANGLE_STRIPS_WITH_AJACENCY: Long = 8L
-        const val RENDER_PRIMITIVE_TRIANGLE_STRIPS_WITH_RESTART_INDEX: Long = 9L
-        const val RENDER_PRIMITIVE_TESSELATION_PATCH: Long = 10L
-        const val RENDER_PRIMITIVE_MAX: Long = 11L
-        const val POLYGON_CULL_DISABLED: Long = 0L
-        const val POLYGON_CULL_FRONT: Long = 1L
-        const val POLYGON_CULL_BACK: Long = 2L
-        const val POLYGON_FRONT_FACE_CLOCKWISE: Long = 0L
-        const val POLYGON_FRONT_FACE_COUNTER_CLOCKWISE: Long = 1L
-        const val STENCIL_OP_KEEP: Long = 0L
-        const val STENCIL_OP_ZERO: Long = 1L
-        const val STENCIL_OP_REPLACE: Long = 2L
-        const val STENCIL_OP_INCREMENT_AND_CLAMP: Long = 3L
-        const val STENCIL_OP_DECREMENT_AND_CLAMP: Long = 4L
-        const val STENCIL_OP_INVERT: Long = 5L
-        const val STENCIL_OP_INCREMENT_AND_WRAP: Long = 6L
-        const val STENCIL_OP_DECREMENT_AND_WRAP: Long = 7L
-        const val STENCIL_OP_MAX: Long = 8L
-        const val COMPARE_OP_NEVER: Long = 0L
-        const val COMPARE_OP_LESS: Long = 1L
-        const val COMPARE_OP_EQUAL: Long = 2L
-        const val COMPARE_OP_LESS_OR_EQUAL: Long = 3L
-        const val COMPARE_OP_GREATER: Long = 4L
-        const val COMPARE_OP_NOT_EQUAL: Long = 5L
-        const val COMPARE_OP_GREATER_OR_EQUAL: Long = 6L
-        const val COMPARE_OP_ALWAYS: Long = 7L
-        const val COMPARE_OP_MAX: Long = 8L
-        const val LOGIC_OP_CLEAR: Long = 0L
-        const val LOGIC_OP_AND: Long = 1L
-        const val LOGIC_OP_AND_REVERSE: Long = 2L
-        const val LOGIC_OP_COPY: Long = 3L
-        const val LOGIC_OP_AND_INVERTED: Long = 4L
-        const val LOGIC_OP_NO_OP: Long = 5L
-        const val LOGIC_OP_XOR: Long = 6L
-        const val LOGIC_OP_OR: Long = 7L
-        const val LOGIC_OP_NOR: Long = 8L
-        const val LOGIC_OP_EQUIVALENT: Long = 9L
-        const val LOGIC_OP_INVERT: Long = 10L
-        const val LOGIC_OP_OR_REVERSE: Long = 11L
-        const val LOGIC_OP_COPY_INVERTED: Long = 12L
-        const val LOGIC_OP_OR_INVERTED: Long = 13L
-        const val LOGIC_OP_NAND: Long = 14L
-        const val LOGIC_OP_SET: Long = 15L
-        const val LOGIC_OP_MAX: Long = 16L
-        const val BLEND_FACTOR_ZERO: Long = 0L
-        const val BLEND_FACTOR_ONE: Long = 1L
-        const val BLEND_FACTOR_SRC_COLOR: Long = 2L
-        const val BLEND_FACTOR_ONE_MINUS_SRC_COLOR: Long = 3L
-        const val BLEND_FACTOR_DST_COLOR: Long = 4L
-        const val BLEND_FACTOR_ONE_MINUS_DST_COLOR: Long = 5L
-        const val BLEND_FACTOR_SRC_ALPHA: Long = 6L
-        const val BLEND_FACTOR_ONE_MINUS_SRC_ALPHA: Long = 7L
-        const val BLEND_FACTOR_DST_ALPHA: Long = 8L
-        const val BLEND_FACTOR_ONE_MINUS_DST_ALPHA: Long = 9L
-        const val BLEND_FACTOR_CONSTANT_COLOR: Long = 10L
-        const val BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR: Long = 11L
-        const val BLEND_FACTOR_CONSTANT_ALPHA: Long = 12L
-        const val BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA: Long = 13L
-        const val BLEND_FACTOR_SRC_ALPHA_SATURATE: Long = 14L
-        const val BLEND_FACTOR_SRC1_COLOR: Long = 15L
-        const val BLEND_FACTOR_ONE_MINUS_SRC1_COLOR: Long = 16L
-        const val BLEND_FACTOR_SRC1_ALPHA: Long = 17L
-        const val BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA: Long = 18L
-        const val BLEND_FACTOR_MAX: Long = 19L
-        const val BLEND_OP_ADD: Long = 0L
-        const val BLEND_OP_SUBTRACT: Long = 1L
-        const val BLEND_OP_REVERSE_SUBTRACT: Long = 2L
-        const val BLEND_OP_MINIMUM: Long = 3L
-        const val BLEND_OP_MAXIMUM: Long = 4L
-        const val BLEND_OP_MAX: Long = 5L
-        const val DYNAMIC_STATE_LINE_WIDTH: Long = 1L
-        const val DYNAMIC_STATE_DEPTH_BIAS: Long = 2L
-        const val DYNAMIC_STATE_BLEND_CONSTANTS: Long = 4L
-        const val DYNAMIC_STATE_DEPTH_BOUNDS: Long = 8L
-        const val DYNAMIC_STATE_STENCIL_COMPARE_MASK: Long = 16L
-        const val DYNAMIC_STATE_STENCIL_WRITE_MASK: Long = 32L
-        const val DYNAMIC_STATE_STENCIL_REFERENCE: Long = 64L
-        const val INITIAL_ACTION_LOAD: Long = 0L
-        const val INITIAL_ACTION_CLEAR: Long = 1L
-        const val INITIAL_ACTION_DISCARD: Long = 2L
-        const val INITIAL_ACTION_MAX: Long = 3L
-        const val INITIAL_ACTION_CLEAR_REGION: Long = 1L
-        const val INITIAL_ACTION_CLEAR_REGION_CONTINUE: Long = 1L
-        const val INITIAL_ACTION_KEEP: Long = 0L
-        const val INITIAL_ACTION_DROP: Long = 2L
-        const val INITIAL_ACTION_CONTINUE: Long = 0L
-        const val FINAL_ACTION_STORE: Long = 0L
-        const val FINAL_ACTION_DISCARD: Long = 1L
-        const val FINAL_ACTION_MAX: Long = 2L
-        const val FINAL_ACTION_READ: Long = 0L
-        const val FINAL_ACTION_CONTINUE: Long = 0L
-        const val SHADER_STAGE_VERTEX: Long = 0L
-        const val SHADER_STAGE_FRAGMENT: Long = 1L
-        const val SHADER_STAGE_TESSELATION_CONTROL: Long = 2L
-        const val SHADER_STAGE_TESSELATION_EVALUATION: Long = 3L
-        const val SHADER_STAGE_COMPUTE: Long = 4L
-        const val SHADER_STAGE_RAYGEN: Long = 5L
-        const val SHADER_STAGE_ANY_HIT: Long = 6L
-        const val SHADER_STAGE_CLOSEST_HIT: Long = 7L
-        const val SHADER_STAGE_MISS: Long = 8L
-        const val SHADER_STAGE_INTERSECTION: Long = 9L
-        const val SHADER_STAGE_MAX: Long = 10L
-        const val SHADER_STAGE_VERTEX_BIT: Long = 1L
-        const val SHADER_STAGE_FRAGMENT_BIT: Long = 2L
-        const val SHADER_STAGE_TESSELATION_CONTROL_BIT: Long = 4L
-        const val SHADER_STAGE_TESSELATION_EVALUATION_BIT: Long = 8L
-        const val SHADER_STAGE_COMPUTE_BIT: Long = 16L
-        const val SHADER_STAGE_RAYGEN_BIT: Long = 32L
-        const val SHADER_STAGE_ANY_HIT_BIT: Long = 64L
-        const val SHADER_STAGE_CLOSEST_HIT_BIT: Long = 128L
-        const val SHADER_STAGE_MISS_BIT: Long = 256L
-        const val SHADER_STAGE_INTERSECTION_BIT: Long = 512L
-        const val SHADER_LANGUAGE_GLSL: Long = 0L
-        const val SHADER_LANGUAGE_HLSL: Long = 1L
-        const val PIPELINE_SPECIALIZATION_CONSTANT_TYPE_BOOL: Long = 0L
-        const val PIPELINE_SPECIALIZATION_CONSTANT_TYPE_INT: Long = 1L
-        const val PIPELINE_SPECIALIZATION_CONSTANT_TYPE_FLOAT: Long = 2L
-        const val SUPPORTS_METALFX_SPATIAL: Long = 3L
-        const val SUPPORTS_METALFX_TEMPORAL: Long = 4L
-        const val SUPPORTS_BUFFER_DEVICE_ADDRESS: Long = 6L
-        const val SUPPORTS_IMAGE_ATOMIC_32_BIT: Long = 7L
-        const val SUPPORTS_RAY_QUERY: Long = 11L
-        const val SUPPORTS_RAYTRACING_PIPELINE: Long = 12L
-        const val SUPPORTS_HDR_OUTPUT: Long = 13L
-        const val LIMIT_MAX_BOUND_UNIFORM_SETS: Long = 0L
-        const val LIMIT_MAX_FRAMEBUFFER_COLOR_ATTACHMENTS: Long = 1L
-        const val LIMIT_MAX_TEXTURES_PER_UNIFORM_SET: Long = 2L
-        const val LIMIT_MAX_SAMPLERS_PER_UNIFORM_SET: Long = 3L
-        const val LIMIT_MAX_STORAGE_BUFFERS_PER_UNIFORM_SET: Long = 4L
-        const val LIMIT_MAX_STORAGE_IMAGES_PER_UNIFORM_SET: Long = 5L
-        const val LIMIT_MAX_UNIFORM_BUFFERS_PER_UNIFORM_SET: Long = 6L
-        const val LIMIT_MAX_DRAW_INDEXED_INDEX: Long = 7L
-        const val LIMIT_MAX_FRAMEBUFFER_HEIGHT: Long = 8L
-        const val LIMIT_MAX_FRAMEBUFFER_WIDTH: Long = 9L
-        const val LIMIT_MAX_TEXTURE_ARRAY_LAYERS: Long = 10L
-        const val LIMIT_MAX_TEXTURE_SIZE_1D: Long = 11L
-        const val LIMIT_MAX_TEXTURE_SIZE_2D: Long = 12L
-        const val LIMIT_MAX_TEXTURE_SIZE_3D: Long = 13L
-        const val LIMIT_MAX_TEXTURE_SIZE_CUBE: Long = 14L
-        const val LIMIT_MAX_TEXTURES_PER_SHADER_STAGE: Long = 15L
-        const val LIMIT_MAX_SAMPLERS_PER_SHADER_STAGE: Long = 16L
-        const val LIMIT_MAX_STORAGE_BUFFERS_PER_SHADER_STAGE: Long = 17L
-        const val LIMIT_MAX_STORAGE_IMAGES_PER_SHADER_STAGE: Long = 18L
-        const val LIMIT_MAX_UNIFORM_BUFFERS_PER_SHADER_STAGE: Long = 19L
-        const val LIMIT_MAX_PUSH_CONSTANT_SIZE: Long = 20L
-        const val LIMIT_MAX_UNIFORM_BUFFER_SIZE: Long = 21L
-        const val LIMIT_MAX_VERTEX_INPUT_ATTRIBUTE_OFFSET: Long = 22L
-        const val LIMIT_MAX_VERTEX_INPUT_ATTRIBUTES: Long = 23L
-        const val LIMIT_MAX_VERTEX_INPUT_BINDINGS: Long = 24L
-        const val LIMIT_MAX_VERTEX_INPUT_BINDING_STRIDE: Long = 25L
-        const val LIMIT_MIN_UNIFORM_BUFFER_OFFSET_ALIGNMENT: Long = 26L
-        const val LIMIT_MAX_COMPUTE_SHARED_MEMORY_SIZE: Long = 27L
-        const val LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_X: Long = 28L
-        const val LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Y: Long = 29L
-        const val LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Z: Long = 30L
-        const val LIMIT_MAX_COMPUTE_WORKGROUP_INVOCATIONS: Long = 31L
-        const val LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_X: Long = 32L
-        const val LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Y: Long = 33L
-        const val LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Z: Long = 34L
-        const val LIMIT_MAX_VIEWPORT_DIMENSIONS_X: Long = 35L
-        const val LIMIT_MAX_VIEWPORT_DIMENSIONS_Y: Long = 36L
-        const val LIMIT_METALFX_TEMPORAL_SCALER_MIN_SCALE: Long = 46L
-        const val LIMIT_METALFX_TEMPORAL_SCALER_MAX_SCALE: Long = 47L
-        const val MEMORY_TEXTURES: Long = 0L
-        const val MEMORY_BUFFERS: Long = 1L
-        const val MEMORY_TOTAL: Long = 2L
-        const val NONE: Long = 0L
-        const val REFLECTION_PROBES: Long = 65536L
-        const val SKY_PASS: Long = 131072L
-        const val LIGHTMAPPER_PASS: Long = 196608L
-        const val SHADOW_PASS_DIRECTIONAL: Long = 262144L
-        const val SHADOW_PASS_CUBE: Long = 327680L
-        const val OPAQUE_PASS: Long = 393216L
-        const val ALPHA_PASS: Long = 458752L
-        const val TRANSPARENT_PASS: Long = 524288L
-        const val POST_PROCESSING_PASS: Long = 589824L
-        const val BLIT_PASS: Long = 655360L
-        const val UI_PASS: Long = 720896L
-        const val DEBUG_PASS: Long = 786432L
-        const val DRAW_DEFAULT_ALL: Long = 0L
-        const val DRAW_CLEAR_COLOR_0: Long = 1L
-        const val DRAW_CLEAR_COLOR_1: Long = 2L
-        const val DRAW_CLEAR_COLOR_2: Long = 4L
-        const val DRAW_CLEAR_COLOR_3: Long = 8L
-        const val DRAW_CLEAR_COLOR_4: Long = 16L
-        const val DRAW_CLEAR_COLOR_5: Long = 32L
-        const val DRAW_CLEAR_COLOR_6: Long = 64L
-        const val DRAW_CLEAR_COLOR_7: Long = 128L
-        const val DRAW_CLEAR_COLOR_MASK: Long = 255L
-        const val DRAW_CLEAR_COLOR_ALL: Long = 255L
-        const val DRAW_IGNORE_COLOR_0: Long = 256L
-        const val DRAW_IGNORE_COLOR_1: Long = 512L
-        const val DRAW_IGNORE_COLOR_2: Long = 1024L
-        const val DRAW_IGNORE_COLOR_3: Long = 2048L
-        const val DRAW_IGNORE_COLOR_4: Long = 4096L
-        const val DRAW_IGNORE_COLOR_5: Long = 8192L
-        const val DRAW_IGNORE_COLOR_6: Long = 16384L
-        const val DRAW_IGNORE_COLOR_7: Long = 32768L
-        const val DRAW_IGNORE_COLOR_MASK: Long = 65280L
-        const val DRAW_IGNORE_COLOR_ALL: Long = 65280L
-        const val DRAW_CLEAR_DEPTH: Long = 65536L
-        const val DRAW_IGNORE_DEPTH: Long = 131072L
-        const val DRAW_CLEAR_STENCIL: Long = 262144L
-        const val DRAW_IGNORE_STENCIL: Long = 524288L
-        const val DRAW_CLEAR_ALL: Long = 327935L
-        const val DRAW_IGNORE_ALL: Long = 720640L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RenderingDevice? =

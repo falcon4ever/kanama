@@ -1,10 +1,12 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
@@ -47,13 +49,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         @JvmName("setTopLevelProperty")
         set(value) = setAsTopLevel(value)
 
-    var clipChildren: Long
+    var clipChildren: CanvasItem.ClipChildrenMode
         @JvmName("clipChildrenProperty")
         get() = getClipChildrenMode()
         @JvmName("setClipChildrenProperty")
         set(value) = setClipChildrenMode(value)
 
-    var oversamplingWithScale: Long
+    var oversamplingWithScale: CanvasItem.OversamplingWithScale
         @JvmName("oversamplingWithScaleProperty")
         get() = getOversamplingWithScale()
         @JvmName("setOversamplingWithScaleProperty")
@@ -89,13 +91,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         @JvmName("setYSortEnabledProperty")
         set(value) = setYSortEnabled(value)
 
-    var textureFilter: Long
+    var textureFilter: CanvasItem.TextureFilter
         @JvmName("textureFilterProperty")
         get() = getTextureFilter()
         @JvmName("setTextureFilterProperty")
         set(value) = setTextureFilter(value)
 
-    var textureRepeat: Long
+    var textureRepeat: CanvasItem.TextureRepeat
         @JvmName("textureRepeatProperty")
         get() = getTextureRepeat()
         @JvmName("setTextureRepeatProperty")
@@ -725,8 +727,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.draw_string
      */
-    fun drawString(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, modulate, justificationFlags, direction, orientation, oversampling)
+    fun drawString(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -738,8 +740,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.draw_multiline_string
      */
-    fun drawMultilineString(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+    fun drawMultilineString(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -751,8 +753,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.draw_string_outline
      */
-    fun drawStringOutline(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, size, modulate, justificationFlags, direction, orientation, oversampling)
+    fun drawStringOutline(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -764,8 +766,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.draw_multiline_string_outline
      */
-    fun drawMultilineStringOutline(font: Font, pos: Vector2, text: String, alignment: Long = 0L, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: Long = 3L, justificationFlags: Long = 3L, direction: Long = 0L, orientation: Long = 0L, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment, width, fontSize, maxLines, size, modulate, brkFlags, justificationFlags, direction, orientation, oversampling)
+    fun drawMultilineStringOutline(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -1121,8 +1123,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.make_input_local
      */
-    fun makeInputLocal(event: InputEvent): InputEvent? {
-        return InputEvent.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, segment, event.requireOpenHandle()))
+    fun makeInputLocal(event: InputEvent): InputEvent {
+        return requireGodotReturn(InputEvent.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, segment, event.requireOpenHandle())), "CanvasItem.make_input_local")
     }
 
     /**
@@ -1183,8 +1185,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.set_texture_filter
      */
-    fun setTextureFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
+    fun setTextureFilter(mode: CanvasItem.TextureFilter) {
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -1192,8 +1194,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.get_texture_filter
      */
-    fun getTextureFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
+    fun getTextureFilter(): CanvasItem.TextureFilter {
+        return CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
     }
 
     /**
@@ -1205,8 +1207,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.set_texture_repeat
      */
-    fun setTextureRepeat(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, mode)
+    fun setTextureRepeat(mode: CanvasItem.TextureRepeat) {
+        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, mode.value)
     }
 
     /**
@@ -1218,8 +1220,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.get_texture_repeat
      */
-    fun getTextureRepeat(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment)
+    fun getTextureRepeat(): CanvasItem.TextureRepeat {
+        return CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment))
     }
 
     /**
@@ -1230,8 +1232,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.set_clip_children_mode
      */
-    fun setClipChildrenMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setClipChildrenModeBind, segment, mode)
+    fun setClipChildrenMode(mode: CanvasItem.ClipChildrenMode) {
+        ObjectCalls.ptrcallWithLongArg(setClipChildrenModeBind, segment, mode.value)
     }
 
     /**
@@ -1242,8 +1244,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.get_clip_children_mode
      */
-    fun getClipChildrenMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getClipChildrenModeBind, segment)
+    fun getClipChildrenMode(): CanvasItem.ClipChildrenMode {
+        return CanvasItem.ClipChildrenMode(ObjectCalls.ptrcallNoArgsRetLong(getClipChildrenModeBind, segment))
     }
 
     /**
@@ -1251,8 +1253,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.set_oversampling_with_scale
      */
-    fun setOversamplingWithScale(enabled: Long) {
-        ObjectCalls.ptrcallWithLongArg(setOversamplingWithScaleBind, segment, enabled)
+    fun setOversamplingWithScale(enabled: CanvasItem.OversamplingWithScale) {
+        ObjectCalls.ptrcallWithLongArg(setOversamplingWithScaleBind, segment, enabled.value)
     }
 
     /**
@@ -1260,8 +1262,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: CanvasItem.get_oversampling_with_scale
      */
-    fun getOversamplingWithScale(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getOversamplingWithScaleBind, segment)
+    fun getOversamplingWithScale(): CanvasItem.OversamplingWithScale {
+        return CanvasItem.OversamplingWithScale(ObjectCalls.ptrcallNoArgsRetLong(getOversamplingWithScaleBind, segment))
     }
 
     object Signals {
@@ -1269,6 +1271,192 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         const val visibilityChanged: String = "visibility_changed"
         const val hidden: String = "hidden"
         const val itemRectChanged: String = "item_rect_changed"
+    }
+
+    @JvmInline
+    value class TextureFilter(val value: Long) {
+        companion object {
+            /**
+             * The `CanvasItem` will inherit the filter from its parent.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_PARENT_NODE
+             */
+            val PARENT_NODE: TextureFilter get() = TextureFilter(0L)
+            /**
+             * The texture filter reads from the nearest pixel only. This makes the texture look pixelated from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_NEAREST
+             */
+            val NEAREST: TextureFilter get() = TextureFilter(1L)
+            /**
+             * The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_LINEAR
+             */
+            val LINEAR: TextureFilter get() = TextureFilter(2L)
+            /**
+             * The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look pixelated from up close, and smooth from a distance. Use this for
+             * non-pixel art textures that may be viewed at a low scale (e.g. due to `Camera2D` zoom or sprite
+             * scaling), as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+             */
+            val NEAREST_WITH_MIPMAPS: TextureFilter get() = TextureFilter(3L)
+            /**
+             * The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look smooth from up close, and smooth from a distance. Use this for non-pixel
+             * art textures that may be viewed at a low scale (e.g. due to `Camera2D` zoom or sprite scaling),
+             * as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+             */
+            val LINEAR_WITH_MIPMAPS: TextureFilter get() = TextureFilter(4L)
+            /**
+             * The texture filter reads from the nearest pixel and blends between 2 mipmaps (or uses the
+             * nearest mipmap if `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter`
+             * is `true`) based on the angle between the surface and the camera view. This makes the texture
+             * look pixelated from up close, and smooth from a distance. Anisotropic filtering improves texture
+             * quality on surfaces that are almost in line with the camera, but is slightly slower. The
+             * anisotropic filtering level can be changed by adjusting
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
+             * texture filter is rarely useful in 2D projects. `TEXTURE_FILTER_NEAREST_WITH_MIPMAPS` is usually
+             * more appropriate in this case.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC
+             */
+            val NEAREST_WITH_MIPMAPS_ANISOTROPIC: TextureFilter get() = TextureFilter(5L)
+            /**
+             * The texture filter blends between the nearest 4 pixels and blends between 2 mipmaps (or uses the
+             * nearest mipmap if `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter`
+             * is `true`) based on the angle between the surface and the camera view. This makes the texture
+             * look smooth from up close, and smooth from a distance. Anisotropic filtering improves texture
+             * quality on surfaces that are almost in line with the camera, but is slightly slower. The
+             * anisotropic filtering level can be changed by adjusting
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
+             * texture filter is rarely useful in 2D projects. `TEXTURE_FILTER_LINEAR_WITH_MIPMAPS` is usually
+             * more appropriate in this case.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+             */
+            val LINEAR_WITH_MIPMAPS_ANISOTROPIC: TextureFilter get() = TextureFilter(6L)
+            /**
+             * Represents the size of the `TextureFilter` enum.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_MAX
+             */
+            val MAX: TextureFilter get() = TextureFilter(7L)
+        }
+    }
+
+    @JvmInline
+    value class TextureRepeat(val value: Long) {
+        companion object {
+            /**
+             * The `CanvasItem` will inherit the repeat mode from its parent.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_REPEAT_PARENT_NODE
+             */
+            val PARENT_NODE: TextureRepeat get() = TextureRepeat(0L)
+            /**
+             * The texture does not repeat. Sampling the texture outside its extents will result in
+             * "stretching" of the edge pixels. You can avoid this by ensuring a 1-pixel fully transparent
+             * border on each side of the texture.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_REPEAT_DISABLED
+             */
+            val DISABLED: TextureRepeat get() = TextureRepeat(1L)
+            /**
+             * The texture repeats when exceeding the texture's size.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_REPEAT_ENABLED
+             */
+            val ENABLED: TextureRepeat get() = TextureRepeat(2L)
+            /**
+             * The texture repeats when the exceeding the texture's size in a "2×2 tiled mode". Repeated
+             * textures at even positions are mirrored.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_REPEAT_MIRROR
+             */
+            val MIRROR: TextureRepeat get() = TextureRepeat(3L)
+            /**
+             * Represents the size of the `TextureRepeat` enum.
+             *
+             * Generated from Godot docs: CanvasItem.TEXTURE_REPEAT_MAX
+             */
+            val MAX: TextureRepeat get() = TextureRepeat(4L)
+        }
+    }
+
+    @JvmInline
+    value class ClipChildrenMode(val value: Long) {
+        companion object {
+            /**
+             * Children are drawn over this node and are not clipped.
+             *
+             * Generated from Godot docs: CanvasItem.CLIP_CHILDREN_DISABLED
+             */
+            val DISABLED: ClipChildrenMode get() = ClipChildrenMode(0L)
+            /**
+             * This node is used as a mask and is not drawn. The mask is based on this node's alpha channel:
+             * Opaque pixels are kept, transparent pixels are discarded, and semi-transparent pixels are
+             * blended in according to their opacity. Children are clipped to this node's drawn area.
+             *
+             * Generated from Godot docs: CanvasItem.CLIP_CHILDREN_ONLY
+             */
+            val ONLY: ClipChildrenMode get() = ClipChildrenMode(1L)
+            /**
+             * This node is used as a mask and is also drawn. The mask is based on this node's alpha channel:
+             * Opaque pixels are kept, transparent pixels are discarded, and semi-transparent pixels are
+             * blended in according to their opacity. Children are clipped to the parent's drawn area.
+             *
+             * Generated from Godot docs: CanvasItem.CLIP_CHILDREN_AND_DRAW
+             */
+            val AND_DRAW: ClipChildrenMode get() = ClipChildrenMode(2L)
+            /**
+             * Represents the size of the `ClipChildrenMode` enum.
+             *
+             * Generated from Godot docs: CanvasItem.CLIP_CHILDREN_MAX
+             */
+            val MAX: ClipChildrenMode get() = ClipChildrenMode(3L)
+        }
+    }
+
+    @JvmInline
+    value class OversamplingWithScale(val value: Long) {
+        companion object {
+            /**
+             * The `CanvasItem` will inherit the oversampling mode from its parent.
+             *
+             * Generated from Godot docs: CanvasItem.OVERSAMPLING_WITH_SCALE_PARENT_NODE
+             */
+            val PARENT_NODE: OversamplingWithScale get() = OversamplingWithScale(0L)
+            /**
+             * The oversampling is not affected by `CanvasItem` scale, and is equal to the `Viewport`
+             * oversampling.
+             *
+             * Generated from Godot docs: CanvasItem.OVERSAMPLING_WITH_SCALE_DISABLED
+             */
+            val DISABLED: OversamplingWithScale get() = OversamplingWithScale(1L)
+            /**
+             * The oversampling is a product of `CanvasItem` scale and `Viewport` oversampling.
+             *
+             * Generated from Godot docs: CanvasItem.OVERSAMPLING_WITH_SCALE_ENABLED
+             */
+            val ENABLED: OversamplingWithScale get() = OversamplingWithScale(2L)
+            /**
+             * Represents the size of the `OversamplingWithScale` enum.
+             *
+             * Generated from Godot docs: CanvasItem.OVERSAMPLING_WITH_SCALE_MAX
+             */
+            val MAX: OversamplingWithScale get() = OversamplingWithScale(3L)
+        }
     }
 
     companion object {
@@ -1279,27 +1467,6 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         const val NOTIFICATION_ENTER_CANVAS: Long = 32L
         const val NOTIFICATION_EXIT_CANVAS: Long = 33L
         const val NOTIFICATION_WORLD_2D_CHANGED: Long = 36L
-        const val TEXTURE_FILTER_PARENT_NODE: Long = 0L
-        const val TEXTURE_FILTER_NEAREST: Long = 1L
-        const val TEXTURE_FILTER_LINEAR: Long = 2L
-        const val TEXTURE_FILTER_NEAREST_WITH_MIPMAPS: Long = 3L
-        const val TEXTURE_FILTER_LINEAR_WITH_MIPMAPS: Long = 4L
-        const val TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC: Long = 5L
-        const val TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC: Long = 6L
-        const val TEXTURE_FILTER_MAX: Long = 7L
-        const val TEXTURE_REPEAT_PARENT_NODE: Long = 0L
-        const val TEXTURE_REPEAT_DISABLED: Long = 1L
-        const val TEXTURE_REPEAT_ENABLED: Long = 2L
-        const val TEXTURE_REPEAT_MIRROR: Long = 3L
-        const val TEXTURE_REPEAT_MAX: Long = 4L
-        const val CLIP_CHILDREN_DISABLED: Long = 0L
-        const val CLIP_CHILDREN_ONLY: Long = 1L
-        const val CLIP_CHILDREN_AND_DRAW: Long = 2L
-        const val CLIP_CHILDREN_MAX: Long = 3L
-        const val OVERSAMPLING_WITH_SCALE_PARENT_NODE: Long = 0L
-        const val OVERSAMPLING_WITH_SCALE_DISABLED: Long = 1L
-        const val OVERSAMPLING_WITH_SCALE_ENABLED: Long = 2L
-        const val OVERSAMPLING_WITH_SCALE_MAX: Long = 3L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CanvasItem? =

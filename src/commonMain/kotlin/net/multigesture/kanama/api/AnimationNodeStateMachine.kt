@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: AnimationNodeStateMachine
  */
 class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle) {
-    var stateMachineType: Long
+    var stateMachineType: AnimationNodeStateMachine.StateMachineType
         @JvmName("stateMachineTypeProperty")
         get() = getStateMachineType()
         @JvmName("setStateMachineTypeProperty")
@@ -242,9 +243,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      *
      * Generated from Godot docs: AnimationNodeStateMachine.set_state_machine_type
      */
-    fun setStateMachineType(stateMachineType: Long) {
+    fun setStateMachineType(stateMachineType: AnimationNodeStateMachine.StateMachineType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStateMachineTypeBind, segment, stateMachineType)
+        ObjectCalls.ptrcallWithLongArg(setStateMachineTypeBind, segment, stateMachineType.value)
     }
 
     /**
@@ -253,9 +254,9 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      *
      * Generated from Godot docs: AnimationNodeStateMachine.get_state_machine_type
      */
-    fun getStateMachineType(): Long {
+    fun getStateMachineType(): AnimationNodeStateMachine.StateMachineType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStateMachineTypeBind, segment)
+        return AnimationNodeStateMachine.StateMachineType(ObjectCalls.ptrcallNoArgsRetLong(getStateMachineTypeBind, segment))
     }
 
     /**
@@ -308,11 +309,36 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
         return ObjectCalls.ptrcallNoArgsRetBool(areEndsResetBind, segment)
     }
 
-    companion object {
-        const val STATE_MACHINE_TYPE_ROOT: Long = 0L
-        const val STATE_MACHINE_TYPE_NESTED: Long = 1L
-        const val STATE_MACHINE_TYPE_GROUPED: Long = 2L
+    @JvmInline
+    value class StateMachineType(val value: Long) {
+        companion object {
+            /**
+             * Seeking to the beginning is treated as playing from the start state. Transition to the end state
+             * is treated as exiting the state machine.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachine.STATE_MACHINE_TYPE_ROOT
+             */
+            val ROOT: StateMachineType get() = StateMachineType(0L)
+            /**
+             * Seeking to the beginning is treated as seeking to the beginning of the animation in the current
+             * state. Transition to the end state, or the absence of transitions in each state, is treated as
+             * exiting the state machine.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachine.STATE_MACHINE_TYPE_NESTED
+             */
+            val NESTED: StateMachineType get() = StateMachineType(1L)
+            /**
+             * This is a grouped state machine that can be controlled from a parent state machine. It does not
+             * work independently. There must be a state machine with `state_machine_type` of
+             * `STATE_MACHINE_TYPE_ROOT` or `STATE_MACHINE_TYPE_NESTED` in the parent or ancestor.
+             *
+             * Generated from Godot docs: AnimationNodeStateMachine.STATE_MACHINE_TYPE_GROUPED
+             */
+            val GROUPED: StateMachineType get() = StateMachineType(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeStateMachine? =
             wrap(handle.segment)

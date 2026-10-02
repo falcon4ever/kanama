@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -162,11 +163,44 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
         return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, segment))
     }
 
-    companion object {
-        const val SHADOWMASK_MODE_NONE: Long = 0L
-        const val SHADOWMASK_MODE_REPLACE: Long = 1L
-        const val SHADOWMASK_MODE_OVERLAY: Long = 2L
+    @JvmInline
+    value class ShadowmaskMode(val value: Long) {
+        companion object {
+            /**
+             * Shadowmasking is disabled. No shadowmask texture will be created when baking lightmaps. Existing
+             * shadowmask textures will be removed during baking.
+             *
+             * Generated from Godot docs: LightmapGIData.SHADOWMASK_MODE_NONE
+             */
+            val NONE: ShadowmaskMode get() = ShadowmaskMode(0L)
+            /**
+             * Shadowmasking is enabled. Directional shadows that are outside the
+             * `DirectionalLight3D.directional_shadow_max_distance` will be rendered using the shadowmask
+             * texture. Shadows that are inside the range will be rendered using real-time shadows exclusively.
+             * This mode allows for more precise real-time shadows up close, without the potential "smearing"
+             * effect that can occur when using lightmaps with a high texel size. The downside is that when the
+             * camera moves fast, the transition between the real-time light and shadowmask can be obvious.
+             * Also, objects that only have shadows baked in the shadowmask (and no real-time shadows) won't
+             * display any shadows up close.
+             *
+             * Generated from Godot docs: LightmapGIData.SHADOWMASK_MODE_REPLACE
+             */
+            val REPLACE: ShadowmaskMode get() = ShadowmaskMode(1L)
+            /**
+             * Shadowmasking is enabled. Directional shadows will be rendered with real-time shadows overlaid
+             * on top of the shadowmask texture. This mode makes for smoother shadow transitions when the
+             * camera moves fast, at the cost of a potential smearing effect for directional shadows that are
+             * up close (due to the real-time shadow being mixed with a low-resolution shadowmask). Objects
+             * that only have shadows baked in the shadowmask (and no real-time shadows) will keep their
+             * shadows up close.
+             *
+             * Generated from Godot docs: LightmapGIData.SHADOWMASK_MODE_OVERLAY
+             */
+            val OVERLAY: ShadowmaskMode get() = ShadowmaskMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LightmapGIData? =
             wrap(handle.segment)

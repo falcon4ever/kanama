@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: XRTracker
  */
 open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
-    var type: Long
+    var type: XRServer.TrackerType
         @JvmName("typeProperty")
         get() = getTrackerType()
         @JvmName("setTypeProperty")
@@ -34,9 +34,9 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRTracker.get_tracker_type
      */
-    fun getTrackerType(): Long {
+    fun getTrackerType(): XRServer.TrackerType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackerTypeBind, segment)
+        return XRServer.TrackerType(ObjectCalls.ptrcallNoArgsRetLong(getTrackerTypeBind, segment))
     }
 
     /**
@@ -44,9 +44,9 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRTracker.set_tracker_type
      */
-    fun setTrackerType(type: Long) {
+    fun setTrackerType(type: XRServer.TrackerType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackerTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setTrackerTypeBind, segment, type.value)
     }
 
     /**

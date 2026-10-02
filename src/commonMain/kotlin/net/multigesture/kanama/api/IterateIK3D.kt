@@ -154,8 +154,8 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      *
      * Generated from Godot docs: IterateIK3D.set_joint_rotation_axis
      */
-    fun setJointRotationAxis(index: Int, joint: Int, axis: Long) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis)
+    fun setJointRotationAxis(index: Int, joint: Int, axis: SkeletonModifier3D.RotationAxis) {
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis.value)
     }
 
     /**
@@ -163,8 +163,8 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      *
      * Generated from Godot docs: IterateIK3D.get_joint_rotation_axis
      */
-    fun getJointRotationAxis(index: Int, joint: Int): Long {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint)
+    fun getJointRotationAxis(index: Int, joint: Int): SkeletonModifier3D.RotationAxis {
+        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint))
     }
 
     /**
@@ -214,8 +214,8 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      *
      * Generated from Godot docs: IterateIK3D.set_joint_limitation_right_axis
      */
-    fun setJointLimitationRightAxis(index: Int, joint: Int, direction: Long) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointLimitationRightAxisBind, segment, index, joint, direction)
+    fun setJointLimitationRightAxis(index: Int, joint: Int, direction: SkeletonModifier3D.SecondaryDirection) {
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointLimitationRightAxisBind, segment, index, joint, direction.value)
     }
 
     /**
@@ -223,8 +223,8 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      *
      * Generated from Godot docs: IterateIK3D.get_joint_limitation_right_axis
      */
-    fun getJointLimitationRightAxis(index: Int, joint: Int): Long {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointLimitationRightAxisBind, segment, index, joint)
+    fun getJointLimitationRightAxis(index: Int, joint: Int): SkeletonModifier3D.SecondaryDirection {
+        return SkeletonModifier3D.SecondaryDirection(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointLimitationRightAxisBind, segment, index, joint))
     }
 
     /**

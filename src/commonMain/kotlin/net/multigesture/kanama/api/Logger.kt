@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -12,12 +13,37 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class Logger(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
-    companion object {
-        const val ERROR_TYPE_ERROR: Long = 0L
-        const val ERROR_TYPE_WARNING: Long = 1L
-        const val ERROR_TYPE_SCRIPT: Long = 2L
-        const val ERROR_TYPE_SHADER: Long = 3L
+    @JvmInline
+    value class ErrorType(val value: Long) {
+        companion object {
+            /**
+             * The message received is an error.
+             *
+             * Generated from Godot docs: Logger.ERROR_TYPE_ERROR
+             */
+            val ERROR: ErrorType get() = ErrorType(0L)
+            /**
+             * The message received is a warning.
+             *
+             * Generated from Godot docs: Logger.ERROR_TYPE_WARNING
+             */
+            val WARNING: ErrorType get() = ErrorType(1L)
+            /**
+             * The message received is a script error.
+             *
+             * Generated from Godot docs: Logger.ERROR_TYPE_SCRIPT
+             */
+            val SCRIPT: ErrorType get() = ErrorType(2L)
+            /**
+             * The message received is a shader error.
+             *
+             * Generated from Godot docs: Logger.ERROR_TYPE_SHADER
+             */
+            val SHADER: ErrorType get() = ErrorType(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Logger? =
             wrap(handle.segment)

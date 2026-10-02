@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -14,19 +15,19 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: TileSet
  */
 class TileSet(handle: GodotHandle) : Resource(handle) {
-    var tileShape: Long
+    var tileShape: TileSet.TileShape
         @JvmName("tileShapeProperty")
         get() = getTileShape()
         @JvmName("setTileShapeProperty")
         set(value) = setTileShape(value)
 
-    var tileLayout: Long
+    var tileLayout: TileSet.TileLayout
         @JvmName("tileLayoutProperty")
         get() = getTileLayout()
         @JvmName("setTileLayoutProperty")
         set(value) = setTileLayout(value)
 
-    var tileOffsetAxis: Long
+    var tileOffsetAxis: TileSet.TileOffsetAxis
         @JvmName("tileOffsetAxisProperty")
         get() = getTileOffsetAxis()
         @JvmName("setTileOffsetAxisProperty")
@@ -134,9 +135,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.set_tile_shape
      */
-    fun setTileShape(shape: Long) {
+    fun setTileShape(shape: TileSet.TileShape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileShapeBind, segment, shape)
+        ObjectCalls.ptrcallWithLongArg(setTileShapeBind, segment, shape.value)
     }
 
     /**
@@ -144,9 +145,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.get_tile_shape
      */
-    fun getTileShape(): Long {
+    fun getTileShape(): TileSet.TileShape {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, segment)
+        return TileSet.TileShape(ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, segment))
     }
 
     /**
@@ -155,9 +156,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.set_tile_layout
      */
-    fun setTileLayout(layout: Long) {
+    fun setTileLayout(layout: TileSet.TileLayout) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, segment, layout)
+        ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, segment, layout.value)
     }
 
     /**
@@ -166,9 +167,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.get_tile_layout
      */
-    fun getTileLayout(): Long {
+    fun getTileLayout(): TileSet.TileLayout {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, segment)
+        return TileSet.TileLayout(ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, segment))
     }
 
     /**
@@ -177,9 +178,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.set_tile_offset_axis
      */
-    fun setTileOffsetAxis(alignment: Long) {
+    fun setTileOffsetAxis(alignment: TileSet.TileOffsetAxis) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, segment, alignment)
+        ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, segment, alignment.value)
     }
 
     /**
@@ -188,9 +189,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.get_tile_offset_axis
      */
-    fun getTileOffsetAxis(): Long {
+    fun getTileOffsetAxis(): TileSet.TileOffsetAxis {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, segment)
+        return TileSet.TileOffsetAxis(ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, segment))
     }
 
     /**
@@ -492,9 +493,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.set_terrain_set_mode
      */
-    fun setTerrainSetMode(terrainSet: Int, mode: Long) {
+    fun setTerrainSetMode(terrainSet: Int, mode: TileSet.TerrainMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, segment, terrainSet, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, segment, terrainSet, mode.value)
     }
 
     /**
@@ -502,9 +503,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.get_terrain_set_mode
      */
-    fun getTerrainSetMode(terrainSet: Int): Long {
+    fun getTerrainSetMode(terrainSet: Int): TileSet.TerrainMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, segment, terrainSet)
+        return TileSet.TerrainMode(ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, segment, terrainSet))
     }
 
     /**
@@ -779,9 +780,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.set_custom_data_layer_type
      */
-    fun setCustomDataLayerType(layerIndex: Int, layerType: Long) {
+    fun setCustomDataLayerType(layerIndex: Int, layerType: VariantType) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, segment, layerIndex, layerType)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, segment, layerIndex, layerType.value)
     }
 
     /**
@@ -789,9 +790,9 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: TileSet.get_custom_data_layer_type
      */
-    fun getCustomDataLayerType(layerIndex: Int): Long {
+    fun getCustomDataLayerType(layerIndex: Int): VariantType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, segment, layerIndex)
+        return VariantType(ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, segment, layerIndex))
     }
 
     /**
@@ -1002,39 +1003,229 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, segment)
     }
 
-    companion object {
-        const val TILE_SHAPE_SQUARE: Long = 0L
-        const val TILE_SHAPE_ISOMETRIC: Long = 1L
-        const val TILE_SHAPE_HALF_OFFSET_SQUARE: Long = 2L
-        const val TILE_SHAPE_HEXAGON: Long = 3L
-        const val TILE_LAYOUT_STACKED: Long = 0L
-        const val TILE_LAYOUT_STACKED_OFFSET: Long = 1L
-        const val TILE_LAYOUT_STAIRS_RIGHT: Long = 2L
-        const val TILE_LAYOUT_STAIRS_DOWN: Long = 3L
-        const val TILE_LAYOUT_DIAMOND_RIGHT: Long = 4L
-        const val TILE_LAYOUT_DIAMOND_DOWN: Long = 5L
-        const val TILE_OFFSET_AXIS_HORIZONTAL: Long = 0L
-        const val TILE_OFFSET_AXIS_VERTICAL: Long = 1L
-        const val CELL_NEIGHBOR_RIGHT_SIDE: Long = 0L
-        const val CELL_NEIGHBOR_RIGHT_CORNER: Long = 1L
-        const val CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE: Long = 2L
-        const val CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER: Long = 3L
-        const val CELL_NEIGHBOR_BOTTOM_SIDE: Long = 4L
-        const val CELL_NEIGHBOR_BOTTOM_CORNER: Long = 5L
-        const val CELL_NEIGHBOR_BOTTOM_LEFT_SIDE: Long = 6L
-        const val CELL_NEIGHBOR_BOTTOM_LEFT_CORNER: Long = 7L
-        const val CELL_NEIGHBOR_LEFT_SIDE: Long = 8L
-        const val CELL_NEIGHBOR_LEFT_CORNER: Long = 9L
-        const val CELL_NEIGHBOR_TOP_LEFT_SIDE: Long = 10L
-        const val CELL_NEIGHBOR_TOP_LEFT_CORNER: Long = 11L
-        const val CELL_NEIGHBOR_TOP_SIDE: Long = 12L
-        const val CELL_NEIGHBOR_TOP_CORNER: Long = 13L
-        const val CELL_NEIGHBOR_TOP_RIGHT_SIDE: Long = 14L
-        const val CELL_NEIGHBOR_TOP_RIGHT_CORNER: Long = 15L
-        const val TERRAIN_MODE_MATCH_CORNERS_AND_SIDES: Long = 0L
-        const val TERRAIN_MODE_MATCH_CORNERS: Long = 1L
-        const val TERRAIN_MODE_MATCH_SIDES: Long = 2L
+    @JvmInline
+    value class TileShape(val value: Long) {
+        companion object {
+            /**
+             * Rectangular tile shape.
+             *
+             * Generated from Godot docs: TileSet.TILE_SHAPE_SQUARE
+             */
+            val SQUARE: TileShape get() = TileShape(0L)
+            /**
+             * Diamond tile shape (for isometric look). Note: Isometric `TileSet` works best if all sibling
+             * `TileMapLayer`s and their parent inheriting from `Node2D` have Y-sort enabled.
+             *
+             * Generated from Godot docs: TileSet.TILE_SHAPE_ISOMETRIC
+             */
+            val ISOMETRIC: TileShape get() = TileShape(1L)
+            /**
+             * Rectangular tile shape with one row/column out of two offset by half a tile.
+             *
+             * Generated from Godot docs: TileSet.TILE_SHAPE_HALF_OFFSET_SQUARE
+             */
+            val HALF_OFFSET_SQUARE: TileShape get() = TileShape(2L)
+            /**
+             * Hexagonal tile shape.
+             *
+             * Generated from Godot docs: TileSet.TILE_SHAPE_HEXAGON
+             */
+            val HEXAGON: TileShape get() = TileShape(3L)
+        }
+    }
 
+    @JvmInline
+    value class TileLayout(val value: Long) {
+        companion object {
+            /**
+             * Tile coordinates layout where both axis stay consistent with their respective local horizontal
+             * and vertical axis.
+             *
+             * Generated from Godot docs: TileSet.TILE_LAYOUT_STACKED
+             */
+            val STACKED: TileLayout get() = TileLayout(0L)
+            /**
+             * Same as `TILE_LAYOUT_STACKED`, but the first half-offset is negative instead of positive.
+             *
+             * Generated from Godot docs: TileSet.TILE_LAYOUT_STACKED_OFFSET
+             */
+            val STACKED_OFFSET: TileLayout get() = TileLayout(1L)
+            /**
+             * Tile coordinates layout where the horizontal axis stay horizontal, and the vertical one goes
+             * down-right.
+             *
+             * Generated from Godot docs: TileSet.TILE_LAYOUT_STAIRS_RIGHT
+             */
+            val STAIRS_RIGHT: TileLayout get() = TileLayout(2L)
+            /**
+             * Tile coordinates layout where the vertical axis stay vertical, and the horizontal one goes
+             * down-right.
+             *
+             * Generated from Godot docs: TileSet.TILE_LAYOUT_STAIRS_DOWN
+             */
+            val STAIRS_DOWN: TileLayout get() = TileLayout(3L)
+            /**
+             * Tile coordinates layout where the horizontal axis goes up-right, and the vertical one goes
+             * down-right.
+             *
+             * Generated from Godot docs: TileSet.TILE_LAYOUT_DIAMOND_RIGHT
+             */
+            val DIAMOND_RIGHT: TileLayout get() = TileLayout(4L)
+            /**
+             * Tile coordinates layout where the horizontal axis goes down-right, and the vertical one goes
+             * down-left.
+             *
+             * Generated from Godot docs: TileSet.TILE_LAYOUT_DIAMOND_DOWN
+             */
+            val DIAMOND_DOWN: TileLayout get() = TileLayout(5L)
+        }
+    }
+
+    @JvmInline
+    value class TileOffsetAxis(val value: Long) {
+        companion object {
+            /**
+             * Horizontal half-offset.
+             *
+             * Generated from Godot docs: TileSet.TILE_OFFSET_AXIS_HORIZONTAL
+             */
+            val HORIZONTAL: TileOffsetAxis get() = TileOffsetAxis(0L)
+            /**
+             * Vertical half-offset.
+             *
+             * Generated from Godot docs: TileSet.TILE_OFFSET_AXIS_VERTICAL
+             */
+            val VERTICAL: TileOffsetAxis get() = TileOffsetAxis(1L)
+        }
+    }
+
+    @JvmInline
+    value class CellNeighbor(val value: Long) {
+        companion object {
+            /**
+             * Neighbor on the right side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_RIGHT_SIDE
+             */
+            val RIGHT_SIDE: CellNeighbor get() = CellNeighbor(0L)
+            /**
+             * Neighbor in the right corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_RIGHT_CORNER
+             */
+            val RIGHT_CORNER: CellNeighbor get() = CellNeighbor(1L)
+            /**
+             * Neighbor on the bottom right side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE
+             */
+            val BOTTOM_RIGHT_SIDE: CellNeighbor get() = CellNeighbor(2L)
+            /**
+             * Neighbor in the bottom right corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER
+             */
+            val BOTTOM_RIGHT_CORNER: CellNeighbor get() = CellNeighbor(3L)
+            /**
+             * Neighbor on the bottom side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_BOTTOM_SIDE
+             */
+            val BOTTOM_SIDE: CellNeighbor get() = CellNeighbor(4L)
+            /**
+             * Neighbor in the bottom corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_BOTTOM_CORNER
+             */
+            val BOTTOM_CORNER: CellNeighbor get() = CellNeighbor(5L)
+            /**
+             * Neighbor on the bottom left side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE
+             */
+            val BOTTOM_LEFT_SIDE: CellNeighbor get() = CellNeighbor(6L)
+            /**
+             * Neighbor in the bottom left corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER
+             */
+            val BOTTOM_LEFT_CORNER: CellNeighbor get() = CellNeighbor(7L)
+            /**
+             * Neighbor on the left side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_LEFT_SIDE
+             */
+            val LEFT_SIDE: CellNeighbor get() = CellNeighbor(8L)
+            /**
+             * Neighbor in the left corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_LEFT_CORNER
+             */
+            val LEFT_CORNER: CellNeighbor get() = CellNeighbor(9L)
+            /**
+             * Neighbor on the top left side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_TOP_LEFT_SIDE
+             */
+            val TOP_LEFT_SIDE: CellNeighbor get() = CellNeighbor(10L)
+            /**
+             * Neighbor in the top left corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_TOP_LEFT_CORNER
+             */
+            val TOP_LEFT_CORNER: CellNeighbor get() = CellNeighbor(11L)
+            /**
+             * Neighbor on the top side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_TOP_SIDE
+             */
+            val TOP_SIDE: CellNeighbor get() = CellNeighbor(12L)
+            /**
+             * Neighbor in the top corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_TOP_CORNER
+             */
+            val TOP_CORNER: CellNeighbor get() = CellNeighbor(13L)
+            /**
+             * Neighbor on the top right side.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_TOP_RIGHT_SIDE
+             */
+            val TOP_RIGHT_SIDE: CellNeighbor get() = CellNeighbor(14L)
+            /**
+             * Neighbor in the top right corner.
+             *
+             * Generated from Godot docs: TileSet.CELL_NEIGHBOR_TOP_RIGHT_CORNER
+             */
+            val TOP_RIGHT_CORNER: CellNeighbor get() = CellNeighbor(15L)
+        }
+    }
+
+    @JvmInline
+    value class TerrainMode(val value: Long) {
+        companion object {
+            /**
+             * Requires both corners and side to match with neighboring tiles' terrains.
+             *
+             * Generated from Godot docs: TileSet.TERRAIN_MODE_MATCH_CORNERS_AND_SIDES
+             */
+            val CORNERS_AND_SIDES: TerrainMode get() = TerrainMode(0L)
+            /**
+             * Requires corners to match with neighboring tiles' terrains.
+             *
+             * Generated from Godot docs: TileSet.TERRAIN_MODE_MATCH_CORNERS
+             */
+            val CORNERS: TerrainMode get() = TerrainMode(1L)
+            /**
+             * Requires sides to match with neighboring tiles' terrains.
+             *
+             * Generated from Godot docs: TileSet.TERRAIN_MODE_MATCH_SIDES
+             */
+            val SIDES: TerrainMode get() = TerrainMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileSet? =
             wrap(handle.segment)

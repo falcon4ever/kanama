@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,9 +31,9 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: PacketPeerDTLS.connect_to_peer
      */
-    fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): Long {
+    fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: NULL_SEGMENT, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: NULL_SEGMENT, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -40,9 +41,9 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: PacketPeerDTLS.get_status
      */
-    fun getStatus(): Long {
+    fun getStatus(): PacketPeerDTLS.Status {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
+        return PacketPeerDTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
     }
 
     /**
@@ -55,13 +56,45 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
         ObjectCalls.ptrcallNoArgs(disconnectFromPeerBind, segment)
     }
 
-    companion object {
-        const val STATUS_DISCONNECTED: Long = 0L
-        const val STATUS_HANDSHAKING: Long = 1L
-        const val STATUS_CONNECTED: Long = 2L
-        const val STATUS_ERROR: Long = 3L
-        const val STATUS_ERROR_HOSTNAME_MISMATCH: Long = 4L
+    @JvmInline
+    value class Status(val value: Long) {
+        companion object {
+            /**
+             * A status representing a `PacketPeerDTLS` that is disconnected.
+             *
+             * Generated from Godot docs: PacketPeerDTLS.STATUS_DISCONNECTED
+             */
+            val DISCONNECTED: Status get() = Status(0L)
+            /**
+             * A status representing a `PacketPeerDTLS` that is currently performing the handshake with a
+             * remote peer.
+             *
+             * Generated from Godot docs: PacketPeerDTLS.STATUS_HANDSHAKING
+             */
+            val HANDSHAKING: Status get() = Status(1L)
+            /**
+             * A status representing a `PacketPeerDTLS` that is connected to a remote peer.
+             *
+             * Generated from Godot docs: PacketPeerDTLS.STATUS_CONNECTED
+             */
+            val CONNECTED: Status get() = Status(2L)
+            /**
+             * A status representing a `PacketPeerDTLS` in a generic error state.
+             *
+             * Generated from Godot docs: PacketPeerDTLS.STATUS_ERROR
+             */
+            val ERROR: Status get() = Status(3L)
+            /**
+             * An error status that shows a mismatch in the DTLS certificate domain presented by the host and
+             * the domain requested for validation.
+             *
+             * Generated from Godot docs: PacketPeerDTLS.STATUS_ERROR_HOSTNAME_MISMATCH
+             */
+            val ERROR_HOSTNAME_MISMATCH: Status get() = Status(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PacketPeerDTLS? =
             wrap(handle.segment)

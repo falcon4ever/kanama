@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,28 +10,33 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeParticleAccelerator
  */
 class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNode(handle) {
-    var mode: Long
+    var mode: VisualShaderNodeParticleAccelerator.Mode
         @JvmName("modeProperty")
         get() = getMode()
         @JvmName("setModeProperty")
         set(value) = setMode(value)
 
-    fun setMode(mode: Long) {
+    fun setMode(mode: VisualShaderNodeParticleAccelerator.Mode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
     }
 
-    fun getMode(): Long {
+    fun getMode(): VisualShaderNodeParticleAccelerator.Mode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
+        return VisualShaderNodeParticleAccelerator.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
+    }
+
+    @JvmInline
+    value class Mode(val value: Long) {
+        companion object {
+            val LINEAR: Mode get() = Mode(0L)
+            val RADIAL: Mode get() = Mode(1L)
+            val TANGENTIAL: Mode get() = Mode(2L)
+            val MAX: Mode get() = Mode(3L)
+        }
     }
 
     companion object {
-        const val MODE_LINEAR: Long = 0L
-        const val MODE_RADIAL: Long = 1L
-        const val MODE_TANGENTIAL: Long = 2L
-        const val MODE_MAX: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleAccelerator? =
             wrap(handle.segment)

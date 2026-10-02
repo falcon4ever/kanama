@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -54,7 +55,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setIgnoreTextureSizeProperty")
         set(value) = setIgnoreTextureSize(value)
 
-    var stretchMode: Long
+    var stretchMode: TextureButton.StretchMode
         @JvmName("stretchModeProperty")
         get() = getStretchMode()
         @JvmName("setStretchModeProperty")
@@ -153,8 +154,8 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: TextureButton.set_stretch_mode
      */
-    fun setStretchMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, mode)
+    fun setStretchMode(mode: TextureButton.StretchMode) {
+        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -274,19 +275,61 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: TextureButton.get_stretch_mode
      */
-    fun getStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment)
+    fun getStretchMode(): TextureButton.StretchMode {
+        return TextureButton.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
+    }
+
+    @JvmInline
+    value class StretchMode(val value: Long) {
+        companion object {
+            /**
+             * Scale to fit the node's bounding rectangle.
+             *
+             * Generated from Godot docs: TextureButton.STRETCH_SCALE
+             */
+            val SCALE: StretchMode get() = StretchMode(0L)
+            /**
+             * Tile inside the node's bounding rectangle.
+             *
+             * Generated from Godot docs: TextureButton.STRETCH_TILE
+             */
+            val TILE: StretchMode get() = StretchMode(1L)
+            /**
+             * The texture keeps its original size and stays in the bounding rectangle's top-left corner.
+             *
+             * Generated from Godot docs: TextureButton.STRETCH_KEEP
+             */
+            val KEEP: StretchMode get() = StretchMode(2L)
+            /**
+             * The texture keeps its original size and stays centered in the node's bounding rectangle.
+             *
+             * Generated from Godot docs: TextureButton.STRETCH_KEEP_CENTERED
+             */
+            val KEEP_CENTERED: StretchMode get() = StretchMode(3L)
+            /**
+             * Scale the texture to fit the node's bounding rectangle, but maintain the texture's aspect ratio.
+             *
+             * Generated from Godot docs: TextureButton.STRETCH_KEEP_ASPECT
+             */
+            val KEEP_ASPECT: StretchMode get() = StretchMode(4L)
+            /**
+             * Scale the texture to fit the node's bounding rectangle, center it, and maintain its aspect
+             * ratio.
+             *
+             * Generated from Godot docs: TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+             */
+            val KEEP_ASPECT_CENTERED: StretchMode get() = StretchMode(5L)
+            /**
+             * Scale the texture so that the shorter side fits the bounding rectangle. The other side clips to
+             * the node's limits.
+             *
+             * Generated from Godot docs: TextureButton.STRETCH_KEEP_ASPECT_COVERED
+             */
+            val KEEP_ASPECT_COVERED: StretchMode get() = StretchMode(6L)
+        }
     }
 
     companion object {
-        const val STRETCH_SCALE: Long = 0L
-        const val STRETCH_TILE: Long = 1L
-        const val STRETCH_KEEP: Long = 2L
-        const val STRETCH_KEEP_CENTERED: Long = 3L
-        const val STRETCH_KEEP_ASPECT: Long = 4L
-        const val STRETCH_KEEP_ASPECT_CENTERED: Long = 5L
-        const val STRETCH_KEEP_ASPECT_COVERED: Long = 6L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureButton? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,8 +19,8 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: CopyTransformModifier3D.set_copy_flags
      */
-    fun setCopyFlags(index: Int, copyFlags: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCopyFlagsBind, segment, index, copyFlags)
+    fun setCopyFlags(index: Int, copyFlags: CopyTransformModifier3D.TransformFlag) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCopyFlagsBind, segment, index, copyFlags.value)
     }
 
     /**
@@ -27,8 +28,8 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: CopyTransformModifier3D.get_copy_flags
      */
-    fun getCopyFlags(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCopyFlagsBind, segment, index)
+    fun getCopyFlags(index: Int): CopyTransformModifier3D.TransformFlag {
+        return CopyTransformModifier3D.TransformFlag(ObjectCalls.ptrcallWithIntArgRetLong(getCopyFlagsBind, segment, index))
     }
 
     /**
@@ -36,8 +37,8 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: CopyTransformModifier3D.set_axis_flags
      */
-    fun setAxisFlags(index: Int, axisFlags: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setAxisFlagsBind, segment, index, axisFlags)
+    fun setAxisFlags(index: Int, axisFlags: CopyTransformModifier3D.AxisFlag) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setAxisFlagsBind, segment, index, axisFlags.value)
     }
 
     /**
@@ -45,8 +46,8 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: CopyTransformModifier3D.get_axis_flags
      */
-    fun getAxisFlags(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getAxisFlagsBind, segment, index)
+    fun getAxisFlags(index: Int): CopyTransformModifier3D.AxisFlag {
+        return CopyTransformModifier3D.AxisFlag(ObjectCalls.ptrcallWithIntArgRetLong(getAxisFlagsBind, segment, index))
     }
 
     /**
@@ -59,8 +60,8 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: CopyTransformModifier3D.set_invert_flags
      */
-    fun setInvertFlags(index: Int, axisFlags: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setInvertFlagsBind, segment, index, axisFlags)
+    fun setInvertFlags(index: Int, axisFlags: CopyTransformModifier3D.AxisFlag) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setInvertFlagsBind, segment, index, axisFlags.value)
     }
 
     /**
@@ -68,8 +69,8 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: CopyTransformModifier3D.get_invert_flags
      */
-    fun getInvertFlags(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getInvertFlagsBind, segment, index)
+    fun getInvertFlags(index: Int): CopyTransformModifier3D.AxisFlag {
+        return CopyTransformModifier3D.AxisFlag(ObjectCalls.ptrcallWithIntArgRetLong(getInvertFlagsBind, segment, index))
     }
 
     /**
@@ -285,16 +286,87 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
     }
 
-    companion object {
-        const val TRANSFORM_FLAG_POSITION: Long = 1L
-        const val TRANSFORM_FLAG_ROTATION: Long = 2L
-        const val TRANSFORM_FLAG_SCALE: Long = 4L
-        const val TRANSFORM_FLAG_ALL: Long = 7L
-        const val AXIS_FLAG_X: Long = 1L
-        const val AXIS_FLAG_Y: Long = 2L
-        const val AXIS_FLAG_Z: Long = 4L
-        const val AXIS_FLAG_ALL: Long = 7L
+    @JvmInline
+    value class TransformFlag(val value: Long) {
+        infix fun or(other: TransformFlag): TransformFlag = TransformFlag(value or other.value)
 
+        infix fun and(other: TransformFlag): TransformFlag = TransformFlag(value and other.value)
+
+        infix fun xor(other: TransformFlag): TransformFlag = TransformFlag(value xor other.value)
+
+        fun inv(): TransformFlag = TransformFlag(value.inv())
+
+        operator fun contains(other: TransformFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * If set, allows to copy the position.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.TRANSFORM_FLAG_POSITION
+             */
+            val POSITION: TransformFlag get() = TransformFlag(1L)
+            /**
+             * If set, allows to copy the rotation.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.TRANSFORM_FLAG_ROTATION
+             */
+            val ROTATION: TransformFlag get() = TransformFlag(2L)
+            /**
+             * If set, allows to copy the scale.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.TRANSFORM_FLAG_SCALE
+             */
+            val SCALE: TransformFlag get() = TransformFlag(4L)
+            /**
+             * If set, allows to copy the position/rotation/scale.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.TRANSFORM_FLAG_ALL
+             */
+            val ALL: TransformFlag get() = TransformFlag(7L)
+        }
+    }
+
+    @JvmInline
+    value class AxisFlag(val value: Long) {
+        infix fun or(other: AxisFlag): AxisFlag = AxisFlag(value or other.value)
+
+        infix fun and(other: AxisFlag): AxisFlag = AxisFlag(value and other.value)
+
+        infix fun xor(other: AxisFlag): AxisFlag = AxisFlag(value xor other.value)
+
+        fun inv(): AxisFlag = AxisFlag(value.inv())
+
+        operator fun contains(other: AxisFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * If set, allows to process the X-axis.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.AXIS_FLAG_X
+             */
+            val X: AxisFlag get() = AxisFlag(1L)
+            /**
+             * If set, allows to process the Y-axis.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.AXIS_FLAG_Y
+             */
+            val Y: AxisFlag get() = AxisFlag(2L)
+            /**
+             * If set, allows to process the Z-axis.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.AXIS_FLAG_Z
+             */
+            val Z: AxisFlag get() = AxisFlag(4L)
+            /**
+             * If set, allows to process the all axes.
+             *
+             * Generated from Godot docs: CopyTransformModifier3D.AXIS_FLAG_ALL
+             */
+            val ALL: AxisFlag get() = AxisFlag(7L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CopyTransformModifier3D? =
             wrap(handle.segment)

@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: AudioEffectRecord
  */
 class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
-    var format: Long
+    var format: AudioStreamWAV.Format
         @JvmName("formatProperty")
         get() = getFormat()
         @JvmName("setFormatProperty")
@@ -43,9 +43,9 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectRecord.set_format
      */
-    fun setFormat(format: Long) {
+    fun setFormat(format: AudioStreamWAV.Format) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, format.value)
     }
 
     /**
@@ -53,9 +53,9 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      *
      * Generated from Godot docs: AudioEffectRecord.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): AudioStreamWAV.Format {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return AudioStreamWAV.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**

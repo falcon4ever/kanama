@@ -2,6 +2,7 @@
 
 package net.multigesture.kanama.types
 
+import kotlin.jvm.JvmInline
 import kotlin.math.atan2
 import kotlin.math.sqrt
 import net.multigesture.kanama.binding.runtime.BArg
@@ -37,6 +38,20 @@ data class Vector2(
    */
   val y: real_t,
 ) {
+  // ===== BEGIN GENERATED ENUMS: Vector2 (scripts/generate_api_wrapper.py — do not edit) =====
+  @JvmInline
+  value class Axis(val value: Long) {
+    companion object {
+      val X: Axis
+        get() = Axis(0L)
+
+      val Y: Axis
+        get() = Axis(1L)
+    }
+  }
+
+  // ===== END GENERATED ENUMS: Vector2 =====
+
   constructor(x: Number, y: Number) : this(GodotReal.fromNumber(x), GodotReal.fromNumber(y))
 
   // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See

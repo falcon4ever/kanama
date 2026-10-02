@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,7 +19,7 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setStreamProperty")
         set(value) = setStream(value)
 
-    var attenuationModel: Long
+    var attenuationModel: AudioStreamPlayer3D.AttenuationModel
         @JvmName("attenuationModelProperty")
         get() = getAttenuationModel()
         @JvmName("setAttenuationModelProperty")
@@ -102,7 +103,7 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setAreaMaskProperty")
         set(value) = setAreaMask(value)
 
-    var playbackType: Long
+    var playbackType: AudioServer.PlaybackType
         @JvmName("playbackTypeProperty")
         get() = getPlaybackType()
         @JvmName("setPlaybackTypeProperty")
@@ -138,7 +139,7 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setAttenuationFilterDbProperty")
         set(value) = setAttenuationFilterDb(value)
 
-    var dopplerTracking: Long
+    var dopplerTracking: AudioStreamPlayer3D.DopplerTracking
         @JvmName("dopplerTrackingProperty")
         get() = getDopplerTracking()
         @JvmName("setDopplerTrackingProperty")
@@ -509,8 +510,8 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer3D.set_attenuation_model
      */
-    fun setAttenuationModel(model: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAttenuationModelBind, segment, model)
+    fun setAttenuationModel(model: AudioStreamPlayer3D.AttenuationModel) {
+        ObjectCalls.ptrcallWithLongArg(setAttenuationModelBind, segment, model.value)
     }
 
     /**
@@ -519,8 +520,8 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer3D.get_attenuation_model
      */
-    fun getAttenuationModel(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAttenuationModelBind, segment)
+    fun getAttenuationModel(): AudioStreamPlayer3D.AttenuationModel {
+        return AudioStreamPlayer3D.AttenuationModel(ObjectCalls.ptrcallNoArgsRetLong(getAttenuationModelBind, segment))
     }
 
     /**
@@ -532,8 +533,8 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer3D.set_doppler_tracking
      */
-    fun setDopplerTracking(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode)
+    fun setDopplerTracking(mode: AudioStreamPlayer3D.DopplerTracking) {
+        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode.value)
     }
 
     /**
@@ -545,8 +546,8 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer3D.get_doppler_tracking
      */
-    fun getDopplerTracking(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment)
+    fun getDopplerTracking(): AudioStreamPlayer3D.DopplerTracking {
+        return AudioStreamPlayer3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment))
     }
 
     /**
@@ -645,8 +646,8 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer3D.set_playback_type
      */
-    fun setPlaybackType(playbackType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType)
+    fun setPlaybackType(playbackType: AudioServer.PlaybackType) {
+        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType.value)
     }
 
     /**
@@ -655,23 +656,72 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer3D.get_playback_type
      */
-    fun getPlaybackType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment)
+    fun getPlaybackType(): AudioServer.PlaybackType {
+        return AudioServer.PlaybackType(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment))
     }
 
     object Signals {
         const val finished: String = "finished"
     }
 
-    companion object {
-        const val ATTENUATION_INVERSE_DISTANCE: Long = 0L
-        const val ATTENUATION_INVERSE_SQUARE_DISTANCE: Long = 1L
-        const val ATTENUATION_LOGARITHMIC: Long = 2L
-        const val ATTENUATION_DISABLED: Long = 3L
-        const val DOPPLER_TRACKING_DISABLED: Long = 0L
-        const val DOPPLER_TRACKING_IDLE_STEP: Long = 1L
-        const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
+    @JvmInline
+    value class AttenuationModel(val value: Long) {
+        companion object {
+            /**
+             * Attenuation of loudness according to linear distance.
+             *
+             * Generated from Godot docs: AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+             */
+            val INVERSE_DISTANCE: AttenuationModel get() = AttenuationModel(0L)
+            /**
+             * Attenuation of loudness according to squared distance.
+             *
+             * Generated from Godot docs: AudioStreamPlayer3D.ATTENUATION_INVERSE_SQUARE_DISTANCE
+             */
+            val INVERSE_SQUARE_DISTANCE: AttenuationModel get() = AttenuationModel(1L)
+            /**
+             * Attenuation of loudness according to logarithmic distance.
+             *
+             * Generated from Godot docs: AudioStreamPlayer3D.ATTENUATION_LOGARITHMIC
+             */
+            val LOGARITHMIC: AttenuationModel get() = AttenuationModel(2L)
+            /**
+             * No attenuation of loudness according to distance. The sound will still be heard positionally,
+             * unlike an `AudioStreamPlayer`. `ATTENUATION_DISABLED` can be combined with a `max_distance`
+             * value greater than `0.0` to achieve linear attenuation clamped to a sphere of a defined size.
+             *
+             * Generated from Godot docs: AudioStreamPlayer3D.ATTENUATION_DISABLED
+             */
+            val DISABLED: AttenuationModel get() = AttenuationModel(3L)
+        }
+    }
 
+    @JvmInline
+    value class DopplerTracking(val value: Long) {
+        companion object {
+            /**
+             * Disables doppler tracking.
+             *
+             * Generated from Godot docs: AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED
+             */
+            val DISABLED: DopplerTracking get() = DopplerTracking(0L)
+            /**
+             * Executes doppler tracking during process frames (see `Node.NOTIFICATION_INTERNAL_PROCESS`).
+             *
+             * Generated from Godot docs: AudioStreamPlayer3D.DOPPLER_TRACKING_IDLE_STEP
+             */
+            val IDLE_STEP: DopplerTracking get() = DopplerTracking(1L)
+            /**
+             * Executes doppler tracking during physics frames (see
+             * `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`).
+             *
+             * Generated from Godot docs: AudioStreamPlayer3D.DOPPLER_TRACKING_PHYSICS_STEP
+             */
+            val PHYSICS_STEP: DopplerTracking get() = DopplerTracking(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlayer3D? =
             wrap(handle.segment)

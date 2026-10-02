@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -137,7 +138,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setLocalCoordsProperty")
         set(value) = setUseLocalCoordinates(value)
 
-    var drawOrder: Long
+    var drawOrder: GPUParticles2D.DrawOrder
         @JvmName("drawOrderProperty")
         get() = getDrawOrder()
         @JvmName("setDrawOrderProperty")
@@ -549,8 +550,8 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: GPUParticles2D.set_draw_order
      */
-    fun setDrawOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order)
+    fun setDrawOrder(order: GPUParticles2D.DrawOrder) {
+        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order.value)
     }
 
     /**
@@ -558,8 +559,8 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: GPUParticles2D.get_draw_order
      */
-    fun getDrawOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment)
+    fun getDrawOrder(): GPUParticles2D.DrawOrder {
+        return GPUParticles2D.DrawOrder(ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment))
     }
 
     /**
@@ -821,16 +822,70 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         const val finished: String = "finished"
     }
 
-    companion object {
-        const val DRAW_ORDER_INDEX: Long = 0L
-        const val DRAW_ORDER_LIFETIME: Long = 1L
-        const val DRAW_ORDER_REVERSE_LIFETIME: Long = 2L
-        const val EMIT_FLAG_POSITION: Long = 1L
-        const val EMIT_FLAG_ROTATION_SCALE: Long = 2L
-        const val EMIT_FLAG_VELOCITY: Long = 4L
-        const val EMIT_FLAG_COLOR: Long = 8L
-        const val EMIT_FLAG_CUSTOM: Long = 16L
+    @JvmInline
+    value class DrawOrder(val value: Long) {
+        companion object {
+            /**
+             * Particles are drawn in the order emitted.
+             *
+             * Generated from Godot docs: GPUParticles2D.DRAW_ORDER_INDEX
+             */
+            val INDEX: DrawOrder get() = DrawOrder(0L)
+            /**
+             * Particles are drawn in order of remaining lifetime. In other words, the particle with the
+             * highest lifetime is drawn at the front.
+             *
+             * Generated from Godot docs: GPUParticles2D.DRAW_ORDER_LIFETIME
+             */
+            val LIFETIME: DrawOrder get() = DrawOrder(1L)
+            /**
+             * Particles are drawn in reverse order of remaining lifetime. In other words, the particle with
+             * the lowest lifetime is drawn at the front.
+             *
+             * Generated from Godot docs: GPUParticles2D.DRAW_ORDER_REVERSE_LIFETIME
+             */
+            val REVERSE_LIFETIME: DrawOrder get() = DrawOrder(2L)
+        }
+    }
 
+    @JvmInline
+    value class EmitFlags(val value: Long) {
+        companion object {
+            /**
+             * Particle starts at the specified position.
+             *
+             * Generated from Godot docs: GPUParticles2D.EMIT_FLAG_POSITION
+             */
+            val POSITION: EmitFlags get() = EmitFlags(1L)
+            /**
+             * Particle starts with specified rotation and scale.
+             *
+             * Generated from Godot docs: GPUParticles2D.EMIT_FLAG_ROTATION_SCALE
+             */
+            val ROTATION_SCALE: EmitFlags get() = EmitFlags(2L)
+            /**
+             * Particle starts with the specified velocity vector, which defines the emission direction and
+             * speed.
+             *
+             * Generated from Godot docs: GPUParticles2D.EMIT_FLAG_VELOCITY
+             */
+            val VELOCITY: EmitFlags get() = EmitFlags(4L)
+            /**
+             * Particle starts with specified color.
+             *
+             * Generated from Godot docs: GPUParticles2D.EMIT_FLAG_COLOR
+             */
+            val COLOR: EmitFlags get() = EmitFlags(8L)
+            /**
+             * Particle starts with specified `CUSTOM` data.
+             *
+             * Generated from Godot docs: GPUParticles2D.EMIT_FLAG_CUSTOM
+             */
+            val CUSTOM: EmitFlags get() = EmitFlags(16L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GPUParticles2D? =
             wrap(handle.segment)

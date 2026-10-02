@@ -161,9 +161,9 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
      *
      * Generated from Godot docs: InputEventWithModifiers.get_modifiers_mask
      */
-    fun getModifiersMask(): Long {
+    fun getModifiersMask(): KeyModifierMask {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, segment)
+        return KeyModifierMask(ObjectCalls.ptrcallNoArgsRetLong(getModifiersMaskBind, segment))
     }
 
     companion object {
