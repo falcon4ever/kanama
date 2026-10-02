@@ -9,7 +9,14 @@ plugins {
 // runtime plugin's `.gdap` pulls in as a local dependency — at export time
 // both AARs dex into the same APK classloader, so registrar lookup needs no
 // loader-aware path.
+//
+// The registrars come from THIS checkout's KSP processor, never from the demo's own Gradle build
+// (which resolves the processor from mavenLocal, so a branch's processor or API change was verified
+// against whatever main last published; task 119 item 40). The root build's
+// `assembleAndroidScriptsAar` runs `:project-scripts:kspKotlin` over the demo's `kotlin-src` and
+// passes the output directory as `-PkanamaAndroidKspDir`.
 val demoDir = providers.gradleProperty("kanamaAndroidDemoDir").map { file(it) }
+val kspDir = providers.gradleProperty("kanamaAndroidKspDir").map { file(it) }
 val androidScriptSources = layout.buildDirectory.dir("generated/kanamaAndroidScriptSources")
 val panamaPortCoreDependency = providers.gradleProperty("kanamaPanamaPortCore")
     .orElse("com.github.falcon4ever.PanamaPort:Core:0.1.5-kanama-r8.1")
@@ -39,7 +46,7 @@ val prepareAndroidKanamaScriptSources by tasks.registering(Sync::class) {
     from(demoDir.map { it.resolve("kotlin-src") }) {
         remapForeignImports()
     }
-    from(demoDir.map { it.resolve("build/generated/ksp/main/kotlin") }) {
+    from(kspDir) {
         remapForeignImports()
     }
 
@@ -47,6 +54,12 @@ val prepareAndroidKanamaScriptSources by tasks.registering(Sync::class) {
         if (!demoDir.isPresent) {
             throw GradleException(
                 "Missing -PkanamaAndroidDemoDir=/absolute/path/to/kanama demo project",
+            )
+        }
+        if (!kspDir.isPresent) {
+            throw GradleException(
+                "Missing -PkanamaAndroidKspDir: the registrars must come from the Kanama checkout's " +
+                    "processor (run :assembleAndroidScriptsAar from the Kanama root build)",
             )
         }
     }

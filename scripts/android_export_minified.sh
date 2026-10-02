@@ -130,12 +130,20 @@ cleanup() {
 trap cleanup EXIT
 
 echo "[android_minified] demo: $DEMO_DIR"
-if [[ -x "$DEMO_DIR/gradlew" ]]; then
-  echo "[android_minified] build demo scripts"
+# Task 119 item 40: compile the demo's scripts in source-checkout mode, against THIS Kanama checkout's
+# API and KSP processor (the same `:project-scripts:jar -PkanamaProjectScriptsDir` path the demos' desktop
+# CI lane uses), never through the demo's own Gradle build, which resolves `kanama`/`processor` from
+# mavenLocal (whatever main last published). The Android scripts AAR below takes its registrars from the
+# same checkout's processor (`:project-scripts:kspKotlin`), so a branch's API or processor change is what
+# gets built and exported.
+if [[ -d "$DEMO_DIR/kotlin-src" ]]; then
+  echo "[android_minified] build demo scripts (against $ROOT_DIR)"
   if [[ -n "${KANAMA_DEMO_JAVA_HOME:-}" ]]; then
-    JAVA_HOME="$KANAMA_DEMO_JAVA_HOME" "$DEMO_DIR/gradlew" -p "$DEMO_DIR" jar
+    JAVA_HOME="$KANAMA_DEMO_JAVA_HOME" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" :project-scripts:jar \
+      "-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src"
   else
-    "$DEMO_DIR/gradlew" -p "$DEMO_DIR" jar
+    "$ROOT_DIR/gradlew" -p "$ROOT_DIR" :project-scripts:jar \
+      "-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src"
   fi
 fi
 

@@ -7,6 +7,20 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — Android smoke builds the demo scripts against this checkout, not mavenLocal (task 119 item 40)
+
+- **The scripts AAR's registrars come from this checkout's KSP processor.** `assembleAndroidScriptsAar`
+  (run by `installAndroidPluginAar -PkanamaAndroidDemoDir=...`) now runs `:project-scripts:kspKotlin`
+  over the project's `kotlin-src/` and the Android build reads that output
+  (`-PkanamaAndroidKspDir`), instead of `<demo>/build/generated/ksp`, which the demo's own Gradle
+  build produced with `kanama`/`processor` resolved from **mavenLocal** (whatever main last
+  published). A processor-only change used to be verified on a device against the OLD processor, and an
+  API-changing branch failed to compile the demo (task 128 A: `Unresolved reference 'CONNECT_DEFAULT'`).
+- **`scripts/android_smoke.sh` and `scripts/android_export_minified.sh`** compile the demo's scripts up
+  front with `:project-scripts:jar -PkanamaProjectScriptsDir=<demo>/kotlin-src` (the path the demos'
+  desktop CI lane uses) instead of `<demo>/gradlew jar`. A project without its own Gradle build now
+  works too. `docs/contributing/backends/android.md` says where demo scripts are compiled from.
+
 ### Fixed — the native bootstrap build no longer accepts a truncated library (task 119 item 39)
 
 - **`buildNativeBootstrap` fails on a missing or empty artifact**, and deletes a 0-byte
