@@ -820,7 +820,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         try {
           scriptPropertyTypeModel(resolvedType, simpleName, kotlinName, scriptClassTypes)
         } catch (e: IllegalArgumentException) {
-          if (emitJvmCode) throw e
+          // A declaration error is the same build error on every target (task 128 B: a nullable
+          // Godot enum is not a missing Kotlin/Native type and must not degrade to a warning).
+          if (emitJvmCode || e is ScriptDeclarationError) throw e
           env.logger.warn(
             "[kanama:ksp] $simpleName.$kotlinName: ${e.message}; skipping on iOS (type not available on Kotlin/Native)"
           )
@@ -829,7 +831,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       val hint = ann?.arguments?.firstOrNull { it.name?.asString() == "hint" }?.value as? Int ?: 0
       val hintString =
         ann?.arguments?.firstOrNull { it.name?.asString() == "hintString" }?.value as? String ?: ""
-      val usage = ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6
+      // Task 128 B: a Godot enum property carries GDScript's class marker too
+      // (PROPERTY_USAGE_CLASS_IS_ENUM / _CLASS_IS_BITFIELD, with class_name = the Godot enum).
+      val usage =
+        (ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6) or
+          (scriptType.godotEnum?.classUsageFlag ?: 0)
       val exportCategory =
         prop.annotations
           .firstOrNull { it.shortName.asString() == "ExportCategory" }
@@ -1310,7 +1316,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         GodotEnumTable.forKotlin(type.declaration.qualifiedName?.asString()) ?: return null
       if (type.isMarkedNullable) {
         val name = shortKotlinName(entry.kotlinFqName)
-        throw IllegalArgumentException(
+        throw ScriptDeclarationError(
           "$where: $slot is a nullable Godot enum ('$name?'); declare it '$name' — the Godot " +
             "slot is an int, which cannot be null."
         )
@@ -2311,24 +2317,36 @@ private fun findPropertyDeclarationLine(
 internal fun collectPropertyDeclaration(lines: List<String>, start: Int): String {
   val parts = mutableListOf<String>()
   var parenDepth = 0
-  var initializerOnNextLine = false
+  var sawEquals = false
   for (i in start..(start + 8).coerceAtMost(lines.lastIndex)) {
     val line = stripLineComment(lines[i]).trim()
     if (line.isEmpty()) continue
     parts += line
     parenDepth += line.count { it == '(' } - line.count { it == ')' }
     if (parenDepth > 0) continue
-    // A line that ENDS with the `=` has its initializer on the next line (ktfmt wraps a long
-    // `var mode: Node.ProcessMode =\n    Node.ProcessMode.ALWAYS` that way, task 128 B).
-    if (initializerOnNextLine) break
-    if (line.endsWith("=")) {
-      initializerOnNextLine = true
-      continue
+    if (!sawEquals) {
+      if (!line.contains("=")) continue
+      sawEquals = true
     }
-    if (line.contains("=")) break
+    // The initializer continues on the next line when this one ENDS with the `=` or with a binary
+    // operator: ktfmt wraps a long `var mode: Node.ProcessMode =\n    Node.ProcessMode.ALWAYS`
+    // and a long bitfield `X.A or\n    X.B` that way (task 128 B).
+    if (line.endsWith("=") || INITIALIZER_CONTINUATION.containsMatchIn(line)) continue
+    break
   }
   return parts.joinToString(" ")
 }
+
+/** A line ending in a binary operator, so the expression continues on the next line. */
+private val INITIALIZER_CONTINUATION =
+  Regex("""(?:\b(?:or|and|xor|shl|shr|ushr)|[-+*/%]|&&|\|\||\?:)$""")
+
+/**
+ * A script declaration error that is a build error on every target. The iOS/Web model builder
+ * degrades an unresolvable `@ScriptProperty` type to a warning (a desktop-only wrapper is absent on
+ * Kotlin/Native); an error of this type is not that and is never degraded (task 128 B).
+ */
+internal class ScriptDeclarationError(message: String) : IllegalArgumentException(message)
 
 private fun stripLineComment(line: String): String {
   var inString = false
@@ -3891,7 +3909,11 @@ internal class ScriptCodeEmitter(
   // hints the hint string is exactly the class name (engine wrapper class or
   // @GlobalClass simple name), so reuse it.
   private fun scriptPropertyClassName(p: ScriptPropertyModel): String =
-    if (
+    // Task 128 B: a Godot enum property names its enum, as GDScript's `@export var mode:
+    // Node.ProcessMode` does (`Node.ProcessMode`, with PROPERTY_USAGE_CLASS_IS_ENUM in usage).
+    if (p.godotEnum != null) {
+      p.godotEnum.godotKey
+    } else if (
       p.type == TypeMapping.OBJECT &&
         (p.hint == PROPERTY_HINT_RESOURCE_TYPE || p.hint == PROPERTY_HINT_NODE_TYPE)
     ) {

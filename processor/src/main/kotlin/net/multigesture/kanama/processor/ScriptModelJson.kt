@@ -98,6 +98,7 @@ private fun JsonWriter.writeArg(a: ArgModel) = obj {
 private fun JsonWriter.writeGodotEnum(e: GodotEnumRef) = obj {
   field("kotlinFqName", e.kotlinFqName)
   field("isBitfield", e.isBitfield)
+  field("godotKey", e.godotKey)
 }
 
 private fun JsonWriter.writeRpc(r: RpcModel) = obj {

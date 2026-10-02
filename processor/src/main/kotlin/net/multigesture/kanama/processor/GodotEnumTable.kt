@@ -6,13 +6,32 @@ package net.multigesture.kanama.processor
  * with `<kotlinFqName>(raw)` on the way in and read `.value` on the way out, so the ABI stays the
  * INT path every backend already marshals.
  */
-internal data class GodotEnumRef(val kotlinFqName: String, val isBitfield: Boolean) {
+internal data class GodotEnumRef(
+  val kotlinFqName: String,
+  val isBitfield: Boolean,
+  /** Godot's qualified name (`Node.ProcessMode`, `Key`): the property's `class_name`. */
+  val godotKey: String,
+) {
+  /**
+   * The usage flag GDScript's own `@export var mode: Node.ProcessMode` adds:
+   * `PROPERTY_USAGE_CLASS_IS_ENUM`, or for a bitfield Godot's native `_CLASS_IS_BITFIELD` (what a
+   * bitfield method argument carries; GDScript's analyzer types it as a plain `int`, so assigning a
+   * combination of flags does not warn as an int-as-enum).
+   */
+  val classUsageFlag: Int
+    get() = if (isBitfield) PROPERTY_USAGE_CLASS_IS_BITFIELD else PROPERTY_USAGE_CLASS_IS_ENUM
+
   /** Wraps the raw `Long` expression [raw] into the value class. */
   fun wrap(raw: String): String = "$kotlinFqName($raw)"
 
   /** The value class's zero (`X(0L)`): Godot has no `NONE` in every enum, so none is invented. */
   val zeroLiteral: String
     get() = wrap("0L")
+
+  companion object {
+    const val PROPERTY_USAGE_CLASS_IS_BITFIELD = 1 shl 9
+    const val PROPERTY_USAGE_CLASS_IS_ENUM = 1 shl 16
+  }
 }
 
 /**
@@ -35,7 +54,7 @@ internal object GodotEnumTable {
     val values: List<Pair<String, Long>>,
   ) {
     val ref: GodotEnumRef
-      get() = GodotEnumRef(kotlinFqName, isBitfield)
+      get() = GodotEnumRef(kotlinFqName, isBitfield, godotKey)
 
     /** `PROPERTY_HINT_FLAGS` for a bitfield, `PROPERTY_HINT_ENUM` otherwise. */
     val propertyHint: Int

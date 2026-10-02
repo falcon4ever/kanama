@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the virtual-method signature table consumed by the KSP processor.
+"""Generate (and with `--check`, drift-gate) the virtual-method signature table the KSP processor reads.
 
 Reads ``extension_api.json`` and emits a compact TSV resource describing, per
 class, every ``is_virtual`` method's argument and return types (Godot type

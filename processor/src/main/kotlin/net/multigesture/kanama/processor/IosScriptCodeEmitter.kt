@@ -149,6 +149,10 @@ internal data class IosProperty(
   // Task 128 B: `List<Node.ProcessMode>` — delivered through the same integer-array path as
   // `arrayElementEnumFqName`, but the integers are Godot values wrapped as-is (no ordinal lookup).
   val arrayElementGodotEnum: GodotEnumRef? = null,
+  // Task 128 B: PropertyInfo.class_name the iOS script instance reports (the Godot enum's
+  // qualified name for a Godot-enum property, as on desktop). Empty keeps the runtime's own
+  // object-property rule.
+  val className: String = "",
 )
 
 internal data class IosSignal(val godotName: String, val kotlinName: String)
@@ -219,8 +223,10 @@ internal class IosScriptCodeEmitter(
       builder.appendLine("            ),")
       builder.appendLine("            properties = listOf(")
       script.properties.forEach { property ->
+        val className =
+          if (property.className.isEmpty()) "" else ", ${kotlinString(property.className)}"
         builder.appendLine(
-          "                KanamaIosScriptProperty(${kotlinString(property.godotName)}, ${property.godotVariantType}, ${property.hint}, ${kotlinString(property.hintString)}, ${property.usage}),"
+          "                KanamaIosScriptProperty(${kotlinString(property.godotName)}, ${property.godotVariantType}, ${property.hint}, ${kotlinString(property.hintString)}, ${property.usage}$className),"
         )
       }
       builder.appendLine("            ),")
@@ -994,6 +1000,7 @@ internal class IosScriptCodeEmitter(
       arrayElementEnumFqName = if (isList) arrayElementEnumFqName.orEmpty() else "",
       isMutable = isMutable,
       arrayElementGodotEnum = if (isList) arrayElementGodotEnum else null,
+      className = godotEnum?.godotKey.orEmpty(),
     )
   }
 

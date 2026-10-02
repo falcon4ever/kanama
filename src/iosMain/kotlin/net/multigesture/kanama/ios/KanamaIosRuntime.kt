@@ -52,6 +52,9 @@ internal data class KanamaIosScriptProperty(
   val hint: Int = 0,
   val hintString: String = "",
   val usage: Int = 6,
+  // PropertyInfo.class_name when the generator knows it (task 128 B: a Godot-enum property names
+  // its enum, `Node.ProcessMode`). Empty falls back to the object-property rule below.
+  val className: String = "",
 )
 
 internal data class KanamaIosScriptSignal(val name: String)
@@ -279,6 +282,7 @@ internal object KanamaIosRuntime {
   fun scriptResourcePropertyClassName(handle: Long, propertyIndex: Int): String {
     val property =
       scriptResources[handle]?.descriptor?.properties?.getOrNull(propertyIndex) ?: return ""
+    if (property.className.isNotEmpty()) return property.className
     val objectVariantType = 24
     val resourceTypeHint = 17
     val nodeTypeHint = 34

@@ -12,6 +12,7 @@ import net.multigesture.kanama.annotations.RegisterProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.annotations.Tool
 import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.generated.HelloKanamaSignals
 
 /**
@@ -55,6 +56,12 @@ class HelloKanama(val godotObject: GodotHandle) {
     HelloKanamaSignals.pinged(this, pingCount)
     return pingCount
   }
+
+  // task 128 B probe: an object return from a @RegisterClass method, through both the call_
+  // (varcall)
+  // and ptrcall_ upcalls. Before 128 B the registrar wrote the GodotHandle itself where the raw
+  // address goes, so this shape did not compile.
+  @RegisterFunction fun selfObject(): GodotObject = GodotObject(godotObject)
 
   // task 98 smoke probe: a @RegisterFunction on a @RegisterClass dispatches through the generated
   // call_/ptrcall_ upcall stubs, which have no bespoke catch. Before structural containment in

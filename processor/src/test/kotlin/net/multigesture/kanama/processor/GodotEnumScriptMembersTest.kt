@@ -194,6 +194,8 @@ class GodotEnumScriptMembersTest {
             type = TypeMapping.INT,
             isMutable = true,
             hint = processMode.propertyHint,
+            // What the KSP builder ORs in for a Godot enum (GDScript's class marker).
+            usage = 6 or processMode.ref.classUsageFlag,
             hintString = processMode.hintString,
             defaultLiteral = "$modeFq(3L)",
             godotEnum = processMode.ref,
@@ -204,6 +206,7 @@ class GodotEnumScriptMembersTest {
             type = TypeMapping.INT,
             isMutable = true,
             hint = threadMessages.propertyHint,
+            usage = 6 or threadMessages.ref.classUsageFlag,
             hintString = threadMessages.hintString,
             defaultLiteral = "$flagsFq(1L)",
             godotEnum = threadMessages.ref,
@@ -260,12 +263,14 @@ class GodotEnumScriptMembersTest {
     fun has(fragment: String) = assertTrue(source.contains(fragment), "missing: $fragment")
     // Inspector metadata.
     has(
-      "ClassDB.PropertySpec(\"mode\", VariantType.INT, 2, \"Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4\", 6)"
+      "ClassDB.PropertySpec(\"mode\", VariantType.INT, 2, \"Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4\", 65542, \"Node.ProcessMode\")"
     )
     has(
-      "ClassDB.PropertySpec(\"messages\", VariantType.INT, 6, \"Messages:1,Messages Physics:2,Messages All:3\", 6)"
+      "ClassDB.PropertySpec(\"messages\", VariantType.INT, 6, \"Messages:1,Messages Physics:2,Messages All:3\", 518, \"Node.ProcessThreadMessages\")"
     )
     has("ClassDB.PropertySpec(\"modes\", VariantType.ARRAY, 23, \"2/2:Inherit:0,")
+    // The script-level property list (Script.get_script_property_list) reports the same marker.
+    has("\"usage\" to 65542, \"class_name\" to \"Node.ProcessMode\")")
     // Default field typed as the value class; reported as its value.
     has("private var defaultMode: $modeFq = $modeFq(3L)")
     has("s.set(JAVA_LONG, 0, defaultMode.value)")
@@ -325,10 +330,10 @@ class GodotEnumScriptMembersTest {
     assertEquals(emptyList(), errors)
     assertEquals(emptyList(), warnings.filter { "EnumFixture" in it })
     has(
-      "KanamaIosScriptProperty(\"mode\", 2, 2, \"Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4\", 6)"
+      "KanamaIosScriptProperty(\"mode\", 2, 2, \"Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4\", 65542, \"Node.ProcessMode\")"
     )
     has(
-      "KanamaIosScriptProperty(\"messages\", 2, 6, \"Messages:1,Messages Physics:2,Messages All:3\", 6)"
+      "KanamaIosScriptProperty(\"messages\", 2, 6, \"Messages:1,Messages Physics:2,Messages All:3\", 518, \"Node.ProcessThreadMessages\")"
     )
     has("0 -> { script.mode = $modeFq(value); true }")
     has("0 -> script.mode.value")
@@ -388,15 +393,25 @@ class GodotEnumScriptMembersTest {
     val json = scriptModelToJson(model())
     assertTrue(json.contains("\"schemaVersion\":$SCRIPT_MODEL_SCHEMA_VERSION"))
     assertTrue(
-      json.contains("\"godotEnum\":{\"kotlinFqName\":\"$modeFq\",\"isBitfield\":false}"),
+      json.contains(
+        "\"godotEnum\":{\"kotlinFqName\":\"$modeFq\",\"isBitfield\":false,\"godotKey\":\"Node.ProcessMode\"}"
+      ),
       json,
     )
     assertTrue(
-      json.contains("\"arrayElementGodotEnum\":{\"kotlinFqName\":\"$modeFq\",\"isBitfield\":false}")
+      json.contains(
+        "\"arrayElementGodotEnum\":{\"kotlinFqName\":\"$modeFq\",\"isBitfield\":false,\"godotKey\":\"Node.ProcessMode\"}"
+      )
     )
     assertTrue(
-      json.contains("\"returnGodotEnum\":{\"kotlinFqName\":\"$modeFq\",\"isBitfield\":false}")
+      json.contains(
+        "\"returnGodotEnum\":{\"kotlinFqName\":\"$modeFq\",\"isBitfield\":false,\"godotKey\":\"Node.ProcessMode\"}"
+      )
     )
-    assertTrue(json.contains("\"godotEnum\":{\"kotlinFqName\":\"$flagsFq\",\"isBitfield\":true}"))
+    assertTrue(
+      json.contains(
+        "\"godotEnum\":{\"kotlinFqName\":\"$flagsFq\",\"isBitfield\":true,\"godotKey\":\"Node.ProcessThreadMessages\"}"
+      )
+    )
   }
 }
