@@ -184,8 +184,8 @@ versioning once public releases begin.
 - Gates: `scripts/check_typed_enums.py` (local_ci) — no `Long` enum slot left (builtin value-type enums
   included), required returns non-null and the rest nullable, no generated top-level name equal to a
   Kotlin default import or a public Kanama type, and every value name equal to the naming function
-  under the frozen lock; the migration table has a `--check` docs stage. Not in this change: KSP
-  marshalling of enum-typed `@ScriptProperty` / `@RegisterFunction` / virtual signatures (task 128 B).
+  under the frozen lock; the migration table has a `--check` docs stage. KSP marshalling of
+  enum-typed script members and virtual signatures is task 128 B (below).
 - **Web (task 128 C): the same types on Web.** The Kotlin/Wasm wrappers (`scripts/generate_web_wrappers.py`)
   use the same value classes, names and frozen lock (`Node.ProcessMode.ALWAYS`, `Key.W`,
   `GodotObject.ConnectFlags.ONE_SHOT`, `GodotError`); every Web class nests all its Godot enums, the
@@ -212,6 +212,34 @@ versioning once public releases begin.
   surfaced as a raw `GodotHandle`. Size: the web3d fixture's Kotlin/Wasm module (`buildWebScripts`, release)
   is 262,837 B on kanama 9a6024d6 and 266,395 B with this change (+3,558 B, +1.4 %; every Web class
   nests all its Godot enums, but Kotlin/Wasm drops the value classes a build never names).
+- **Godot enums as script members (task 128 B), desktop/Android, iOS and Web.** A Godot enum value
+  class is a valid `@ScriptProperty` / `@Export` type: `var mode: Node.ProcessMode =
+  Node.ProcessMode.ALWAYS` exports as an `int` with `PROPERTY_HINT_ENUM` (a bitfield such as
+  `Node.ProcessThreadMessages` with `PROPERTY_HINT_FLAGS`) and a hint string in the format of
+  Godot's own enum properties with the values spelled out
+  (`Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4`, `Messages:1,Messages Physics:2,Messages
+  All:3`); unlike a Kotlin `enum class` it stores the **Godot value**, not an ordinal, so scenes
+  saved by a GDScript/C# version load unchanged and an unlisted value is kept, not clamped. The
+  default (`X.VALUE`, `X(3L)`, or a bitfield `or`-chain) is constant-folded into the inspector
+  default; an initializer ktfmt wrapped onto the line after the `=` is now read as the default for
+  every property type (it used to be dropped, which on Web failed the build as "not a plain
+  literal"). `List<Node.ProcessMode>` exports as a typed int array (`"2/2:<hint>"`) on desktop and iOS
+  (a build error on Web, like `List<enum class>`); on Web the scalar export goes through
+  `@export_custom(<hint>, "<hint string>")` so the proxy reports the same metadata. A nullable enum
+  member is a build error (the slot is an `int`). `@RegisterFunction` parameters and returns,
+  `@Signal` arguments (emitted as INT, delivered typed to the generated `connect*` / `await*`
+  helpers) and `@Rpc` arguments take the value classes on every emitter; GDScript sees the `int`.
+  **Engine virtuals:** the 185 slots (96 parameters, 89 returns) of the 167 engine virtuals Godot types
+  `enum::` / `bitfield::` (e.g. `Material._get_shader_mode(): Shader.Mode`, `Texture2D._get_format():
+  Image.Format`, `TextServerExtension._has_feature(feature: TextServer.Feature)`) take the value
+  class; an override still declaring `Long` (or the wrong enum) **fails the build** naming the type
+  to use, and the two `meta: "required"` `_get_space_state` returns must be declared non-null.
+  Desktop object returns from `@OverrideVirtual` / `@RegisterFunction` (`GodotObject`) compile now
+  (the registrar wrote the task-104 `GodotHandle` where the raw address goes). The processor reads
+  names and values from `processor/.../godot-enums.tsv`, written from the same model as the wrappers
+  by `generate_api_wrapper.py --write-tree` and held to it by the wrapper drift gate;
+  `virtual-signatures.tsv` (schema 2) marks the required returns; the serialized script model is
+  schema 7. User `enum class` exports are unchanged.
 - **`InputEventMouseButton.create()` on every backend (task 128 C; Web protocol 28 → 29).** A shared
   script registers a mouse-button input action the same way everywhere:
   `InputEventMouseButton.create().also { it.buttonIndex = MouseButton.LEFT }`, then

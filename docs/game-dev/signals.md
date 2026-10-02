@@ -52,6 +52,23 @@ awaits. For a `coinCollected(value: Long)` signal, KSP emits
 The string-based `signal(PlayerNames.Signals.coinCollected)` style remains
 available when you need lower-level Godot API behavior.
 
+A signal argument can be one of Godot's enums (`Node.ProcessMode`,
+`BaseMaterial3D.Flags`, see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields)).
+It is emitted as the `int` it stands for, which is what a GDScript handler
+connected to the signal receives, and the generated `connect*` / `await*`
+helpers hand Kotlin the typed value:
+
+```kotlin
+@Signal
+fun modeChanged(mode: Node.ProcessMode) = Unit
+
+PlayerSignals.connectModeChanged(this, self) { mode -> if (mode == Node.ProcessMode.DISABLED) pause() }
+PlayerSignals.modeChanged(this, Node.ProcessMode.DISABLED)
+```
+
+A lambda connected with the lower-level `signal(...).connect { args -> }` sees
+the raw `Long` (as any dynamic call does); wrap it with `Node.ProcessMode(raw)`.
+
 RPC methods follow the same generated-helper pattern. See
 [Multiplayer](multiplayer.md#rpc-methods) for `@Rpc` sender helpers such as
 `PlayerRpcs.rpcJump(...)` and `PlayerRpcs.callLocalJump(...)`.
