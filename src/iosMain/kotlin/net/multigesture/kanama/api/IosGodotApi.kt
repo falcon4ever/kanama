@@ -1168,6 +1168,10 @@ internal object IosCallableRegistry {
     fun release(callbackId: Long) {
         callbacks.remove(callbackId)
     }
+
+    /** Live entries; the self-test's leak rows compare it before and after (task 131). */
+    val size: Int
+        get() = callbacks.size
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)

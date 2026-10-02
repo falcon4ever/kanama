@@ -46,7 +46,10 @@ internal actual constructor(
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         require(argumentCount in 0..3) { "Signal lambda callbacks currently support 0..3 emitted arguments" }
-        val id = SignalCallbackRegistry.register(callback)
+        val oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags
+        // The receiver's instance id lets its script free release the closure, and a one-shot
+        // entry releases itself when it fires (task 131): Godot drops the connection in both cases.
+        val id = SignalCallbackRegistry.register(target.instanceId, oneShot, callback)
         val method = "__kanama_signal_dispatch$argumentCount"
         val boundArgs = listOf(id)
         val error = owner.connectBound(name, target, method, boundArgs, flags)
@@ -61,7 +64,7 @@ internal actual constructor(
             boundArgs = boundArgs,
             callbackId = id,
             error = error,
-            disconnectOnClose = GodotObject.ConnectFlags.ONE_SHOT !in flags,
+            disconnectOnClose = !oneShot,
         )
     }
 

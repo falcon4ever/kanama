@@ -357,6 +357,7 @@ static GDExtensionClassLibraryPtr g_library = NULL;
 static GDExtensionInterfaceCallableCustomCreate2 g_callable_custom_create2 = NULL;
 static GDExtensionInterfaceObjectGetInstanceId g_object_get_instance_id = NULL;
 static GDExtensionInterfaceObjectGetInstanceFromId g_object_get_instance_from_id = NULL;
+static GDExtensionInterfacePrintScriptErrorWithMessage g_print_script_error_with_message = NULL;
 
 static GDExtensionInterfaceStringNameNewWithUtf8Chars g_string_name_new = NULL;
 static GDExtensionInterfaceStringNewWithUtf8Chars g_string_new = NULL;
@@ -1030,6 +1031,12 @@ static int kanama_ios_resolve_godot_api(void) {
     // instance id at construction and validity is answered by the ObjectDB lookup, never by
     // dereferencing the possibly-freed object pointer. Optional like the entry above.
     g_object_get_instance_from_id = (GDExtensionInterfaceObjectGetInstanceFromId)kanama_ios_lookup("object_get_instance_from_id");
+    // Task 131: a contained Kotlin exception is reported as a Godot script error (Output panel,
+    // Errors tab, device log) through kanama_ios_report_script_error. Optional like the two
+    // entries above: without it the Kotlin side still prints its stderr trace.
+    g_print_script_error_with_message = (GDExtensionInterfacePrintScriptErrorWithMessage)kanama_ios_lookup(
+        "print_script_error_with_message"
+    );
     g_variant_new_nil = (GDExtensionInterfaceVariantNewNil)kanama_ios_lookup("variant_new_nil");
     g_global_get_singleton = (GDExtensionInterfaceGlobalGetSingleton)kanama_ios_lookup(
         "global_get_singleton"
@@ -5807,6 +5814,32 @@ int64_t kanama_ios_godot_object_get_instance_id(int64_t object) {
         return 0;
     }
     return (int64_t)g_object_get_instance_id((GDExtensionConstObjectPtr)(intptr_t)object);
+}
+
+// Task 131 (F4): a Kotlin exception contained at the script-call boundary reaches Godot's own error
+// output as `SCRIPT ERROR: <message>` / `at: <function> (<file>:<line>)`, and the debugger's Errors
+// tab, like a GDScript error. NULL strings are sent as "" (Godot formats them with %s). Returns 1
+// when the error reached the engine, 0 when the entry point did not resolve.
+int32_t kanama_ios_report_script_error(
+    const char *description,
+    const char *message,
+    const char *function,
+    const char *file,
+    int32_t line
+) {
+    if (g_print_script_error_with_message == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_print_script_error_with_message");
+        return 0;
+    }
+    g_print_script_error_with_message(
+        description != NULL ? description : "",
+        message != NULL ? message : "",
+        function != NULL ? function : "",
+        file != NULL ? file : "",
+        line,
+        1 /* p_editor_notify */
+    );
+    return 1;
 }
 
 int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id) {

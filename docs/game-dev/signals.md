@@ -190,6 +190,12 @@ val connection = area.signal(Area3D.Signals.bodyEntered).connectObject(self) { b
 connection.close()
 ```
 
+`close()` disconnects early. You do not have to keep the connection just to
+release it: like a GDScript lambda connection, it dies with its target. When the
+target is freed, Godot drops the connection and Kanama releases the lambda (and
+everything it captured), and a `ConnectFlags.ONE_SHOT` connection is released
+once it fires.
+
 `connect(target, argumentCount) { args -> ... }` supports zero to three emitted
 arguments today. `connectObject` is the common one-argument shortcut for signals
 such as `body_entered`. `await(target, argumentCount)` and `awaitObject(target)`

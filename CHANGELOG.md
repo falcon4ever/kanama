@@ -7,6 +7,30 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — Kotlin exceptions reach Godot's error log; lambda connections no longer leak (task 131)
+
+- **A Kotlin exception is a Godot script error** (F4). An exception escaping a script method, a
+  lifecycle callback (`_ready`, `_process`, ...), a signal lambda, a property accessor or any other
+  engine callback is still contained and still printed to stderr, and is now also reported through
+  GDExtension `print_script_error_with_message` with the Kotlin file and line of the top frame of
+  game code: Godot prints `SCRIPT ERROR: java.lang.IllegalStateException: ...` /
+  `at: Player.ready (Player.kt:42)` and the editor's Debugger shows it in the Errors tab. Before,
+  the trace went only to the process stderr, which the editor's Play button does not capture, so a
+  failing script looked like a script that did nothing. Desktop, Android and iOS. On iOS this also
+  **contains** the exception: one thrown from a script method or `_ready` used to cross the
+  Kotlin/Native `@CName` boundary and terminate the app; it now fails the call, as on desktop. The
+  runtime smoke asserts the exact `SCRIPT ERROR` line for a throwing `_ready`
+  (`script_error_smoke.tscn`).
+- **Lambda signal connections release their closures** (F9). On desktop and Android a lambda's
+  closure stayed in a process-wide registry until its `SignalConnection` was closed, so every
+  connection whose handle was dropped (the common case) leaked the closure and everything it
+  captured. It is now also released when the receiver is freed (its script instance's free path)
+  and when a `CONNECT_ONE_SHOT` connection fires. iOS already released both through the custom
+  Callable's `free_func`; two self-test rows now prove it. The runtime smoke asserts the registry
+  size returns to its value before the connect (`signal_leak_smoke.tscn`).
+- **Docs:** `docs/game-dev/scripts.md` now says where output and errors appear: `System.err.println`
+  reaches the process stderr only, not "Godot output" as it claimed.
+
 ### Fixed — Android smoke builds the demo scripts against this checkout, not mavenLocal (task 119 item 40)
 
 - **The scripts AAR's registrars come from this checkout's KSP processor.** `assembleAndroidScriptsAar`
@@ -33,6 +57,7 @@ versioning once public releases begin.
   it with an `ALL` target (`kanama_bootstrap_install`, `copy_if_different`) instead of a `POST_BUILD`
   step on the library, so deleting or truncating only the copy is repaired by the next build rather than
   failing with "was not created".
+
 
 ### Changed — typed Godot enums and required returns (task 128 A) — BREAKING
 

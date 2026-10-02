@@ -15,6 +15,8 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.GodotStructs
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.ScriptErrors
+import net.multigesture.kanama.binding.runtime.SignalCallbackRegistry
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.binding.runtime.VariantConverters
@@ -487,6 +489,11 @@ object ScriptBridge {
             "${t::class.qualifiedName}: ${t.message}"
         )
         t.printStackTrace(System.err)
+        // stderr alone is invisible from the editor's Play button (no pipe): also report the
+        // exception as a Godot script error with the throwing Kotlin file:line (task 131).
+        val methodName =
+          runCatching { GodotStrings.readStringName(method) }.getOrDefault("<method>")
+        ScriptErrors.report(t, "${scriptLabel(instance)}.$methodName")
         if (rError.address() != 0L) {
           // GDEXTENSION_CALL_ERROR_INVALID_METHOD = 1. GDExtension has no
           // script-exception error type, but returning a call error keeps
@@ -534,6 +541,9 @@ object ScriptBridge {
         "[kanama:kt] script property $op failed (property=0x${nameLong.toString(16)})"
       )
     }
+    // The Godot-side script error (task 131): reaches the editor's Output panel and Errors tab,
+    // which the stderr lines do not. ScriptErrors.report never throws.
+    ScriptErrors.report(t, "${scriptLabel(instance)} property $op")
     runCatching {
         val script = instance?.script
         val scriptName =
@@ -559,6 +569,15 @@ object ScriptBridge {
         }
       }
   }
+
+  private fun scriptLabel(instance: KanamaScriptInstance?): String =
+    runCatching {
+        val script = instance?.script
+        script?.globalName?.takeIf { it.isNotEmpty() }
+          ?: script?.kotlinClassName?.takeIf { it.isNotEmpty() }?.substringAfterLast('.')
+          ?: instance?.kotlinObject?.javaClass?.simpleName
+      }
+      .getOrNull() ?: "<script>"
 
   private fun formatScriptCallContext(
     instance: KanamaScriptInstance?,
@@ -803,6 +822,22 @@ object ScriptBridge {
         .onFailure { error ->
           System.err.println(
             "[kanama:kt] failed to cancel KanamaScope during siFree: ${error.message}"
+          )
+        }
+    }
+    // Lambda signal connections dispatch through this instance (`__kanama_signal_dispatchN` on
+    // the receiver's script), so its registry entries die with it (task 131, F9): Godot drops
+    // the connections themselves when the receiver is freed, and nothing else would release the
+    // closures. One instance-id downcall, skipped while the registry is empty.
+    if (scriptInstance != null && !SignalCallbackRegistry.isEmpty()) {
+      runCatching {
+          SignalCallbackRegistry.unregisterTarget(
+            ObjectCalls.objectGetInstanceId(scriptInstance.ownerObject)
+          )
+        }
+        .onFailure { error ->
+          System.err.println(
+            "[kanama:kt] failed to release signal callbacks during siFree: ${error.message}"
           )
         }
     }

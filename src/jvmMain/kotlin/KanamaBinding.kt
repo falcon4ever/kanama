@@ -16,6 +16,7 @@ import net.multigesture.kanama.binding.KanamaScript
 import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
+import net.multigesture.kanama.binding.runtime.ScriptErrors
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.ffi.GodotFFI
 import net.multigesture.kanama.ffi.NativeCallSurface
@@ -43,6 +44,9 @@ object KanamaBinding {
     // Generate every native call adapter while we are still on the JNI bootstrap thread, before
     // any Godot→JVM upcall exists (task 83). Must stay ahead of installInitCallbacks.
     NativeCallSurface.prewarm()
+    // Contained Kotlin exceptions become Godot script errors (task 131); bound on the prewarmed
+    // shape, so this generates no adapter.
+    ScriptErrors.bind()
     val version = fetchGodotVersion()
     System.err.println(
       "[kanama:kt] Godot version: " +

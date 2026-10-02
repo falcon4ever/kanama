@@ -41117,6 +41117,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   var lamFreeFires = 0
   val lamFreeReceiver = requireObject("Node")
   if (lamFreeReceiver.address() != 0L) {
+    val lamFreeBefore = IosCallableRegistry.size
     val lamFreeId = IosCallableRegistry.register { lamFreeFires++ }
     ObjectCalls.callWithVariantArgs(
       ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
@@ -41139,7 +41140,58 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       listOf("kanamaLambdaFree"),
     )
     check("lambda-callable(auto-disconnect on receiver free)", lamFreeFires == 0)
+    // Task 131 (F9): the dropped connection's free_func releases the closure, so the registry is
+    // back to its size before the connect (desktop needed ScriptBridge.siFree for this).
+    check(
+      "lambda-callable(receiver free releases the registry entry)",
+      IosCallableRegistry.size == lamFreeBefore,
+    )
   } else check("lambda-callable(auto-disconnect on receiver free) (instance absent)", false)
+
+  // Task 131 (F9): a CONNECT_ONE_SHOT lambda fires once, and Godot's one-shot disconnect frees the
+  // Callable, whose free_func releases the closure: the registry returns to its size before.
+  var lamOneShotFires = 0
+  val lamOneShotBefore = IosCallableRegistry.size
+  val lamOneShotId = IosCallableRegistry.register { lamOneShotFires++ }
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+    lamEmitter,
+    listOf("kanamaLambdaOneShot"),
+  )
+  IosGodot.objectConnectCallable(
+    lamEmitter.address(),
+    "kanamaLambdaOneShot",
+    lamEmitter.address(),
+    lamOneShotId,
+    4L, // CONNECT_ONE_SHOT
+  )
+  repeat(2) {
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L),
+      lamEmitter,
+      listOf("kanamaLambdaOneShot"),
+    )
+  }
+  check(
+    "lambda-callable(one-shot fires once and releases its entry)",
+    lamOneShotFires == 1 && IosCallableRegistry.size == lamOneShotBefore,
+  )
+
+  // Task 131 (F4): the report a contained script exception sends to Godot. Built, not sent -- a
+  // sent one prints `SCRIPT ERROR`, which the visual smoke treats as a failure; delivery is the
+  // documented device check (a throwing _ready shows `SCRIPT ERROR:` in the device log). The
+  // function/file/line are logged for that check: file:line need a binary with source info.
+  val scriptErrorReport =
+    runCatching { error("kanama self-test: deliberate script error") }
+      .exceptionOrNull()
+      ?.let { IosScriptErrors.reportFor(it, "selfTest") }
+  println("[kanama][ios][kn] OBJECTCALLS SELFTEST script-error report=$scriptErrorReport")
+  check(
+    "script-error(report carries class and message)",
+    scriptErrorReport?.description == "kotlin.IllegalStateException" &&
+      scriptErrorReport.message ==
+        "kotlin.IllegalStateException: kanama self-test: deliberate script error",
+  )
 
   // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect
   // erases the receiver-side connection entry only via the receiver it finds on the Callable it is
