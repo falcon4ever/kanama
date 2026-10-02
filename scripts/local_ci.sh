@@ -359,6 +359,13 @@ stage "no default argument on an expect declaration (task 117 D24)"
 # omit the argument compile on desktop and iOS and fail on Android. Overloads instead.
 python3 "$ROOT_DIR/scripts/check_expect_no_defaults.py"
 
+stage "no public member an expect lacks on an actual (task 117 D1)"
+# The compiler forces every expect member to have an actual, but lets an actual class/object carry
+# extra PUBLIC members silently: API on one platform only. This is the one-sided-member check of the
+# retired check_wrapper_parity.py, now against the expect (ObjectCalls excluded; its parity gate
+# above owns it).
+python3 "$ROOT_DIR/scripts/check_actual_public_surface.py"
+
 stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, task 117 P2')"
 # A zero instance is the generator's static-method marker (NULL_SEGMENT for an `is_static`
 # method) and over twenty kanama_ios_godot_* entry points early-return on it, so a static routed

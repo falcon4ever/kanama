@@ -207,8 +207,10 @@ like any other referenced helper; on iOS the generator emits them from the root 
 `SignalCallbackRegistry` + bound Callable, iOS `IosCallableRegistry` + the shim's custom
 Callable): since task 117 P4′ they are `expect class`es in
 `src/commonMain/.../api/GodotSignal.expect.kt` with one `actual` per platform, and `MainThread`
-is an `expect object` the same way — the compiler holds both platforms to one public surface,
-so the old `scripts/check_wrapper_parity.py` and its allowlist are retired. Their former default
+is an `expect object` the same way — the compiler holds both platforms to every member of the
+expect, and `scripts/check_actual_public_surface.py` (a local_ci stage) fails on an `actual` that
+declares a public member the expect does not, which the compiler allows; so the old
+`scripts/check_wrapper_parity.py` and its allowlist are retired. Their former default
 arguments are overloads (`connect(target, method)` + `connect(target, method, flags)`,
 `connect(target, argumentCount, callback)` + `connect(target, argumentCount, flags, callback)`,
 `connectObject(target, callback)` + `connectObject(target, flags, callback)`, `await(target)` +

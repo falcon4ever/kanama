@@ -230,7 +230,9 @@ Mechanism (a) landed for the tree too: the API wrapper tree is KMP common code.
   on each platform behind `callWithVariantArgsOwned`), and `check_objectcalls_parity.py` fails on
   any exception. `GodotSignal`/`SignalConnection` are `expect class`es and `MainThread` an
   `expect object`, each with one `actual` per platform; the hand-shaped parity gate
-  (`check_wrapper_parity.py`) retired with them.
+  (`check_wrapper_parity.py`) retired with them. Its one-sided-member check — an `actual` with a
+  public member the other platform lacks, which the compiler allows — lives on as
+  `check_actual_public_surface.py`, now against the `expect` (P4′ review).
 - **`expect` declarations carry no default argument** (D24): the Android copy skips `*.expect.kt`,
   so a default would vanish there. `GodotSignal`'s defaults became overloads;
   `check_expect_no_defaults.py` holds the rule.

@@ -53,6 +53,8 @@ versioning once public releases begin.
   local_ci stage are retired — the compiler holds `GodotSignal`/`SignalConnection`/`MainThread` to
   one surface now. The drift gate still fails on a stale per-platform copy of a root or of a shared
   class. The Android remap's `expect`/`actual` audit also recognizes `constructor`.
+  `scripts/check_actual_public_surface.py` (a new local_ci stage) fails on an `actual` that declares
+  a public member its `expect` does not — the one-sided-member check the compiler does not make.
 - **Build cost (D29), same Mac, each task alone with `--rerun-tasks --no-build-cache`:**
   `compileKotlinJvm` 54.97 s → 51.32 s, `compileKotlinIosArm64` 34.27 s → 36.47 s,
   `linkDebugStaticIosArm64` 113.75 s → 121.55 s, `installAddonJar` (whole build) 93.89 s →

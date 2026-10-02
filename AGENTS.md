@@ -77,7 +77,9 @@ task, then use targeted `rg` searches.
       (`compileCommonMainKotlinMetadata`), which is what makes the compiler the proof
       that the API is platform-neutral and that both backends implement every `expect`.
       An `expect` declaration carries no default argument (overloads instead;
-      `scripts/check_expect_no_defaults.py`), because the Android copy skips `*.expect.kt`.
+      `scripts/check_expect_no_defaults.py`), because the Android copy skips `*.expect.kt`;
+      an `actual` declares no public member its `expect` lacks
+      (`scripts/check_actual_public_surface.py`; the compiler does not check that).
     - `src/jvmMain/kotlin`: Kanama runtime, bootstrap-facing Kotlin code, the
       hand-shaped and desktop-only wrappers with their `<Class>.jvm.kt` companions,
       the `actual`s of the seams and of `GodotSignal`/`SignalConnection`/`MainThread`,
