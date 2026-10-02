@@ -62,6 +62,7 @@ versioning once public releases begin.
   124,719,880 → 124,691,160 bytes, `kanama.jar` 12,245,507 → 12,247,869 bytes. The release link
   is not comparable on that machine: 530 s and 1,506 s for the same baseline commit, 1,270 s and
   1,072 s after, tracking the machine's background load. Within noise everywhere else.
+
 ### Fixed — Android 17 September update: every Kanama app aborted in PanamaPort's FFI bootstrap (task 127)
 
 - After the September 2026 **Android 17** update (API 37, build `CP3A.260905.009`) a Pixel 7 aborted every Kanama app during startup

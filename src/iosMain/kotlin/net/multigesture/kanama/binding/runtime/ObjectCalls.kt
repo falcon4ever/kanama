@@ -42019,10 +42019,9 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // task 117 P2' follow-up — SHARED-TREE STATIC dispatch (the ptrcallDispatch fix above). These
   // rows call the generated wrapper API, NOT the hand-written ptrcallStatic* helpers: every
   // `is_static` method in the shared tree renders `NULL_SEGMENT` as the instance, and before the
-  // fix
-  // the iOS C instance entry point early-returned on a null instance, so all 72 such call sites
-  // across 36 shared classes were silent no-ops (null / 0 / default) on device while passing on
-  // desktop. A regression that drops the dispatcher fails every row here.
+  // fix the iOS C instance entry point early-returned on a null instance, so all 72 such call
+  // sites across 36 shared classes were silent no-ops (null / 0 / default) on device while passing
+  // on desktop. A regression that drops the dispatcher fails every row here.
   run {
     // Image.create_from_data: 2x2 RGBA8 needs exactly 2*2*4 = 16 bytes.
     val fromData =
