@@ -137,6 +137,25 @@ into two AAR modules (task 36; mirrors desktop's `kanama.jar` /
   export adds both AARs and they dex into the same APK classloader — registrar
   lookup needs no loader-aware path.
 
+Where the demo scripts are compiled from: **this checkout, never mavenLocal.**
+`assembleAndroidScriptsAar` (run by `installAndroidPluginAar`) first runs
+`:project-scripts:kspKotlin` over the project's `kotlin-src/` (the root
+`project-scripts` build reads `-PkanamaAndroidDemoDir`), so the registrars the
+scripts AAR copies come from this checkout's KSP processor and API, and hands
+that output directory to the Android build as `-PkanamaAndroidKspDir`. The demo's
+own Gradle build (`<demo>/gradlew`, `<demo>/build/generated/ksp`) is not used:
+it resolves `kanama`/`processor` from mavenLocal, so a branch's API or processor
+change would have been checked against whatever main last published
+(task 119 item 40). `scripts/android_smoke.sh` and
+`scripts/android_export_minified.sh` also compile the scripts up front with
+`:project-scripts:jar -PkanamaProjectScriptsDir=<demo>/kotlin-src`, the path the
+demos' desktop CI lane uses, so an API break fails before the Android build, and
+the export-time desktop addon (`installAddonJar`) comes from the same checkout.
+To prove it without a device, run `assembleAndroidScriptsAar` from a scratch
+copy of the checkout whose processor writes a marker comment into the script
+registrars and look for the marker under
+`android/godot-plugin/scripts/build/generated/kanamaAndroidScriptSources`.
+
 Both modules copy sources into generated Android source trees through the same
 PanamaPort compatibility remap, shared in `buildSrc` (`KanamaAndroidRemap`).
 The remap is deliberately guarded per module: `auditAndroidKanamaSources`
