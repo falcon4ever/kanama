@@ -42018,8 +42018,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       )
     }
     // InputEventMouseButton.create() (task 128 C): an owned event with a typed button, added to an
-    // action. The action keeps its own reference, so after the wrapper's close() a fresh RIGHT event
-    // still matches the action (the event survived); then the scratch action is erased.
+    // action. The action keeps its own reference, so after the wrapper's close() a fresh RIGHT
+    // event still matches the action (the event survived); then the scratch action is erased.
     run {
       val im = net.multigesture.kanama.api.InputMap
       val rmb = net.multigesture.kanama.api.MouseButton.RIGHT
