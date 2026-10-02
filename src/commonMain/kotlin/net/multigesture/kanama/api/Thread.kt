@@ -15,7 +15,8 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Starts a new `Thread` that calls `callable`. If the method takes some arguments, you can pass
      * them using `Callable.bind`. The `priority` of the `Thread` can be changed by passing a value
-     * from the `Priority` enum. Returns `OK` on success, or `ERR_CANT_CREATE` on failure.
+     * from the `Priority` enum. Returns `GodotError.OK` on success, or `GodotError.ERR_CANT_CREATE` on
+     * failure.
      *
      * Generated from Godot docs: Thread.start
      */
@@ -72,6 +73,12 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(waitToFinishBind, segment)
     }
 
+    /**
+     * Godot's `Thread.Priority` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Thread.Priority.<NAME>`).
+     *
+     * Generated from Godot docs: Thread.Priority
+     */
     @JvmInline
     value class Priority(override val value: Long) : GodotEnumValue {
         companion object {

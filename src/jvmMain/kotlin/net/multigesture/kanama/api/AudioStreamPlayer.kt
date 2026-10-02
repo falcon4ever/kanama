@@ -10,6 +10,12 @@ import java.lang.foreign.MemorySegment
  */
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
     // ===== BEGIN GENERATED ENUMS: AudioStreamPlayer (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `AudioStreamPlayer.MixTarget` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AudioStreamPlayer.MixTarget.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamPlayer.MixTarget
+     */
     @JvmInline
     value class MixTarget(override val value: Long) : GodotEnumValue {
         companion object {

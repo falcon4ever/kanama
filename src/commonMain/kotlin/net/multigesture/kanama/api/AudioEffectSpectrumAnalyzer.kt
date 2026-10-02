@@ -71,6 +71,13 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
         return AudioEffectSpectrumAnalyzer.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment))
     }
 
+    /**
+     * Godot's `AudioEffectSpectrumAnalyzer.FFTSize` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AudioEffectSpectrumAnalyzer.FFTSize.<NAME>`).
+     *
+     * Generated from Godot docs: AudioEffectSpectrumAnalyzer.FFTSize
+     */
     @JvmInline
     value class FFTSize(override val value: Long) : GodotEnumValue {
         companion object {

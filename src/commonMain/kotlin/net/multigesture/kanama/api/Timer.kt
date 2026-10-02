@@ -224,6 +224,12 @@ class Timer(handle: GodotHandle) : Node(handle) {
         const val timeout: String = "timeout"
     }
 
+    /**
+     * Godot's `Timer.TimerProcessCallback` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Timer.TimerProcessCallback.<NAME>`).
+     *
+     * Generated from Godot docs: Timer.TimerProcessCallback
+     */
     @JvmInline
     value class TimerProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {

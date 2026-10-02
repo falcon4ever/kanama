@@ -654,26 +654,26 @@ object RenderingServer {
      * Creates a new surface on the given `mesh`. `mesh_get_surface_count` will become the surface
      * index for this new surface. Surfaces are created to be rendered using a `primitive`, which may
      * be any of the values defined in `Mesh.PrimitiveType`. The `arrays` argument is an array of
-     * arrays. Each of the `Mesh.ARRAY_MAX` elements contains an array with some of the mesh data for
-     * this surface as described by the corresponding member of `Mesh.ArrayType` or `null` if it is not
-     * used by the surface. For example, `arrays[0]` is the array of vertices. That first vertex
+     * arrays. Each of the `Mesh.ArrayType.MAX` elements contains an array with some of the mesh data
+     * for this surface as described by the corresponding member of `Mesh.ArrayType` or `null` if it is
+     * not used by the surface. For example, `arrays[0]` is the array of vertices. That first vertex
      * sub-array is always required; the others are optional. Adding an index array puts this surface
      * into "index mode" where the vertex and other arrays become the sources of data and the index
      * array defines the vertex order. All sub-arrays must have the same length as the vertex array (or
      * be an exact multiple of the vertex array's length, when multiple elements of a sub-array
-     * correspond to a single vertex) or be empty, except for `Mesh.ARRAY_INDEX` if it is used. The
+     * correspond to a single vertex) or be empty, except for `Mesh.ArrayType.INDEX` if it is used. The
      * `blend_shapes` argument is an array of vertex data for each blend shape. Each element is an
-     * array of the same structure as `arrays`, but `Mesh.ARRAY_VERTEX`, `Mesh.ARRAY_NORMAL`, and
-     * `Mesh.ARRAY_TANGENT` are set if and only if they are set in `arrays` and all other entries are
-     * `null`. The `lods` argument is a dictionary with `float` keys and `PackedInt32Array` values.
-     * Each entry in the dictionary represents an LOD level of the surface, where the value is the
-     * `Mesh.ARRAY_INDEX` array to use for the LOD level and the key is roughly proportional to the
-     * distance at which the LOD stats being used. I.e., increasing the key of an LOD also increases
-     * the distance that the objects has to be from the camera before the LOD is used. The
+     * array of the same structure as `arrays`, but `Mesh.ArrayType.VERTEX`, `Mesh.ArrayType.NORMAL`,
+     * and `Mesh.ArrayType.TANGENT` are set if and only if they are set in `arrays` and all other
+     * entries are `null`. The `lods` argument is a dictionary with `float` keys and `PackedInt32Array`
+     * values. Each entry in the dictionary represents an LOD level of the surface, where the value is
+     * the `Mesh.ArrayType.INDEX` array to use for the LOD level and the key is roughly proportional to
+     * the distance at which the LOD stats being used. I.e., increasing the key of an LOD also
+     * increases the distance that the objects has to be from the camera before the LOD is used. The
      * `compress_format` argument is the bitwise OR of, as required: One value of `ArrayFormat` left
      * shifted by `ARRAY_FORMAT_CUSTOMn_SHIFT` for each custom channel in use,
-     * `ARRAY_FLAG_USE_DYNAMIC_UPDATE`, `ARRAY_FLAG_USE_8_BONE_WEIGHTS`, or
-     * `ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY`. See `ArrayMesh.add_surface_from_arrays` and
+     * `ArrayFormat.FLAG_USE_DYNAMIC_UPDATE`, `ArrayFormat.FLAG_USE_8_BONE_WEIGHTS`, or
+     * `ArrayFormat.FLAG_USES_EMPTY_VERTEX_ARRAY`. See `ArrayMesh.add_surface_from_arrays` and
      * `ImporterMesh.add_surface` for higher-level equivalents of this method. Note: When using
      * indices, it is recommended to only use points, lines, or triangles.
      *
@@ -1161,8 +1161,8 @@ object RenderingServer {
 
     /**
      * Sets the physics interpolation quality for the `MultiMesh`. A value of
-     * `MULTIMESH_INTERP_QUALITY_FAST` gives fast but low quality interpolation, a value of
-     * `MULTIMESH_INTERP_QUALITY_HIGH` gives slower but higher quality interpolation.
+     * `MultimeshPhysicsInterpolationQuality.FAST` gives fast but low quality interpolation, a value of
+     * `MultimeshPhysicsInterpolationQuality.HIGH` gives slower but higher quality interpolation.
      *
      * Generated from Godot docs: RenderingServer.multimesh_set_physics_interpolation_quality
      */
@@ -2794,9 +2794,9 @@ object RenderingServer {
     }
 
     /**
-     * Sets the shape of the fog volume to either `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CONE`, `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_BOX` or `RenderingServer.FOG_VOLUME_SHAPE_WORLD`.
+     * Sets the shape of the fog volume to either `RenderingServer.FogVolumeShape.ELLIPSOID`,
+     * `RenderingServer.FogVolumeShape.CONE`, `RenderingServer.FogVolumeShape.CYLINDER`,
+     * `RenderingServer.FogVolumeShape.BOX` or `RenderingServer.FogVolumeShape.WORLD`.
      *
      * Generated from Godot docs: RenderingServer.fog_volume_set_shape
      */
@@ -2806,9 +2806,9 @@ object RenderingServer {
     }
 
     /**
-     * Sets the size of the fog volume when shape is `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CONE`, `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_BOX`.
+     * Sets the size of the fog volume when shape is `RenderingServer.FogVolumeShape.ELLIPSOID`,
+     * `RenderingServer.FogVolumeShape.CONE`, `RenderingServer.FogVolumeShape.CYLINDER` or
+     * `RenderingServer.FogVolumeShape.BOX`.
      *
      * Generated from Godot docs: RenderingServer.fog_volume_set_size
      */
@@ -2986,8 +2986,9 @@ object RenderingServer {
     }
 
     /**
-     * If `true`, preserves the horizontal aspect ratio which is equivalent to `Camera3D.KEEP_WIDTH`.
-     * If `false`, preserves the vertical aspect ratio which is equivalent to `Camera3D.KEEP_HEIGHT`.
+     * If `true`, preserves the horizontal aspect ratio which is equivalent to
+     * `Camera3D.KeepAspect.WIDTH`. If `false`, preserves the vertical aspect ratio which is equivalent
+     * to `Camera3D.KeepAspect.HEIGHT`.
      *
      * Generated from Godot docs: RenderingServer.camera_set_use_vertical_aspect
      */
@@ -3167,11 +3168,11 @@ object RenderingServer {
      * `ProjectSettings.rendering/textures/decals/filter` and
      * `ProjectSettings.rendering/textures/light_projectors/filter`. Note: In 3D, for this setting to
      * have an effect, set `BaseMaterial3D.texture_filter` to
-     * `BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
+     * `BaseMaterial3D.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `BaseMaterial3D.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
      * this setting to have an effect, set `CanvasItem.texture_filter` to
-     * `CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
+     * `CanvasItem.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `CanvasItem.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
      * the texture (or in `CanvasTexture`). However, anisotropic filtering is rarely useful in 2D, so
      * only enable it for textures in 2D if it makes a meaningful visual difference.
      *
@@ -3257,9 +3258,9 @@ object RenderingServer {
      * Sets the viewport's environment mode which allows enabling or disabling rendering of 3D
      * environment over 2D canvas. When disabled, 2D will not be affected by the environment. When
      * enabled, 2D will be affected by the environment if the environment background mode is
-     * `ENV_BG_CANVAS`. The default behavior is to inherit the setting from the viewport's parent. If
-     * the topmost parent is also set to `VIEWPORT_ENVIRONMENT_INHERIT`, then the behavior will be the
-     * same as if it was set to `VIEWPORT_ENVIRONMENT_ENABLED`.
+     * `EnvironmentBG.CANVAS`. The default behavior is to inherit the setting from the viewport's
+     * parent. If the topmost parent is also set to `ViewportEnvironmentMode.INHERIT`, then the
+     * behavior will be the same as if it was set to `ViewportEnvironmentMode.ENABLED`.
      *
      * Generated from Godot docs: RenderingServer.viewport_set_environment_mode
      */
@@ -3636,9 +3637,9 @@ object RenderingServer {
      * Sets the update mode for Variable Rate Shading (VRS) for the viewport. VRS requires the input
      * texture to be converted to the format usable by the VRS method supported by the hardware. The
      * update mode defines how often this happens. If the GPU does not support VRS, or VRS is not
-     * enabled, this property is ignored. If set to `RenderingServer.VIEWPORT_VRS_UPDATE_ONCE`, the
+     * enabled, this property is ignored. If set to `RenderingServer.ViewportVRSUpdateMode.ONCE`, the
      * input texture is copied once and the mode is changed to
-     * `RenderingServer.VIEWPORT_VRS_UPDATE_DISABLED`.
+     * `RenderingServer.ViewportVRSUpdateMode.DISABLED`.
      *
      * Generated from Godot docs: RenderingServer.viewport_set_vrs_update_mode
      */
@@ -3648,7 +3649,7 @@ object RenderingServer {
     }
 
     /**
-     * The texture to use when the VRS mode is set to `RenderingServer.VIEWPORT_VRS_TEXTURE`.
+     * The texture to use when the VRS mode is set to `RenderingServer.ViewportVRSMode.TEXTURE`.
      * Equivalent to `ProjectSettings.rendering/vrs/texture`.
      *
      * Generated from Godot docs: RenderingServer.viewport_set_vrs_texture
@@ -3854,7 +3855,7 @@ object RenderingServer {
     }
 
     /**
-     * Color displayed for clear areas of the scene. Only effective if using the `ENV_BG_COLOR`
+     * Color displayed for clear areas of the scene. Only effective if using the `EnvironmentBG.COLOR`
      * background mode.
      *
      * Generated from Godot docs: RenderingServer.environment_set_bg_color
@@ -3972,8 +3973,8 @@ object RenderingServer {
 
     /**
      * Configures fog depth for the specified environment RID. Only has an effect when the fog mode of
-     * the environment is `ENV_FOG_MODE_DEPTH`. See `fog_depth_*` properties in `Environment` for more
-     * information.
+     * the environment is `EnvironmentFogMode.DEPTH`. See `fog_depth_*` properties in `Environment` for
+     * more information.
      *
      * Generated from Godot docs: RenderingServer.environment_set_fog_depth
      */
@@ -5956,7 +5957,7 @@ object RenderingServer {
      * device type can be used as a basis for automatic graphics settings adjustment. However, this is
      * not always true, so make sure to provide users with a way to manually override graphics
      * settings. Note: When using the OpenGL rendering driver or when running in headless mode, this
-     * function always returns `RenderingDevice.DEVICE_TYPE_OTHER`.
+     * function always returns `RenderingDevice.DeviceType.OTHER`.
      *
      * Generated from Godot docs: RenderingServer.get_video_adapter_type
      */
@@ -6033,7 +6034,7 @@ object RenderingServer {
     }
 
     /**
-     * Returns the RID of a 256×256 texture with a testing pattern on it (in `Image.FORMAT_RGB8`
+     * Returns the RID of a 256×256 texture with a testing pattern on it (in `Image.Format.RGB8`
      * format). This texture will be created and returned on the first call to `get_test_texture`, then
      * it will be cached for subsequent calls. See also `get_white_texture`.
      *
@@ -6045,7 +6046,7 @@ object RenderingServer {
     }
 
     /**
-     * Returns the ID of a 4×4 white texture (in `Image.FORMAT_RGB8` format). This texture will be
+     * Returns the ID of a 4×4 white texture (in `Image.Format.RGB8` format). This texture will be
      * created and returned on the first call to `get_white_texture`, then it will be cached for
      * subsequent calls. See also `get_test_texture`.
      *
@@ -6246,6 +6247,12 @@ object RenderingServer {
         const val framePostDraw: String = "frame_post_draw"
     }
 
+    /**
+     * Godot's `RenderingServer.TextureType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.TextureType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.TextureType
+     */
     @JvmInline
     value class TextureType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6270,6 +6277,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.TextureLayeredType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.TextureLayeredType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.TextureLayeredType
+     */
     @JvmInline
     value class TextureLayeredType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6294,6 +6308,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CubeMapLayer` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.CubeMapLayer.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CubeMapLayer
+     */
     @JvmInline
     value class CubeMapLayer(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6336,6 +6356,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.TextureDrawableFormat` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.TextureDrawableFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.TextureDrawableFormat
+     */
     @JvmInline
     value class TextureDrawableFormat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6369,6 +6396,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ShaderMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ShaderMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ShaderMode
+     */
     @JvmInline
     value class ShaderMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6417,6 +6450,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ArrayType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ArrayType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ArrayType
+     */
     @JvmInline
     value class ArrayType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6507,6 +6546,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ArrayCustomFormat` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ArrayCustomFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ArrayCustomFormat
+     */
     @JvmInline
     value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6575,6 +6621,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ArrayFormat` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.ArrayFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ArrayFormat
+     */
     @JvmInline
     value class ArrayFormat(override val value: Long) : GodotEnumValue {
         infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
@@ -6780,23 +6832,23 @@ object RenderingServer {
             val FLAG_FORMAT_VERSION_1: ArrayFormat get() = ArrayFormat(0L)
             /**
              * Flag used to record the second iteration of the mesh version flag. The primary difference
-             * between this and `ARRAY_FLAG_FORMAT_VERSION_1` is that this version supports
-             * `ARRAY_FLAG_COMPRESS_ATTRIBUTES` and in this version vertex positions are de-interleaved from
-             * normals and tangents.
+             * between this and `ArrayFormat.FLAG_FORMAT_VERSION_1` is that this version supports
+             * `ArrayFormat.FLAG_COMPRESS_ATTRIBUTES` and in this version vertex positions are de-interleaved
+             * from normals and tangents.
              *
              * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_2
              */
             val FLAG_FORMAT_VERSION_2: ArrayFormat get() = ArrayFormat(34359738368L)
             /**
              * Flag used to record the current version that the engine expects. Currently this is the same as
-             * `ARRAY_FLAG_FORMAT_VERSION_2`.
+             * `ArrayFormat.FLAG_FORMAT_VERSION_2`.
              *
              * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_CURRENT_VERSION
              */
             val FLAG_FORMAT_CURRENT_VERSION: ArrayFormat get() = ArrayFormat(34359738368L)
             /**
              * Flag used to isolate the bits used for mesh version after using
-             * `ARRAY_FLAG_FORMAT_VERSION_SHIFT` to shift them into place.
+             * `ArrayFormat.FLAG_FORMAT_VERSION_SHIFT` to shift them into place.
              *
              * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_MASK
              */
@@ -6804,6 +6856,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.PrimitiveType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.PrimitiveType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.PrimitiveType
+     */
     @JvmInline
     value class PrimitiveType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6847,6 +6905,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.BlendShapeMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.BlendShapeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.BlendShapeMode
+     */
     @JvmInline
     value class BlendShapeMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6865,6 +6929,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.MultimeshTransformFormat` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.MultimeshTransformFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.MultimeshTransformFormat
+     */
     @JvmInline
     value class MultimeshTransformFormat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6883,6 +6954,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.MultimeshPhysicsInterpolationQuality` enum as a typed value: `.value`
+     * is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.MultimeshPhysicsInterpolationQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.MultimeshPhysicsInterpolationQuality
+     */
     @JvmInline
     value class MultimeshPhysicsInterpolationQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6901,6 +6979,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.LightProjectorFilter` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightProjectorFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightProjectorFilter
+     */
     @JvmInline
     value class LightProjectorFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6959,6 +7044,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.LightType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.LightType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightType
+     */
     @JvmInline
     value class LightType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6989,6 +7080,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.LightParam` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.LightParam.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightParam
+     */
     @JvmInline
     value class LightParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -6999,15 +7096,15 @@ object RenderingServer {
              */
             val ENERGY: LightParam get() = LightParam(0L)
             /**
-             * The light's indirect energy multiplier (final indirect energy is `LIGHT_PARAM_ENERGY` *
-             * `LIGHT_PARAM_INDIRECT_ENERGY`).
+             * The light's indirect energy multiplier (final indirect energy is `LightParam.ENERGY` *
+             * `LightParam.INDIRECT_ENERGY`).
              *
              * Generated from Godot docs: RenderingServer.LIGHT_PARAM_INDIRECT_ENERGY
              */
             val INDIRECT_ENERGY: LightParam get() = LightParam(1L)
             /**
-             * The light's volumetric fog energy multiplier (final volumetric fog energy is
-             * `LIGHT_PARAM_ENERGY` * `LIGHT_PARAM_VOLUMETRIC_FOG_ENERGY`).
+             * The light's volumetric fog energy multiplier (final volumetric fog energy is `LightParam.ENERGY`
+             * * `LightParam.VOLUMETRIC_FOG_ENERGY`).
              *
              * Generated from Godot docs: RenderingServer.LIGHT_PARAM_VOLUMETRIC_FOG_ENERGY
              */
@@ -7137,6 +7234,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.LightBakeMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.LightBakeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightBakeMode
+     */
     @JvmInline
     value class LightBakeMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7161,8 +7264,8 @@ object RenderingServer {
              * Light is taken into account in dynamic baking (`VoxelGI` and SDFGI (`Environment.sdfgi_enabled`)
              * only). The light can be moved around or modified with global illumination updating in real-time.
              * The light's global illumination appearance will be slightly different compared to
-             * `LIGHT_BAKE_STATIC`. This has a greater performance cost compared to `LIGHT_BAKE_STATIC`. When
-             * using SDFGI, the update speed of dynamic lights is affected by
+             * `LightBakeMode.STATIC`. This has a greater performance cost compared to `LightBakeMode.STATIC`.
+             * When using SDFGI, the update speed of dynamic lights is affected by
              * `ProjectSettings.rendering/global_illumination/sdfgi/frames_to_update_lights`.
              *
              * Generated from Godot docs: RenderingServer.LIGHT_BAKE_DYNAMIC
@@ -7171,6 +7274,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.LightOmniShadowMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightOmniShadowMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightOmniShadowMode
+     */
     @JvmInline
     value class LightOmniShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7189,6 +7299,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.LightDirectionalShadowMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightDirectionalShadowMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightDirectionalShadowMode
+     */
     @JvmInline
     value class LightDirectionalShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7213,6 +7330,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.LightDirectionalSkyMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightDirectionalSkyMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightDirectionalSkyMode
+     */
     @JvmInline
     value class LightDirectionalSkyMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7237,6 +7361,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ShadowQuality` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ShadowQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ShadowQuality
+     */
     @JvmInline
     value class ShadowQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7301,6 +7431,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ReflectionProbeUpdateMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ReflectionProbeUpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ReflectionProbeUpdateMode
+     */
     @JvmInline
     value class ReflectionProbeUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7319,6 +7456,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ReflectionProbeAmbientMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ReflectionProbeAmbientMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ReflectionProbeAmbientMode
+     */
     @JvmInline
     value class ReflectionProbeAmbientMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7345,6 +7489,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.DecalTexture` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DecalTexture.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DecalTexture
+     */
     @JvmInline
     value class DecalTexture(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7381,6 +7531,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.DecalFilter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DecalFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DecalFilter
+     */
     @JvmInline
     value class DecalFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7439,6 +7595,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.VoxelGIQuality` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.VoxelGIQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.VoxelGIQuality
+     */
     @JvmInline
     value class VoxelGIQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7457,6 +7619,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ParticlesMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ParticlesMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesMode
+     */
     @JvmInline
     value class ParticlesMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7475,6 +7643,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ParticlesTransformAlign` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesTransformAlign.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesTransformAlign
+     */
     @JvmInline
     value class ParticlesTransformAlign(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7511,6 +7686,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ParticlesTransformAlignCustomSrc` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesTransformAlignCustomSrc.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesTransformAlignCustomSrc
+     */
     @JvmInline
     value class ParticlesTransformAlignCustomSrc(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7547,6 +7729,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ParticlesTransformAlignAxis` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesTransformAlignAxis.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesTransformAlignAxis
+     */
     @JvmInline
     value class ParticlesTransformAlignAxis(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7565,6 +7754,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ParticlesDrawOrder` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesDrawOrder.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesDrawOrder
+     */
     @JvmInline
     value class ParticlesDrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7597,6 +7793,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ParticlesCollisionType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesCollisionType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesCollisionType
+     */
     @JvmInline
     value class ParticlesCollisionType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7645,6 +7848,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ParticlesCollisionHeightfieldResolution` enum as a typed value:
+     * `.value` is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesCollisionHeightfieldResolution.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesCollisionHeightfieldResolution
+     */
     @JvmInline
     value class ParticlesCollisionHeightfieldResolution(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7693,6 +7903,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.FogVolumeShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.FogVolumeShape.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.FogVolumeShape
+     */
     @JvmInline
     value class FogVolumeShape(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7740,6 +7956,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportScaling3DMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportScaling3DMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportScaling3DMode
+     */
     @JvmInline
     value class ViewportScaling3DMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7793,8 +8016,8 @@ object RenderingServer {
             val METALFX_TEMPORAL: ViewportScaling3DMode get() = ViewportScaling3DMode(4L)
             /**
              * Use nearest-neighbor filtering for the viewport's 3D buffer. This looks crisper than
-             * `VIEWPORT_SCALING_3D_MODE_BILINEAR` and has no additional rendering cost. The amount of scaling
-             * can be set using `Viewport.scaling_3d_scale`. Values greater than `1.0` are not supported and
+             * `ViewportScaling3DMode.BILINEAR` and has no additional rendering cost. The amount of scaling can
+             * be set using `Viewport.scaling_3d_scale`. Values greater than `1.0` are not supported and
              * bilinear downsampling will be used instead. A value of `1.0` disables scaling. Note: When using
              * the Nearest scaling mode, to avoid uneven pixel scaling, it's highly recommended to use a value
              * equal to an integer divisor with a dividend of `1`. For example, it's best to use a scale of
@@ -7812,6 +8035,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportUpdateMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportUpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportUpdateMode
+     */
     @JvmInline
     value class ViewportUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7822,7 +8052,7 @@ object RenderingServer {
              */
             val DISABLED: ViewportUpdateMode get() = ViewportUpdateMode(0L)
             /**
-             * Update the viewport's render target once, then switch to `VIEWPORT_UPDATE_DISABLED`.
+             * Update the viewport's render target once, then switch to `ViewportUpdateMode.DISABLED`.
              *
              * Generated from Godot docs: RenderingServer.VIEWPORT_UPDATE_ONCE
              */
@@ -7848,6 +8078,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportClearMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportClearMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportClearMode
+     */
     @JvmInline
     value class ViewportClearMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7864,7 +8101,7 @@ object RenderingServer {
              */
             val NEVER: ViewportClearMode get() = ViewportClearMode(1L)
             /**
-             * Clear the viewport's render target on the next frame, then switch to `VIEWPORT_CLEAR_NEVER`.
+             * Clear the viewport's render target on the next frame, then switch to `ViewportClearMode.NEVER`.
              *
              * Generated from Godot docs: RenderingServer.VIEWPORT_CLEAR_ONLY_NEXT_FRAME
              */
@@ -7872,6 +8109,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportEnvironmentMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportEnvironmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportEnvironmentMode
+     */
     @JvmInline
     value class ViewportEnvironmentMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7889,8 +8133,8 @@ object RenderingServer {
             val ENABLED: ViewportEnvironmentMode get() = ViewportEnvironmentMode(1L)
             /**
              * Inherit enable/disable value from parent. If the topmost parent is also set to
-             * `VIEWPORT_ENVIRONMENT_INHERIT`, then this has the same behavior as
-             * `VIEWPORT_ENVIRONMENT_ENABLED`.
+             * `ViewportEnvironmentMode.INHERIT`, then this has the same behavior as
+             * `ViewportEnvironmentMode.ENABLED`.
              *
              * Generated from Godot docs: RenderingServer.VIEWPORT_ENVIRONMENT_INHERIT
              */
@@ -7904,6 +8148,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportSDFOversize` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportSDFOversize.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportSDFOversize
+     */
     @JvmInline
     value class ViewportSDFOversize(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7945,6 +8196,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportSDFScale` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportSDFScale.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportSDFScale
+     */
     @JvmInline
     value class ViewportSDFScale(override val value: Long) : GodotEnumValue {
         companion object {
@@ -7976,6 +8234,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportMSAA` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ViewportMSAA.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportMSAA
+     */
     @JvmInline
     value class ViewportMSAA(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8015,6 +8279,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportAnisotropicFiltering` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportAnisotropicFiltering.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportAnisotropicFiltering
+     */
     @JvmInline
     value class ViewportAnisotropicFiltering(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8057,6 +8328,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportScreenSpaceAA` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportScreenSpaceAA.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportScreenSpaceAA
+     */
     @JvmInline
     value class ViewportScreenSpaceAA(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8090,6 +8368,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportOcclusionCullingBuildQuality` enum as a typed value: `.value`
+     * is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportOcclusionCullingBuildQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportOcclusionCullingBuildQuality
+     */
     @JvmInline
     value class ViewportOcclusionCullingBuildQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8116,6 +8401,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportRenderInfo` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportRenderInfo.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportRenderInfo
+     */
     @JvmInline
     value class ViewportRenderInfo(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8146,6 +8438,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportRenderInfoType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportRenderInfoType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportRenderInfoType
+     */
     @JvmInline
     value class ViewportRenderInfoType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8177,6 +8476,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportDebugDraw` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportDebugDraw.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportDebugDraw
+     */
     @JvmInline
     value class ViewportDebugDraw(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8264,7 +8570,7 @@ object RenderingServer {
              * Draws the shadow atlas that stores shadows from `DirectionalLight3D`s in the upper left quadrant
              * of the `Viewport`. The slice of the camera frustum related to the shadow map cascade is
              * superimposed to visualize coverage. The color of each slice matches the colors used for
-             * `VIEWPORT_DEBUG_DRAW_PSSM_SPLITS`. When shadow cascades are blended the overlap is taken into
+             * `ViewportDebugDraw.PSSM_SPLITS`. When shadow cascades are blended the overlap is taken into
              * account when drawing the frustum slices. The last cascade shows all frustum slices to illustrate
              * the coverage of all slices.
              *
@@ -8405,6 +8711,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportVRSMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.ViewportVRSMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportVRSMode
+     */
     @JvmInline
     value class ViewportVRSMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8437,6 +8749,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ViewportVRSUpdateMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportVRSUpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportVRSUpdateMode
+     */
     @JvmInline
     value class ViewportVRSUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8467,21 +8786,27 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.SkyMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RenderingServer.SkyMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.SkyMode
+     */
     @JvmInline
     value class SkyMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Automatically selects the appropriate process mode based on your sky shader. If your shader uses
-             * `TIME` or `POSITION`, this will use `SKY_MODE_REALTIME`. If your shader uses any of the
-             * `LIGHT_*` variables or any custom uniforms, this uses `SKY_MODE_INCREMENTAL`. Otherwise, this
-             * defaults to `SKY_MODE_QUALITY`.
+             * `TIME` or `POSITION`, this will use `SkyMode.REALTIME`. If your shader uses any of the `LIGHT_*`
+             * variables or any custom uniforms, this uses `SkyMode.INCREMENTAL`. Otherwise, this defaults to
+             * `SkyMode.QUALITY`.
              *
              * Generated from Godot docs: RenderingServer.SKY_MODE_AUTOMATIC
              */
             val AUTOMATIC: SkyMode get() = SkyMode(0L)
             /**
              * Uses high quality importance sampling to process the radiance map. In general, this results in
-             * much higher quality than `SKY_MODE_REALTIME` but takes much longer to generate. This should not
+             * much higher quality than `SkyMode.REALTIME` but takes much longer to generate. This should not
              * be used if you plan on changing the sky at runtime. If you are finding that the reflection is
              * not blurry enough and is showing sparkles or fireflies, try increasing
              * `ProjectSettings.rendering/reflections/sky_reflections/ggx_samples`.
@@ -8490,8 +8815,8 @@ object RenderingServer {
              */
             val QUALITY: SkyMode get() = SkyMode(1L)
             /**
-             * Uses the same high quality importance sampling to process the radiance map as
-             * `SKY_MODE_QUALITY`, but updates over several frames. The number of frames is determined by
+             * Uses the same high quality importance sampling to process the radiance map as `SkyMode.QUALITY`,
+             * but updates over several frames. The number of frames is determined by
              * `ProjectSettings.rendering/reflections/sky_reflections/roughness_layers`. Use this when you need
              * highest quality radiance maps, but have a sky that updates slowly.
              *
@@ -8512,6 +8837,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CompositorEffectFlags` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CompositorEffectFlags.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CompositorEffectFlags
+     */
     @JvmInline
     value class CompositorEffectFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8548,6 +8880,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CompositorEffectCallbackType` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CompositorEffectCallbackType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CompositorEffectCallbackType
+     */
     @JvmInline
     value class CompositorEffectCallbackType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8589,6 +8928,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentBG` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.EnvironmentBG.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentBG
+     */
     @JvmInline
     value class EnvironmentBG(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8638,6 +8983,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentAmbientSource` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentAmbientSource.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentAmbientSource
+     */
     @JvmInline
     value class EnvironmentAmbientSource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8668,6 +9020,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentReflectionSource` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentReflectionSource.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentReflectionSource
+     */
     @JvmInline
     value class EnvironmentReflectionSource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8692,6 +9051,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentGlowBlendMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentGlowBlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentGlowBlendMode
+     */
     @JvmInline
     value class EnvironmentGlowBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8706,9 +9072,9 @@ object RenderingServer {
              * dark values will be highly influenced by glow and bright values will not be influenced by glow.
              * This approach avoids bright values becoming overly bright from the glow effect.
              * `Environment.tonemap_white` is used to determine the maximum scene value where the glow should
-             * have no influence. When `Environment.tonemap_mode` is set to `Environment.TONE_MAPPER_LINEAR`
-             * and `Viewport.use_hdr_2d` is `true`, the parent window's `Window.get_output_max_linear_value`
-             * will be used as the maximum scene value.
+             * have no influence. When `Environment.tonemap_mode` is set to `Environment.ToneMapper.LINEAR` and
+             * `Viewport.use_hdr_2d` is `true`, the parent window's `Window.get_output_max_linear_value` will
+             * be used as the maximum scene value.
              *
              * Generated from Godot docs: RenderingServer.ENV_GLOW_BLEND_MODE_SCREEN
              */
@@ -8743,6 +9109,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentFogMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentFogMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentFogMode
+     */
     @JvmInline
     value class EnvironmentFogMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8762,6 +9135,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentToneMapper` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentToneMapper.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentToneMapper
+     */
     @JvmInline
     value class EnvironmentToneMapper(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8774,28 +9154,29 @@ object RenderingServer {
             val LINEAR: EnvironmentToneMapper get() = EnvironmentToneMapper(0L)
             /**
              * A simple tonemapping curve that rolls off bright values to prevent clipping. This results in an
-             * image that can appear dull and low contrast. Slower than `ENV_TONE_MAPPER_LINEAR`. Note: When
-             * `Environment.tonemap_white` is left at the default value of `1.0`, `ENV_TONE_MAPPER_REINHARD`
-             * produces an identical image to `ENV_TONE_MAPPER_LINEAR`.
+             * image that can appear dull and low contrast. Slower than `EnvironmentToneMapper.LINEAR`. Note:
+             * When `Environment.tonemap_white` is left at the default value of `1.0`,
+             * `EnvironmentToneMapper.REINHARD` produces an identical image to `EnvironmentToneMapper.LINEAR`.
              *
              * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_REINHARD
              */
             val REINHARD: EnvironmentToneMapper get() = EnvironmentToneMapper(1L)
             /**
              * Uses a film-like tonemapping curve to prevent clipping of bright values and provide better
-             * contrast than `ENV_TONE_MAPPER_REINHARD`. Slightly slower than `ENV_TONE_MAPPER_REINHARD`. Note:
-             * This tonemapper does not support HDR output because it produces output in the SDR range. It is
-             * recommended to use a different tonemapper when rendering to an HDR screen.
+             * contrast than `EnvironmentToneMapper.REINHARD`. Slightly slower than
+             * `EnvironmentToneMapper.REINHARD`. Note: This tonemapper does not support HDR output because it
+             * produces output in the SDR range. It is recommended to use a different tonemapper when rendering
+             * to an HDR screen.
              *
              * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_FILMIC
              */
             val FILMIC: EnvironmentToneMapper get() = EnvironmentToneMapper(2L)
             /**
              * Uses a high-contrast film-like tonemapping curve and desaturates bright values for a more
-             * realistic appearance. Slightly slower than `ENV_TONE_MAPPER_FILMIC`. Note: This tonemapping
-             * operator is called "ACES Fitted" in Godot 3.x. Note: This tonemapper does not support HDR output
-             * because it produces output in the SDR range. It is recommended to use a different tonemapper
-             * when rendering to an HDR screen.
+             * realistic appearance. Slightly slower than `EnvironmentToneMapper.FILMIC`. Note: This
+             * tonemapping operator is called "ACES Fitted" in Godot 3.x. Note: This tonemapper does not
+             * support HDR output because it produces output in the SDR range. It is recommended to use a
+             * different tonemapper when rendering to an HDR screen.
              *
              * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_ACES
              */
@@ -8811,6 +9192,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentSSRRoughnessQuality` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSSRRoughnessQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSSRRoughnessQuality
+     */
     @JvmInline
     value class EnvironmentSSRRoughnessQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8843,6 +9231,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentSSAOQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSSAOQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSSAOQuality
+     */
     @JvmInline
     value class EnvironmentSSAOQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8880,6 +9275,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentSSILQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSSILQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSSILQuality
+     */
     @JvmInline
     value class EnvironmentSSILQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8917,6 +9319,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIYScale` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIYScale.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIYScale
+     */
     @JvmInline
     value class EnvironmentSDFGIYScale(override val value: Long) : GodotEnumValue {
         companion object {
@@ -8946,6 +9355,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIRayCount` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIRayCount.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIRayCount
+     */
     @JvmInline
     value class EnvironmentSDFGIRayCount(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9002,6 +9418,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIFramesToConverge` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIFramesToConverge.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIFramesToConverge
+     */
     @JvmInline
     value class EnvironmentSDFGIFramesToConverge(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9052,6 +9475,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIFramesToUpdateLight` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIFramesToUpdateLight.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIFramesToUpdateLight
+     */
     @JvmInline
     value class EnvironmentSDFGIFramesToUpdateLight(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9096,6 +9526,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.SubSurfaceScatteringQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.SubSurfaceScatteringQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.SubSurfaceScatteringQuality
+     */
     @JvmInline
     value class SubSurfaceScatteringQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9127,6 +9564,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.DOFBokehShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DOFBokehShape.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DOFBokehShape
+     */
     @JvmInline
     value class DOFBokehShape(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9154,6 +9597,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.DOFBlurQuality` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DOFBlurQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DOFBlurQuality
+     */
     @JvmInline
     value class DOFBlurQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9186,6 +9635,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.InstanceType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.InstanceType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.InstanceType
+     */
     @JvmInline
     value class InstanceType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9282,6 +9737,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.InstanceFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.InstanceFlags.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.InstanceFlags
+     */
     @JvmInline
     value class InstanceFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9319,6 +9780,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.ShadowCastingSetting` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ShadowCastingSetting.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ShadowCastingSetting
+     */
     @JvmInline
     value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9350,6 +9818,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.VisibilityRangeFadeMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.VisibilityRangeFadeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.VisibilityRangeFadeMode
+     */
     @JvmInline
     value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9374,12 +9849,18 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.BakeChannels` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.BakeChannels.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.BakeChannels
+     */
     @JvmInline
     value class BakeChannels(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
-             * `Image.FORMAT_RGBA8` and contains albedo color in the `.rgb` channels and alpha in the `.a`
+             * `Image.Format.RGBA8` and contains albedo color in the `.rgb` channels and alpha in the `.a`
              * channel.
              *
              * Generated from Godot docs: RenderingServer.BAKE_CHANNEL_ALBEDO_ALPHA
@@ -9387,7 +9868,7 @@ object RenderingServer {
             val ALBEDO_ALPHA: BakeChannels get() = BakeChannels(0L)
             /**
              * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
-             * `Image.FORMAT_RGBA8` and contains the per-pixel normal of the object in the `.rgb` channels and
+             * `Image.Format.RGBA8` and contains the per-pixel normal of the object in the `.rgb` channels and
              * nothing in the `.a` channel. The per-pixel normal is encoded as `normal * 0.5 + 0.5`.
              *
              * Generated from Godot docs: RenderingServer.BAKE_CHANNEL_NORMAL
@@ -9395,7 +9876,7 @@ object RenderingServer {
             val NORMAL: BakeChannels get() = BakeChannels(1L)
             /**
              * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
-             * `Image.FORMAT_RGBA8` and contains ambient occlusion (from material and decals only) in the `.r`
+             * `Image.Format.RGBA8` and contains ambient occlusion (from material and decals only) in the `.r`
              * channel, roughness in the `.g` channel, metallic in the `.b` channel and sub surface scattering
              * amount in the `.a` channel.
              *
@@ -9404,7 +9885,7 @@ object RenderingServer {
             val ORM: BakeChannels get() = BakeChannels(2L)
             /**
              * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
-             * `Image.FORMAT_RGBAH` and contains emission color in the `.rgb` channels and nothing in the `.a`
+             * `Image.Format.RGBAH` and contains emission color in the `.rgb` channels and nothing in the `.a`
              * channel.
              *
              * Generated from Godot docs: RenderingServer.BAKE_CHANNEL_EMISSION
@@ -9413,6 +9894,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasTextureChannel` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasTextureChannel.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasTextureChannel
+     */
     @JvmInline
     value class CanvasTextureChannel(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9437,6 +9925,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.NinePatchAxisMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.NinePatchAxisMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.NinePatchAxisMode
+     */
     @JvmInline
     value class NinePatchAxisMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9461,6 +9956,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasItemTextureFilter` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasItemTextureFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasItemTextureFilter
+     */
     @JvmInline
     value class CanvasItemTextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9514,8 +10016,8 @@ object RenderingServer {
              * quality on surfaces that are almost in line with the camera, but is slightly slower. The
              * anisotropic filtering level can be changed by adjusting
              * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
-             * texture filter is rarely useful in 2D projects.
-             * `CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS` is usually more appropriate in this case.
+             * texture filter is rarely useful in 2D projects. `CanvasItemTextureFilter.NEAREST_WITH_MIPMAPS`
+             * is usually more appropriate in this case.
              *
              * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC
              */
@@ -9528,8 +10030,8 @@ object RenderingServer {
              * quality on surfaces that are almost in line with the camera, but is slightly slower. The
              * anisotropic filtering level can be changed by adjusting
              * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
-             * texture filter is rarely useful in 2D projects. `CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS`
-             * is usually more appropriate in this case.
+             * texture filter is rarely useful in 2D projects. `CanvasItemTextureFilter.LINEAR_WITH_MIPMAPS` is
+             * usually more appropriate in this case.
              *
              * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
              */
@@ -9543,6 +10045,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasItemTextureRepeat` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasItemTextureRepeat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasItemTextureRepeat
+     */
     @JvmInline
     value class CanvasItemTextureRepeat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9583,6 +10092,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasGroupMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.CanvasGroupMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasGroupMode
+     */
     @JvmInline
     value class CanvasGroupMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9610,6 +10125,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasLightMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.CanvasLightMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasLightMode
+     */
     @JvmInline
     value class CanvasLightMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9628,6 +10149,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasLightBlendMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasLightBlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasLightBlendMode
+     */
     @JvmInline
     value class CanvasLightBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9652,6 +10180,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasLightShadowFilter` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasLightShadowFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasLightShadowFilter
+     */
     @JvmInline
     value class CanvasLightShadowFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9682,6 +10217,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.CanvasOccluderPolygonCullMode` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasOccluderPolygonCullMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasOccluderPolygonCullMode
+     */
     @JvmInline
     value class CanvasOccluderPolygonCullMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9706,6 +10248,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.GlobalShaderParameterType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.GlobalShaderParameterType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.GlobalShaderParameterType
+     */
     @JvmInline
     value class GlobalShaderParameterType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9759,7 +10308,7 @@ object RenderingServer {
             val IVEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(7L)
             /**
              * 2-dimensional integer rectangle global shader parameter (`global uniform ivec4 ...`). Equivalent
-             * to `GLOBAL_VAR_TYPE_IVEC4` in shader code, but exposed as a `Rect2i` in the editor UI.
+             * to `GlobalShaderParameterType.IVEC4` in shader code, but exposed as a `Rect2i` in the editor UI.
              *
              * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_RECT2I
              */
@@ -9813,15 +10362,16 @@ object RenderingServer {
              */
             val VEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(16L)
             /**
-             * Color global shader parameter (`global uniform vec4 ...`). Equivalent to `GLOBAL_VAR_TYPE_VEC4`
-             * in shader code, but exposed as a `Color` in the editor UI.
+             * Color global shader parameter (`global uniform vec4 ...`). Equivalent to
+             * `GlobalShaderParameterType.VEC4` in shader code, but exposed as a `Color` in the editor UI.
              *
              * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_COLOR
              */
             val COLOR: GlobalShaderParameterType get() = GlobalShaderParameterType(17L)
             /**
              * 2-dimensional floating-point rectangle global shader parameter (`global uniform vec4 ...`).
-             * Equivalent to `GLOBAL_VAR_TYPE_VEC4` in shader code, but exposed as a `Rect2` in the editor UI.
+             * Equivalent to `GlobalShaderParameterType.VEC4` in shader code, but exposed as a `Rect2` in the
+             * editor UI.
              *
              * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_RECT2
              */
@@ -9905,6 +10455,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.RenderingInfo` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.RenderingInfo.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.RenderingInfo
+     */
     @JvmInline
     value class RenderingInfo(override val value: Long) : GodotEnumValue {
         companion object {
@@ -9944,10 +10500,10 @@ object RenderingServer {
             val BUFFER_MEM_USED: RenderingInfo get() = RenderingInfo(4L)
             /**
              * Video memory used (in bytes). When using the Forward+ or Mobile renderers, this is always
-             * greater than the sum of `RENDERING_INFO_TEXTURE_MEM_USED` and `RENDERING_INFO_BUFFER_MEM_USED`,
+             * greater than the sum of `RenderingInfo.TEXTURE_MEM_USED` and `RenderingInfo.BUFFER_MEM_USED`,
              * since there is miscellaneous data not accounted for by those two metrics. When using the
-             * Compatibility renderer, this is equal to the sum of `RENDERING_INFO_TEXTURE_MEM_USED` and
-             * `RENDERING_INFO_BUFFER_MEM_USED`.
+             * Compatibility renderer, this is equal to the sum of `RenderingInfo.TEXTURE_MEM_USED` and
+             * `RenderingInfo.BUFFER_MEM_USED`.
              *
              * Generated from Godot docs: RenderingServer.RENDERING_INFO_VIDEO_MEM_USED
              */
@@ -9992,6 +10548,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.PipelineSource` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.PipelineSource.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.PipelineSource
+     */
     @JvmInline
     value class PipelineSource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -10035,6 +10597,13 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.SplashStretchMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.SplashStretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.SplashStretchMode
+     */
     @JvmInline
     value class SplashStretchMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -10077,6 +10646,12 @@ object RenderingServer {
         }
     }
 
+    /**
+     * Godot's `RenderingServer.Features` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RenderingServer.Features.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.Features
+     */
     @JvmInline
     value class Features(override val value: Long) : GodotEnumValue {
         companion object {

@@ -75,6 +75,12 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
         const val modificationProcessed: String = "modification_processed"
     }
 
+    /**
+     * Godot's `SkeletonModifier3D.BoneAxis` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`SkeletonModifier3D.BoneAxis.<NAME>`).
+     *
+     * Generated from Godot docs: SkeletonModifier3D.BoneAxis
+     */
     @JvmInline
     value class BoneAxis(override val value: Long) : GodotEnumValue {
         companion object {
@@ -117,6 +123,13 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
         }
     }
 
+    /**
+     * Godot's `SkeletonModifier3D.BoneDirection` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`SkeletonModifier3D.BoneDirection.<NAME>`).
+     *
+     * Generated from Godot docs: SkeletonModifier3D.BoneDirection
+     */
     @JvmInline
     value class BoneDirection(override val value: Long) : GodotEnumValue {
         companion object {
@@ -165,6 +178,13 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
         }
     }
 
+    /**
+     * Godot's `SkeletonModifier3D.SecondaryDirection` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`SkeletonModifier3D.SecondaryDirection.<NAME>`).
+     *
+     * Generated from Godot docs: SkeletonModifier3D.SecondaryDirection
+     */
     @JvmInline
     value class SecondaryDirection(override val value: Long) : GodotEnumValue {
         companion object {
@@ -219,6 +239,12 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
         }
     }
 
+    /**
+     * Godot's `SkeletonModifier3D.RotationAxis` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`SkeletonModifier3D.RotationAxis.<NAME>`).
+     *
+     * Generated from Godot docs: SkeletonModifier3D.RotationAxis
+     */
     @JvmInline
     value class RotationAxis(override val value: Long) : GodotEnumValue {
         companion object {

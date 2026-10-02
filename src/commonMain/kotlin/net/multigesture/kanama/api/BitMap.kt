@@ -131,7 +131,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns an image of the same size as the bitmap and with an `Image.Format` of type
-     * `Image.FORMAT_L8`. `true` bits of the bitmap are being converted into white pixels, and `false`
+     * `Image.Format.L8`. `true` bits of the bitmap are being converted into white pixels, and `false`
      * bits into black.
      *
      * Generated from Godot docs: BitMap.convert_to_image

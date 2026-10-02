@@ -232,6 +232,13 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
         return AudioStreamRandomizer.PlaybackMode(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, segment))
     }
 
+    /**
+     * Godot's `AudioStreamRandomizer.PlaybackMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AudioStreamRandomizer.PlaybackMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamRandomizer.PlaybackMode
+     */
     @JvmInline
     value class PlaybackMode(override val value: Long) : GodotEnumValue {
         companion object {

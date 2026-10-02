@@ -197,6 +197,12 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
         return XRPose.TrackingConfidence(ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, segment))
     }
 
+    /**
+     * Godot's `XRPose.TrackingConfidence` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRPose.TrackingConfidence.<NAME>`).
+     *
+     * Generated from Godot docs: XRPose.TrackingConfidence
+     */
     @JvmInline
     value class TrackingConfidence(override val value: Long) : GodotEnumValue {
         companion object {

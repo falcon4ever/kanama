@@ -1212,7 +1212,7 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
         // collides with the getRoot() twin two lines down.
         val root: Window
             @JvmName("rootProperty")
-            get() = checkNotNull(active().getRoot()) { "SceneTree.root: the running tree has no root Window" }
+            get() = active().getRoot()
 
         fun isPaused(): Boolean = active().isPaused()
 
@@ -1233,7 +1233,7 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
         fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath = NodePath("")) =
             active().setMultiplayer(multiplayer, rootPath)
 
-        fun getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI? = active().getMultiplayer(forPath)
+        fun getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI = active().getMultiplayer(forPath)
 
         fun isMultiplayerPollEnabled(): Boolean = active().isMultiplayerPollEnabled()
 
@@ -1243,7 +1243,7 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun getNodeCountInGroup(name: String): Int = active().getNodeCountInGroup(name)
 
-        fun getRoot(): Window? = active().getRoot()
+        fun getRoot(): Window = active().getRoot()
 
         fun getCurrentScene(): Node? = active().getCurrentScene()
 
@@ -1284,7 +1284,7 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
             processAlways: Boolean = true,
             processInPhysics: Boolean = false,
             ignoreTimeScale: Boolean = false,
-        ): SceneTreeTimer? = active().createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
+        ): SceneTreeTimer = active().createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
 
         // legacy handle-returning form: the retired desktop `object SceneTree` exposed the raw
         // GodotHandle next to the wrapper-returning call. Kept so callers keep compiling; prefer

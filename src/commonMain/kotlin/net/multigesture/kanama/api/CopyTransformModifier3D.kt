@@ -286,6 +286,13 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
     }
 
+    /**
+     * Godot's `CopyTransformModifier3D.TransformFlag` bitfield as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`CopyTransformModifier3D.TransformFlag.<NAME>`).
+     *
+     * Generated from Godot docs: CopyTransformModifier3D.TransformFlag
+     */
     @JvmInline
     value class TransformFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: TransformFlag): TransformFlag = TransformFlag(value or other.value)
@@ -326,6 +333,13 @@ class CopyTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
         }
     }
 
+    /**
+     * Godot's `CopyTransformModifier3D.AxisFlag` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`CopyTransformModifier3D.AxisFlag.<NAME>`).
+     *
+     * Generated from Godot docs: CopyTransformModifier3D.AxisFlag
+     */
     @JvmInline
     value class AxisFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: AxisFlag): AxisFlag = AxisFlag(value or other.value)

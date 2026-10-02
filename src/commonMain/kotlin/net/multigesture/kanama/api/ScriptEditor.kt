@@ -161,8 +161,8 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
     }
 
     /**
-     * Closes the file at the given `path`, discarding any unsaved changes. Returns `OK` on success or
-     * `ERR_FILE_NOT_FOUND` if the file is not found.
+     * Closes the file at the given `path`, discarding any unsaved changes. Returns `GodotError.OK` on
+     * success or `GodotError.ERR_FILE_NOT_FOUND` if the file is not found.
      *
      * Generated from Godot docs: ScriptEditor.close_file
      */

@@ -269,6 +269,12 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithStringNameAndBoolArgRetString(getVersionBind, segment, name, windowsVersion)
     }
 
+    /**
+     * Godot's `EditorExportPreset.ExportFilter` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`EditorExportPreset.ExportFilter.<NAME>`).
+     *
+     * Generated from Godot docs: EditorExportPreset.ExportFilter
+     */
     @JvmInline
     value class ExportFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -280,6 +286,13 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `EditorExportPreset.FileExportMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`EditorExportPreset.FileExportMode.<NAME>`).
+     *
+     * Generated from Godot docs: EditorExportPreset.FileExportMode
+     */
     @JvmInline
     value class FileExportMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -290,6 +303,13 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `EditorExportPreset.ScriptExportMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`EditorExportPreset.ScriptExportMode.<NAME>`).
+     *
+     * Generated from Godot docs: EditorExportPreset.ScriptExportMode
+     */
     @JvmInline
     value class ScriptExportMode(override val value: Long) : GodotEnumValue {
         companion object {

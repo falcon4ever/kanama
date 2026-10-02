@@ -236,6 +236,12 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
+    /**
+     * Godot's `LinkButton.UnderlineMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`LinkButton.UnderlineMode.<NAME>`).
+     *
+     * Generated from Godot docs: LinkButton.UnderlineMode
+     */
     @JvmInline
     value class UnderlineMode(override val value: Long) : GodotEnumValue {
         companion object {

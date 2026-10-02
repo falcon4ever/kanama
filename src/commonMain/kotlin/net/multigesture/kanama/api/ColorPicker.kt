@@ -373,6 +373,12 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
         const val presetRemoved: String = "preset_removed"
     }
 
+    /**
+     * Godot's `ColorPicker.ColorModeType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ColorPicker.ColorModeType.<NAME>`).
+     *
+     * Generated from Godot docs: ColorPicker.ColorModeType
+     */
     @JvmInline
     value class ColorModeType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -407,6 +413,12 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
         }
     }
 
+    /**
+     * Godot's `ColorPicker.PickerShapeType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ColorPicker.PickerShapeType.<NAME>`).
+     *
+     * Generated from Godot docs: ColorPicker.PickerShapeType
+     */
     @JvmInline
     value class PickerShapeType(override val value: Long) : GodotEnumValue {
         companion object {

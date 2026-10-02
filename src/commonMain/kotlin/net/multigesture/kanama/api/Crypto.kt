@@ -93,7 +93,8 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Generates an HMAC (https://en.wikipedia.org/wiki/HMAC) digest of `msg` using `key`. The
      * `hash_type` parameter is the hashing algorithm that is used for the inner and outer hashes.
-     * Currently, only `HashingContext.HASH_SHA256` and `HashingContext.HASH_SHA1` are supported.
+     * Currently, only `HashingContext.HashType.SHA256` and `HashingContext.HashType.SHA1` are
+     * supported.
      *
      * Generated from Godot docs: Crypto.hmac_digest
      */

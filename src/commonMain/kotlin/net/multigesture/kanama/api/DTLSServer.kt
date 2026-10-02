@@ -24,7 +24,7 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Try to initiate the DTLS handshake with the given `udp_peer` which must be already connected
      * (see `PacketPeerUDP.connect_to_host`). Note: You must check that the state of the return
-     * PacketPeerUDP is `PacketPeerDTLS.STATUS_HANDSHAKING`, as it is normal that 50% of the new
+     * PacketPeerUDP is `PacketPeerDTLS.Status.HANDSHAKING`, as it is normal that 50% of the new
      * connections will be invalid due to cookie exchange.
      *
      * Generated from Godot docs: DTLSServer.take_connection

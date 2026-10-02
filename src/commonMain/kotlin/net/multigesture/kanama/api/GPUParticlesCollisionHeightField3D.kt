@@ -65,8 +65,8 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
 
     /**
      * Higher resolutions can represent small details more accurately in large scenes, at the cost of
-     * lower performance. If `update_mode` is `UPDATE_MODE_ALWAYS`, consider using the lowest
-     * resolution possible.
+     * lower performance. If `update_mode` is `UpdateMode.ALWAYS`, consider using the lowest resolution
+     * possible.
      *
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.set_resolution
      */
@@ -76,8 +76,8 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
 
     /**
      * Higher resolutions can represent small details more accurately in large scenes, at the cost of
-     * lower performance. If `update_mode` is `UPDATE_MODE_ALWAYS`, consider using the lowest
-     * resolution possible.
+     * lower performance. If `update_mode` is `UpdateMode.ALWAYS`, consider using the lowest resolution
+     * possible.
      *
      * Generated from Godot docs: GPUParticlesCollisionHeightField3D.get_resolution
      */
@@ -181,6 +181,13 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
         return ObjectCalls.ptrcallNoArgsRetBool(isFollowCameraEnabledBind, segment)
     }
 
+    /**
+     * Godot's `GPUParticlesCollisionHeightField3D.Resolution` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`GPUParticlesCollisionHeightField3D.Resolution.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticlesCollisionHeightField3D.Resolution
+     */
     @JvmInline
     value class Resolution(override val value: Long) : GodotEnumValue {
         companion object {
@@ -231,6 +238,13 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
         }
     }
 
+    /**
+     * Godot's `GPUParticlesCollisionHeightField3D.UpdateMode` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`GPUParticlesCollisionHeightField3D.UpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticlesCollisionHeightField3D.UpdateMode
+     */
     @JvmInline
     value class UpdateMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -177,6 +177,12 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         return RibbonTrailMesh.Shape(ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment))
     }
 
+    /**
+     * Godot's `RibbonTrailMesh.Shape` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RibbonTrailMesh.Shape.<NAME>`).
+     *
+     * Generated from Godot docs: RibbonTrailMesh.Shape
+     */
     @JvmInline
     value class Shape(override val value: Long) : GodotEnumValue {
         companion object {

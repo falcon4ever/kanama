@@ -60,7 +60,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Sets the given column's auto translate mode to `mode`. All columns use
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `Node.AutoTranslateMode.INHERIT` by default, which uses the same auto translate mode as the
      * `Tree` itself.
      *
      * Generated from Godot docs: TreeItem.set_auto_translate_mode
@@ -204,7 +204,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Sets the autowrap mode in the given `column`. If set to something other than
-     * `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the cell's bounding rectangle.
+     * `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the cell's bounding rectangle.
      *
      * Generated from Godot docs: TreeItem.set_autowrap_mode
      */
@@ -214,7 +214,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Returns the text autowrap mode in the given `column`. By default it is
-     * `TextServer.AUTOWRAP_OFF`.
+     * `TextServer.AutowrapMode.OFF`.
      *
      * Generated from Godot docs: TreeItem.get_autowrap_mode
      */
@@ -234,8 +234,8 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Returns the autowrap trim flags for the given `column`. By default, both
-     * `TextServer.BREAK_TRIM_START_EDGE_SPACES` and `TextServer.BREAK_TRIM_END_EDGE_SPACES` are
-     * enabled.
+     * `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` are enabled.
      *
      * Generated from Godot docs: TreeItem.get_autowrap_trim_flags
      */
@@ -255,7 +255,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Returns the clipping behavior when the text exceeds the item's bounding rectangle in the given
-     * `column`. By default it is `TextServer.OVERRUN_TRIM_ELLIPSIS`.
+     * `column`. By default it is `TextServer.OverrunBehavior.TRIM_ELLIPSIS`.
      *
      * Generated from Godot docs: TreeItem.get_text_overrun_behavior
      */
@@ -337,9 +337,9 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Sets the given cell's icon `Texture2D`. If the cell is in `CELL_MODE_ICON` mode, the icon is
+     * Sets the given cell's icon `Texture2D`. If the cell is in `TreeCellMode.ICON` mode, the icon is
      * displayed in the center of the cell. Otherwise, the icon is displayed before the cell's text.
-     * `CELL_MODE_RANGE` does not display an icon.
+     * `TreeCellMode.RANGE` does not display an icon.
      *
      * Generated from Godot docs: TreeItem.set_icon
      */
@@ -357,8 +357,8 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Sets the given cell's icon overlay `Texture2D`. The cell has to be in `CELL_MODE_ICON` mode, and
-     * icon has to be set. Overlay is drawn on top of icon, in the bottom left corner.
+     * Sets the given cell's icon overlay `Texture2D`. The cell has to be in `TreeCellMode.ICON` mode,
+     * and icon has to be set. Overlay is drawn on top of icon, in the bottom left corner.
      *
      * Generated from Godot docs: TreeItem.set_icon_overlay
      */
@@ -432,7 +432,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Sets the value of a `CELL_MODE_RANGE` column.
+     * Sets the value of a `TreeCellMode.RANGE` column.
      *
      * Generated from Godot docs: TreeItem.set_range
      */
@@ -441,7 +441,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Returns the value of a `CELL_MODE_RANGE` column.
+     * Returns the value of a `TreeCellMode.RANGE` column.
      *
      * Generated from Godot docs: TreeItem.get_range
      */
@@ -450,7 +450,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Sets the range of accepted values for a column. The column must be in the `CELL_MODE_RANGE`
+     * Sets the range of accepted values for a column. The column must be in the `TreeCellMode.RANGE`
      * mode. If `expr` is `true`, the edit mode slider will use an exponential scale as with
      * `Range.exp_edit`.
      *
@@ -502,7 +502,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Sets the given column's custom draw callback. Use an empty `Callable` (`Callable()`) to clear
-     * the custom callback. The cell has to be in `CELL_MODE_CUSTOM` to use this feature. The
+     * the custom callback. The cell has to be in `TreeCellMode.CUSTOM` to use this feature. The
      * `callback` should accept two arguments: the `TreeItem` that is drawn and its position and size
      * as a `Rect2`. To draw custom content over the native style, please use
      * `Tree.get_custom_drawing_canvas_item`.
@@ -663,7 +663,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Selects the given `column`. If `set_as_cursor` is `true`, the `Tree`'s cursor will be moved to
-     * this item (only matters if `Tree.select_mode` is set to `Tree.SELECT_MULTI`).
+     * this item (only matters if `Tree.select_mode` is set to `Tree.SelectMode.MULTI`).
      *
      * Generated from Godot docs: TreeItem.select
      */
@@ -790,7 +790,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Makes a cell with `CELL_MODE_CUSTOM` display as a non-flat button with a `StyleBox`.
+     * Makes a cell with `TreeCellMode.CUSTOM` display as a non-flat button with a `StyleBox`.
      *
      * Generated from Godot docs: TreeItem.set_custom_as_button
      */
@@ -1231,6 +1231,12 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
         ObjectCalls.callWithVariantArgs(callRecursiveBind, segment, listOf(method, *extraArgs))
     }
 
+    /**
+     * Godot's `TreeItem.TreeCellMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TreeItem.TreeCellMode.<NAME>`).
+     *
+     * Generated from Godot docs: TreeItem.TreeCellMode
+     */
     @JvmInline
     value class TreeCellMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1267,10 +1273,10 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
             val ICON: TreeCellMode get() = TreeCellMode(3L)
             /**
              * Cell shows as a clickable button. It will display an arrow similar to `OptionButton`, but
-             * doesn't feature a dropdown (for that you can use `CELL_MODE_RANGE`). Clicking the button emits
-             * the `Tree.item_edited` signal. The button is flat by default, you can use `set_custom_as_button`
-             * to display it with a `StyleBox`. This mode also supports custom drawing using
-             * `set_custom_draw_callback`.
+             * doesn't feature a dropdown (for that you can use `TreeCellMode.RANGE`). Clicking the button
+             * emits the `Tree.item_edited` signal. The button is flat by default, you can use
+             * `set_custom_as_button` to display it with a `StyleBox`. This mode also supports custom drawing
+             * using `set_custom_draw_callback`.
              *
              * Generated from Godot docs: TreeItem.CELL_MODE_CUSTOM
              */

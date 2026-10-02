@@ -18,9 +18,9 @@ object ResourceSaver {
     /**
      * Saves a resource to disk to the given path, using a `ResourceFormatSaver` that recognizes the
      * resource object. If `path` is empty, `ResourceSaver` will try to use `Resource.resource_path`.
-     * The `flags` bitmask can be specified to customize the save behavior. Returns `OK` on success.
-     * Note: When the project is running, any generated UID associated with the resource will not be
-     * saved as the required code is only executed in editor mode.
+     * The `flags` bitmask can be specified to customize the save behavior. Returns `GodotError.OK` on
+     * success. Note: When the project is running, any generated UID associated with the resource will
+     * not be saved as the required code is only executed in editor mode.
      *
      * Generated from Godot docs: ResourceSaver.save
      */
@@ -85,6 +85,12 @@ object ResourceSaver {
         return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(getResourceIdForPathBind, singleton, path, generate)
     }
 
+    /**
+     * Godot's `ResourceSaver.SaverFlags` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ResourceSaver.SaverFlags.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceSaver.SaverFlags
+     */
     @JvmInline
     value class SaverFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: SaverFlags): SaverFlags = SaverFlags(value or other.value)
@@ -135,7 +141,7 @@ object ResourceSaver {
              */
             val SAVE_BIG_ENDIAN: SaverFlags get() = SaverFlags(16L)
             /**
-             * Compress the resource on save using `FileAccess.COMPRESSION_ZSTD`. Only available for binary
+             * Compress the resource on save using `FileAccess.CompressionMode.ZSTD`. Only available for binary
              * resource types.
              *
              * Generated from Godot docs: ResourceSaver.FLAG_COMPRESS

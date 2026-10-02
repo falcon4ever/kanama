@@ -35,24 +35,60 @@ data class Projection(
   val w: Vector4,
 ) {
   // ===== BEGIN GENERATED ENUMS: Projection (scripts/generate_api_wrapper.py — do not edit) =====
+  /**
+   * Godot's `Projection.Planes` enum as a typed value: `.value` is the raw number Godot uses, and
+   * the companion holds the named values (`Projection.Planes.<NAME>`).
+   *
+   * Generated from Godot docs: Projection.Planes
+   */
   @JvmInline
   value class Planes(override val value: Long) : net.multigesture.kanama.api.GodotEnumValue {
     companion object {
+      /**
+       * The index value of the projection's near clipping plane.
+       *
+       * Generated from Godot docs: Projection.PLANE_NEAR
+       */
       val NEAR: Planes
         get() = Planes(0L)
 
+      /**
+       * The index value of the projection's far clipping plane.
+       *
+       * Generated from Godot docs: Projection.PLANE_FAR
+       */
       val FAR: Planes
         get() = Planes(1L)
 
+      /**
+       * The index value of the projection's left clipping plane.
+       *
+       * Generated from Godot docs: Projection.PLANE_LEFT
+       */
       val LEFT: Planes
         get() = Planes(2L)
 
+      /**
+       * The index value of the projection's top clipping plane.
+       *
+       * Generated from Godot docs: Projection.PLANE_TOP
+       */
       val TOP: Planes
         get() = Planes(3L)
 
+      /**
+       * The index value of the projection's right clipping plane.
+       *
+       * Generated from Godot docs: Projection.PLANE_RIGHT
+       */
       val RIGHT: Planes
         get() = Planes(4L)
 
+      /**
+       * The index value of the projection bottom clipping plane.
+       *
+       * Generated from Godot docs: Projection.PLANE_BOTTOM
+       */
       val BOTTOM: Planes
         get() = Planes(5L)
     }

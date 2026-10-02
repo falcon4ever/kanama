@@ -273,8 +273,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * The body's bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Note: Even
      * with `bounce` set to `1.0`, some energy will be lost over time due to linear and angular
      * damping. To have a `PhysicalBone3D` that preserves all its energy over time, set `bounce` to
-     * `1.0`, `linear_damp_mode` to `DAMP_MODE_REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
-     * `DAMP_MODE_REPLACE`, and `angular_damp` to `0.0`.
+     * `1.0`, `linear_damp_mode` to `DampMode.REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
+     * `DampMode.REPLACE`, and `angular_damp` to `0.0`.
      *
      * Generated from Godot docs: PhysicalBone3D.set_bounce
      */
@@ -286,8 +286,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * The body's bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Note: Even
      * with `bounce` set to `1.0`, some energy will be lost over time due to linear and angular
      * damping. To have a `PhysicalBone3D` that preserves all its energy over time, set `bounce` to
-     * `1.0`, `linear_damp_mode` to `DAMP_MODE_REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
-     * `DAMP_MODE_REPLACE`, and `angular_damp` to `0.0`.
+     * `1.0`, `linear_damp_mode` to `DampMode.REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
+     * `DampMode.REPLACE`, and `angular_damp` to `0.0`.
      *
      * Generated from Godot docs: PhysicalBone3D.get_bounce
      */
@@ -489,6 +489,12 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, segment)
     }
 
+    /**
+     * Godot's `PhysicalBone3D.DampMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicalBone3D.DampMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicalBone3D.DampMode
+     */
     @JvmInline
     value class DampMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -507,6 +513,12 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         }
     }
 
+    /**
+     * Godot's `PhysicalBone3D.JointType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicalBone3D.JointType.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicalBone3D.JointType
+     */
     @JvmInline
     value class JointType(override val value: Long) : GodotEnumValue {
         companion object {

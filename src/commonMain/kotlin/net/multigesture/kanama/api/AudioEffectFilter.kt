@@ -132,6 +132,12 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
         return AudioEffectFilter.FilterDB(ObjectCalls.ptrcallNoArgsRetLong(getDbBind, segment))
     }
 
+    /**
+     * Godot's `AudioEffectFilter.FilterDB` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AudioEffectFilter.FilterDB.<NAME>`).
+     *
+     * Generated from Godot docs: AudioEffectFilter.FilterDB
+     */
     @JvmInline
     value class FilterDB(override val value: Long) : GodotEnumValue {
         companion object {

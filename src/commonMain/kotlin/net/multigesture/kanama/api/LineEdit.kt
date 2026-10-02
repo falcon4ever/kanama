@@ -1102,7 +1102,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Scale ratio of the icon when `icon_expand_mode` is set to `EXPAND_MODE_FIT_TO_LINE_EDIT`.
+     * Scale ratio of the icon when `icon_expand_mode` is set to `ExpandMode.FIT_TO_LINE_EDIT`.
      *
      * Generated from Godot docs: LineEdit.set_right_icon_scale
      */
@@ -1111,7 +1111,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Scale ratio of the icon when `icon_expand_mode` is set to `EXPAND_MODE_FIT_TO_LINE_EDIT`.
+     * Scale ratio of the icon when `icon_expand_mode` is set to `ExpandMode.FIT_TO_LINE_EDIT`.
      *
      * Generated from Godot docs: LineEdit.get_right_icon_scale
      */
@@ -1162,6 +1162,12 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         const val editingToggled: String = "editing_toggled"
     }
 
+    /**
+     * Godot's `LineEdit.MenuItems` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`LineEdit.MenuItems.<NAME>`).
+     *
+     * Generated from Godot docs: LineEdit.MenuItems
+     */
     @JvmInline
     value class MenuItems(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1361,6 +1367,12 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `LineEdit.VirtualKeyboardType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`LineEdit.VirtualKeyboardType.<NAME>`).
+     *
+     * Generated from Godot docs: LineEdit.VirtualKeyboardType
+     */
     @JvmInline
     value class VirtualKeyboardType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1403,7 +1415,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
             /**
              * Virtual keyboard for entering a password. On most platforms, this should disable autocomplete
              * and autocapitalization. Note: This is not supported on Web. Instead, this behaves identically to
-             * `KEYBOARD_TYPE_DEFAULT`.
+             * `VirtualKeyboardType.DEFAULT`.
              *
              * Generated from Godot docs: LineEdit.KEYBOARD_TYPE_PASSWORD
              */
@@ -1417,6 +1429,12 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `LineEdit.ExpandMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`LineEdit.ExpandMode.<NAME>`).
+     *
+     * Generated from Godot docs: LineEdit.ExpandMode
+     */
     @JvmInline
     value class ExpandMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -10,14 +10,18 @@ compiler cannot tell a raw `Long` from a forgotten enum. This gate reads the COM
 
   (a) typed slots -- every Kotlin function under the api directories (shared, desktop, iOS; generated
       files and hand-written per-platform classes alike) is tied to its Godot method through the
-      `getMethodBind("Class", "method", ...)` bind it calls; each parameter whose Godot type is an
-      enum/bitfield, and the return of the function named after the method, must use the value
-      class (builtin value-type enums included: `Vector3.Axis` nests in Kanama's `types.Vector3`).
-      A property must have its getter's type.
+      `getMethodBind("Class", "method", ...)` bind it calls, or -- for hand-written / bind-less
+      wrappers (iOS IosGodot glue, delegating facades) -- through its owner class (enclosing class
+      or extension receiver) and its name; each parameter whose Godot type is an enum/bitfield, and
+      the return of the function named after the method, must use the value class, and an enum
+      return is never nullable (builtin value-type enums included: `Vector3.Axis` nests in
+      Kanama's `types.Vector3`). A property must have its getter's type.
   (b) required returns -- a function tied to a Godot method returning an object is non-null exactly
       when Godot marks the return `meta: "required"` (nullable otherwise), and a required one goes
       through the shared `requireGodotReturn` helper (or the Tween fluent `wrapOrThis` / iOS
-      `releaseIosFluentSelf`, which call it).
+      `releaseIosFluentSelf`, which call it, or a delegation to the same-named non-null member).
+      Bind-less hand functions are held to the required rule only (an iOS sugar factory that
+      constructs the object itself is not Godot's return).
   (c) names -- no generated top-level name equals a Kotlin default-import classifier (the `Error`
       that made Godot's `Error` `GodotError`) or a public Kanama type of a package scripts import
       (`net.multigesture.kanama.api` hand files, `.types`, `.annotations`).
@@ -84,6 +88,8 @@ KOTLIN_DEFAULT_IMPORT_NAMES = frozenset(
 @dataclass(frozen=True)
 class Fun:
     name: str
+    receiver: str | None
+    offset: int
     line: int
     params: list[tuple[str, str]]  # (name, type text)
     ret: str | None
@@ -165,7 +171,7 @@ def split_top(text: str) -> list[str]:
     return parts
 
 
-FUN_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s+)?(?:[\w.]+\.)?(\w+)\s*\(")
+FUN_RE = re.compile(r"\bfun\s+(?:<[^>]*>\s+)?(?:([\w.]+)\.)?(\w+)\s*\(")
 BIND_RE = re.compile(r'(?:private\s+)?val\s+(\w+)\s+by\s+lazy\s*\{\s*ObjectCalls\.getMethodBind\(\s*"(\w+)"\s*,\s*"(\w+)"', re.S)
 PROPERTY_RE = re.compile(r"\b(?:val|var)\s+(\w+)\s*:\s*([\w.<>?, ]+?)\s*\n(?:\s*@JvmName\([^)]*\)\s*\n)?\s*get\(\)\s*=\s*(\w+)\(")
 
@@ -191,7 +197,7 @@ def parse_functions(text: str) -> list[Fun]:
         else:
             end = text.find("\n\n", close_paren)
             body = text[close_paren + 1 : end if end != -1 else len(text)]
-        funs.append(Fun(m.group(1), text.count("\n", 0, m.start()) + 1, params, ret, body))
+        funs.append(Fun(m.group(2), m.group(1), m.start(), text.count("\n", 0, m.start()) + 1, params, ret, body))
     return funs
 
 
@@ -253,18 +259,46 @@ def main() -> int:
             cursor = classes[cursor].get("inherits")
         return found
 
-    checked_slots = checked_required = checked_nullable = 0
+    # Kotlin owner names that are not their Godot class's name.
+    kotlin_to_godot = {"GodotObject": "Object", "FileAccessHandle": "FileAccess", "DirAccessHandle": "DirAccess"}
+
+    def godot_method_named(cls: str, kotlin_name: str) -> str | None:
+        """The Godot method of [cls] or an ancestor whose wrapper name is [kotlin_name]."""
+        cursor: str | None = cls
+        while cursor and cursor in classes:
+            for m in classes[cursor].get("methods", []):
+                if not m.get("is_virtual") and camel_name(m["name"]) == kotlin_name:
+                    return m["name"]
+            cursor = classes[cursor].get("inherits")
+        return None
+
+    top_decl_re = re.compile(r"(?m)^(?:(?:public|internal|private|actual|expect|open|abstract|sealed|data)\s+)*(?:class|object)\s+(\w+)")
+    checked_slots = checked_required = checked_nullable = checked_bindless = 0
+    required_methods: set[tuple[str, str]] = set()
     for path in files:
         raw = path.read_text(encoding="utf-8")
         text = blank_comments(raw)
         rel = path.relative_to(root)
         binds = {m.group(1): (m.group(2), m.group(3)) for m in BIND_RE.finditer(text)}
+        owners = [(m.start(), m.group(1)) for m in top_decl_re.finditer(text)]
         fun_returns: dict[str, str] = {}
         for fun in parse_functions(text):
             used = {binds[b] for b in re.findall(r"\b(\w+Bind)\b", fun.body) if b in binds}
-            if len(used) != 1:
-                continue
-            godot_class, godot_method = used.pop()
+            bindless = len(used) != 1
+            if not bindless:
+                godot_class, godot_method = used.pop()
+            else:
+                # Hand-written / bind-less wrappers (IosGodot glue, delegating facades): tie the
+                # function to its owner's Godot method of the same wrapper name.
+                owner = (fun.receiver or "").removesuffix(".Companion") or None
+                if owner is None:
+                    enclosing = [name for start, name in owners if start < fun.offset]
+                    owner = enclosing[-1] if enclosing else None
+                godot_class = kotlin_to_godot.get(owner or "", owner or "")
+                godot_method = godot_method_named(godot_class, fun.name) if godot_class in classes else None
+                if godot_method is None:
+                    continue
+                checked_bindless += 1
             if godot_class not in classes:
                 continue
             candidates = methods_of(godot_class, godot_method)
@@ -295,7 +329,12 @@ def main() -> int:
                 want = expected_types(gret)
                 if want is not None:
                     checked_slots += 1
-                    if fun.ret.rstrip("?") not in want:
+                    if fun.ret.endswith("?"):
+                        failures.append(
+                            f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot {godot_class}.{godot_method} returns "
+                            f"{gret}, never null: the enum return must not be nullable"
+                        )
+                    elif fun.ret not in want:
                         failures.append(
                             f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot {godot_class}.{godot_method} "
                             f"returns {gret}; expected {' / '.join(sorted(want))}"
@@ -306,17 +345,23 @@ def main() -> int:
                     nullable = fun.ret.endswith("?")
                     if required:
                         checked_required += 1
+                        required_methods.add((godot_class, godot_method))
                         if nullable:
                             failures.append(
                                 f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot marks {godot_class}.{godot_method} "
                                 "`meta: \"required\"`: the return must be non-null (decision 9)"
                             )
-                        elif not re.search(r"requireGodotReturn|wrapOrThis|releaseIosFluentSelf|return this\b", fun.body):
+                        elif not re.search(
+                            rf"requireGodotReturn|wrapOrThis|releaseIosFluentSelf|return this\b|\.{fun.name}\(", fun.body
+                        ):
+                            # (a delegation to the same-named non-null member counts: SceneTree.Companion.createTween)
                             failures.append(
                                 f"{rel}:{fun.line}: {fun.name}() -- required return of {godot_class}.{godot_method} does "
                                 "not go through requireGodotReturn (a null must throw, never pass silently)"
                             )
-                    elif named_after:
+                    elif named_after and not bindless:
+                        # Bind-less hand functions of the same name (iOS sugar factories that construct
+                        # the object themselves) are not Godot's return; the nullable rule is for wrappers.
                         checked_nullable += 1
                         if not nullable:
                             failures.append(
@@ -419,7 +464,9 @@ def main() -> int:
             print(f"    {failure}", file=sys.stderr)
         return 1
     print(
-        f"{TAG} PASS {checked_slots} enum/bitfield slots typed, {checked_required} required returns non-null, "
+        f"{TAG} PASS {checked_slots} enum/bitfield slots typed ({checked_bindless} functions tied by name, "
+        f"not by MethodBind), {len(required_methods)} required Godot object returns non-null "
+        f"({checked_required} per-platform functions), "
         f"{checked_nullable} other object returns nullable, {len(generated_names)} global enum names clear of "
         f"{len(KOTLIN_DEFAULT_IMPORT_NAMES)} Kotlin default imports + {len(public_kanama)} public Kanama types, "
         f"{len(lock)} locked prefixes cover {len(enums)} enums, {checked_values} emitted value names match "

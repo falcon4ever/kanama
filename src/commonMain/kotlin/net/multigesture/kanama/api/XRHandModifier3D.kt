@@ -62,6 +62,12 @@ class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         return XRHandModifier3D.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment))
     }
 
+    /**
+     * Godot's `XRHandModifier3D.BoneUpdate` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRHandModifier3D.BoneUpdate.<NAME>`).
+     *
+     * Generated from Godot docs: XRHandModifier3D.BoneUpdate
+     */
     @JvmInline
     value class BoneUpdate(override val value: Long) : GodotEnumValue {
         companion object {

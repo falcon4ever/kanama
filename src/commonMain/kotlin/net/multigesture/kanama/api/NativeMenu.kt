@@ -843,6 +843,12 @@ object NativeMenu {
         ObjectCalls.ptrcallWithRIDArg(clearBind, singleton, rid)
     }
 
+    /**
+     * Godot's `NativeMenu.Feature` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`NativeMenu.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: NativeMenu.Feature
+     */
     @JvmInline
     value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
@@ -879,6 +885,12 @@ object NativeMenu {
         }
     }
 
+    /**
+     * Godot's `NativeMenu.SystemMenus` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`NativeMenu.SystemMenus.<NAME>`).
+     *
+     * Generated from Godot docs: NativeMenu.SystemMenus
+     */
     @JvmInline
     value class SystemMenus(override val value: Long) : GodotEnumValue {
         companion object {

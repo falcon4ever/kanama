@@ -142,6 +142,12 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
         const val profileChanged: String = "profile_changed"
     }
 
+    /**
+     * Godot's `XRPositionalTracker.TrackerHand` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`XRPositionalTracker.TrackerHand.<NAME>`).
+     *
+     * Generated from Godot docs: XRPositionalTracker.TrackerHand
+     */
     @JvmInline
     value class TrackerHand(override val value: Long) : GodotEnumValue {
         companion object {

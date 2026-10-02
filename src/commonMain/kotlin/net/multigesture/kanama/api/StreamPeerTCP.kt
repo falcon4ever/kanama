@@ -24,8 +24,8 @@ class StreamPeerTCP(handle: GodotHandle) : StreamPeerSocket(handle) {
     }
 
     /**
-     * Connects to the specified `host:port` pair. A hostname will be resolved if valid. Returns `OK`
-     * on success.
+     * Connects to the specified `host:port` pair. A hostname will be resolved if valid. Returns
+     * `GodotError.OK` on success.
      *
      * Generated from Godot docs: StreamPeerTCP.connect_to_host
      */

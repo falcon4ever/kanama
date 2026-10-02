@@ -387,7 +387,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
     /**
      * Minimum angle (in radians) where the body is allowed to slide when it encounters a wall. The
-     * default value equals 15 degrees. When `motion_mode` is `MOTION_MODE_GROUNDED`, it only affects
+     * default value equals 15 degrees. When `motion_mode` is `MotionMode.GROUNDED`, it only affects
      * movement if `floor_block_on_wall` is `true`.
      *
      * Generated from Godot docs: CharacterBody3D.get_wall_min_slide_angle
@@ -398,7 +398,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
     /**
      * Minimum angle (in radians) where the body is allowed to slide when it encounters a wall. The
-     * default value equals 15 degrees. When `motion_mode` is `MOTION_MODE_GROUNDED`, it only affects
+     * default value equals 15 degrees. When `motion_mode` is `MotionMode.GROUNDED`, it only affects
      * movement if `floor_block_on_wall` is `true`.
      *
      * Generated from Godot docs: CharacterBody3D.set_wall_min_slide_angle
@@ -411,7 +411,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Vector pointing upwards, used to determine what is a wall and what is a floor (or a ceiling)
      * when calling `move_and_slide`. Defaults to `Vector3.UP`. As the vector will be normalized it
      * can't be equal to `Vector3.ZERO`, if you want all collisions to be reported as walls, consider
-     * using `MOTION_MODE_FLOATING` as `motion_mode`.
+     * using `MotionMode.FLOATING` as `motion_mode`.
      *
      * Generated from Godot docs: CharacterBody3D.get_up_direction
      */
@@ -423,7 +423,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Vector pointing upwards, used to determine what is a wall and what is a floor (or a ceiling)
      * when calling `move_and_slide`. Defaults to `Vector3.UP`. As the vector will be normalized it
      * can't be equal to `Vector3.ZERO`, if you want all collisions to be reported as walls, consider
-     * using `MOTION_MODE_FLOATING` as `motion_mode`.
+     * using `MotionMode.FLOATING` as `motion_mode`.
      *
      * Generated from Godot docs: CharacterBody3D.set_up_direction
      */
@@ -652,6 +652,12 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         return KinematicCollision3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
     }
 
+    /**
+     * Godot's `CharacterBody3D.MotionMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CharacterBody3D.MotionMode.<NAME>`).
+     *
+     * Generated from Godot docs: CharacterBody3D.MotionMode
+     */
     @JvmInline
     value class MotionMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -674,6 +680,12 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         }
     }
 
+    /**
+     * Godot's `CharacterBody3D.PlatformOnLeave` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`CharacterBody3D.PlatformOnLeave.<NAME>`).
+     *
+     * Generated from Godot docs: CharacterBody3D.PlatformOnLeave
+     */
     @JvmInline
     value class PlatformOnLeave(override val value: Long) : GodotEnumValue {
         companion object {

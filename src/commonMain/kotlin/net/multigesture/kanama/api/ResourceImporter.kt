@@ -13,6 +13,12 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 open class ResourceImporter(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
+    /**
+     * Godot's `ResourceImporter.ImportOrder` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ResourceImporter.ImportOrder.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceImporter.ImportOrder
+     */
     @JvmInline
     value class ImportOrder(override val value: Long) : GodotEnumValue {
         companion object {

@@ -37,8 +37,8 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      * only be in respect to the channel the packet is being sent on. Using different channels to send
      * different and independent state updates is a common way to optimize network usage and decrease
      * latency in fast-paced games. Note: The default channel (`0`) actually works as 3 separate
-     * channels (one for each `TransferMode`) so that `TRANSFER_MODE_RELIABLE` and
-     * `TRANSFER_MODE_UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
+     * channels (one for each `TransferMode`) so that `TransferMode.RELIABLE` and
+     * `TransferMode.UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
      * specific network API documentation (e.g. ENet or WebRTC) to learn how to set up channels
      * correctly.
      *
@@ -56,8 +56,8 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      * only be in respect to the channel the packet is being sent on. Using different channels to send
      * different and independent state updates is a common way to optimize network usage and decrease
      * latency in fast-paced games. Note: The default channel (`0`) actually works as 3 separate
-     * channels (one for each `TransferMode`) so that `TRANSFER_MODE_RELIABLE` and
-     * `TRANSFER_MODE_UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
+     * channels (one for each `TransferMode`) so that `TransferMode.RELIABLE` and
+     * `TransferMode.UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
      * specific network API documentation (e.g. ENet or WebRTC) to learn how to set up channels
      * correctly.
      *
@@ -227,6 +227,13 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
         const val peerDisconnected: String = "peer_disconnected"
     }
 
+    /**
+     * Godot's `MultiplayerPeer.ConnectionStatus` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`MultiplayerPeer.ConnectionStatus.<NAME>`).
+     *
+     * Generated from Godot docs: MultiplayerPeer.ConnectionStatus
+     */
     @JvmInline
     value class ConnectionStatus(override val value: Long) : GodotEnumValue {
         companion object {
@@ -251,12 +258,18 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
         }
     }
 
+    /**
+     * Godot's `MultiplayerPeer.TransferMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`MultiplayerPeer.TransferMode.<NAME>`).
+     *
+     * Generated from Godot docs: MultiplayerPeer.TransferMode
+     */
     @JvmInline
     value class TransferMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Packets are not acknowledged, no resend attempts are made for lost packets. Packets may arrive
-             * in any order. Potentially faster than `TRANSFER_MODE_UNRELIABLE_ORDERED`. Use for non-critical
+             * in any order. Potentially faster than `TransferMode.UNRELIABLE_ORDERED`. Use for non-critical
              * data, and always consider whether the order matters.
              *
              * Generated from Godot docs: MultiplayerPeer.TRANSFER_MODE_UNRELIABLE
@@ -264,7 +277,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
             val UNRELIABLE: TransferMode get() = TransferMode(0L)
             /**
              * Packets are not acknowledged, no resend attempts are made for lost packets. Packets are received
-             * in the order they were sent in. Potentially faster than `TRANSFER_MODE_RELIABLE`. Use for
+             * in the order they were sent in. Potentially faster than `TransferMode.RELIABLE`. Use for
              * non-critical data or data that would be outdated if received late due to resend attempt(s)
              * anyway, for example movement and positional data.
              *

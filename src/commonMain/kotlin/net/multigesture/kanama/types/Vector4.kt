@@ -38,18 +38,44 @@ data class Vector4(
   val w: real_t,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector4 (scripts/generate_api_wrapper.py — do not edit) =====
+  /**
+   * Godot's `Vector4.Axis` enum as a typed value: `.value` is the raw number Godot uses, and the
+   * companion holds the named values (`Vector4.Axis.<NAME>`).
+   *
+   * Generated from Godot docs: Vector4.Axis
+   */
   @JvmInline
   value class Axis(override val value: Long) : net.multigesture.kanama.api.GodotEnumValue {
     companion object {
+      /**
+       * Enumerated value for the X axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector4.AXIS_X
+       */
       val X: Axis
         get() = Axis(0L)
 
+      /**
+       * Enumerated value for the Y axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector4.AXIS_Y
+       */
       val Y: Axis
         get() = Axis(1L)
 
+      /**
+       * Enumerated value for the Z axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector4.AXIS_Z
+       */
       val Z: Axis
         get() = Axis(2L)
 
+      /**
+       * Enumerated value for the W axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector4.AXIS_W
+       */
       val W: Axis
         get() = Axis(3L)
     }

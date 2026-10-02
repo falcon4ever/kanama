@@ -127,7 +127,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle.
      *
      * Generated from Godot docs: Button.set_autowrap_mode
@@ -137,7 +137,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle.
      *
      * Generated from Godot docs: Button.get_autowrap_mode
@@ -147,8 +147,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Button.set_autowrap_trim_flags
      */
@@ -157,8 +157,8 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Button.get_autowrap_trim_flags
      */

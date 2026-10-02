@@ -840,6 +840,12 @@ class Theme(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
+    /**
+     * Godot's `Theme.DataType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Theme.DataType.<NAME>`).
+     *
+     * Generated from Godot docs: Theme.DataType
+     */
     @JvmInline
     value class DataType(override val value: Long) : GodotEnumValue {
         companion object {

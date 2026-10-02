@@ -144,10 +144,10 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
     /**
      * Adds a new item with text `label`. An `id` can optionally be provided, as well as an accelerator
      * (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is
-     * provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be
-     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
-     * more info on accelerators. Note: The provided `id` is used only in `id_pressed` and `id_focused`
-     * signals. It's not related to the `index` arguments in e.g. `set_item_checked`.
+     * provided, then the default value of 0 (corresponding to `Key.NONE`) will be assigned to the item
+     * (which means it won't have any accelerator). See `get_item_accelerator` for more info on
+     * accelerators. Note: The provided `id` is used only in `id_pressed` and `id_focused` signals.
+     * It's not related to the `index` arguments in e.g. `set_item_checked`.
      *
      * Generated from Godot docs: PopupMenu.add_item
      */
@@ -158,9 +158,9 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
     /**
      * Adds a new item with text `label` and icon `texture`. An `id` can optionally be provided, as
      * well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If
-     * no `accel` is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`)
-     * will be assigned to the item (which means it won't have any accelerator). See
-     * `get_item_accelerator` for more info on accelerators.
+     * no `accel` is provided, then the default value of 0 (corresponding to `Key.NONE`) will be
+     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
+     * more info on accelerators.
      *
      * Generated from Godot docs: PopupMenu.add_icon_item
      */
@@ -171,11 +171,11 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
     /**
      * Adds a new checkable item with text `label`. An `id` can optionally be provided, as well as an
      * accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel`
-     * is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be
-     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
-     * more info on accelerators. Note: Checkable items just display a checkmark, but don't have any
-     * built-in checking behavior and must be checked/unchecked manually. See `set_item_checked` for
-     * more info on how to control it.
+     * is provided, then the default value of 0 (corresponding to `Key.NONE`) will be assigned to the
+     * item (which means it won't have any accelerator). See `get_item_accelerator` for more info on
+     * accelerators. Note: Checkable items just display a checkmark, but don't have any built-in
+     * checking behavior and must be checked/unchecked manually. See `set_item_checked` for more info
+     * on how to control it.
      *
      * Generated from Godot docs: PopupMenu.add_check_item
      */
@@ -186,11 +186,11 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
     /**
      * Adds a new checkable item with text `label` and icon `texture`. An `id` can optionally be
      * provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from
-     * the index. If no `accel` is provided, then the default value of 0 (corresponding to
-     * `@GlobalScope.KEY_NONE`) will be assigned to the item (which means it won't have any
-     * accelerator). See `get_item_accelerator` for more info on accelerators. Note: Checkable items
-     * just display a checkmark, but don't have any built-in checking behavior and must be
-     * checked/unchecked manually. See `set_item_checked` for more info on how to control it.
+     * the index. If no `accel` is provided, then the default value of 0 (corresponding to `Key.NONE`)
+     * will be assigned to the item (which means it won't have any accelerator). See
+     * `get_item_accelerator` for more info on accelerators. Note: Checkable items just display a
+     * checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually.
+     * See `set_item_checked` for more info on how to control it.
      *
      * Generated from Godot docs: PopupMenu.add_icon_check_item
      */
@@ -201,11 +201,11 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
     /**
      * Adds a new radio check button with text `label`. An `id` can optionally be provided, as well as
      * an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no
-     * `accel` is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will
-     * be assigned to the item (which means it won't have any accelerator). See `get_item_accelerator`
-     * for more info on accelerators. Note: Checkable items just display a checkmark, but don't have
-     * any built-in checking behavior and must be checked/unchecked manually. See `set_item_checked`
-     * for more info on how to control it.
+     * `accel` is provided, then the default value of 0 (corresponding to `Key.NONE`) will be assigned
+     * to the item (which means it won't have any accelerator). See `get_item_accelerator` for more
+     * info on accelerators. Note: Checkable items just display a checkmark, but don't have any
+     * built-in checking behavior and must be checked/unchecked manually. See `set_item_checked` for
+     * more info on how to control it.
      *
      * Generated from Godot docs: PopupMenu.add_radio_check_item
      */
@@ -227,9 +227,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * items can have more than two states, as defined by `max_states`. The default value is defined by
      * `default_state`. An `id` can optionally be provided, as well as an accelerator (`accel`). If no
      * `id` is provided, one will be created from the index. If no `accel` is provided, then the
-     * default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be assigned to the item
-     * (which means it won't have any accelerator). See `get_item_accelerator` for more info on
-     * accelerators.
+     * default value of 0 (corresponding to `Key.NONE`) will be assigned to the item (which means it
+     * won't have any accelerator). See `get_item_accelerator` for more info on accelerators.
      *
      * Generated from Godot docs: PopupMenu.add_multistate_item
      */
@@ -366,7 +365,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
 
     /**
      * Sets the auto translate mode of the item at the given `index`. Items use
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `Node.AutoTranslateMode.INHERIT` by default, which uses the same auto translate mode as the
      * `PopupMenu` itself.
      *
      * Generated from Godot docs: PopupMenu.set_item_auto_translate_mode
@@ -688,7 +687,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * that can be pressed to trigger the menu button even if it's not currently open. The return value
      * is an integer which is generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR
      * such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). If no accelerator is defined for the specified
-     * `index`, `get_item_accelerator` returns `0` (corresponding to `@GlobalScope.KEY_NONE`).
+     * `index`, `get_item_accelerator` returns `0` (corresponding to `Key.NONE`).
      *
      * Generated from Godot docs: PopupMenu.get_item_accelerator
      */

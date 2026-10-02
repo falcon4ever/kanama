@@ -11,6 +11,12 @@ import java.lang.foreign.MemorySegment
  */
 actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle) {
     // ===== BEGIN GENERATED ENUMS: Tween (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `Tween.TweenProcessMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Tween.TweenProcessMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TweenProcessMode
+     */
     @JvmInline
     actual value class TweenProcessMode
     actual constructor(
@@ -32,6 +38,12 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
         }
     }
 
+    /**
+     * Godot's `Tween.TweenPauseMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tween.TweenPauseMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TweenPauseMode
+     */
     @JvmInline
     actual value class TweenPauseMode
     actual constructor(
@@ -40,7 +52,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
         actual companion object {
             /**
              * If the `Tween` has a bound node, it will process when that node can process (see
-             * `Node.process_mode`). Otherwise it's the same as `TWEEN_PAUSE_STOP`.
+             * `Node.process_mode`). Otherwise it's the same as `TweenPauseMode.STOP`.
              *
              * Generated from Godot docs: Tween.TWEEN_PAUSE_BOUND
              */
@@ -60,6 +72,12 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
         }
     }
 
+    /**
+     * Godot's `Tween.TransitionType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tween.TransitionType.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TransitionType
+     */
     @JvmInline
     actual value class TransitionType
     actual constructor(
@@ -141,6 +159,12 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
         }
     }
 
+    /**
+     * Godot's `Tween.EaseType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Tween.EaseType.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.EaseType
+     */
     @JvmInline
     actual value class EaseType
     actual constructor(
@@ -160,13 +184,13 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
              */
             actual val OUT: EaseType get() = EaseType(1L)
             /**
-             * A combination of `EASE_IN` and `EASE_OUT`. The interpolation is slowest at both ends.
+             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is slowest at both ends.
              *
              * Generated from Godot docs: Tween.EASE_IN_OUT
              */
             actual val IN_OUT: EaseType get() = EaseType(2L)
             /**
-             * A combination of `EASE_IN` and `EASE_OUT`. The interpolation is fastest at both ends.
+             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is fastest at both ends.
              *
              * Generated from Godot docs: Tween.EASE_OUT_IN
              */
@@ -408,7 +432,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
      * Binds this `Tween` with the given `node`. `Tween`s are processed directly by the `SceneTree`, so
      * they run independently of the animated nodes. When you bind a `Node` with the `Tween`, the
      * `Tween` will halt the animation when the object is not inside tree and the `Tween` will be
-     * automatically killed when the bound object is freed. Also `TWEEN_PAUSE_BOUND` will make the
+     * automatically killed when the bound object is freed. Also `TweenPauseMode.BOUND` will make the
      * pausing behavior dependent on the bound node. For a shorter way to create and bind a `Tween`,
      * you can use `Node.create_tween`.
      *
@@ -421,7 +445,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
 
     /**
      * Determines whether the `Tween` should run after process frames (see `Node._process`) or physics
-     * frames (see `Node._physics_process`). Default value is `TWEEN_PROCESS_IDLE`.
+     * frames (see `Node._physics_process`). Default value is `TweenProcessMode.IDLE`.
      *
      * Generated from Godot docs: Tween.set_process_mode
      */
@@ -432,7 +456,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
 
     /**
      * Determines the behavior of the `Tween` when the `SceneTree` is paused. Default value is
-     * `TWEEN_PAUSE_BOUND`.
+     * `TweenPauseMode.BOUND`.
      *
      * Generated from Godot docs: Tween.set_pause_mode
      */
@@ -505,7 +529,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
 
     /**
      * Sets the default transition type for `PropertyTweener`s and `MethodTweener`s appended after this
-     * method. Before this method is called, the default transition type is `TRANS_LINEAR`.
+     * method. Before this method is called, the default transition type is `TransitionType.LINEAR`.
      *
      * Generated from Godot docs: Tween.set_trans
      */
@@ -516,7 +540,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
 
     /**
      * Sets the default ease type for `PropertyTweener`s and `MethodTweener`s appended after this
-     * method. Before this method is called, the default ease type is `EASE_IN_OUT`.
+     * method. Before this method is called, the default ease type is `EaseType.IN_OUT`.
      *
      * Generated from Godot docs: Tween.set_ease
      */

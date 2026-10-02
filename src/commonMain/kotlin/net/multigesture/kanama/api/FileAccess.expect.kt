@@ -9,6 +9,12 @@ import kotlin.jvm.JvmInline
 // platform FileAccess surface is not in the expect (scripts/check_actual_public_surface.py
 // scopes it out until the class is generated once).
 expect object FileAccess {
+    /**
+     * Godot's `FileAccess.ModeFlags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`FileAccess.ModeFlags.<NAME>`).
+     *
+     * Generated from Godot docs: FileAccess.ModeFlags
+     */
     @JvmInline
     value class ModeFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -46,6 +52,12 @@ expect object FileAccess {
         }
     }
 
+    /**
+     * Godot's `FileAccess.CompressionMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`FileAccess.CompressionMode.<NAME>`).
+     *
+     * Generated from Godot docs: FileAccess.CompressionMode
+     */
     @JvmInline
     value class CompressionMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -83,6 +95,12 @@ expect object FileAccess {
         }
     }
 
+    /**
+     * Godot's `FileAccess.UnixPermissionFlags` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`FileAccess.UnixPermissionFlags.<NAME>`).
+     *
+     * Generated from Godot docs: FileAccess.UnixPermissionFlags
+     */
     @JvmInline
     value class UnixPermissionFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: UnixPermissionFlags): UnixPermissionFlags

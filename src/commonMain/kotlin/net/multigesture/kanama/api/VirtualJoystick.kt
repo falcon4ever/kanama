@@ -166,7 +166,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
     /**
      * The multiplier applied to the joystick's radius that defines the clamp zone. This zone limits
      * how far the joystick tip can move from its center before being clamped. A value of `1.0` means
-     * the tip can move up to the edge of the joystick's visual size. In `JOYSTICK_FOLLOWING` mode,
+     * the tip can move up to the edge of the joystick's visual size. In `JoystickMode.FOLLOWING` mode,
      * this radius also determines how far the finger can move before the joystick base starts
      * following the touch input.
      *
@@ -179,7 +179,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
     /**
      * The multiplier applied to the joystick's radius that defines the clamp zone. This zone limits
      * how far the joystick tip can move from its center before being clamped. A value of `1.0` means
-     * the tip can move up to the edge of the joystick's visual size. In `JOYSTICK_FOLLOWING` mode,
+     * the tip can move up to the edge of the joystick's visual size. In `JoystickMode.FOLLOWING` mode,
      * this radius also determines how far the finger can move before the joystick base starts
      * following the touch input.
      *
@@ -307,6 +307,12 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
         const val flickCanceled: String = "flick_canceled"
     }
 
+    /**
+     * Godot's `VirtualJoystick.JoystickMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`VirtualJoystick.JoystickMode.<NAME>`).
+     *
+     * Generated from Godot docs: VirtualJoystick.JoystickMode
+     */
     @JvmInline
     value class JoystickMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -334,6 +340,12 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `VirtualJoystick.VisibilityMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`VirtualJoystick.VisibilityMode.<NAME>`).
+     *
+     * Generated from Godot docs: VirtualJoystick.VisibilityMode
+     */
     @JvmInline
     value class VisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {

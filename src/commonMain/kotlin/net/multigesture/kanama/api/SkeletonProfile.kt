@@ -359,6 +359,12 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
         const val profileUpdated: String = "profile_updated"
     }
 
+    /**
+     * Godot's `SkeletonProfile.TailDirection` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`SkeletonProfile.TailDirection.<NAME>`).
+     *
+     * Generated from Godot docs: SkeletonProfile.TailDirection
+     */
     @JvmInline
     value class TailDirection(override val value: Long) : GodotEnumValue {
         companion object {

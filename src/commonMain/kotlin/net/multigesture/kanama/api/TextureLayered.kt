@@ -83,6 +83,12 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
         return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, segment, layer))
     }
 
+    /**
+     * Godot's `TextureLayered.LayeredType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextureLayered.LayeredType.<NAME>`).
+     *
+     * Generated from Godot docs: TextureLayered.LayeredType
+     */
     @JvmInline
     value class LayeredType(override val value: Long) : GodotEnumValue {
         companion object {

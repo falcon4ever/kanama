@@ -14,7 +14,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Start the AES context in the given `mode`. A `key` of either 16 or 32 bytes must always be
      * provided, while an `iv` (initialization vector) of exactly 16 bytes, is only needed when `mode`
-     * is either `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
+     * is either `Mode.CBC_ENCRYPT` or `Mode.CBC_DECRYPT`.
      *
      * Generated from Godot docs: AESContext.start
      */
@@ -38,7 +38,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Get the current IV state for this context (IV gets updated when calling `update`). You normally
      * don't need this function. Note: This function only makes sense when the context is started with
-     * `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
+     * `Mode.CBC_ENCRYPT` or `Mode.CBC_DECRYPT`.
      *
      * Generated from Godot docs: AESContext.get_iv_state
      */
@@ -57,6 +57,12 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(finishBind, segment)
     }
 
+    /**
+     * Godot's `AESContext.Mode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`AESContext.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: AESContext.Mode
+     */
     @JvmInline
     value class Mode(override val value: Long) : GodotEnumValue {
         companion object {

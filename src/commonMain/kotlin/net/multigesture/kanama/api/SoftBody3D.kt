@@ -207,7 +207,7 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
     }
 
     /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
+     * Defines the behavior in physics when `Node.process_mode` is set to `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: SoftBody3D.set_disable_mode
      */
@@ -216,7 +216,7 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
     }
 
     /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
+     * Defines the behavior in physics when `Node.process_mode` is set to `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: SoftBody3D.get_disable_mode
      */
@@ -481,11 +481,17 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isRayPickableBind, segment)
     }
 
+    /**
+     * Godot's `SoftBody3D.DisableMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SoftBody3D.DisableMode.<NAME>`).
+     *
+     * Generated from Godot docs: SoftBody3D.DisableMode
+     */
     @JvmInline
     value class DisableMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, remove from the physics
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, remove from the physics
              * simulation to stop all physics interactions with this `SoftBody3D`. Automatically re-added to
              * the physics simulation when the `Node` is processed again.
              *
@@ -493,7 +499,7 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
              */
             val REMOVE: DisableMode get() = DisableMode(0L)
             /**
-             * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, do not affect the physics
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, do not affect the physics
              * simulation.
              *
              * Generated from Godot docs: SoftBody3D.DISABLE_MODE_KEEP_ACTIVE

@@ -448,6 +448,12 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, segment, fromId, toId, allowPartialPath)
     }
 
+    /**
+     * Godot's `AStarGrid2D.Heuristic` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AStarGrid2D.Heuristic.<NAME>`).
+     *
+     * Generated from Godot docs: AStarGrid2D.Heuristic
+     */
     @JvmInline
     value class Heuristic(override val value: Long) : GodotEnumValue {
         companion object {
@@ -487,6 +493,12 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `AStarGrid2D.DiagonalMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AStarGrid2D.DiagonalMode.<NAME>`).
+     *
+     * Generated from Godot docs: AStarGrid2D.DiagonalMode
+     */
     @JvmInline
     value class DiagonalMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -526,6 +538,12 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `AStarGrid2D.CellShape` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AStarGrid2D.CellShape.<NAME>`).
+     *
+     * Generated from Godot docs: AStarGrid2D.CellShape
+     */
     @JvmInline
     value class CellShape(override val value: Long) : GodotEnumValue {
         companion object {

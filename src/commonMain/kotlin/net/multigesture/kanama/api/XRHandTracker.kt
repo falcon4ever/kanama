@@ -166,6 +166,13 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         return ObjectCalls.ptrcallWithLongArgRetVector3(getHandJointAngularVelocityBind, segment, joint.value)
     }
 
+    /**
+     * Godot's `XRHandTracker.HandTrackingSource` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`XRHandTracker.HandTrackingSource.<NAME>`).
+     *
+     * Generated from Godot docs: XRHandTracker.HandTrackingSource
+     */
     @JvmInline
     value class HandTrackingSource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -205,6 +212,12 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         }
     }
 
+    /**
+     * Godot's `XRHandTracker.HandJoint` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`XRHandTracker.HandJoint.<NAME>`).
+     *
+     * Generated from Godot docs: XRHandTracker.HandJoint
+     */
     @JvmInline
     value class HandJoint(override val value: Long) : GodotEnumValue {
         companion object {
@@ -373,6 +386,12 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         }
     }
 
+    /**
+     * Godot's `XRHandTracker.HandJointFlags` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`XRHandTracker.HandJointFlags.<NAME>`).
+     *
+     * Generated from Godot docs: XRHandTracker.HandJointFlags
+     */
     @JvmInline
     value class HandJointFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: HandJointFlags): HandJointFlags = HandJointFlags(value or other.value)

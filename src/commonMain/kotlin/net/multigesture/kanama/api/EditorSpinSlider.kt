@@ -175,7 +175,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * `EditorSpinSlider` is considered to be editing a floating-point value. This is used to determine
      * whether a slider should be drawn by default. The slider is only drawn for floats; integers use
      * up-down arrows similar to `SpinBox` instead, unless `control_state` is set to
-     * `CONTROL_STATE_PREFER_SLIDER`. It will also use
+     * `ControlState.PREFER_SLIDER`. It will also use
      * `EditorSettings.interface/inspector/integer_drag_speed` instead of
      * `EditorSettings.interface/inspector/float_drag_speed` if the slider is available.
      *
@@ -190,7 +190,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * `EditorSpinSlider` is considered to be editing a floating-point value. This is used to determine
      * whether a slider should be drawn by default. The slider is only drawn for floats; integers use
      * up-down arrows similar to `SpinBox` instead, unless `control_state` is set to
-     * `CONTROL_STATE_PREFER_SLIDER`. It will also use
+     * `ControlState.PREFER_SLIDER`. It will also use
      * `EditorSettings.interface/inspector/integer_drag_speed` instead of
      * `EditorSettings.interface/inspector/float_drag_speed` if the slider is available.
      *
@@ -228,6 +228,12 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
         const val valueFocusExited: String = "value_focus_exited"
     }
 
+    /**
+     * Godot's `EditorSpinSlider.ControlState` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorSpinSlider.ControlState.<NAME>`).
+     *
+     * Generated from Godot docs: EditorSpinSlider.ControlState
+     */
     @JvmInline
     value class ControlState(override val value: Long) : GodotEnumValue {
         companion object {

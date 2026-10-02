@@ -13,6 +13,12 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 open class ImageFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
+    /**
+     * Godot's `ImageFormatLoader.LoaderFlags` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`ImageFormatLoader.LoaderFlags.<NAME>`).
+     *
+     * Generated from Godot docs: ImageFormatLoader.LoaderFlags
+     */
     @JvmInline
     value class LoaderFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: LoaderFlags): LoaderFlags = LoaderFlags(value or other.value)

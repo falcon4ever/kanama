@@ -49,7 +49,7 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
      * Set the tangent attribute that will be pushed with the next vertex. Note: Even though `tangent`
      * is a `Plane`, it does not directly represent the tangent plane. Its `Plane.x`, `Plane.y`, and
      * `Plane.z` represent the tangent vector and `Plane.d` should be either `-1` or `1`. See also
-     * `Mesh.ARRAY_TANGENT`.
+     * `Mesh.ArrayType.TANGENT`.
      *
      * Generated from Godot docs: ImmediateMesh.surface_set_tangent
      */

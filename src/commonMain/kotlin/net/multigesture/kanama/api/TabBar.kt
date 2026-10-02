@@ -679,6 +679,12 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         const val activeTabRearranged: String = "active_tab_rearranged"
     }
 
+    /**
+     * Godot's `TabBar.AlignmentMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TabBar.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: TabBar.AlignmentMode
+     */
     @JvmInline
     value class AlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -709,6 +715,12 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TabBar.CloseButtonDisplayPolicy` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`TabBar.CloseButtonDisplayPolicy.<NAME>`).
+     *
+     * Generated from Godot docs: TabBar.CloseButtonDisplayPolicy
+     */
     @JvmInline
     value class CloseButtonDisplayPolicy(override val value: Long) : GodotEnumValue {
         companion object {

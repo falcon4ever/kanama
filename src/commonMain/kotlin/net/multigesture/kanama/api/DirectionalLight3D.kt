@@ -87,7 +87,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
     /**
      * If `true`, shadow detail is sacrificed in exchange for smoother transitions between splits.
      * Enabling shadow blend splitting also has a moderate performance cost. This is ignored when
-     * `directional_shadow_mode` is `SHADOW_ORTHOGONAL`.
+     * `directional_shadow_mode` is `ShadowMode.ORTHOGONAL`.
      *
      * Generated from Godot docs: DirectionalLight3D.set_blend_splits
      */
@@ -98,7 +98,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
     /**
      * If `true`, shadow detail is sacrificed in exchange for smoother transitions between splits.
      * Enabling shadow blend splitting also has a moderate performance cost. This is ignored when
-     * `directional_shadow_mode` is `SHADOW_ORTHOGONAL`.
+     * `directional_shadow_mode` is `ShadowMode.ORTHOGONAL`.
      *
      * Generated from Godot docs: DirectionalLight3D.is_blend_splits_enabled
      */
@@ -126,6 +126,12 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
         return DirectionalLight3D.SkyMode(ObjectCalls.ptrcallNoArgsRetLong(getSkyModeBind, segment))
     }
 
+    /**
+     * Godot's `DirectionalLight3D.ShadowMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DirectionalLight3D.ShadowMode.<NAME>`).
+     *
+     * Generated from Godot docs: DirectionalLight3D.ShadowMode
+     */
     @JvmInline
     value class ShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -138,7 +144,8 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
             val ORTHOGONAL: ShadowMode get() = ShadowMode(0L)
             /**
              * Splits the view frustum in 2 areas, each with its own shadow map. This shadow mode is a
-             * compromise between `SHADOW_ORTHOGONAL` and `SHADOW_PARALLEL_4_SPLITS` in terms of performance.
+             * compromise between `ShadowMode.ORTHOGONAL` and `ShadowMode.PARALLEL_4_SPLITS` in terms of
+             * performance.
              *
              * Generated from Godot docs: DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
              */
@@ -153,6 +160,12 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
         }
     }
 
+    /**
+     * Godot's `DirectionalLight3D.SkyMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DirectionalLight3D.SkyMode.<NAME>`).
+     *
+     * Generated from Godot docs: DirectionalLight3D.SkyMode
+     */
     @JvmInline
     value class SkyMode(override val value: Long) : GodotEnumValue {
         companion object {

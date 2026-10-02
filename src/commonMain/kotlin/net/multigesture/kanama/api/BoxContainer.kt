@@ -35,8 +35,8 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: BoxContainer.set_alignment
      */
@@ -45,8 +45,8 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: BoxContainer.get_alignment
      */
@@ -74,6 +74,12 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
     }
 
+    /**
+     * Godot's `BoxContainer.AlignmentMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BoxContainer.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: BoxContainer.AlignmentMode
+     */
     @JvmInline
     value class AlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {

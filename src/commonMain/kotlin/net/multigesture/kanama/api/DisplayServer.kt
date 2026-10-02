@@ -781,11 +781,12 @@ object DisplayServer {
 
     /**
      * Adds a callback, which is called when the utterance has started, finished, canceled or reached a
-     * text boundary. - `TTS_UTTERANCE_STARTED`, `TTS_UTTERANCE_ENDED`, and `TTS_UTTERANCE_CANCELED`
-     * callable's method should take one `int` parameter, the utterance ID. - `TTS_UTTERANCE_BOUNDARY`
-     * callable's method should take two `int` parameters, the index of the character and the utterance
-     * ID. Note: The granularity of the boundary callbacks is engine dependent. Note: This method is
-     * implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
+     * text boundary. - `TTSUtteranceEvent.STARTED`, `TTSUtteranceEvent.ENDED`, and
+     * `TTSUtteranceEvent.CANCELED` callable's method should take one `int` parameter, the utterance
+     * ID. - `TTSUtteranceEvent.BOUNDARY` callable's method should take two `int` parameters, the index
+     * of the character and the utterance ID. Note: The granularity of the boundary callbacks is engine
+     * dependent. Note: This method is implemented on Android, iOS, Web, Linux (X11/Wayland), macOS,
+     * and Windows.
      *
      * Generated from Godot docs: DisplayServer.tts_set_utterance_callback
      */
@@ -1220,7 +1221,7 @@ object DisplayServer {
      * constants can be used as `screen`: `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`,
      * `SCREEN_WITH_MOUSE_FOCUS`, or `SCREEN_WITH_KEYBOARD_FOCUS`. Note: This method is implemented on
      * Android and iOS. Note: On iOS, this method has no effect if
-     * `ProjectSettings.display/window/handheld/orientation` is not set to `SCREEN_SENSOR`.
+     * `ProjectSettings.display/window/handheld/orientation` is not set to `ScreenOrientation.SENSOR`.
      *
      * Generated from Godot docs: DisplayServer.screen_set_orientation
      */
@@ -1231,10 +1232,10 @@ object DisplayServer {
 
     /**
      * Returns the `screen`'s current orientation. See also `screen_set_orientation`. Returns
-     * `SCREEN_LANDSCAPE` if `screen` is invalid. Note: One of the following constants can be used as
-     * `screen`: `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or
+     * `ScreenOrientation.LANDSCAPE` if `screen` is invalid. Note: One of the following constants can
+     * be used as `screen`: `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or
      * `SCREEN_WITH_KEYBOARD_FOCUS`. Note: This method is implemented on Android and iOS. On other
-     * platforms, this method always returns `SCREEN_LANDSCAPE`.
+     * platforms, this method always returns `ScreenOrientation.LANDSCAPE`.
      *
      * Generated from Godot docs: DisplayServer.screen_get_orientation
      */
@@ -1598,7 +1599,7 @@ object DisplayServer {
 
     /**
      * Sets window mode for the given window to `mode`. Note: On Android, setting it to
-     * `WINDOW_MODE_FULLSCREEN` or `WINDOW_MODE_EXCLUSIVE_FULLSCREEN` will enable immersive mode. Note:
+     * `WindowMode.FULLSCREEN` or `WindowMode.EXCLUSIVE_FULLSCREEN` will enable immersive mode. Note:
      * Setting the window to full screen forcibly sets the borderless flag to `true`, so make sure to
      * set it back to `false` when not wanted.
      *
@@ -1641,7 +1642,7 @@ object DisplayServer {
     }
 
     /**
-     * When `WINDOW_FLAG_EXTEND_TO_TITLE` flag is set, set offset to the center of the first titlebar
+     * When `WindowFlags.EXTEND_TO_TITLE` flag is set, set offset to the center of the first titlebar
      * button. Note: This flag is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.window_set_window_buttons_offset
@@ -1653,7 +1654,7 @@ object DisplayServer {
 
     /**
      * Returns left margins (`x`), right margins (`y`) and height (`z`) of the title that are safe to
-     * use (contains no buttons or other elements) when `WINDOW_FLAG_EXTEND_TO_TITLE` flag is set.
+     * use (contains no buttons or other elements) when `WindowFlags.EXTEND_TO_TITLE` flag is set.
      *
      * Generated from Godot docs: DisplayServer.window_get_safe_title_margins
      */
@@ -1786,9 +1787,9 @@ object DisplayServer {
     /**
      * Sets the V-Sync mode of the given window. See also
      * `ProjectSettings.display/window/vsync/vsync_mode`. Depending on the platform and used renderer,
-     * the engine will fall back to `VSYNC_ENABLED` if the desired mode is not supported. Note: V-Sync
-     * modes other than `VSYNC_ENABLED` are only supported in the Forward+ and Mobile rendering
-     * methods, not Compatibility.
+     * the engine will fall back to `VSyncMode.ENABLED` if the desired mode is not supported. Note:
+     * V-Sync modes other than `VSyncMode.ENABLED` are only supported in the Forward+ and Mobile
+     * rendering methods, not Compatibility.
      *
      * Generated from Godot docs: DisplayServer.window_set_vsync_mode
      */
@@ -2446,7 +2447,7 @@ object DisplayServer {
 
     /**
      * Adds support for a custom accessibility action. `action_id` is passed as an argument to the
-     * callback of `ACTION_CUSTOM` action.
+     * callback of `AccessibilityAction.CUSTOM` action.
      *
      * Generated from Godot docs: DisplayServer.accessibility_update_add_custom_action
      */
@@ -2980,7 +2981,7 @@ object DisplayServer {
     /**
      * Shows a text dialog which uses the operating system's native look-and-feel. `callback` should
      * accept a single `int` parameter which corresponds to the index of the pressed button. Note: This
-     * method is implemented if the display server has the `FEATURE_NATIVE_DIALOG` feature. Supported
+     * method is implemented if the display server has the `Feature.NATIVE_DIALOG` feature. Supported
      * platforms include macOS, Windows, and Android.
      *
      * Generated from Godot docs: DisplayServer.dialog_show
@@ -2993,7 +2994,7 @@ object DisplayServer {
     /**
      * Shows a text input dialog which uses the operating system's native look-and-feel. `callback`
      * should accept a single `String` parameter which contains the text field's contents. Note: This
-     * method is implemented if the display server has the `FEATURE_NATIVE_DIALOG_INPUT` feature.
+     * method is implemented if the display server has the `Feature.NATIVE_DIALOG_INPUT` feature.
      * Supported platforms include macOS, Windows, and Android.
      *
      * Generated from Godot docs: DisplayServer.dialog_input_text
@@ -3011,7 +3012,7 @@ object DisplayServer {
      * Callbacks have the following arguments: `status: bool, selected_paths: PackedStringArray,
      * selected_filter_index: int`. On Android, the third callback argument (`selected_filter_index`)
      * is always `0`. Note: This method is implemented if the display server has the
-     * `FEATURE_NATIVE_DIALOG_FILE` feature. Supported platforms include Linux (X11/Wayland), Windows,
+     * `Feature.NATIVE_DIALOG_FILE` feature. Supported platforms include Linux (X11/Wayland), Windows,
      * macOS, and Android. Note: `current_directory` might be ignored. Note: Embedded file dialogs and
      * Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs
      * also support MIME types. Note: On Android and Linux, `show_hidden` is ignored. Note: On Android
@@ -3020,10 +3021,10 @@ object DisplayServer {
      * `OS.get_granted_permissions` to get a list of saved bookmarks. Note: On Android, this method
      * uses the Android Storage Access Framework (SAF). The file picker returns a URI instead of a
      * filesystem path. This URI can be passed directly to `FileAccess` to perform read/write
-     * operations. When using `FILE_DIALOG_MODE_OPEN_DIR`, it returns a tree URI that grants full
-     * access to the selected directory. File operations inside this directory can be performed by
-     * passing a path on the form `treeUri#relative/path/to/file` to `FileAccess`. To avoid opening the
-     * file picker again after each app restart, you can take persistable URI permission as follows:
+     * operations. When using `FileDialogMode.OPEN_DIR`, it returns a tree URI that grants full access
+     * to the selected directory. File operations inside this directory can be performed by passing a
+     * path on the form `treeUri#relative/path/to/file` to `FileAccess`. To avoid opening the file
+     * picker again after each app restart, you can take persistable URI permission as follows:
      *
      * Generated from Godot docs: DisplayServer.file_dialog_show
      */
@@ -3043,7 +3044,7 @@ object DisplayServer {
      * default boolean value (`bool`). Callbacks have the following arguments: `status: bool,
      * selected_paths: PackedStringArray, selected_filter_index: int, selected_option: Dictionary`.
      * Note: This method is implemented if the display server has the
-     * `FEATURE_NATIVE_DIALOG_FILE_EXTRA` feature. Supported platforms include Linux (X11/Wayland),
+     * `Feature.NATIVE_DIALOG_FILE_EXTRA` feature. Supported platforms include Linux (X11/Wayland),
      * Windows, and macOS. Note: `current_directory` might be ignored. Note: Embedded file dialogs and
      * Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs
      * also support MIME types. Note: On Linux (X11), `show_hidden` is ignored. Note: On macOS, native
@@ -3161,7 +3162,7 @@ object DisplayServer {
     /**
      * Displays OS native color picker. Callbacks have the following arguments: `status: bool, color:
      * Color`. Note: This method is implemented if the display server has the
-     * `FEATURE_NATIVE_COLOR_PICKER` feature. Note: This method is only implemented on Linux
+     * `Feature.NATIVE_COLOR_PICKER` feature. Note: This method is only implemented on Linux
      * (X11/Wayland).
      *
      * Generated from Godot docs: DisplayServer.color_picker
@@ -3200,7 +3201,7 @@ object DisplayServer {
      * specially crafted `.ico` or `.icns` icons, `set_native_icon` allows specifying different icons
      * depending on the size the icon is displayed at. This size is determined by the operating system
      * and user preferences (including the display scale factor). To use icons in other formats, use
-     * `set_icon` instead. Note: Requires support for `FEATURE_NATIVE_ICON`.
+     * `set_icon` instead. Note: Requires support for `Feature.NATIVE_ICON`.
      *
      * Generated from Godot docs: DisplayServer.set_native_icon
      */
@@ -3212,7 +3213,7 @@ object DisplayServer {
     /**
      * Sets the application icon and icons of all windows with an `Image`. To use icons in the
      * operating system's native format, use `set_native_icon` instead. Note: Requires support for
-     * `FEATURE_ICON`.
+     * `Feature.ICON`.
      *
      * Generated from Godot docs: DisplayServer.set_icon
      */
@@ -3261,7 +3262,7 @@ object DisplayServer {
      * activated by the right mouse button, selecting the status icon and pressing Shift + F10, or the
      * applications key. The menu's activation callback for the other mouse buttons is still triggered.
      * Note: Native popup is only supported if `NativeMenu` supports the
-     * `NativeMenu.FEATURE_POPUP_MENU` feature.
+     * `NativeMenu.Feature.POPUP_MENU` feature.
      *
      * Generated from Godot docs: DisplayServer.status_indicator_set_menu
      */
@@ -3441,6 +3442,12 @@ object DisplayServer {
         const val orientationChanged: String = "orientation_changed"
     }
 
+    /**
+     * Godot's `DisplayServer.Feature` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.Feature
+     */
     @JvmInline
     value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3479,7 +3486,7 @@ object DisplayServer {
             val MOUSE_WARP: Feature get() = Feature(4L)
             /**
              * Display server supports setting and getting clipboard data. See also
-             * `FEATURE_CLIPBOARD_PRIMARY`. Windows, macOS, Linux (X11/Wayland), Android, iOS, Web
+             * `Feature.CLIPBOARD_PRIMARY`. Windows, macOS, Linux (X11/Wayland), Android, iOS, Web
              *
              * Generated from Godot docs: DisplayServer.FEATURE_CLIPBOARD
              */
@@ -3570,7 +3577,7 @@ object DisplayServer {
             val SWAP_BUFFERS: Feature get() = Feature(16L)
             /**
              * Display server supports Primary clipboard can be used. This is a different clipboard from
-             * `FEATURE_CLIPBOARD`. Linux (X11/Wayland)
+             * `Feature.CLIPBOARD`. Linux (X11/Wayland)
              *
              * Generated from Godot docs: DisplayServer.FEATURE_CLIPBOARD_PRIMARY
              */
@@ -3584,7 +3591,7 @@ object DisplayServer {
             val TEXT_TO_SPEECH: Feature get() = Feature(19L)
             /**
              * Display server supports expanding window content to the title. See
-             * `WINDOW_FLAG_EXTEND_TO_TITLE`. macOS
+             * `WindowFlags.EXTEND_TO_TITLE`. macOS
              *
              * Generated from Godot docs: DisplayServer.FEATURE_EXTEND_TO_TITLE
              */
@@ -3623,7 +3630,7 @@ object DisplayServer {
              */
             val NATIVE_DIALOG_FILE: Feature get() = Feature(25L)
             /**
-             * The display server supports all features of `FEATURE_NATIVE_DIALOG_FILE`, with the added
+             * The display server supports all features of `Feature.NATIVE_DIALOG_FILE`, with the added
              * functionality of Options and native dialog file access to `res://` and `user://` paths. See
              * `file_dialog_show` and `file_dialog_with_options_show`. Windows, macOS, Linux (X11/Wayland)
              *
@@ -3638,7 +3645,7 @@ object DisplayServer {
              */
             val WINDOW_DRAG: Feature get() = Feature(27L)
             /**
-             * Display server supports `WINDOW_FLAG_EXCLUDE_FROM_CAPTURE` window flag. Windows, macOS
+             * Display server supports `WindowFlags.EXCLUDE_FROM_CAPTURE` window flag. Windows, macOS
              *
              * Generated from Godot docs: DisplayServer.FEATURE_SCREEN_EXCLUDE_FROM_CAPTURE
              */
@@ -3696,6 +3703,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.AccessibilityRole` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`DisplayServer.AccessibilityRole.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityRole
+     */
     @JvmInline
     value class AccessibilityRole(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3992,6 +4005,13 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.AccessibilityPopupType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityPopupType.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityPopupType
+     */
     @JvmInline
     value class AccessibilityPopupType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4022,6 +4042,13 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.AccessibilityFlags` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityFlags.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityFlags
+     */
     @JvmInline
     value class AccessibilityFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4088,6 +4115,13 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.AccessibilityAction` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityAction.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityAction
+     */
     @JvmInline
     value class AccessibilityAction(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4237,6 +4271,13 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.AccessibilityLiveMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityLiveMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityLiveMode
+     */
     @JvmInline
     value class AccessibilityLiveMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4263,6 +4304,13 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.AccessibilityScrollUnit` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityScrollUnit.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityScrollUnit
+     */
     @JvmInline
     value class AccessibilityScrollUnit(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4281,6 +4329,13 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.AccessibilityScrollHint` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityScrollHint.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityScrollHint
+     */
     @JvmInline
     value class AccessibilityScrollHint(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4323,6 +4378,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.MouseMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.MouseMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.MouseMode
+     */
     @JvmInline
     value class MouseMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4367,6 +4428,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.ScreenOrientation` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`DisplayServer.ScreenOrientation.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.ScreenOrientation
+     */
     @JvmInline
     value class ScreenOrientation(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4415,6 +4482,13 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.VirtualKeyboardType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.VirtualKeyboardType.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.VirtualKeyboardType
+     */
     @JvmInline
     value class VirtualKeyboardType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4457,7 +4531,7 @@ object DisplayServer {
             /**
              * Virtual keyboard for entering a password. On most platforms, this should disable autocomplete
              * and autocapitalization. Note: This is not supported on Web. Instead, this behaves identically to
-             * `KEYBOARD_TYPE_DEFAULT`.
+             * `VirtualKeyboardType.DEFAULT`.
              *
              * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_PASSWORD
              */
@@ -4471,6 +4545,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.CursorShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.CursorShape.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.CursorShape
+     */
     @JvmInline
     value class CursorShape(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4505,7 +4585,7 @@ object DisplayServer {
             /**
              * Wait cursor. On most cursor themes, this displays a spinning icon besides the arrow. Intended to
              * be used for non-blocking operations (when the user can do something else at the moment). See
-             * also `CURSOR_BUSY`.
+             * also `CursorShape.BUSY`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_WAIT
              */
@@ -4513,14 +4593,14 @@ object DisplayServer {
             /**
              * Wait cursor. On most cursor themes, this replaces the arrow with a spinning icon. Intended to be
              * used for blocking operations (when the user can't do anything else at the moment). See also
-             * `CURSOR_WAIT`.
+             * `CursorShape.WAIT`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_BUSY
              */
             val BUSY: CursorShape get() = CursorShape(5L)
             /**
              * Dragging hand cursor. This is displayed during drag-and-drop operations. See also
-             * `CURSOR_CAN_DROP`.
+             * `CursorShape.CAN_DROP`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_DRAG
              */
@@ -4528,7 +4608,7 @@ object DisplayServer {
             /**
              * "Can drop" cursor. This is displayed during drag-and-drop operations if hovering over a
              * `Control` that can accept the drag-and-drop event. On most cursor themes, this displays a
-             * dragging hand with an arrow symbol besides it. See also `CURSOR_DRAG`.
+             * dragging hand with an arrow symbol besides it. See also `CursorShape.DRAG`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_CAN_DROP
              */
@@ -4542,14 +4622,14 @@ object DisplayServer {
             val FORBIDDEN: CursorShape get() = CursorShape(8L)
             /**
              * Vertical resize cursor. Intended to be displayed when the hovered `Control` can be vertically
-             * resized using the mouse. See also `CURSOR_VSPLIT`.
+             * resized using the mouse. See also `CursorShape.VSPLIT`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_VSIZE
              */
             val VSIZE: CursorShape get() = CursorShape(9L)
             /**
              * Horizontal resize cursor. Intended to be displayed when the hovered `Control` can be
-             * horizontally resized using the mouse. See also `CURSOR_HSPLIT`.
+             * horizontally resized using the mouse. See also `CursorShape.HSPLIT`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_HSIZE
              */
@@ -4577,7 +4657,7 @@ object DisplayServer {
             /**
              * Vertical split cursor. This is displayed when hovering a `Control` with splits that can be
              * vertically resized using the mouse, such as `VSplitContainer`. On some cursor themes, this
-             * cursor may have the same appearance as `CURSOR_VSIZE`.
+             * cursor may have the same appearance as `CursorShape.VSIZE`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_VSPLIT
              */
@@ -4585,7 +4665,7 @@ object DisplayServer {
             /**
              * Horizontal split cursor. This is displayed when hovering a `Control` with splits that can be
              * horizontally resized using the mouse, such as `HSplitContainer`. On some cursor themes, this
-             * cursor may have the same appearance as `CURSOR_HSIZE`.
+             * cursor may have the same appearance as `CursorShape.HSIZE`.
              *
              * Generated from Godot docs: DisplayServer.CURSOR_HSPLIT
              */
@@ -4607,6 +4687,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.FileDialogMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.FileDialogMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.FileDialogMode
+     */
     @JvmInline
     value class FileDialogMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4643,6 +4729,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.WindowMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.WindowMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowMode
+     */
     @JvmInline
     value class WindowMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4688,7 +4780,7 @@ object DisplayServer {
              * A new desktop is used to display the running project. Exclusive full screen mode prevents Dock
              * and Menu from showing up when the mouse pointer is hovering the edge of the screen. On Linux
              * (X11): Exclusive full screen mode bypasses compositor. On Linux (Wayland): Equivalent to
-             * `WINDOW_MODE_FULLSCREEN`. Note: Regardless of the platform, enabling full screen will change the
+             * `WindowMode.FULLSCREEN`. Note: Regardless of the platform, enabling full screen will change the
              * window size to match the monitor's size. Therefore, make sure your project supports multiple
              * resolutions ($DOCS_URL/tutorials/rendering/multiple_resolutions.html) when enabling full screen
              * mode.
@@ -4699,6 +4791,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.ProgressState` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.ProgressState.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.ProgressState
+     */
     @JvmInline
     value class ProgressState(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4740,6 +4838,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.WindowFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.WindowFlags.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowFlags
+     */
     @JvmInline
     value class WindowFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4861,6 +4965,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.WindowEvent` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.WindowEvent.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowEvent
+     */
     @JvmInline
     value class WindowEvent(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4908,7 +5018,7 @@ object DisplayServer {
              */
             val DPI_CHANGE: WindowEvent get() = WindowEvent(6L)
             /**
-             * Sent when the window title bar decoration is changed (e.g. `WINDOW_FLAG_EXTEND_TO_TITLE` is set
+             * Sent when the window title bar decoration is changed (e.g. `WindowFlags.EXTEND_TO_TITLE` is set
              * or window entered/exited full screen mode). Note: This flag is implemented only on macOS.
              *
              * Generated from Godot docs: DisplayServer.WINDOW_EVENT_TITLEBAR_CHANGE
@@ -4934,6 +5044,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.WindowResizeEdge` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.WindowResizeEdge.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowResizeEdge
+     */
     @JvmInline
     value class WindowResizeEdge(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4994,6 +5110,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.VSyncMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.VSyncMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.VSyncMode
+     */
     @JvmInline
     value class VSyncMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -5013,10 +5135,11 @@ object DisplayServer {
              */
             val ENABLED: VSyncMode get() = VSyncMode(1L)
             /**
-             * Behaves like `VSYNC_DISABLED` when the framerate drops below the screen's refresh rate to reduce
-             * stuttering (tearing may be visible). Otherwise, vertical synchronization is enabled to avoid
-             * tearing. Framerate is limited by the monitor refresh rate (regardless of `Engine.max_fps`).
-             * Behaves like `VSYNC_ENABLED` when using the Compatibility rendering method.
+             * Behaves like `VSyncMode.DISABLED` when the framerate drops below the screen's refresh rate to
+             * reduce stuttering (tearing may be visible). Otherwise, vertical synchronization is enabled to
+             * avoid tearing. Framerate is limited by the monitor refresh rate (regardless of
+             * `Engine.max_fps`). Behaves like `VSyncMode.ENABLED` when using the Compatibility rendering
+             * method.
              *
              * Generated from Godot docs: DisplayServer.VSYNC_ADAPTIVE
              */
@@ -5025,9 +5148,9 @@ object DisplayServer {
              * Displays the most recent image in the queue on vertical blanking intervals, while rendering to
              * the other images (no tearing is visible). Framerate is unlimited (regardless of
              * `Engine.max_fps`). Although not guaranteed, the images can be rendered as fast as possible,
-             * which may reduce input lag (also called "Fast" V-Sync mode). `VSYNC_MAILBOX` works best when at
-             * least twice as many frames as the display refresh rate are rendered. Behaves like
-             * `VSYNC_ENABLED` when using the Compatibility rendering method.
+             * which may reduce input lag (also called "Fast" V-Sync mode). `VSyncMode.MAILBOX` works best when
+             * at least twice as many frames as the display refresh rate are rendered. Behaves like
+             * `VSyncMode.ENABLED` when using the Compatibility rendering method.
              *
              * Generated from Godot docs: DisplayServer.VSYNC_MAILBOX
              */
@@ -5035,6 +5158,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.HandleType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.HandleType.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.HandleType
+     */
     @JvmInline
     value class HandleType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -5098,6 +5227,12 @@ object DisplayServer {
         }
     }
 
+    /**
+     * Godot's `DisplayServer.TTSUtteranceEvent` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`DisplayServer.TTSUtteranceEvent.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.TTSUtteranceEvent
+     */
     @JvmInline
     value class TTSUtteranceEvent(override val value: Long) : GodotEnumValue {
         companion object {

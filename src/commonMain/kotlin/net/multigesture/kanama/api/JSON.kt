@@ -20,12 +20,12 @@ class JSON(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Attempts to parse the `json_text` provided. Returns an `Error`. If the parse was successful, it
-     * returns `OK` and the result can be retrieved using `data`. If unsuccessful, use `get_error_line`
-     * and `get_error_message` to identify the source of the failure. Non-static variant of
-     * `parse_string`, if you want custom error handling. The optional `keep_text` argument instructs
-     * the parser to keep a copy of the original text. This text can be obtained later by using the
-     * `get_parsed_text` function and is used when saving the resource (instead of generating new text
-     * from `data`).
+     * returns `GodotError.OK` and the result can be retrieved using `data`. If unsuccessful, use
+     * `get_error_line` and `get_error_message` to identify the source of the failure. Non-static
+     * variant of `parse_string`, if you want custom error handling. The optional `keep_text` argument
+     * instructs the parser to keep a copy of the original text. This text can be obtained later by
+     * using the `get_parsed_text` function and is used when saving the resource (instead of generating
+     * new text from `data`).
      *
      * Generated from Godot docs: JSON.parse
      */

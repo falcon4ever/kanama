@@ -309,6 +309,13 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
         return ObjectCalls.ptrcallNoArgsRetBool(areEndsResetBind, segment)
     }
 
+    /**
+     * Godot's `AnimationNodeStateMachine.StateMachineType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationNodeStateMachine.StateMachineType.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeStateMachine.StateMachineType
+     */
     @JvmInline
     value class StateMachineType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -330,7 +337,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
             /**
              * This is a grouped state machine that can be controlled from a parent state machine. It does not
              * work independently. There must be a state machine with `state_machine_type` of
-             * `STATE_MACHINE_TYPE_ROOT` or `STATE_MACHINE_TYPE_NESTED` in the parent or ancestor.
+             * `StateMachineType.ROOT` or `StateMachineType.NESTED` in the parent or ancestor.
              *
              * Generated from Godot docs: AnimationNodeStateMachine.STATE_MACHINE_TYPE_GROUPED
              */

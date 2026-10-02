@@ -382,7 +382,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     /**
-     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
+     * If `true`, sync mode is enabled (equivalent to `SyncMode.INDEPENDENT`). This property is kept
      * for backward compatibility.
      *
      * Generated from Godot docs: AnimationNodeBlendSpace2D.set_use_sync
@@ -393,7 +393,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     /**
-     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
+     * If `true`, sync mode is enabled (equivalent to `SyncMode.INDEPENDENT`). This property is kept
      * for backward compatibility.
      *
      * Generated from Godot docs: AnimationNodeBlendSpace2D.is_using_sync
@@ -424,7 +424,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     /**
-     * The cycle length in seconds used by `SYNC_MODE_CYCLIC_CONSTANT`. All animations are time-scaled
+     * The cycle length in seconds used by `SyncMode.CYCLIC_CONSTANT`. All animations are time-scaled
      * so they complete one full cycle in this duration. Must be greater than `0` for cyclic sync to
      * take effect.
      *
@@ -436,7 +436,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     /**
-     * The cycle length in seconds used by `SYNC_MODE_CYCLIC_CONSTANT`. All animations are time-scaled
+     * The cycle length in seconds used by `SyncMode.CYCLIC_CONSTANT`. All animations are time-scaled
      * so they complete one full cycle in this duration. Must be greater than `0` for cyclic sync to
      * take effect.
      *
@@ -451,6 +451,13 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
         const val trianglesUpdated: String = "triangles_updated"
     }
 
+    /**
+     * Godot's `AnimationNodeBlendSpace2D.BlendMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AnimationNodeBlendSpace2D.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.BlendMode
+     */
     @JvmInline
     value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -468,7 +475,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
              */
             val DISCRETE: BlendMode get() = BlendMode(1L)
             /**
-             * Similar to `BLEND_MODE_DISCRETE`, but starts the new animation at the last animation's playback
+             * Similar to `BlendMode.DISCRETE`, but starts the new animation at the last animation's playback
              * position.
              *
              * Generated from Godot docs: AnimationNodeBlendSpace2D.BLEND_MODE_DISCRETE_CARRY
@@ -477,6 +484,13 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
         }
     }
 
+    /**
+     * Godot's `AnimationNodeBlendSpace2D.SyncMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AnimationNodeBlendSpace2D.SyncMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace2D.SyncMode
+     */
     @JvmInline
     value class SyncMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -107,6 +107,13 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
         ObjectCalls.ptrcallWithIntAndDoubleArg(setBasisuCompressorParamsBind, segment, uastcLevel, rdoQualityLoss)
     }
 
+    /**
+     * Godot's `PortableCompressedTexture2D.CompressionMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`PortableCompressedTexture2D.CompressionMode.<NAME>`).
+     *
+     * Generated from Godot docs: PortableCompressedTexture2D.CompressionMode
+     */
     @JvmInline
     value class CompressionMode(override val value: Long) : GodotEnumValue {
         companion object {

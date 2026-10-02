@@ -221,6 +221,12 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearAllBind, segment)
     }
 
+    /**
+     * Godot's `SpriteFrames.LoopMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SpriteFrames.LoopMode.<NAME>`).
+     *
+     * Generated from Godot docs: SpriteFrames.LoopMode
+     */
     @JvmInline
     value class LoopMode(override val value: Long) : GodotEnumValue {
         companion object {

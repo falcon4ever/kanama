@@ -253,6 +253,12 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
         const val foldingChanged: String = "folding_changed"
     }
 
+    /**
+     * Godot's `FoldableContainer.TitlePosition` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`FoldableContainer.TitlePosition.<NAME>`).
+     *
+     * Generated from Godot docs: FoldableContainer.TitlePosition
+     */
     @JvmInline
     value class TitlePosition(override val value: Long) : GodotEnumValue {
         companion object {

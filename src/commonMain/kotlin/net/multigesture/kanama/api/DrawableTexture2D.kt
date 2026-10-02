@@ -90,6 +90,13 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
         ObjectCalls.ptrcallNoArgs(generateMipmapsBind, segment)
     }
 
+    /**
+     * Godot's `DrawableTexture2D.DrawableFormat` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DrawableTexture2D.DrawableFormat.<NAME>`).
+     *
+     * Generated from Godot docs: DrawableTexture2D.DrawableFormat
+     */
     @JvmInline
     value class DrawableFormat(override val value: Long) : GodotEnumValue {
         companion object {

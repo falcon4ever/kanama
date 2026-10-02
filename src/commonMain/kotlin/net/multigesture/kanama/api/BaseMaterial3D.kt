@@ -829,7 +829,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The material's transparency mode. Some transparency modes will disable shadow casting. Any
-     * transparency mode other than `TRANSPARENCY_DISABLED` has a greater performance impact compared
+     * transparency mode other than `Transparency.DISABLED` has a greater performance impact compared
      * to opaque rendering. See also `blend_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_transparency
@@ -841,7 +841,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The material's transparency mode. Some transparency modes will disable shadow casting. Any
-     * transparency mode other than `TRANSPARENCY_DISABLED` has a greater performance impact compared
+     * transparency mode other than `Transparency.DISABLED` has a greater performance impact compared
      * to opaque rendering. See also `blend_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_transparency
@@ -919,9 +919,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      * Adjusts the strength of specular reflections. Specular reflections are composed of scene
      * reflections and the specular lobe which is the bright spot that is reflected from light sources.
      * When set to `0.0`, no specular reflections will be visible. This differs from the
-     * `SPECULAR_DISABLED` `SpecularMode` as `SPECULAR_DISABLED` only applies to the specular lobe from
-     * the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should be left
-     * at `0.5` in most cases. See also `roughness`.
+     * `SpecularMode.DISABLED` `SpecularMode` as `SpecularMode.DISABLED` only applies to the specular
+     * lobe from the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should
+     * be left at `0.5` in most cases. See also `roughness`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_specular
      */
@@ -934,9 +934,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      * Adjusts the strength of specular reflections. Specular reflections are composed of scene
      * reflections and the specular lobe which is the bright spot that is reflected from light sources.
      * When set to `0.0`, no specular reflections will be visible. This differs from the
-     * `SPECULAR_DISABLED` `SpecularMode` as `SPECULAR_DISABLED` only applies to the specular lobe from
-     * the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should be left
-     * at `0.5` in most cases. See also `roughness`.
+     * `SpecularMode.DISABLED` `SpecularMode` as `SpecularMode.DISABLED` only applies to the specular
+     * lobe from the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should
+     * be left at `0.5` in most cases. See also `roughness`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_specular
      */
@@ -1442,7 +1442,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     /**
      * Determines which comparison operator is used when testing depth. Note: Changing `depth_test` to
      * a non-default value only has a visible effect when used on a transparent material, or a material
-     * that has `depth_draw_mode` set to `DEPTH_DRAW_DISABLED`.
+     * that has `depth_draw_mode` set to `DepthDrawMode.DISABLED`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_depth_test
      */
@@ -1454,7 +1454,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     /**
      * Determines which comparison operator is used when testing depth. Note: Changing `depth_test` to
      * a non-default value only has a visible effect when used on a transparent material, or a material
-     * that has `depth_draw_mode` set to `DEPTH_DRAW_DISABLED`.
+     * that has `depth_draw_mode` set to `DepthDrawMode.DISABLED`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_depth_test
      */
@@ -1809,7 +1809,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The number of horizontal frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_h_frames
      */
@@ -1820,7 +1820,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The number of horizontal frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_h_frames
      */
@@ -1831,7 +1831,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The number of vertical frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_v_frames
      */
@@ -1842,7 +1842,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The number of vertical frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_v_frames
      */
@@ -1852,8 +1852,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * If `true`, particle animations are looped. Only enabled when using `BILLBOARD_PARTICLES`. See
-     * `billboard_mode`.
+     * If `true`, particle animations are looped. Only enabled when using `BillboardMode.PARTICLES`.
+     * See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_loop
      */
@@ -1863,8 +1863,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * If `true`, particle animations are looped. Only enabled when using `BILLBOARD_PARTICLES`. See
-     * `billboard_mode`.
+     * If `true`, particle animations are looped. Only enabled when using `BillboardMode.PARTICLES`.
+     * See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_loop
      */
@@ -2117,8 +2117,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * If `true`, enables the vertex grow setting. This can be used to create mesh-based outlines using
-     * a second material pass and its `cull_mode` set to `CULL_FRONT`. See also `grow_amount`. Note:
-     * Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
+     * a second material pass and its `cull_mode` set to `CullMode.FRONT`. See also `grow_amount`.
+     * Note: Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
      * corners. This can be alleviated by designing the mesh to use smooth normals exclusively using
      * face weighted normals (http://wiki.polycount.com/wiki/Face_weighted_normals) in the 3D authoring
      * software. In this case, grow will be able to join every outline together, just like in the
@@ -2133,8 +2133,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * If `true`, enables the vertex grow setting. This can be used to create mesh-based outlines using
-     * a second material pass and its `cull_mode` set to `CULL_FRONT`. See also `grow_amount`. Note:
-     * Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
+     * a second material pass and its `cull_mode` set to `CullMode.FRONT`. See also `grow_amount`.
+     * Note: Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
      * corners. This can be alleviated by designing the mesh to use smooth normals exclusively using
      * face weighted normals (http://wiki.polycount.com/wiki/Face_weighted_normals) in the 3D authoring
      * software. In this case, grow will be able to join every outline together, just like in the
@@ -2441,7 +2441,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * Overrides the `Camera3D`'s field of view angle (in degrees). Note: This behaves as if the field
-     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KEEP_HEIGHT`.
+     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KeepAspect.HEIGHT`.
      * Additionally, it may not look correct on a non-perspective camera where the field of view
      * setting is ignored.
      *
@@ -2454,7 +2454,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * Overrides the `Camera3D`'s field of view angle (in degrees). Note: This behaves as if the field
-     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KEEP_HEIGHT`.
+     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KeepAspect.HEIGHT`.
      * Additionally, it may not look correct on a non-perspective camera where the field of view
      * setting is ignored.
      *
@@ -2566,7 +2566,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The outline thickness for `STENCIL_MODE_OUTLINE`.
+     * The outline thickness for `StencilMode.OUTLINE`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_stencil_effect_outline_thickness
      */
@@ -2576,7 +2576,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The outline thickness for `STENCIL_MODE_OUTLINE`.
+     * The outline thickness for `StencilMode.OUTLINE`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_stencil_effect_outline_thickness
      */
@@ -2585,6 +2585,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStencilEffectOutlineThicknessBind, segment)
     }
 
+    /**
+     * Godot's `BaseMaterial3D.TextureParam` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.TextureParam.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.TextureParam
+     */
     @JvmInline
     value class TextureParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2711,6 +2717,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.TextureFilter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.TextureFilter.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.TextureFilter
+     */
     @JvmInline
     value class TextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2779,6 +2791,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.DetailUV` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.DetailUV.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DetailUV
+     */
     @JvmInline
     value class DetailUV(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2797,6 +2815,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.Transparency` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.Transparency.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.Transparency
+     */
     @JvmInline
     value class Transparency(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2846,6 +2870,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.ShadingMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.ShadingMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.ShadingMode
+     */
     @JvmInline
     value class ShadingMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2878,6 +2908,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.Feature` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.Feature
+     */
     @JvmInline
     value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2968,6 +3004,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.BlendMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.BlendMode
+     */
     @JvmInline
     value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3009,6 +3051,13 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.AlphaAntiAliasing` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`BaseMaterial3D.AlphaAntiAliasing.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.AlphaAntiAliasing
+     */
     @JvmInline
     value class AlphaAntiAliasing(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3035,6 +3084,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.DepthDrawMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.DepthDrawMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DepthDrawMode
+     */
     @JvmInline
     value class DepthDrawMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3064,6 +3119,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.DepthTest` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.DepthTest.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DepthTest
+     */
     @JvmInline
     value class DepthTest(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3082,6 +3143,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.CullMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.CullMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.CullMode
+     */
     @JvmInline
     value class CullMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3110,6 +3177,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.Flags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`BaseMaterial3D.Flags.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.Flags
+     */
     @JvmInline
     value class Flags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3150,7 +3223,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
             val FIXED_SIZE: Flags get() = Flags(4L)
             /**
              * Shader will keep the scale set for the mesh. Otherwise the scale is lost when billboarding. Only
-             * applies when `billboard_mode` is `BILLBOARD_ENABLED`.
+             * applies when `billboard_mode` is `BillboardMode.ENABLED`.
              *
              * Generated from Godot docs: BaseMaterial3D.FLAG_BILLBOARD_KEEP_SCALE
              */
@@ -3284,6 +3357,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.DiffuseMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.DiffuseMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DiffuseMode
+     */
     @JvmInline
     value class DiffuseMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3314,6 +3393,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.SpecularMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.SpecularMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.SpecularMode
+     */
     @JvmInline
     value class SpecularMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3342,6 +3427,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.BillboardMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.BillboardMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.BillboardMode
+     */
     @JvmInline
     value class BillboardMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3375,6 +3466,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.TextureChannel` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.TextureChannel.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.TextureChannel
+     */
     @JvmInline
     value class TextureChannel(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3412,6 +3509,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.EmissionOperator` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`BaseMaterial3D.EmissionOperator.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.EmissionOperator
+     */
     @JvmInline
     value class EmissionOperator(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3430,6 +3533,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.DistanceFadeMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`BaseMaterial3D.DistanceFadeMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DistanceFadeMode
+     */
     @JvmInline
     value class DistanceFadeMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3449,7 +3558,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
             /**
              * Smoothly fades the object out based on each pixel's distance from the camera using a dithering
              * approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling
-             * transparency. On certain hardware, this can be faster than `DISTANCE_FADE_PIXEL_ALPHA`.
+             * transparency. On certain hardware, this can be faster than `DistanceFadeMode.PIXEL_ALPHA`.
              *
              * Generated from Godot docs: BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
              */
@@ -3457,8 +3566,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
             /**
              * Smoothly fades the object out based on the object's distance from the camera using a dithering
              * approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling
-             * transparency. On certain hardware, this can be faster than `DISTANCE_FADE_PIXEL_ALPHA` and
-             * `DISTANCE_FADE_PIXEL_DITHER`.
+             * transparency. On certain hardware, this can be faster than `DistanceFadeMode.PIXEL_ALPHA` and
+             * `DistanceFadeMode.PIXEL_DITHER`.
              *
              * Generated from Godot docs: BaseMaterial3D.DISTANCE_FADE_OBJECT_DITHER
              */
@@ -3466,6 +3575,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.StencilMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.StencilMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.StencilMode
+     */
     @JvmInline
     value class StencilMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3504,6 +3619,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.StencilFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.StencilFlags.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.StencilFlags
+     */
     @JvmInline
     value class StencilFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3530,6 +3651,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseMaterial3D.StencilCompare` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.StencilCompare.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.StencilCompare
+     */
     @JvmInline
     value class StencilCompare(override val value: Long) : GodotEnumValue {
         companion object {

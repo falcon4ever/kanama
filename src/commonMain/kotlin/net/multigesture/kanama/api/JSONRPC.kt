@@ -85,6 +85,12 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
         return ObjectCalls.ptrcallWithIntStringVariantArgsRetDictionary(makeResponseErrorBind, segment, code, message, id)
     }
 
+    /**
+     * Godot's `JSONRPC.ErrorCode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`JSONRPC.ErrorCode.<NAME>`).
+     *
+     * Generated from Godot docs: JSONRPC.ErrorCode
+     */
     @JvmInline
     value class ErrorCode(override val value: Long) : GodotEnumValue {
         companion object {

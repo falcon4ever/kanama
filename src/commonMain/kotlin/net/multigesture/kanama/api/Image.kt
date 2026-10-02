@@ -133,8 +133,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
     /**
      * Resizes the image to the given `width` and `height`. New pixels are calculated using the
      * `interpolation` mode defined via `Interpolation` constants. Note: If the image's format is
-     * `FORMAT_RGBA4444`, `FORMAT_RGB565`, or `FORMAT_RGBE9995`, it will be temporarily converted to
-     * either `FORMAT_RGBA8` or `FORMAT_RGBAH`. This can affect the quality of the resized image.
+     * `Format.RGBA4444`, `Format.RGB565`, or `Format.RGBE9995`, it will be temporarily converted to
+     * either `Format.RGBA8` or `Format.RGBAH`. This can affect the quality of the resized image.
      *
      * Generated from Godot docs: Image.resize
      */
@@ -303,8 +303,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * included when `color_image` is `false`, which may be useful for saving raw floating point data
      * such as a lightmap that includes negative light information. Color component values in the
      * resulting EXR file will not exceed `max_linear_value` if `max_linear_value` is not negative.
-     * This function will return `ERR_UNAVAILABLE` if Godot was compiled without the TinyEXR module.
-     * When saving screenshots of a project that uses HDR output, use
+     * This function will return `GodotError.ERR_UNAVAILABLE` if Godot was compiled without the TinyEXR
+     * module. When saving screenshots of a project that uses HDR output, use
      * `Window.get_output_max_linear_value` for `max_linear_value`.
      *
      * Generated from Godot docs: Image.save_exr
@@ -335,9 +335,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
     /**
      * Saves the image as a DDS (DirectDraw Surface) file to `path`. DDS is a container format that can
      * store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will
-     * return `ERR_UNAVAILABLE` if Godot was compiled without the DDS module. Note: The DDS module may
-     * be disabled in certain builds, which means `save_dds` will return `ERR_UNAVAILABLE` when it is
-     * called from an exported project.
+     * return `GodotError.ERR_UNAVAILABLE` if Godot was compiled without the DDS module. Note: The DDS
+     * module may be disabled in certain builds, which means `save_dds` will return
+     * `GodotError.ERR_UNAVAILABLE` when it is called from an exported project.
      *
      * Generated from Godot docs: Image.save_dds
      */
@@ -388,9 +388,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Returns `ALPHA_BLEND` if the image has data for alpha values. Returns `ALPHA_BIT` if all the
-     * alpha values are stored in a single bit. Returns `ALPHA_NONE` if no data for alpha values is
-     * found.
+     * Returns `AlphaMode.BLEND` if the image has data for alpha values. Returns `AlphaMode.BIT` if all
+     * the alpha values are stored in a single bit. Returns `AlphaMode.NONE` if no data for alpha
+     * values is found.
      *
      * Generated from Godot docs: Image.detect_alpha
      */
@@ -428,7 +428,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * formats. It is ignored for ASTC compression. The `astc_format` parameter is only taken into
      * account when using ASTC compression; it is ignored for all other formats. Note: `compress` is
      * only supported in editor builds. When run in an exported project, this method always returns
-     * `ERR_UNAVAILABLE`.
+     * `GodotError.ERR_UNAVAILABLE`.
      *
      * Generated from Godot docs: Image.compress
      */
@@ -445,7 +445,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * ETC2), this argument is ignored. The `astc_format` parameter is only taken into account when
      * using ASTC compression; it is ignored for all other formats. Note: `compress_from_channels` is
      * only supported in editor builds. When run in an exported project, this method always returns
-     * `ERR_UNAVAILABLE`.
+     * `GodotError.ERR_UNAVAILABLE`.
      *
      * Generated from Godot docs: Image.compress_from_channels
      */
@@ -456,9 +456,10 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Decompresses the image if it is VRAM-compressed in a supported format. This increases memory
-     * utilization, but allows modifying the image. Returns `OK` if the format is supported, otherwise
-     * `ERR_UNAVAILABLE`. All VRAM-compressed formats supported by Godot can be decompressed with this
-     * method, except `FORMAT_ETC2_R11S`, `FORMAT_ETC2_RG11S`, and `FORMAT_ETC2_RGB8A1`.
+     * utilization, but allows modifying the image. Returns `GodotError.OK` if the format is supported,
+     * otherwise `GodotError.ERR_UNAVAILABLE`. All VRAM-compressed formats supported by Godot can be
+     * decompressed with this method, except `Format.ETC2_R11S`, `Format.ETC2_RG11S`, and
+     * `Format.ETC2_RGB8A1`.
      *
      * Generated from Godot docs: Image.decompress
      */
@@ -522,7 +523,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Converts the raw data from nonlinear sRGB encoding to linear encoding using a lookup table. Only
-     * works on images with `FORMAT_RGB8` or `FORMAT_RGBA8` formats. Note: The 8-bit formats required
+     * works on images with `Format.RGB8` or `Format.RGBA8` formats. Note: The 8-bit formats required
      * by this method are not suitable for storing linearly encoded values; a significant amount of
      * color information will be lost in darker values. To maintain image quality, this method should
      * not be used.
@@ -536,7 +537,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Converts the entire image from linear encoding to nonlinear sRGB encoding by using a lookup
-     * table. Only works on images with `FORMAT_RGB8` or `FORMAT_RGBA8` formats.
+     * table. Only works on images with `Format.RGB8` or `Format.RGBA8` formats.
      *
      * Generated from Godot docs: Image.linear_to_srgb
      */
@@ -879,6 +880,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, segment, svgStr, scale))
     }
 
+    /**
+     * Godot's `Image.Format` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Image.Format.<NAME>`).
+     *
+     * Generated from Godot docs: Image.Format
+     */
     @JvmInline
     value class Format(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1133,7 +1140,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
              * Ericsson Texture Compression format 2
              * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`RGBA8` variant),
              * which compresses RA data and interprets it as two channels (red and green). See also
-             * `FORMAT_ETC2_RGBA8`.
+             * `Format.ETC2_RGBA8`.
              *
              * Generated from Godot docs: Image.FORMAT_ETC2_RA_AS_RG
              */
@@ -1141,7 +1148,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
             /**
              * The S3TC (https://en.wikipedia.org/wiki/S3_Texture_Compression) texture format also known as
              * Block Compression 3 or BC3, which compresses RA data and interprets it as two channels (red and
-             * green). See also `FORMAT_DXT5`.
+             * green). See also `Format.DXT5`.
              *
              * Generated from Godot docs: Image.FORMAT_DXT5_RA_AS_RG
              */
@@ -1155,7 +1162,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
              * value. Since the value is normalized, each component is clamped between `0.0` and `1.0`
              * (inclusive). Note: Due to limited hardware support, it is mainly recommended to be used on
              * desktop or console devices. It may be unsupported on mobile or web, and will consequently be
-             * converted to `FORMAT_RF`.
+             * converted to `Format.RF`.
              *
              * Generated from Godot docs: Image.FORMAT_R16
              */
@@ -1165,7 +1172,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
              * normalized integer value. Since the value is normalized, each component is clamped between `0.0`
              * and `1.0` (inclusive). Note: Due to limited hardware support, it is mainly recommended to be
              * used on desktop or console devices. It may be unsupported on mobile or web, and will
-             * consequently be converted to `FORMAT_RGF`.
+             * consequently be converted to `Format.RGF`.
              *
              * Generated from Godot docs: Image.FORMAT_RG16
              */
@@ -1175,7 +1182,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
              * normalized integer value. Since the value is normalized, each component is clamped between `0.0`
              * and `1.0` (inclusive). Note: Due to limited hardware support, it is mainly recommended to be
              * used on desktop or console devices. It may be unsupported on mobile or web, and will
-             * consequently be converted to `FORMAT_RGBF`.
+             * consequently be converted to `Format.RGBF`.
              *
              * Generated from Godot docs: Image.FORMAT_RGB16
              */
@@ -1185,7 +1192,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
              * normalized integer value. Since the value is normalized, each component is clamped between `0.0`
              * and `1.0` (inclusive). Note: Due to limited hardware support, it is mainly recommended to be
              * used on desktop or console devices. It may be unsupported on mobile or web, and will
-             * consequently be converted to `FORMAT_RGBAF`.
+             * consequently be converted to `Format.RGBAF`.
              *
              * Generated from Godot docs: Image.FORMAT_RGBA16
              */
@@ -1242,6 +1249,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Image.Interpolation` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.Interpolation.<NAME>`).
+     *
+     * Generated from Godot docs: Image.Interpolation
+     */
     @JvmInline
     value class Interpolation(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1253,27 +1266,27 @@ class Image(handle: GodotHandle) : Resource(handle) {
             val NEAREST: Interpolation get() = Interpolation(0L)
             /**
              * Performs bilinear interpolation. If the image is resized, it will be blurry. This mode is faster
-             * than `INTERPOLATE_CUBIC`, but it results in lower quality.
+             * than `Interpolation.CUBIC`, but it results in lower quality.
              *
              * Generated from Godot docs: Image.INTERPOLATE_BILINEAR
              */
             val BILINEAR: Interpolation get() = Interpolation(1L)
             /**
              * Performs cubic interpolation. If the image is resized, it will be blurry. This mode often gives
-             * better results compared to `INTERPOLATE_BILINEAR`, at the cost of being slower.
+             * better results compared to `Interpolation.BILINEAR`, at the cost of being slower.
              *
              * Generated from Godot docs: Image.INTERPOLATE_CUBIC
              */
             val CUBIC: Interpolation get() = Interpolation(2L)
             /**
              * Performs bilinear separately on the two most-suited mipmap levels, then linearly interpolates
-             * between them. It's slower than `INTERPOLATE_BILINEAR`, but produces higher-quality results with
-             * far fewer aliasing artifacts. If the image does not have mipmaps, they will be generated and
-             * used internally, but no mipmaps will be generated on the resulting image. Note: If you intend to
-             * scale multiple copies of the original image, it's better to call `generate_mipmaps`] on it in
-             * advance, to avoid wasting processing power in generating them again and again. On the other
-             * hand, if the image already has mipmaps, they will be used, and a new set will be generated for
-             * the resulting image.
+             * between them. It's slower than `Interpolation.BILINEAR`, but produces higher-quality results
+             * with far fewer aliasing artifacts. If the image does not have mipmaps, they will be generated
+             * and used internally, but no mipmaps will be generated on the resulting image. Note: If you
+             * intend to scale multiple copies of the original image, it's better to call `generate_mipmaps`]
+             * on it in advance, to avoid wasting processing power in generating them again and again. On the
+             * other hand, if the image already has mipmaps, they will be used, and a new set will be generated
+             * for the resulting image.
              *
              * Generated from Godot docs: Image.INTERPOLATE_TRILINEAR
              */
@@ -1288,6 +1301,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Image.AlphaMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Image.AlphaMode.<NAME>`).
+     *
+     * Generated from Godot docs: Image.AlphaMode
+     */
     @JvmInline
     value class AlphaMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1312,6 +1331,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Image.CompressMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.CompressMode.<NAME>`).
+     *
+     * Generated from Godot docs: Image.CompressMode
+     */
     @JvmInline
     value class CompressMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1354,6 +1379,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Image.UsedChannels` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.UsedChannels.<NAME>`).
+     *
+     * Generated from Godot docs: Image.UsedChannels
+     */
     @JvmInline
     value class UsedChannels(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1396,6 +1427,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Image.CompressSource` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.CompressSource.<NAME>`).
+     *
+     * Generated from Godot docs: Image.CompressSource
+     */
     @JvmInline
     value class CompressSource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1421,6 +1458,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Image.ASTCFormat` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Image.ASTCFormat.<NAME>`).
+     *
+     * Generated from Godot docs: Image.ASTCFormat
+     */
     @JvmInline
     value class ASTCFormat(override val value: Long) : GodotEnumValue {
         companion object {

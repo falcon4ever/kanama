@@ -23,7 +23,7 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
     }
 
     /**
-     * Connects to the specified UNIX Domain Socket path. Returns `OK` on success.
+     * Connects to the specified UNIX Domain Socket path. Returns `GodotError.OK` on success.
      *
      * Generated from Godot docs: StreamPeerUDS.connect_to_host
      */

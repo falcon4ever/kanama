@@ -30,6 +30,12 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
         return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
     }
 
+    /**
+     * Godot's `PinJoint3D.Param` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`PinJoint3D.Param.<NAME>`).
+     *
+     * Generated from Godot docs: PinJoint3D.Param
+     */
     @JvmInline
     value class Param(override val value: Long) : GodotEnumValue {
         companion object {

@@ -526,10 +526,10 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * Decides in which step the Doppler effect should be calculated. Note: If `doppler_tracking` is
-     * not `DOPPLER_TRACKING_DISABLED` but the current `Camera3D`/`AudioListener3D` has doppler
-     * tracking disabled, the Doppler effect will be heard but will not take the movement of the
-     * current listener into account. If accurate Doppler effect is desired, doppler tracking should be
-     * enabled on both the `AudioStreamPlayer3D` and the current `Camera3D`/`AudioListener3D`.
+     * not `DopplerTracking.DISABLED` but the current `Camera3D`/`AudioListener3D` has doppler tracking
+     * disabled, the Doppler effect will be heard but will not take the movement of the current
+     * listener into account. If accurate Doppler effect is desired, doppler tracking should be enabled
+     * on both the `AudioStreamPlayer3D` and the current `Camera3D`/`AudioListener3D`.
      *
      * Generated from Godot docs: AudioStreamPlayer3D.set_doppler_tracking
      */
@@ -539,10 +539,10 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * Decides in which step the Doppler effect should be calculated. Note: If `doppler_tracking` is
-     * not `DOPPLER_TRACKING_DISABLED` but the current `Camera3D`/`AudioListener3D` has doppler
-     * tracking disabled, the Doppler effect will be heard but will not take the movement of the
-     * current listener into account. If accurate Doppler effect is desired, doppler tracking should be
-     * enabled on both the `AudioStreamPlayer3D` and the current `Camera3D`/`AudioListener3D`.
+     * not `DopplerTracking.DISABLED` but the current `Camera3D`/`AudioListener3D` has doppler tracking
+     * disabled, the Doppler effect will be heard but will not take the movement of the current
+     * listener into account. If accurate Doppler effect is desired, doppler tracking should be enabled
+     * on both the `AudioStreamPlayer3D` and the current `Camera3D`/`AudioListener3D`.
      *
      * Generated from Godot docs: AudioStreamPlayer3D.get_doppler_tracking
      */
@@ -664,6 +664,13 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
         const val finished: String = "finished"
     }
 
+    /**
+     * Godot's `AudioStreamPlayer3D.AttenuationModel` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AudioStreamPlayer3D.AttenuationModel.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamPlayer3D.AttenuationModel
+     */
     @JvmInline
     value class AttenuationModel(override val value: Long) : GodotEnumValue {
         companion object {
@@ -687,7 +694,7 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
             val LOGARITHMIC: AttenuationModel get() = AttenuationModel(2L)
             /**
              * No attenuation of loudness according to distance. The sound will still be heard positionally,
-             * unlike an `AudioStreamPlayer`. `ATTENUATION_DISABLED` can be combined with a `max_distance`
+             * unlike an `AudioStreamPlayer`. `AttenuationModel.DISABLED` can be combined with a `max_distance`
              * value greater than `0.0` to achieve linear attenuation clamped to a sphere of a defined size.
              *
              * Generated from Godot docs: AudioStreamPlayer3D.ATTENUATION_DISABLED
@@ -696,6 +703,13 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
         }
     }
 
+    /**
+     * Godot's `AudioStreamPlayer3D.DopplerTracking` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AudioStreamPlayer3D.DopplerTracking.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamPlayer3D.DopplerTracking
+     */
     @JvmInline
     value class DopplerTracking(override val value: Long) : GodotEnumValue {
         companion object {

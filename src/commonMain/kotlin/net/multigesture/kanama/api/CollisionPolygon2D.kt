@@ -171,6 +171,12 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetVector2(getOneWayCollisionDirectionBind, segment)
     }
 
+    /**
+     * Godot's `CollisionPolygon2D.BuildMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CollisionPolygon2D.BuildMode.<NAME>`).
+     *
+     * Generated from Godot docs: CollisionPolygon2D.BuildMode
+     */
     @JvmInline
     value class BuildMode(override val value: Long) : GodotEnumValue {
         companion object {

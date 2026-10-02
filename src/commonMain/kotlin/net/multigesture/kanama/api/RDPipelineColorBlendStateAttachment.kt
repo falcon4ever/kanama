@@ -80,10 +80,10 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     /**
      * Convenience method to perform standard mix blending with straight (non-premultiplied) alpha.
      * This sets `enable_blend` to `true`, `src_color_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_SRC_ALPHA`, `dst_color_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA`, `src_alpha_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_SRC_ALPHA` and `dst_alpha_blend_factor` to
-     * `RenderingDevice.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA`.
+     * `RenderingDevice.BlendFactor.SRC_ALPHA`, `dst_color_blend_factor` to
+     * `RenderingDevice.BlendFactor.ONE_MINUS_SRC_ALPHA`, `src_alpha_blend_factor` to
+     * `RenderingDevice.BlendFactor.SRC_ALPHA` and `dst_alpha_blend_factor` to
+     * `RenderingDevice.BlendFactor.ONE_MINUS_SRC_ALPHA`.
      *
      * Generated from Godot docs: RDPipelineColorBlendStateAttachment.set_as_mix
      */

@@ -322,7 +322,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * is `false`, the position is in absolute screen coordinates. This typically applies to editor
      * plugins. If the setting is `true`, the window's position is in the coordinates of its parent
      * `Viewport`. Note: This property only works if `initial_position` is set to
-     * `WINDOW_INITIAL_POSITION_ABSOLUTE`.
+     * `WindowInitialPosition.ABSOLUTE`.
      *
      * Generated from Godot docs: Window.set_position
      */
@@ -335,7 +335,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * is `false`, the position is in absolute screen coordinates. This typically applies to editor
      * plugins. If the setting is `true`, the window's position is in the coordinates of its parent
      * `Viewport`. Note: This property only works if `initial_position` is set to
-     * `WINDOW_INITIAL_POSITION_ABSOLUTE`.
+     * `WindowInitialPosition.ABSOLUTE`.
      *
      * Generated from Godot docs: Window.get_position
      */
@@ -806,12 +806,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     /**
      * The content's base size in "virtual" pixels. Not to be confused with `size`, which sets the
      * actual window's physical size in pixels. If set to a value greater than `0` and
-     * `content_scale_mode` is set to a value other than `CONTENT_SCALE_MODE_DISABLED`, the `Window`'s
+     * `content_scale_mode` is set to a value other than `ContentScaleMode.DISABLED`, the `Window`'s
      * content will be scaled when the window is resized to a different size. Higher values will make
      * the content appear smaller, as it will be able to fit more of the project in view. On the root
      * `Window`, this is set to match `ProjectSettings.display/window/size/viewport_width` and
      * `ProjectSettings.display/window/size/viewport_height` by default. For example, when using
-     * `CONTENT_SCALE_MODE_CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
+     * `ContentScaleMode.CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
      * window size of `2560×1440` will make 2D elements appear at double their original size, as the
      * content is scaled by a factor of `2.0` (`2560.0 / 1280.0 = 2.0`, `1440.0 / 720.0 = 2.0`). See
      * the Base size section of the Multiple resolutions documentation
@@ -826,12 +826,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     /**
      * The content's base size in "virtual" pixels. Not to be confused with `size`, which sets the
      * actual window's physical size in pixels. If set to a value greater than `0` and
-     * `content_scale_mode` is set to a value other than `CONTENT_SCALE_MODE_DISABLED`, the `Window`'s
+     * `content_scale_mode` is set to a value other than `ContentScaleMode.DISABLED`, the `Window`'s
      * content will be scaled when the window is resized to a different size. Higher values will make
      * the content appear smaller, as it will be able to fit more of the project in view. On the root
      * `Window`, this is set to match `ProjectSettings.display/window/size/viewport_width` and
      * `ProjectSettings.display/window/size/viewport_height` by default. For example, when using
-     * `CONTENT_SCALE_MODE_CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
+     * `ContentScaleMode.CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
      * window size of `2560×1440` will make 2D elements appear at double their original size, as the
      * content is scaled by a factor of `2.0` (`2560.0 / 1280.0 = 2.0`, `1440.0 / 720.0 = 2.0`). See
      * the Base size section of the Multiple resolutions documentation
@@ -1661,6 +1661,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         const val outputMaxLinearValueChanged: String = "output_max_linear_value_changed"
     }
 
+    /**
+     * Godot's `Window.Mode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Window.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: Window.Mode
+     */
     @JvmInline
     value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1706,7 +1712,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
              * A new desktop is used to display the running project. Exclusive full screen mode prevents Dock
              * and Menu from showing up when the mouse pointer is hovering the edge of the screen. On Linux
              * (X11): Exclusive full screen mode bypasses compositor. On Linux (Wayland): Equivalent to
-             * `MODE_FULLSCREEN`. Note: Regardless of the platform, enabling full screen will change the window
+             * `Mode.FULLSCREEN`. Note: Regardless of the platform, enabling full screen will change the window
              * size to match the monitor's size. Therefore, make sure your project supports multiple
              * resolutions ($DOCS_URL/tutorials/rendering/multiple_resolutions.html) when enabling full screen
              * mode.
@@ -1717,6 +1723,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         }
     }
 
+    /**
+     * Godot's `Window.Flags` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Window.Flags.<NAME>`).
+     *
+     * Generated from Godot docs: Window.Flags
+     */
     @JvmInline
     value class Flags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1837,6 +1849,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         }
     }
 
+    /**
+     * Godot's `Window.ContentScaleMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Window.ContentScaleMode.<NAME>`).
+     *
+     * Generated from Godot docs: Window.ContentScaleMode
+     */
     @JvmInline
     value class ContentScaleMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1848,14 +1866,14 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
             val DISABLED: ContentScaleMode get() = ContentScaleMode(0L)
             /**
              * The content will be rendered at the target size. This is more performance-expensive than
-             * `CONTENT_SCALE_MODE_VIEWPORT`, but provides better results.
+             * `ContentScaleMode.VIEWPORT`, but provides better results.
              *
              * Generated from Godot docs: Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
              */
             val CANVAS_ITEMS: ContentScaleMode get() = ContentScaleMode(1L)
             /**
              * The content will be rendered at the base size and then scaled to the target size. More
-             * performant than `CONTENT_SCALE_MODE_CANVAS_ITEMS`, but results in pixelated image.
+             * performant than `ContentScaleMode.CANVAS_ITEMS`, but results in pixelated image.
              *
              * Generated from Godot docs: Window.CONTENT_SCALE_MODE_VIEWPORT
              */
@@ -1863,6 +1881,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         }
     }
 
+    /**
+     * Godot's `Window.ContentScaleAspect` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Window.ContentScaleAspect.<NAME>`).
+     *
+     * Generated from Godot docs: Window.ContentScaleAspect
+     */
     @JvmInline
     value class ContentScaleAspect(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1904,6 +1928,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         }
     }
 
+    /**
+     * Godot's `Window.ContentScaleStretch` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Window.ContentScaleStretch.<NAME>`).
+     *
+     * Generated from Godot docs: Window.ContentScaleStretch
+     */
     @JvmInline
     value class ContentScaleStretch(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1924,6 +1954,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         }
     }
 
+    /**
+     * Godot's `Window.LayoutDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Window.LayoutDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Window.LayoutDirection
+     */
     @JvmInline
     value class LayoutDirection(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1967,6 +2003,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         }
     }
 
+    /**
+     * Godot's `Window.WindowInitialPosition` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Window.WindowInitialPosition.<NAME>`).
+     *
+     * Generated from Godot docs: Window.WindowInitialPosition
+     */
     @JvmInline
     value class WindowInitialPosition(override val value: Long) : GodotEnumValue {
         companion object {

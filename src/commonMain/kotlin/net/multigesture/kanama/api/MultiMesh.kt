@@ -405,6 +405,12 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(setBufferInterpolatedBind, segment, bufferCurr, bufferPrev)
     }
 
+    /**
+     * Godot's `MultiMesh.TransformFormat` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`MultiMesh.TransformFormat.<NAME>`).
+     *
+     * Generated from Godot docs: MultiMesh.TransformFormat
+     */
     @JvmInline
     value class TransformFormat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -423,6 +429,13 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `MultiMesh.PhysicsInterpolationQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`MultiMesh.PhysicsInterpolationQuality.<NAME>`).
+     *
+     * Generated from Godot docs: MultiMesh.PhysicsInterpolationQuality
+     */
     @JvmInline
     value class PhysicsInterpolationQuality(override val value: Long) : GodotEnumValue {
         companion object {

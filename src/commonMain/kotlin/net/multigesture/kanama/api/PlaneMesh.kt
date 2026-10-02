@@ -144,6 +144,12 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         return PlaneMesh.Orientation(ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment))
     }
 
+    /**
+     * Godot's `PlaneMesh.Orientation` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PlaneMesh.Orientation.<NAME>`).
+     *
+     * Generated from Godot docs: PlaneMesh.Orientation
+     */
     @JvmInline
     value class Orientation(override val value: Long) : GodotEnumValue {
         companion object {

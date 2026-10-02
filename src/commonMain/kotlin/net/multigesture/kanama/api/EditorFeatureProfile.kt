@@ -141,6 +141,12 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
         return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadFromFileBind, segment, path))
     }
 
+    /**
+     * Godot's `EditorFeatureProfile.Feature` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorFeatureProfile.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: EditorFeatureProfile.Feature
+     */
     @JvmInline
     value class Feature(override val value: Long) : GodotEnumValue {
         companion object {

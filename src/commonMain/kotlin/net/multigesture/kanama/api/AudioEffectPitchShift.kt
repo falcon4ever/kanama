@@ -103,6 +103,12 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
         return AudioEffectPitchShift.FFTSize(ObjectCalls.ptrcallNoArgsRetLong(getFftSizeBind, segment))
     }
 
+    /**
+     * Godot's `AudioEffectPitchShift.FFTSize` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AudioEffectPitchShift.FFTSize.<NAME>`).
+     *
+     * Generated from Godot docs: AudioEffectPitchShift.FFTSize
+     */
     @JvmInline
     value class FFTSize(override val value: Long) : GodotEnumValue {
         companion object {

@@ -139,7 +139,7 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
 
     /**
      * Sets the auto translate mode of the item at index `idx`. Items use
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `Node.AutoTranslateMode.INHERIT` by default, which uses the same auto translate mode as the
      * `OptionButton` itself.
      *
      * Generated from Godot docs: OptionButton.set_item_auto_translate_mode

@@ -244,7 +244,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * Sets the render priority for the sprite. Higher priority objects will be sorted in front of
-     * lower priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED`
+     * lower priority objects. Note: This only applies if `alpha_cut` is set to `AlphaCutMode.DISABLED`
      * (default value). Note: This only applies to sorting of transparent objects. This will not impact
      * how transparent objects are sorted relative to opaque objects. This is because opaque objects
      * are not sorted, while transparent objects are sorted from back to front (subject to priority).
@@ -257,7 +257,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * Sets the render priority for the sprite. Higher priority objects will be sorted in front of
-     * lower priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED`
+     * lower priority objects. Note: This only applies if `alpha_cut` is set to `AlphaCutMode.DISABLED`
      * (default value). Note: This only applies to sorting of transparent objects. This will not impact
      * how transparent objects are sorted relative to opaque objects. This is because opaque objects
      * are not sorted, while transparent objects are sorted from back to front (subject to priority).
@@ -481,6 +481,12 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
+    /**
+     * Godot's `SpriteBase3D.DrawFlags` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SpriteBase3D.DrawFlags.<NAME>`).
+     *
+     * Generated from Godot docs: SpriteBase3D.DrawFlags
+     */
     @JvmInline
     value class DrawFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -526,6 +532,12 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `SpriteBase3D.AlphaCutMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`SpriteBase3D.AlphaCutMode.<NAME>`).
+     *
+     * Generated from Godot docs: SpriteBase3D.AlphaCutMode
+     */
     @JvmInline
     value class AlphaCutMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -548,8 +560,8 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
             val DISCARD: AlphaCutMode get() = AlphaCutMode(1L)
             /**
              * This mode draws fully opaque pixels in the depth prepass. This is slower than
-             * `ALPHA_CUT_DISABLED` or `ALPHA_CUT_DISCARD`, but it allows displaying translucent areas and
-             * smooth edges while using proper sorting.
+             * `AlphaCutMode.DISABLED` or `AlphaCutMode.DISCARD`, but it allows displaying translucent areas
+             * and smooth edges while using proper sorting.
              *
              * Generated from Godot docs: SpriteBase3D.ALPHA_CUT_OPAQUE_PREPASS
              */

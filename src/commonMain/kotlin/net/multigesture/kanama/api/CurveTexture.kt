@@ -79,6 +79,12 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
         return CurveTexture.TextureMode(ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment))
     }
 
+    /**
+     * Godot's `CurveTexture.TextureMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CurveTexture.TextureMode.<NAME>`).
+     *
+     * Generated from Godot docs: CurveTexture.TextureMode
+     */
     @JvmInline
     value class TextureMode(override val value: Long) : GodotEnumValue {
         companion object {

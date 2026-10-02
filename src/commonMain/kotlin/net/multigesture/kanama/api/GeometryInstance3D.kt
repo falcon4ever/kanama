@@ -233,10 +233,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_end` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_end` threshold by this amount.
-     * If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a hysteresis
-     * distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a hysteresis
+     * distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_end_margin
      */
@@ -247,10 +247,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_end` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_end` threshold by this amount.
-     * If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a hysteresis
-     * distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a hysteresis
+     * distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_end_margin
      */
@@ -281,10 +281,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_begin` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_begin` threshold by this
-     * amount. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a
-     * hysteresis distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * amount. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a
+     * hysteresis distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_begin_margin
      */
@@ -295,10 +295,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_begin` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_begin` threshold by this
-     * amount. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a
-     * hysteresis distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * amount. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a
+     * hysteresis distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_begin_margin
      */
@@ -519,6 +519,13 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
     }
 
+    /**
+     * Godot's `GeometryInstance3D.ShadowCastingSetting` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`GeometryInstance3D.ShadowCastingSetting.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.ShadowCastingSetting
+     */
     @JvmInline
     value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
         companion object {
@@ -553,6 +560,12 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `GeometryInstance3D.GIMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GeometryInstance3D.GIMode.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.GIMode
+     */
     @JvmInline
     value class GIMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -575,8 +588,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
             /**
              * Dynamic global illumination mode. Use for dynamic objects that contribute to global
              * illumination. This GI mode is only effective when using `VoxelGI`, but it has a higher
-             * performance impact than `GI_MODE_STATIC`. When using other GI methods, this will act the same as
-             * `GI_MODE_DISABLED`. When using `LightmapGI`, the object will receive indirect lighting using
+             * performance impact than `GIMode.STATIC`. When using other GI methods, this will act the same as
+             * `GIMode.DISABLED`. When using `LightmapGI`, the object will receive indirect lighting using
              * lightmap probes instead of using the baked lightmap texture.
              *
              * Generated from Godot docs: GeometryInstance3D.GI_MODE_DYNAMIC
@@ -585,6 +598,13 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `GeometryInstance3D.LightmapScale` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`GeometryInstance3D.LightmapScale.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.LightmapScale
+     */
     @JvmInline
     value class LightmapScale(override val value: Long) : GodotEnumValue {
         companion object {
@@ -624,6 +644,13 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `GeometryInstance3D.VisibilityRangeFadeMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`GeometryInstance3D.VisibilityRangeFadeMode.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.VisibilityRangeFadeMode
+     */
     @JvmInline
     value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -638,10 +665,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
             val DISABLED: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(0L)
             /**
              * Will fade-out itself when reaching the limits of its own visibility range. This is slower than
-             * `VISIBILITY_RANGE_FADE_DISABLED`, but it can provide smoother transitions. The fading range is
+             * `VisibilityRangeFadeMode.DISABLED`, but it can provide smoother transitions. The fading range is
              * determined by `visibility_range_begin_margin` and `visibility_range_end_margin`. Note: Only
              * supported when using the Forward+ rendering method. When using the Mobile or Compatibility
-             * rendering method, this mode acts like `VISIBILITY_RANGE_FADE_DISABLED` but with hysteresis
+             * rendering method, this mode acts like `VisibilityRangeFadeMode.DISABLED` but with hysteresis
              * disabled.
              *
              * Generated from Godot docs: GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
@@ -649,11 +676,11 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
             val SELF: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(1L)
             /**
              * Will fade-in its visibility dependencies (see `Node3D.visibility_parent`) when reaching the
-             * limits of its own visibility range. This is slower than `VISIBILITY_RANGE_FADE_DISABLED`, but it
-             * can provide smoother transitions. The fading range is determined by
+             * limits of its own visibility range. This is slower than `VisibilityRangeFadeMode.DISABLED`, but
+             * it can provide smoother transitions. The fading range is determined by
              * `visibility_range_begin_margin` and `visibility_range_end_margin`. Note: Only supported when
              * using the Forward+ rendering method. When using the Mobile or Compatibility rendering method,
-             * this mode acts like `VISIBILITY_RANGE_FADE_DISABLED` but with hysteresis disabled.
+             * this mode acts like `VisibilityRangeFadeMode.DISABLED` but with hysteresis disabled.
              *
              * Generated from Godot docs: GeometryInstance3D.VISIBILITY_RANGE_FADE_DEPENDENCIES
              */

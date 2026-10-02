@@ -144,7 +144,7 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
 
     /**
      * Sets the pole direction vector. This vector is normalized by an internal process. If the vector
-     * length is `0`, it is considered synonymous with `SkeletonModifier3D.SECONDARY_DIRECTION_NONE`.
+     * length is `0`, it is considered synonymous with `SkeletonModifier3D.SecondaryDirection.NONE`.
      *
      * Generated from Godot docs: TwoBoneIK3D.set_pole_direction_vector
      */
@@ -154,7 +154,7 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
 
     /**
      * Returns the pole direction vector. If `get_pole_direction` is
-     * `SkeletonModifier3D.SECONDARY_DIRECTION_NONE`, this method returns `Vector3(0, 0, 0)`.
+     * `SkeletonModifier3D.SecondaryDirection.NONE`, this method returns `Vector3(0, 0, 0)`.
      *
      * Generated from Godot docs: TwoBoneIK3D.get_pole_direction_vector
      */

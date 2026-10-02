@@ -1278,7 +1278,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The sphere's radius if `emission_shape` is set to `EMISSION_SHAPE_SPHERE`.
+     * The sphere's radius if `emission_shape` is set to `EmissionShape.SPHERE`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_sphere_radius
      */
@@ -1288,7 +1288,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The sphere's radius if `emission_shape` is set to `EMISSION_SHAPE_SPHERE`.
+     * The sphere's radius if `emission_shape` is set to `EmissionShape.SPHERE`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_sphere_radius
      */
@@ -1298,7 +1298,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The box's extents if `emission_shape` is set to `EMISSION_SHAPE_BOX`. Note:
+     * The box's extents if `emission_shape` is set to `EmissionShape.BOX`. Note:
      * `emission_box_extents` starts from the center point and applies the X, Y, and Z values in both
      * directions. The size is twice the area of the extents.
      *
@@ -1310,7 +1310,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The box's extents if `emission_shape` is set to `EMISSION_SHAPE_BOX`. Note:
+     * The box's extents if `emission_shape` is set to `EmissionShape.BOX`. Note:
      * `emission_box_extents` starts from the center point and applies the X, Y, and Z values in both
      * directions. The size is twice the area of the extents.
      *
@@ -1323,7 +1323,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * Particles will be emitted at positions determined by sampling this texture at a random position.
-     * Used with `EMISSION_SHAPE_POINTS` and `EMISSION_SHAPE_DIRECTED_POINTS`. Can be created
+     * Used with `EmissionShape.POINTS` and `EmissionShape.DIRECTED_POINTS`. Can be created
      * automatically from mesh or node by selecting "Create Emission Points from Mesh/Node" under the
      * "Particles" tool in the toolbar.
      *
@@ -1336,7 +1336,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * Particles will be emitted at positions determined by sampling this texture at a random position.
-     * Used with `EMISSION_SHAPE_POINTS` and `EMISSION_SHAPE_DIRECTED_POINTS`. Can be created
+     * Used with `EmissionShape.POINTS` and `EmissionShape.DIRECTED_POINTS`. Can be created
      * automatically from mesh or node by selecting "Create Emission Points from Mesh/Node" under the
      * "Particles" tool in the toolbar.
      *
@@ -1349,7 +1349,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * Particle velocity and rotation will be set by sampling this texture at the same point as the
-     * `emission_point_texture`. Used only in `EMISSION_SHAPE_DIRECTED_POINTS`. Can be created
+     * `emission_point_texture`. Used only in `EmissionShape.DIRECTED_POINTS`. Can be created
      * automatically from mesh or node by selecting "Create Emission Points from Mesh/Node" under the
      * "Particles" tool in the toolbar.
      *
@@ -1362,7 +1362,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * Particle velocity and rotation will be set by sampling this texture at the same point as the
-     * `emission_point_texture`. Used only in `EMISSION_SHAPE_DIRECTED_POINTS`. Can be created
+     * `emission_point_texture`. Used only in `EmissionShape.DIRECTED_POINTS`. Can be created
      * automatically from mesh or node by selecting "Create Emission Points from Mesh/Node" under the
      * "Particles" tool in the toolbar.
      *
@@ -1404,8 +1404,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The number of emission points if `emission_shape` is set to `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * The number of emission points if `emission_shape` is set to `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_point_count
      */
@@ -1415,8 +1415,8 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The number of emission points if `emission_shape` is set to `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * The number of emission points if `emission_shape` is set to `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_point_count
      */
@@ -1426,7 +1426,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The axis of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The axis of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_axis
      */
@@ -1436,7 +1436,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The axis of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The axis of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_axis
      */
@@ -1446,7 +1446,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The height of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The height of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_height
      */
@@ -1456,7 +1456,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The height of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The height of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_height
      */
@@ -1466,7 +1466,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_radius
      */
@@ -1476,7 +1476,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_radius
      */
@@ -1486,7 +1486,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The inner radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The inner radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_emission_ring_inner_radius
      */
@@ -1496,7 +1496,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The inner radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The inner radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_emission_ring_inner_radius
      */
@@ -1506,7 +1506,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The angle of the cone when using the emitter `EMISSION_SHAPE_RING`. The default angle of 90
+     * The angle of the cone when using the emitter `EmissionShape.RING`. The default angle of 90
      * degrees results in a ring, while an angle of 0 degrees results in a cone. Intermediate values
      * will result in a ring where one end is larger than the other. Note: Depending on
      * `emission_ring_height`, the angle may be clamped if the ring's end is reached to form a perfect
@@ -1520,7 +1520,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The angle of the cone when using the emitter `EMISSION_SHAPE_RING`. The default angle of 90
+     * The angle of the cone when using the emitter `EmissionShape.RING`. The default angle of 90
      * degrees results in a ring, while an angle of 0 degrees results in a cone. Intermediate values
      * will result in a ring where one end is larger than the other. Note: Depending on
      * `emission_ring_height`, the angle may be clamped if the ring's end is reached to form a perfect
@@ -1819,7 +1819,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * The amount of particles to spawn from the subemitter node when a collision occurs. When combined
-     * with `COLLISION_HIDE_ON_CONTACT` on the main particles material, this can be used to achieve
+     * with `CollisionMode.HIDE_ON_CONTACT` on the main particles material, this can be used to achieve
      * effects such as raindrops hitting the ground. Note: This value shouldn't exceed
      * `GPUParticles2D.amount` or `GPUParticles3D.amount` defined on the subemitter node (not the main
      * node), relative to the subemitter's particle lifetime. If the number of particles is exceeded,
@@ -1834,7 +1834,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * The amount of particles to spawn from the subemitter node when a collision occurs. When combined
-     * with `COLLISION_HIDE_ON_CONTACT` on the main particles material, this can be used to achieve
+     * with `CollisionMode.HIDE_ON_CONTACT` on the main particles material, this can be used to achieve
      * effects such as raindrops hitting the ground. Note: This value shouldn't exceed
      * `GPUParticles2D.amount` or `GPUParticles3D.amount` defined on the subemitter node (not the main
      * node), relative to the subemitter's particle lifetime. If the number of particles is exceeded,
@@ -1971,7 +1971,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * The particles' friction. Values range from `0` (frictionless) to `1` (maximum friction). Only
-     * effective if `collision_mode` is `COLLISION_RIGID`.
+     * effective if `collision_mode` is `CollisionMode.RIGID`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_collision_friction
      */
@@ -1982,7 +1982,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * The particles' friction. Values range from `0` (frictionless) to `1` (maximum friction). Only
-     * effective if `collision_mode` is `COLLISION_RIGID`.
+     * effective if `collision_mode` is `CollisionMode.RIGID`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_collision_friction
      */
@@ -1993,7 +1993,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * The particles' bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Only
-     * effective if `collision_mode` is `COLLISION_RIGID`.
+     * effective if `collision_mode` is `CollisionMode.RIGID`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.set_collision_bounce
      */
@@ -2004,7 +2004,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     /**
      * The particles' bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Only
-     * effective if `collision_mode` is `COLLISION_RIGID`.
+     * effective if `collision_mode` is `CollisionMode.RIGID`.
      *
      * Generated from Godot docs: ParticleProcessMaterial.get_collision_bounce
      */
@@ -2101,6 +2101,13 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         const val emissionShapeChanged: String = "emission_shape_changed"
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.Parameter` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.Parameter.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.Parameter
+     */
     @JvmInline
     value class Parameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2235,6 +2242,13 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.ParticleFlags` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.ParticleFlags.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.ParticleFlags
+     */
     @JvmInline
     value class ParticleFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2267,6 +2281,13 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.EmissionShape` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.EmissionShape.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.EmissionShape
+     */
     @JvmInline
     value class EmissionShape(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2324,6 +2345,13 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.SubEmitterMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.SubEmitterMode.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.SubEmitterMode
+     */
     @JvmInline
     value class SubEmitterMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2366,6 +2394,13 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.CollisionMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.CollisionMode.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.CollisionMode
+     */
     @JvmInline
     value class CollisionMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2383,7 +2418,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
             val RIGID: CollisionMode get() = CollisionMode(1L)
             /**
              * Hide particles instantly when colliding with a `GPUParticlesCollision3D` node. This can be
-             * combined with a subemitter that uses the `COLLISION_RIGID` collision mode to "replace" the
+             * combined with a subemitter that uses the `CollisionMode.RIGID` collision mode to "replace" the
              * parent particle with the subemitter on impact.
              *
              * Generated from Godot docs: ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT

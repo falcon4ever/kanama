@@ -27,7 +27,7 @@ class VisibleOnScreenEnabler2D(handle: GodotHandle) : VisibleOnScreenNotifier2D(
 
     /**
      * Determines how the target node is enabled. Corresponds to `Node.ProcessMode`. When the node is
-     * disabled, it always uses `Node.PROCESS_MODE_DISABLED`.
+     * disabled, it always uses `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: VisibleOnScreenEnabler2D.set_enable_mode
      */
@@ -37,7 +37,7 @@ class VisibleOnScreenEnabler2D(handle: GodotHandle) : VisibleOnScreenNotifier2D(
 
     /**
      * Determines how the target node is enabled. Corresponds to `Node.ProcessMode`. When the node is
-     * disabled, it always uses `Node.PROCESS_MODE_DISABLED`.
+     * disabled, it always uses `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: VisibleOnScreenEnabler2D.get_enable_mode
      */
@@ -69,23 +69,30 @@ class VisibleOnScreenEnabler2D(handle: GodotHandle) : VisibleOnScreenNotifier2D(
         return ObjectCalls.ptrcallNoArgsRetNodePath(getEnableNodePathBind, segment)
     }
 
+    /**
+     * Godot's `VisibleOnScreenEnabler2D.EnableMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`VisibleOnScreenEnabler2D.EnableMode.<NAME>`).
+     *
+     * Generated from Godot docs: VisibleOnScreenEnabler2D.EnableMode
+     */
     @JvmInline
     value class EnableMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Corresponds to `Node.PROCESS_MODE_INHERIT`.
+             * Corresponds to `Node.ProcessMode.INHERIT`.
              *
              * Generated from Godot docs: VisibleOnScreenEnabler2D.ENABLE_MODE_INHERIT
              */
             val INHERIT: EnableMode get() = EnableMode(0L)
             /**
-             * Corresponds to `Node.PROCESS_MODE_ALWAYS`.
+             * Corresponds to `Node.ProcessMode.ALWAYS`.
              *
              * Generated from Godot docs: VisibleOnScreenEnabler2D.ENABLE_MODE_ALWAYS
              */
             val ALWAYS: EnableMode get() = EnableMode(1L)
             /**
-             * Corresponds to `Node.PROCESS_MODE_WHEN_PAUSED`.
+             * Corresponds to `Node.ProcessMode.WHEN_PAUSED`.
              *
              * Generated from Godot docs: VisibleOnScreenEnabler2D.ENABLE_MODE_WHEN_PAUSED
              */

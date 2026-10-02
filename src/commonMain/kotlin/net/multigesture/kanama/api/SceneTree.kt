@@ -140,7 +140,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
     /**
      * If `true`, the application quits automatically when navigating back (e.g. using the system
      * "Back" button on Android). To handle 'Go Back' button when this option is disabled, use
-     * `DisplayServer.WINDOW_EVENT_GO_BACK_REQUEST`.
+     * `DisplayServer.WindowEvent.GO_BACK_REQUEST`.
      *
      * Generated from Godot docs: SceneTree.is_quit_on_go_back
      */
@@ -151,7 +151,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
     /**
      * If `true`, the application quits automatically when navigating back (e.g. using the system
      * "Back" button on Android). To handle 'Go Back' button when this option is disabled, use
-     * `DisplayServer.WINDOW_EVENT_GO_BACK_REQUEST`.
+     * `DisplayServer.WindowEvent.GO_BACK_REQUEST`.
      *
      * Generated from Godot docs: SceneTree.set_quit_on_go_back
      */
@@ -490,9 +490,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
     /**
      * Changes the running scene to the one at the given `path`, after loading it into a `PackedScene`
-     * and creating a new instance. Returns `OK` on success, `ERR_CANT_OPEN` if the `path` cannot be
-     * loaded into a `PackedScene`, or `ERR_CANT_CREATE` if that scene cannot be instantiated. Note:
-     * See `change_scene_to_node` for details on the order of operations.
+     * and creating a new instance. Returns `GodotError.OK` on success, `GodotError.ERR_CANT_OPEN` if
+     * the `path` cannot be loaded into a `PackedScene`, or `GodotError.ERR_CANT_CREATE` if that scene
+     * cannot be instantiated. Note: See `change_scene_to_node` for details on the order of operations.
      *
      * Generated from Godot docs: SceneTree.change_scene_to_file
      */
@@ -502,9 +502,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
     /**
      * Changes the running scene to a new instance of the given `PackedScene` (which must be valid).
-     * Returns `OK` on success, `ERR_CANT_CREATE` if the scene cannot be instantiated, or
-     * `ERR_INVALID_PARAMETER` if the scene is invalid. Note: See `change_scene_to_node` for details on
-     * the order of operations.
+     * Returns `GodotError.OK` on success, `GodotError.ERR_CANT_CREATE` if the scene cannot be
+     * instantiated, or `GodotError.ERR_INVALID_PARAMETER` if the scene is invalid. Note: See
+     * `change_scene_to_node` for details on the order of operations.
      *
      * Generated from Godot docs: SceneTree.change_scene_to_packed
      */
@@ -514,19 +514,19 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
     /**
      * Changes the running scene to the provided `Node`. Useful when you want to set up the new scene
-     * before changing. Returns `OK` on success, `ERR_INVALID_PARAMETER` if the `node` is `null`, or
-     * `ERR_UNCONFIGURED` if the `node` is already inside the scene tree. Note: Operations happen in
-     * the following order when `change_scene_to_node` is called: 1. The current scene node is
-     * immediately removed from the tree. From that point, `Node.get_tree` called on the current
-     * (outgoing) scene will return `null`. `current_scene` will be `null` too, because the new scene
-     * is not available yet. 2. At the end of the frame, the formerly current scene, already removed
-     * from the tree, will be deleted (freed from memory) and then the new scene node will be added to
-     * the tree. `Node.get_tree` and `current_scene` will be back to working as usual. This ensures
-     * that both scenes aren't running at the same time, while still freeing the previous scene in a
-     * safe way similar to `Node.queue_free`. If you want to reliably access the new scene, await the
-     * `scene_changed` signal. Warning: After using this method, the `SceneTree` will take ownership of
-     * the node and will free it automatically when changing scene again. Any references you had to
-     * that node will become invalid.
+     * before changing. Returns `GodotError.OK` on success, `GodotError.ERR_INVALID_PARAMETER` if the
+     * `node` is `null`, or `GodotError.ERR_UNCONFIGURED` if the `node` is already inside the scene
+     * tree. Note: Operations happen in the following order when `change_scene_to_node` is called: 1.
+     * The current scene node is immediately removed from the tree. From that point, `Node.get_tree`
+     * called on the current (outgoing) scene will return `null`. `current_scene` will be `null` too,
+     * because the new scene is not available yet. 2. At the end of the frame, the formerly current
+     * scene, already removed from the tree, will be deleted (freed from memory) and then the new scene
+     * node will be added to the tree. `Node.get_tree` and `current_scene` will be back to working as
+     * usual. This ensures that both scenes aren't running at the same time, while still freeing the
+     * previous scene in a safe way similar to `Node.queue_free`. If you want to reliably access the
+     * new scene, await the `scene_changed` signal. Warning: After using this method, the `SceneTree`
+     * will take ownership of the node and will free it automatically when changing scene again. Any
+     * references you had to that node will become invalid.
      *
      * Generated from Godot docs: SceneTree.change_scene_to_node
      */
@@ -536,9 +536,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
     /**
      * Reloads the currently active scene, replacing `current_scene` with a new instance of its
-     * original `PackedScene`. Returns `OK` on success, `ERR_UNCONFIGURED` if no `current_scene` is
-     * defined, `ERR_CANT_OPEN` if `current_scene` cannot be loaded into a `PackedScene`, or
-     * `ERR_CANT_CREATE` if the scene cannot be instantiated.
+     * original `PackedScene`. Returns `GodotError.OK` on success, `GodotError.ERR_UNCONFIGURED` if no
+     * `current_scene` is defined, `GodotError.ERR_CANT_OPEN` if `current_scene` cannot be loaded into
+     * a `PackedScene`, or `GodotError.ERR_CANT_CREATE` if the scene cannot be instantiated.
      *
      * Generated from Godot docs: SceneTree.reload_current_scene
      */
@@ -661,6 +661,12 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         const val physicsFrame: String = "physics_frame"
     }
 
+    /**
+     * Godot's `SceneTree.GroupCallFlags` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SceneTree.GroupCallFlags.<NAME>`).
+     *
+     * Generated from Godot docs: SceneTree.GroupCallFlags
+     */
     @JvmInline
     value class GroupCallFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -686,7 +692,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
             val DEFERRED: GroupCallFlags get() = GroupCallFlags(2L)
             /**
              * Call nodes within a group only once, even if the call is executed many times in the same frame.
-             * Must be combined with `GROUP_CALL_DEFERRED` to work. Note: Different arguments are not taken
+             * Must be combined with `GroupCallFlags.DEFERRED` to work. Note: Different arguments are not taken
              * into account. Therefore, when the same call is executed with different arguments, only the first
              * call will be performed.
              *
@@ -760,7 +766,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         // collides with the getRoot() twin two lines down.
         val root: Window
             @JvmName("rootProperty")
-            get() = checkNotNull(active().getRoot()) { "SceneTree.root: the running tree has no root Window" }
+            get() = active().getRoot()
 
         /**
          * If `true`, the scene tree is considered paused. This causes the following behavior: - 2D and 3D
@@ -804,9 +810,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
         /**
          * Changes the running scene to the one at the given `path`, after loading it into a `PackedScene`
-         * and creating a new instance. Returns `OK` on success, `ERR_CANT_OPEN` if the `path` cannot be
-         * loaded into a `PackedScene`, or `ERR_CANT_CREATE` if that scene cannot be instantiated. Note:
-         * See `change_scene_to_node` for details on the order of operations.
+         * and creating a new instance. Returns `GodotError.OK` on success, `GodotError.ERR_CANT_OPEN` if
+         * the `path` cannot be loaded into a `PackedScene`, or `GodotError.ERR_CANT_CREATE` if that scene
+         * cannot be instantiated. Note: See `change_scene_to_node` for details on the order of operations.
          *
          * Generated from Godot docs: SceneTree.change_scene_to_file
          */
@@ -814,9 +820,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
         /**
          * Reloads the currently active scene, replacing `current_scene` with a new instance of its
-         * original `PackedScene`. Returns `OK` on success, `ERR_UNCONFIGURED` if no `current_scene` is
-         * defined, `ERR_CANT_OPEN` if `current_scene` cannot be loaded into a `PackedScene`, or
-         * `ERR_CANT_CREATE` if the scene cannot be instantiated.
+         * original `PackedScene`. Returns `GodotError.OK` on success, `GodotError.ERR_UNCONFIGURED` if no
+         * `current_scene` is defined, `GodotError.ERR_CANT_OPEN` if `current_scene` cannot be loaded into
+         * a `PackedScene`, or `GodotError.ERR_CANT_CREATE` if the scene cannot be instantiated.
          *
          * Generated from Godot docs: SceneTree.reload_current_scene
          */
@@ -850,7 +856,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.get_multiplayer
          */
-        fun getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI? = active().getMultiplayer(forPath)
+        fun getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI = active().getMultiplayer(forPath)
 
         /**
          * If `true` (default value), enables automatic polling of the `MultiplayerAPI` for this SceneTree
@@ -897,7 +903,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.get_root
          */
-        fun getRoot(): Window? = active().getRoot()
+        fun getRoot(): Window = active().getRoot()
 
         /**
          * The root node of the currently loaded main scene, usually as a direct child of `root`. See also
@@ -945,9 +951,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
         /**
          * Changes the running scene to a new instance of the given `PackedScene` (which must be valid).
-         * Returns `OK` on success, `ERR_CANT_CREATE` if the scene cannot be instantiated, or
-         * `ERR_INVALID_PARAMETER` if the scene is invalid. Note: See `change_scene_to_node` for details on
-         * the order of operations.
+         * Returns `GodotError.OK` on success, `GodotError.ERR_CANT_CREATE` if the scene cannot be
+         * instantiated, or `GodotError.ERR_INVALID_PARAMETER` if the scene is invalid. Note: See
+         * `change_scene_to_node` for details on the order of operations.
          *
          * Generated from Godot docs: SceneTree.change_scene_to_packed
          */
@@ -955,19 +961,19 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
         /**
          * Changes the running scene to the provided `Node`. Useful when you want to set up the new scene
-         * before changing. Returns `OK` on success, `ERR_INVALID_PARAMETER` if the `node` is `null`, or
-         * `ERR_UNCONFIGURED` if the `node` is already inside the scene tree. Note: Operations happen in
-         * the following order when `change_scene_to_node` is called: 1. The current scene node is
-         * immediately removed from the tree. From that point, `Node.get_tree` called on the current
-         * (outgoing) scene will return `null`. `current_scene` will be `null` too, because the new scene
-         * is not available yet. 2. At the end of the frame, the formerly current scene, already removed
-         * from the tree, will be deleted (freed from memory) and then the new scene node will be added to
-         * the tree. `Node.get_tree` and `current_scene` will be back to working as usual. This ensures
-         * that both scenes aren't running at the same time, while still freeing the previous scene in a
-         * safe way similar to `Node.queue_free`. If you want to reliably access the new scene, await the
-         * `scene_changed` signal. Warning: After using this method, the `SceneTree` will take ownership of
-         * the node and will free it automatically when changing scene again. Any references you had to
-         * that node will become invalid.
+         * before changing. Returns `GodotError.OK` on success, `GodotError.ERR_INVALID_PARAMETER` if the
+         * `node` is `null`, or `GodotError.ERR_UNCONFIGURED` if the `node` is already inside the scene
+         * tree. Note: Operations happen in the following order when `change_scene_to_node` is called: 1.
+         * The current scene node is immediately removed from the tree. From that point, `Node.get_tree`
+         * called on the current (outgoing) scene will return `null`. `current_scene` will be `null` too,
+         * because the new scene is not available yet. 2. At the end of the frame, the formerly current
+         * scene, already removed from the tree, will be deleted (freed from memory) and then the new scene
+         * node will be added to the tree. `Node.get_tree` and `current_scene` will be back to working as
+         * usual. This ensures that both scenes aren't running at the same time, while still freeing the
+         * previous scene in a safe way similar to `Node.queue_free`. If you want to reliably access the
+         * new scene, await the `scene_changed` signal. Warning: After using this method, the `SceneTree`
+         * will take ownership of the node and will free it automatically when changing scene again. Any
+         * references you had to that node will become invalid.
          *
          * Generated from Godot docs: SceneTree.change_scene_to_node
          */
@@ -1074,7 +1080,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
             processAlways: Boolean = true,
             processInPhysics: Boolean = false,
             ignoreTimeScale: Boolean = false,
-        ): SceneTreeTimer? = active().createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
+        ): SceneTreeTimer = active().createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
 
         // legacy handle-returning form: the retired desktop `object SceneTree` exposed the raw
         // GodotHandle next to the wrapper-returning call. Kept so callers keep compiling; prefer
@@ -1144,7 +1150,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         /**
          * If `true`, the application quits automatically when navigating back (e.g. using the system
          * "Back" button on Android). To handle 'Go Back' button when this option is disabled, use
-         * `DisplayServer.WINDOW_EVENT_GO_BACK_REQUEST`.
+         * `DisplayServer.WindowEvent.GO_BACK_REQUEST`.
          *
          * Generated from Godot docs: SceneTree.is_quit_on_go_back
          */
@@ -1153,7 +1159,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         /**
          * If `true`, the application quits automatically when navigating back (e.g. using the system
          * "Back" button on Android). To handle 'Go Back' button when this option is disabled, use
-         * `DisplayServer.WINDOW_EVENT_GO_BACK_REQUEST`.
+         * `DisplayServer.WindowEvent.GO_BACK_REQUEST`.
          *
          * Generated from Godot docs: SceneTree.set_quit_on_go_back
          */

@@ -103,7 +103,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Sets `TRANSFORM_FLAG_POSITION` into `enable`.
+     * Sets `TransformFlag.POSITION` into `enable`.
      *
      * Generated from Godot docs: RetargetModifier3D.set_position_enabled
      */
@@ -112,7 +112,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Returns `true` if `enable` has `TRANSFORM_FLAG_POSITION`.
+     * Returns `true` if `enable` has `TransformFlag.POSITION`.
      *
      * Generated from Godot docs: RetargetModifier3D.is_position_enabled
      */
@@ -121,7 +121,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Sets `TRANSFORM_FLAG_ROTATION` into `enable`.
+     * Sets `TransformFlag.ROTATION` into `enable`.
      *
      * Generated from Godot docs: RetargetModifier3D.set_rotation_enabled
      */
@@ -130,7 +130,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Returns `true` if `enable` has `TRANSFORM_FLAG_ROTATION`.
+     * Returns `true` if `enable` has `TransformFlag.ROTATION`.
      *
      * Generated from Godot docs: RetargetModifier3D.is_rotation_enabled
      */
@@ -139,7 +139,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Sets `TRANSFORM_FLAG_SCALE` into `enable`.
+     * Sets `TransformFlag.SCALE` into `enable`.
      *
      * Generated from Godot docs: RetargetModifier3D.set_scale_enabled
      */
@@ -148,7 +148,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Returns `true` if `enable` has `TRANSFORM_FLAG_SCALE`.
+     * Returns `true` if `enable` has `TransformFlag.SCALE`.
      *
      * Generated from Godot docs: RetargetModifier3D.is_scale_enabled
      */
@@ -156,6 +156,13 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isScaleEnabledBind, segment)
     }
 
+    /**
+     * Godot's `RetargetModifier3D.TransformFlag` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RetargetModifier3D.TransformFlag.<NAME>`).
+     *
+     * Generated from Godot docs: RetargetModifier3D.TransformFlag
+     */
     @JvmInline
     value class TransformFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: TransformFlag): TransformFlag = TransformFlag(value or other.value)

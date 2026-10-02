@@ -26,7 +26,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
         set(value) = setRect(value)
 
     /**
-     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `COPY_MODE_RECT`.
+     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `CopyMode.RECT`.
      *
      * Generated from Godot docs: BackBufferCopy.set_rect
      */
@@ -35,7 +35,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `COPY_MODE_RECT`.
+     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `CopyMode.RECT`.
      *
      * Generated from Godot docs: BackBufferCopy.get_rect
      */
@@ -61,6 +61,12 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
         return BackBufferCopy.CopyMode(ObjectCalls.ptrcallNoArgsRetLong(getCopyModeBind, segment))
     }
 
+    /**
+     * Godot's `BackBufferCopy.CopyMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BackBufferCopy.CopyMode.<NAME>`).
+     *
+     * Generated from Godot docs: BackBufferCopy.CopyMode
+     */
     @JvmInline
     value class CopyMode(override val value: Long) : GodotEnumValue {
         companion object {

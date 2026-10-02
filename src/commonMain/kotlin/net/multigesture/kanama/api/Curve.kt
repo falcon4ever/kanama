@@ -70,9 +70,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Adds a point to the curve. For each side, if the `*_mode` is `TANGENT_LINEAR`, the `*_tangent`
-     * angle (in degrees) uses the slope of the curve halfway to the adjacent point. Allows custom
-     * assignments to the `*_tangent` angle if `*_mode` is set to `TANGENT_FREE`.
+     * Adds a point to the curve. For each side, if the `*_mode` is `TangentMode.LINEAR`, the
+     * `*_tangent` angle (in degrees) uses the slope of the curve halfway to the adjacent point. Allows
+     * custom assignments to the `*_tangent` angle if `*_mode` is set to `TangentMode.FREE`.
      *
      * Generated from Godot docs: Curve.add_point
      */
@@ -382,6 +382,12 @@ class Curve(handle: GodotHandle) : Resource(handle) {
         const val domainChanged: String = "domain_changed"
     }
 
+    /**
+     * Godot's `Curve.TangentMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Curve.TangentMode.<NAME>`).
+     *
+     * Generated from Godot docs: Curve.TangentMode
+     */
     @JvmInline
     value class TangentMode(override val value: Long) : GodotEnumValue {
         companion object {

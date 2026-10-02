@@ -13,70 +13,329 @@ import net.multigesture.kanama.types.Vector3
  */
 class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     // ===== BEGIN GENERATED ENUMS: ParticleProcessMaterial (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `ParticleProcessMaterial.Parameter` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.Parameter.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.Parameter
+     */
     value class Parameter(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set initial velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_INITIAL_LINEAR_VELOCITY
+             */
             val INITIAL_LINEAR_VELOCITY: Parameter get() = Parameter(0L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set angular velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANGULAR_VELOCITY
+             */
             val ANGULAR_VELOCITY: Parameter get() = Parameter(1L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set orbital velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ORBIT_VELOCITY
+             */
             val ORBIT_VELOCITY: Parameter get() = Parameter(2L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set linear acceleration
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_LINEAR_ACCEL
+             */
             val LINEAR_ACCEL: Parameter get() = Parameter(3L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set radial acceleration
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_RADIAL_ACCEL
+             */
             val RADIAL_ACCEL: Parameter get() = Parameter(4L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set tangential
+             * acceleration properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TANGENTIAL_ACCEL
+             */
             val TANGENTIAL_ACCEL: Parameter get() = Parameter(5L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set damping properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_DAMPING
+             */
             val DAMPING: Parameter get() = Parameter(6L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set angle properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANGLE
+             */
             val ANGLE: Parameter get() = Parameter(7L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set scale properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_SCALE
+             */
             val SCALE: Parameter get() = Parameter(8L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set hue variation
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_HUE_VARIATION
+             */
             val HUE_VARIATION: Parameter get() = Parameter(9L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set animation speed
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANIM_SPEED
+             */
             val ANIM_SPEED: Parameter get() = Parameter(10L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set animation offset
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_ANIM_OFFSET
+             */
             val ANIM_OFFSET: Parameter get() = Parameter(11L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set radial velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_RADIAL_VELOCITY
+             */
             val RADIAL_VELOCITY: Parameter get() = Parameter(15L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set directional velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_DIRECTIONAL_VELOCITY
+             */
             val DIRECTIONAL_VELOCITY: Parameter get() = Parameter(16L)
+            /**
+             * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set scale over velocity
+             * properties.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_SCALE_OVER_VELOCITY
+             */
             val SCALE_OVER_VELOCITY: Parameter get() = Parameter(17L)
+            /**
+             * Represents the size of the `Parameter` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_MAX
+             */
             val MAX: Parameter get() = Parameter(18L)
+            /**
+             * Use with `set_param_min` and `set_param_max` to set the turbulence minimum und maximum influence
+             * on each particles velocity.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TURB_VEL_INFLUENCE
+             */
             val TURB_VEL_INFLUENCE: Parameter get() = Parameter(13L)
+            /**
+             * Use with `set_param_min` and `set_param_max` to set the turbulence minimum and maximum
+             * displacement of the particles spawn position.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TURB_INIT_DISPLACEMENT
+             */
             val TURB_INIT_DISPLACEMENT: Parameter get() = Parameter(14L)
+            /**
+             * Use with `set_param_texture` to set the turbulence influence over the particles life time.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARAM_TURB_INFLUENCE_OVER_LIFE
+             */
             val TURB_INFLUENCE_OVER_LIFE: Parameter get() = Parameter(12L)
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.ParticleFlags` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.ParticleFlags.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.ParticleFlags
+     */
     value class ParticleFlags(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_align_y`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_ALIGN_Y_TO_VELOCITY
+             */
             val ALIGN_Y_TO_VELOCITY: ParticleFlags get() = ParticleFlags(0L)
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_rotate_y`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_ROTATE_Y
+             */
             val ROTATE_Y: ParticleFlags get() = ParticleFlags(1L)
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_disable_z`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_DISABLE_Z
+             */
             val DISABLE_Z: ParticleFlags get() = ParticleFlags(2L)
             val DAMPING_AS_FRICTION: ParticleFlags get() = ParticleFlags(3L)
             val INHERIT_EMITTER_SCALE: ParticleFlags get() = ParticleFlags(4L)
+            /**
+             * Represents the size of the `ParticleFlags` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_MAX
+             */
             val MAX: ParticleFlags get() = ParticleFlags(5L)
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.EmissionShape` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.EmissionShape.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.EmissionShape
+     */
     value class EmissionShape(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * All particles will be emitted from a single point.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_POINT
+             */
             val POINT: EmissionShape get() = EmissionShape(0L)
+            /**
+             * Particles will be emitted in the volume of a sphere.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+             */
             val SPHERE: EmissionShape get() = EmissionShape(1L)
+            /**
+             * Particles will be emitted on the surface of a sphere.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_SPHERE_SURFACE
+             */
             val SPHERE_SURFACE: EmissionShape get() = EmissionShape(2L)
+            /**
+             * Particles will be emitted in the volume of a box.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_BOX
+             */
             val BOX: EmissionShape get() = EmissionShape(3L)
+            /**
+             * Particles will be emitted at a position determined by sampling a random point on the
+             * `emission_point_texture`. Particle color will be modulated by `emission_color_texture`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_POINTS
+             */
             val POINTS: EmissionShape get() = EmissionShape(4L)
+            /**
+             * Particles will be emitted at a position determined by sampling a random point on the
+             * `emission_point_texture`. Particle velocity and rotation will be set based on
+             * `emission_normal_texture`. Particle color will be modulated by `emission_color_texture`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_DIRECTED_POINTS
+             */
             val DIRECTED_POINTS: EmissionShape get() = EmissionShape(5L)
+            /**
+             * Particles will be emitted in a ring or cylinder.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_RING
+             */
             val RING: EmissionShape get() = EmissionShape(6L)
+            /**
+             * Represents the size of the `EmissionShape` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.EMISSION_SHAPE_MAX
+             */
             val MAX: EmissionShape get() = EmissionShape(7L)
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.SubEmitterMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.SubEmitterMode.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.SubEmitterMode
+     */
     value class SubEmitterMode(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * The subemitter is disabled.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_DISABLED
+             */
             val DISABLED: SubEmitterMode get() = SubEmitterMode(0L)
+            /**
+             * The submitter is emitted on the constant interval defined by `sub_emitter_frequency`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_CONSTANT
+             */
             val CONSTANT: SubEmitterMode get() = SubEmitterMode(1L)
+            /**
+             * The subemitter is emitted at the end of the particle's lifetime.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_AT_END
+             */
             val AT_END: SubEmitterMode get() = SubEmitterMode(2L)
+            /**
+             * The subemitter is emitted when the particle collides.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_AT_COLLISION
+             */
             val AT_COLLISION: SubEmitterMode get() = SubEmitterMode(3L)
+            /**
+             * The subemitter is emitted when the particle spawns.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_AT_START
+             */
             val AT_START: SubEmitterMode get() = SubEmitterMode(4L)
+            /**
+             * Represents the size of the `SubEmitterMode` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.SUB_EMITTER_MAX
+             */
             val MAX: SubEmitterMode get() = SubEmitterMode(5L)
         }
     }
 
+    /**
+     * Godot's `ParticleProcessMaterial.CollisionMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ParticleProcessMaterial.CollisionMode.<NAME>`).
+     *
+     * Generated from Godot docs: ParticleProcessMaterial.CollisionMode
+     */
     value class CollisionMode(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * No collision for particles. Particles will go through `GPUParticlesCollision3D` nodes.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_DISABLED
+             */
             val DISABLED: CollisionMode get() = CollisionMode(0L)
+            /**
+             * `RigidBody3D`-style collision for particles using `GPUParticlesCollision3D` nodes.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_RIGID
+             */
             val RIGID: CollisionMode get() = CollisionMode(1L)
+            /**
+             * Hide particles instantly when colliding with a `GPUParticlesCollision3D` node. This can be
+             * combined with a subemitter that uses the `CollisionMode.RIGID` collision mode to "replace" the
+             * parent particle with the subemitter on impact.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT
+             */
             val HIDE_ON_CONTACT: CollisionMode get() = CollisionMode(2L)
+            /**
+             * Represents the size of the `CollisionMode` enum.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.COLLISION_MAX
+             */
             val MAX: CollisionMode get() = CollisionMode(3L)
         }
     }

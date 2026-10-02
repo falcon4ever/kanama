@@ -901,6 +901,12 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         const val scrollOffsetChanged: String = "scroll_offset_changed"
     }
 
+    /**
+     * Godot's `GraphEdit.PanningScheme` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GraphEdit.PanningScheme.<NAME>`).
+     *
+     * Generated from Godot docs: GraphEdit.PanningScheme
+     */
     @JvmInline
     value class PanningScheme(override val value: Long) : GodotEnumValue {
         companion object {
@@ -919,6 +925,12 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `GraphEdit.GridPattern` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GraphEdit.GridPattern.<NAME>`).
+     *
+     * Generated from Godot docs: GraphEdit.GridPattern
+     */
     @JvmInline
     value class GridPattern(override val value: Long) : GodotEnumValue {
         companion object {

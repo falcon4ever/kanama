@@ -1074,7 +1074,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The sphere's radius if `EmissionShape` is set to `EMISSION_SHAPE_SPHERE`.
+     * The sphere's radius if `EmissionShape` is set to `EmissionShape.SPHERE`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_sphere_radius
      */
@@ -1083,7 +1083,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The sphere's radius if `EmissionShape` is set to `EMISSION_SHAPE_SPHERE`.
+     * The sphere's radius if `EmissionShape` is set to `EmissionShape.SPHERE`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_sphere_radius
      */
@@ -1092,7 +1092,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The rectangle's extents if `emission_shape` is set to `EMISSION_SHAPE_BOX`.
+     * The rectangle's extents if `emission_shape` is set to `EmissionShape.BOX`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_box_extents
      */
@@ -1101,7 +1101,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The rectangle's extents if `emission_shape` is set to `EMISSION_SHAPE_BOX`.
+     * The rectangle's extents if `emission_shape` is set to `EmissionShape.BOX`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_box_extents
      */
@@ -1110,8 +1110,8 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the initial positions to spawn particles when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_points
      */
@@ -1120,8 +1120,8 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the initial positions to spawn particles when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_points
      */
@@ -1130,7 +1130,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the direction the particles will be emitted in when using `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_normals
      */
@@ -1139,7 +1139,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the direction the particles will be emitted in when using `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_normals
      */
@@ -1148,8 +1148,8 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Sets the `Color`s to modulate particles by when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`. Note: `emission_colors` multiplies the particle mesh's vertex
+     * Sets the `Color`s to modulate particles by when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`. Note: `emission_colors` multiplies the particle mesh's vertex
      * colors. To have a visible effect on a `BaseMaterial3D`,
      * `BaseMaterial3D.vertex_color_use_as_albedo` must be `true`. For a `ShaderMaterial`, `ALBEDO *=
      * COLOR.rgb;` must be inserted in the shader's `fragment()` function. Otherwise, `emission_colors`
@@ -1162,8 +1162,8 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Sets the `Color`s to modulate particles by when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`. Note: `emission_colors` multiplies the particle mesh's vertex
+     * Sets the `Color`s to modulate particles by when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`. Note: `emission_colors` multiplies the particle mesh's vertex
      * colors. To have a visible effect on a `BaseMaterial3D`,
      * `BaseMaterial3D.vertex_color_use_as_albedo` must be `true`. For a `ShaderMaterial`, `ALBEDO *=
      * COLOR.rgb;` must be inserted in the shader's `fragment()` function. Otherwise, `emission_colors`
@@ -1176,7 +1176,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The axis of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The axis of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_axis
      */
@@ -1185,7 +1185,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The axis of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The axis of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_axis
      */
@@ -1194,7 +1194,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The height of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The height of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_height
      */
@@ -1203,7 +1203,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The height of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The height of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_height
      */
@@ -1212,7 +1212,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_radius
      */
@@ -1221,7 +1221,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_radius
      */
@@ -1230,7 +1230,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The inner radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The inner radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.set_emission_ring_inner_radius
      */
@@ -1239,7 +1239,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The inner radius of the ring when using the emitter `EMISSION_SHAPE_RING`.
+     * The inner radius of the ring when using the emitter `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles3D.get_emission_ring_inner_radius
      */
@@ -1248,7 +1248,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The angle of the cone when using the emitter `EMISSION_SHAPE_RING`. The default angle of 90
+     * The angle of the cone when using the emitter `EmissionShape.RING`. The default angle of 90
      * degrees results in a ring, while an angle of 0 degrees results in a cone. Intermediate values
      * will result in a ring where one end is larger than the other. Note: Depending on
      * `emission_ring_height`, the angle may be clamped if the ring's end is reached to form a perfect
@@ -1261,7 +1261,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * The angle of the cone when using the emitter `EMISSION_SHAPE_RING`. The default angle of 90
+     * The angle of the cone when using the emitter `EmissionShape.RING`. The default angle of 90
      * degrees results in a ring, while an angle of 0 degrees results in a cone. Intermediate values
      * will result in a ring where one end is larger than the other. Note: Depending on
      * `emission_ring_height`, the angle may be clamped if the ring's end is reached to form a perfect
@@ -1377,6 +1377,12 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         const val finished: String = "finished"
     }
 
+    /**
+     * Godot's `CPUParticles3D.DrawOrder` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CPUParticles3D.DrawOrder.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles3D.DrawOrder
+     */
     @JvmInline
     value class DrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1402,6 +1408,12 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `CPUParticles3D.Parameter` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CPUParticles3D.Parameter.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles3D.Parameter
+     */
     @JvmInline
     value class Parameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1495,6 +1507,12 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `CPUParticles3D.ParticleFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CPUParticles3D.ParticleFlags.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles3D.ParticleFlags
+     */
     @JvmInline
     value class ParticleFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1525,6 +1543,12 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `CPUParticles3D.EmissionShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CPUParticles3D.EmissionShape.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles3D.EmissionShape
+     */
     @JvmInline
     value class EmissionShape(override val value: Long) : GodotEnumValue {
         companion object {

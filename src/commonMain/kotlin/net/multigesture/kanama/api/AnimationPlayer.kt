@@ -139,7 +139,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * If `true`, performs `AnimationMixer.capture` before playback automatically. This means just
      * `play_with_capture` is executed with default arguments instead of `play`. Note: Capture
      * interpolation is only performed if the animation contains a capture track. See also
-     * `Animation.UPDATE_CAPTURE`.
+     * `Animation.UpdateMode.CAPTURE`.
      *
      * Generated from Godot docs: AnimationPlayer.set_auto_capture
      */
@@ -151,7 +151,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * If `true`, performs `AnimationMixer.capture` before playback automatically. This means just
      * `play_with_capture` is executed with default arguments instead of `play`. Note: Capture
      * interpolation is only performed if the animation contains a capture track. See also
-     * `Animation.UPDATE_CAPTURE`.
+     * `Animation.UpdateMode.CAPTURE`.
      *
      * Generated from Godot docs: AnimationPlayer.is_auto_capture
      */
@@ -654,6 +654,13 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         const val animationChanged: String = "animation_changed"
     }
 
+    /**
+     * Godot's `AnimationPlayer.AnimationProcessCallback` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationPlayer.AnimationProcessCallback.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationPlayer.AnimationProcessCallback
+     */
     @JvmInline
     value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {
@@ -663,6 +670,13 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         }
     }
 
+    /**
+     * Godot's `AnimationPlayer.AnimationMethodCallMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationPlayer.AnimationMethodCallMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationPlayer.AnimationMethodCallMode
+     */
     @JvmInline
     value class AnimationMethodCallMode(override val value: Long) : GodotEnumValue {
         companion object {

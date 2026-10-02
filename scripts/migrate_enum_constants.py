@@ -107,7 +107,57 @@ def enum_typed_methods(api_path: Path) -> dict[str, set[int]]:
 # value class implements GodotEnumValue and the Variant encoders turn it into the INT it stands for,
 # so these are informational notes, not fixes (dynamic RETURNS still come back as Long).
 DYNAMIC_SINK_RE = re.compile(r"\b(?:setValue|call|callDeferred|set|setDeferred|setMeta|emitSignal|emit|rpc|rpcId)\(")
-REF_RE = re.compile(r"(?<![\w.])((?:net\.multigesture\.kanama\.api\.)?)([A-Z][A-Za-z0-9]*)\.([A-Z][A-Z0-9_]*[A-Z0-9])\b(?!\s*\()(?!\.\w)")
+# Not preceded by a word character or a SINGLE dot (`x.Node.FOO` is a member chain), but a range
+# operand after `..` (`Window.MODE_A..Window.MODE_B`) is a reference too.
+REF_RE = re.compile(r"(?<!\w)(?:(?<=\.\.)|(?<!\.))((?:net\.multigesture\.kanama\.api\.)?)([A-Z][A-Za-z0-9]*)\.([A-Z][A-Z0-9_]*[A-Z0-9])\b(?!\s*\()(?!\.\w)")
+
+
+def literal_mask(text: str) -> list[bool]:
+    """True for every offset inside string / char literal TEXT: rewrites skip it, so
+    `"Node.PROCESS_MODE_ALWAYS"` in a string stays. A `${...}` template inside a string is code."""
+    mask = [False] * len(text)
+    i, n = 0, len(text)
+
+    def skip_template(j: int) -> int:
+        depth = 0
+        while j < n:
+            if text[j] == "{":
+                depth += 1
+            elif text[j] == "}":
+                depth -= 1
+                if depth == 0:
+                    return j + 1
+            j += 1
+        return j
+
+    while i < n:
+        if text.startswith("//", i):
+            # Comments are rewritten (they describe the code); only skip their quotes.
+            j = text.find("\n", i)
+            i = n if j == -1 else j
+        elif text.startswith("/*", i):
+            j = text.find("*/", i + 2)
+            i = n if j == -1 else j + 2
+        elif text[i] == '"' or text[i] == "'":
+            triple = text.startswith('"""', i)
+            quote = '"""' if triple else text[i]
+            j = i + len(quote)
+            while j < n and not text.startswith(quote, j):
+                if text[j] == "\\" and not triple:
+                    mask[j] = True
+                    if j + 1 < n:
+                        mask[j + 1] = True
+                    j += 2
+                    continue
+                if text.startswith("${", j) and quote != "'":
+                    j = skip_template(j + 1)
+                    continue
+                mask[j] = True
+                j += 1
+            i = j + len(quote)
+        else:
+            i += 1
+    return mask
 
 
 def migrate_text(
@@ -116,11 +166,16 @@ def migrate_text(
     unique: dict[str, str],
     known_owners: set[str],
     class_constants: set[str] | None = None,
+    range_hits: list[tuple[int, str]] | None = None,
 ) -> tuple[str, list[tuple[int, str, str]], list[tuple[int, str]]]:
     changes: list[tuple[int, str, str]] = []
     unknown: list[tuple[int, str]] = []
+    ranges = range_hits if range_hits is not None else []
+    in_literal = literal_mask(text)
 
     def replace(match: re.Match[str]) -> str:
+        if in_literal[match.start()]:
+            return match.group(0)
         package, owner, name = match.group(1), match.group(2), match.group(3)
         old = f"{owner}.{name}"
         new = SPECIAL.get(old) or per_owner.get(owner, {}).get(name)
@@ -132,6 +187,10 @@ def migrate_text(
                 unknown.append((line, old))
             return match.group(0)
         changes.append((line, old, new))
+        before = text[max(0, match.start() - 8) : match.start()].rstrip()
+        after = text[match.end() : match.end() + 8].lstrip()
+        if before.endswith(("..", "until", "downTo")) or after.startswith(("..", "until", "downTo")):
+            ranges.append((line, new))
         return package + new
 
     return REF_RE.sub(replace, text), changes, unknown
@@ -262,15 +321,23 @@ def main() -> int:
     methods = enum_typed_methods(args.api)
     files = [p for path in args.paths for p in ([path] if path.is_file() else sorted(path.rglob("*.kt")))]
     changed_total = 0
+    changed_files = 0
     human: list[str] = []
     info: list[str] = []
     for path in files:
         text = path.read_text(encoding="utf-8")
-        new_text, changes, unknown = migrate_text(text, per_owner, unique, known_owners, class_constants)
+        range_hits: list[tuple[int, str]] = []
+        new_text, changes, unknown = migrate_text(text, per_owner, unique, known_owners, class_constants, range_hits)
         for line, old, new in changes:
             print(f"{path}:{line}: {old} -> {new}")
         changed_total += len(changes)
+        changed_files += 1 if changes else 0
         human += [f"{path}:{line}: {ref} matched no enum value (constant removed or renamed?)" for line, ref in unknown]
+        human += [
+            f"{path}:{line}: {new} is a range bound (`..` / `until` / `downTo`): value classes have no ranges; "
+            "iterate the `.value`s or list the values"
+            for line, new in range_hits
+        ]
         human += [f"{path}:{line}: raw number where an enum is expected: {call}" for line, call in raw_number_suspects(new_text, methods)]
         info += [
             f"{path}:{line}: {new} is passed to a dynamic (Variant/Any?) argument: now encoded as INT "
@@ -281,7 +348,10 @@ def main() -> int:
         new_text = add_missing_imports(new_text, [new for _, _, new in changes])
         if changes and not args.dry_run:
             path.write_text(new_text, encoding="utf-8")
-    print(f"{TAG} {changed_total} reference(s) rewritten in {len(files)} file(s){' (dry run)' if args.dry_run else ''}")
+    print(
+        f"{TAG} {changed_total} reference(s) rewritten in {changed_files} file(s) "
+        f"({len(files)} scanned){' (dry run)' if args.dry_run else ''}"
+    )
     if info:
         print(f"{TAG} {len(info)} note(s):")
         for item in info:

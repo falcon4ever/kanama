@@ -17,6 +17,12 @@ interface GodotEnumValue {
     val value: Long
 }
 
+/**
+ * Godot's `Side` enum as a typed value: `.value` is the raw number Godot uses, and the companion
+ * holds the named values (`Side.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.Side
+ */
 @JvmInline
 value class Side(override val value: Long) : GodotEnumValue {
     companion object {
@@ -47,6 +53,12 @@ value class Side(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `Corner` enum as a typed value: `.value` is the raw number Godot uses, and the companion
+ * holds the named values (`Corner.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.Corner
+ */
 @JvmInline
 value class Corner(override val value: Long) : GodotEnumValue {
     companion object {
@@ -77,6 +89,12 @@ value class Corner(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `Orientation` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`Orientation.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.Orientation
+ */
 @JvmInline
 value class Orientation(override val value: Long) : GodotEnumValue {
     companion object {
@@ -95,6 +113,12 @@ value class Orientation(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `ClockDirection` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`ClockDirection.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.ClockDirection
+ */
 @JvmInline
 value class ClockDirection(override val value: Long) : GodotEnumValue {
     companion object {
@@ -113,6 +137,12 @@ value class ClockDirection(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `HorizontalAlignment` enum as a typed value: `.value` is the raw number Godot uses, and
+ * the companion holds the named values (`HorizontalAlignment.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.HorizontalAlignment
+ */
 @JvmInline
 value class HorizontalAlignment(override val value: Long) : GodotEnumValue {
     companion object {
@@ -143,6 +173,12 @@ value class HorizontalAlignment(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `VerticalAlignment` enum as a typed value: `.value` is the raw number Godot uses, and
+ * the companion holds the named values (`VerticalAlignment.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.VerticalAlignment
+ */
 @JvmInline
 value class VerticalAlignment(override val value: Long) : GodotEnumValue {
     companion object {
@@ -173,6 +209,12 @@ value class VerticalAlignment(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `InlineAlignment` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`InlineAlignment.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.InlineAlignment
+ */
 @JvmInline
 value class InlineAlignment(override val value: Long) : GodotEnumValue {
     companion object {
@@ -267,6 +309,12 @@ value class InlineAlignment(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `EulerOrder` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`EulerOrder.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.EulerOrder
+ */
 @JvmInline
 value class EulerOrder(override val value: Long) : GodotEnumValue {
     companion object {
@@ -321,6 +369,12 @@ value class EulerOrder(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `Key` enum as a typed value: `.value` is the raw number Godot uses, and the companion
+ * holds the named values (`Key.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.Key
+ */
 @JvmInline
 value class Key(override val value: Long) : GodotEnumValue {
     companion object {
@@ -1486,6 +1540,12 @@ value class Key(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `KeyModifierMask` bitfield as a typed value: `.value` is the raw number Godot uses, and
+ * the companion holds the named values (`KeyModifierMask.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.KeyModifierMask
+ */
 @JvmInline
 value class KeyModifierMask(override val value: Long) : GodotEnumValue {
     infix fun or(other: KeyModifierMask): KeyModifierMask = KeyModifierMask(value or other.value)
@@ -1512,7 +1572,7 @@ value class KeyModifierMask(override val value: Long) : GodotEnumValue {
          */
         val MODIFIER_MASK: KeyModifierMask get() = KeyModifierMask(2130706432L)
         /**
-         * Automatically remapped to `KEY_META` on macOS and `KEY_CTRL` on other platforms, this mask is
+         * Automatically remapped to `Key.META` on macOS and `Key.CTRL` on other platforms, this mask is
          * never set in the actual events, and should be used for key mapping only.
          *
          * Generated from Godot docs: @GlobalScope.KEY_MASK_CMD_OR_CTRL
@@ -1557,13 +1617,19 @@ value class KeyModifierMask(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `KeyLocation` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`KeyLocation.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.KeyLocation
+ */
 @JvmInline
 value class KeyLocation(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Used for keys which only appear once, or when a comparison doesn't need to differentiate the
          * `LEFT` and `RIGHT` versions. For example, when using `InputEvent.is_match`, an event which has
-         * `KEY_LOCATION_UNSPECIFIED` will match any `KeyLocation` on the passed event.
+         * `KeyLocation.UNSPECIFIED` will match any `KeyLocation` on the passed event.
          *
          * Generated from Godot docs: @GlobalScope.KEY_LOCATION_UNSPECIFIED
          */
@@ -1583,6 +1649,12 @@ value class KeyLocation(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `MouseButton` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`MouseButton.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.MouseButton
+ */
 @JvmInline
 value class MouseButton(override val value: Long) : GodotEnumValue {
     companion object {
@@ -1650,6 +1722,12 @@ value class MouseButton(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `MouseButtonMask` bitfield as a typed value: `.value` is the raw number Godot uses, and
+ * the companion holds the named values (`MouseButtonMask.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.MouseButtonMask
+ */
 @JvmInline
 value class MouseButtonMask(override val value: Long) : GodotEnumValue {
     infix fun or(other: MouseButtonMask): MouseButtonMask = MouseButtonMask(value or other.value)
@@ -1696,6 +1774,12 @@ value class MouseButtonMask(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `JoyButton` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`JoyButton.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.JoyButton
+ */
 @JvmInline
 value class JoyButton(override val value: Long) : GodotEnumValue {
     companion object {
@@ -1884,6 +1968,12 @@ value class JoyButton(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `JoyAxis` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`JoyAxis.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.JoyAxis
+ */
 @JvmInline
 value class JoyAxis(override val value: Long) : GodotEnumValue {
     companion object {
@@ -1945,6 +2035,12 @@ value class JoyAxis(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `MIDIMessage` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`MIDIMessage.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.MIDIMessage
+ */
 @JvmInline
 value class MIDIMessage(override val value: Long) : GodotEnumValue {
     companion object {
@@ -1956,7 +2052,7 @@ value class MIDIMessage(override val value: Long) : GodotEnumValue {
         val NONE: MIDIMessage get() = MIDIMessage(0L)
         /**
          * MIDI message sent when a note is released. Note: Not all MIDI devices send this message; some
-         * may send `MIDI_MESSAGE_NOTE_ON` with `InputEventMIDI.velocity` set to `0`.
+         * may send `MIDIMessage.NOTE_ON` with `InputEventMIDI.velocity` set to `0`.
          *
          * Generated from Godot docs: @GlobalScope.MIDI_MESSAGE_NOTE_OFF
          */
@@ -1992,7 +2088,7 @@ value class MIDIMessage(override val value: Long) : GodotEnumValue {
         val PROGRAM_CHANGE: MIDIMessage get() = MIDIMessage(12L)
         /**
          * MIDI message sent to indicate a change in pressure for the whole channel. Some MIDI devices may
-         * send this instead of `MIDI_MESSAGE_AFTERTOUCH`.
+         * send this instead of `MIDIMessage.AFTERTOUCH`.
          *
          * Generated from Godot docs: @GlobalScope.MIDI_MESSAGE_CHANNEL_PRESSURE
          */
@@ -2014,7 +2110,7 @@ value class MIDIMessage(override val value: Long) : GodotEnumValue {
         val SYSTEM_EXCLUSIVE: MIDIMessage get() = MIDIMessage(240L)
         /**
          * MIDI message sent every quarter frame to keep connected MIDI devices synchronized. Related to
-         * `MIDI_MESSAGE_TIMING_CLOCK`. Note: Getting this message's data from `InputEventMIDI` is not
+         * `MIDIMessage.TIMING_CLOCK`. Note: Getting this message's data from `InputEventMIDI` is not
          * implemented.
          *
          * Generated from Godot docs: @GlobalScope.MIDI_MESSAGE_QUARTER_FRAME
@@ -2042,7 +2138,7 @@ value class MIDIMessage(override val value: Long) : GodotEnumValue {
          */
         val TUNE_REQUEST: MIDIMessage get() = MIDIMessage(246L)
         /**
-         * MIDI message sent 24 times after `MIDI_MESSAGE_QUARTER_FRAME`, to keep connected MIDI devices
+         * MIDI message sent 24 times after `MIDIMessage.QUARTER_FRAME`, to keep connected MIDI devices
          * synchronized.
          *
          * Generated from Godot docs: @GlobalScope.MIDI_MESSAGE_TIMING_CLOCK
@@ -2083,12 +2179,19 @@ value class MIDIMessage(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `Error` enum as a typed value: `.value` is the raw number Godot uses, and the companion
+ * holds the named values (`GodotError.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.Error
+ */
 @JvmInline
 value class GodotError(override val value: Long) : GodotEnumValue {
     companion object {
         /**
-         * Methods that return `Error` return `OK` when no error occurred. Since `OK` has value `0`, and
-         * all other error constants are positive integers, it can also be used in boolean checks.
+         * Methods that return `Error` return `GodotError.OK` when no error occurred. Since `GodotError.OK`
+         * has value `0`, and all other error constants are positive integers, it can also be used in
+         * boolean checks.
          *
          * Generated from Godot docs: @GlobalScope.OK
          */
@@ -2386,12 +2489,18 @@ value class GodotError(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `PropertyHint` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`GodotPropertyHint.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.PropertyHint
+ */
 @JvmInline
 value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * The property has no hint for the editor. However, the hint string is still read, which can be
-         * used to specify a suffix for a property that has no range limit (see `PROPERTY_HINT_RANGE`'s
+         * used to specify a suffix for a property that has no range limit (see `GodotPropertyHint.RANGE`'s
          * description).
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_NONE
@@ -2418,9 +2527,9 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
         val ENUM: GodotPropertyHint get() = GodotPropertyHint(2L)
         /**
          * Hints that a `String` or `StringName` property can be an enumerated value to pick in a list
-         * specified via a hint string such as `"Hello,Something,Else"`. See `PROPERTY_HINT_ENUM` for
-         * details. Unlike `PROPERTY_HINT_ENUM`, a property with this hint still accepts arbitrary values
-         * and can be empty. The list of values serves to suggest possible values.
+         * specified via a hint string such as `"Hello,Something,Else"`. See `GodotPropertyHint.ENUM` for
+         * details. Unlike `GodotPropertyHint.ENUM`, a property with this hint still accepts arbitrary
+         * values and can be empty. The list of values serves to suggest possible values.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_ENUM_SUGGESTION
          */
@@ -2429,7 +2538,7 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
          * Hints that a `float` property should be edited using a curve editor showing an exponential
          * easing function. The hint string can include `"attenuation"` to flip the curve horizontally
          * and/or `"positive_only"` to exclude in/out easing and limit values to be greater than or equal
-         * to zero. This displays differently to a property that uses `PROPERTY_HINT_RANGE` with the
+         * to zero. This displays differently to a property that uses `GodotPropertyHint.RANGE` with the
          * `"exp"` keyword, as it's edited with a slider instead of a curve editor.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_EXP_EASING
@@ -2450,7 +2559,7 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
          * end of a name. The first name in the list has value 1, the next 2, then 4, 8, 16 and so on.
          * Explicit values can also be specified by appending `:integer` to the name, e.g.
          * `"A:4,B:8,C:16"`. You can also combine several flags (`"A:4,B:8,AB:12,C:16"`). Note: A flag
-         * value must be at least `1` and at most `2 ** 32 - 1`. Note: Unlike `PROPERTY_HINT_ENUM`, the
+         * value must be at least `1` and at most `2 ** 32 - 1`. Note: Unlike `GodotPropertyHint.ENUM`, the
          * previous explicit value is not taken into account. For the hint `"A:16,B,C"`, A is 16, B is 2, C
          * is 4.
          *
@@ -2503,7 +2612,7 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
          * Hints that a `String` property is a path to a file. Editing it will show a file dialog for
          * picking the path. The hint string can be a set of filters with wildcards like `"*.png,*.jpg"`.
          * By default the file will be stored as UID whenever available. You can use `ResourceUID` methods
-         * to convert it back to path. For storing a raw path, use `PROPERTY_HINT_FILE_PATH`.
+         * to convert it back to path. For storing a raw path, use `GodotPropertyHint.FILE_PATH`.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_FILE
          */
@@ -2626,7 +2735,7 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
         /**
          * Hints that a property is an `Array` with the stored type specified in the hint string. The hint
          * string contains the type of the array (e.g. `"String"`). Use the hint string format from
-         * `PROPERTY_HINT_TYPE_STRING` for more control over the stored type.
+         * `GodotPropertyHint.TYPE_STRING` for more control over the stored type.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_ARRAY_TYPE
          */
@@ -2634,7 +2743,8 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
         /**
          * Hints that a property is a `Dictionary` with the stored types specified in the hint string. The
          * hint string contains the key and value types separated by a semicolon (e.g. `"int;String"`). Use
-         * the hint string format from `PROPERTY_HINT_TYPE_STRING` for more control over the stored types.
+         * the hint string format from `GodotPropertyHint.TYPE_STRING` for more control over the stored
+         * types.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_DICTIONARY_TYPE
          */
@@ -2708,8 +2818,8 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
          */
         val INPUT_NAME: GodotPropertyHint get() = GodotPropertyHint(43L)
         /**
-         * Like `PROPERTY_HINT_FILE`, but the property is stored as a raw path, not UID. That means the
-         * reference will be broken if you move the file. Consider using `PROPERTY_HINT_FILE` when
+         * Like `GodotPropertyHint.FILE`, but the property is stored as a raw path, not UID. That means the
+         * reference will be broken if you move the file. Consider using `GodotPropertyHint.FILE` when
          * possible.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_FILE_PATH
@@ -2724,6 +2834,12 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `PropertyUsageFlags` bitfield as a typed value: `.value` is the raw number Godot uses,
+ * and the companion holds the named values (`PropertyUsageFlags.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.PropertyUsageFlags
+ */
 @JvmInline
 value class PropertyUsageFlags(override val value: Long) : GodotEnumValue {
     infix fun or(other: PropertyUsageFlags): PropertyUsageFlags = PropertyUsageFlags(value or other.value)
@@ -2812,10 +2928,10 @@ value class PropertyUsageFlags(override val value: Long) : GodotEnumValue {
          */
         val RESTART_IF_CHANGED: PropertyUsageFlags get() = PropertyUsageFlags(2048L)
         /**
-         * The property is a script variable. `PROPERTY_USAGE_SCRIPT_VARIABLE` can be used to distinguish
-         * between exported script variables from built-in variables (which don't have this usage flag). By
-         * default, `PROPERTY_USAGE_SCRIPT_VARIABLE` is not applied to variables that are created by
-         * overriding `Object._get_property_list` in a script.
+         * The property is a script variable. `PropertyUsageFlags.SCRIPT_VARIABLE` can be used to
+         * distinguish between exported script variables from built-in variables (which don't have this
+         * usage flag). By default, `PropertyUsageFlags.SCRIPT_VARIABLE` is not applied to variables that
+         * are created by overriding `Object._get_property_list` in a script.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_USAGE_SCRIPT_VARIABLE
          */
@@ -2949,6 +3065,12 @@ value class PropertyUsageFlags(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `MethodFlags` bitfield as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`MethodFlags.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.MethodFlags
+ */
 @JvmInline
 value class MethodFlags(override val value: Long) : GodotEnumValue {
     infix fun or(other: MethodFlags): MethodFlags = MethodFlags(value or other.value)
@@ -3021,6 +3143,12 @@ value class MethodFlags(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `Variant.Type` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`VariantType.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.Variant.Type
+ */
 @JvmInline
 value class VariantType(override val value: Long) : GodotEnumValue {
     companion object {
@@ -3267,6 +3395,12 @@ value class VariantType(override val value: Long) : GodotEnumValue {
     }
 }
 
+/**
+ * Godot's `Variant.Operator` enum as a typed value: `.value` is the raw number Godot uses, and the
+ * companion holds the named values (`VariantOperator.<NAME>`).
+ *
+ * Generated from Godot docs: @GlobalScope.Variant.Operator
+ */
 @JvmInline
 value class VariantOperator(override val value: Long) : GodotEnumValue {
     companion object {

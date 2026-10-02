@@ -477,7 +477,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Sets the offsets to a `preset` from `Control.LayoutPreset` enum. This is the code equivalent to
      * using the Layout menu in the 2D editor. Use parameter `resize_mode` with constants from
      * `Control.LayoutPresetMode` to better determine the resulting size of the `Control`. Constant
-     * size will be ignored if used with presets that change size, e.g. `PRESET_LEFT_WIDE`. Use
+     * size will be ignored if used with presets that change size, e.g. `LayoutPreset.LEFT_WIDE`. Use
      * parameter `margin` to determine the gap between the `Control` and the edges.
      *
      * Generated from Godot docs: Control.set_offsets_preset
@@ -944,9 +944,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * Returns the `focus_mode`, but takes the `focus_behavior_recursive` into account. If
-     * `focus_behavior_recursive` is set to `FOCUS_BEHAVIOR_DISABLED`, or it is set to
-     * `FOCUS_BEHAVIOR_INHERITED` and its ancestor is set to `FOCUS_BEHAVIOR_DISABLED`, then this
-     * returns `FOCUS_NONE`.
+     * `focus_behavior_recursive` is set to `FocusBehaviorRecursive.DISABLED`, or it is set to
+     * `FocusBehaviorRecursive.INHERITED` and its ancestor is set to `FocusBehaviorRecursive.DISABLED`,
+     * then this returns `FocusMode.NONE`.
      *
      * Generated from Godot docs: Control.get_focus_mode_with_override
      */
@@ -956,8 +956,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * Determines which controls can be focused together with `focus_mode`. See
-     * `get_focus_mode_with_override`. Since the default behavior is `FOCUS_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from getting focused.
+     * `get_focus_mode_with_override`. Since the default behavior is
+     * `FocusBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * getting focused.
      *
      * Generated from Godot docs: Control.set_focus_behavior_recursive
      */
@@ -967,8 +968,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * Determines which controls can be focused together with `focus_mode`. See
-     * `get_focus_mode_with_override`. Since the default behavior is `FOCUS_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from getting focused.
+     * `get_focus_mode_with_override`. Since the default behavior is
+     * `FocusBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * getting focused.
      *
      * Generated from Godot docs: Control.get_focus_behavior_recursive
      */
@@ -1062,7 +1064,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * If the node and at least one of its neighbors uses the `SIZE_EXPAND` size flag, the parent
+     * If the node and at least one of its neighbors uses the `SizeFlags.EXPAND` size flag, the parent
      * `Container` will let it take more or less space depending on this property. If this node has a
      * stretch ratio of 2 and its neighbor a ratio of 1, this node will take two thirds of the
      * available space.
@@ -1074,7 +1076,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * If the node and at least one of its neighbors uses the `SIZE_EXPAND` size flag, the parent
+     * If the node and at least one of its neighbors uses the `SizeFlags.EXPAND` size flag, the parent
      * `Container` will let it take more or less space depending on this property. If this node has a
      * stretch ratio of 2 and its neighbor a ratio of 1, this node will take two thirds of the
      * available space.
@@ -1760,8 +1762,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     /**
      * Defines if tooltip text should automatically change to its translated version depending on the
      * current locale. Uses the same auto translate mode as this control when set to
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do
-     * not use this auto translate mode automatically.
+     * `Node.AutoTranslateMode.INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do not
+     * use this auto translate mode automatically.
      *
      * Generated from Godot docs: Control.set_tooltip_auto_translate_mode
      */
@@ -1772,8 +1774,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     /**
      * Defines if tooltip text should automatically change to its translated version depending on the
      * current locale. Uses the same auto translate mode as this control when set to
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do
-     * not use this auto translate mode automatically.
+     * `Node.AutoTranslateMode.INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do not
+     * use this auto translate mode automatically.
      *
      * Generated from Godot docs: Control.get_tooltip_auto_translate_mode
      */
@@ -1784,7 +1786,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     /**
      * The default tooltip text. The tooltip appears when the user's mouse cursor stays idle over this
      * control for a few moments, provided that the `mouse_filter` property is not
-     * `MOUSE_FILTER_IGNORE`. The time required for the tooltip to appear can be changed with the
+     * `MouseFilter.IGNORE`. The time required for the tooltip to appear can be changed with the
      * `ProjectSettings.gui/timers/tooltip_delay_sec` setting. This string is the default return value
      * of `get_tooltip`. Override `_get_tooltip` to generate tooltip text dynamically. Override
      * `_make_custom_tooltip` to customize the tooltip interface and behavior. The tooltip popup will
@@ -1802,7 +1804,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     /**
      * The default tooltip text. The tooltip appears when the user's mouse cursor stays idle over this
      * control for a few moments, provided that the `mouse_filter` property is not
-     * `MOUSE_FILTER_IGNORE`. The time required for the tooltip to appear can be changed with the
+     * `MouseFilter.IGNORE`. The time required for the tooltip to appear can be changed with the
      * `ProjectSettings.gui/timers/tooltip_delay_sec` setting. This string is the default return value
      * of `get_tooltip`. Override `_get_tooltip` to generate tooltip text dynamically. Override
      * `_make_custom_tooltip` to customize the tooltip interface and behavior. The tooltip popup will
@@ -2142,9 +2144,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * Returns the `mouse_filter`, but takes the `mouse_behavior_recursive` into account. If
-     * `mouse_behavior_recursive` is set to `MOUSE_BEHAVIOR_DISABLED`, or it is set to
-     * `MOUSE_BEHAVIOR_INHERITED` and its ancestor is set to `MOUSE_BEHAVIOR_DISABLED`, then this
-     * returns `MOUSE_FILTER_IGNORE`.
+     * `mouse_behavior_recursive` is set to `MouseBehaviorRecursive.DISABLED`, or it is set to
+     * `MouseBehaviorRecursive.INHERITED` and its ancestor is set to `MouseBehaviorRecursive.DISABLED`,
+     * then this returns `MouseFilter.IGNORE`.
      *
      * Generated from Godot docs: Control.get_mouse_filter_with_override
      */
@@ -2154,8 +2156,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * Determines which controls can receive mouse input together with `mouse_filter`. See
-     * `get_mouse_filter_with_override`. Since the default behavior is `MOUSE_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from receiving mouse input.
+     * `get_mouse_filter_with_override`. Since the default behavior is
+     * `MouseBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * receiving mouse input.
      *
      * Generated from Godot docs: Control.set_mouse_behavior_recursive
      */
@@ -2165,8 +2168,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * Determines which controls can receive mouse input together with `mouse_filter`. See
-     * `get_mouse_filter_with_override`. Since the default behavior is `MOUSE_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from receiving mouse input.
+     * `get_mouse_filter_with_override`. Since the default behavior is
+     * `MouseBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * receiving mouse input.
      *
      * Generated from Godot docs: Control.get_mouse_behavior_recursive
      */
@@ -2176,7 +2180,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * When enabled, scroll wheel events processed by `_gui_input` will be passed to the parent control
-     * even if `mouse_filter` is set to `MOUSE_FILTER_STOP`. You should disable it on the root of your
+     * even if `mouse_filter` is set to `MouseFilter.STOP`. You should disable it on the root of your
      * UI if you do not want scroll events to go to the `Node._unhandled_input` processing. Note:
      * Because this property defaults to `true`, this allows nested scrollable containers to work out
      * of the box.
@@ -2189,7 +2193,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * When enabled, scroll wheel events processed by `_gui_input` will be passed to the parent control
-     * even if `mouse_filter` is set to `MOUSE_FILTER_STOP`. You should disable it on the root of your
+     * even if `mouse_filter` is set to `MouseFilter.STOP`. You should disable it on the root of your
      * UI if you do not want scroll events to go to the `Node._unhandled_input` processing. Note:
      * Because this property defaults to `true`, this allows nested scrollable containers to work out
      * of the box.
@@ -2411,6 +2415,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         const val themeChanged: String = "theme_changed"
     }
 
+    /**
+     * Godot's `Control.FocusMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.FocusMode.<NAME>`).
+     *
+     * Generated from Godot docs: Control.FocusMode
+     */
     @JvmInline
     value class FocusMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2442,19 +2452,25 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.FocusBehaviorRecursive` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Control.FocusBehaviorRecursive.<NAME>`).
+     *
+     * Generated from Godot docs: Control.FocusBehaviorRecursive
+     */
     @JvmInline
     value class FocusBehaviorRecursive(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inherits the `focus_behavior_recursive` from the parent control. If there is no parent control,
-             * this is the same as `FOCUS_BEHAVIOR_ENABLED`.
+             * this is the same as `FocusBehaviorRecursive.ENABLED`.
              *
              * Generated from Godot docs: Control.FOCUS_BEHAVIOR_INHERITED
              */
             val INHERITED: FocusBehaviorRecursive get() = FocusBehaviorRecursive(0L)
             /**
              * Prevents the control from getting focused. `get_focus_mode_with_override` will return
-             * `FOCUS_NONE`.
+             * `FocusMode.NONE`.
              *
              * Generated from Godot docs: Control.FOCUS_BEHAVIOR_DISABLED
              */
@@ -2470,19 +2486,25 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.MouseBehaviorRecursive` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Control.MouseBehaviorRecursive.<NAME>`).
+     *
+     * Generated from Godot docs: Control.MouseBehaviorRecursive
+     */
     @JvmInline
     value class MouseBehaviorRecursive(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inherits the `mouse_behavior_recursive` from the parent control. If there is no parent control,
-             * this is the same as `MOUSE_BEHAVIOR_ENABLED`.
+             * this is the same as `MouseBehaviorRecursive.ENABLED`.
              *
              * Generated from Godot docs: Control.MOUSE_BEHAVIOR_INHERITED
              */
             val INHERITED: MouseBehaviorRecursive get() = MouseBehaviorRecursive(0L)
             /**
              * Prevents the control from receiving mouse input. `get_mouse_filter_with_override` will return
-             * `MOUSE_FILTER_IGNORE`.
+             * `MouseFilter.IGNORE`.
              *
              * Generated from Godot docs: Control.MOUSE_BEHAVIOR_DISABLED
              */
@@ -2498,6 +2520,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.CursorShape` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.CursorShape.<NAME>`).
+     *
+     * Generated from Godot docs: Control.CursorShape
+     */
     @JvmInline
     value class CursorShape(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2585,8 +2613,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
             /**
              * Show the system's window resize mouse cursor when the user hovers the node. The cursor is a
              * double-headed arrow that goes from the top left to the bottom right, the opposite of
-             * `CURSOR_BDIAGSIZE`. It tells the user they can resize the window or the panel both horizontally
-             * and vertically.
+             * `CursorShape.BDIAGSIZE`. It tells the user they can resize the window or the panel both
+             * horizontally and vertically.
              *
              * Generated from Godot docs: Control.CURSOR_FDIAGSIZE
              */
@@ -2600,14 +2628,14 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
             val MOVE: CursorShape get() = CursorShape(13L)
             /**
              * Show the system's vertical split mouse cursor when the user hovers the node. On Windows, it's
-             * the same as `CURSOR_VSIZE`.
+             * the same as `CursorShape.VSIZE`.
              *
              * Generated from Godot docs: Control.CURSOR_VSPLIT
              */
             val VSPLIT: CursorShape get() = CursorShape(14L)
             /**
              * Show the system's horizontal split mouse cursor when the user hovers the node. On Windows, it's
-             * the same as `CURSOR_HSIZE`.
+             * the same as `CursorShape.HSIZE`.
              *
              * Generated from Godot docs: Control.CURSOR_HSPLIT
              */
@@ -2621,6 +2649,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.LayoutPreset` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.LayoutPreset.<NAME>`).
+     *
+     * Generated from Godot docs: Control.LayoutPreset
+     */
     @JvmInline
     value class LayoutPreset(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2743,6 +2777,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.LayoutPresetMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.LayoutPresetMode.<NAME>`).
+     *
+     * Generated from Godot docs: Control.LayoutPresetMode
+     */
     @JvmInline
     value class LayoutPresetMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2773,6 +2813,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.SizeFlags` bitfield as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.SizeFlags.<NAME>`).
+     *
+     * Generated from Godot docs: Control.SizeFlags
+     */
     @JvmInline
     value class SizeFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: SizeFlags): SizeFlags = SizeFlags(value or other.value)
@@ -2788,9 +2834,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         companion object {
             /**
              * Tells the parent `Container` to align the node with its start, either the top or the left edge.
-             * It is mutually exclusive with `SIZE_FILL` and other shrink size flags, but can be used with
-             * `SIZE_EXPAND` in some containers. Use with `size_flags_horizontal` and `size_flags_vertical`.
-             * Note: Setting this flag is equal to not having any size flags.
+             * It is mutually exclusive with `SizeFlags.FILL` and other shrink size flags, but can be used with
+             * `SizeFlags.EXPAND` in some containers. Use with `size_flags_horizontal` and
+             * `size_flags_vertical`. Note: Setting this flag is equal to not having any size flags.
              *
              * Generated from Godot docs: Control.SIZE_SHRINK_BEGIN
              */
@@ -2813,24 +2859,24 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
              */
             val EXPAND: SizeFlags get() = SizeFlags(2L)
             /**
-             * Sets the node's size flags to both fill and expand. See `SIZE_FILL` and `SIZE_EXPAND` for more
-             * information.
+             * Sets the node's size flags to both fill and expand. See `SizeFlags.FILL` and `SizeFlags.EXPAND`
+             * for more information.
              *
              * Generated from Godot docs: Control.SIZE_EXPAND_FILL
              */
             val EXPAND_FILL: SizeFlags get() = SizeFlags(3L)
             /**
              * Tells the parent `Container` to center the node in the available space. It is mutually exclusive
-             * with `SIZE_FILL` and other shrink size flags, but can be used with `SIZE_EXPAND` in some
-             * containers. Use with `size_flags_horizontal` and `size_flags_vertical`.
+             * with `SizeFlags.FILL` and other shrink size flags, but can be used with `SizeFlags.EXPAND` in
+             * some containers. Use with `size_flags_horizontal` and `size_flags_vertical`.
              *
              * Generated from Godot docs: Control.SIZE_SHRINK_CENTER
              */
             val SHRINK_CENTER: SizeFlags get() = SizeFlags(4L)
             /**
              * Tells the parent `Container` to align the node with its end, either the bottom or the right
-             * edge. It is mutually exclusive with `SIZE_FILL` and other shrink size flags, but can be used
-             * with `SIZE_EXPAND` in some containers. Use with `size_flags_horizontal` and
+             * edge. It is mutually exclusive with `SizeFlags.FILL` and other shrink size flags, but can be
+             * used with `SizeFlags.EXPAND` in some containers. Use with `size_flags_horizontal` and
              * `size_flags_vertical`.
              *
              * Generated from Godot docs: Control.SIZE_SHRINK_END
@@ -2839,6 +2885,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.MouseFilter` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.MouseFilter.<NAME>`).
+     *
+     * Generated from Godot docs: Control.MouseFilter
+     */
     @JvmInline
     value class MouseFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2856,7 +2908,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
              * through `_gui_input`. The control will also receive the `mouse_entered` and `mouse_exited`
              * signals. If this control does not handle the event, the event will propagate up to its parent
              * control if it has one. The event is bubbled up the node hierarchy until it reaches a
-             * non-`CanvasItem`, a control with `MOUSE_FILTER_STOP`, or a `CanvasItem` with
+             * non-`CanvasItem`, a control with `MouseFilter.STOP`, or a `CanvasItem` with
              * `CanvasItem.top_level` enabled. This will allow signals to fire in all controls it reaches. If
              * no control handled it, the event will be passed to `Node._shortcut_input` for further
              * processing.
@@ -2868,10 +2920,10 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
              * The control will not receive any mouse movement input events nor mouse button input events
              * through `_gui_input`. The control will also not receive the `mouse_entered` nor `mouse_exited`
              * signals. This will not block other controls from receiving these events or firing the signals.
-             * Ignored events will not be handled automatically. If a child has `MOUSE_FILTER_PASS` and an
-             * event was passed to this control, the event will further propagate up to the control's parent.
-             * Note: If the control has received `mouse_entered` but not `mouse_exited`, changing the
-             * `mouse_filter` to `MOUSE_FILTER_IGNORE` will cause `mouse_exited` to be emitted.
+             * Ignored events will not be handled automatically. If a child has `MouseFilter.PASS` and an event
+             * was passed to this control, the event will further propagate up to the control's parent. Note:
+             * If the control has received `mouse_entered` but not `mouse_exited`, changing the `mouse_filter`
+             * to `MouseFilter.IGNORE` will cause `mouse_exited` to be emitted.
              *
              * Generated from Godot docs: Control.MOUSE_FILTER_IGNORE
              */
@@ -2879,6 +2931,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.GrowDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.GrowDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Control.GrowDirection
+     */
     @JvmInline
     value class GrowDirection(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2906,6 +2964,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.Anchor` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Control.Anchor.<NAME>`).
+     *
+     * Generated from Godot docs: Control.Anchor
+     */
     @JvmInline
     value class Anchor(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2928,6 +2992,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.LayoutDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.LayoutDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Control.LayoutDirection
+     */
     @JvmInline
     value class LayoutDirection(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2984,6 +3054,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         }
     }
 
+    /**
+     * Godot's `Control.TextDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.TextDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Control.TextDirection
+     */
     @JvmInline
     value class TextDirection(override val value: Long) : GodotEnumValue {
         companion object {

@@ -383,7 +383,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      * Finds the key index by time in a given track. Optionally, only find it if the approx/exact time
      * is given. If `limit` is `true`, it does not return keys outside the animation range. If
      * `backward` is `true`, the direction is reversed in methods that rely on one directional
-     * processing. For example, in case `find_mode` is `FIND_MODE_NEAREST`, if there is no key in the
+     * processing. For example, in case `find_mode` is `FindMode.NEAREST`, if there is no key in the
      * current position just after seeked, the first key found is retrieved by searching before the
      * position, but if `backward` is `true`, the first key found is retrieved after the position.
      *
@@ -468,8 +468,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     /**
      * Returns the interpolated value at the given time (in seconds). The `track_idx` must be the index
      * of a value track. A `backward` mainly affects the direction of key retrieval of the track with
-     * `UPDATE_DISCRETE` converted by
-     * `AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to match the result with
+     * `UpdateMode.DISCRETE` converted by
+     * `AnimationMixer.AnimationCallbackModeDiscrete.FORCE_CONTINUOUS` to match the result with
      * `track_find_key`.
      *
      * Generated from Godot docs: Animation.value_track_interpolate
@@ -951,13 +951,20 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isCaptureIncludedBind, segment)
     }
 
+    /**
+     * Godot's `Animation.TrackType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.TrackType.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.TrackType
+     */
     @JvmInline
     value class TrackType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Value tracks set values in node properties, but only those which can be interpolated. For 3D
-             * position/rotation/scale, using the dedicated `TYPE_POSITION_3D`, `TYPE_ROTATION_3D` and
-             * `TYPE_SCALE_3D` track types instead of `TYPE_VALUE` is recommended for performance reasons.
+             * position/rotation/scale, using the dedicated `TrackType.POSITION_3D`, `TrackType.ROTATION_3D`
+             * and `TrackType.SCALE_3D` track types instead of `TrackType.VALUE` is recommended for performance
+             * reasons.
              *
              * Generated from Godot docs: Animation.TYPE_VALUE
              */
@@ -1015,6 +1022,12 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Animation.InterpolationType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Animation.InterpolationType.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.InterpolationType
+     */
     @JvmInline
     value class InterpolationType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1032,8 +1045,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
             val LINEAR: InterpolationType get() = InterpolationType(1L)
             /**
              * Cubic interpolation. This looks smoother than linear interpolation, but is more expensive to
-             * interpolate. Stick to `INTERPOLATION_LINEAR` for complex 3D animations imported from external
-             * software, even if it requires using a higher animation framerate in return.
+             * interpolate. Stick to `InterpolationType.LINEAR` for complex 3D animations imported from
+             * external software, even if it requires using a higher animation framerate in return.
              *
              * Generated from Godot docs: Animation.INTERPOLATION_CUBIC
              */
@@ -1055,6 +1068,12 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Animation.UpdateMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.UpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.UpdateMode
+     */
     @JvmInline
     value class UpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1071,8 +1090,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
              */
             val DISCRETE: UpdateMode get() = UpdateMode(1L)
             /**
-             * Same as `UPDATE_CONTINUOUS` but works as a flag to capture the value of the current object and
-             * perform interpolation in some methods. See also `AnimationMixer.capture`,
+             * Same as `UpdateMode.CONTINUOUS` but works as a flag to capture the value of the current object
+             * and perform interpolation in some methods. See also `AnimationMixer.capture`,
              * `AnimationPlayer.playback_auto_capture`, and `AnimationPlayer.play_with_capture`.
              *
              * Generated from Godot docs: Animation.UPDATE_CAPTURE
@@ -1081,6 +1100,12 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Animation.LoopMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.LoopMode.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.LoopMode
+     */
     @JvmInline
     value class LoopMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1106,6 +1131,12 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Animation.LoopedFlag` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.LoopedFlag.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.LoopedFlag
+     */
     @JvmInline
     value class LoopedFlag(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1132,6 +1163,12 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Animation.FindMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.FindMode.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.FindMode
+     */
     @JvmInline
     value class FindMode(override val value: Long) : GodotEnumValue {
         companion object {

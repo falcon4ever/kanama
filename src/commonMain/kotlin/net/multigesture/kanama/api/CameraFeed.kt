@@ -193,10 +193,10 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Sets the feed format parameters for the given `index` in the `formats` array. Returns `true` on
-     * success. By default, the YUYV encoded stream is transformed to `FEED_RGB`. The YUYV encoded
-     * stream output format can be changed by setting `parameters`'s `output` entry to one of the
-     * following: - `"separate"` will result in `FEED_YCBCR_SEP`; - `"grayscale"` will result in
-     * desaturated `FEED_RGB`; - `"copy"` will result in `FEED_YCBCR`.
+     * success. By default, the YUYV encoded stream is transformed to `FeedDataType.RGB`. The YUYV
+     * encoded stream output format can be changed by setting `parameters`'s `output` entry to one of
+     * the following: - `"separate"` will result in `FeedDataType.YCBCR_SEP`; - `"grayscale"` will
+     * result in desaturated `FeedDataType.RGB`; - `"copy"` will result in `FeedDataType.YCBCR`.
      *
      * Generated from Godot docs: CameraFeed.set_format
      */
@@ -210,6 +210,12 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
         const val formatChanged: String = "format_changed"
     }
 
+    /**
+     * Godot's `CameraFeed.FeedDataType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CameraFeed.FeedDataType.<NAME>`).
+     *
+     * Generated from Godot docs: CameraFeed.FeedDataType
+     */
     @JvmInline
     value class FeedDataType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -246,6 +252,12 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `CameraFeed.FeedPosition` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CameraFeed.FeedPosition.<NAME>`).
+     *
+     * Generated from Godot docs: CameraFeed.FeedPosition
+     */
     @JvmInline
     value class FeedPosition(override val value: Long) : GodotEnumValue {
         companion object {

@@ -330,6 +330,12 @@ object ClassDB {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassEnabledBind, singleton, classValue)
     }
 
+    /**
+     * Godot's `ClassDB.APIType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`ClassDB.APIType.<NAME>`).
+     *
+     * Generated from Godot docs: ClassDB.APIType
+     */
     @JvmInline
     value class APIType(override val value: Long) : GodotEnumValue {
         companion object {

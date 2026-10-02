@@ -460,6 +460,13 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathSearchMaxDistanceBind, segment)
     }
 
+    /**
+     * Godot's `NavigationPathQueryParameters3D.PathfindingAlgorithm` enum as a typed value: `.value`
+     * is the raw number Godot uses, and the companion holds the named values
+     * (`NavigationPathQueryParameters3D.PathfindingAlgorithm.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPathQueryParameters3D.PathfindingAlgorithm
+     */
     @JvmInline
     value class PathfindingAlgorithm(override val value: Long) : GodotEnumValue {
         companion object {
@@ -472,6 +479,13 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
         }
     }
 
+    /**
+     * Godot's `NavigationPathQueryParameters3D.PathPostProcessing` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`NavigationPathQueryParameters3D.PathPostProcessing.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPathQueryParameters3D.PathPostProcessing
+     */
     @JvmInline
     value class PathPostProcessing(override val value: Long) : GodotEnumValue {
         companion object {
@@ -503,6 +517,13 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
         }
     }
 
+    /**
+     * Godot's `NavigationPathQueryParameters3D.PathMetadataFlags` bitfield as a typed value: `.value`
+     * is the raw number Godot uses, and the companion holds the named values
+     * (`NavigationPathQueryParameters3D.PathMetadataFlags.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPathQueryParameters3D.PathMetadataFlags
+     */
     @JvmInline
     value class PathMetadataFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: PathMetadataFlags): PathMetadataFlags = PathMetadataFlags(value or other.value)

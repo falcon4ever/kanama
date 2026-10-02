@@ -268,8 +268,8 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * Sets the position at which to divide the segment between joints for weight assignment when
-     * `get_disperse_mode` is `DISPERSE_MODE_WEIGHTED`. For example, when `weight_position` is `0.5`,
-     * if two bone segments with a length of `1.0` exist between three joints, weights are assigned to
+     * `get_disperse_mode` is `DisperseMode.WEIGHTED`. For example, when `weight_position` is `0.5`, if
+     * two bone segments with a length of `1.0` exist between three joints, weights are assigned to
      * each joint from root to end at ratios of `0.5`, `1.0`, and `0.5`. Then amounts become `0.25`,
      * `0.75`, and `1.0` respectively.
      *
@@ -281,7 +281,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * Returns the position at which to divide the segment between joints for weight assignment when
-     * `get_disperse_mode` is `DISPERSE_MODE_WEIGHTED`.
+     * `get_disperse_mode` is `DisperseMode.WEIGHTED`.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.get_weight_position
      */
@@ -290,7 +290,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Sets the damping curve when `get_disperse_mode` is `DISPERSE_MODE_CUSTOM`.
+     * Sets the damping curve when `get_disperse_mode` is `DisperseMode.CUSTOM`.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.set_damping_curve
      */
@@ -299,7 +299,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Returns the damping curve when `get_disperse_mode` is `DISPERSE_MODE_CUSTOM`.
+     * Returns the damping curve when `get_disperse_mode` is `DisperseMode.CUSTOM`.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.get_damping_curve
      */
@@ -327,7 +327,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * Returns the twist amount at `joint` in the bone chain's joint list when `get_disperse_mode` is
-     * `DISPERSE_MODE_CUSTOM`.
+     * `DisperseMode.CUSTOM`.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.get_joint_twist_amount
      */
@@ -337,7 +337,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * Sets the twist amount at `joint` in the bone chain's joint list when `get_disperse_mode` is
-     * `DISPERSE_MODE_CUSTOM`.
+     * `DisperseMode.CUSTOM`.
      *
      * Generated from Godot docs: BoneTwistDisperser3D.set_joint_twist_amount
      */
@@ -354,6 +354,13 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, segment, index)
     }
 
+    /**
+     * Godot's `BoneTwistDisperser3D.DisperseMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`BoneTwistDisperser3D.DisperseMode.<NAME>`).
+     *
+     * Generated from Godot docs: BoneTwistDisperser3D.DisperseMode
+     */
     @JvmInline
     value class DisperseMode(override val value: Long) : GodotEnumValue {
         companion object {

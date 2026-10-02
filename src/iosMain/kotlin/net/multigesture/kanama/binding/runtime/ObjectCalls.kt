@@ -38,6 +38,7 @@ import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
+import net.multigesture.kanama.api.createTween
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
 import net.multigesture.kanama.ios.KanamaIosRpcConfig
@@ -4014,6 +4015,40 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): NodePath =
     NodePath(callWithVariantArgs(methodBind, instance, listOf(objectArg, boolArg)) as? String ?: "")
+
+  // Tween.tween_property(object, property: NodePath, final_val: Variant, duration) for the
+  // hand-written iOS Tween (task 128 A review): the Variant final value goes through the general
+  // Variant encoder (packVariantDesc), so every Variant-expressible value -- Double, Long, Vector3,
+  // a typed GodotEnumValue -- reaches Godot as itself. The previous Vector2 / Color C-shim pair
+  // tweened every other value to Vector2(0, 0). Same name and parameters as the desktop helper.
+  fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    objectArg: MemorySegment,
+    path: String,
+    variantArg: Any?,
+    doubleArg: Double,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<LongVar>()
+    c0.value = objectArg.address()
+    val c2 = packVariantDesc(variantArg)
+    val c3 = alloc<DoubleVar>()
+    c3.value = doubleArg
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_OBJECT
+    types[1] = PT_NODE_PATH
+    types[2] = PT_VARIANT
+    types[3] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = path.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
 
   // ===== BEGIN GENERATED MEMBERS (scripts/generate_api_wrapper.py — do not edit) =====
   /*
@@ -42425,6 +42460,28 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     val segment = ObjectCalls.getSingleton(name)
     check("singleton-present($name)", segment.address() != 0L)
     return segment
+  }
+
+  // Task 128 A review — iOS Tween.tweenProperty with a Variant final value the old Vector2/Color
+  // C-shim pair could not carry: a Double rotation. A valid Tween needs the running SceneTree, so
+  // the
+  // row lives in this frame-1 phase. The tween is stepped past its duration with custom_step, so
+  // the
+  // property must read the target 1.25; the old path tweened a float property to Vector2(0, 0),
+  // which Godot refuses, leaving rotation at 0.
+  run {
+    val node =
+      net.multigesture.kanama.api.Node2D(GodotHandle(ObjectCalls.constructObject("Node2D")))
+    val tween = net.multigesture.kanama.api.SceneTree.active().createTween()
+    tween.tweenProperty(node, "rotation", 1.25, 0.5)
+    tween.call("custom_step", 1.0)
+    check(
+      "tween-property(Double rotation -> 1.25 after custom_step)",
+      kotlin.math.abs(node.getRotation() - 1.25) < 1e-4,
+    )
+    tween.kill()
+    tween.close()
+    ObjectCalls.destroyObject(node.segment)
   }
 
   // task 100 (parcel 10), moved here by task 117 P2' follow-up 4 — Array[Dictionary] ARGUMENT

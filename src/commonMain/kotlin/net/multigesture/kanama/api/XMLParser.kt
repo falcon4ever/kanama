@@ -33,8 +33,8 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the name of a node. This method will raise an error if the currently parsed node is a
-     * text node. Note: The content of a `NODE_CDATA` node and the comment string of a `NODE_COMMENT`
-     * node are also considered names.
+     * text node. Note: The content of a `NodeType.CDATA` node and the comment string of a
+     * `NodeType.COMMENT` node are also considered names.
      *
      * Generated from Godot docs: XMLParser.get_node_name
      */
@@ -67,8 +67,8 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the number of attributes in the currently parsed element. Note: If this method is used
-     * while the currently parsed node is not `NODE_ELEMENT` or `NODE_ELEMENT_END`, this count will not
-     * be updated and will still reflect the last element.
+     * while the currently parsed node is not `NodeType.ELEMENT` or `NodeType.ELEMENT_END`, this count
+     * will not be updated and will still reflect the last element.
      *
      * Generated from Godot docs: XMLParser.get_attribute_count
      */
@@ -191,6 +191,12 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
         return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(openBufferBind, segment, buffer))
     }
 
+    /**
+     * Godot's `XMLParser.NodeType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`XMLParser.NodeType.<NAME>`).
+     *
+     * Generated from Godot docs: XMLParser.NodeType
+     */
     @JvmInline
     value class NodeType(override val value: Long) : GodotEnumValue {
         companion object {

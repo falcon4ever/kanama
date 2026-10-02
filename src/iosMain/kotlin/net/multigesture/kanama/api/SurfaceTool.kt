@@ -184,23 +184,98 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
     fun commit(): ArrayMesh? = commit(null)
 
+    /**
+     * Godot's `SurfaceTool.CustomFormat` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SurfaceTool.CustomFormat.<NAME>`).
+     *
+     * Generated from Godot docs: SurfaceTool.CustomFormat
+     */
     value class CustomFormat(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Limits range of data passed to `set_custom` to unsigned normalized 0 to 1 stored in 8 bits per
+             * channel. See `Mesh.ArrayCustomFormat.RGBA8_UNORM`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA8_UNORM
+             */
             val RGBA8_UNORM: CustomFormat get() = CustomFormat(0L)
+            /**
+             * Limits range of data passed to `set_custom` to signed normalized -1 to 1 stored in 8 bits per
+             * channel. See `Mesh.ArrayCustomFormat.RGBA8_SNORM`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA8_SNORM
+             */
             val RGBA8_SNORM: CustomFormat get() = CustomFormat(1L)
+            /**
+             * Stores data passed to `set_custom` as half precision floats, and uses only red and green color
+             * channels. See `Mesh.ArrayCustomFormat.RG_HALF`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RG_HALF
+             */
             val RG_HALF: CustomFormat get() = CustomFormat(2L)
+            /**
+             * Stores data passed to `set_custom` as half precision floats and uses all color channels. See
+             * `Mesh.ArrayCustomFormat.RGBA_HALF`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA_HALF
+             */
             val RGBA_HALF: CustomFormat get() = CustomFormat(3L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red color channel.
+             * See `Mesh.ArrayCustomFormat.R_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_R_FLOAT
+             */
             val R_FLOAT: CustomFormat get() = CustomFormat(4L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red and green color
+             * channels. See `Mesh.ArrayCustomFormat.RG_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RG_FLOAT
+             */
             val RG_FLOAT: CustomFormat get() = CustomFormat(5L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red, green and blue
+             * color channels. See `Mesh.ArrayCustomFormat.RGB_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGB_FLOAT
+             */
             val RGB_FLOAT: CustomFormat get() = CustomFormat(6L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses all color channels. See
+             * `Mesh.ArrayCustomFormat.RGBA_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA_FLOAT
+             */
             val RGBA_FLOAT: CustomFormat get() = CustomFormat(7L)
+            /**
+             * Used to indicate a disabled custom channel.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_MAX
+             */
             val MAX: CustomFormat get() = CustomFormat(8L)
         }
     }
 
+    /**
+     * Godot's `SurfaceTool.SkinWeightCount` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`SurfaceTool.SkinWeightCount.<NAME>`).
+     *
+     * Generated from Godot docs: SurfaceTool.SkinWeightCount
+     */
     value class SkinWeightCount(override val value: Long) : GodotEnumValue {
         companion object {
+            /**
+             * Each individual vertex can be influenced by only 4 bone weights.
+             *
+             * Generated from Godot docs: SurfaceTool.SKIN_4_WEIGHTS
+             */
             val SKIN_4_WEIGHTS: SkinWeightCount get() = SkinWeightCount(0L)
+            /**
+             * Each individual vertex can be influenced by up to 8 bone weights.
+             *
+             * Generated from Godot docs: SurfaceTool.SKIN_8_WEIGHTS
+             */
             val SKIN_8_WEIGHTS: SkinWeightCount get() = SkinWeightCount(1L)
         }
     }

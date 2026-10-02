@@ -280,7 +280,7 @@ class Label(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text. Note: Labels with autowrapping enabled must have a custom maximum width
      * configured to work correctly, either through the Label's own `Control.custom_maximum_size` or as
@@ -294,7 +294,7 @@ class Label(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text. Note: Labels with autowrapping enabled must have a custom maximum width
      * configured to work correctly, either through the Label's own `Control.custom_maximum_size` or as
@@ -308,8 +308,8 @@ class Label(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Label.set_autowrap_trim_flags
      */
@@ -318,8 +318,8 @@ class Label(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Label.get_autowrap_trim_flags
      */

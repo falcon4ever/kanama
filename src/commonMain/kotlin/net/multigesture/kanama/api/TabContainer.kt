@@ -587,6 +587,12 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         const val prePopupPressed: String = "pre_popup_pressed"
     }
 
+    /**
+     * Godot's `TabContainer.TabPosition` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TabContainer.TabPosition.<NAME>`).
+     *
+     * Generated from Godot docs: TabContainer.TabPosition
+     */
     @JvmInline
     value class TabPosition(override val value: Long) : GodotEnumValue {
         companion object {

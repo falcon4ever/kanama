@@ -69,7 +69,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      * Sends a raw HTTP request to the connected host with the given `method`. The URL parameter is
      * usually just the part after the host, so for `https://example.com/index.php`, it is
      * `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For
-     * `HTTPClient.METHOD_OPTIONS` requests, `*` is also allowed. For `HTTPClient.METHOD_CONNECT`
+     * `HTTPClient.Method.OPTIONS` requests, `*` is also allowed. For `HTTPClient.Method.CONNECT`
      * requests, it should be the authority component (`host:port`). `headers` are HTTP request
      * headers. Sends the body data raw, as a byte array and does not encode it in any way.
      *
@@ -84,7 +84,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      * Sends an HTTP request to the connected host with the given `method`. The URL parameter is
      * usually just the part after the host, so for `https://example.com/index.php`, it is
      * `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For
-     * `HTTPClient.METHOD_OPTIONS` requests, `*` is also allowed. For `HTTPClient.METHOD_CONNECT`
+     * `HTTPClient.Method.OPTIONS` requests, `*` is also allowed. For `HTTPClient.Method.CONNECT`
      * requests, it should be the authority component (`host:port`). `headers` are HTTP request
      * headers. To create a POST request with query strings to push to the server, do:
      *
@@ -270,6 +270,12 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithDictionaryArgRetString(queryStringFromDictBind, segment, fields)
     }
 
+    /**
+     * Godot's `HTTPClient.Method` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`HTTPClient.Method.<NAME>`).
+     *
+     * Generated from Godot docs: HTTPClient.Method
+     */
     @JvmInline
     value class Method(override val value: Long) : GodotEnumValue {
         companion object {
@@ -346,6 +352,12 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `HTTPClient.Status` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`HTTPClient.Status.<NAME>`).
+     *
+     * Generated from Godot docs: HTTPClient.Status
+     */
     @JvmInline
     value class Status(override val value: Long) : GodotEnumValue {
         companion object {
@@ -412,6 +424,12 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `HTTPClient.ResponseCode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`HTTPClient.ResponseCode.<NAME>`).
+     *
+     * Generated from Godot docs: HTTPClient.ResponseCode
+     */
     @JvmInline
     value class ResponseCode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -438,10 +456,10 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
             val PROCESSING: ResponseCode get() = ResponseCode(102L)
             /**
              * HTTP status code `200 OK`. The request has succeeded. Default response for successful requests.
-             * Meaning varies depending on the request: - `METHOD_GET`: The resource has been fetched and is
-             * transmitted in the message body. - `METHOD_HEAD`: The entity headers are in the message body. -
-             * `METHOD_POST`: The resource describing the result of the action is transmitted in the message
-             * body. - `METHOD_TRACE`: The message body contains the request message as received by the server.
+             * Meaning varies depending on the request: - `Method.GET`: The resource has been fetched and is
+             * transmitted in the message body. - `Method.HEAD`: The entity headers are in the message body. -
+             * `Method.POST`: The resource describing the result of the action is transmitted in the message
+             * body. - `Method.TRACE`: The message body contains the request message as received by the server.
              *
              * Generated from Godot docs: HTTPClient.RESPONSE_OK
              */

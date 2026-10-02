@@ -110,6 +110,12 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditorPreviewIndeterminateEnabledBind, segment)
     }
 
+    /**
+     * Godot's `ProgressBar.FillMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`ProgressBar.FillMode.<NAME>`).
+     *
+     * Generated from Godot docs: ProgressBar.FillMode
+     */
     @JvmInline
     value class FillMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -17,7 +17,7 @@ object GDExtensionManager {
 
     /**
      * Loads an extension by absolute file path. The `path` needs to point to a valid `GDExtension`.
-     * Returns `LOAD_STATUS_OK` if successful.
+     * Returns `LoadStatus.OK` if successful.
      *
      * Generated from Godot docs: GDExtensionManager.load_extension
      */
@@ -28,9 +28,9 @@ object GDExtensionManager {
 
     /**
      * Reloads the extension at the given file path. The `path` needs to point to a valid
-     * `GDExtension`, otherwise this method may return either `LOAD_STATUS_NOT_LOADED` or
-     * `LOAD_STATUS_FAILED`. Note: You can only reload extensions in the editor. In release builds,
-     * this method always fails and returns `LOAD_STATUS_FAILED`.
+     * `GDExtension`, otherwise this method may return either `LoadStatus.NOT_LOADED` or
+     * `LoadStatus.FAILED`. Note: You can only reload extensions in the editor. In release builds, this
+     * method always fails and returns `LoadStatus.FAILED`.
      *
      * Generated from Godot docs: GDExtensionManager.reload_extension
      */
@@ -41,7 +41,7 @@ object GDExtensionManager {
 
     /**
      * Unloads an extension by file path. The `path` needs to point to an already loaded `GDExtension`,
-     * otherwise this method returns `LOAD_STATUS_NOT_LOADED`.
+     * otherwise this method returns `LoadStatus.NOT_LOADED`.
      *
      * Generated from Godot docs: GDExtensionManager.unload_extension
      */
@@ -88,6 +88,12 @@ object GDExtensionManager {
         const val extensionUnloading: String = "extension_unloading"
     }
 
+    /**
+     * Godot's `GDExtensionManager.LoadStatus` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GDExtensionManager.LoadStatus.<NAME>`).
+     *
+     * Generated from Godot docs: GDExtensionManager.LoadStatus
+     */
     @JvmInline
     value class LoadStatus(override val value: Long) : GodotEnumValue {
         companion object {

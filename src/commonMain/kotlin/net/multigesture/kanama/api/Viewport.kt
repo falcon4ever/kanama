@@ -393,7 +393,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * regardless of the automatically computed scale factor. Note: Due to how pixel scaling works, the
      * returned transform's X and Y scale may differ slightly, even when `Window.content_scale_aspect`
      * is set to a mode that preserves the pixels' aspect ratio. If `Window.content_scale_aspect` is
-     * `Window.CONTENT_SCALE_ASPECT_IGNORE`, the X and Y scale may differ significantly.
+     * `Window.ContentScaleAspect.IGNORE`, the X and Y scale may differ significantly.
      *
      * Generated from Godot docs: Viewport.get_stretch_transform
      */
@@ -487,8 +487,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * The multisample antialiasing mode for 2D/Canvas rendering. A higher number results in smoother
-     * edges at the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or
-     * `Viewport.MSAA_4X` is best unless targeting very high-end systems. This has no effect on
+     * edges at the cost of significantly worse performance. A value of `Viewport.MSAA.MSAA_2X` or
+     * `Viewport.MSAA.MSAA_4X` is best unless targeting very high-end systems. This has no effect on
      * shader-induced aliasing or texture aliasing. See also
      * `ProjectSettings.rendering/anti_aliasing/quality/msaa_2d` and
      * `RenderingServer.viewport_set_msaa_2d`.
@@ -501,8 +501,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * The multisample antialiasing mode for 2D/Canvas rendering. A higher number results in smoother
-     * edges at the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or
-     * `Viewport.MSAA_4X` is best unless targeting very high-end systems. This has no effect on
+     * edges at the cost of significantly worse performance. A value of `Viewport.MSAA.MSAA_2X` or
+     * `Viewport.MSAA.MSAA_4X` is best unless targeting very high-end systems. This has no effect on
      * shader-induced aliasing or texture aliasing. See also
      * `ProjectSettings.rendering/anti_aliasing/quality/msaa_2d` and
      * `RenderingServer.viewport_set_msaa_2d`.
@@ -515,10 +515,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * The multisample antialiasing mode for 3D rendering. A higher number results in smoother edges at
-     * the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or `Viewport.MSAA_4X`
-     * is best unless targeting very high-end systems. See also bilinear scaling 3D `scaling_3d_mode`
-     * for supersampling, which provides higher quality but is much more expensive. This has no effect
-     * on shader-induced aliasing or texture aliasing. See also
+     * the cost of significantly worse performance. A value of `Viewport.MSAA.MSAA_2X` or
+     * `Viewport.MSAA.MSAA_4X` is best unless targeting very high-end systems. See also bilinear
+     * scaling 3D `scaling_3d_mode` for supersampling, which provides higher quality but is much more
+     * expensive. This has no effect on shader-induced aliasing or texture aliasing. See also
      * `ProjectSettings.rendering/anti_aliasing/quality/msaa_3d` and
      * `RenderingServer.viewport_set_msaa_3d`.
      *
@@ -530,10 +530,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * The multisample antialiasing mode for 3D rendering. A higher number results in smoother edges at
-     * the cost of significantly worse performance. A value of `Viewport.MSAA_2X` or `Viewport.MSAA_4X`
-     * is best unless targeting very high-end systems. See also bilinear scaling 3D `scaling_3d_mode`
-     * for supersampling, which provides higher quality but is much more expensive. This has no effect
-     * on shader-induced aliasing or texture aliasing. See also
+     * the cost of significantly worse performance. A value of `Viewport.MSAA.MSAA_2X` or
+     * `Viewport.MSAA.MSAA_4X` is best unless targeting very high-end systems. See also bilinear
+     * scaling 3D `scaling_3d_mode` for supersampling, which provides higher quality but is much more
+     * expensive. This has no effect on shader-induced aliasing or texture aliasing. See also
      * `ProjectSettings.rendering/anti_aliasing/quality/msaa_3d` and
      * `RenderingServer.viewport_set_msaa_3d`.
      *
@@ -602,7 +602,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     /**
      * When using the Mobile or Forward+ renderers, set `use_debanding` to enable or disable the
      * debanding feature of this `Viewport`. If `use_hdr_2d` is `false`, 2D rendering is not affected
-     * by debanding unless the `Environment.background_mode` is `Environment.BG_CANVAS`. If
+     * by debanding unless the `Environment.background_mode` is `Environment.BGMode.CANVAS`. If
      * `use_hdr_2d` is `true`, debanding will only be applied if this is the root `Viewport` and will
      * affect all 2D and 3D rendering, including canvas items. `use_debanding` has no effect when using
      * the Compatibility rendering method. The Mobile renderer can also use material debanding, which
@@ -620,7 +620,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     /**
      * When using the Mobile or Forward+ renderers, set `use_debanding` to enable or disable the
      * debanding feature of this `Viewport`. If `use_hdr_2d` is `false`, 2D rendering is not affected
-     * by debanding unless the `Environment.background_mode` is `Environment.BG_CANVAS`. If
+     * by debanding unless the `Environment.background_mode` is `Environment.BGMode.CANVAS`. If
      * `use_hdr_2d` is `true`, debanding will only be applied if this is the root `Viewport` and will
      * affect all 2D and 3D rendering, including canvas items. `use_debanding` has no effect when using
      * the Compatibility rendering method. The Mobile renderer can also use material debanding, which
@@ -1371,7 +1371,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * taken into account in the generated signed distance field, at the cost of performance. If you
      * notice particles falling through `LightOccluder2D`s as the occluders leave the viewport,
      * increase this setting. The percentage is added on each axis and on both sides. For example, with
-     * the default `SDF_OVERSIZE_120_PERCENT`, the signed distance field will cover 20% of the
+     * the default `SDFOversize.OVERSIZE_120_PERCENT`, the signed distance field will cover 20% of the
      * viewport's size outside the viewport on each side (top, right, bottom, left).
      *
      * Generated from Godot docs: Viewport.set_sdf_oversize
@@ -1387,7 +1387,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * taken into account in the generated signed distance field, at the cost of performance. If you
      * notice particles falling through `LightOccluder2D`s as the occluders leave the viewport,
      * increase this setting. The percentage is added on each axis and on both sides. For example, with
-     * the default `SDF_OVERSIZE_120_PERCENT`, the signed distance field will cover 20% of the
+     * the default `SDFOversize.OVERSIZE_120_PERCENT`, the signed distance field will cover 20% of the
      * viewport's size outside the viewport on each side (top, right, bottom, left).
      *
      * Generated from Godot docs: Viewport.get_sdf_oversize
@@ -1765,11 +1765,11 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * `ProjectSettings.rendering/textures/decals/filter` and
      * `ProjectSettings.rendering/textures/light_projectors/filter`. Note: In 3D, for this setting to
      * have an effect, set `BaseMaterial3D.texture_filter` to
-     * `BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
+     * `BaseMaterial3D.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `BaseMaterial3D.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
      * this setting to have an effect, set `CanvasItem.texture_filter` to
-     * `CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
+     * `CanvasItem.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `CanvasItem.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
      * the texture (or in `CanvasTexture`). However, anisotropic filtering is rarely useful in 2D, so
      * only enable it for textures in 2D if it makes a meaningful visual difference.
      *
@@ -1788,11 +1788,11 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * `ProjectSettings.rendering/textures/decals/filter` and
      * `ProjectSettings.rendering/textures/light_projectors/filter`. Note: In 3D, for this setting to
      * have an effect, set `BaseMaterial3D.texture_filter` to
-     * `BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
+     * `BaseMaterial3D.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `BaseMaterial3D.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
      * this setting to have an effect, set `CanvasItem.texture_filter` to
-     * `CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
+     * `CanvasItem.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `CanvasItem.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
      * the texture (or in `CanvasTexture`). However, anisotropic filtering is rarely useful in 2D, so
      * only enable it for textures in 2D if it makes a meaningful visual difference.
      *
@@ -1847,9 +1847,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * Texture to use when `vrs_mode` is set to `Viewport.VRS_TEXTURE`. The texture must use a lossless
-     * compression format so that colors can be matched precisely. The following VRS densities are
-     * mapped to various colors, with brighter colors representing a lower level of shading precision:
+     * Texture to use when `vrs_mode` is set to `Viewport.VRSMode.TEXTURE`. The texture must use a
+     * lossless compression format so that colors can be matched precisely. The following VRS densities
+     * are mapped to various colors, with brighter colors representing a lower level of shading
+     * precision:
      *
      * Generated from Godot docs: Viewport.set_vrs_texture
      */
@@ -1858,9 +1859,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * Texture to use when `vrs_mode` is set to `Viewport.VRS_TEXTURE`. The texture must use a lossless
-     * compression format so that colors can be matched precisely. The following VRS densities are
-     * mapped to various colors, with brighter colors representing a lower level of shading precision:
+     * Texture to use when `vrs_mode` is set to `Viewport.VRSMode.TEXTURE`. The texture must use a
+     * lossless compression format so that colors can be matched precisely. The following VRS densities
+     * are mapped to various colors, with brighter colors representing a lower level of shading
+     * precision:
      *
      * Generated from Godot docs: Viewport.get_vrs_texture
      */
@@ -1881,6 +1883,13 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         const val guiFocusChanged: String = "gui_focus_changed"
     }
 
+    /**
+     * Godot's `Viewport.PositionalShadowAtlasQuadrantSubdiv` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`Viewport.PositionalShadowAtlasQuadrantSubdiv.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.PositionalShadowAtlasQuadrantSubdiv
+     */
     @JvmInline
     value class PositionalShadowAtlasQuadrantSubdiv(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1939,6 +1948,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.Scaling3DMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Viewport.Scaling3DMode.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.Scaling3DMode
+     */
     @JvmInline
     value class Scaling3DMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1987,7 +2002,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
              * (https://developer.apple.com/documentation/metalfx/mtlfxtemporalscaler#overview) for the
              * viewport's 3D buffer. The amount of scaling can be set using `scaling_3d_scale`. To determine
              * the minimum input scale, use the `RenderingDevice.limit_get` method with
-             * `RenderingDevice.LIMIT_METALFX_TEMPORAL_SCALER_MIN_SCALE`. Values less than `1.0` will result in
+             * `RenderingDevice.Limit.METALFX_TEMPORAL_SCALER_MIN_SCALE`. Values less than `1.0` will result in
              * the viewport being upscaled using MetalFX. Values greater than `1.0` are not supported and
              * bilinear downsampling will be used instead. A value of `1.0` will use MetalFX at native
              * resolution as a TAA solution. More information: MetalFX
@@ -1999,12 +2014,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
             val METALFX_TEMPORAL: Scaling3DMode get() = Scaling3DMode(4L)
             /**
              * Use nearest-neighbor filtering for the viewport's 3D buffer. This looks crisper than
-             * `SCALING_3D_MODE_BILINEAR` and has no additional rendering cost. The amount of scaling can be
-             * set using `scaling_3d_scale`. Values greater than `1.0` are not supported and bilinear
-             * downsampling will be used instead. A value of `1.0` disables scaling. Note: When using the
-             * Nearest scaling mode, to avoid uneven pixel scaling, it's highly recommended to use a value
-             * equal to an integer divisor with a dividend of `1`. For example, it's best to use a scale of
-             * `0.5` (1/2), `0.3333` (1/3), `0.25` (1/4), `0.2` (1/5), and so on.
+             * `Scaling3DMode.BILINEAR` and has no additional rendering cost. The amount of scaling can be set
+             * using `scaling_3d_scale`. Values greater than `1.0` are not supported and bilinear downsampling
+             * will be used instead. A value of `1.0` disables scaling. Note: When using the Nearest scaling
+             * mode, to avoid uneven pixel scaling, it's highly recommended to use a value equal to an integer
+             * divisor with a dividend of `1`. For example, it's best to use a scale of `0.5` (1/2), `0.3333`
+             * (1/3), `0.25` (1/4), `0.2` (1/5), and so on.
              *
              * Generated from Godot docs: Viewport.SCALING_3D_MODE_NEAREST
              */
@@ -2018,6 +2033,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.MSAA` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Viewport.MSAA.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.MSAA
+     */
     @JvmInline
     value class MSAA(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2059,6 +2080,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.AnisotropicFiltering` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Viewport.AnisotropicFiltering.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.AnisotropicFiltering
+     */
     @JvmInline
     value class AnisotropicFiltering(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2101,6 +2128,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.ScreenSpaceAA` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Viewport.ScreenSpaceAA.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.ScreenSpaceAA
+     */
     @JvmInline
     value class ScreenSpaceAA(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2134,6 +2167,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.RenderInfo` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Viewport.RenderInfo.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.RenderInfo
+     */
     @JvmInline
     value class RenderInfo(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2164,6 +2203,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.RenderInfoType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Viewport.RenderInfoType.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.RenderInfoType
+     */
     @JvmInline
     value class RenderInfoType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2195,6 +2240,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.DebugDraw` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Viewport.DebugDraw.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.DebugDraw
+     */
     @JvmInline
     value class DebugDraw(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2429,6 +2480,13 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.DefaultCanvasItemTextureFilter` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`Viewport.DefaultCanvasItemTextureFilter.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.DefaultCanvasItemTextureFilter
+     */
     @JvmInline
     value class DefaultCanvasItemTextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2483,6 +2541,13 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.DefaultCanvasItemTextureRepeat` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`Viewport.DefaultCanvasItemTextureRepeat.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.DefaultCanvasItemTextureRepeat
+     */
     @JvmInline
     value class DefaultCanvasItemTextureRepeat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2523,6 +2588,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.SDFOversize` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Viewport.SDFOversize.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.SDFOversize
+     */
     @JvmInline
     value class SDFOversize(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2560,6 +2631,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.SDFScale` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Viewport.SDFScale.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.SDFScale
+     */
     @JvmInline
     value class SDFScale(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2590,6 +2667,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.VRSMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Viewport.VRSMode.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.VRSMode
+     */
     @JvmInline
     value class VRSMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2621,6 +2704,12 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `Viewport.VRSUpdateMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Viewport.VRSUpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: Viewport.VRSUpdateMode
+     */
     @JvmInline
     value class VRSUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {

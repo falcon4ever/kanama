@@ -233,7 +233,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
 
     /**
      * Lower priority transitions are preferred when travelling through the tree via
-     * `AnimationNodeStateMachinePlayback.travel` or `advance_mode` is set to `ADVANCE_MODE_AUTO`.
+     * `AnimationNodeStateMachinePlayback.travel` or `advance_mode` is set to `AdvanceMode.AUTO`.
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_priority
      */
@@ -244,7 +244,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
 
     /**
      * Lower priority transitions are preferred when travelling through the tree via
-     * `AnimationNodeStateMachinePlayback.travel` or `advance_mode` is set to `ADVANCE_MODE_AUTO`.
+     * `AnimationNodeStateMachinePlayback.travel` or `advance_mode` is set to `AdvanceMode.AUTO`.
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_priority
      */
@@ -281,6 +281,13 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
         const val advanceConditionChanged: String = "advance_condition_changed"
     }
 
+    /**
+     * Godot's `AnimationNodeStateMachineTransition.SwitchMode` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`AnimationNodeStateMachineTransition.SwitchMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeStateMachineTransition.SwitchMode
+     */
     @JvmInline
     value class SwitchMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -308,6 +315,13 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
         }
     }
 
+    /**
+     * Godot's `AnimationNodeStateMachineTransition.AdvanceMode` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`AnimationNodeStateMachineTransition.AdvanceMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeStateMachineTransition.AdvanceMode
+     */
     @JvmInline
     value class AdvanceMode(override val value: Long) : GodotEnumValue {
         companion object {

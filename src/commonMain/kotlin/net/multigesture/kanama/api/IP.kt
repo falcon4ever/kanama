@@ -126,6 +126,12 @@ object IP {
         ObjectCalls.ptrcallWithStringArg(clearCacheBind, singleton, hostname)
     }
 
+    /**
+     * Godot's `IP.ResolverStatus` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`IP.ResolverStatus.<NAME>`).
+     *
+     * Generated from Godot docs: IP.ResolverStatus
+     */
     @JvmInline
     value class ResolverStatus(override val value: Long) : GodotEnumValue {
         companion object {
@@ -156,6 +162,12 @@ object IP {
         }
     }
 
+    /**
+     * Godot's `IP.Type` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`IP.Type.<NAME>`).
+     *
+     * Generated from Godot docs: IP.Type
+     */
     @JvmInline
     value class Type(override val value: Long) : GodotEnumValue {
         companion object {

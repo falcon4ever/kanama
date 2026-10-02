@@ -354,6 +354,13 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
         return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, segment)
     }
 
+    /**
+     * Godot's `MeshConvexDecompositionSettings.Mode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`MeshConvexDecompositionSettings.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: MeshConvexDecompositionSettings.Mode
+     */
     @JvmInline
     value class Mode(override val value: Long) : GodotEnumValue {
         companion object {

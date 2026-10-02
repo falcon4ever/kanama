@@ -48,6 +48,12 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
         return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag.value)
     }
 
+    /**
+     * Godot's `HingeJoint3D.Param` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`HingeJoint3D.Param.<NAME>`).
+     *
+     * Generated from Godot docs: HingeJoint3D.Param
+     */
     @JvmInline
     value class Param(override val value: Long) : GodotEnumValue {
         companion object {
@@ -103,6 +109,12 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
         }
     }
 
+    /**
+     * Godot's `HingeJoint3D.Flag` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`HingeJoint3D.Flag.<NAME>`).
+     *
+     * Generated from Godot docs: HingeJoint3D.Flag
+     */
     @JvmInline
     value class Flag(override val value: Long) : GodotEnumValue {
         companion object {

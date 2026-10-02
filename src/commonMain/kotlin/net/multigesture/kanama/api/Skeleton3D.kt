@@ -598,6 +598,13 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
         const val showRestOnlyChanged: String = "show_rest_only_changed"
     }
 
+    /**
+     * Godot's `Skeleton3D.ModifierCallbackModeProcess` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`Skeleton3D.ModifierCallbackModeProcess.<NAME>`).
+     *
+     * Generated from Godot docs: Skeleton3D.ModifierCallbackModeProcess
+     */
     @JvmInline
     value class ModifierCallbackModeProcess(override val value: Long) : GodotEnumValue {
         companion object {

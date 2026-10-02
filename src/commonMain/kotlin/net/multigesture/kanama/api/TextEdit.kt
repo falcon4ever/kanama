@@ -1881,7 +1881,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If `wrap_mode` is set to `LINE_WRAPPING_BOUNDARY`, sets text wrapping mode.
+     * If `wrap_mode` is set to `LineWrappingMode.BOUNDARY`, sets text wrapping mode.
      *
      * Generated from Godot docs: TextEdit.set_autowrap_mode
      */
@@ -1890,7 +1890,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If `wrap_mode` is set to `LINE_WRAPPING_BOUNDARY`, sets text wrapping mode.
+     * If `wrap_mode` is set to `LineWrappingMode.BOUNDARY`, sets text wrapping mode.
      *
      * Generated from Godot docs: TextEdit.get_autowrap_mode
      */
@@ -2185,7 +2185,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Returns the total number of lines in the text. This includes wrapped lines and excludes folded
-     * lines. If `wrap_mode` is set to `LINE_WRAPPING_NONE` and no lines are folded (see
+     * lines. If `wrap_mode` is set to `LineWrappingMode.NONE` and no lines are folded (see
      * `CodeEdit.is_line_folded`) then this is equivalent to `get_line_count`. See
      * `get_visible_line_count_in_range` for a limited range of lines.
      *
@@ -2364,8 +2364,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If `true`, the mouse cursor will change to a pointing hand (`Control.CURSOR_POINTING_HAND`) when
-     * hovering over the gutter at the given index. See `is_gutter_clickable` and
+     * If `true`, the mouse cursor will change to a pointing hand (`Control.CursorShape.POINTING_HAND`)
+     * when hovering over the gutter at the given index. See `is_gutter_clickable` and
      * `set_line_gutter_clickable`.
      *
      * Generated from Godot docs: TextEdit.set_gutter_clickable
@@ -2415,7 +2415,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     /**
      * Set a custom draw callback for the gutter at the given index. `draw_callback` must take the
      * following arguments: A line index `int`, a gutter index `int`, and an area `Rect2`. This
-     * callback only works when the gutter type is `GUTTER_TYPE_CUSTOM` (see `set_gutter_type`).
+     * callback only works when the gutter type is `GutterType.CUSTOM` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.set_gutter_custom_draw
      */
@@ -2452,7 +2452,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Sets the text for `gutter` on `line` to `text`. This only works when the gutter type is
-     * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
+     * `GutterType.STRING` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.set_line_gutter_text
      */
@@ -2462,7 +2462,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Returns the text currently in `gutter` at `line`. This only works when the gutter type is
-     * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
+     * `GutterType.STRING` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.get_line_gutter_text
      */
@@ -2472,7 +2472,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Sets the icon for `gutter` on `line` to `icon`. This only works when the gutter type is
-     * `GUTTER_TYPE_ICON` (see `set_gutter_type`).
+     * `GutterType.ICON` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.set_line_gutter_icon
      */
@@ -2482,7 +2482,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Returns the icon currently in `gutter` at `line`. This only works when the gutter type is
-     * `GUTTER_TYPE_ICON` (see `set_gutter_type`).
+     * `GutterType.ICON` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.get_line_gutter_icon
      */
@@ -2737,6 +2737,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         const val gutterRemoved: String = "gutter_removed"
     }
 
+    /**
+     * Godot's `TextEdit.MenuItems` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.MenuItems.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.MenuItems
+     */
     @JvmInline
     value class MenuItems(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2935,6 +2941,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TextEdit.EditAction` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.EditAction.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.EditAction
+     */
     @JvmInline
     value class EditAction(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2965,6 +2977,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TextEdit.SearchFlags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.SearchFlags.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.SearchFlags
+     */
     @JvmInline
     value class SearchFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2989,6 +3007,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TextEdit.CaretType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.CaretType.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.CaretType
+     */
     @JvmInline
     value class CaretType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3007,6 +3031,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TextEdit.SelectionMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextEdit.SelectionMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.SelectionMode
+     */
     @JvmInline
     value class SelectionMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3043,6 +3073,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TextEdit.LineWrappingMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextEdit.LineWrappingMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.LineWrappingMode
+     */
     @JvmInline
     value class LineWrappingMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3061,6 +3097,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TextEdit.GutterType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.GutterType.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.GutterType
+     */
     @JvmInline
     value class GutterType(override val value: Long) : GodotEnumValue {
         companion object {

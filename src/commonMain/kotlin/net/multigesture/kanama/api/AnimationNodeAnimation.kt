@@ -246,6 +246,12 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
         return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment))
     }
 
+    /**
+     * Godot's `AnimationNodeAnimation.PlayMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`AnimationNodeAnimation.PlayMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeAnimation.PlayMode
+     */
     @JvmInline
     value class PlayMode(override val value: Long) : GodotEnumValue {
         companion object {

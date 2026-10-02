@@ -93,10 +93,10 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     /**
-     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
+     * If `true`, the generated texture will support high dynamic range (`Image.Format.RGBAF` format).
      * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
      * generated texture will use low dynamic range; overbright colors will be clamped
-     * (`Image.FORMAT_RGBA8` format).
+     * (`Image.Format.RGBA8` format).
      *
      * Generated from Godot docs: GradientTexture2D.set_use_hdr
      */
@@ -106,10 +106,10 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     /**
-     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
+     * If `true`, the generated texture will support high dynamic range (`Image.Format.RGBAF` format).
      * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
      * generated texture will use low dynamic range; overbright colors will be clamped
-     * (`Image.FORMAT_RGBA8` format).
+     * (`Image.Format.RGBA8` format).
      *
      * Generated from Godot docs: GradientTexture2D.is_using_hdr
      */
@@ -198,6 +198,12 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
         return GradientTexture2D.Repeat(ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, segment))
     }
 
+    /**
+     * Godot's `GradientTexture2D.Fill` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GradientTexture2D.Fill.<NAME>`).
+     *
+     * Generated from Godot docs: GradientTexture2D.Fill
+     */
     @JvmInline
     value class Fill(override val value: Long) : GodotEnumValue {
         companion object {
@@ -228,6 +234,12 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
         }
     }
 
+    /**
+     * Godot's `GradientTexture2D.Repeat` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GradientTexture2D.Repeat.<NAME>`).
+     *
+     * Generated from Godot docs: GradientTexture2D.Repeat
+     */
     @JvmInline
     value class Repeat(override val value: Long) : GodotEnumValue {
         companion object {

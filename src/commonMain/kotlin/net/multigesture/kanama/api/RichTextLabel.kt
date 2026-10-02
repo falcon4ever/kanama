@@ -797,7 +797,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. Note: RichTextLabels with autowrapping and `fit_content` enabled must
      * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
      * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
@@ -810,7 +810,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. Note: RichTextLabels with autowrapping and `fit_content` enabled must
      * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
      * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
@@ -823,8 +823,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: RichTextLabel.set_autowrap_trim_flags
      */
@@ -833,8 +833,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: RichTextLabel.get_autowrap_trim_flags
      */
@@ -1398,9 +1398,9 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the indexes of the first and last visible characters for the given `line`, as a
      * `Vector2i`. Note: If `visible_characters_behavior` is set to
-     * `TextServer.VC_CHARS_BEFORE_SHAPING` only visible wrapped lines are counted. Note: If `threaded`
-     * is enabled, this method returns a value for the loaded part of the document. Use `is_finished`
-     * or `finished` to determine whether document is fully loaded.
+     * `TextServer.VisibleCharactersBehavior.CHARS_BEFORE_SHAPING` only visible wrapped lines are
+     * counted. Note: If `threaded` is enabled, this method returns a value for the loaded part of the
+     * document. Use `is_finished` or `finished` to determine whether document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_line_range
      */
@@ -1607,6 +1607,12 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         const val finished: String = "finished"
     }
 
+    /**
+     * Godot's `RichTextLabel.ListType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RichTextLabel.ListType.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.ListType
+     */
     @JvmInline
     value class ListType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1637,6 +1643,12 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `RichTextLabel.MenuItems` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RichTextLabel.MenuItems.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.MenuItems
+     */
     @JvmInline
     value class MenuItems(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1661,6 +1673,12 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `RichTextLabel.MetaUnderline` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RichTextLabel.MetaUnderline.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.MetaUnderline
+     */
     @JvmInline
     value class MetaUnderline(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1685,6 +1703,12 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `RichTextLabel.ImageUpdateMask` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RichTextLabel.ImageUpdateMask.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.ImageUpdateMask
+     */
     @JvmInline
     value class ImageUpdateMask(override val value: Long) : GodotEnumValue {
         infix fun or(other: ImageUpdateMask): ImageUpdateMask = ImageUpdateMask(value or other.value)
@@ -1749,6 +1773,12 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `RichTextLabel.ImageUnit` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RichTextLabel.ImageUnit.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.ImageUnit
+     */
     @JvmInline
     value class ImageUnit(override val value: Long) : GodotEnumValue {
         companion object {

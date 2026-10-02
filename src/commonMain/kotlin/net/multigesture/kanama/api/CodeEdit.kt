@@ -1270,6 +1270,12 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
         const val symbolHovered: String = "symbol_hovered"
     }
 
+    /**
+     * Godot's `CodeEdit.CodeCompletionKind` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CodeEdit.CodeCompletionKind.<NAME>`).
+     *
+     * Generated from Godot docs: CodeEdit.CodeCompletionKind
+     */
     @JvmInline
     value class CodeCompletionKind(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1342,6 +1348,12 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
         }
     }
 
+    /**
+     * Godot's `CodeEdit.CodeCompletionLocation` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`CodeEdit.CodeCompletionLocation.<NAME>`).
+     *
+     * Generated from Godot docs: CodeEdit.CodeCompletionLocation
+     */
     @JvmInline
     value class CodeCompletionLocation(override val value: Long) : GodotEnumValue {
         companion object {

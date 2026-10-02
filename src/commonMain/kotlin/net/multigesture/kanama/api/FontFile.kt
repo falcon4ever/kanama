@@ -495,7 +495,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     /**
      * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
      * kerning for smaller font sizes, at the cost of higher memory usage and lower font rasterization
-     * speed. Use `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font
+     * speed. Use `TextServer.SubpixelPositioning.AUTO` to automatically enable it based on the font
      * size.
      *
      * Generated from Godot docs: FontFile.set_subpixel_positioning
@@ -508,7 +508,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     /**
      * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
      * kerning for smaller font sizes, at the cost of higher memory usage and lower font rasterization
-     * speed. Use `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font
+     * speed. Use `TextServer.SubpixelPositioning.AUTO` to automatically enable it based on the font
      * size.
      *
      * Generated from Godot docs: FontFile.get_subpixel_positioning

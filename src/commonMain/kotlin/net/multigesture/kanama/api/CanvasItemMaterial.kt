@@ -186,6 +186,12 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, segment)
     }
 
+    /**
+     * Godot's `CanvasItemMaterial.BlendMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CanvasItemMaterial.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItemMaterial.BlendMode
+     */
     @JvmInline
     value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -222,6 +228,12 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
+    /**
+     * Godot's `CanvasItemMaterial.LightMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CanvasItemMaterial.LightMode.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItemMaterial.LightMode
+     */
     @JvmInline
     value class LightMode(override val value: Long) : GodotEnumValue {
         companion object {

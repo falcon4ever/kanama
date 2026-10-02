@@ -134,23 +134,23 @@ object PhysicsServer3D {
 
     /**
      * Sets the shape data that configures the shape. The `data` to be passed depends on the shape's
-     * type (see `shape_get_type`): - `SHAPE_WORLD_BOUNDARY`: a `Plane`, - `SHAPE_SEPARATION_RAY`: a
-     * dictionary containing the key `"length"` with a `float` value and the key `"slide_on_slope"`
-     * with a `bool` value, - `SHAPE_SPHERE`: a `float` that is the radius of the sphere, -
-     * `SHAPE_BOX`: a `Vector3` containing the half-extents of the box, - `SHAPE_CAPSULE`: a dictionary
-     * containing the keys `"height"` and `"radius"` with `float` values, - `SHAPE_CYLINDER`: a
-     * dictionary containing the keys `"height"` and `"radius"` with `float` values, -
-     * `SHAPE_CONVEX_POLYGON`: a `PackedVector3Array` of points defining a convex polygon (the shape
-     * will be the convex hull of the points), - `SHAPE_CONCAVE_POLYGON`: a dictionary containing the
-     * key `"faces"` with a `PackedVector3Array` value (with a length divisible by 3, so that each
-     * 3-tuple of points forms a face) and the key `"backface_collision"` with a `bool` value, -
-     * `SHAPE_HEIGHTMAP`: a dictionary containing the keys `"width"` and `"depth"` with `int` values,
-     * and the key `"heights"` with a value that is a packed array of `float`s of length `width *
-     * depth` (that is a `PackedFloat32Array`, or a `PackedFloat64Array` if Godot was compiled with the
-     * `precision=double` option), and optionally the keys `"min_height"` and `"max_height"` with
-     * `float` values, - `SHAPE_SOFT_BODY`: the input `data` is ignored and this method has no effect,
-     * - `SHAPE_CUSTOM`: the input `data` is interpreted by a custom physics server, if it supports
-     * custom shapes.
+     * type (see `shape_get_type`): - `ShapeType.WORLD_BOUNDARY`: a `Plane`, -
+     * `ShapeType.SEPARATION_RAY`: a dictionary containing the key `"length"` with a `float` value and
+     * the key `"slide_on_slope"` with a `bool` value, - `ShapeType.SPHERE`: a `float` that is the
+     * radius of the sphere, - `ShapeType.BOX`: a `Vector3` containing the half-extents of the box, -
+     * `ShapeType.CAPSULE`: a dictionary containing the keys `"height"` and `"radius"` with `float`
+     * values, - `ShapeType.CYLINDER`: a dictionary containing the keys `"height"` and `"radius"` with
+     * `float` values, - `ShapeType.CONVEX_POLYGON`: a `PackedVector3Array` of points defining a convex
+     * polygon (the shape will be the convex hull of the points), - `ShapeType.CONCAVE_POLYGON`: a
+     * dictionary containing the key `"faces"` with a `PackedVector3Array` value (with a length
+     * divisible by 3, so that each 3-tuple of points forms a face) and the key `"backface_collision"`
+     * with a `bool` value, - `ShapeType.HEIGHTMAP`: a dictionary containing the keys `"width"` and
+     * `"depth"` with `int` values, and the key `"heights"` with a value that is a packed array of
+     * `float`s of length `width * depth` (that is a `PackedFloat32Array`, or a `PackedFloat64Array` if
+     * Godot was compiled with the `precision=double` option), and optionally the keys `"min_height"`
+     * and `"max_height"` with `float` values, - `ShapeType.SOFT_BODY`: the input `data` is ignored and
+     * this method has no effect, - `ShapeType.CUSTOM`: the input `data` is interpreted by a custom
+     * physics server, if it supports custom shapes.
      *
      * Generated from Godot docs: PhysicsServer3D.shape_set_data
      */
@@ -492,13 +492,14 @@ object PhysicsServer3D {
     /**
      * Sets the area's body monitor callback. This callback will be called when any other (shape of a)
      * body enters or exits (a shape of) the given area, and must take the following five parameters:
-     * 1. an integer `status`: either `AREA_BODY_ADDED` or `AREA_BODY_REMOVED` depending on whether the
-     * other body shape entered or exited the area, 2. an `RID` `body_rid`: the `RID` of the body that
-     * entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached to the body, 4.
-     * an integer `body_shape_idx`: the index of the shape of the body that entered or exited the area,
-     * 5. an integer `self_shape_idx`: the index of the shape of the area where the body entered or
-     * exited. By counting (or keeping track of) the shapes that enter and exit, it can be determined
-     * if a body (with all its shapes) is entering for the first time or exiting for the last time.
+     * 1. an integer `status`: either `AreaBodyStatus.ADDED` or `AreaBodyStatus.REMOVED` depending on
+     * whether the other body shape entered or exited the area, 2. an `RID` `body_rid`: the `RID` of
+     * the body that entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached
+     * to the body, 4. an integer `body_shape_idx`: the index of the shape of the body that entered or
+     * exited the area, 5. an integer `self_shape_idx`: the index of the shape of the area where the
+     * body entered or exited. By counting (or keeping track of) the shapes that enter and exit, it can
+     * be determined if a body (with all its shapes) is entering for the first time or exiting for the
+     * last time.
      *
      * Generated from Godot docs: PhysicsServer3D.area_set_monitor_callback
      */
@@ -510,14 +511,14 @@ object PhysicsServer3D {
     /**
      * Sets the area's area monitor callback. This callback will be called when any other (shape of an)
      * area enters or exits (a shape of) the given area, and must take the following five parameters:
-     * 1. an integer `status`: either `AREA_BODY_ADDED` or `AREA_BODY_REMOVED` depending on whether the
-     * other area's shape entered or exited the area, 2. an `RID` `area_rid`: the `RID` of the other
-     * area that entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached to
-     * the other area, 4. an integer `area_shape_idx`: the index of the shape of the other area that
-     * entered or exited the area, 5. an integer `self_shape_idx`: the index of the shape of the area
-     * where the other area entered or exited. By counting (or keeping track of) the shapes that enter
-     * and exit, it can be determined if an area (with all its shapes) is entering for the first time
-     * or exiting for the last time.
+     * 1. an integer `status`: either `AreaBodyStatus.ADDED` or `AreaBodyStatus.REMOVED` depending on
+     * whether the other area's shape entered or exited the area, 2. an `RID` `area_rid`: the `RID` of
+     * the other area that entered or exited the area, 3. an integer `instance_id`: the `ObjectID`
+     * attached to the other area, 4. an integer `area_shape_idx`: the index of the shape of the other
+     * area that entered or exited the area, 5. an integer `self_shape_idx`: the index of the shape of
+     * the area where the other area entered or exited. By counting (or keeping track of) the shapes
+     * that enter and exit, it can be determined if an area (with all its shapes) is entering for the
+     * first time or exiting for the last time.
      *
      * Generated from Godot docs: PhysicsServer3D.area_set_area_monitor_callback
      */
@@ -544,7 +545,7 @@ object PhysicsServer3D {
     /**
      * Creates a 3D body object in the physics server, and returns the `RID` that identifies it. The
      * default settings for the created area include a collision layer and mask set to `1`, and body
-     * mode set to `BODY_MODE_RIGID`. Use `body_add_shape` to add shapes to it, use `body_set_state` to
+     * mode set to `BodyMode.RIGID`. Use `body_add_shape` to add shapes to it, use `body_set_state` to
      * set its transform, and use `body_set_space` to add the body to a space.
      *
      * Generated from Godot docs: PhysicsServer3D.body_create
@@ -1264,8 +1265,8 @@ object PhysicsServer3D {
 
     /**
      * Sets the given body state for the given body. Note: Godot's default physics implementation does
-     * not support `BODY_STATE_LINEAR_VELOCITY`, `BODY_STATE_ANGULAR_VELOCITY`, `BODY_STATE_SLEEPING`,
-     * or `BODY_STATE_CAN_SLEEP`.
+     * not support `BodyState.LINEAR_VELOCITY`, `BodyState.ANGULAR_VELOCITY`, `BodyState.SLEEPING`, or
+     * `BodyState.CAN_SLEEP`.
      *
      * Generated from Godot docs: PhysicsServer3D.soft_body_set_state
      */
@@ -1276,8 +1277,8 @@ object PhysicsServer3D {
 
     /**
      * Returns the given soft body state. Note: Godot's default physics implementation does not support
-     * `BODY_STATE_LINEAR_VELOCITY`, `BODY_STATE_ANGULAR_VELOCITY`, `BODY_STATE_SLEEPING`, or
-     * `BODY_STATE_CAN_SLEEP`.
+     * `BodyState.LINEAR_VELOCITY`, `BodyState.ANGULAR_VELOCITY`, `BodyState.SLEEPING`, or
+     * `BodyState.CAN_SLEEP`.
      *
      * Generated from Godot docs: PhysicsServer3D.soft_body_get_state
      */
@@ -1854,6 +1855,12 @@ object PhysicsServer3D {
         return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
     }
 
+    /**
+     * Godot's `PhysicsServer3D.JointType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.JointType.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.JointType
+     */
     @JvmInline
     value class JointType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1896,6 +1903,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.PinJointParam` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.PinJointParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.PinJointParam
+     */
     @JvmInline
     value class PinJointParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1926,6 +1939,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.HingeJointParam` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`PhysicsServer3D.HingeJointParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.HingeJointParam
+     */
     @JvmInline
     value class HingeJointParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1986,6 +2005,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.HingeJointFlag` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.HingeJointFlag.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.HingeJointFlag
+     */
     @JvmInline
     value class HingeJointFlag(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2004,6 +2029,13 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.SliderJointParam` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`PhysicsServer3D.SliderJointParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.SliderJointParam
+     */
     @JvmInline
     value class SliderJointParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2171,6 +2203,13 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.ConeTwistJointParam` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`PhysicsServer3D.ConeTwistJointParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.ConeTwistJointParam
+     */
     @JvmInline
     value class ConeTwistJointParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2214,6 +2253,13 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.G6DOFJointAxisParam` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`PhysicsServer3D.G6DOFJointAxisParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.G6DOFJointAxisParam
+     */
     @JvmInline
     value class G6DOFJointAxisParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2340,6 +2386,13 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.G6DOFJointAxisFlag` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`PhysicsServer3D.G6DOFJointAxisFlag.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.G6DOFJointAxisFlag
+     */
     @JvmInline
     value class G6DOFJointAxisFlag(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2378,6 +2431,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.ShapeType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.ShapeType.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.ShapeType
+     */
     @JvmInline
     value class ShapeType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2453,6 +2512,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.AreaParameter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.AreaParameter.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.AreaParameter
+     */
     @JvmInline
     value class AreaParameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2483,9 +2548,9 @@ object PhysicsServer3D {
             val GRAVITY_IS_POINT: AreaParameter get() = AreaParameter(3L)
             /**
              * Constant to set/get the distance at which the gravity strength is equal to the gravity
-             * controlled by `AREA_PARAM_GRAVITY`. For example, on a planet 100 meters in radius with a surface
-             * gravity of 4.0 m/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity will
-             * have falloff according to the inverse square law, so in the example, at 200 meters from the
+             * controlled by `AreaParameter.GRAVITY`. For example, on a planet 100 meters in radius with a
+             * surface gravity of 4.0 m/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity
+             * will have falloff according to the inverse square law, so in the example, at 200 meters from the
              * center the gravity will be 1.0 m/s² (twice the distance, 1/4th the gravity), at 50 meters it
              * will be 16.0 m/s² (half the distance, 4x the gravity), and so on. The above is true only when
              * the unit distance is a positive number. When this is set to 0.0, the gravity will be constant
@@ -2557,6 +2622,13 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.AreaSpaceOverrideMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`PhysicsServer3D.AreaSpaceOverrideMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.AreaSpaceOverrideMode
+     */
     @JvmInline
     value class AreaSpaceOverrideMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2598,6 +2670,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.BodyMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicsServer3D.BodyMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.BodyMode
+     */
     @JvmInline
     value class BodyMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2632,6 +2710,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.BodyParameter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.BodyParameter.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.BodyParameter
+     */
     @JvmInline
     value class BodyParameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2704,6 +2788,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.BodyDampMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.BodyDampMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.BodyDampMode
+     */
     @JvmInline
     value class BodyDampMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2722,6 +2812,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.BodyState` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.BodyState.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.BodyState
+     */
     @JvmInline
     value class BodyState(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2758,6 +2854,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.AreaBodyStatus` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.AreaBodyStatus.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.AreaBodyStatus
+     */
     @JvmInline
     value class AreaBodyStatus(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2778,6 +2880,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.ProcessInfo` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.ProcessInfo.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.ProcessInfo
+     */
     @JvmInline
     value class ProcessInfo(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2802,6 +2910,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.SpaceParameter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer3D.SpaceParameter.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.SpaceParameter
+     */
     @JvmInline
     value class SpaceParameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2868,6 +2982,12 @@ object PhysicsServer3D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer3D.BodyAxis` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicsServer3D.BodyAxis.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer3D.BodyAxis
+     */
     @JvmInline
     value class BodyAxis(override val value: Long) : GodotEnumValue {
         companion object {

@@ -47,8 +47,8 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.set_alignment
      */
@@ -57,8 +57,8 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.get_alignment
      */
@@ -68,8 +68,8 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
 
     /**
      * The wrap behavior of the last, partially filled row or column (must be one of
-     * `LAST_WRAP_ALIGNMENT_INHERIT`, `LAST_WRAP_ALIGNMENT_BEGIN`, `LAST_WRAP_ALIGNMENT_CENTER`, or
-     * `LAST_WRAP_ALIGNMENT_END`).
+     * `LastWrapAlignmentMode.INHERIT`, `LastWrapAlignmentMode.BEGIN`, `LastWrapAlignmentMode.CENTER`,
+     * or `LastWrapAlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.set_last_wrap_alignment
      */
@@ -79,8 +79,8 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
 
     /**
      * The wrap behavior of the last, partially filled row or column (must be one of
-     * `LAST_WRAP_ALIGNMENT_INHERIT`, `LAST_WRAP_ALIGNMENT_BEGIN`, `LAST_WRAP_ALIGNMENT_CENTER`, or
-     * `LAST_WRAP_ALIGNMENT_END`).
+     * `LastWrapAlignmentMode.INHERIT`, `LastWrapAlignmentMode.BEGIN`, `LastWrapAlignmentMode.CENTER`,
+     * or `LastWrapAlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.get_last_wrap_alignment
      */
@@ -130,6 +130,12 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isReverseFillBind, segment)
     }
 
+    /**
+     * Godot's `FlowContainer.AlignmentMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`FlowContainer.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: FlowContainer.AlignmentMode
+     */
     @JvmInline
     value class AlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -156,6 +162,13 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
         }
     }
 
+    /**
+     * Godot's `FlowContainer.LastWrapAlignmentMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`FlowContainer.LastWrapAlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: FlowContainer.LastWrapAlignmentMode
+     */
     @JvmInline
     value class LastWrapAlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {

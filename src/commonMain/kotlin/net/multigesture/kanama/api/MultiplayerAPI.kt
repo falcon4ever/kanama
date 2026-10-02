@@ -168,6 +168,12 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
         const val serverDisconnected: String = "server_disconnected"
     }
 
+    /**
+     * Godot's `MultiplayerAPI.RPCMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`MultiplayerAPI.RPCMode.<NAME>`).
+     *
+     * Generated from Godot docs: MultiplayerAPI.RPCMode
+     */
     @JvmInline
     value class RPCMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -109,22 +109,22 @@ object PhysicsServer2D {
 
     /**
      * Sets the shape data that defines the configuration of the shape. The `data` to be passed depends
-     * on the shape's type (see `shape_get_type`): - `SHAPE_WORLD_BOUNDARY`: an array of length two
-     * containing a `Vector2` `normal` direction and a `float` distance `d`, - `SHAPE_SEPARATION_RAY`:
-     * a dictionary containing the key `length` with a `float` value and the key `slide_on_slope` with
-     * a `bool` value, - `SHAPE_SEGMENT`: a `Rect2` `rect` containing the first point of the segment in
-     * `rect.position` and the second point of the segment in `rect.size`, - `SHAPE_CIRCLE`: a `float`
-     * `radius`, - `SHAPE_RECTANGLE`: a `Vector2` `half_extents`, - `SHAPE_CAPSULE`: an array of length
-     * two (or a `Vector2`) containing a `float` `height` and a `float` `radius`, -
-     * `SHAPE_CONVEX_POLYGON`: either a `PackedVector2Array` of points defining a convex polygon in
-     * counterclockwise order (the clockwise outward normal of each segment formed by consecutive
-     * points is calculated internally), or a `PackedFloat32Array` of length divisible by four so that
-     * every 4-tuple of `float`s contains the coordinates of a point followed by the coordinates of the
-     * clockwise outward normal vector to the segment between the current point and the next point, -
-     * `SHAPE_CONCAVE_POLYGON`: a `PackedVector2Array` of length divisible by two (each pair of points
-     * forms one segment). Warning: In the case of `SHAPE_CONVEX_POLYGON`, this method does not check
-     * if the points supplied actually form a convex polygon (unlike the `CollisionPolygon2D.polygon`
-     * property).
+     * on the shape's type (see `shape_get_type`): - `ShapeType.WORLD_BOUNDARY`: an array of length two
+     * containing a `Vector2` `normal` direction and a `float` distance `d`, -
+     * `ShapeType.SEPARATION_RAY`: a dictionary containing the key `length` with a `float` value and
+     * the key `slide_on_slope` with a `bool` value, - `ShapeType.SEGMENT`: a `Rect2` `rect` containing
+     * the first point of the segment in `rect.position` and the second point of the segment in
+     * `rect.size`, - `ShapeType.CIRCLE`: a `float` `radius`, - `ShapeType.RECTANGLE`: a `Vector2`
+     * `half_extents`, - `ShapeType.CAPSULE`: an array of length two (or a `Vector2`) containing a
+     * `float` `height` and a `float` `radius`, - `ShapeType.CONVEX_POLYGON`: either a
+     * `PackedVector2Array` of points defining a convex polygon in counterclockwise order (the
+     * clockwise outward normal of each segment formed by consecutive points is calculated internally),
+     * or a `PackedFloat32Array` of length divisible by four so that every 4-tuple of `float`s contains
+     * the coordinates of a point followed by the coordinates of the clockwise outward normal vector to
+     * the segment between the current point and the next point, - `ShapeType.CONCAVE_POLYGON`: a
+     * `PackedVector2Array` of length divisible by two (each pair of points forms one segment).
+     * Warning: In the case of `ShapeType.CONVEX_POLYGON`, this method does not check if the points
+     * supplied actually form a convex polygon (unlike the `CollisionPolygon2D.polygon` property).
      *
      * Generated from Godot docs: PhysicsServer2D.shape_set_data
      */
@@ -482,13 +482,14 @@ object PhysicsServer2D {
     /**
      * Sets the area's body monitor callback. This callback will be called when any other (shape of a)
      * body enters or exits (a shape of) the given area, and must take the following five parameters:
-     * 1. an integer `status`: either `AREA_BODY_ADDED` or `AREA_BODY_REMOVED` depending on whether the
-     * other body shape entered or exited the area, 2. an `RID` `body_rid`: the `RID` of the body that
-     * entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached to the body, 4.
-     * an integer `body_shape_idx`: the index of the shape of the body that entered or exited the area,
-     * 5. an integer `self_shape_idx`: the index of the shape of the area where the body entered or
-     * exited. By counting (or keeping track of) the shapes that enter and exit, it can be determined
-     * if a body (with all its shapes) is entering for the first time or exiting for the last time.
+     * 1. an integer `status`: either `AreaBodyStatus.ADDED` or `AreaBodyStatus.REMOVED` depending on
+     * whether the other body shape entered or exited the area, 2. an `RID` `body_rid`: the `RID` of
+     * the body that entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached
+     * to the body, 4. an integer `body_shape_idx`: the index of the shape of the body that entered or
+     * exited the area, 5. an integer `self_shape_idx`: the index of the shape of the area where the
+     * body entered or exited. By counting (or keeping track of) the shapes that enter and exit, it can
+     * be determined if a body (with all its shapes) is entering for the first time or exiting for the
+     * last time.
      *
      * Generated from Godot docs: PhysicsServer2D.area_set_monitor_callback
      */
@@ -500,14 +501,14 @@ object PhysicsServer2D {
     /**
      * Sets the area's area monitor callback. This callback will be called when any other (shape of an)
      * area enters or exits (a shape of) the given area, and must take the following five parameters:
-     * 1. an integer `status`: either `AREA_BODY_ADDED` or `AREA_BODY_REMOVED` depending on whether the
-     * other area's shape entered or exited the area, 2. an `RID` `area_rid`: the `RID` of the other
-     * area that entered or exited the area, 3. an integer `instance_id`: the `ObjectID` attached to
-     * the other area, 4. an integer `area_shape_idx`: the index of the shape of the other area that
-     * entered or exited the area, 5. an integer `self_shape_idx`: the index of the shape of the area
-     * where the other area entered or exited. By counting (or keeping track of) the shapes that enter
-     * and exit, it can be determined if an area (with all its shapes) is entering for the first time
-     * or exiting for the last time.
+     * 1. an integer `status`: either `AreaBodyStatus.ADDED` or `AreaBodyStatus.REMOVED` depending on
+     * whether the other area's shape entered or exited the area, 2. an `RID` `area_rid`: the `RID` of
+     * the other area that entered or exited the area, 3. an integer `instance_id`: the `ObjectID`
+     * attached to the other area, 4. an integer `area_shape_idx`: the index of the shape of the other
+     * area that entered or exited the area, 5. an integer `self_shape_idx`: the index of the shape of
+     * the area where the other area entered or exited. By counting (or keeping track of) the shapes
+     * that enter and exit, it can be determined if an area (with all its shapes) is entering for the
+     * first time or exiting for the last time.
      *
      * Generated from Godot docs: PhysicsServer2D.area_set_area_monitor_callback
      */
@@ -530,7 +531,7 @@ object PhysicsServer2D {
     /**
      * Creates a 2D body object in the physics server, and returns the `RID` that identifies it. The
      * default settings for the created area include a collision layer and mask set to `1`, and body
-     * mode set to `BODY_MODE_RIGID`. Use `body_add_shape` to add shapes to it, use `body_set_state` to
+     * mode set to `BodyMode.RIGID`. Use `body_add_shape` to add shapes to it, use `body_set_state` to
      * set its transform, and use `body_set_space` to add the body to a space.
      *
      * Generated from Godot docs: PhysicsServer2D.body_create
@@ -542,10 +543,10 @@ object PhysicsServer2D {
 
     /**
      * Adds the body to the given space, after removing the body from the previously assigned space (if
-     * any). If the body's mode is set to `BODY_MODE_RIGID`, then adding the body to a space will have
-     * the following additional effects: - If the parameter `BODY_PARAM_CENTER_OF_MASS` has never been
-     * set explicitly, then the value of that parameter will be recalculated based on the body's
-     * shapes. - If the parameter `BODY_PARAM_INERTIA` is set to a value `<= 0.0`, then the value of
+     * any). If the body's mode is set to `BodyMode.RIGID`, then adding the body to a space will have
+     * the following additional effects: - If the parameter `BodyParameter.CENTER_OF_MASS` has never
+     * been set explicitly, then the value of that parameter will be recalculated based on the body's
+     * shapes. - If the parameter `BodyParameter.INERTIA` is set to a value `<= 0.0`, then the value of
      * that parameter will be recalculated based on the body's shapes, mass, and center of mass. Note:
      * To remove a body from a space without immediately adding it back elsewhere, use
      * `PhysicsServer2D.body_set_space(body, RID())`.
@@ -1377,6 +1378,12 @@ object PhysicsServer2D {
         return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
     }
 
+    /**
+     * Godot's `PhysicsServer2D.SpaceParameter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.SpaceParameter.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.SpaceParameter
+     */
     @JvmInline
     value class SpaceParameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1458,6 +1465,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.ShapeType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.ShapeType.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.ShapeType
+     */
     @JvmInline
     value class ShapeType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1527,12 +1540,18 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.AreaParameter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.AreaParameter.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.AreaParameter
+     */
     @JvmInline
     value class AreaParameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get gravity override mode in an area. See `AreaSpaceOverrideMode` for possible
-             * values. The default value of this parameter is `AREA_SPACE_OVERRIDE_DISABLED`.
+             * values. The default value of this parameter is `AreaSpaceOverrideMode.DISABLED`.
              *
              * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_GRAVITY_OVERRIDE_MODE
              */
@@ -1560,9 +1579,9 @@ object PhysicsServer2D {
             val GRAVITY_IS_POINT: AreaParameter get() = AreaParameter(3L)
             /**
              * Constant to set/get the distance at which the gravity strength is equal to the gravity
-             * controlled by `AREA_PARAM_GRAVITY`. For example, on a planet 100 pixels in radius with a surface
-             * gravity of 4.0 px/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity will
-             * have falloff according to the inverse square law, so in the example, at 200 pixels from the
+             * controlled by `AreaParameter.GRAVITY`. For example, on a planet 100 pixels in radius with a
+             * surface gravity of 4.0 px/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity
+             * will have falloff according to the inverse square law, so in the example, at 200 pixels from the
              * center the gravity will be 1.0 px/s² (twice the distance, 1/4th the gravity), at 50 pixels it
              * will be 16.0 px/s² (half the distance, 4x the gravity), and so on. The above is true only when
              * the unit distance is a positive number. When the unit distance is set to 0.0, the gravity will
@@ -1573,7 +1592,7 @@ object PhysicsServer2D {
             val GRAVITY_POINT_UNIT_DISTANCE: AreaParameter get() = AreaParameter(4L)
             /**
              * Constant to set/get linear damping override mode in an area. See `AreaSpaceOverrideMode` for
-             * possible values. The default value of this parameter is `AREA_SPACE_OVERRIDE_DISABLED`.
+             * possible values. The default value of this parameter is `AreaSpaceOverrideMode.DISABLED`.
              *
              * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE
              */
@@ -1587,7 +1606,7 @@ object PhysicsServer2D {
             val LINEAR_DAMP: AreaParameter get() = AreaParameter(6L)
             /**
              * Constant to set/get angular damping override mode in an area. See `AreaSpaceOverrideMode` for
-             * possible values. The default value of this parameter is `AREA_SPACE_OVERRIDE_DISABLED`.
+             * possible values. The default value of this parameter is `AreaSpaceOverrideMode.DISABLED`.
              *
              * Generated from Godot docs: PhysicsServer2D.AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE
              */
@@ -1609,6 +1628,13 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.AreaSpaceOverrideMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`PhysicsServer2D.AreaSpaceOverrideMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.AreaSpaceOverrideMode
+     */
     @JvmInline
     value class AreaSpaceOverrideMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1650,6 +1676,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.BodyMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicsServer2D.BodyMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.BodyMode
+     */
     @JvmInline
     value class BodyMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1684,6 +1716,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.BodyParameter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.BodyParameter.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.BodyParameter
+     */
     @JvmInline
     value class BodyParameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1701,10 +1739,10 @@ object PhysicsServer2D {
             val FRICTION: BodyParameter get() = BodyParameter(1L)
             /**
              * Constant to set/get a body's mass. The default value of this parameter is `1.0`. If the body's
-             * mode is set to `BODY_MODE_RIGID`, then setting this parameter will have the following additional
-             * effects: - If the parameter `BODY_PARAM_CENTER_OF_MASS` has never been set explicitly, then the
-             * value of that parameter will be recalculated based on the body's shapes. - If the parameter
-             * `BODY_PARAM_INERTIA` is set to a value `<= 0.0`, then the value of that parameter will be
+             * mode is set to `BodyMode.RIGID`, then setting this parameter will have the following additional
+             * effects: - If the parameter `BodyParameter.CENTER_OF_MASS` has never been set explicitly, then
+             * the value of that parameter will be recalculated based on the body's shapes. - If the parameter
+             * `BodyParameter.INERTIA` is set to a value `<= 0.0`, then the value of that parameter will be
              * recalculated based on the body's shapes, mass, and center of mass.
              *
              * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_MASS
@@ -1721,8 +1759,8 @@ object PhysicsServer2D {
             /**
              * Constant to set/get a body's center of mass position in the body's local coordinate system. The
              * default value of this parameter is `Vector2(0, 0)`. If this parameter is never set explicitly,
-             * then it is recalculated based on the body's shapes when setting the parameter `BODY_PARAM_MASS`
-             * or when calling `body_set_space`.
+             * then it is recalculated based on the body's shapes when setting the parameter
+             * `BodyParameter.MASS` or when calling `body_set_space`.
              *
              * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_CENTER_OF_MASS
              */
@@ -1735,14 +1773,14 @@ object PhysicsServer2D {
             val GRAVITY_SCALE: BodyParameter get() = BodyParameter(5L)
             /**
              * Constant to set/get a body's linear damping mode. See `BodyDampMode` for possible values. The
-             * default value of this parameter is `BODY_DAMP_MODE_COMBINE`.
+             * default value of this parameter is `BodyDampMode.COMBINE`.
              *
              * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_LINEAR_DAMP_MODE
              */
             val LINEAR_DAMP_MODE: BodyParameter get() = BodyParameter(6L)
             /**
              * Constant to set/get a body's angular damping mode. See `BodyDampMode` for possible values. The
-             * default value of this parameter is `BODY_DAMP_MODE_COMBINE`.
+             * default value of this parameter is `BodyDampMode.COMBINE`.
              *
              * Generated from Godot docs: PhysicsServer2D.BODY_PARAM_ANGULAR_DAMP_MODE
              */
@@ -1770,6 +1808,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.BodyDampMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.BodyDampMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.BodyDampMode
+     */
     @JvmInline
     value class BodyDampMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1788,6 +1832,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.BodyState` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.BodyState.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.BodyState
+     */
     @JvmInline
     value class BodyState(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1824,6 +1874,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.JointType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.JointType.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.JointType
+     */
     @JvmInline
     value class JointType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1854,6 +1910,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.JointParam` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.JointParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.JointParam
+     */
     @JvmInline
     value class JointParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1885,6 +1947,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.PinJointParam` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.PinJointParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.PinJointParam
+     */
     @JvmInline
     value class PinJointParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1916,6 +1984,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.PinJointFlag` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.PinJointFlag.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.PinJointFlag
+     */
     @JvmInline
     value class PinJointFlag(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1934,6 +2008,13 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.DampedSpringParam` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`PhysicsServer2D.DampedSpringParam.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.DampedSpringParam
+     */
     @JvmInline
     value class DampedSpringParam(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1963,6 +2044,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.CCDMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicsServer2D.CCDMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.CCDMode
+     */
     @JvmInline
     value class CCDMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1990,6 +2077,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.AreaBodyStatus` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.AreaBodyStatus.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.AreaBodyStatus
+     */
     @JvmInline
     value class AreaBodyStatus(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2010,6 +2103,12 @@ object PhysicsServer2D {
         }
     }
 
+    /**
+     * Godot's `PhysicsServer2D.ProcessInfo` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PhysicsServer2D.ProcessInfo.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicsServer2D.ProcessInfo
+     */
     @JvmInline
     value class ProcessInfo(override val value: Long) : GodotEnumValue {
         companion object {

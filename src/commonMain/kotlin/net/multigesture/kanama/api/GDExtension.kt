@@ -32,6 +32,12 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
         return GDExtension.InitializationLevel(ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, segment))
     }
 
+    /**
+     * Godot's `GDExtension.InitializationLevel` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`GDExtension.InitializationLevel.<NAME>`).
+     *
+     * Generated from Godot docs: GDExtension.InitializationLevel
+     */
     @JvmInline
     value class InitializationLevel(override val value: Long) : GodotEnumValue {
         companion object {

@@ -161,6 +161,13 @@ class NavigationPathQueryResult2D(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
+    /**
+     * Godot's `NavigationPathQueryResult2D.PathSegmentType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`NavigationPathQueryResult2D.PathSegmentType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPathQueryResult2D.PathSegmentType
+     */
     @JvmInline
     value class PathSegmentType(override val value: Long) : GodotEnumValue {
         companion object {

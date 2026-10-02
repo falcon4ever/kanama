@@ -178,6 +178,13 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
         return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, segment, layerNumber)
     }
 
+    /**
+     * Godot's `GPUParticlesCollisionSDF3D.Resolution` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`GPUParticlesCollisionSDF3D.Resolution.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticlesCollisionSDF3D.Resolution
+     */
     @JvmInline
     value class Resolution(override val value: Long) : GodotEnumValue {
         companion object {

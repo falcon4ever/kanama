@@ -209,6 +209,12 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
         const val animationNodeRemoved: String = "animation_node_removed"
     }
 
+    /**
+     * Godot's `AnimationNode.FilterAction` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AnimationNode.FilterAction.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNode.FilterAction
+     */
     @JvmInline
     value class FilterAction(override val value: Long) : GodotEnumValue {
         companion object {

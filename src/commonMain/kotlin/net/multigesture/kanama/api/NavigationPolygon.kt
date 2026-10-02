@@ -326,7 +326,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The physics layers to scan for static colliders. Only used when `parsed_geometry_type` is
-     * `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
+     * `ParsedGeometryType.STATIC_COLLIDERS` or `ParsedGeometryType.BOTH`.
      *
      * Generated from Godot docs: NavigationPolygon.set_parsed_collision_mask
      */
@@ -337,7 +337,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The physics layers to scan for static colliders. Only used when `parsed_geometry_type` is
-     * `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
+     * `ParsedGeometryType.STATIC_COLLIDERS` or `ParsedGeometryType.BOTH`.
      *
      * Generated from Godot docs: NavigationPolygon.get_parsed_collision_mask
      */
@@ -390,8 +390,8 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The group name of nodes that should be parsed for baking source geometry. Only used when
-     * `source_geometry_mode` is `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or
-     * `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
+     * `source_geometry_mode` is `SourceGeometryMode.GROUPS_WITH_CHILDREN` or
+     * `SourceGeometryMode.GROUPS_EXPLICIT`.
      *
      * Generated from Godot docs: NavigationPolygon.set_source_geometry_group_name
      */
@@ -402,8 +402,8 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The group name of nodes that should be parsed for baking source geometry. Only used when
-     * `source_geometry_mode` is `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or
-     * `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
+     * `source_geometry_mode` is `SourceGeometryMode.GROUPS_WITH_CHILDREN` or
+     * `SourceGeometryMode.GROUPS_EXPLICIT`.
      *
      * Generated from Godot docs: NavigationPolygon.get_source_geometry_group_name
      */
@@ -492,6 +492,13 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
+    /**
+     * Godot's `NavigationPolygon.SamplePartitionType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`NavigationPolygon.SamplePartitionType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPolygon.SamplePartitionType
+     */
     @JvmInline
     value class SamplePartitionType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -516,6 +523,13 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `NavigationPolygon.ParsedGeometryType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationPolygon.ParsedGeometryType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPolygon.ParsedGeometryType
+     */
     @JvmInline
     value class ParsedGeometryType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -535,7 +549,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
              */
             val STATIC_COLLIDERS: ParsedGeometryType get() = ParsedGeometryType(1L)
             /**
-             * Both `PARSED_GEOMETRY_MESH_INSTANCES` and `PARSED_GEOMETRY_STATIC_COLLIDERS`.
+             * Both `ParsedGeometryType.MESH_INSTANCES` and `ParsedGeometryType.STATIC_COLLIDERS`.
              *
              * Generated from Godot docs: NavigationPolygon.PARSED_GEOMETRY_BOTH
              */
@@ -549,6 +563,13 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `NavigationPolygon.SourceGeometryMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationPolygon.SourceGeometryMode.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPolygon.SourceGeometryMode
+     */
     @JvmInline
     value class SourceGeometryMode(override val value: Long) : GodotEnumValue {
         companion object {

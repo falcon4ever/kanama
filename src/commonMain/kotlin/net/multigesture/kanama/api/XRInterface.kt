@@ -353,6 +353,12 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         const val playAreaChanged: String = "play_area_changed"
     }
 
+    /**
+     * Godot's `XRInterface.Capabilities` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`XRInterface.Capabilities.<NAME>`).
+     *
+     * Generated from Godot docs: XRInterface.Capabilities
+     */
     @JvmInline
     value class Capabilities(override val value: Long) : GodotEnumValue {
         companion object {
@@ -404,6 +410,12 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `XRInterface.TrackingStatus` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRInterface.TrackingStatus.<NAME>`).
+     *
+     * Generated from Godot docs: XRInterface.TrackingStatus
+     */
     @JvmInline
     value class TrackingStatus(override val value: Long) : GodotEnumValue {
         companion object {
@@ -442,6 +454,12 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `XRInterface.PlayAreaMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`XRInterface.PlayAreaMode.<NAME>`).
+     *
+     * Generated from Godot docs: XRInterface.PlayAreaMode
+     */
     @JvmInline
     value class PlayAreaMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -471,7 +489,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
              */
             val ROOMSCALE: PlayAreaMode get() = PlayAreaMode(3L)
             /**
-             * Same as `XR_PLAY_AREA_ROOMSCALE` but origin point is fixed to the center of the physical space.
+             * Same as `PlayAreaMode.ROOMSCALE` but origin point is fixed to the center of the physical space.
              * In this mode, system-level recentering may be disabled, requiring the use of
              * `XRServer.center_on_hmd`.
              *
@@ -487,6 +505,13 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `XRInterface.EnvironmentBlendMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`XRInterface.EnvironmentBlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: XRInterface.EnvironmentBlendMode
+     */
     @JvmInline
     value class EnvironmentBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -514,6 +539,12 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `XRInterface.VRSTextureFormat` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRInterface.VRSTextureFormat.<NAME>`).
+     *
+     * Generated from Godot docs: XRInterface.VRSTextureFormat
+     */
     @JvmInline
     value class VRSTextureFormat(override val value: Long) : GodotEnumValue {
         companion object {

@@ -81,6 +81,12 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
         ObjectCalls.ptrcallNoArgs(disconnectFromStreamBind, segment)
     }
 
+    /**
+     * Godot's `StreamPeerTLS.Status` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`StreamPeerTLS.Status.<NAME>`).
+     *
+     * Generated from Godot docs: StreamPeerTLS.Status
+     */
     @JvmInline
     value class Status(override val value: Long) : GodotEnumValue {
         companion object {

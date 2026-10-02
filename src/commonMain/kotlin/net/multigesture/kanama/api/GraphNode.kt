@@ -329,12 +329,12 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
     }
 
     /**
-     * Determines how connection slots can be focused. - If set to `Control.FOCUS_CLICK`, connections
-     * can only be made with the mouse. - If set to `Control.FOCUS_ALL`, slots can also be focused
-     * using the `ProjectSettings.input/ui_up` and `ProjectSettings.input/ui_down` and connected using
-     * `ProjectSettings.input/ui_left` and `ProjectSettings.input/ui_right` input actions. - If set to
-     * `Control.FOCUS_ACCESSIBILITY`, slot input actions are only enabled when the screen reader is
-     * active.
+     * Determines how connection slots can be focused. - If set to `Control.FocusMode.CLICK`,
+     * connections can only be made with the mouse. - If set to `Control.FocusMode.ALL`, slots can also
+     * be focused using the `ProjectSettings.input/ui_up` and `ProjectSettings.input/ui_down` and
+     * connected using `ProjectSettings.input/ui_left` and `ProjectSettings.input/ui_right` input
+     * actions. - If set to `Control.FocusMode.ACCESSIBILITY`, slot input actions are only enabled when
+     * the screen reader is active.
      *
      * Generated from Godot docs: GraphNode.set_slots_focus_mode
      */
@@ -343,12 +343,12 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
     }
 
     /**
-     * Determines how connection slots can be focused. - If set to `Control.FOCUS_CLICK`, connections
-     * can only be made with the mouse. - If set to `Control.FOCUS_ALL`, slots can also be focused
-     * using the `ProjectSettings.input/ui_up` and `ProjectSettings.input/ui_down` and connected using
-     * `ProjectSettings.input/ui_left` and `ProjectSettings.input/ui_right` input actions. - If set to
-     * `Control.FOCUS_ACCESSIBILITY`, slot input actions are only enabled when the screen reader is
-     * active.
+     * Determines how connection slots can be focused. - If set to `Control.FocusMode.CLICK`,
+     * connections can only be made with the mouse. - If set to `Control.FocusMode.ALL`, slots can also
+     * be focused using the `ProjectSettings.input/ui_up` and `ProjectSettings.input/ui_down` and
+     * connected using `ProjectSettings.input/ui_left` and `ProjectSettings.input/ui_right` input
+     * actions. - If set to `Control.FocusMode.ACCESSIBILITY`, slot input actions are only enabled when
+     * the screen reader is active.
      *
      * Generated from Godot docs: GraphNode.get_slots_focus_mode
      */

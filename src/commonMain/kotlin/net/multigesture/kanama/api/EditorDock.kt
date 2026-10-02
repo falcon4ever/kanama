@@ -356,6 +356,12 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         const val closed: String = "closed"
     }
 
+    /**
+     * Godot's `EditorDock.DockLayout` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorDock.DockLayout.<NAME>`).
+     *
+     * Generated from Godot docs: EditorDock.DockLayout
+     */
     @JvmInline
     value class DockLayout(override val value: Long) : GodotEnumValue {
         infix fun or(other: DockLayout): DockLayout = DockLayout(value or other.value)
@@ -396,6 +402,12 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         }
     }
 
+    /**
+     * Godot's `EditorDock.DockSlot` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`EditorDock.DockSlot.<NAME>`).
+     *
+     * Generated from Godot docs: EditorDock.DockSlot
+     */
     @JvmInline
     value class DockSlot(override val value: Long) : GodotEnumValue {
         companion object {

@@ -389,6 +389,13 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
         const val dragEnded: String = "drag_ended"
     }
 
+    /**
+     * Godot's `SplitContainer.DraggerVisibility` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`SplitContainer.DraggerVisibility.<NAME>`).
+     *
+     * Generated from Godot docs: SplitContainer.DraggerVisibility
+     */
     @JvmInline
     value class DraggerVisibility(override val value: Long) : GodotEnumValue {
         companion object {

@@ -110,6 +110,13 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
         return AspectRatioContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentVerticalBind, segment))
     }
 
+    /**
+     * Godot's `AspectRatioContainer.StretchMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AspectRatioContainer.StretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: AspectRatioContainer.StretchMode
+     */
     @JvmInline
     value class StretchMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -144,6 +151,13 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
         }
     }
 
+    /**
+     * Godot's `AspectRatioContainer.AlignmentMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AspectRatioContainer.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: AspectRatioContainer.AlignmentMode
+     */
     @JvmInline
     value class AlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {

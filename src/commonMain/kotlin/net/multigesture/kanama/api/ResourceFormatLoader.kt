@@ -13,13 +13,19 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
+    /**
+     * Godot's `ResourceFormatLoader.CacheMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ResourceFormatLoader.CacheMode.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceFormatLoader.CacheMode
+     */
     @JvmInline
     value class CacheMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Neither the main resource (the one requested to be loaded) nor any of its subresources are
              * retrieved from cache nor stored into it. Dependencies (external resources) are loaded with
-             * `CACHE_MODE_REUSE`.
+             * `CacheMode.REUSE`.
              *
              * Generated from Godot docs: ResourceFormatLoader.CACHE_MODE_IGNORE
              */
@@ -34,7 +40,7 @@ class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
              */
             val REUSE: CacheMode get() = CacheMode(1L)
             /**
-             * Like `CACHE_MODE_REUSE`, but the cache is checked for the main resource (the one requested to be
+             * Like `CacheMode.REUSE`, but the cache is checked for the main resource (the one requested to be
              * loaded) as well as for each of its subresources. Those already in the cache, as long as the
              * loaded and cached types match, have their data refreshed from storage into the already existing
              * instances. Otherwise, they are recreated as completely new objects.
@@ -43,14 +49,14 @@ class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
              */
             val REPLACE: CacheMode get() = CacheMode(2L)
             /**
-             * Like `CACHE_MODE_IGNORE`, but propagated recursively down the tree of dependencies (external
+             * Like `CacheMode.IGNORE`, but propagated recursively down the tree of dependencies (external
              * resources).
              *
              * Generated from Godot docs: ResourceFormatLoader.CACHE_MODE_IGNORE_DEEP
              */
             val IGNORE_DEEP: CacheMode get() = CacheMode(3L)
             /**
-             * Like `CACHE_MODE_REPLACE`, but propagated recursively down the tree of dependencies (external
+             * Like `CacheMode.REPLACE`, but propagated recursively down the tree of dependencies (external
              * resources).
              *
              * Generated from Godot docs: ResourceFormatLoader.CACHE_MODE_REPLACE_DEEP

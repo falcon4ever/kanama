@@ -167,6 +167,12 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
         return SubViewport.ClearMode(ObjectCalls.ptrcallNoArgsRetLong(getClearModeBind, segment))
     }
 
+    /**
+     * Godot's `SubViewport.ClearMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SubViewport.ClearMode.<NAME>`).
+     *
+     * Generated from Godot docs: SubViewport.ClearMode
+     */
     @JvmInline
     value class ClearMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -183,7 +189,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
              */
             val NEVER: ClearMode get() = ClearMode(1L)
             /**
-             * Clear the render target on the next frame, then switch to `CLEAR_MODE_NEVER`.
+             * Clear the render target on the next frame, then switch to `ClearMode.NEVER`.
              *
              * Generated from Godot docs: SubViewport.CLEAR_MODE_ONCE
              */
@@ -191,6 +197,12 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
         }
     }
 
+    /**
+     * Godot's `SubViewport.UpdateMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SubViewport.UpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: SubViewport.UpdateMode
+     */
     @JvmInline
     value class UpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -201,7 +213,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
              */
             val DISABLED: UpdateMode get() = UpdateMode(0L)
             /**
-             * Update the render target once, then switch to `UPDATE_DISABLED`.
+             * Update the render target once, then switch to `UpdateMode.DISABLED`.
              *
              * Generated from Godot docs: SubViewport.UPDATE_ONCE
              */

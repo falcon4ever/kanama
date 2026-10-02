@@ -371,9 +371,9 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
 
     /**
      * Determines the miter limit of the polyline. Normally, when `joint_mode` is set to
-     * `LINE_JOINT_SHARP`, sharp angles fall back to using the logic of `LINE_JOINT_BEVEL` joints to
-     * prevent very long miters. Higher values of this property mean that the fallback to a bevel joint
-     * will happen at sharper angles.
+     * `LineJointMode.SHARP`, sharp angles fall back to using the logic of `LineJointMode.BEVEL` joints
+     * to prevent very long miters. Higher values of this property mean that the fallback to a bevel
+     * joint will happen at sharper angles.
      *
      * Generated from Godot docs: Line2D.set_sharp_limit
      */
@@ -383,9 +383,9 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
 
     /**
      * Determines the miter limit of the polyline. Normally, when `joint_mode` is set to
-     * `LINE_JOINT_SHARP`, sharp angles fall back to using the logic of `LINE_JOINT_BEVEL` joints to
-     * prevent very long miters. Higher values of this property mean that the fallback to a bevel joint
-     * will happen at sharper angles.
+     * `LineJointMode.SHARP`, sharp angles fall back to using the logic of `LineJointMode.BEVEL` joints
+     * to prevent very long miters. Higher values of this property mean that the fallback to a bevel
+     * joint will happen at sharper angles.
      *
      * Generated from Godot docs: Line2D.get_sharp_limit
      */
@@ -433,13 +433,19 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, segment)
     }
 
+    /**
+     * Godot's `Line2D.LineJointMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Line2D.LineJointMode.<NAME>`).
+     *
+     * Generated from Godot docs: Line2D.LineJointMode
+     */
     @JvmInline
     value class LineJointMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Makes the polyline's joints pointy, connecting the sides of the two segments by extending them
              * until they intersect. If the rotation of a joint is too big (based on `sharp_limit`), the joint
-             * falls back to `LINE_JOINT_BEVEL` to prevent very long miters.
+             * falls back to `LineJointMode.BEVEL` to prevent very long miters.
              *
              * Generated from Godot docs: Line2D.LINE_JOINT_SHARP
              */
@@ -461,6 +467,12 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `Line2D.LineCapMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Line2D.LineCapMode.<NAME>`).
+     *
+     * Generated from Godot docs: Line2D.LineCapMode
+     */
     @JvmInline
     value class LineCapMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -485,6 +497,12 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `Line2D.LineTextureMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Line2D.LineTextureMode.<NAME>`).
+     *
+     * Generated from Godot docs: Line2D.LineTextureMode
+     */
     @JvmInline
     value class LineTextureMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -496,15 +514,14 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
             val NONE: LineTextureMode get() = LineTextureMode(0L)
             /**
              * Tiles the texture over the polyline. `CanvasItem.texture_repeat` of the `Line2D` node must be
-             * `CanvasItem.TEXTURE_REPEAT_ENABLED` or `CanvasItem.TEXTURE_REPEAT_MIRROR` for it to work
-             * properly.
+             * `CanvasItem.TextureRepeat.ENABLED` or `CanvasItem.TextureRepeat.MIRROR` for it to work properly.
              *
              * Generated from Godot docs: Line2D.LINE_TEXTURE_TILE
              */
             val TILE: LineTextureMode get() = LineTextureMode(1L)
             /**
              * Stretches the texture across the polyline. `CanvasItem.texture_repeat` of the `Line2D` node must
-             * be `CanvasItem.TEXTURE_REPEAT_DISABLED` for best results.
+             * be `CanvasItem.TextureRepeat.DISABLED` for best results.
              *
              * Generated from Godot docs: Line2D.LINE_TEXTURE_STRETCH
              */

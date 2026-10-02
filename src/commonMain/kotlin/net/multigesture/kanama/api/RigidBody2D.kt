@@ -216,10 +216,10 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
 
     /**
      * The body's custom center of mass, relative to the body's origin position, when
-     * `center_of_mass_mode` is set to `CENTER_OF_MASS_MODE_CUSTOM`. This is the balanced point of the
+     * `center_of_mass_mode` is set to `CenterOfMassMode.CUSTOM`. This is the balanced point of the
      * body, where applied forces only cause linear acceleration. Applying forces outside of the center
      * of mass causes angular acceleration. When `center_of_mass_mode` is set to
-     * `CENTER_OF_MASS_MODE_AUTO` (default value), the center of mass is automatically determined, but
+     * `CenterOfMassMode.AUTO` (default value), the center of mass is automatically determined, but
      * this does not update the value of `center_of_mass`.
      *
      * Generated from Godot docs: RigidBody2D.set_center_of_mass
@@ -230,10 +230,10 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
 
     /**
      * The body's custom center of mass, relative to the body's origin position, when
-     * `center_of_mass_mode` is set to `CENTER_OF_MASS_MODE_CUSTOM`. This is the balanced point of the
+     * `center_of_mass_mode` is set to `CenterOfMassMode.CUSTOM`. This is the balanced point of the
      * body, where applied forces only cause linear acceleration. Applying forces outside of the center
      * of mass causes angular acceleration. When `center_of_mass_mode` is set to
-     * `CENTER_OF_MASS_MODE_AUTO` (default value), the center of mass is automatically determined, but
+     * `CenterOfMassMode.AUTO` (default value), the center of mass is automatically determined, but
      * this does not update the value of `center_of_mass`.
      *
      * Generated from Godot docs: RigidBody2D.get_center_of_mass
@@ -790,6 +790,12 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         const val sleepingStateChanged: String = "sleeping_state_changed"
     }
 
+    /**
+     * Godot's `RigidBody2D.FreezeMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RigidBody2D.FreezeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RigidBody2D.FreezeMode
+     */
     @JvmInline
     value class FreezeMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -801,8 +807,8 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
              */
             val STATIC: FreezeMode get() = FreezeMode(0L)
             /**
-             * Kinematic body freeze mode. Similar to `FREEZE_MODE_STATIC`, but collides with other bodies
-             * along its path when moved. Useful for a frozen body that needs to be animated.
+             * Kinematic body freeze mode. Similar to `FreezeMode.STATIC`, but collides with other bodies along
+             * its path when moved. Useful for a frozen body that needs to be animated.
              *
              * Generated from Godot docs: RigidBody2D.FREEZE_MODE_KINEMATIC
              */
@@ -810,6 +816,12 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         }
     }
 
+    /**
+     * Godot's `RigidBody2D.CenterOfMassMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RigidBody2D.CenterOfMassMode.<NAME>`).
+     *
+     * Generated from Godot docs: RigidBody2D.CenterOfMassMode
+     */
     @JvmInline
     value class CenterOfMassMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -830,6 +842,12 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         }
     }
 
+    /**
+     * Godot's `RigidBody2D.DampMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`RigidBody2D.DampMode.<NAME>`).
+     *
+     * Generated from Godot docs: RigidBody2D.DampMode
+     */
     @JvmInline
     value class DampMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -848,6 +866,12 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
         }
     }
 
+    /**
+     * Godot's `RigidBody2D.CCDMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`RigidBody2D.CCDMode.<NAME>`).
+     *
+     * Generated from Godot docs: RigidBody2D.CCDMode
+     */
     @JvmInline
     value class CCDMode(override val value: Long) : GodotEnumValue {
         companion object {

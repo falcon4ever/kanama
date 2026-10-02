@@ -432,7 +432,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * drawing large amounts of lines, this is faster than using individual `draw_line` calls. To draw
      * disconnected lines, use `draw_multiline` instead. See also `draw_polygon`. If `width` is
      * negative, it will be ignored and the polyline will be drawn using
-     * `RenderingServer.PRIMITIVE_LINE_STRIP`. This means that when the CanvasItem is scaled, the
+     * `RenderingServer.PrimitiveType.LINE_STRIP`. This means that when the CanvasItem is scaled, the
      * polyline will remain thin. If this behavior is not desired, then pass a positive `width` like
      * `1.0`.
      *
@@ -449,7 +449,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * the colors of the endpoints. The `points` array is defined in local space. When drawing large
      * amounts of lines, this is faster than using individual `draw_line` calls. To draw disconnected
      * lines, use `draw_multiline_colors` instead. See also `draw_polygon`. If `width` is negative, it
-     * will be ignored and the polyline will be drawn using `RenderingServer.PRIMITIVE_LINE_STRIP`.
+     * will be ignored and the polyline will be drawn using `RenderingServer.PrimitiveType.LINE_STRIP`.
      * This means that when the CanvasItem is scaled, the polyline will remain thin. If this behavior
      * is not desired, then pass a positive `width` like `1.0`.
      *
@@ -464,10 +464,10 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * optional antialiasing (supported only for positive `width`). The larger the value of
      * `point_count`, the smoother the curve. For circular arcs, see `draw_arc`. See also
      * `draw_ellipse`. If `width` is negative, it will be ignored and the arc will be drawn using
-     * `RenderingServer.PRIMITIVE_LINE_STRIP`. This means that when the CanvasItem is scaled, the arc
-     * will remain thin. If this behavior is not desired, then pass a positive `width` like `1.0`. The
-     * arc is drawn from `start_angle` towards the value of `end_angle` so in clockwise direction if
-     * `start_angle < end_angle` and counter-clockwise otherwise. Passing the same angles but in
+     * `RenderingServer.PrimitiveType.LINE_STRIP`. This means that when the CanvasItem is scaled, the
+     * arc will remain thin. If this behavior is not desired, then pass a positive `width` like `1.0`.
+     * The arc is drawn from `start_angle` towards the value of `end_angle` so in clockwise direction
+     * if `start_angle < end_angle` and counter-clockwise otherwise. Passing the same angles but in
      * reversed order will produce the same arc. If absolute difference of `start_angle` and
      * `end_angle` is greater than `@GDScript.TAU` radians, then a full ellipse is drawn (i.e. arc will
      * not overlap itself).
@@ -483,7 +483,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * antialiasing (supported only for positive `width`). The larger the value of `point_count`, the
      * smoother the curve. `center` is defined in local space. For elliptical arcs, see
      * `draw_ellipse_arc`. See also `draw_circle`. If `width` is negative, it will be ignored and the
-     * arc will be drawn using `RenderingServer.PRIMITIVE_LINE_STRIP`. This means that when the
+     * arc will be drawn using `RenderingServer.PrimitiveType.LINE_STRIP`. This means that when the
      * CanvasItem is scaled, the arc will remain thin. If this behavior is not desired, then pass a
      * positive `width` like `1.0`. The arc is drawn from `start_angle` towards the value of
      * `end_angle` so in clockwise direction if `start_angle < end_angle` and counter-clockwise
@@ -1227,7 +1227,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     /**
      * The mode in which this node clips its children, acting as a mask. Note: Clipping nodes cannot be
      * nested or placed within a `CanvasGroup`. If an ancestor of this node clips its children or is a
-     * `CanvasGroup`, then this node's clip mode should be set to `CLIP_CHILDREN_DISABLED` to avoid
+     * `CanvasGroup`, then this node's clip mode should be set to `ClipChildrenMode.DISABLED` to avoid
      * unexpected behavior.
      *
      * Generated from Godot docs: CanvasItem.set_clip_children_mode
@@ -1239,7 +1239,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     /**
      * The mode in which this node clips its children, acting as a mask. Note: Clipping nodes cannot be
      * nested or placed within a `CanvasGroup`. If an ancestor of this node clips its children or is a
-     * `CanvasGroup`, then this node's clip mode should be set to `CLIP_CHILDREN_DISABLED` to avoid
+     * `CanvasGroup`, then this node's clip mode should be set to `ClipChildrenMode.DISABLED` to avoid
      * unexpected behavior.
      *
      * Generated from Godot docs: CanvasItem.get_clip_children_mode
@@ -1273,6 +1273,12 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         const val itemRectChanged: String = "item_rect_changed"
     }
 
+    /**
+     * Godot's `CanvasItem.TextureFilter` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CanvasItem.TextureFilter.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItem.TextureFilter
+     */
     @JvmInline
     value class TextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1326,7 +1332,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
              * quality on surfaces that are almost in line with the camera, but is slightly slower. The
              * anisotropic filtering level can be changed by adjusting
              * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
-             * texture filter is rarely useful in 2D projects. `TEXTURE_FILTER_NEAREST_WITH_MIPMAPS` is usually
+             * texture filter is rarely useful in 2D projects. `TextureFilter.NEAREST_WITH_MIPMAPS` is usually
              * more appropriate in this case.
              *
              * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC
@@ -1340,7 +1346,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
              * quality on surfaces that are almost in line with the camera, but is slightly slower. The
              * anisotropic filtering level can be changed by adjusting
              * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
-             * texture filter is rarely useful in 2D projects. `TEXTURE_FILTER_LINEAR_WITH_MIPMAPS` is usually
+             * texture filter is rarely useful in 2D projects. `TextureFilter.LINEAR_WITH_MIPMAPS` is usually
              * more appropriate in this case.
              *
              * Generated from Godot docs: CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
@@ -1355,6 +1361,12 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `CanvasItem.TextureRepeat` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CanvasItem.TextureRepeat.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItem.TextureRepeat
+     */
     @JvmInline
     value class TextureRepeat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1394,6 +1406,12 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `CanvasItem.ClipChildrenMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CanvasItem.ClipChildrenMode.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItem.ClipChildrenMode
+     */
     @JvmInline
     value class ClipChildrenMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1428,6 +1446,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `CanvasItem.OversamplingWithScale` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`CanvasItem.OversamplingWithScale.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItem.OversamplingWithScale
+     */
     @JvmInline
     value class OversamplingWithScale(override val value: Long) : GodotEnumValue {
         companion object {

@@ -23,12 +23,28 @@ data class Vector2i(
   val y: Int,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector2i (scripts/generate_api_wrapper.py — do not edit) =====
+  /**
+   * Godot's `Vector2i.Axis` enum as a typed value: `.value` is the raw number Godot uses, and the
+   * companion holds the named values (`Vector2i.Axis.<NAME>`).
+   *
+   * Generated from Godot docs: Vector2i.Axis
+   */
   @JvmInline
   value class Axis(override val value: Long) : net.multigesture.kanama.api.GodotEnumValue {
     companion object {
+      /**
+       * Enumerated value for the X axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector2i.AXIS_X
+       */
       val X: Axis
         get() = Axis(0L)
 
+      /**
+       * Enumerated value for the Y axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector2i.AXIS_Y
+       */
       val Y: Axis
         get() = Axis(1L)
     }

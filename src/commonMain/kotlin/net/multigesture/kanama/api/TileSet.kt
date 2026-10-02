@@ -1003,6 +1003,12 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, segment)
     }
 
+    /**
+     * Godot's `TileSet.TileShape` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TileSet.TileShape.<NAME>`).
+     *
+     * Generated from Godot docs: TileSet.TileShape
+     */
     @JvmInline
     value class TileShape(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1034,6 +1040,12 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `TileSet.TileLayout` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TileSet.TileLayout.<NAME>`).
+     *
+     * Generated from Godot docs: TileSet.TileLayout
+     */
     @JvmInline
     value class TileLayout(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1045,7 +1057,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
              */
             val STACKED: TileLayout get() = TileLayout(0L)
             /**
-             * Same as `TILE_LAYOUT_STACKED`, but the first half-offset is negative instead of positive.
+             * Same as `TileLayout.STACKED`, but the first half-offset is negative instead of positive.
              *
              * Generated from Godot docs: TileSet.TILE_LAYOUT_STACKED_OFFSET
              */
@@ -1081,6 +1093,12 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `TileSet.TileOffsetAxis` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TileSet.TileOffsetAxis.<NAME>`).
+     *
+     * Generated from Godot docs: TileSet.TileOffsetAxis
+     */
     @JvmInline
     value class TileOffsetAxis(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1099,6 +1117,12 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `TileSet.CellNeighbor` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TileSet.CellNeighbor.<NAME>`).
+     *
+     * Generated from Godot docs: TileSet.CellNeighbor
+     */
     @JvmInline
     value class CellNeighbor(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1201,6 +1225,12 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `TileSet.TerrainMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TileSet.TerrainMode.<NAME>`).
+     *
+     * Generated from Godot docs: TileSet.TerrainMode
+     */
     @JvmInline
     value class TerrainMode(override val value: Long) : GodotEnumValue {
         companion object {

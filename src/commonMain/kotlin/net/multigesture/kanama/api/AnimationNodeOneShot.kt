@@ -209,10 +209,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
 
     /**
      * If `true`, the sub-animation will restart automatically after finishing. In other words, to
-     * start auto restarting, the animation must be played once with the `ONE_SHOT_REQUEST_FIRE`
-     * request. The `ONE_SHOT_REQUEST_ABORT` request stops the auto restarting, but it does not disable
-     * the `autorestart` itself. So, the `ONE_SHOT_REQUEST_FIRE` request will start auto restarting
-     * again.
+     * start auto restarting, the animation must be played once with the `OneShotRequest.FIRE` request.
+     * The `OneShotRequest.ABORT` request stops the auto restarting, but it does not disable the
+     * `autorestart` itself. So, the `OneShotRequest.FIRE` request will start auto restarting again.
      *
      * Generated from Godot docs: AnimationNodeOneShot.set_autorestart
      */
@@ -223,10 +222,9 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
 
     /**
      * If `true`, the sub-animation will restart automatically after finishing. In other words, to
-     * start auto restarting, the animation must be played once with the `ONE_SHOT_REQUEST_FIRE`
-     * request. The `ONE_SHOT_REQUEST_ABORT` request stops the auto restarting, but it does not disable
-     * the `autorestart` itself. So, the `ONE_SHOT_REQUEST_FIRE` request will start auto restarting
-     * again.
+     * start auto restarting, the animation must be played once with the `OneShotRequest.FIRE` request.
+     * The `OneShotRequest.ABORT` request stops the auto restarting, but it does not disable the
+     * `autorestart` itself. So, the `OneShotRequest.FIRE` request will start auto restarting again.
      *
      * Generated from Godot docs: AnimationNodeOneShot.has_autorestart
      */
@@ -297,6 +295,13 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
         return AnimationNodeOneShot.MixMode(ObjectCalls.ptrcallNoArgsRetLong(getMixModeBind, segment))
     }
 
+    /**
+     * Godot's `AnimationNodeOneShot.OneShotRequest` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AnimationNodeOneShot.OneShotRequest.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.OneShotRequest
+     */
     @JvmInline
     value class OneShotRequest(override val value: Long) : GodotEnumValue {
         companion object {
@@ -327,6 +332,12 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
         }
     }
 
+    /**
+     * Godot's `AnimationNodeOneShot.MixMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AnimationNodeOneShot.MixMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeOneShot.MixMode
+     */
     @JvmInline
     value class MixMode(override val value: Long) : GodotEnumValue {
         companion object {

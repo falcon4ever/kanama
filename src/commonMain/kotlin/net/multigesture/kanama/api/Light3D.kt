@@ -393,7 +393,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * If `true`, reverses the backface culling of the mesh. This can be useful when you have a flat
      * mesh that has a light behind it. If you need to cast a shadow on both sides of the mesh, set the
-     * mesh to use double-sided shadows with `GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED`.
+     * mesh to use double-sided shadows with `GeometryInstance3D.ShadowCastingSetting.DOUBLE_SIDED`.
      *
      * Generated from Godot docs: Light3D.set_shadow_reverse_cull_face
      */
@@ -404,7 +404,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * If `true`, reverses the backface culling of the mesh. This can be useful when you have a flat
      * mesh that has a light behind it. If you need to cast a shadow on both sides of the mesh, set the
-     * mesh to use double-sided shadows with `GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED`.
+     * mesh to use double-sided shadows with `GeometryInstance3D.ShadowCastingSetting.DOUBLE_SIDED`.
      *
      * Generated from Godot docs: Light3D.get_shadow_reverse_cull_face
      */
@@ -517,6 +517,12 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetColor(getCorrelatedColorBind, segment)
     }
 
+    /**
+     * Godot's `Light3D.Param` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Light3D.Param.<NAME>`).
+     *
+     * Generated from Godot docs: Light3D.Param
+     */
     @JvmInline
     value class Param(override val value: Long) : GodotEnumValue {
         companion object {
@@ -656,6 +662,12 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `Light3D.BakeMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Light3D.BakeMode.<NAME>`).
+     *
+     * Generated from Godot docs: Light3D.BakeMode
+     */
     @JvmInline
     value class BakeMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -678,7 +690,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
              * lightmapped meshes. Shadows on static lightmapped meshes will also look less detailed, but the
              * light still casts shadows that can be displayed on dynamic objects. Since real-time light
              * computations are skipped on static lightmapped meshes, this bake mode improves runtime
-             * performance compared to `BAKE_DYNAMIC` and `BAKE_DISABLED`.
+             * performance compared to `BakeMode.DYNAMIC` and `BakeMode.DISABLED`.
              *
              * Generated from Godot docs: Light3D.BAKE_STATIC
              */
@@ -687,8 +699,8 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
              * Light is taken into account in dynamic baking (`VoxelGI` and SDFGI
              * (`Environment.sdfgi_enabled`)). The light can be moved around or modified with global
              * illumination updating in real-time. The light's global illumination appearance will be slightly
-             * different compared to `BAKE_STATIC`. This has a greater performance cost compared to
-             * `BAKE_STATIC`. When using SDFGI, the update speed of dynamic lights is affected by
+             * different compared to `BakeMode.STATIC`. This has a greater performance cost compared to
+             * `BakeMode.STATIC`. When using SDFGI, the update speed of dynamic lights is affected by
              * `ProjectSettings.rendering/global_illumination/sdfgi/frames_to_update_lights`. Note: When using
              * `LightmapGI`, the light's indirect light is baked, but direct light and shadows remain
              * real-time. This mode allows performing subtle changes to a light's color, energy, and position

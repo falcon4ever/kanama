@@ -12,6 +12,12 @@ import kotlin.jvm.JvmName
  */
 class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     // ===== BEGIN GENERATED ENUMS: LightmapGI (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `LightmapGI.BakeQuality` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`LightmapGI.BakeQuality.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.BakeQuality
+     */
     @JvmInline
     value class BakeQuality(override val value: Long) : GodotEnumValue {
         companion object {
@@ -50,6 +56,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `LightmapGI.GenerateProbes` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`LightmapGI.GenerateProbes.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.GenerateProbes
+     */
     @JvmInline
     value class GenerateProbes(override val value: Long) : GodotEnumValue {
         companion object {
@@ -86,6 +98,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `LightmapGI.BakeError` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`LightmapGI.BakeError.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.BakeError
+     */
     @JvmInline
     value class BakeError(override val value: Long) : GodotEnumValue {
         companion object {
@@ -121,9 +139,8 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
             val NO_SAVE_PATH: BakeError get() = BakeError(4L)
             /**
              * Lightmap baking failed as there are no meshes whose `GeometryInstance3D.gi_mode` is
-             * `GeometryInstance3D.GI_MODE_STATIC` and with valid UV2 mapping in the current scene. You may
-             * need to select 3D scenes in the Import dock and change their global illumination mode
-             * accordingly.
+             * `GeometryInstance3D.GIMode.STATIC` and with valid UV2 mapping in the current scene. You may need
+             * to select 3D scenes in the Import dock and change their global illumination mode accordingly.
              *
              * Generated from Godot docs: LightmapGI.BAKE_ERROR_NO_MESHES
              */
@@ -171,6 +188,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `LightmapGI.EnvironmentMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`LightmapGI.EnvironmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.EnvironmentMode
+     */
     @JvmInline
     value class EnvironmentMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -182,7 +205,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
             val DISABLED: EnvironmentMode get() = EnvironmentMode(0L)
             /**
              * Use the scene's environment lighting when baking lightmaps. Note: If baking lightmaps in a scene
-             * with no `WorldEnvironment` node, this will act like `ENVIRONMENT_MODE_DISABLED`. The editor's
+             * with no `WorldEnvironment` node, this will act like `EnvironmentMode.DISABLED`. The editor's
              * preview sky and sun is not taken into account by `LightmapGI` when baking lightmaps.
              *
              * Generated from Godot docs: LightmapGI.ENVIRONMENT_MODE_SCENE
@@ -501,7 +524,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The sky to use as a source of environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_SKY`.
+     * `EnvironmentMode.CUSTOM_SKY`.
      *
      * Generated from Godot docs: LightmapGI.set_environment_custom_sky
      */
@@ -511,7 +534,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The sky to use as a source of environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_SKY`.
+     * `EnvironmentMode.CUSTOM_SKY`.
      *
      * Generated from Godot docs: LightmapGI.get_environment_custom_sky
      */
@@ -521,7 +544,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.set_environment_custom_color
      */
@@ -531,7 +554,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.get_environment_custom_color
      */
@@ -541,7 +564,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color multiplier to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.set_environment_custom_energy
      */
@@ -551,7 +574,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color multiplier to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.get_environment_custom_energy
      */
@@ -753,7 +776,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * If `true`, bakes lightmaps to contain directional information as spherical harmonics. This
      * results in more realistic lighting appearance, especially with normal mapped materials and for
      * lights that have their direct light baked (`Light3D.light_bake_mode` set to
-     * `Light3D.BAKE_STATIC` and with `Light3D.editor_only` set to `false`). The directional
+     * `Light3D.BakeMode.STATIC` and with `Light3D.editor_only` set to `false`). The directional
      * information is also used to provide rough reflections for static and dynamic objects. This has a
      * small run-time performance cost as the shader has to perform more work to interpret the
      * direction information from the lightmap. Directional lightmaps also take longer to bake and
@@ -770,7 +793,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * If `true`, bakes lightmaps to contain directional information as spherical harmonics. This
      * results in more realistic lighting appearance, especially with normal mapped materials and for
      * lights that have their direct light baked (`Light3D.light_bake_mode` set to
-     * `Light3D.BAKE_STATIC` and with `Light3D.editor_only` set to `false`). The directional
+     * `Light3D.BakeMode.STATIC` and with `Light3D.editor_only` set to `false`). The directional
      * information is also used to provide rough reflections for static and dynamic objects. This has a
      * small run-time performance cost as the shader has to perform more work to interpret the
      * direction information from the lightmap. Directional lightmaps also take longer to bake and
@@ -789,9 +812,9 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * outside the range defined by their `DirectionalLight3D.directional_shadow_max_distance`
      * property. This is done by baking a texture that contains a shadowmap for the directional light,
      * then using this texture according to the current shadowmask mode. Note: The shadowmask texture
-     * is only created if `shadowmask_mode` is not `LightmapGIData.SHADOWMASK_MODE_NONE`. To see a
+     * is only created if `shadowmask_mode` is not `LightmapGIData.ShadowmaskMode.NONE`. To see a
      * difference, you need to bake lightmaps again after switching from
-     * `LightmapGIData.SHADOWMASK_MODE_NONE` to any other mode.
+     * `LightmapGIData.ShadowmaskMode.NONE` to any other mode.
      *
      * Generated from Godot docs: LightmapGI.set_shadowmask_mode
      */
@@ -805,9 +828,9 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * outside the range defined by their `DirectionalLight3D.directional_shadow_max_distance`
      * property. This is done by baking a texture that contains a shadowmap for the directional light,
      * then using this texture according to the current shadowmask mode. Note: The shadowmask texture
-     * is only created if `shadowmask_mode` is not `LightmapGIData.SHADOWMASK_MODE_NONE`. To see a
+     * is only created if `shadowmask_mode` is not `LightmapGIData.ShadowmaskMode.NONE`. To see a
      * difference, you need to bake lightmaps again after switching from
-     * `LightmapGIData.SHADOWMASK_MODE_NONE` to any other mode.
+     * `LightmapGIData.ShadowmaskMode.NONE` to any other mode.
      *
      * Generated from Godot docs: LightmapGI.get_shadowmask_mode
      */

@@ -314,7 +314,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
     /**
      * Smoothing value for shadows. Higher values will result in softer shadows, at the cost of visible
      * streaks that can appear in shadow rendering. `shadow_filter_smooth` only has an effect if
-     * `shadow_filter` is `SHADOW_FILTER_PCF5` or `SHADOW_FILTER_PCF13`.
+     * `shadow_filter` is `ShadowFilter.PCF5` or `ShadowFilter.PCF13`.
      *
      * Generated from Godot docs: Light2D.set_shadow_smooth
      */
@@ -325,7 +325,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
     /**
      * Smoothing value for shadows. Higher values will result in softer shadows, at the cost of visible
      * streaks that can appear in shadow rendering. `shadow_filter_smooth` only has an effect if
-     * `shadow_filter` is `SHADOW_FILTER_PCF5` or `SHADOW_FILTER_PCF13`.
+     * `shadow_filter` is `ShadowFilter.PCF5` or `ShadowFilter.PCF13`.
      *
      * Generated from Godot docs: Light2D.get_shadow_smooth
      */
@@ -407,6 +407,12 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
+    /**
+     * Godot's `Light2D.ShadowFilter` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Light2D.ShadowFilter.<NAME>`).
+     *
+     * Generated from Godot docs: Light2D.ShadowFilter
+     */
     @JvmInline
     value class ShadowFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -434,6 +440,12 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `Light2D.BlendMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Light2D.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: Light2D.BlendMode
+     */
     @JvmInline
     value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {

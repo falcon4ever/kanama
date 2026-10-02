@@ -309,6 +309,13 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug)
     }
 
+    /**
+     * Godot's `EditorExportPlatform.ExportMessageType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`EditorExportPlatform.ExportMessageType.<NAME>`).
+     *
+     * Generated from Godot docs: EditorExportPlatform.ExportMessageType
+     */
     @JvmInline
     value class ExportMessageType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -340,6 +347,12 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `EditorExportPlatform.DebugFlags` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`EditorExportPlatform.DebugFlags.<NAME>`).
+     *
+     * Generated from Godot docs: EditorExportPlatform.DebugFlags
+     */
     @JvmInline
     value class DebugFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: DebugFlags): DebugFlags = DebugFlags(value or other.value)

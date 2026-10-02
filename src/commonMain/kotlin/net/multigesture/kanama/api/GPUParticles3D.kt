@@ -369,8 +369,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * The base diameter for particle collision in meters. If particles appear to sink into the ground
      * when colliding, increase this value. If particles appear to float when colliding, decrease this
      * value. Only effective if `ParticleProcessMaterial.collision_mode` is
-     * `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
+     * `ParticleProcessMaterial.CollisionMode.RIGID` or
+     * `ParticleProcessMaterial.CollisionMode.HIDE_ON_CONTACT`. Note: Particles always have a spherical
      * collision shape.
      *
      * Generated from Godot docs: GPUParticles3D.set_collision_base_size
@@ -549,8 +549,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * The base diameter for particle collision in meters. If particles appear to sink into the ground
      * when colliding, increase this value. If particles appear to float when colliding, decrease this
      * value. Only effective if `ParticleProcessMaterial.collision_mode` is
-     * `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
+     * `ParticleProcessMaterial.CollisionMode.RIGID` or
+     * `ParticleProcessMaterial.CollisionMode.HIDE_ON_CONTACT`. Note: Particles always have a spherical
      * collision shape.
      *
      * Generated from Godot docs: GPUParticles3D.get_collision_base_size
@@ -611,8 +611,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Particle draw order. Note: `DRAW_ORDER_INDEX` is the only option that supports motion vectors
-     * for effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
+     * Particle draw order. Note: `DrawOrder.INDEX` is the only option that supports motion vectors for
+     * effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
      * ghosting artifacts.
      *
      * Generated from Godot docs: GPUParticles3D.set_draw_order
@@ -622,8 +622,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Particle draw order. Note: `DRAW_ORDER_INDEX` is the only option that supports motion vectors
-     * for effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
+     * Particle draw order. Note: `DrawOrder.INDEX` is the only option that supports motion vectors for
+     * effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
      * ghosting artifacts.
      *
      * Generated from Godot docs: GPUParticles3D.get_draw_order
@@ -899,6 +899,12 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         const val finished: String = "finished"
     }
 
+    /**
+     * Godot's `GPUParticles3D.DrawOrder` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GPUParticles3D.DrawOrder.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles3D.DrawOrder
+     */
     @JvmInline
     value class DrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
@@ -931,6 +937,12 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `GPUParticles3D.EmitFlags` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GPUParticles3D.EmitFlags.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles3D.EmitFlags
+     */
     @JvmInline
     value class EmitFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -968,6 +980,12 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `GPUParticles3D.TransformAlign` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GPUParticles3D.TransformAlign.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles3D.TransformAlign
+     */
     @JvmInline
     value class TransformAlign(override val value: Long) : GodotEnumValue {
         companion object {

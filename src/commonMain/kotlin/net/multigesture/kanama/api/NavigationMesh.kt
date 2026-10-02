@@ -207,7 +207,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The physics layers to scan for static colliders. Only used when `geometry_parsed_geometry_type`
-     * is `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
+     * is `ParsedGeometryType.STATIC_COLLIDERS` or `ParsedGeometryType.BOTH`.
      *
      * Generated from Godot docs: NavigationMesh.set_collision_mask
      */
@@ -218,7 +218,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The physics layers to scan for static colliders. Only used when `geometry_parsed_geometry_type`
-     * is `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
+     * is `ParsedGeometryType.STATIC_COLLIDERS` or `ParsedGeometryType.BOTH`.
      *
      * Generated from Godot docs: NavigationMesh.get_collision_mask
      */
@@ -271,7 +271,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The name of the group to scan for geometry. Only used when `geometry_source_geometry_mode` is
-     * `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
+     * `SourceGeometryMode.GROUPS_WITH_CHILDREN` or `SourceGeometryMode.GROUPS_EXPLICIT`.
      *
      * Generated from Godot docs: NavigationMesh.set_source_group_name
      */
@@ -282,7 +282,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The name of the group to scan for geometry. Only used when `geometry_source_geometry_mode` is
-     * `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
+     * `SourceGeometryMode.GROUPS_WITH_CHILDREN` or `SourceGeometryMode.GROUPS_EXPLICIT`.
      *
      * Generated from Godot docs: NavigationMesh.get_source_group_name
      */
@@ -783,7 +783,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Initializes the navigation mesh by setting the vertices and indices according to a `Mesh`. Note:
-     * The given `mesh` must be of type `Mesh.PRIMITIVE_TRIANGLES` and have an index array.
+     * The given `mesh` must be of type `Mesh.PrimitiveType.TRIANGLES` and have an index array.
      *
      * Generated from Godot docs: NavigationMesh.create_from_mesh
      */
@@ -802,6 +802,13 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
+    /**
+     * Godot's `NavigationMesh.SamplePartitionType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationMesh.SamplePartitionType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationMesh.SamplePartitionType
+     */
     @JvmInline
     value class SamplePartitionType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -834,6 +841,13 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `NavigationMesh.ParsedGeometryType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationMesh.ParsedGeometryType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationMesh.ParsedGeometryType
+     */
     @JvmInline
     value class ParsedGeometryType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -852,7 +866,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
              */
             val STATIC_COLLIDERS: ParsedGeometryType get() = ParsedGeometryType(1L)
             /**
-             * Both `PARSED_GEOMETRY_MESH_INSTANCES` and `PARSED_GEOMETRY_STATIC_COLLIDERS`.
+             * Both `ParsedGeometryType.MESH_INSTANCES` and `ParsedGeometryType.STATIC_COLLIDERS`.
              *
              * Generated from Godot docs: NavigationMesh.PARSED_GEOMETRY_BOTH
              */
@@ -866,6 +880,13 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `NavigationMesh.SourceGeometryMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationMesh.SourceGeometryMode.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationMesh.SourceGeometryMode
+     */
     @JvmInline
     value class SourceGeometryMode(override val value: Long) : GodotEnumValue {
         companion object {

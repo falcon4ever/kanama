@@ -10,6 +10,12 @@ import java.lang.foreign.MemorySegment
  */
 object ResourceLoader {
     // ===== BEGIN GENERATED ENUMS: ResourceLoader (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `ResourceLoader.ThreadLoadStatus` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`ResourceLoader.ThreadLoadStatus.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceLoader.ThreadLoadStatus
+     */
     @JvmInline
     value class ThreadLoadStatus(override val value: Long) : GodotEnumValue {
         companion object {
@@ -40,13 +46,19 @@ object ResourceLoader {
         }
     }
 
+    /**
+     * Godot's `ResourceLoader.CacheMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`ResourceLoader.CacheMode.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceLoader.CacheMode
+     */
     @JvmInline
     value class CacheMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Neither the main resource (the one requested to be loaded) nor any of its subresources are
              * retrieved from cache nor stored into it. Dependencies (external resources) are loaded with
-             * `CACHE_MODE_REUSE`.
+             * `CacheMode.REUSE`.
              *
              * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE
              */
@@ -61,7 +73,7 @@ object ResourceLoader {
              */
             val REUSE: CacheMode get() = CacheMode(1L)
             /**
-             * Like `CACHE_MODE_REUSE`, but the cache is checked for the main resource (the one requested to be
+             * Like `CacheMode.REUSE`, but the cache is checked for the main resource (the one requested to be
              * loaded) as well as for each of its subresources. Those already in the cache, as long as the
              * loaded and cached types match, have their data refreshed from storage into the already existing
              * instances. Otherwise, they are recreated as completely new objects.
@@ -70,14 +82,14 @@ object ResourceLoader {
              */
             val REPLACE: CacheMode get() = CacheMode(2L)
             /**
-             * Like `CACHE_MODE_IGNORE`, but propagated recursively down the tree of dependencies (external
+             * Like `CacheMode.IGNORE`, but propagated recursively down the tree of dependencies (external
              * resources).
              *
              * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE_DEEP
              */
             val IGNORE_DEEP: CacheMode get() = CacheMode(3L)
             /**
-             * Like `CACHE_MODE_REPLACE`, but propagated recursively down the tree of dependencies (external
+             * Like `CacheMode.REPLACE`, but propagated recursively down the tree of dependencies (external
              * resources).
              *
              * Generated from Godot docs: ResourceLoader.CACHE_MODE_REPLACE_DEEP
@@ -293,8 +305,8 @@ object ResourceLoader {
 
     /**
      * Returns the resource loaded by `load_threaded_request`. If this is called before the loading
-     * thread is done (i.e. `load_threaded_get_status` is not `THREAD_LOAD_LOADED`), the calling thread
-     * will be blocked until the resource has finished loading. However, it's recommended to use
+     * thread is done (i.e. `load_threaded_get_status` is not `ThreadLoadStatus.LOADED`), the calling
+     * thread will be blocked until the resource has finished loading. However, it's recommended to use
      * `load_threaded_get_status` to known when the load has actually completed.
      *
      * Generated from Godot docs: ResourceLoader.load_threaded_get

@@ -80,7 +80,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     /**
      * Reverses/mirrors the gradient. Note: This method mirrors all points around the middle of the
      * gradient, which may produce unexpected results when `interpolation_mode` is set to
-     * `GRADIENT_INTERPOLATE_CONSTANT`.
+     * `InterpolationMode.CONSTANT`.
      *
      * Generated from Godot docs: Gradient.reverse
      */
@@ -200,7 +200,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     /**
      * The color space used to interpolate between points of the gradient. It does not affect the
      * returned colors, which will always use nonlinear sRGB encoding. Note: This setting has no effect
-     * when `interpolation_mode` is set to `GRADIENT_INTERPOLATE_CONSTANT`.
+     * when `interpolation_mode` is set to `InterpolationMode.CONSTANT`.
      *
      * Generated from Godot docs: Gradient.set_interpolation_color_space
      */
@@ -212,7 +212,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     /**
      * The color space used to interpolate between points of the gradient. It does not affect the
      * returned colors, which will always use nonlinear sRGB encoding. Note: This setting has no effect
-     * when `interpolation_mode` is set to `GRADIENT_INTERPOLATE_CONSTANT`.
+     * when `interpolation_mode` is set to `InterpolationMode.CONSTANT`.
      *
      * Generated from Godot docs: Gradient.get_interpolation_color_space
      */
@@ -221,6 +221,12 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
         return Gradient.ColorSpace(ObjectCalls.ptrcallNoArgsRetLong(getInterpolationColorSpaceBind, segment))
     }
 
+    /**
+     * Godot's `Gradient.InterpolationMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Gradient.InterpolationMode.<NAME>`).
+     *
+     * Generated from Godot docs: Gradient.InterpolationMode
+     */
     @JvmInline
     value class InterpolationMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -246,6 +252,12 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Gradient.ColorSpace` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Gradient.ColorSpace.<NAME>`).
+     *
+     * Generated from Godot docs: Gradient.ColorSpace
+     */
     @JvmInline
     value class ColorSpace(override val value: Long) : GodotEnumValue {
         companion object {

@@ -299,6 +299,12 @@ object XRServer {
         const val worldOriginChanged: String = "world_origin_changed"
     }
 
+    /**
+     * Godot's `XRServer.TrackerType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`XRServer.TrackerType.<NAME>`).
+     *
+     * Generated from Godot docs: XRServer.TrackerType
+     */
     @JvmInline
     value class TrackerType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -367,6 +373,12 @@ object XRServer {
         }
     }
 
+    /**
+     * Godot's `XRServer.RotationMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`XRServer.RotationMode.<NAME>`).
+     *
+     * Generated from Godot docs: XRServer.RotationMode
+     */
     @JvmInline
     value class RotationMode(override val value: Long) : GodotEnumValue {
         companion object {

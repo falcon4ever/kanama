@@ -11,6 +11,12 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 open class ScriptLanguage(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
+    /**
+     * Godot's `ScriptLanguage.ScriptNameCasing` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`ScriptLanguage.ScriptNameCasing.<NAME>`).
+     *
+     * Generated from Godot docs: ScriptLanguage.ScriptNameCasing
+     */
     @JvmInline
     value class ScriptNameCasing(override val value: Long) : GodotEnumValue {
         companion object {

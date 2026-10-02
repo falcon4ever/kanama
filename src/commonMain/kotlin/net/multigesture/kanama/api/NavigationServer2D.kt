@@ -1517,6 +1517,12 @@ object NavigationServer2D {
         const val avoidanceDebugChanged: String = "avoidance_debug_changed"
     }
 
+    /**
+     * Godot's `NavigationServer2D.ProcessInfo` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`NavigationServer2D.ProcessInfo.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationServer2D.ProcessInfo
+     */
     @JvmInline
     value class ProcessInfo(override val value: Long) : GodotEnumValue {
         companion object {

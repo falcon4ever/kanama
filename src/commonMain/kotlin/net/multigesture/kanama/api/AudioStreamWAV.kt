@@ -62,9 +62,10 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
         set(value) = setTags(value)
 
     /**
-     * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
-     * expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from each byte.
-     * Note: If `format` is set to `FORMAT_QOA`, this property expects data from a full QOA file.
+     * Contains the audio data in bytes. Note: If `format` is set to `Format.FORMAT_8_BITS`, this
+     * property expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from
+     * each byte. Note: If `format` is set to `Format.QOA`, this property expects data from a full QOA
+     * file.
      *
      * Generated from Godot docs: AudioStreamWAV.set_data
      */
@@ -74,9 +75,10 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     }
 
     /**
-     * Contains the audio data in bytes. Note: If `format` is set to `FORMAT_8_BITS`, this property
-     * expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from each byte.
-     * Note: If `format` is set to `FORMAT_QOA`, this property expects data from a full QOA file.
+     * Contains the audio data in bytes. Note: If `format` is set to `Format.FORMAT_8_BITS`, this
+     * property expects signed 8-bit PCM data. To convert from unsigned 8-bit PCM, subtract 128 from
+     * each byte. Note: If `format` is set to `Format.QOA`, this property expects data from a full QOA
+     * file.
      *
      * Generated from Godot docs: AudioStreamWAV.get_data
      */
@@ -257,6 +259,12 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
         return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveToWavBind, segment, path))
     }
 
+    /**
+     * Godot's `AudioStreamWAV.Format` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AudioStreamWAV.Format.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamWAV.Format
+     */
     @JvmInline
     value class Format(override val value: Long) : GodotEnumValue {
         companion object {
@@ -287,6 +295,12 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
         }
     }
 
+    /**
+     * Godot's `AudioStreamWAV.LoopMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AudioStreamWAV.LoopMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamWAV.LoopMode
+     */
     @JvmInline
     value class LoopMode(override val value: Long) : GodotEnumValue {
         companion object {

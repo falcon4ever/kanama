@@ -105,6 +105,12 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         return ObjectCalls.ptrcallWithLongArgRetTransform3D(getJointTransformBind, segment, joint.value)
     }
 
+    /**
+     * Godot's `XRBodyTracker.BodyFlags` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRBodyTracker.BodyFlags.<NAME>`).
+     *
+     * Generated from Godot docs: XRBodyTracker.BodyFlags
+     */
     @JvmInline
     value class BodyFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: BodyFlags): BodyFlags = BodyFlags(value or other.value)
@@ -139,6 +145,12 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         }
     }
 
+    /**
+     * Godot's `XRBodyTracker.Joint` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`XRBodyTracker.Joint.<NAME>`).
+     *
+     * Generated from Godot docs: XRBodyTracker.Joint
+     */
     @JvmInline
     value class Joint(override val value: Long) : GodotEnumValue {
         companion object {
@@ -673,6 +685,12 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
         }
     }
 
+    /**
+     * Godot's `XRBodyTracker.JointFlags` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRBodyTracker.JointFlags.<NAME>`).
+     *
+     * Generated from Godot docs: XRBodyTracker.JointFlags
+     */
     @JvmInline
     value class JointFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: JointFlags): JointFlags = JointFlags(value or other.value)

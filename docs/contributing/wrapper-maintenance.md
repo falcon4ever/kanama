@@ -279,10 +279,14 @@ gate all import it.
   (`HAND_SURFACE_SCOPED`) and prints the cross-platform gap task 129 closes.
 - **Value names** come from ONE function, `godot_enum_model.enum_value_name(prefix, godot_name)`:
   Godot's C# rule (`bindings_generator.cpp` `_determine_enum_prefix` /
-  `_apply_prefix_to_enum_constants`) ported exactly, SCREAMING_CASE kept. The prefix is frozen per
+  `_apply_prefix_to_enum_constants`) ported exactly, SCREAMING_CASE kept, except C#'s hard-coded
+  `ERR_` prefix for `Error`: Kanama keeps `GodotError`'s full names (`GodotError.ERR_FILE_NOT_FOUND`).
+  The prefix is frozen per
   enum in `scripts/enum_prefix_lock.json` (generated, do not edit): the generator uses an existing
   entry as-is, appends one only for a new enum, and a value that does not carry its enum's frozen
-  prefix keeps Godot's full name, so siblings never change name across Godot versions.
+  prefix keeps Godot's full name, so siblings never change name across Godot versions. The
+  file's "do not edit" header is the only guard against a hand edit of an EXISTING entry, by design:
+  the generator trusts the lock, and `check_typed_enums.py` then holds every emitted name to it.
 - **Raw values** are always constructible (`X(3L)`) and readable (`.value`); `toString()` stays the
   value-class default. Every value class implements the generated marker `GodotEnumValue`
   (`GlobalEnums.kt`): the `Any?` -> Variant encoders (desktop `BuiltinTypes.initVariantFromAny`, the

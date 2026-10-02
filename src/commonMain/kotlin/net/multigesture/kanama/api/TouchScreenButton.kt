@@ -249,6 +249,13 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
         const val released: String = "released"
     }
 
+    /**
+     * Godot's `TouchScreenButton.VisibilityMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TouchScreenButton.VisibilityMode.<NAME>`).
+     *
+     * Generated from Godot docs: TouchScreenButton.VisibilityMode
+     */
     @JvmInline
     value class VisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {

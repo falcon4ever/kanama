@@ -139,6 +139,12 @@ open class Slider(handle: GodotHandle) : Range(handle) {
         const val dragEnded: String = "drag_ended"
     }
 
+    /**
+     * Godot's `Slider.TickPosition` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Slider.TickPosition.<NAME>`).
+     *
+     * Generated from Godot docs: Slider.TickPosition
+     */
     @JvmInline
     value class TickPosition(override val value: Long) : GodotEnumValue {
         companion object {

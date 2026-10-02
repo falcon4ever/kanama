@@ -567,7 +567,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show collision debug settings.
      *
      * Generated from Godot docs: TileMapLayer.set_collision_visibility_mode
@@ -577,7 +577,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show collision debug settings.
      *
      * Generated from Godot docs: TileMapLayer.get_collision_visibility_mode
@@ -678,7 +678,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show navigation debug settings.
      *
      * Generated from Godot docs: TileMapLayer.set_navigation_visibility_mode
@@ -688,7 +688,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show navigation debug settings.
      *
      * Generated from Godot docs: TileMapLayer.get_navigation_visibility_mode
@@ -701,6 +701,13 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
         const val changed: String = "changed"
     }
 
+    /**
+     * Godot's `TileMapLayer.DebugVisibilityMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TileMapLayer.DebugVisibilityMode.<NAME>`).
+     *
+     * Generated from Godot docs: TileMapLayer.DebugVisibilityMode
+     */
     @JvmInline
     value class DebugVisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {

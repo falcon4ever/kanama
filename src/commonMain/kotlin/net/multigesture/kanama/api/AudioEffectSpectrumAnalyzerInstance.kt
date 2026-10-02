@@ -24,6 +24,13 @@ class AudioEffectSpectrumAnalyzerInstance(handle: GodotHandle) : AudioEffectInst
         return ObjectCalls.ptrcallWithTwoDoubleAndLongArgsRetVector2(getMagnitudeForFrequencyRangeBind, segment, fromHz, toHz, mode.value)
     }
 
+    /**
+     * Godot's `AudioEffectSpectrumAnalyzerInstance.MagnitudeMode` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioEffectSpectrumAnalyzerInstance.MagnitudeMode
+     */
     @JvmInline
     value class MagnitudeMode(override val value: Long) : GodotEnumValue {
         companion object {

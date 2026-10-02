@@ -260,7 +260,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text.
      *
@@ -272,7 +272,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text.
      *

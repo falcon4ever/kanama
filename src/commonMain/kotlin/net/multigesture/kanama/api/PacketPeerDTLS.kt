@@ -56,6 +56,12 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
         ObjectCalls.ptrcallNoArgs(disconnectFromPeerBind, segment)
     }
 
+    /**
+     * Godot's `PacketPeerDTLS.Status` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PacketPeerDTLS.Status.<NAME>`).
+     *
+     * Generated from Godot docs: PacketPeerDTLS.Status
+     */
     @JvmInline
     value class Status(override val value: Long) : GodotEnumValue {
         companion object {

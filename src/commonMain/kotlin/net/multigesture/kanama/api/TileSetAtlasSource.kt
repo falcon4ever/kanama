@@ -494,6 +494,13 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
         return ObjectCalls.ptrcallWithVector2iAndIntArgRetRect2i(getRuntimeTileTextureRegionBind, segment, atlasCoords, frame)
     }
 
+    /**
+     * Godot's `TileSetAtlasSource.TileAnimationMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TileSetAtlasSource.TileAnimationMode.<NAME>`).
+     *
+     * Generated from Godot docs: TileSetAtlasSource.TileAnimationMode
+     */
     @JvmInline
     value class TileAnimationMode(override val value: Long) : GodotEnumValue {
         companion object {

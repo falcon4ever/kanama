@@ -53,6 +53,12 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
         return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, segment))
     }
 
+    /**
+     * Godot's `PackedScene.GenEditState` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PackedScene.GenEditState.<NAME>`).
+     *
+     * Generated from Godot docs: PackedScene.GenEditState
+     */
     @JvmInline
     value class GenEditState(override val value: Long) : GodotEnumValue {
         companion object {
@@ -77,7 +83,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
              */
             val MAIN: GenEditState get() = GenEditState(2L)
             /**
-             * It's similar to `GEN_EDIT_STATE_MAIN`, but for the case where the scene is being instantiated to
+             * It's similar to `GenEditState.MAIN`, but for the case where the scene is being instantiated to
              * be the base of another one. Note: Only available in editor builds.
              *
              * Generated from Godot docs: PackedScene.GEN_EDIT_STATE_MAIN_INHERITED

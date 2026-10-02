@@ -12,7 +12,9 @@ cannot disagree:
   constants), and the dotted `Variant.Type` / `Variant.Operator` -> `VariantType` / `VariantOperator`.
 * **Value names** (decision 2, final). [enum_value_name] is the ONE naming function: Godot's C# rule
   (`modules/mono/editor/bindings_generator.cpp` `_determine_enum_prefix` /
-  `_apply_prefix_to_enum_constants`) ported exactly, SCREAMING_CASE kept. The prefix of every enum is
+  `_apply_prefix_to_enum_constants`) ported exactly, SCREAMING_CASE kept -- except C#'s hard-coded
+  `ERR_` prefix for `Error` (bindings_generator.cpp, "HARDCODED: The Error enum ..."): Kanama keeps
+  `GodotError`'s full names (`GodotError.ERR_FILE_NOT_FOUND`, `GodotError.OK`). The prefix of every enum is
   FROZEN in [LOCK_PATH]: the generator computes a prefix only for an enum the lock does not know yet
   and never changes an existing entry, so a later Godot adding a value cannot rename its siblings; a
   value that does not carry the frozen prefix keeps its full Godot name.

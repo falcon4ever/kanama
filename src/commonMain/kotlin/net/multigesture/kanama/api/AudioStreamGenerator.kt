@@ -40,8 +40,9 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      * rates such as `32000` or `22050` may be usable with no loss in quality. Note:
      * `AudioStreamGenerator` is not automatically resampling input data, to produce expected result
      * `mix_rate_mode` should match the sampling rate of input data. Note: If you are using
-     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to `MIX_RATE_INPUT` or
-     * `MIX_RATE_OUTPUT` to automatically match current `AudioServer` mixing rate.
+     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to
+     * `AudioStreamGeneratorMixRate.INPUT` or `AudioStreamGeneratorMixRate.OUTPUT` to automatically
+     * match current `AudioServer` mixing rate.
      *
      * Generated from Godot docs: AudioStreamGenerator.set_mix_rate
      */
@@ -60,8 +61,9 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      * rates such as `32000` or `22050` may be usable with no loss in quality. Note:
      * `AudioStreamGenerator` is not automatically resampling input data, to produce expected result
      * `mix_rate_mode` should match the sampling rate of input data. Note: If you are using
-     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to `MIX_RATE_INPUT` or
-     * `MIX_RATE_OUTPUT` to automatically match current `AudioServer` mixing rate.
+     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to
+     * `AudioStreamGeneratorMixRate.INPUT` or `AudioStreamGeneratorMixRate.OUTPUT` to automatically
+     * match current `AudioServer` mixing rate.
      *
      * Generated from Godot docs: AudioStreamGenerator.get_mix_rate
      */
@@ -71,8 +73,8 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     }
 
     /**
-     * Mixing rate mode. If set to `MIX_RATE_CUSTOM`, `mix_rate` is used, otherwise current
-     * `AudioServer` mixing rate is used.
+     * Mixing rate mode. If set to `AudioStreamGeneratorMixRate.CUSTOM`, `mix_rate` is used, otherwise
+     * current `AudioServer` mixing rate is used.
      *
      * Generated from Godot docs: AudioStreamGenerator.set_mix_rate_mode
      */
@@ -82,8 +84,8 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     }
 
     /**
-     * Mixing rate mode. If set to `MIX_RATE_CUSTOM`, `mix_rate` is used, otherwise current
-     * `AudioServer` mixing rate is used.
+     * Mixing rate mode. If set to `AudioStreamGeneratorMixRate.CUSTOM`, `mix_rate` is used, otherwise
+     * current `AudioServer` mixing rate is used.
      *
      * Generated from Godot docs: AudioStreamGenerator.get_mix_rate_mode
      */
@@ -116,6 +118,13 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
     }
 
+    /**
+     * Godot's `AudioStreamGenerator.AudioStreamGeneratorMixRate` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`AudioStreamGenerator.AudioStreamGeneratorMixRate.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamGenerator.AudioStreamGeneratorMixRate
+     */
     @JvmInline
     value class AudioStreamGeneratorMixRate(override val value: Long) : GodotEnumValue {
         companion object {

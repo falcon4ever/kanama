@@ -914,8 +914,8 @@ object Input {
      * Sets the mouse position to the specified vector, provided in pixels and relative to an origin at
      * the upper left corner of the currently focused Window Manager game window. Mouse position is
      * clipped to the limits of the screen resolution, or to the limits of the game window if
-     * `MouseMode` is set to `MOUSE_MODE_CONFINED` or `MOUSE_MODE_CONFINED_HIDDEN`. Note: `warp_mouse`
-     * is only supported on Windows, macOS and Linux. It has no effect on Android, iOS and Web.
+     * `MouseMode` is set to `MouseMode.CONFINED` or `MouseMode.CONFINED_HIDDEN`. Note: `warp_mouse` is
+     * only supported on Windows, macOS and Linux. It has no effect on Android, iOS and Web.
      *
      * Generated from Godot docs: Input.warp_mouse
      */
@@ -949,8 +949,8 @@ object Input {
     }
 
     /**
-     * Sets the default cursor shape to be used in the viewport instead of `CURSOR_ARROW`. Note: If you
-     * want to change the default cursor shape for `Control`'s nodes, use
+     * Sets the default cursor shape to be used in the viewport instead of `CursorShape.ARROW`. Note:
+     * If you want to change the default cursor shape for `Control`'s nodes, use
      * `Control.mouse_default_cursor_shape` instead. Note: This method generates an
      * `InputEventMouseMotion` to update cursor immediately.
      *
@@ -1099,6 +1099,12 @@ object Input {
         const val joyConnectionChanged: String = "joy_connection_changed"
     }
 
+    /**
+     * Godot's `Input.MouseMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Input.MouseMode.<NAME>`).
+     *
+     * Generated from Godot docs: Input.MouseMode
+     */
     @JvmInline
     value class MouseMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1143,6 +1149,12 @@ object Input {
         }
     }
 
+    /**
+     * Godot's `Input.CursorShape` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Input.CursorShape.<NAME>`).
+     *
+     * Generated from Godot docs: Input.CursorShape
+     */
     @JvmInline
     value class CursorShape(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1188,7 +1200,7 @@ object Input {
             val BUSY: CursorShape get() = CursorShape(5L)
             /**
              * Drag cursor. Usually displayed when dragging something. Note: Windows lacks a dragging cursor,
-             * so `CURSOR_DRAG` is the same as `CURSOR_MOVE` for this platform.
+             * so `CursorShape.DRAG` is the same as `CursorShape.MOVE` for this platform.
              *
              * Generated from Godot docs: Input.CURSOR_DRAG
              */
@@ -1231,7 +1243,7 @@ object Input {
             val BDIAGSIZE: CursorShape get() = CursorShape(11L)
             /**
              * Window resize mouse cursor. The cursor is a double-headed arrow that goes from the top left to
-             * the bottom right, the opposite of `CURSOR_BDIAGSIZE`. It tells the user they can resize the
+             * the bottom right, the opposite of `CursorShape.BDIAGSIZE`. It tells the user they can resize the
              * window or the panel both horizontally and vertically.
              *
              * Generated from Godot docs: Input.CURSOR_FDIAGSIZE
@@ -1244,13 +1256,13 @@ object Input {
              */
             val MOVE: CursorShape get() = CursorShape(13L)
             /**
-             * Vertical split mouse cursor. On Windows, it's the same as `CURSOR_VSIZE`.
+             * Vertical split mouse cursor. On Windows, it's the same as `CursorShape.VSIZE`.
              *
              * Generated from Godot docs: Input.CURSOR_VSPLIT
              */
             val VSPLIT: CursorShape get() = CursorShape(14L)
             /**
-             * Horizontal split mouse cursor. On Windows, it's the same as `CURSOR_HSIZE`.
+             * Horizontal split mouse cursor. On Windows, it's the same as `CursorShape.HSIZE`.
              *
              * Generated from Godot docs: Input.CURSOR_HSPLIT
              */

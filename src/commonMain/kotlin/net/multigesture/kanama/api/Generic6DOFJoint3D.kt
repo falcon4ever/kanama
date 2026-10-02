@@ -125,6 +125,12 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
         return ObjectCalls.ptrcallWithLongArgRetBool(getFlagZBind, segment, flag.value)
     }
 
+    /**
+     * Godot's `Generic6DOFJoint3D.Param` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Generic6DOFJoint3D.Param.<NAME>`).
+     *
+     * Generated from Godot docs: Generic6DOFJoint3D.Param
+     */
     @JvmInline
     value class Param(override val value: Long) : GodotEnumValue {
         companion object {
@@ -240,6 +246,12 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
         }
     }
 
+    /**
+     * Godot's `Generic6DOFJoint3D.Flag` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Generic6DOFJoint3D.Flag.<NAME>`).
+     *
+     * Generated from Godot docs: Generic6DOFJoint3D.Flag
+     */
     @JvmInline
     value class Flag(override val value: Long) : GodotEnumValue {
         companion object {

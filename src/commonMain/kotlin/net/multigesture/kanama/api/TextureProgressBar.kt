@@ -268,11 +268,11 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Starting angle for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `min_value`, the texture doesn't show up at all. When the `value` increases, the
-     * texture fills and tends towards `radial_fill_degrees`. Note: `radial_initial_angle` is wrapped
-     * between `0` and `360` degrees (inclusive).
+     * Starting angle for the fill of `texture_progress` if `fill_mode` is `FillMode.CLOCKWISE`,
+     * `FillMode.COUNTER_CLOCKWISE`, or `FillMode.CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's
+     * `value` is equal to its `min_value`, the texture doesn't show up at all. When the `value`
+     * increases, the texture fills and tends towards `radial_fill_degrees`. Note:
+     * `radial_initial_angle` is wrapped between `0` and `360` degrees (inclusive).
      *
      * Generated from Godot docs: TextureProgressBar.set_radial_initial_angle
      */
@@ -281,11 +281,11 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Starting angle for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `min_value`, the texture doesn't show up at all. When the `value` increases, the
-     * texture fills and tends towards `radial_fill_degrees`. Note: `radial_initial_angle` is wrapped
-     * between `0` and `360` degrees (inclusive).
+     * Starting angle for the fill of `texture_progress` if `fill_mode` is `FillMode.CLOCKWISE`,
+     * `FillMode.COUNTER_CLOCKWISE`, or `FillMode.CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's
+     * `value` is equal to its `min_value`, the texture doesn't show up at all. When the `value`
+     * increases, the texture fills and tends towards `radial_fill_degrees`. Note:
+     * `radial_initial_angle` is wrapped between `0` and `360` degrees (inclusive).
      *
      * Generated from Godot docs: TextureProgressBar.get_radial_initial_angle
      */
@@ -294,10 +294,10 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Offsets `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`, `FILL_COUNTER_CLOCKWISE`, or
-     * `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. Note: The effective radial center always stays within
-     * the `texture_progress` bounds. If you need to move it outside the texture's bounds, modify the
-     * `texture_progress` to contain additional empty space where needed.
+     * Offsets `texture_progress` if `fill_mode` is `FillMode.CLOCKWISE`, `FillMode.COUNTER_CLOCKWISE`,
+     * or `FillMode.CLOCKWISE_AND_COUNTER_CLOCKWISE`. Note: The effective radial center always stays
+     * within the `texture_progress` bounds. If you need to move it outside the texture's bounds,
+     * modify the `texture_progress` to contain additional empty space where needed.
      *
      * Generated from Godot docs: TextureProgressBar.set_radial_center_offset
      */
@@ -306,10 +306,10 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Offsets `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`, `FILL_COUNTER_CLOCKWISE`, or
-     * `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. Note: The effective radial center always stays within
-     * the `texture_progress` bounds. If you need to move it outside the texture's bounds, modify the
-     * `texture_progress` to contain additional empty space where needed.
+     * Offsets `texture_progress` if `fill_mode` is `FillMode.CLOCKWISE`, `FillMode.COUNTER_CLOCKWISE`,
+     * or `FillMode.CLOCKWISE_AND_COUNTER_CLOCKWISE`. Note: The effective radial center always stays
+     * within the `texture_progress` bounds. If you need to move it outside the texture's bounds,
+     * modify the `texture_progress` to contain additional empty space where needed.
      *
      * Generated from Godot docs: TextureProgressBar.get_radial_center_offset
      */
@@ -318,9 +318,9 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Upper limit for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `max_value`, the texture fills up to this angle. See `Range.value`,
+     * Upper limit for the fill of `texture_progress` if `fill_mode` is `FillMode.CLOCKWISE`,
+     * `FillMode.COUNTER_CLOCKWISE`, or `FillMode.CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's
+     * `value` is equal to its `max_value`, the texture fills up to this angle. See `Range.value`,
      * `Range.max_value`.
      *
      * Generated from Godot docs: TextureProgressBar.set_fill_degrees
@@ -330,9 +330,9 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Upper limit for the fill of `texture_progress` if `fill_mode` is `FILL_CLOCKWISE`,
-     * `FILL_COUNTER_CLOCKWISE`, or `FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's `value` is
-     * equal to its `max_value`, the texture fills up to this angle. See `Range.value`,
+     * Upper limit for the fill of `texture_progress` if `fill_mode` is `FillMode.CLOCKWISE`,
+     * `FillMode.COUNTER_CLOCKWISE`, or `FillMode.CLOCKWISE_AND_COUNTER_CLOCKWISE`. When the node's
+     * `value` is equal to its `max_value`, the texture fills up to this angle. See `Range.value`,
      * `Range.max_value`.
      *
      * Generated from Godot docs: TextureProgressBar.get_fill_degrees
@@ -383,6 +383,12 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getNinePatchStretchBind, segment)
     }
 
+    /**
+     * Godot's `TextureProgressBar.FillMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextureProgressBar.FillMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextureProgressBar.FillMode
+     */
     @JvmInline
     value class FillMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -263,7 +263,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Sets the rotation axis of the bone chain. If set to a specific axis, it acts like a hinge joint.
      * The value is cached in each joint setting in the joint list. The axes are based on the reference
-     * pose's space, if `axis` is `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify any axis.
+     * pose's space, if `axis` is `SkeletonModifier3D.RotationAxis.CUSTOM`, you can specify any axis.
      * In here, the reference pose is the bone pose immediately before the simulation. Note: The
      * rotation axis vector and the forward vector shouldn't be colinear to avoid unintended rotation
      * since `SpringBoneSimulator3D` does not factor in twisting forces.
@@ -287,7 +287,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Sets the rotation axis vector of the bone chain. The value is cached in each joint setting in
      * the joint list. This vector is normalized by an internal process and represents the axis around
      * which the bone chain can rotate. If the vector length is `0`, it is considered synonymous with
-     * `SkeletonModifier3D.ROTATION_AXIS_ALL`.
+     * `SkeletonModifier3D.RotationAxis.ALL`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis_vector
      */
@@ -298,8 +298,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Returns the rotation axis vector of the bone chain. This vector represents the axis around which
      * the bone chain can rotate. It is determined based on the rotation axis set for the bone chain.
-     * If `get_rotation_axis` is `SkeletonModifier3D.ROTATION_AXIS_ALL`, this method returns
-     * `Vector3(0, 0, 0)`.
+     * If `get_rotation_axis` is `SkeletonModifier3D.RotationAxis.ALL`, this method returns `Vector3(0,
+     * 0, 0)`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis_vector
      */
@@ -526,7 +526,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Sets the rotation axis at `joint` in the bone chain's joint list when `is_config_individual` is
      * `true`. The axes are based on the reference pose's space, if `axis` is
-     * `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify any axis. In here, the reference pose
+     * `SkeletonModifier3D.RotationAxis.CUSTOM`, you can specify any axis. In here, the reference pose
      * is the bone pose immediately before the simulation. Note: The rotation axis and the forward
      * vector shouldn't be colinear to avoid unintended rotation since `SpringBoneSimulator3D` does not
      * factor in twisting forces.
@@ -550,7 +550,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Sets the rotation axis vector for the specified joint in the bone chain. This vector is
      * normalized by an internal process and represents the axis around which the bone chain can
      * rotate. If the vector length is `0`, it is considered synonymous with
-     * `SkeletonModifier3D.ROTATION_AXIS_ALL`.
+     * `SkeletonModifier3D.RotationAxis.ALL`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis_vector
      */
@@ -561,7 +561,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Returns the rotation axis vector for the specified joint in the bone chain. This vector
      * represents the axis around which the joint can rotate. It is determined based on the rotation
-     * axis set for the joint. If `get_joint_rotation_axis` is `SkeletonModifier3D.ROTATION_AXIS_ALL`,
+     * axis set for the joint. If `get_joint_rotation_axis` is `SkeletonModifier3D.RotationAxis.ALL`,
      * this method returns `Vector3(0, 0, 0)`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis_vector
@@ -854,6 +854,13 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
+    /**
+     * Godot's `SpringBoneSimulator3D.CenterFrom` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`SpringBoneSimulator3D.CenterFrom.<NAME>`).
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.CenterFrom
+     */
     @JvmInline
     value class CenterFrom(override val value: Long) : GodotEnumValue {
         companion object {

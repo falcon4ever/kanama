@@ -9,6 +9,12 @@ import kotlin.jvm.JvmInline
 // platform Tween surface is not in the expect (scripts/check_actual_public_surface.py
 // scopes it out until the class is generated once).
 expect class Tween {
+    /**
+     * Godot's `Tween.TweenProcessMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Tween.TweenProcessMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TweenProcessMode
+     */
     @JvmInline
     value class TweenProcessMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -27,12 +33,18 @@ expect class Tween {
         }
     }
 
+    /**
+     * Godot's `Tween.TweenPauseMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tween.TweenPauseMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TweenPauseMode
+     */
     @JvmInline
     value class TweenPauseMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If the `Tween` has a bound node, it will process when that node can process (see
-             * `Node.process_mode`). Otherwise it's the same as `TWEEN_PAUSE_STOP`.
+             * `Node.process_mode`). Otherwise it's the same as `TweenPauseMode.STOP`.
              *
              * Generated from Godot docs: Tween.TWEEN_PAUSE_BOUND
              */
@@ -52,6 +64,12 @@ expect class Tween {
         }
     }
 
+    /**
+     * Godot's `Tween.TransitionType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tween.TransitionType.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TransitionType
+     */
     @JvmInline
     value class TransitionType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -130,6 +148,12 @@ expect class Tween {
         }
     }
 
+    /**
+     * Godot's `Tween.EaseType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Tween.EaseType.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.EaseType
+     */
     @JvmInline
     value class EaseType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -146,13 +170,13 @@ expect class Tween {
              */
             val OUT: EaseType
             /**
-             * A combination of `EASE_IN` and `EASE_OUT`. The interpolation is slowest at both ends.
+             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is slowest at both ends.
              *
              * Generated from Godot docs: Tween.EASE_IN_OUT
              */
             val IN_OUT: EaseType
             /**
-             * A combination of `EASE_IN` and `EASE_OUT`. The interpolation is fastest at both ends.
+             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is fastest at both ends.
              *
              * Generated from Godot docs: Tween.EASE_OUT_IN
              */

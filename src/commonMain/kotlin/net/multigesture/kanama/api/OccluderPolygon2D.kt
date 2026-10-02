@@ -81,6 +81,12 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
+    /**
+     * Godot's `OccluderPolygon2D.CullMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`OccluderPolygon2D.CullMode.<NAME>`).
+     *
+     * Generated from Godot docs: OccluderPolygon2D.CullMode
+     */
     @JvmInline
     value class CullMode(override val value: Long) : GodotEnumValue {
         companion object {

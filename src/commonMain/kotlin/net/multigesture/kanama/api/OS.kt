@@ -907,8 +907,8 @@ object OS {
      * Moves the file or directory at the given `path` to the system's recycle bin. See also
      * `DirAccess.remove`. The method takes only global paths, so you may need to use
      * `ProjectSettings.globalize_path`. Do not use it for files in `res://` as it will not work in
-     * exported projects. Returns `FAILED` if the file or directory cannot be found, or the system does
-     * not support this method.
+     * exported projects. Returns `GodotError.FAILED` if the file or directory cannot be found, or the
+     * system does not support this method.
      *
      * Generated from Godot docs: OS.move_to_trash
      */
@@ -1070,8 +1070,8 @@ object OS {
     }
 
     /**
-     * Assigns the given name to the current thread. Returns `ERR_UNAVAILABLE` if unavailable on the
-     * current platform.
+     * Assigns the given name to the current thread. Returns `GodotError.ERR_UNAVAILABLE` if
+     * unavailable on the current platform.
      *
      * Generated from Godot docs: OS.set_thread_name
      */
@@ -1205,6 +1205,12 @@ object OS {
         ObjectCalls.ptrcallWithObjectArgs(removeLoggerBind, singleton, listOf(logger.requireOpenHandle()))
     }
 
+    /**
+     * Godot's `OS.RenderingDriver` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`OS.RenderingDriver.<NAME>`).
+     *
+     * Generated from Godot docs: OS.RenderingDriver
+     */
     @JvmInline
     value class RenderingDriver(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1238,6 +1244,12 @@ object OS {
         }
     }
 
+    /**
+     * Godot's `OS.SystemDir` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`OS.SystemDir.<NAME>`).
+     *
+     * Generated from Godot docs: OS.SystemDir
+     */
     @JvmInline
     value class SystemDir(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1292,6 +1304,12 @@ object OS {
         }
     }
 
+    /**
+     * Godot's `OS.StdHandleType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`OS.StdHandleType.<NAME>`).
+     *
+     * Generated from Godot docs: OS.StdHandleType
+     */
     @JvmInline
     value class StdHandleType(override val value: Long) : GodotEnumValue {
         companion object {

@@ -289,6 +289,12 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
         return StyleBoxTexture.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment))
     }
 
+    /**
+     * Godot's `StyleBoxTexture.AxisStretchMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`StyleBoxTexture.AxisStretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: StyleBoxTexture.AxisStretchMode
+     */
     @JvmInline
     value class AxisStretchMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -307,7 +313,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
             val TILE: AxisStretchMode get() = AxisStretchMode(1L)
             /**
              * Repeats the stylebox's texture to match the stylebox's size according to the nine-patch system.
-             * Unlike `AXIS_STRETCH_MODE_TILE`, the texture may be slightly stretched to make the nine-patch
+             * Unlike `AxisStretchMode.TILE`, the texture may be slightly stretched to make the nine-patch
              * texture tile seamlessly.
              *
              * Generated from Godot docs: StyleBoxTexture.AXIS_STRETCH_MODE_TILE_FIT

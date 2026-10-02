@@ -38,17 +38,24 @@ class OmniLight3D(handle: GodotHandle) : Light3D(handle) {
         return OmniLight3D.ShadowMode(ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment))
     }
 
+    /**
+     * Godot's `OmniLight3D.ShadowMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`OmniLight3D.ShadowMode.<NAME>`).
+     *
+     * Generated from Godot docs: OmniLight3D.ShadowMode
+     */
     @JvmInline
     value class ShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Shadows are rendered to a dual-paraboloid texture. Faster than `SHADOW_CUBE`, but lower-quality.
+             * Shadows are rendered to a dual-paraboloid texture. Faster than `ShadowMode.CUBE`, but
+             * lower-quality.
              *
              * Generated from Godot docs: OmniLight3D.SHADOW_DUAL_PARABOLOID
              */
             val DUAL_PARABOLOID: ShadowMode get() = ShadowMode(0L)
             /**
-             * Shadows are rendered to a cubemap. Slower than `SHADOW_DUAL_PARABOLOID`, but higher-quality.
+             * Shadows are rendered to a cubemap. Slower than `ShadowMode.DUAL_PARABOLOID`, but higher-quality.
              *
              * Generated from Godot docs: OmniLight3D.SHADOW_CUBE
              */

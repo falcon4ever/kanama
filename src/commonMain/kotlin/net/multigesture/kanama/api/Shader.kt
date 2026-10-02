@@ -101,6 +101,12 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, segment)
     }
 
+    /**
+     * Godot's `Shader.Mode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Shader.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: Shader.Mode
+     */
     @JvmInline
     value class Mode(override val value: Long) : GodotEnumValue {
         companion object {

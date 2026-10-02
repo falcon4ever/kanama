@@ -208,6 +208,13 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, segment)
     }
 
+    /**
+     * Godot's `CompositorEffect.EffectCallbackType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`CompositorEffect.EffectCallbackType.<NAME>`).
+     *
+     * Generated from Godot docs: CompositorEffect.EffectCallbackType
+     */
     @JvmInline
     value class EffectCallbackType(override val value: Long) : GodotEnumValue {
         companion object {

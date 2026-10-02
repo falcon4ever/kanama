@@ -198,6 +198,13 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
         return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
     }
 
+    /**
+     * Godot's `ConvertTransformModifier3D.TransformMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ConvertTransformModifier3D.TransformMode.<NAME>`).
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.TransformMode
+     */
     @JvmInline
     value class TransformMode(override val value: Long) : GodotEnumValue {
         companion object {

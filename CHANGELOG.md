@@ -28,7 +28,8 @@ versioning once public releases begin.
   `net.multigesture.kanama.api.VariantType` one (the processor's generated registrars import the
   runtime one explicitly, which wins over the same-package name).
 - **Value names drop the enum's common prefix**, by Godot's C# rule (`bindings_generator.cpp`
-  `_determine_enum_prefix` / `_apply_prefix_to_enum_constants`, ported exactly), keeping
+  `_determine_enum_prefix` / `_apply_prefix_to_enum_constants`, ported exactly except C#'s hard-coded
+  `ERR_` prefix for `Error`, whose full names Kanama keeps), keeping
   SCREAMING_CASE: `Node.PROCESS_MODE_ALWAYS` → `Node.ProcessMode.ALWAYS`, `InputEventKey.KEY_W` →
   `Key.W`, `Tween.TRANS_SINE` → `Tween.TransitionType.SINE`. A remainder that would start with a digit
   keeps a word (`Key.KEY_0`); the 12 enums with no common prefix keep Godot's names
@@ -72,6 +73,17 @@ versioning once public releases begin.
   **throws** `IllegalStateException("Godot returned null from required <Class>.<method>")` through one
   shared helper (`binding.runtime.requireGodotReturn`) on every platform — the hand `Tween`'s
   `wrapOrThis` no longer turns a null into `this`, and the iOS fluent path no longer ignores one.
+- **iOS `Tween.tweenProperty(target, property, finalValue, duration)` takes any Variant value.** It
+  went through a Vector2 / Color C-shim pair and silently tweened every other value (a `Double`
+  rotation, a `Vector3`, a typed enum, …) to `Vector2(0, 0)`; it now uses the general Variant encoder
+  like desktop (`kanama_ios_godot_tween_tween_property_vector2/_color` are deleted from the shim). A
+  frame-1 iOS self-test row tweens a `Double` rotation and steps the tween.
+- The `SceneTree` companion forms of the required returns (`SceneTree.getRoot()`,
+  `getMultiplayer()`, `createTimer()`) are non-null like the members.
+- KDoc: every value class carries a one-line class doc (Godot's XML documents enum values, not
+  enums), its values carry Godot's constant docs on desktop and iOS, and Godot doc references to old
+  constant names are rewritten to the typed spelling (`PROCESS_MODE_WHEN_PAUSED` →
+  `ProcessMode.WHEN_PAUSED`) through the same naming function.
 - **Tween and FileAccess get an enum-only `expect`.** Shared signatures name their enums
   (`PropertyTweener.setTrans(trans: Tween.TransitionType)`, `ZIPPacker.startFile(permissions:
   FileAccess.UnixPermissionFlags)`), so the generator emits `Tween.expect.kt` / `FileAccess.expect.kt`
@@ -98,7 +110,9 @@ versioning once public releases begin.
 
   Of that, the `GodotEnumValue` marker (every value class implementing it) costs +29,677 B of
   `kanama.jar` (+0.2 %), +30,952 B debug and +15,984 B release on iOS (measured against the same
-  tree without it: 14,343,145 / 230,610,648 / 121,179,784 B).
+  tree without it: 14,343,145 / 230,610,648 / 121,179,784 B). These are the final task 128 A numbers:
+  clean `compileKotlinJvm` 54.3 s → 59.6 s and `compileKotlinIosArm64` 38.0 s → 40.6 s, one
+  `--profile` run each on the same machine.
 
   The enum values are getter-only companion properties (`val ALWAYS: ProcessMode get() =
   ProcessMode(3L)`): no backing field and no companion static initialiser, the smallest JVM shape that

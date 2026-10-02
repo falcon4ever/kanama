@@ -123,8 +123,8 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     /**
-     * Bakes the effect from all `GeometryInstance3D`s marked with `GeometryInstance3D.GI_MODE_STATIC`
-     * and `Light3D`s marked with either `Light3D.BAKE_STATIC` or `Light3D.BAKE_DYNAMIC`. If
+     * Bakes the effect from all `GeometryInstance3D`s marked with `GeometryInstance3D.GIMode.STATIC`
+     * and `Light3D`s marked with either `Light3D.BakeMode.STATIC` or `Light3D.BakeMode.DYNAMIC`. If
      * `create_visual_debug` is `true`, after baking the light, this will generate a `MultiMesh` that
      * has a cube representing each solid cell with each cube colored to the cell's albedo color. This
      * can be used to visualize the `VoxelGI`'s data and debug any issues that may be occurring. Note:
@@ -150,6 +150,12 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
         ObjectCalls.ptrcallNoArgs(debugBakeBind, segment)
     }
 
+    /**
+     * Godot's `VoxelGI.Subdiv` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`VoxelGI.Subdiv.<NAME>`).
+     *
+     * Generated from Godot docs: VoxelGI.Subdiv
+     */
     @JvmInline
     value class Subdiv(override val value: Long) : GodotEnumValue {
         companion object {

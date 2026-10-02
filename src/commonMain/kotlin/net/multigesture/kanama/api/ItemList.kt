@@ -221,7 +221,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
 
     /**
      * Sets the auto translate mode of the item associated with the specified index. Items use
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `Node.AutoTranslateMode.INHERIT` by default, which uses the same auto translate mode as the
      * `ItemList` itself.
      *
      * Generated from Godot docs: ItemList.set_item_auto_translate_mode
@@ -575,7 +575,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
     /**
      * Maximum lines of text allowed in each item. Space will be reserved even when there is not enough
      * lines of text to display. Note: This property takes effect only when `icon_mode` is
-     * `ICON_MODE_TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
+     * `IconMode.TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
      *
      * Generated from Godot docs: ItemList.set_max_text_lines
      */
@@ -586,7 +586,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
     /**
      * Maximum lines of text allowed in each item. Space will be reserved even when there is not enough
      * lines of text to display. Note: This property takes effect only when `icon_mode` is
-     * `ICON_MODE_TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
+     * `IconMode.TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
      *
      * Generated from Godot docs: ItemList.get_max_text_lines
      */
@@ -942,6 +942,12 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         const val itemActivated: String = "item_activated"
     }
 
+    /**
+     * Godot's `ItemList.IconMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`ItemList.IconMode.<NAME>`).
+     *
+     * Generated from Godot docs: ItemList.IconMode
+     */
     @JvmInline
     value class IconMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -960,6 +966,12 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `ItemList.SelectMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`ItemList.SelectMode.<NAME>`).
+     *
+     * Generated from Godot docs: ItemList.SelectMode
+     */
     @JvmInline
     value class SelectMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -984,6 +996,12 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `ItemList.ScrollHintMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`ItemList.ScrollHintMode.<NAME>`).
+     *
+     * Generated from Godot docs: ItemList.ScrollHintMode
+     */
     @JvmInline
     value class ScrollHintMode(override val value: Long) : GodotEnumValue {
         companion object {

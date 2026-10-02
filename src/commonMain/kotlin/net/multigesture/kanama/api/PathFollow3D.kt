@@ -260,6 +260,12 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isTiltEnabledBind, segment)
     }
 
+    /**
+     * Godot's `PathFollow3D.RotationMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PathFollow3D.RotationMode.<NAME>`).
+     *
+     * Generated from Godot docs: PathFollow3D.RotationMode
+     */
     @JvmInline
     value class RotationMode(override val value: Long) : GodotEnumValue {
         companion object {

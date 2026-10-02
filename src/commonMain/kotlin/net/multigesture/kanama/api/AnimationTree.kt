@@ -110,6 +110,13 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
         const val animationPlayerChanged: String = "animation_player_changed"
     }
 
+    /**
+     * Godot's `AnimationTree.AnimationProcessCallback` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationTree.AnimationProcessCallback.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationTree.AnimationProcessCallback
+     */
     @JvmInline
     value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {

@@ -1237,14 +1237,14 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      * `PackedVector3Array`, containing outline points. `x` and `y` are point coordinates. `z` is the
      * type of the point, using the `ContourPointTag` values. `contours` - `PackedInt32Array`,
      * containing indices the end points of each contour. `orientation` - `bool`, contour orientation.
-     * If `true`, clockwise contours must be filled. - Two successive `CONTOUR_CURVE_TAG_ON` points
-     * indicate a line segment. - One `CONTOUR_CURVE_TAG_OFF_CONIC` point between two
-     * `CONTOUR_CURVE_TAG_ON` points indicates a single conic (quadratic) Bézier arc. - Two
-     * `CONTOUR_CURVE_TAG_OFF_CUBIC` points between two `CONTOUR_CURVE_TAG_ON` points indicate a single
-     * cubic Bézier arc. - Two successive `CONTOUR_CURVE_TAG_OFF_CONIC` points indicate two successive
-     * conic (quadratic) Bézier arcs with a virtual `CONTOUR_CURVE_TAG_ON` point at their middle. -
-     * Each contour is closed. The last point of a contour uses the first point of a contour as its
-     * next point, and vice versa. The first point can be `CONTOUR_CURVE_TAG_OFF_CONIC` point.
+     * If `true`, clockwise contours must be filled. - Two successive `ContourPointTag.ON` points
+     * indicate a line segment. - One `ContourPointTag.OFF_CONIC` point between two
+     * `ContourPointTag.ON` points indicates a single conic (quadratic) Bézier arc. - Two
+     * `ContourPointTag.OFF_CUBIC` points between two `ContourPointTag.ON` points indicate a single
+     * cubic Bézier arc. - Two successive `ContourPointTag.OFF_CONIC` points indicate two successive
+     * conic (quadratic) Bézier arcs with a virtual `ContourPointTag.ON` point at their middle. - Each
+     * contour is closed. The last point of a contour uses the first point of a contour as its next
+     * point, and vice versa. The first point can be `ContourPointTag.OFF_CONIC` point.
      *
      * Generated from Godot docs: TextServer.font_get_glyph_contours
      */
@@ -1590,8 +1590,8 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Creates a new buffer for complex text layout, with the given `direction` and `orientation`. To
      * free the resulting buffer, use `free_rid` method. Note: Direction is ignored if server does not
-     * support `FEATURE_BIDI_LAYOUT` feature (supported by `TextServerAdvanced`). Note: Orientation is
-     * ignored if server does not support `FEATURE_VERTICAL_LAYOUT` feature (supported by
+     * support `Feature.BIDI_LAYOUT` feature (supported by `TextServerAdvanced`). Note: Orientation is
+     * ignored if server does not support `Feature.VERTICAL_LAYOUT` feature (supported by
      * `TextServerAdvanced`).
      *
      * Generated from Godot docs: TextServer.create_shaped_text
@@ -1622,9 +1622,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * Sets desired text direction. If set to `DIRECTION_AUTO`, direction will be detected based on the
+     * Sets desired text direction. If set to `Direction.AUTO`, direction will be detected based on the
      * buffer contents and current locale. Note: Direction is ignored if server does not support
-     * `FEATURE_BIDI_LAYOUT` feature (supported by `TextServerAdvanced`).
+     * `Feature.BIDI_LAYOUT` feature (supported by `TextServerAdvanced`).
      *
      * Generated from Godot docs: TextServer.shaped_text_set_direction
      */
@@ -1708,7 +1708,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Sets desired text orientation. Note: Orientation is ignored if server does not support
-     * `FEATURE_VERTICAL_LAYOUT` feature (supported by `TextServerAdvanced`).
+     * `Feature.VERTICAL_LAYOUT` feature (supported by `TextServerAdvanced`).
      *
      * Generated from Godot docs: TextServer.shaped_text_set_orientation
      */
@@ -2501,7 +2501,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      * Returns index of the first string in `dict` which is visually confusable with the `string`, or
      * `-1` if none is found. Note: This method doesn't detect invisible characters, for spoof
      * detection use it in combination with `spoof_check`. Note: Always returns `-1` if the server does
-     * not support the `FEATURE_UNICODE_SECURITY` feature.
+     * not support the `Feature.UNICODE_SECURITY` feature.
      *
      * Generated from Godot docs: TextServer.is_confusable
      */
@@ -2512,7 +2512,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns `true` if `string` is likely to be an attempt at confusing the reader. Note: Always
-     * returns `false` if the server does not support the `FEATURE_UNICODE_SECURITY` feature.
+     * returns `false` if the server does not support the `Feature.UNICODE_SECURITY` feature.
      *
      * Generated from Godot docs: TextServer.spoof_check
      */
@@ -2533,10 +2533,10 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns `true` if `string` is a valid identifier. If the text server supports the
-     * `FEATURE_UNICODE_IDENTIFIERS` feature, a valid identifier must: - Conform to normalization form
+     * `Feature.UNICODE_IDENTIFIERS` feature, a valid identifier must: - Conform to normalization form
      * C. - Begin with a Unicode character of class XID_Start or `"_"`. - May contain Unicode
      * characters of class XID_Continue in the other positions. - Use UAX #31 recommended scripts only
-     * (mixed scripts are allowed). If the `FEATURE_UNICODE_IDENTIFIERS` feature is not supported, a
+     * (mixed scripts are allowed). If the `Feature.UNICODE_IDENTIFIERS` feature is not supported, a
      * valid identifier must: - Begin with a Unicode character of class XID_Start or `"_"`. - May
      * contain Unicode characters of class XID_Continue in the other positions.
      *
@@ -2560,7 +2560,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the string converted to `UPPERCASE`. Note: Casing is locale dependent and context
-     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * sensitive if server support `Feature.CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
      * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
      *
      * Generated from Godot docs: TextServer.string_to_upper
@@ -2572,7 +2572,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the string converted to `lowercase`. Note: Casing is locale dependent and context
-     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * sensitive if server support `Feature.CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
      * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
      *
      * Generated from Godot docs: TextServer.string_to_lower
@@ -2584,7 +2584,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the string converted to `Title Case`. Note: Casing is locale dependent and context
-     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * sensitive if server support `Feature.CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
      * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
      *
      * Generated from Godot docs: TextServer.string_to_title
@@ -2604,6 +2604,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, segment, parserType.value, args, text)
     }
 
+    /**
+     * Godot's `TextServer.FontAntialiasing` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.FontAntialiasing.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FontAntialiasing
+     */
     @JvmInline
     value class FontAntialiasing(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2630,6 +2636,13 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.FontLCDSubpixelLayout` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TextServer.FontLCDSubpixelLayout.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FontLCDSubpixelLayout
+     */
     @JvmInline
     value class FontLCDSubpixelLayout(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2672,6 +2685,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.Direction` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextServer.Direction.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Direction
+     */
     @JvmInline
     value class Direction(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2703,6 +2722,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.Orientation` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.Orientation.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Orientation
+     */
     @JvmInline
     value class Orientation(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2722,6 +2747,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.JustificationFlag` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`TextServer.JustificationFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.JustificationFlag
+     */
     @JvmInline
     value class JustificationFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: JustificationFlag): JustificationFlag = JustificationFlag(value or other.value)
@@ -2779,14 +2810,15 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
             val SKIP_LAST_LINE: JustificationFlag get() = JustificationFlag(32L)
             /**
              * Do not apply justification to the last line of the paragraph with visible characters (takes
-             * precedence over `JUSTIFICATION_SKIP_LAST_LINE`).
+             * precedence over `JustificationFlag.SKIP_LAST_LINE`).
              *
              * Generated from Godot docs: TextServer.JUSTIFICATION_SKIP_LAST_LINE_WITH_VISIBLE_CHARS
              */
             val SKIP_LAST_LINE_WITH_VISIBLE_CHARS: JustificationFlag get() = JustificationFlag(64L)
             /**
-             * Always apply justification to the paragraphs with a single line (`JUSTIFICATION_SKIP_LAST_LINE`
-             * and `JUSTIFICATION_SKIP_LAST_LINE_WITH_VISIBLE_CHARS` are ignored).
+             * Always apply justification to the paragraphs with a single line
+             * (`JustificationFlag.SKIP_LAST_LINE` and `JustificationFlag.SKIP_LAST_LINE_WITH_VISIBLE_CHARS`
+             * are ignored).
              *
              * Generated from Godot docs: TextServer.JUSTIFICATION_DO_NOT_SKIP_SINGLE_LINE
              */
@@ -2794,6 +2826,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.AutowrapMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.AutowrapMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.AutowrapMode
+     */
     @JvmInline
     value class AutowrapMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2817,8 +2855,8 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
              */
             val WORD: AutowrapMode get() = AutowrapMode(2L)
             /**
-             * Behaves similarly to `AUTOWRAP_WORD`, but force-breaks a word if that single word does not fit
-             * in one line.
+             * Behaves similarly to `AutowrapMode.WORD`, but force-breaks a word if that single word does not
+             * fit in one line.
              *
              * Generated from Godot docs: TextServer.AUTOWRAP_WORD_SMART
              */
@@ -2826,6 +2864,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.LineBreakFlag` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.LineBreakFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.LineBreakFlag
+     */
     @JvmInline
     value class LineBreakFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: LineBreakFlag): LineBreakFlag = LineBreakFlag(value or other.value)
@@ -2864,7 +2908,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
              */
             val GRAPHEME_BOUND: LineBreakFlag get() = LineBreakFlag(4L)
             /**
-             * Should be used only in conjunction with `BREAK_WORD_BOUND`, break the line between any
+             * Should be used only in conjunction with `LineBreakFlag.WORD_BOUND`, break the line between any
              * unconnected graphemes, if it's impossible to break it between the words.
              *
              * Generated from Godot docs: TextServer.BREAK_ADAPTIVE
@@ -2901,6 +2945,13 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.VisibleCharactersBehavior` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TextServer.VisibleCharactersBehavior.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.VisibleCharactersBehavior
+     */
     @JvmInline
     value class VisibleCharactersBehavior(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2942,6 +2993,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.OverrunBehavior` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.OverrunBehavior.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.OverrunBehavior
+     */
     @JvmInline
     value class OverrunBehavior(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2994,6 +3051,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.TextOverrunFlag` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.TextOverrunFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.TextOverrunFlag
+     */
     @JvmInline
     value class TextOverrunFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: TextOverrunFlag): TextOverrunFlag = TextOverrunFlag(value or other.value)
@@ -3053,6 +3116,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.GraphemeFlag` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.GraphemeFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.GraphemeFlag
+     */
     @JvmInline
     value class GraphemeFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: GraphemeFlag): GraphemeFlag = GraphemeFlag(value or other.value)
@@ -3153,6 +3222,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.Hinting` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextServer.Hinting.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Hinting
+     */
     @JvmInline
     value class Hinting(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3179,6 +3254,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.SubpixelPositioning` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.SubpixelPositioning.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.SubpixelPositioning
+     */
     @JvmInline
     value class SubpixelPositioning(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3190,9 +3271,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
             val DISABLED: SubpixelPositioning get() = SubpixelPositioning(0L)
             /**
              * Glyph horizontal position is rounded based on font size. - To one quarter of the pixel size if
-             * font size is smaller or equal to `SUBPIXEL_POSITIONING_ONE_QUARTER_MAX_SIZE`. - To one half of
-             * the pixel size if font size is smaller or equal to `SUBPIXEL_POSITIONING_ONE_HALF_MAX_SIZE`. -
-             * To the whole pixel size for larger fonts.
+             * font size is smaller or equal to `SubpixelPositioning.ONE_QUARTER_MAX_SIZE`. - To one half of
+             * the pixel size if font size is smaller or equal to `SubpixelPositioning.ONE_HALF_MAX_SIZE`. - To
+             * the whole pixel size for larger fonts.
              *
              * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_AUTO
              */
@@ -3213,14 +3294,14 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
             val ONE_QUARTER: SubpixelPositioning get() = SubpixelPositioning(3L)
             /**
              * Maximum font size which will use "one half of the pixel" subpixel positioning in
-             * `SUBPIXEL_POSITIONING_AUTO` mode.
+             * `SubpixelPositioning.AUTO` mode.
              *
              * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_ONE_HALF_MAX_SIZE
              */
             val ONE_HALF_MAX_SIZE: SubpixelPositioning get() = SubpixelPositioning(20L)
             /**
              * Maximum font size which will use "one quarter of the pixel" subpixel positioning in
-             * `SUBPIXEL_POSITIONING_AUTO` mode.
+             * `SubpixelPositioning.AUTO` mode.
              *
              * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_ONE_QUARTER_MAX_SIZE
              */
@@ -3228,6 +3309,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.Feature` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextServer.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Feature
+     */
     @JvmInline
     value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3325,6 +3412,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.ContourPointTag` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.ContourPointTag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.ContourPointTag
+     */
     @JvmInline
     value class ContourPointTag(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3350,6 +3443,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.SpacingType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.SpacingType.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.SpacingType
+     */
     @JvmInline
     value class SpacingType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3386,6 +3485,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.FontStyle` bitfield as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.FontStyle.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FontStyle
+     */
     @JvmInline
     value class FontStyle(override val value: Long) : GodotEnumValue {
         infix fun or(other: FontStyle): FontStyle = FontStyle(value or other.value)
@@ -3420,6 +3525,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.StructuredTextParser` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`TextServer.StructuredTextParser.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.StructuredTextParser
+     */
     @JvmInline
     value class StructuredTextParser(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3468,6 +3579,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
+    /**
+     * Godot's `TextServer.FixedSizeScaleMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.FixedSizeScaleMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FixedSizeScaleMode
+     */
     @JvmInline
     value class FixedSizeScaleMode(override val value: Long) : GodotEnumValue {
         companion object {

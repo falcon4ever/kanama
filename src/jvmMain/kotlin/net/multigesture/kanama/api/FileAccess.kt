@@ -11,6 +11,12 @@ import java.lang.foreign.MemorySegment
  */
 actual object FileAccess {
     // ===== BEGIN GENERATED ENUMS: FileAccess (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `FileAccess.ModeFlags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`FileAccess.ModeFlags.<NAME>`).
+     *
+     * Generated from Godot docs: FileAccess.ModeFlags
+     */
     @JvmInline
     actual value class ModeFlags
     actual constructor(
@@ -51,6 +57,12 @@ actual object FileAccess {
         }
     }
 
+    /**
+     * Godot's `FileAccess.CompressionMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`FileAccess.CompressionMode.<NAME>`).
+     *
+     * Generated from Godot docs: FileAccess.CompressionMode
+     */
     @JvmInline
     actual value class CompressionMode
     actual constructor(
@@ -91,6 +103,12 @@ actual object FileAccess {
         }
     }
 
+    /**
+     * Godot's `FileAccess.UnixPermissionFlags` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`FileAccess.UnixPermissionFlags.<NAME>`).
+     *
+     * Generated from Godot docs: FileAccess.UnixPermissionFlags
+     */
     @JvmInline
     actual value class UnixPermissionFlags
     actual constructor(

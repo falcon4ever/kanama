@@ -393,6 +393,12 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
+    /**
+     * Godot's `Decal.DecalTexture` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Decal.DecalTexture.<NAME>`).
+     *
+     * Generated from Godot docs: Decal.DecalTexture
+     */
     @JvmInline
     value class DecalTexture(override val value: Long) : GodotEnumValue {
         companion object {

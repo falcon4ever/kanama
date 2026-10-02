@@ -180,7 +180,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Generate a `TriangleMesh` from the mesh. Considers only surfaces using one of these primitive
-     * types: `PRIMITIVE_TRIANGLES`, `PRIMITIVE_TRIANGLE_STRIP`.
+     * types: `PrimitiveType.TRIANGLES`, `PrimitiveType.TRIANGLE_STRIP`.
      *
      * Generated from Godot docs: Mesh.generate_triangle_mesh
      */
@@ -189,6 +189,12 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
+    /**
+     * Godot's `Mesh.PrimitiveType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Mesh.PrimitiveType.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.PrimitiveType
+     */
     @JvmInline
     value class PrimitiveType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -225,6 +231,12 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Mesh.ArrayType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Mesh.ArrayType.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.ArrayType
+     */
     @JvmInline
     value class ArrayType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -268,43 +280,43 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
             val TEX_UV2: ArrayType get() = ArrayType(5L)
             /**
              * Contains custom color channel 0. `PackedByteArray` if `(format >>
-             * Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is `ARRAY_CUSTOM_RGBA8_UNORM`,
-             * `ARRAY_CUSTOM_RGBA8_SNORM`, `ARRAY_CUSTOM_RG_HALF`, or `ARRAY_CUSTOM_RGBA_HALF`.
-             * `PackedFloat32Array` otherwise.
+             * Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
              *
              * Generated from Godot docs: Mesh.ARRAY_CUSTOM0
              */
             val CUSTOM0: ArrayType get() = ArrayType(6L)
             /**
              * Contains custom color channel 1. `PackedByteArray` if `(format >>
-             * Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is `ARRAY_CUSTOM_RGBA8_UNORM`,
-             * `ARRAY_CUSTOM_RGBA8_SNORM`, `ARRAY_CUSTOM_RG_HALF`, or `ARRAY_CUSTOM_RGBA_HALF`.
-             * `PackedFloat32Array` otherwise.
+             * Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
              *
              * Generated from Godot docs: Mesh.ARRAY_CUSTOM1
              */
             val CUSTOM1: ArrayType get() = ArrayType(7L)
             /**
              * Contains custom color channel 2. `PackedByteArray` if `(format >>
-             * Mesh.ARRAY_FORMAT_CUSTOM2_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is `ARRAY_CUSTOM_RGBA8_UNORM`,
-             * `ARRAY_CUSTOM_RGBA8_SNORM`, `ARRAY_CUSTOM_RG_HALF`, or `ARRAY_CUSTOM_RGBA_HALF`.
-             * `PackedFloat32Array` otherwise.
+             * Mesh.ARRAY_FORMAT_CUSTOM2_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
              *
              * Generated from Godot docs: Mesh.ARRAY_CUSTOM2
              */
             val CUSTOM2: ArrayType get() = ArrayType(8L)
             /**
              * Contains custom color channel 3. `PackedByteArray` if `(format >>
-             * Mesh.ARRAY_FORMAT_CUSTOM3_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is `ARRAY_CUSTOM_RGBA8_UNORM`,
-             * `ARRAY_CUSTOM_RGBA8_SNORM`, `ARRAY_CUSTOM_RG_HALF`, or `ARRAY_CUSTOM_RGBA_HALF`.
-             * `PackedFloat32Array` otherwise.
+             * Mesh.ARRAY_FORMAT_CUSTOM3_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
              *
              * Generated from Godot docs: Mesh.ARRAY_CUSTOM3
              */
             val CUSTOM3: ArrayType get() = ArrayType(9L)
             /**
              * `PackedFloat32Array` or `PackedInt32Array` of bone indices. Contains either 4 or 8 numbers per
-             * vertex depending on the presence of the `ARRAY_FLAG_USE_8_BONE_WEIGHTS` flag.
+             * vertex depending on the presence of the `ArrayFormat.FLAG_USE_8_BONE_WEIGHTS` flag.
              *
              * Generated from Godot docs: Mesh.ARRAY_BONES
              */
@@ -312,7 +324,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
             /**
              * `PackedFloat32Array` or `PackedFloat64Array` of bone weights in the range `0.0` to `1.0`
              * (inclusive). Contains either 4 or 8 numbers per vertex depending on the presence of the
-             * `ARRAY_FLAG_USE_8_BONE_WEIGHTS` flag.
+             * `ArrayFormat.FLAG_USE_8_BONE_WEIGHTS` flag.
              *
              * Generated from Godot docs: Mesh.ARRAY_WEIGHTS
              */
@@ -339,6 +351,12 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Mesh.ArrayCustomFormat` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Mesh.ArrayCustomFormat.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.ArrayCustomFormat
+     */
     @JvmInline
     value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -406,6 +424,12 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Mesh.ArrayFormat` bitfield as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Mesh.ArrayFormat.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.ArrayFormat
+     */
     @JvmInline
     value class ArrayFormat(override val value: Long) : GodotEnumValue {
         infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
@@ -568,7 +592,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
             val FLAG_USE_DYNAMIC_UPDATE: ArrayFormat get() = ArrayFormat(67108864L)
             /**
              * Flag used to mark that the mesh contains up to 8 bone influences per vertex. This flag indicates
-             * that `ARRAY_BONES` and `ARRAY_WEIGHTS` elements will have double length.
+             * that `ArrayType.BONES` and `ArrayType.WEIGHTS` elements will have double length.
              *
              * Generated from Godot docs: Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
              */
@@ -595,6 +619,12 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Mesh.BlendShapeMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Mesh.BlendShapeMode.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.BlendShapeMode
+     */
     @JvmInline
     value class BlendShapeMode(override val value: Long) : GodotEnumValue {
         companion object {

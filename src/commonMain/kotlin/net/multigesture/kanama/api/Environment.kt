@@ -656,7 +656,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * The `Color` displayed for clear areas of the scene. Only effective when using the `BG_COLOR`
+     * The `Color` displayed for clear areas of the scene. Only effective when using the `BGMode.COLOR`
      * background mode.
      *
      * Generated from Godot docs: Environment.set_bg_color
@@ -667,7 +667,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * The `Color` displayed for clear areas of the scene. Only effective when using the `BG_COLOR`
+     * The `Color` displayed for clear areas of the scene. Only effective when using the `BGMode.COLOR`
      * background mode.
      *
      * Generated from Godot docs: Environment.get_bg_color
@@ -724,7 +724,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * The maximum layer ID to display. Only effective when using the `BG_CANVAS` background mode.
+     * The maximum layer ID to display. Only effective when using the `BGMode.CANVAS` background mode.
      *
      * Generated from Godot docs: Environment.set_canvas_max_layer
      */
@@ -734,7 +734,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * The maximum layer ID to display. Only effective when using the `BG_CANVAS` background mode.
+     * The maximum layer ID to display. Only effective when using the `BGMode.CANVAS` background mode.
      *
      * Generated from Godot docs: Environment.get_canvas_max_layer
      */
@@ -902,9 +902,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * Adjusts the brightness of values before they are provided to the tonemapper. Higher
      * `tonemap_exposure` values result in a brighter image. See also `tonemap_white`. Note: Values
-     * provided to the tonemapper will also be multiplied by `2.0` and `1.8` for `TONE_MAPPER_FILMIC`
-     * and `TONE_MAPPER_ACES` respectively to produce a similar apparent brightness as
-     * `TONE_MAPPER_LINEAR`.
+     * provided to the tonemapper will also be multiplied by `2.0` and `1.8` for `ToneMapper.FILMIC`
+     * and `ToneMapper.ACES` respectively to produce a similar apparent brightness as
+     * `ToneMapper.LINEAR`.
      *
      * Generated from Godot docs: Environment.set_tonemap_exposure
      */
@@ -916,9 +916,9 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * Adjusts the brightness of values before they are provided to the tonemapper. Higher
      * `tonemap_exposure` values result in a brighter image. See also `tonemap_white`. Note: Values
-     * provided to the tonemapper will also be multiplied by `2.0` and `1.8` for `TONE_MAPPER_FILMIC`
-     * and `TONE_MAPPER_ACES` respectively to produce a similar apparent brightness as
-     * `TONE_MAPPER_LINEAR`.
+     * provided to the tonemapper will also be multiplied by `2.0` and `1.8` for `ToneMapper.FILMIC`
+     * and `ToneMapper.ACES` respectively to produce a similar apparent brightness as
+     * `ToneMapper.LINEAR`.
      *
      * Generated from Godot docs: Environment.get_tonemap_exposure
      */
@@ -932,11 +932,11 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      * scale of values provided to the tonemapper. For photorealistic lighting, it is recommended to
      * set `tonemap_white` to at least `6.0`. Higher values result in less blown out highlights, but
      * may make the scene appear lower contrast. `tonemap_agx_white` will be used instead when using
-     * the `TONE_MAPPER_AGX` tonemapper. See also `tonemap_exposure`. Note: `tonemap_white` must be set
+     * the `ToneMapper.AGX` tonemapper. See also `tonemap_exposure`. Note: `tonemap_white` must be set
      * to `2.0` or lower on the Mobile renderer to produce bright images. Note: `tonemap_white` is
-     * ignored when using `TONE_MAPPER_LINEAR` and will be dynamically adjusted at runtime to never be
+     * ignored when using `ToneMapper.LINEAR` and will be dynamically adjusted at runtime to never be
      * less than the parent window's `Window.get_output_max_linear_value` when using
-     * `TONE_MAPPER_REINHARDT` with `Viewport.use_hdr_2d`.
+     * `ToneMapper.REINHARDT` with `Viewport.use_hdr_2d`.
      *
      * Generated from Godot docs: Environment.set_tonemap_white
      */
@@ -950,11 +950,11 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      * scale of values provided to the tonemapper. For photorealistic lighting, it is recommended to
      * set `tonemap_white` to at least `6.0`. Higher values result in less blown out highlights, but
      * may make the scene appear lower contrast. `tonemap_agx_white` will be used instead when using
-     * the `TONE_MAPPER_AGX` tonemapper. See also `tonemap_exposure`. Note: `tonemap_white` must be set
+     * the `ToneMapper.AGX` tonemapper. See also `tonemap_exposure`. Note: `tonemap_white` must be set
      * to `2.0` or lower on the Mobile renderer to produce bright images. Note: `tonemap_white` is
-     * ignored when using `TONE_MAPPER_LINEAR` and will be dynamically adjusted at runtime to never be
+     * ignored when using `ToneMapper.LINEAR` and will be dynamically adjusted at runtime to never be
      * less than the parent window's `Window.get_output_max_linear_value` when using
-     * `TONE_MAPPER_REINHARDT` with `Viewport.use_hdr_2d`.
+     * `ToneMapper.REINHARDT` with `Viewport.use_hdr_2d`.
      *
      * Generated from Godot docs: Environment.get_tonemap_white
      */
@@ -968,7 +968,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      * scale of values provided to the tonemapper. For photorealistic lighting, it is recommended to
      * set `tonemap_agx_white` to at least `6.0`. Higher values result in less blown out highlights,
      * but may make the scene appear lower contrast. `tonemap_agx_white` is the same as
-     * `tonemap_white`, but is only effective with the `TONE_MAPPER_AGX` tonemapper. See also
+     * `tonemap_white`, but is only effective with the `ToneMapper.AGX` tonemapper. See also
      * `tonemap_exposure`. Note: When using the Mobile renderer with `Viewport.use_hdr_2d` disabled,
      * `tonemap_agx_white` is ignored and a white value of `2.0` will always be used instead.
      * Otherwise, `tonemap_agx_white` will be dynamically adjusted at runtime by multiplying it by the
@@ -987,7 +987,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      * scale of values provided to the tonemapper. For photorealistic lighting, it is recommended to
      * set `tonemap_agx_white` to at least `6.0`. Higher values result in less blown out highlights,
      * but may make the scene appear lower contrast. `tonemap_agx_white` is the same as
-     * `tonemap_white`, but is only effective with the `TONE_MAPPER_AGX` tonemapper. See also
+     * `tonemap_white`, but is only effective with the `ToneMapper.AGX` tonemapper. See also
      * `tonemap_exposure`. Note: When using the Mobile renderer with `Viewport.use_hdr_2d` disabled,
      * `tonemap_agx_white` is ignored and a white value of `2.0` will always be used instead.
      * Otherwise, `tonemap_agx_white` will be dynamically adjusted at runtime by multiplying it by the
@@ -1004,7 +1004,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * Increasing `tonemap_agx_contrast` will make dark values darker and bright values brighter.
      * Produces a higher quality result than `adjustment_contrast` without any additional performance
-     * cost, but is only available when using the `TONE_MAPPER_AGX` tonemapper.
+     * cost, but is only available when using the `ToneMapper.AGX` tonemapper.
      *
      * Generated from Godot docs: Environment.set_tonemap_agx_contrast
      */
@@ -1016,7 +1016,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * Increasing `tonemap_agx_contrast` will make dark values darker and bright values brighter.
      * Produces a higher quality result than `adjustment_contrast` without any additional performance
-     * cost, but is only available when using the `TONE_MAPPER_AGX` tonemapper.
+     * cost, but is only available when using the `ToneMapper.AGX` tonemapper.
      *
      * Generated from Godot docs: Environment.get_tonemap_agx_contrast
      */
@@ -1493,7 +1493,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true`, enables signed distance field global illumination for meshes that have their
-     * `GeometryInstance3D.gi_mode` set to `GeometryInstance3D.GI_MODE_STATIC`. SDFGI is a real-time
+     * `GeometryInstance3D.gi_mode` set to `GeometryInstance3D.GIMode.STATIC`. SDFGI is a real-time
      * global illumination technique that works well with procedurally generated and user-built levels,
      * including in situations where geometry is created during gameplay. The signed distance field is
      * automatically generated around the camera as it moves. Dynamic lights are supported, but dynamic
@@ -1515,7 +1515,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true`, enables signed distance field global illumination for meshes that have their
-     * `GeometryInstance3D.gi_mode` set to `GeometryInstance3D.GI_MODE_STATIC`. SDFGI is a real-time
+     * `GeometryInstance3D.gi_mode` set to `GeometryInstance3D.GIMode.STATIC`. SDFGI is a real-time
      * global illumination technique that works well with procedurally generated and user-built levels,
      * including in situations where geometry is created during gameplay. The signed distance field is
      * automatically generated around the camera as it moves. Dynamic lights are supported, but dynamic
@@ -1942,11 +1942,11 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * When using the `GLOW_BLEND_MODE_MIX` `glow_blend_mode`, this controls how much the source image
-     * is blended with the glow layer. A value of `0.0` makes the glow rendering invisible, while a
-     * value of `1.0` is equivalent to `GLOW_BLEND_MODE_REPLACE`. Note: `glow_mix` has no effect when
-     * using the Compatibility rendering method, due to this rendering method using a simpler glow
-     * implementation optimized for low-end devices.
+     * When using the `GlowBlendMode.MIX` `glow_blend_mode`, this controls how much the source image is
+     * blended with the glow layer. A value of `0.0` makes the glow rendering invisible, while a value
+     * of `1.0` is equivalent to `GlowBlendMode.REPLACE`. Note: `glow_mix` has no effect when using the
+     * Compatibility rendering method, due to this rendering method using a simpler glow implementation
+     * optimized for low-end devices.
      *
      * Generated from Godot docs: Environment.set_glow_mix
      */
@@ -1956,11 +1956,11 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * When using the `GLOW_BLEND_MODE_MIX` `glow_blend_mode`, this controls how much the source image
-     * is blended with the glow layer. A value of `0.0` makes the glow rendering invisible, while a
-     * value of `1.0` is equivalent to `GLOW_BLEND_MODE_REPLACE`. Note: `glow_mix` has no effect when
-     * using the Compatibility rendering method, due to this rendering method using a simpler glow
-     * implementation optimized for low-end devices.
+     * When using the `GlowBlendMode.MIX` `glow_blend_mode`, this controls how much the source image is
+     * blended with the glow layer. A value of `0.0` makes the glow rendering invisible, while a value
+     * of `1.0` is equivalent to `GlowBlendMode.REPLACE`. Note: `glow_mix` has no effect when using the
+     * Compatibility rendering method, due to this rendering method using a simpler glow implementation
+     * optimized for low-end devices.
      *
      * Generated from Godot docs: Environment.get_glow_mix
      */
@@ -1992,8 +1992,8 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * The glow blending mode. Note: The Compatibility renderer always uses `GLOW_BLEND_MODE_SCREEN`
-     * and `glow_blend_mode` will have no effect.
+     * The glow blending mode. Note: The Compatibility renderer always uses `GlowBlendMode.SCREEN` and
+     * `glow_blend_mode` will have no effect.
      *
      * Generated from Godot docs: Environment.set_glow_blend_mode
      */
@@ -2003,8 +2003,8 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * The glow blending mode. Note: The Compatibility renderer always uses `GLOW_BLEND_MODE_SCREEN`
-     * and `glow_blend_mode` will have no effect.
+     * The glow blending mode. Note: The Compatibility renderer always uses `GlowBlendMode.SCREEN` and
+     * `glow_blend_mode` will have no effect.
      *
      * Generated from Godot docs: Environment.get_glow_blend_mode
      */
@@ -2322,7 +2322,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * If set above `0.0` (exclusive), blends between the fog's color and the color of the background
      * `Sky`, as read from the radiance cubemap. This has a small performance cost when set above
-     * `0.0`. Must have `background_mode` set to `BG_SKY`. This is useful to simulate aerial
+     * `0.0`. Must have `background_mode` set to `BGMode.SKY`. This is useful to simulate aerial
      * perspective (https://en.wikipedia.org/wiki/Aerial_perspective) in large scenes with low density
      * fog. However, it is not very useful for high-density fog, as the sky will shine through. When
      * set to `1.0`, the fog color comes completely from the `Sky`. If set to `0.0`, aerial perspective
@@ -2342,7 +2342,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * If set above `0.0` (exclusive), blends between the fog's color and the color of the background
      * `Sky`, as read from the radiance cubemap. This has a small performance cost when set above
-     * `0.0`. Must have `background_mode` set to `BG_SKY`. This is useful to simulate aerial
+     * `0.0`. Must have `background_mode` set to `BGMode.SKY`. This is useful to simulate aerial
      * perspective (https://en.wikipedia.org/wiki/Aerial_perspective) in large scenes with low density
      * fog. However, it is not very useful for high-density fog, as the sky will shine through. When
      * set to `1.0`, the fog color comes completely from the `Sky`. If set to `0.0`, aerial perspective
@@ -2387,7 +2387,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The fog depth's intensity curve. A number of presets are available in the Inspector by
-     * right-clicking the curve. Only available when `fog_mode` is set to `FOG_MODE_DEPTH`.
+     * right-clicking the curve. Only available when `fog_mode` is set to `FogMode.DEPTH`.
      *
      * Generated from Godot docs: Environment.set_fog_depth_curve
      */
@@ -2398,7 +2398,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The fog depth's intensity curve. A number of presets are available in the Inspector by
-     * right-clicking the curve. Only available when `fog_mode` is set to `FOG_MODE_DEPTH`.
+     * right-clicking the curve. Only available when `fog_mode` is set to `FogMode.DEPTH`.
      *
      * Generated from Godot docs: Environment.get_fog_depth_curve
      */
@@ -2409,7 +2409,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The fog's depth starting distance from the camera. Only available when `fog_mode` is set to
-     * `FOG_MODE_DEPTH`.
+     * `FogMode.DEPTH`.
      *
      * Generated from Godot docs: Environment.set_fog_depth_begin
      */
@@ -2420,7 +2420,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The fog's depth starting distance from the camera. Only available when `fog_mode` is set to
-     * `FOG_MODE_DEPTH`.
+     * `FogMode.DEPTH`.
      *
      * Generated from Godot docs: Environment.get_fog_depth_begin
      */
@@ -2432,7 +2432,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * The fog's depth end distance from the camera. If this value is set to `0`, it will be equal to
      * the current camera's `Camera3D.far` value. Only available when `fog_mode` is set to
-     * `FOG_MODE_DEPTH`.
+     * `FogMode.DEPTH`.
      *
      * Generated from Godot docs: Environment.set_fog_depth_end
      */
@@ -2444,7 +2444,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     /**
      * The fog's depth end distance from the camera. If this value is set to `0`, it will be equal to
      * the current camera's `Camera3D.far` value. Only available when `fog_mode` is set to
-     * `FOG_MODE_DEPTH`.
+     * `FogMode.DEPTH`.
      *
      * Generated from Godot docs: Environment.get_fog_depth_end
      */
@@ -2919,6 +2919,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, segment))
     }
 
+    /**
+     * Godot's `Environment.BGMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Environment.BGMode.<NAME>`).
+     *
+     * Generated from Godot docs: Environment.BGMode
+     */
     @JvmInline
     value class BGMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2971,6 +2977,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Environment.AmbientSource` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Environment.AmbientSource.<NAME>`).
+     *
+     * Generated from Godot docs: Environment.AmbientSource
+     */
     @JvmInline
     value class AmbientSource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -2981,14 +2993,14 @@ class Environment(handle: GodotHandle) : Resource(handle) {
              */
             val BG: AmbientSource get() = AmbientSource(0L)
             /**
-             * Disable ambient light. This provides a slight performance boost over `AMBIENT_SOURCE_SKY`.
+             * Disable ambient light. This provides a slight performance boost over `AmbientSource.SKY`.
              *
              * Generated from Godot docs: Environment.AMBIENT_SOURCE_DISABLED
              */
             val DISABLED: AmbientSource get() = AmbientSource(1L)
             /**
              * Specify a specific `Color` for ambient light. This provides a slight performance boost over
-             * `AMBIENT_SOURCE_SKY`.
+             * `AmbientSource.SKY`.
              *
              * Generated from Godot docs: Environment.AMBIENT_SOURCE_COLOR
              */
@@ -3002,6 +3014,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Environment.ReflectionSource` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Environment.ReflectionSource.<NAME>`).
+     *
+     * Generated from Godot docs: Environment.ReflectionSource
+     */
     @JvmInline
     value class ReflectionSource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3026,6 +3044,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Environment.ToneMapper` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Environment.ToneMapper.<NAME>`).
+     *
+     * Generated from Godot docs: Environment.ToneMapper
+     */
     @JvmInline
     value class ToneMapper(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3038,16 +3062,16 @@ class Environment(handle: GodotHandle) : Resource(handle) {
             val LINEAR: ToneMapper get() = ToneMapper(0L)
             /**
              * A simple tonemapping curve that rolls off bright values to prevent clipping. This results in an
-             * image that can appear dull and low contrast. Slower than `TONE_MAPPER_LINEAR`. Note: When
-             * `tonemap_white` is left at the default value of `1.0`, `TONE_MAPPER_REINHARDT` produces an
-             * identical image to `TONE_MAPPER_LINEAR`.
+             * image that can appear dull and low contrast. Slower than `ToneMapper.LINEAR`. Note: When
+             * `tonemap_white` is left at the default value of `1.0`, `ToneMapper.REINHARDT` produces an
+             * identical image to `ToneMapper.LINEAR`.
              *
              * Generated from Godot docs: Environment.TONE_MAPPER_REINHARDT
              */
             val REINHARDT: ToneMapper get() = ToneMapper(1L)
             /**
              * Uses a film-like tonemapping curve to prevent clipping of bright values and provide better
-             * contrast than `TONE_MAPPER_REINHARDT`. Slightly slower than `TONE_MAPPER_REINHARDT`. Note: This
+             * contrast than `ToneMapper.REINHARDT`. Slightly slower than `ToneMapper.REINHARDT`. Note: This
              * tonemapper does not support HDR output because it produces output in the SDR range. It is
              * recommended to use a different tonemapper when rendering to an HDR screen.
              *
@@ -3056,7 +3080,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
             val FILMIC: ToneMapper get() = ToneMapper(2L)
             /**
              * Uses a high-contrast film-like tonemapping curve and desaturates bright values for a more
-             * realistic appearance. Slightly slower than `TONE_MAPPER_FILMIC`. Note: This tonemapping operator
+             * realistic appearance. Slightly slower than `ToneMapper.FILMIC`. Note: This tonemapping operator
              * is called "ACES Fitted" in Godot 3.x. Note: This tonemapper does not support HDR output because
              * it produces output in the SDR range. It is recommended to use a different tonemapper when
              * rendering to an HDR screen.
@@ -3075,6 +3099,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Environment.GlowBlendMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Environment.GlowBlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: Environment.GlowBlendMode
+     */
     @JvmInline
     value class GlowBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3089,7 +3119,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
              * dark values will be highly influenced by glow and bright values will not be influenced by glow.
              * This approach avoids bright values becoming overly bright from the glow effect. `tonemap_white`
              * is used to determine the maximum scene value where the glow should have no influence. When
-             * `tonemap_mode` is set to `TONE_MAPPER_LINEAR` and `Viewport.use_hdr_2d` is `true`, the parent
+             * `tonemap_mode` is set to `ToneMapper.LINEAR` and `Viewport.use_hdr_2d` is `true`, the parent
              * window's `Window.get_output_max_linear_value` will be used as the maximum scene value.
              *
              * Generated from Godot docs: Environment.GLOW_BLEND_MODE_SCREEN
@@ -3125,6 +3155,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Environment.FogMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Environment.FogMode.<NAME>`).
+     *
+     * Generated from Godot docs: Environment.FogMode
+     */
     @JvmInline
     value class FogMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3144,6 +3180,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Environment.SDFGIYScale` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Environment.SDFGIYScale.<NAME>`).
+     *
+     * Generated from Godot docs: Environment.SDFGIYScale
+     */
     @JvmInline
     value class SDFGIYScale(override val value: Long) : GodotEnumValue {
         companion object {

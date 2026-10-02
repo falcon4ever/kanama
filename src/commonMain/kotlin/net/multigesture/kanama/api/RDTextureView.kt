@@ -44,7 +44,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Optional override for the data format to return sampled values in. The corresponding
      * `RDTextureFormat` must have had this added as a shareable format. The default value of
-     * `RenderingDevice.DATA_FORMAT_MAX` does not override the format.
+     * `RenderingDevice.DataFormat.MAX` does not override the format.
      *
      * Generated from Godot docs: RDTextureView.set_format_override
      */
@@ -56,7 +56,7 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Optional override for the data format to return sampled values in. The corresponding
      * `RDTextureFormat` must have had this added as a shareable format. The default value of
-     * `RenderingDevice.DATA_FORMAT_MAX` does not override the format.
+     * `RenderingDevice.DataFormat.MAX` does not override the format.
      *
      * Generated from Godot docs: RDTextureView.get_format_override
      */

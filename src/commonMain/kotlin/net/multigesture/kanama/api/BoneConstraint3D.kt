@@ -171,6 +171,12 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         ObjectCalls.ptrcallNoArgs(clearSettingBind, segment)
     }
 
+    /**
+     * Godot's `BoneConstraint3D.ReferenceType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BoneConstraint3D.ReferenceType.<NAME>`).
+     *
+     * Generated from Godot docs: BoneConstraint3D.ReferenceType
+     */
     @JvmInline
     value class ReferenceType(override val value: Long) : GodotEnumValue {
         companion object {

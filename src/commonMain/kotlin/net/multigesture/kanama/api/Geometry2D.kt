@@ -188,9 +188,9 @@ object Geometry2D {
 
     /**
      * Merges (combines) `polygon_a` and `polygon_b` and returns an array of merged polygons. This
-     * performs `OPERATION_UNION` between polygons. The operation may result in an outer polygon
-     * (boundary) and multiple inner polygons (holes) produced which could be distinguished by calling
-     * `is_polygon_clockwise`.
+     * performs `PolyBooleanOperation.UNION` between polygons. The operation may result in an outer
+     * polygon (boundary) and multiple inner polygons (holes) produced which could be distinguished by
+     * calling `is_polygon_clockwise`.
      *
      * Generated from Godot docs: Geometry2D.merge_polygons
      */
@@ -201,9 +201,9 @@ object Geometry2D {
 
     /**
      * Clips `polygon_a` against `polygon_b` and returns an array of clipped polygons. This performs
-     * `OPERATION_DIFFERENCE` between polygons. Returns an empty array if `polygon_b` completely
-     * overlaps `polygon_a`. If `polygon_b` is enclosed by `polygon_a`, returns an outer polygon
-     * (boundary) and inner polygon (hole) which could be distinguished by calling
+     * `PolyBooleanOperation.DIFFERENCE` between polygons. Returns an empty array if `polygon_b`
+     * completely overlaps `polygon_a`. If `polygon_b` is enclosed by `polygon_a`, returns an outer
+     * polygon (boundary) and inner polygon (hole) which could be distinguished by calling
      * `is_polygon_clockwise`.
      *
      * Generated from Godot docs: Geometry2D.clip_polygons
@@ -215,10 +215,10 @@ object Geometry2D {
 
     /**
      * Intersects `polygon_a` with `polygon_b` and returns an array of intersected polygons. This
-     * performs `OPERATION_INTERSECTION` between polygons. In other words, returns common area shared
-     * by polygons. Returns an empty array if no intersection occurs. The operation may result in an
-     * outer polygon (boundary) and inner polygon (hole) produced which could be distinguished by
-     * calling `is_polygon_clockwise`.
+     * performs `PolyBooleanOperation.INTERSECTION` between polygons. In other words, returns common
+     * area shared by polygons. Returns an empty array if no intersection occurs. The operation may
+     * result in an outer polygon (boundary) and inner polygon (hole) produced which could be
+     * distinguished by calling `is_polygon_clockwise`.
      *
      * Generated from Godot docs: Geometry2D.intersect_polygons
      */
@@ -229,10 +229,10 @@ object Geometry2D {
 
     /**
      * Mutually excludes common area defined by intersection of `polygon_a` and `polygon_b` (see
-     * `intersect_polygons`) and returns an array of excluded polygons. This performs `OPERATION_XOR`
-     * between polygons. In other words, returns all but common area between polygons. The operation
-     * may result in an outer polygon (boundary) and inner polygon (hole) produced which could be
-     * distinguished by calling `is_polygon_clockwise`.
+     * `intersect_polygons`) and returns an array of excluded polygons. This performs
+     * `PolyBooleanOperation.XOR` between polygons. In other words, returns all but common area between
+     * polygons. The operation may result in an outer polygon (boundary) and inner polygon (hole)
+     * produced which could be distinguished by calling `is_polygon_clockwise`.
      *
      * Generated from Godot docs: Geometry2D.exclude_polygons
      */
@@ -243,8 +243,8 @@ object Geometry2D {
 
     /**
      * Clips `polyline` against `polygon` and returns an array of clipped polylines. This performs
-     * `OPERATION_DIFFERENCE` between the polyline and the polygon. This operation can be thought of as
-     * cutting a line with a closed shape.
+     * `PolyBooleanOperation.DIFFERENCE` between the polyline and the polygon. This operation can be
+     * thought of as cutting a line with a closed shape.
      *
      * Generated from Godot docs: Geometry2D.clip_polyline_with_polygon
      */
@@ -255,8 +255,8 @@ object Geometry2D {
 
     /**
      * Intersects `polyline` with `polygon` and returns an array of intersected polylines. This
-     * performs `OPERATION_INTERSECTION` between the polyline and the polygon. This operation can be
-     * thought of as chopping a line with a closed shape.
+     * performs `PolyBooleanOperation.INTERSECTION` between the polyline and the polygon. This
+     * operation can be thought of as chopping a line with a closed shape.
      *
      * Generated from Godot docs: Geometry2D.intersect_polyline_with_polygon
      */
@@ -323,6 +323,12 @@ object Geometry2D {
         return ObjectCalls.ptrcallWithTwoVector2iArgsRetVector2iList(bresenhamLineBind, singleton, from, to)
     }
 
+    /**
+     * Godot's `Geometry2D.PolyBooleanOperation` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`Geometry2D.PolyBooleanOperation.<NAME>`).
+     *
+     * Generated from Godot docs: Geometry2D.PolyBooleanOperation
+     */
     @JvmInline
     value class PolyBooleanOperation(override val value: Long) : GodotEnumValue {
         companion object {
@@ -353,6 +359,12 @@ object Geometry2D {
         }
     }
 
+    /**
+     * Godot's `Geometry2D.PolyJoinType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Geometry2D.PolyJoinType.<NAME>`).
+     *
+     * Generated from Godot docs: Geometry2D.PolyJoinType
+     */
     @JvmInline
     value class PolyJoinType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -380,6 +392,12 @@ object Geometry2D {
         }
     }
 
+    /**
+     * Godot's `Geometry2D.PolyEndType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Geometry2D.PolyEndType.<NAME>`).
+     *
+     * Generated from Godot docs: Geometry2D.PolyEndType
+     */
     @JvmInline
     value class PolyEndType(override val value: Long) : GodotEnumValue {
         companion object {

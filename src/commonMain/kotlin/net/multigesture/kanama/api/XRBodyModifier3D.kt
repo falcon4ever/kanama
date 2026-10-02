@@ -86,6 +86,12 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         return XRBodyModifier3D.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment))
     }
 
+    /**
+     * Godot's `XRBodyModifier3D.BodyUpdate` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`XRBodyModifier3D.BodyUpdate.<NAME>`).
+     *
+     * Generated from Godot docs: XRBodyModifier3D.BodyUpdate
+     */
     @JvmInline
     value class BodyUpdate(override val value: Long) : GodotEnumValue {
         infix fun or(other: BodyUpdate): BodyUpdate = BodyUpdate(value or other.value)
@@ -120,6 +126,12 @@ class XRBodyModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         }
     }
 
+    /**
+     * Godot's `XRBodyModifier3D.BoneUpdate` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRBodyModifier3D.BoneUpdate.<NAME>`).
+     *
+     * Generated from Godot docs: XRBodyModifier3D.BoneUpdate
+     */
     @JvmInline
     value class BoneUpdate(override val value: Long) : GodotEnumValue {
         companion object {

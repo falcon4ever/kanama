@@ -94,6 +94,12 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
         ObjectCalls.ptrcallWithStringArg(popupErrorBind, segment, msg)
     }
 
+    /**
+     * Godot's `EditorVCSInterface.ChangeType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorVCSInterface.ChangeType.<NAME>`).
+     *
+     * Generated from Godot docs: EditorVCSInterface.ChangeType
+     */
     @JvmInline
     value class ChangeType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -136,6 +142,12 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `EditorVCSInterface.TreeArea` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorVCSInterface.TreeArea.<NAME>`).
+     *
+     * Generated from Godot docs: EditorVCSInterface.TreeArea
+     */
     @JvmInline
     value class TreeArea(override val value: Long) : GodotEnumValue {
         companion object {

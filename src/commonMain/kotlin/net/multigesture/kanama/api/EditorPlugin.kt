@@ -538,6 +538,13 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         const val projectSettingsChanged: String = "project_settings_changed"
     }
 
+    /**
+     * Godot's `EditorPlugin.CustomControlContainer` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`EditorPlugin.CustomControlContainer.<NAME>`).
+     *
+     * Generated from Godot docs: EditorPlugin.CustomControlContainer
+     */
     @JvmInline
     value class CustomControlContainer(override val value: Long) : GodotEnumValue {
         companion object {
@@ -616,6 +623,12 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `EditorPlugin.DockSlot` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`EditorPlugin.DockSlot.<NAME>`).
+     *
+     * Generated from Godot docs: EditorPlugin.DockSlot
+     */
     @JvmInline
     value class DockSlot(override val value: Long) : GodotEnumValue {
         companion object {
@@ -689,6 +702,12 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         }
     }
 
+    /**
+     * Godot's `EditorPlugin.AfterGUIInput` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorPlugin.AfterGUIInput.<NAME>`).
+     *
+     * Generated from Godot docs: EditorPlugin.AfterGUIInput
+     */
     @JvmInline
     value class AfterGUIInput(override val value: Long) : GodotEnumValue {
         companion object {

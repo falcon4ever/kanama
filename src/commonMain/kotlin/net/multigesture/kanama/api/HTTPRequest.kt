@@ -58,17 +58,17 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
     /**
      * Creates request on the underlying `HTTPClient`. If there is no configuration errors, it tries to
      * connect using `HTTPClient.connect_to_host` and passes parameters onto `HTTPClient.request`.
-     * Returns `OK` if request is successfully created. (Does not imply that the server has responded),
-     * `ERR_UNCONFIGURED` if not in the tree, `ERR_BUSY` if still processing previous request,
-     * `ERR_INVALID_PARAMETER` if given string is not a valid URL format, or `ERR_CANT_CONNECT` if not
-     * using thread and the `HTTPClient` cannot connect to host. Note: When `method` is
-     * `HTTPClient.METHOD_GET`, the payload sent via `request_data` might be ignored by the server or
-     * even cause the server to reject the request (check RFC 7231 section 4.3.1
-     * (https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1) for more details). As a
-     * workaround, you can send data as a query string in the URL (see `String.uri_encode` for an
-     * example). Note: It's recommended to use transport encryption (TLS) and to avoid sending
-     * sensitive information (such as login credentials) in HTTP GET URL parameters. Consider using
-     * HTTP POST requests or HTTP headers for such information instead.
+     * Returns `GodotError.OK` if request is successfully created. (Does not imply that the server has
+     * responded), `GodotError.ERR_UNCONFIGURED` if not in the tree, `GodotError.ERR_BUSY` if still
+     * processing previous request, `GodotError.ERR_INVALID_PARAMETER` if given string is not a valid
+     * URL format, or `GodotError.ERR_CANT_CONNECT` if not using thread and the `HTTPClient` cannot
+     * connect to host. Note: When `method` is `HTTPClient.Method.GET`, the payload sent via
+     * `request_data` might be ignored by the server or even cause the server to reject the request
+     * (check RFC 7231 section 4.3.1 (https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1) for
+     * more details). As a workaround, you can send data as a query string in the URL (see
+     * `String.uri_encode` for an example). Note: It's recommended to use transport encryption (TLS)
+     * and to avoid sending sensitive information (such as login credentials) in HTTP GET URL
+     * parameters. Consider using HTTP POST requests or HTTP headers for such information instead.
      *
      * Generated from Godot docs: HTTPRequest.request
      */
@@ -79,11 +79,11 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
     /**
      * Creates request on the underlying `HTTPClient` using a raw array of bytes for the request body.
      * If there is no configuration errors, it tries to connect using `HTTPClient.connect_to_host` and
-     * passes parameters onto `HTTPClient.request`. Returns `OK` if request is successfully created.
-     * (Does not imply that the server has responded), `ERR_UNCONFIGURED` if not in the tree,
-     * `ERR_BUSY` if still processing previous request, `ERR_INVALID_PARAMETER` if given string is not
-     * a valid URL format, or `ERR_CANT_CONNECT` if not using thread and the `HTTPClient` cannot
-     * connect to host.
+     * passes parameters onto `HTTPClient.request`. Returns `GodotError.OK` if request is successfully
+     * created. (Does not imply that the server has responded), `GodotError.ERR_UNCONFIGURED` if not in
+     * the tree, `GodotError.ERR_BUSY` if still processing previous request,
+     * `GodotError.ERR_INVALID_PARAMETER` if given string is not a valid URL format, or
+     * `GodotError.ERR_CANT_CONNECT` if not using thread and the `HTTPClient` cannot connect to host.
      *
      * Generated from Godot docs: HTTPRequest.request_raw
      */
@@ -320,6 +320,12 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
         const val requestCompleted: String = "request_completed"
     }
 
+    /**
+     * Godot's `HTTPRequest.Result` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`HTTPRequest.Result.<NAME>`).
+     *
+     * Generated from Godot docs: HTTPRequest.Result
+     */
     @JvmInline
     value class Result(override val value: Long) : GodotEnumValue {
         companion object {

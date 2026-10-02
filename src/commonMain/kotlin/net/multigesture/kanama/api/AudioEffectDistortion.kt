@@ -147,6 +147,12 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPostGainBind, segment)
     }
 
+    /**
+     * Godot's `AudioEffectDistortion.Mode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AudioEffectDistortion.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioEffectDistortion.Mode
+     */
     @JvmInline
     value class Mode(override val value: Long) : GodotEnumValue {
         companion object {

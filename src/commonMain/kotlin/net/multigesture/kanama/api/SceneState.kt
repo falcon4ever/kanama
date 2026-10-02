@@ -259,6 +259,12 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, segment, idx)
     }
 
+    /**
+     * Godot's `SceneState.GenEditState` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SceneState.GenEditState.<NAME>`).
+     *
+     * Generated from Godot docs: SceneState.GenEditState
+     */
     @JvmInline
     value class GenEditState(override val value: Long) : GodotEnumValue {
         companion object {
@@ -283,7 +289,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
              */
             val MAIN: GenEditState get() = GenEditState(2L)
             /**
-             * If passed to `PackedScene.instantiate`, it's similar to `GEN_EDIT_STATE_MAIN`, but for the case
+             * If passed to `PackedScene.instantiate`, it's similar to `GenEditState.MAIN`, but for the case
              * where the scene is being instantiated to be the base of another one. Note: Only available in
              * editor builds.
              *

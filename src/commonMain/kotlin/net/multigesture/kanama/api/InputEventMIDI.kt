@@ -134,9 +134,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     /**
      * The velocity of the MIDI message. This value ranges from `0` to `127`. For a musical keyboard,
      * this corresponds to how quickly the key was pressed, and is rarely above `110` in practice.
-     * Note: Some MIDI devices may send a `MIDI_MESSAGE_NOTE_ON` message with `0` velocity and expect
-     * it to be treated the same as a `MIDI_MESSAGE_NOTE_OFF` message. If necessary, this can be
-     * handled with a few lines of code:
+     * Note: Some MIDI devices may send a `MIDIMessage.NOTE_ON` message with `0` velocity and expect it
+     * to be treated the same as a `MIDIMessage.NOTE_OFF` message. If necessary, this can be handled
+     * with a few lines of code:
      *
      * Generated from Godot docs: InputEventMIDI.set_velocity
      */
@@ -148,9 +148,9 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     /**
      * The velocity of the MIDI message. This value ranges from `0` to `127`. For a musical keyboard,
      * this corresponds to how quickly the key was pressed, and is rarely above `110` in practice.
-     * Note: Some MIDI devices may send a `MIDI_MESSAGE_NOTE_ON` message with `0` velocity and expect
-     * it to be treated the same as a `MIDI_MESSAGE_NOTE_OFF` message. If necessary, this can be
-     * handled with a few lines of code:
+     * Note: Some MIDI devices may send a `MIDIMessage.NOTE_ON` message with `0` velocity and expect it
+     * to be treated the same as a `MIDIMessage.NOTE_OFF` message. If necessary, this can be handled
+     * with a few lines of code:
      *
      * Generated from Godot docs: InputEventMIDI.get_velocity
      */
@@ -212,7 +212,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     }
 
     /**
-     * The unique number of the controller, if `message` is `MIDI_MESSAGE_CONTROL_CHANGE`, otherwise
+     * The unique number of the controller, if `message` is `MIDIMessage.CONTROL_CHANGE`, otherwise
      * this is `0`. This value can be used to identify sliders for volume, balance, and panning, as
      * well as switches and pedals on the MIDI device. See the General MIDI specification
      * (https://en.wikipedia.org/wiki/General_MIDI#Controller_events) for a small list.
@@ -225,7 +225,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     }
 
     /**
-     * The unique number of the controller, if `message` is `MIDI_MESSAGE_CONTROL_CHANGE`, otherwise
+     * The unique number of the controller, if `message` is `MIDIMessage.CONTROL_CHANGE`, otherwise
      * this is `0`. This value can be used to identify sliders for volume, balance, and panning, as
      * well as switches and pedals on the MIDI device. See the General MIDI specification
      * (https://en.wikipedia.org/wiki/General_MIDI#Controller_events) for a small list.
@@ -238,7 +238,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     }
 
     /**
-     * The value applied to the controller. If `message` is `MIDI_MESSAGE_CONTROL_CHANGE`, this value
+     * The value applied to the controller. If `message` is `MIDIMessage.CONTROL_CHANGE`, this value
      * ranges from `0` to `127`, otherwise it is `0`. See also `controller_value`.
      *
      * Generated from Godot docs: InputEventMIDI.set_controller_value
@@ -249,7 +249,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     }
 
     /**
-     * The value applied to the controller. If `message` is `MIDI_MESSAGE_CONTROL_CHANGE`, this value
+     * The value applied to the controller. If `message` is `MIDIMessage.CONTROL_CHANGE`, this value
      * ranges from `0` to `127`, otherwise it is `0`. See also `controller_value`.
      *
      * Generated from Godot docs: InputEventMIDI.get_controller_value

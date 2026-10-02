@@ -61,6 +61,13 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextSubmenuItemBind, segment, name, menu.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /**
+     * Godot's `EditorContextMenuPlugin.ContextMenuSlot` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`EditorContextMenuPlugin.ContextMenuSlot.<NAME>`).
+     *
+     * Generated from Godot docs: EditorContextMenuPlugin.ContextMenuSlot
+     */
     @JvmInline
     value class ContextMenuSlot(override val value: Long) : GodotEnumValue {
         companion object {

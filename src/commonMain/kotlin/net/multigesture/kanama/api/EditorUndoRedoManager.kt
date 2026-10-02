@@ -148,9 +148,10 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Clears the given undo history. You can clear history for a specific scene, global history, or
-     * for all histories at once (except `REMOTE_HISTORY`) if `id` is `INVALID_HISTORY`. If
-     * `increase_version` is `true`, the undo history version will be increased, marking it as unsaved.
-     * Useful for operations that modify the scene, but don't support undo.
+     * for all histories at once (except `SpecialHistory.REMOTE_HISTORY`) if `id` is
+     * `SpecialHistory.INVALID_HISTORY`. If `increase_version` is `true`, the undo history version will
+     * be increased, marking it as unsaved. Useful for operations that modify the scene, but don't
+     * support undo.
      *
      * Generated from Godot docs: EditorUndoRedoManager.clear_history
      */
@@ -163,6 +164,13 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
         const val versionChanged: String = "version_changed"
     }
 
+    /**
+     * Godot's `EditorUndoRedoManager.SpecialHistory` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`EditorUndoRedoManager.SpecialHistory.<NAME>`).
+     *
+     * Generated from Godot docs: EditorUndoRedoManager.SpecialHistory
+     */
     @JvmInline
     value class SpecialHistory(override val value: Long) : GodotEnumValue {
         companion object {

@@ -666,6 +666,12 @@ object AudioServer {
         const val busRenamed: String = "bus_renamed"
     }
 
+    /**
+     * Godot's `AudioServer.SpeakerMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AudioServer.SpeakerMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioServer.SpeakerMode
+     */
     @JvmInline
     value class SpeakerMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -696,6 +702,12 @@ object AudioServer {
         }
     }
 
+    /**
+     * Godot's `AudioServer.PlaybackType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AudioServer.PlaybackType.<NAME>`).
+     *
+     * Generated from Godot docs: AudioServer.PlaybackType
+     */
     @JvmInline
     value class PlaybackType(override val value: Long) : GodotEnumValue {
         companion object {

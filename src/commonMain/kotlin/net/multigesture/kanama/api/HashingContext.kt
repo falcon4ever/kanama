@@ -12,8 +12,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 class HashingContext(handle: GodotHandle) : RefCounted(handle) {
     /**
-     * Starts a new hash computation of the given `type` (e.g. `HASH_SHA256` to start computation of an
-     * SHA-256).
+     * Starts a new hash computation of the given `type` (e.g. `HashType.SHA256` to start computation
+     * of an SHA-256).
      *
      * Generated from Godot docs: HashingContext.start
      */
@@ -42,6 +42,12 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, segment)
     }
 
+    /**
+     * Godot's `HashingContext.HashType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`HashingContext.HashType.<NAME>`).
+     *
+     * Generated from Godot docs: HashingContext.HashType
+     */
     @JvmInline
     value class HashType(override val value: Long) : GodotEnumValue {
         companion object {

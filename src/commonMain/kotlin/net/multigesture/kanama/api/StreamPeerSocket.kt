@@ -41,6 +41,12 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
         ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, segment)
     }
 
+    /**
+     * Godot's `StreamPeerSocket.Status` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`StreamPeerSocket.Status.<NAME>`).
+     *
+     * Generated from Godot docs: StreamPeerSocket.Status
+     */
     @JvmInline
     value class Status(override val value: Long) : GodotEnumValue {
         companion object {

@@ -484,6 +484,12 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         const val areaExited: String = "area_exited"
     }
 
+    /**
+     * Godot's `Area2D.SpaceOverride` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Area2D.SpaceOverride.<NAME>`).
+     *
+     * Generated from Godot docs: Area2D.SpaceOverride
+     */
     @JvmInline
     value class SpaceOverride(override val value: Long) : GodotEnumValue {
         companion object {

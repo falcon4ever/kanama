@@ -260,9 +260,9 @@ class Tree(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the currently focused item, or `null` if no item is focused. In `SELECT_ROW` and
-     * `SELECT_SINGLE` modes, the focused item is same as the selected item. In `SELECT_MULTI` mode,
-     * the focused item is the item under the focus cursor, not necessarily selected. To get the
+     * Returns the currently focused item, or `null` if no item is focused. In `SelectMode.ROW` and
+     * `SelectMode.SINGLE` modes, the focused item is same as the selected item. In `SelectMode.MULTI`
+     * mode, the focused item is the item under the focus cursor, not necessarily selected. To get the
      * currently selected item(s), use `get_next_selected`.
      *
      * Generated from Godot docs: Tree.get_selected
@@ -281,11 +281,11 @@ class Tree(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the currently focused column, or -1 if no column is focused. In `SELECT_SINGLE` mode,
-     * the focused column is the selected column. In `SELECT_ROW` mode, the focused column is always 0
-     * if any item is selected. In `SELECT_MULTI` mode, the focused column is the column under the
-     * focus cursor, and there are not necessarily any column selected. To tell whether a column of an
-     * item is selected, use `TreeItem.is_selected`.
+     * Returns the currently focused column, or -1 if no column is focused. In `SelectMode.SINGLE`
+     * mode, the focused column is the selected column. In `SelectMode.ROW` mode, the focused column is
+     * always 0 if any item is selected. In `SelectMode.MULTI` mode, the focused column is the column
+     * under the focus cursor, and there are not necessarily any column selected. To tell whether a
+     * column of an item is selected, use `TreeItem.is_selected`.
      *
      * Generated from Godot docs: Tree.get_selected_column
      */
@@ -321,7 +321,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Deselects all tree items (rows and columns). In `SELECT_MULTI` mode also removes selection
+     * Deselects all tree items (rows and columns). In `SelectMode.MULTI` mode also removes selection
      * cursor.
      *
      * Generated from Godot docs: Tree.deselect_all
@@ -448,9 +448,9 @@ class Tree(handle: GodotHandle) : Control(handle) {
 
     /**
      * Makes the currently focused cell visible. This will scroll the tree if necessary. In
-     * `SELECT_ROW` mode, this will not do horizontal scrolling, as all the cells in the selected row
-     * is focused logically. Note: Despite the name of this method, the focus cursor itself is only
-     * visible in `SELECT_MULTI` mode.
+     * `SelectMode.ROW` mode, this will not do horizontal scrolling, as all the cells in the selected
+     * row is focused logically. Note: Despite the name of this method, the focus cursor itself is only
+     * visible in `SelectMode.MULTI` mode.
      *
      * Generated from Godot docs: Tree.ensure_cursor_is_visible
      */
@@ -513,8 +513,8 @@ class Tree(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Sets the column title alignment. Note that `@GlobalScope.HORIZONTAL_ALIGNMENT_FILL` is not
-     * supported for column titles.
+     * Sets the column title alignment. Note that `HorizontalAlignment.FILL` is not supported for
+     * column titles.
      *
      * Generated from Godot docs: Tree.set_column_title_alignment
      */
@@ -722,7 +722,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
 
     /**
      * The drop mode as an OR combination of flags. See `DropModeFlags` constants. Once dropping is
-     * done, reverts to `DROP_MODE_DISABLED`. Setting this during `Control._can_drop_data` is
+     * done, reverts to `DropModeFlags.DISABLED`. Setting this during `Control._can_drop_data` is
      * recommended. This controls the drop sections, i.e. the decision and drawing of possible drop
      * locations based on the mouse position.
      *
@@ -734,7 +734,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
 
     /**
      * The drop mode as an OR combination of flags. See `DropModeFlags` constants. Once dropping is
-     * done, reverts to `DROP_MODE_DISABLED`. Setting this during `Control._can_drop_data` is
+     * done, reverts to `DropModeFlags.DISABLED`. Setting this during `Control._can_drop_data` is
      * recommended. This controls the drop sections, i.e. the decision and drawing of possible drop
      * locations based on the mouse position.
      *
@@ -836,6 +836,12 @@ class Tree(handle: GodotHandle) : Control(handle) {
         const val nothingSelected: String = "nothing_selected"
     }
 
+    /**
+     * Godot's `Tree.SelectMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Tree.SelectMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tree.SelectMode
+     */
     @JvmInline
     value class SelectMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -869,6 +875,12 @@ class Tree(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `Tree.DropModeFlags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tree.DropModeFlags.<NAME>`).
+     *
+     * Generated from Godot docs: Tree.DropModeFlags
+     */
     @JvmInline
     value class DropModeFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -881,7 +893,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
             val DISABLED: DropModeFlags get() = DropModeFlags(0L)
             /**
              * Enables the "on item" drop section. This drop section covers the entire item. When combined with
-             * `DROP_MODE_INBETWEEN`, this drop section halves in height and stays centered vertically.
+             * `DropModeFlags.INBETWEEN`, this drop section halves in height and stays centered vertically.
              *
              * Generated from Godot docs: Tree.DROP_MODE_ON_ITEM
              */
@@ -889,7 +901,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
             /**
              * Enables "above item" and "below item" drop sections. The "above item" drop section covers the
              * top half of the item, while the "below item" drop section covers the bottom half, and extends
-             * downward to the left of any children. When combined with `DROP_MODE_ON_ITEM`, these drop
+             * downward to the left of any children. When combined with `DropModeFlags.ON_ITEM`, these drop
              * sections halve in height and stay at the top and bottom respectively.
              *
              * Generated from Godot docs: Tree.DROP_MODE_INBETWEEN
@@ -898,6 +910,12 @@ class Tree(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `Tree.ScrollHintMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tree.ScrollHintMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tree.ScrollHintMode
+     */
     @JvmInline
     value class ScrollHintMode(override val value: Long) : GodotEnumValue {
         companion object {

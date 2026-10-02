@@ -279,6 +279,12 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
         return TextureButton.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
     }
 
+    /**
+     * Godot's `TextureButton.StretchMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextureButton.StretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextureButton.StretchMode
+     */
     @JvmInline
     value class StretchMode(override val value: Long) : GodotEnumValue {
         companion object {

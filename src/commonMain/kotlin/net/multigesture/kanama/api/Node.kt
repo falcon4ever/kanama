@@ -146,7 +146,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * readability of the added `node`. If not named, the `node` is renamed to its type, and if it
      * shares `name` with a sibling, a number is suffixed more appropriately. This operation is very
      * slow. As such, it is recommended leaving this to `false`, which assigns a dummy name featuring
-     * `@` in both situations. If `internal` is different than `INTERNAL_MODE_DISABLED`, the child will
+     * `@` in both situations. If `internal` is different than `InternalMode.DISABLED`, the child will
      * be added as internal node. These nodes are ignored by methods like `get_children`, unless their
      * parameter `include_internal` is `true`. It also prevents these nodes being duplicated with their
      * parent. The intended usage is to hide the internal nodes from the user, so the user won't
@@ -648,7 +648,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * exists). Note: If `_process` is overridden, this will be automatically enabled before `_ready`
      * is called. Note: This method only affects the `_process` callback, i.e. it has no effect on
      * other callbacks like `_physics_process`. If you want to disable all processing for the node, set
-     * `process_mode` to `PROCESS_MODE_DISABLED`.
+     * `process_mode` to `ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: Node.set_process
      */
@@ -810,12 +810,12 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns `true` if the node can receive processing notifications and input callbacks
      * (`NOTIFICATION_PROCESS`, `_input`, etc.) from the `SceneTree` and `Viewport`. The returned value
-     * depends on `process_mode`: - If set to `PROCESS_MODE_PAUSABLE`, returns `true` when the game is
-     * processing, i.e. `SceneTree.paused` is `false`; - If set to `PROCESS_MODE_WHEN_PAUSED`, returns
+     * depends on `process_mode`: - If set to `ProcessMode.PAUSABLE`, returns `true` when the game is
+     * processing, i.e. `SceneTree.paused` is `false`; - If set to `ProcessMode.WHEN_PAUSED`, returns
      * `true` when the game is paused, i.e. `SceneTree.paused` is `true`; - If set to
-     * `PROCESS_MODE_ALWAYS`, always returns `true`; - If set to `PROCESS_MODE_DISABLED`, always
-     * returns `false`; - If set to `PROCESS_MODE_INHERIT`, use the parent node's `process_mode` to
-     * determine the result. If the node is not inside the tree, returns `false` no matter the value of
+     * `ProcessMode.ALWAYS`, always returns `true`; - If set to `ProcessMode.DISABLED`, always returns
+     * `false`; - If set to `ProcessMode.INHERIT`, use the parent node's `process_mode` to determine
+     * the result. If the node is not inside the tree, returns `false` no matter the value of
      * `process_mode`.
      *
      * Generated from Godot docs: Node.can_process
@@ -828,11 +828,11 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Set the process thread group for this node (basically, whether it receives
      * `NOTIFICATION_PROCESS`, `NOTIFICATION_PHYSICS_PROCESS`, `_process` or `_physics_process` (and
      * the internal versions) on the main thread or in a sub-thread. By default, the thread group is
-     * `PROCESS_THREAD_GROUP_INHERIT`, which means that this node belongs to the same thread group as
-     * the parent node. The thread groups means that nodes in a specific thread group will process
+     * `ProcessThreadGroup.INHERIT`, which means that this node belongs to the same thread group as the
+     * parent node. The thread groups means that nodes in a specific thread group will process
      * together, separate to other thread groups (depending on `process_thread_group_order`). If the
-     * value is set is `PROCESS_THREAD_GROUP_SUB_THREAD`, this thread group will occur on a sub thread
-     * (not the main thread), otherwise if set to `PROCESS_THREAD_GROUP_MAIN_THREAD` it will process on
+     * value is set is `ProcessThreadGroup.SUB_THREAD`, this thread group will occur on a sub thread
+     * (not the main thread), otherwise if set to `ProcessThreadGroup.MAIN_THREAD` it will process on
      * the main thread. If there is not a parent or grandparent node set to something other than
      * inherit, the node will belong to the default thread group. This default group will process on
      * the main thread and its group order is 0. During processing in a sub-thread, accessing most
@@ -840,7 +840,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * debug mode). Use `Object.call_deferred`, `call_thread_safe`, `call_deferred_thread_group` and
      * the likes in order to communicate from the thread groups to the main thread (or to other thread
      * groups). To better understand process thread groups, the idea is that any node set to any other
-     * value than `PROCESS_THREAD_GROUP_INHERIT` will include any child (and grandchild) nodes set to
+     * value than `ProcessThreadGroup.INHERIT` will include any child (and grandchild) nodes set to
      * inherit into its process thread group. This means that the processing of all the nodes in the
      * group will happen together, at the same time as the node including them.
      *
@@ -854,11 +854,11 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Set the process thread group for this node (basically, whether it receives
      * `NOTIFICATION_PROCESS`, `NOTIFICATION_PHYSICS_PROCESS`, `_process` or `_physics_process` (and
      * the internal versions) on the main thread or in a sub-thread. By default, the thread group is
-     * `PROCESS_THREAD_GROUP_INHERIT`, which means that this node belongs to the same thread group as
-     * the parent node. The thread groups means that nodes in a specific thread group will process
+     * `ProcessThreadGroup.INHERIT`, which means that this node belongs to the same thread group as the
+     * parent node. The thread groups means that nodes in a specific thread group will process
      * together, separate to other thread groups (depending on `process_thread_group_order`). If the
-     * value is set is `PROCESS_THREAD_GROUP_SUB_THREAD`, this thread group will occur on a sub thread
-     * (not the main thread), otherwise if set to `PROCESS_THREAD_GROUP_MAIN_THREAD` it will process on
+     * value is set is `ProcessThreadGroup.SUB_THREAD`, this thread group will occur on a sub thread
+     * (not the main thread), otherwise if set to `ProcessThreadGroup.MAIN_THREAD` it will process on
      * the main thread. If there is not a parent or grandparent node set to something other than
      * inherit, the node will belong to the default thread group. This default group will process on
      * the main thread and its group order is 0. During processing in a sub-thread, accessing most
@@ -866,7 +866,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * debug mode). Use `Object.call_deferred`, `call_thread_safe`, `call_deferred_thread_group` and
      * the likes in order to communicate from the thread groups to the main thread (or to other thread
      * groups). To better understand process thread groups, the idea is that any node set to any other
-     * value than `PROCESS_THREAD_GROUP_INHERIT` will include any child (and grandchild) nodes set to
+     * value than `ProcessThreadGroup.INHERIT` will include any child (and grandchild) nodes set to
      * inherit into its process thread group. This means that the processing of all the nodes in the
      * group will happen together, at the same time as the node including them.
      *
@@ -1162,8 +1162,8 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * (see `DuplicateFlags`). Internal nodes are not duplicated. Note: For nodes with a `Script`
      * attached, if `Object._init` has been defined with required parameters, the duplicated node will
      * not have a `Script`. Note: By default, this method will duplicate only properties marked for
-     * serialization (i.e. using `@GlobalScope.PROPERTY_USAGE_STORAGE`, or in GDScript,
-     * `@GDScript.@export`). If you want to duplicate all properties, use `DUPLICATE_INTERNAL_STATE`.
+     * serialization (i.e. using `PropertyUsageFlags.STORAGE`, or in GDScript, `@GDScript.@export`). If
+     * you want to duplicate all properties, use `DuplicateFlags.INTERNAL_STATE`.
      *
      * Generated from Godot docs: Node.duplicate
      */
@@ -1427,13 +1427,14 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * locally), sending additional arguments to the method called by the RPC. The call request will
      * only be received by nodes with the same `NodePath`, including the exact same `name`. Behavior
      * depends on the RPC configuration for the given `method` (see `rpc_config` and `@GDScript.@rpc`).
-     * By default, methods are not exposed to RPCs. May return `OK` if the call is successful,
-     * `ERR_INVALID_PARAMETER` if the arguments passed in the `method` do not match, `ERR_UNCONFIGURED`
-     * if the node's `multiplayer` cannot be fetched (such as when the node is not inside the tree),
-     * `ERR_CONNECTION_ERROR` if `multiplayer`'s connection is not available. Note: You can only safely
-     * use RPCs on clients after you received the `MultiplayerAPI.connected_to_server` signal from the
-     * `MultiplayerAPI`. You also need to keep track of the connection state, either by the
-     * `MultiplayerAPI` signals like `MultiplayerAPI.server_disconnected` or by checking
+     * By default, methods are not exposed to RPCs. May return `GodotError.OK` if the call is
+     * successful, `GodotError.ERR_INVALID_PARAMETER` if the arguments passed in the `method` do not
+     * match, `GodotError.ERR_UNCONFIGURED` if the node's `multiplayer` cannot be fetched (such as when
+     * the node is not inside the tree), `GodotError.ERR_CONNECTION_ERROR` if `multiplayer`'s
+     * connection is not available. Note: You can only safely use RPCs on clients after you received
+     * the `MultiplayerAPI.connected_to_server` signal from the `MultiplayerAPI`. You also need to keep
+     * track of the connection state, either by the `MultiplayerAPI` signals like
+     * `MultiplayerAPI.server_disconnected` or by checking
      * (`get_multiplayer().peer.get_connection_status() == CONNECTION_CONNECTED`).
      *
      * Generated from Godot docs: Node.rpc
@@ -1444,10 +1445,11 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Sends a `rpc` to a specific peer identified by `peer_id` (see
-     * `MultiplayerPeer.set_target_peer`). May return `OK` if the call is successful,
-     * `ERR_INVALID_PARAMETER` if the arguments passed in the `method` do not match, `ERR_UNCONFIGURED`
-     * if the node's `multiplayer` cannot be fetched (such as when the node is not inside the tree),
-     * `ERR_CONNECTION_ERROR` if `multiplayer`'s connection is not available.
+     * `MultiplayerPeer.set_target_peer`). May return `GodotError.OK` if the call is successful,
+     * `GodotError.ERR_INVALID_PARAMETER` if the arguments passed in the `method` do not match,
+     * `GodotError.ERR_UNCONFIGURED` if the node's `multiplayer` cannot be fetched (such as when the
+     * node is not inside the tree), `GodotError.ERR_CONNECTION_ERROR` if `multiplayer`'s connection is
+     * not available.
      *
      * Generated from Godot docs: Node.rpc_id
      */
@@ -1717,6 +1719,12 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         const val editorStateChanged: String = "editor_state_changed"
     }
 
+    /**
+     * Godot's `Node.ProcessMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Node.ProcessMode.<NAME>`).
+     *
+     * Generated from Godot docs: Node.ProcessMode
+     */
     @JvmInline
     value class ProcessMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1727,29 +1735,28 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
              */
             val INHERIT: ProcessMode get() = ProcessMode(0L)
             /**
-             * Processes when `SceneTree.paused` is `false`. This is the inverse of `PROCESS_MODE_WHEN_PAUSED`,
+             * Processes when `SceneTree.paused` is `false`. This is the inverse of `ProcessMode.WHEN_PAUSED`,
              * and the default for the root node.
              *
              * Generated from Godot docs: Node.PROCESS_MODE_PAUSABLE
              */
             val PAUSABLE: ProcessMode get() = ProcessMode(1L)
             /**
-             * Processes only when `SceneTree.paused` is `true`. This is the inverse of
-             * `PROCESS_MODE_PAUSABLE`.
+             * Processes only when `SceneTree.paused` is `true`. This is the inverse of `ProcessMode.PAUSABLE`.
              *
              * Generated from Godot docs: Node.PROCESS_MODE_WHEN_PAUSED
              */
             val WHEN_PAUSED: ProcessMode get() = ProcessMode(2L)
             /**
              * Always processes. Keeps processing, ignoring `SceneTree.paused`. This is the inverse of
-             * `PROCESS_MODE_DISABLED`.
+             * `ProcessMode.DISABLED`.
              *
              * Generated from Godot docs: Node.PROCESS_MODE_ALWAYS
              */
             val ALWAYS: ProcessMode get() = ProcessMode(3L)
             /**
              * Never processes. Completely disables processing, ignoring `SceneTree.paused`. This is the
-             * inverse of `PROCESS_MODE_ALWAYS`.
+             * inverse of `ProcessMode.ALWAYS`.
              *
              * Generated from Godot docs: Node.PROCESS_MODE_DISABLED
              */
@@ -1757,6 +1764,12 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `Node.ProcessThreadGroup` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Node.ProcessThreadGroup.<NAME>`).
+     *
+     * Generated from Godot docs: Node.ProcessThreadGroup
+     */
     @JvmInline
     value class ProcessThreadGroup(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1784,6 +1797,12 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `Node.ProcessThreadMessages` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Node.ProcessThreadMessages.<NAME>`).
+     *
+     * Generated from Godot docs: Node.ProcessThreadMessages
+     */
     @JvmInline
     value class ProcessThreadMessages(override val value: Long) : GodotEnumValue {
         infix fun or(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value or other.value)
@@ -1821,6 +1840,12 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `Node.PhysicsInterpolationMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Node.PhysicsInterpolationMode.<NAME>`).
+     *
+     * Generated from Godot docs: Node.PhysicsInterpolationMode
+     */
     @JvmInline
     value class PhysicsInterpolationMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1833,14 +1858,14 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
             val INHERIT: PhysicsInterpolationMode get() = PhysicsInterpolationMode(0L)
             /**
              * Enables physics interpolation for this node and for children set to
-             * `PHYSICS_INTERPOLATION_MODE_INHERIT`. This is the default for the root node.
+             * `PhysicsInterpolationMode.INHERIT`. This is the default for the root node.
              *
              * Generated from Godot docs: Node.PHYSICS_INTERPOLATION_MODE_ON
              */
             val ON: PhysicsInterpolationMode get() = PhysicsInterpolationMode(1L)
             /**
              * Disables physics interpolation for this node and for children set to
-             * `PHYSICS_INTERPOLATION_MODE_INHERIT`.
+             * `PhysicsInterpolationMode.INHERIT`.
              *
              * Generated from Godot docs: Node.PHYSICS_INTERPOLATION_MODE_OFF
              */
@@ -1848,12 +1873,18 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `Node.DuplicateFlags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Node.DuplicateFlags.<NAME>`).
+     *
+     * Generated from Godot docs: Node.DuplicateFlags
+     */
     @JvmInline
     value class DuplicateFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Duplicate the node's signal connections that are connected with the `Object.CONNECT_PERSIST`
-             * flag.
+             * Duplicate the node's signal connections that are connected with the
+             * `GodotObject.ConnectFlags.PERSIST` flag.
              *
              * Generated from Godot docs: Node.DUPLICATE_SIGNALS
              */
@@ -1866,7 +1897,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
             val GROUPS: DuplicateFlags get() = DuplicateFlags(2L)
             /**
              * Duplicate the node's script (also overriding the duplicated children's scripts, if combined with
-             * `DUPLICATE_USE_INSTANTIATION`).
+             * `DuplicateFlags.USE_INSTANTIATION`).
              *
              * Generated from Godot docs: Node.DUPLICATE_SCRIPTS
              */
@@ -1879,7 +1910,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
              */
             val USE_INSTANTIATION: DuplicateFlags get() = DuplicateFlags(8L)
             /**
-             * Duplicate also non-serializable variables (i.e. without `@GlobalScope.PROPERTY_USAGE_STORAGE`).
+             * Duplicate also non-serializable variables (i.e. without `PropertyUsageFlags.STORAGE`).
              *
              * Generated from Godot docs: Node.DUPLICATE_INTERNAL_STATE
              */
@@ -1893,6 +1924,12 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `Node.InternalMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Node.InternalMode.<NAME>`).
+     *
+     * Generated from Godot docs: Node.InternalMode
+     */
     @JvmInline
     value class InternalMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1918,6 +1955,12 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `Node.AutoTranslateMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Node.AutoTranslateMode.<NAME>`).
+     *
+     * Generated from Godot docs: Node.AutoTranslateMode
+     */
     @JvmInline
     value class AutoTranslateMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1929,16 +1972,16 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
              */
             val INHERIT: AutoTranslateMode get() = AutoTranslateMode(0L)
             /**
-             * Always automatically translate. This is the inverse of `AUTO_TRANSLATE_MODE_DISABLED`, and the
+             * Always automatically translate. This is the inverse of `AutoTranslateMode.DISABLED`, and the
              * default for the root node.
              *
              * Generated from Godot docs: Node.AUTO_TRANSLATE_MODE_ALWAYS
              */
             val ALWAYS: AutoTranslateMode get() = AutoTranslateMode(1L)
             /**
-             * Never automatically translate. This is the inverse of `AUTO_TRANSLATE_MODE_ALWAYS`. String
-             * parsing for translation template generation will be skipped for this node and children that are
-             * set to `AUTO_TRANSLATE_MODE_INHERIT`.
+             * Never automatically translate. This is the inverse of `AutoTranslateMode.ALWAYS`. String parsing
+             * for translation template generation will be skipped for this node and children that are set to
+             * `AutoTranslateMode.INHERIT`.
              *
              * Generated from Godot docs: Node.AUTO_TRANSLATE_MODE_DISABLED
              */

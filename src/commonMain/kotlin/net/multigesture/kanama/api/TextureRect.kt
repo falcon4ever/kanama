@@ -133,6 +133,12 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
         return TextureRect.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
     }
 
+    /**
+     * Godot's `TextureRect.ExpandMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextureRect.ExpandMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextureRect.ExpandMode
+     */
     @JvmInline
     value class ExpandMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -158,7 +164,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
              */
             val FIT_WIDTH: ExpandMode get() = ExpandMode(2L)
             /**
-             * Same as `EXPAND_FIT_WIDTH`, but keeps texture's aspect ratio.
+             * Same as `ExpandMode.FIT_WIDTH`, but keeps texture's aspect ratio.
              *
              * Generated from Godot docs: TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
              */
@@ -171,7 +177,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
              */
             val FIT_HEIGHT: ExpandMode get() = ExpandMode(4L)
             /**
-             * Same as `EXPAND_FIT_HEIGHT`, but keeps texture's aspect ratio.
+             * Same as `ExpandMode.FIT_HEIGHT`, but keeps texture's aspect ratio.
              *
              * Generated from Godot docs: TextureRect.EXPAND_FIT_HEIGHT_PROPORTIONAL
              */
@@ -179,6 +185,12 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `TextureRect.StretchMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextureRect.StretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextureRect.StretchMode
+     */
     @JvmInline
     value class StretchMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -189,7 +201,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
              */
             val SCALE: StretchMode get() = StretchMode(0L)
             /**
-             * Tile inside the node's bounding rectangle. Note: `STRETCH_TILE` mode is not supported for
+             * Tile inside the node's bounding rectangle. Note: `StretchMode.TILE` mode is not supported for
              * `texture` set to an `AtlasTexture` with non-zero `AtlasTexture.margin`.
              *
              * Generated from Godot docs: TextureRect.STRETCH_TILE

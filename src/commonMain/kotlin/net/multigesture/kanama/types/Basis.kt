@@ -174,7 +174,7 @@ data class Basis(
    * angle around the `y` axis (yaw); - The `Vector3.z` contains the angle around the `z` axis
    * (roll). The order of each consecutive rotation can be changed with `order` (see `EulerOrder`
    * constants). In Godot, Euler angles always use intrinsic order. By default, the intrinsic YXZ
-   * convention is used (`EULER_ORDER_YXZ`): since we are decomposing, local Z (roll) is calculated
+   * convention is used (`EulerOrder.YXZ`): since we are decomposing, local Z (roll) is calculated
    * first, then local X (pitch), and lastly local Y (yaw). When using the opposite method
    * `from_euler` to compose a rotation, this order is reversed. Note: For this method to return
    * correctly, the basis needs to be orthonormal (see `orthonormalized`). Note: Euler angles are

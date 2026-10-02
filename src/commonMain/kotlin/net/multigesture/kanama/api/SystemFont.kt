@@ -249,7 +249,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     /**
      * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
      * kerning for smaller font sizes, at the cost of memory usage and font rasterization speed. Use
-     * `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font size.
+     * `TextServer.SubpixelPositioning.AUTO` to automatically enable it based on the font size.
      *
      * Generated from Godot docs: SystemFont.set_subpixel_positioning
      */
@@ -261,7 +261,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     /**
      * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
      * kerning for smaller font sizes, at the cost of memory usage and font rasterization speed. Use
-     * `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font size.
+     * `TextServer.SubpixelPositioning.AUTO` to automatically enable it based on the font size.
      *
      * Generated from Godot docs: SystemFont.get_subpixel_positioning
      */

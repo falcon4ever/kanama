@@ -58,11 +58,11 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * If not `DOPPLER_TRACKING_DISABLED`, this listener will simulate the Doppler effect
+     * If not `DopplerTracking.DISABLED`, this listener will simulate the Doppler effect
      * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
      * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
      * `AudioStreamPlayer3D.doppler_tracking` is not set to
-     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     * `AudioStreamPlayer3D.DopplerTracking.DISABLED`.
      *
      * Generated from Godot docs: AudioListener3D.set_doppler_tracking
      */
@@ -71,11 +71,11 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * If not `DOPPLER_TRACKING_DISABLED`, this listener will simulate the Doppler effect
+     * If not `DopplerTracking.DISABLED`, this listener will simulate the Doppler effect
      * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
      * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
      * `AudioStreamPlayer3D.doppler_tracking` is not set to
-     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     * `AudioStreamPlayer3D.DopplerTracking.DISABLED`.
      *
      * Generated from Godot docs: AudioListener3D.get_doppler_tracking
      */
@@ -83,6 +83,12 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
         return AudioListener3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment))
     }
 
+    /**
+     * Godot's `AudioListener3D.DopplerTracking` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`AudioListener3D.DopplerTracking.<NAME>`).
+     *
+     * Generated from Godot docs: AudioListener3D.DopplerTracking
+     */
     @JvmInline
     value class DopplerTracking(override val value: Long) : GodotEnumValue {
         companion object {

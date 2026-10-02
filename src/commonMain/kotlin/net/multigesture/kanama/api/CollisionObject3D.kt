@@ -165,7 +165,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
+     * Defines the behavior in physics when `Node.process_mode` is set to `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: CollisionObject3D.set_disable_mode
      */
@@ -174,7 +174,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
+     * Defines the behavior in physics when `Node.process_mode` is set to `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: CollisionObject3D.get_disable_mode
      */
@@ -376,11 +376,17 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
         const val mouseExited: String = "mouse_exited"
     }
 
+    /**
+     * Godot's `CollisionObject3D.DisableMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CollisionObject3D.DisableMode.<NAME>`).
+     *
+     * Generated from Godot docs: CollisionObject3D.DisableMode
+     */
     @JvmInline
     value class DisableMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, remove from the physics
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, remove from the physics
              * simulation to stop all physics interactions with this `CollisionObject3D`. Automatically
              * re-added to the physics simulation when the `Node` is processed again.
              *
@@ -388,7 +394,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
              */
             val REMOVE: DisableMode get() = DisableMode(0L)
             /**
-             * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, make the body static. Doesn't
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, make the body static. Doesn't
              * affect `Area3D`. `PhysicsBody3D` can't be affected by forces or other bodies while static.
              * Automatically set `PhysicsBody3D` back to its original mode when the `Node` is processed again.
              *
@@ -396,7 +402,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
              */
             val MAKE_STATIC: DisableMode get() = DisableMode(1L)
             /**
-             * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, do not affect the physics
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, do not affect the physics
              * simulation.
              *
              * Generated from Godot docs: CollisionObject3D.DISABLE_MODE_KEEP_ACTIVE

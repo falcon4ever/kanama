@@ -44,6 +44,13 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
     }
 
+    /**
+     * Godot's `EditorScenePostImportPlugin.InternalImportCategory` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`EditorScenePostImportPlugin.InternalImportCategory.<NAME>`).
+     *
+     * Generated from Godot docs: EditorScenePostImportPlugin.InternalImportCategory
+     */
     @JvmInline
     value class InternalImportCategory(override val value: Long) : GodotEnumValue {
         companion object {

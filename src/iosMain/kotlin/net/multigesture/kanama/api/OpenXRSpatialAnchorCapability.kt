@@ -63,6 +63,13 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
         ObjectCalls.ptrcallWithRIDObjectListTwoObjectArgs(doEntityUpdateBind, segment, spatialContext, componentData, nextSnapshotCreate?.requireOpenHandle() ?: MemorySegment.NULL, nextSnapshotQuery?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
+    /**
+     * Godot's `OpenXRSpatialAnchorCapability.PersistenceScope` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`OpenXRSpatialAnchorCapability.PersistenceScope.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRSpatialAnchorCapability.PersistenceScope
+     */
     value class PersistenceScope(override val value: Long) : GodotEnumValue {
         companion object {
             val SYSTEM_MANAGED: PersistenceScope get() = PersistenceScope(1L)

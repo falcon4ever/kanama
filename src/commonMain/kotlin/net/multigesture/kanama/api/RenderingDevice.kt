@@ -20,12 +20,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Creates a new texture. It can be accessed with the RID that is returned. Once finished with your
      * RID, you will want to free the RID using the RenderingDevice's `free_rid` method. Note: `data`
-     * takes an `Array` of `PackedByteArray`s. For `TEXTURE_TYPE_1D`, `TEXTURE_TYPE_2D`, and
-     * `TEXTURE_TYPE_3D` types, this array should only have one element, a `PackedByteArray` containing
-     * all the data for the texture. For `_ARRAY` and `_CUBE` types, the length should be the same as
-     * the number of `RDTextureFormat.array_layers` in `format`. Note: Not to be confused with
-     * `RenderingServer.texture_2d_create`, which creates the Godot-specific `Texture2D` resource as
-     * opposed to the graphics API's own texture type.
+     * takes an `Array` of `PackedByteArray`s. For `TextureType.TYPE_1D`, `TextureType.TYPE_2D`, and
+     * `TextureType.TYPE_3D` types, this array should only have one element, a `PackedByteArray`
+     * containing all the data for the texture. For `_ARRAY` and `_CUBE` types, the length should be
+     * the same as the number of `RDTextureFormat.array_layers` in `format`. Note: Not to be confused
+     * with `RenderingServer.texture_2d_create`, which creates the Godot-specific `Texture2D` resource
+     * as opposed to the graphics API's own texture type.
      *
      * Generated from Godot docs: RenderingDevice.texture_create
      */
@@ -72,12 +72,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Updates texture data with new data, replacing the previous data in place. The updated texture
      * data must have the same dimensions and format. For 2D textures (which only have one layer),
-     * `layer` must be `0`. Returns `@GlobalScope.OK` if the update was successful,
-     * `@GlobalScope.ERR_INVALID_PARAMETER` otherwise. Note: Updating textures is forbidden during
+     * `layer` must be `0`. Returns `GodotError.OK` if the update was successful,
+     * `GodotError.ERR_INVALID_PARAMETER` otherwise. Note: Updating textures is forbidden during
      * creation of a draw or compute list. Note: The existing `texture` can't be updated while a draw
      * list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized
-     * (and that the color/depth texture using it is not set to `FINAL_ACTION_CONTINUE`) to update this
-     * texture. Note: The existing `texture` requires the `TEXTURE_USAGE_CAN_UPDATE_BIT` to be
+     * (and that the color/depth texture using it is not set to `FinalAction.CONTINUE`) to update this
+     * texture. Note: The existing `texture` requires the `TextureUsageBits.CAN_UPDATE_BIT` to be
      * updatable.
      *
      * Generated from Godot docs: RenderingDevice.texture_update
@@ -90,10 +90,10 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Returns the `texture` data for the specified `layer` as raw binary data. For 2D textures (which
      * only have one layer), `layer` must be `0`. Note: `texture` can't be retrieved while a draw list
      * that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and
-     * that the color/depth texture using it is not set to `FINAL_ACTION_CONTINUE`) to retrieve this
+     * that the color/depth texture using it is not set to `FinalAction.CONTINUE`) to retrieve this
      * texture. Otherwise, an error is printed and an empty `PackedByteArray` is returned. Note:
-     * `texture` requires the `TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be retrieved. Otherwise, an error is
-     * printed and an empty `PackedByteArray` is returned. Note: This method will block the GPU from
+     * `texture` requires the `TextureUsageBits.CAN_COPY_FROM_BIT` to be retrieved. Otherwise, an error
+     * is printed and an empty `PackedByteArray` is returned. Note: This method will block the GPU from
      * working until the data is retrieved. Refer to `texture_get_data_async` for an alternative that
      * returns the data in more performant way.
      *
@@ -177,16 +177,16 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * coordinates. For 2-dimensional textures, `from_pos` and `to_pos` must have a Z axis of `0`, and
      * `size` must have a Z axis of `1`. Source and destination mipmaps/layers must also be specified,
      * with these parameters being `0` for textures without mipmaps or single-layer textures. Returns
-     * `@GlobalScope.OK` if the texture copy was successful or `@GlobalScope.ERR_INVALID_PARAMETER`
+     * `GodotError.OK` if the texture copy was successful or `GodotError.ERR_INVALID_PARAMETER`
      * otherwise. Note: `from_texture` texture can't be copied while a draw list that uses it as part
      * of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth
-     * texture using it is not set to `FINAL_ACTION_CONTINUE`) to copy this texture. Note:
-     * `from_texture` texture requires the `TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be retrieved. Note:
+     * texture using it is not set to `FinalAction.CONTINUE`) to copy this texture. Note:
+     * `from_texture` texture requires the `TextureUsageBits.CAN_COPY_FROM_BIT` to be retrieved. Note:
      * `to_texture` can't be copied while a draw list that uses it as part of a framebuffer is being
      * created. Ensure the draw list is finalized (and that the color/depth texture using it is not set
-     * to `FINAL_ACTION_CONTINUE`) to copy this texture. Note: `to_texture` requires the
-     * `TEXTURE_USAGE_CAN_COPY_TO_BIT` to be retrieved. Note: `from_texture` and `to_texture` must be
-     * of the same type (color or depth).
+     * to `FinalAction.CONTINUE`) to copy this texture. Note: `to_texture` requires the
+     * `TextureUsageBits.CAN_COPY_TO_BIT` to be retrieved. Note: `from_texture` and `to_texture` must
+     * be of the same type (color or depth).
      *
      * Generated from Godot docs: RenderingDevice.texture_copy
      */
@@ -202,7 +202,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * by design), `base_layer` must be `0` and `layer_count` must be `1`. Note: `texture` can't be
      * cleared while a draw list that uses it as part of a framebuffer is being created. Ensure the
      * draw list is finalized (and that the color/depth texture using it is not set to
-     * `FINAL_ACTION_CONTINUE`) to clear this texture.
+     * `FinalAction.CONTINUE`) to clear this texture.
      *
      * Generated from Godot docs: RenderingDevice.texture_clear
      */
@@ -212,18 +212,18 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Resolves the `from_texture` texture onto `to_texture` with multisample antialiasing enabled.
-     * This must be used when rendering a framebuffer for MSAA to work. Returns `@GlobalScope.OK` if
-     * successful, `@GlobalScope.ERR_INVALID_PARAMETER` otherwise. Note: `from_texture` and
-     * `to_texture` textures must have the same dimension, format and type (color or depth). Note:
-     * `from_texture` can't be copied while a draw list that uses it as part of a framebuffer is being
-     * created. Ensure the draw list is finalized (and that the color/depth texture using it is not set
-     * to `FINAL_ACTION_CONTINUE`) to resolve this texture. Note: `from_texture` requires the
-     * `TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be retrieved. Note: `from_texture` must be multisampled and
-     * must also be 2D (or a slice of a 3D/cubemap texture). Note: `to_texture` can't be copied while a
-     * draw list that uses it as part of a framebuffer is being created. Ensure the draw list is
-     * finalized (and that the color/depth texture using it is not set to `FINAL_ACTION_CONTINUE`) to
-     * resolve this texture. Note: `to_texture` texture requires the `TEXTURE_USAGE_CAN_COPY_TO_BIT` to
-     * be retrieved. Note: `to_texture` texture must not be multisampled and must also be 2D (or a
+     * This must be used when rendering a framebuffer for MSAA to work. Returns `GodotError.OK` if
+     * successful, `GodotError.ERR_INVALID_PARAMETER` otherwise. Note: `from_texture` and `to_texture`
+     * textures must have the same dimension, format and type (color or depth). Note: `from_texture`
+     * can't be copied while a draw list that uses it as part of a framebuffer is being created. Ensure
+     * the draw list is finalized (and that the color/depth texture using it is not set to
+     * `FinalAction.CONTINUE`) to resolve this texture. Note: `from_texture` requires the
+     * `TextureUsageBits.CAN_COPY_FROM_BIT` to be retrieved. Note: `from_texture` must be multisampled
+     * and must also be 2D (or a slice of a 3D/cubemap texture). Note: `to_texture` can't be copied
+     * while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list
+     * is finalized (and that the color/depth texture using it is not set to `FinalAction.CONTINUE`) to
+     * resolve this texture. Note: `to_texture` texture requires the `TextureUsageBits.CAN_COPY_TO_BIT`
+     * to be retrieved. Note: `to_texture` texture must not be multisampled and must also be 2D (or a
      * slice of a 3D/cubemap texture).
      *
      * Generated from Godot docs: RenderingDevice.texture_resolve_multisample
@@ -614,7 +614,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Returns the address of the given `buffer` which can be passed to shaders in any way to access
      * underlying data. Buffer must have been created with this feature enabled. Note: You must check
      * that the GPU supports this functionality by calling `has_feature` with
-     * `SUPPORTS_BUFFER_DEVICE_ADDRESS` as a parameter.
+     * `Features.BUFFER_DEVICE_ADDRESS` as a parameter.
      *
      * Generated from Godot docs: RenderingDevice.buffer_get_device_address
      */
@@ -867,7 +867,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Sets blend constants for the specified `draw_list` to `color`. Blend constants are used only if
-     * the graphics pipeline is created with `DYNAMIC_STATE_BLEND_CONSTANTS` flag set.
+     * the graphics pipeline is created with `PipelineDynamicStateFlags.BLEND_CONSTANTS` flag set.
      *
      * Generated from Godot docs: RenderingDevice.draw_list_set_blend_constants
      */
@@ -948,7 +948,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Submits `draw_list` for rendering on the GPU with the given parameters stored in the `buffer` at
      * `offset`. Parameters being integers: vertex count, instance count, first vertex, first instance.
      * And when using indices: index count, instance count, first index, vertex offset, first instance.
-     * Buffer must have been created with `STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT` flag.
+     * Buffer must have been created with `StorageBufferUsage.INDIRECT` flag.
      *
      * Generated from Godot docs: RenderingDevice.draw_list_draw_indirect
      */
@@ -1062,8 +1062,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Submits the compute list for processing on the GPU with the given group counts stored in the
-     * `buffer` at `offset`. Buffer must have been created with
-     * `STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT` flag.
+     * `buffer` at `offset`. Buffer must have been created with `StorageBufferUsage.INDIRECT` flag.
      *
      * Generated from Godot docs: RenderingDevice.compute_list_dispatch_indirect
      */
@@ -1549,6 +1548,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         return ObjectCalls.ptrcallWithUInt32ArgRetLong(getDeviceAllocsByObjectTypeBind, segment, type)
     }
 
+    /**
+     * Godot's `RenderingDevice.DeviceType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.DeviceType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.DeviceType
+     */
     @JvmInline
     value class DeviceType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1560,15 +1565,15 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
             val OTHER: DeviceType get() = DeviceType(0L)
             /**
              * Rendering device is an integrated GPU, which is typically (but not always) slower than dedicated
-             * GPUs (`DEVICE_TYPE_DISCRETE_GPU`). On Android and iOS, the rendering device type is always
-             * considered to be `DEVICE_TYPE_INTEGRATED_GPU`.
+             * GPUs (`DeviceType.DISCRETE_GPU`). On Android and iOS, the rendering device type is always
+             * considered to be `DeviceType.INTEGRATED_GPU`.
              *
              * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_INTEGRATED_GPU
              */
             val INTEGRATED_GPU: DeviceType get() = DeviceType(1L)
             /**
              * Rendering device is a dedicated GPU, which is typically (but not always) faster than integrated
-             * GPUs (`DEVICE_TYPE_INTEGRATED_GPU`).
+             * GPUs (`DeviceType.INTEGRATED_GPU`).
              *
              * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_DISCRETE_GPU
              */
@@ -1576,9 +1581,9 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
             /**
              * Rendering device is an emulated GPU in a virtual environment. This is typically much slower than
              * the host GPU, which means the expected performance level on a dedicated GPU will be roughly
-             * equivalent to `DEVICE_TYPE_INTEGRATED_GPU`. Virtual machine GPU passthrough (such as VFIO) will
-             * not report the device type as `DEVICE_TYPE_VIRTUAL_GPU`. Instead, the host GPU's device type
-             * will be reported as if the GPU was not emulated.
+             * equivalent to `DeviceType.INTEGRATED_GPU`. Virtual machine GPU passthrough (such as VFIO) will
+             * not report the device type as `DeviceType.VIRTUAL_GPU`. Instead, the host GPU's device type will
+             * be reported as if the GPU was not emulated.
              *
              * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_VIRTUAL_GPU
              */
@@ -1586,7 +1591,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
             /**
              * Rendering device is provided by software emulation (such as Lavapipe or SwiftShader
              * (https://github.com/google/swiftshader)). This is the slowest kind of rendering device
-             * available; it's typically much slower than `DEVICE_TYPE_INTEGRATED_GPU`.
+             * available; it's typically much slower than `DeviceType.INTEGRATED_GPU`.
              *
              * Generated from Godot docs: RenderingDevice.DEVICE_TYPE_CPU
              */
@@ -1600,6 +1605,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.DriverResource` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.DriverResource.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.DriverResource
+     */
     @JvmInline
     value class DriverResource(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1702,6 +1713,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.DataFormat` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.DataFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.DataFormat
+     */
     @JvmInline
     value class DataFormat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3201,6 +3218,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.BarrierMask` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingDevice.BarrierMask.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.BarrierMask
+     */
     @JvmInline
     value class BarrierMask(override val value: Long) : GodotEnumValue {
         infix fun or(other: BarrierMask): BarrierMask = BarrierMask(value or other.value)
@@ -3260,6 +3283,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.TextureType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.TextureType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.TextureType
+     */
     @JvmInline
     value class TextureType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3314,6 +3343,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.TextureSamples` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.TextureSamples.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.TextureSamples
+     */
     @JvmInline
     value class TextureSamples(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3369,6 +3404,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.TextureUsageBits` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.TextureUsageBits.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.TextureUsageBits
+     */
     @JvmInline
     value class TextureUsageBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: TextureUsageBits): TextureUsageBits = TextureUsageBits(value or other.value)
@@ -3457,6 +3499,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.TextureSwizzle` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.TextureSwizzle.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.TextureSwizzle
+     */
     @JvmInline
     value class TextureSwizzle(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3511,6 +3559,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.TextureSliceType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.TextureSliceType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.TextureSliceType
+     */
     @JvmInline
     value class TextureSliceType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3535,6 +3590,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.SamplerFilter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.SamplerFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.SamplerFilter
+     */
     @JvmInline
     value class SamplerFilter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3555,6 +3616,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.SamplerRepeatMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.SamplerRepeatMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.SamplerRepeatMode
+     */
     @JvmInline
     value class SamplerRepeatMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3603,47 +3671,54 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.SamplerBorderColor` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.SamplerBorderColor.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.SamplerBorderColor
+     */
     @JvmInline
     value class SamplerBorderColor(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Return a floating-point transparent black color when sampling outside the `[0.0, 1.0]` range.
-             * Only effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             * Only effective if the sampler repeat mode is `SamplerRepeatMode.CLAMP_TO_BORDER`.
              *
              * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
              */
             val FLOAT_TRANSPARENT_BLACK: SamplerBorderColor get() = SamplerBorderColor(0L)
             /**
              * Return an integer transparent black color when sampling outside the `[0.0, 1.0]` range. Only
-             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             * effective if the sampler repeat mode is `SamplerRepeatMode.CLAMP_TO_BORDER`.
              *
              * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_INT_TRANSPARENT_BLACK
              */
             val INT_TRANSPARENT_BLACK: SamplerBorderColor get() = SamplerBorderColor(1L)
             /**
              * Return a floating-point opaque black color when sampling outside the `[0.0, 1.0]` range. Only
-             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             * effective if the sampler repeat mode is `SamplerRepeatMode.CLAMP_TO_BORDER`.
              *
              * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_BLACK
              */
             val FLOAT_OPAQUE_BLACK: SamplerBorderColor get() = SamplerBorderColor(2L)
             /**
              * Return an integer opaque black color when sampling outside the `[0.0, 1.0]` range. Only
-             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             * effective if the sampler repeat mode is `SamplerRepeatMode.CLAMP_TO_BORDER`.
              *
              * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_INT_OPAQUE_BLACK
              */
             val INT_OPAQUE_BLACK: SamplerBorderColor get() = SamplerBorderColor(3L)
             /**
              * Return a floating-point opaque white color when sampling outside the `[0.0, 1.0]` range. Only
-             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             * effective if the sampler repeat mode is `SamplerRepeatMode.CLAMP_TO_BORDER`.
              *
              * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_WHITE
              */
             val FLOAT_OPAQUE_WHITE: SamplerBorderColor get() = SamplerBorderColor(4L)
             /**
              * Return an integer opaque white color when sampling outside the `[0.0, 1.0]` range. Only
-             * effective if the sampler repeat mode is `SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER`.
+             * effective if the sampler repeat mode is `SamplerRepeatMode.CLAMP_TO_BORDER`.
              *
              * Generated from Godot docs: RenderingDevice.SAMPLER_BORDER_COLOR_INT_OPAQUE_WHITE
              */
@@ -3657,6 +3732,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.VertexFrequency` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingDevice.VertexFrequency.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.VertexFrequency
+     */
     @JvmInline
     value class VertexFrequency(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3677,6 +3758,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.IndexBufferFormat` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.IndexBufferFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.IndexBufferFormat
+     */
     @JvmInline
     value class IndexBufferFormat(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3697,6 +3785,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.StorageBufferUsage` bitfield as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingDevice.StorageBufferUsage.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.StorageBufferUsage
+     */
     @JvmInline
     value class StorageBufferUsage(override val value: Long) : GodotEnumValue {
         infix fun or(other: StorageBufferUsage): StorageBufferUsage = StorageBufferUsage(value or other.value)
@@ -3714,6 +3809,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.BufferCreationBits` bitfield as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingDevice.BufferCreationBits.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.BufferCreationBits
+     */
     @JvmInline
     value class BufferCreationBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: BufferCreationBits): BufferCreationBits = BufferCreationBits(value or other.value)
@@ -3753,6 +3855,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.AccelerationStructureFlagBits` bitfield as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingDevice.AccelerationStructureFlagBits.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.AccelerationStructureFlagBits
+     */
     @JvmInline
     value class AccelerationStructureFlagBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: AccelerationStructureFlagBits): AccelerationStructureFlagBits = AccelerationStructureFlagBits(value or other.value)
@@ -3803,6 +3912,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.AccelerationStructureGeometryFlagBits` bitfield as a typed value:
+     * `.value` is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingDevice.AccelerationStructureGeometryFlagBits.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.AccelerationStructureGeometryFlagBits
+     */
     @JvmInline
     value class AccelerationStructureGeometryFlagBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: AccelerationStructureGeometryFlagBits): AccelerationStructureGeometryFlagBits = AccelerationStructureGeometryFlagBits(value or other.value)
@@ -3831,6 +3947,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.AccelerationStructureInstanceFlagBits` bitfield as a typed value:
+     * `.value` is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingDevice.AccelerationStructureInstanceFlagBits.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.AccelerationStructureInstanceFlagBits
+     */
     @JvmInline
     value class AccelerationStructureInstanceFlagBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: AccelerationStructureInstanceFlagBits): AccelerationStructureInstanceFlagBits = AccelerationStructureInstanceFlagBits(value or other.value)
@@ -3873,6 +3996,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.UniformType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.UniformType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.UniformType
+     */
     @JvmInline
     value class UniformType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -3969,6 +4098,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.RenderPrimitive` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingDevice.RenderPrimitive.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.RenderPrimitive
+     */
     @JvmInline
     value class RenderPrimitive(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4059,6 +4194,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.PolygonCullMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingDevice.PolygonCullMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.PolygonCullMode
+     */
     @JvmInline
     value class PolygonCullMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4083,6 +4224,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.PolygonFrontFace` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.PolygonFrontFace.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.PolygonFrontFace
+     */
     @JvmInline
     value class PolygonFrontFace(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4101,6 +4249,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.StencilOperation` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.StencilOperation.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.StencilOperation
+     */
     @JvmInline
     value class StencilOperation(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4165,11 +4320,17 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.CompareOperator` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingDevice.CompareOperator.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.CompareOperator
+     */
     @JvmInline
     value class CompareOperator(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * "Never" comparison (opposite of `COMPARE_OP_ALWAYS`).
+             * "Never" comparison (opposite of `CompareOperator.ALWAYS`).
              *
              * Generated from Godot docs: RenderingDevice.COMPARE_OP_NEVER
              */
@@ -4211,7 +4372,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              */
             val GREATER_OR_EQUAL: CompareOperator get() = CompareOperator(6L)
             /**
-             * "Always" comparison (opposite of `COMPARE_OP_NEVER`).
+             * "Always" comparison (opposite of `CompareOperator.NEVER`).
              *
              * Generated from Godot docs: RenderingDevice.COMPARE_OP_ALWAYS
              */
@@ -4225,11 +4386,17 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.LogicOperation` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.LogicOperation.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.LogicOperation
+     */
     @JvmInline
     value class LogicOperation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Clear logic operation (result is always `0`). See also `LOGIC_OP_SET`.
+             * Clear logic operation (result is always `0`). See also `LogicOperation.SET`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_CLEAR
              */
@@ -4242,26 +4409,27 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
             val AND: LogicOperation get() = LogicOperation(1L)
             /**
              * AND logic operation with the destination operand being inverted. See also
-             * `LOGIC_OP_AND_INVERTED`.
+             * `LogicOperation.AND_INVERTED`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_AND_REVERSE
              */
             val AND_REVERSE: LogicOperation get() = LogicOperation(2L)
             /**
-             * Copy logic operation (keeps the source value as-is). See also `LOGIC_OP_COPY_INVERTED` and
-             * `LOGIC_OP_NO_OP`.
+             * Copy logic operation (keeps the source value as-is). See also `LogicOperation.COPY_INVERTED` and
+             * `LogicOperation.NO_OP`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_COPY
              */
             val COPY: LogicOperation get() = LogicOperation(3L)
             /**
-             * AND logic operation with the source operand being inverted. See also `LOGIC_OP_AND_REVERSE`.
+             * AND logic operation with the source operand being inverted. See also
+             * `LogicOperation.AND_REVERSE`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_AND_INVERTED
              */
             val AND_INVERTED: LogicOperation get() = LogicOperation(4L)
             /**
-             * No-op logic operation (keeps the destination value as-is). See also `LOGIC_OP_COPY`.
+             * No-op logic operation (keeps the destination value as-is). See also `LogicOperation.COPY`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_NO_OP
              */
@@ -4297,19 +4465,20 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              */
             val INVERT: LogicOperation get() = LogicOperation(10L)
             /**
-             * OR logic operation with the destination operand being inverted. See also `LOGIC_OP_OR_REVERSE`.
+             * OR logic operation with the destination operand being inverted. See also
+             * `LogicOperation.OR_REVERSE`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_OR_REVERSE
              */
             val OR_REVERSE: LogicOperation get() = LogicOperation(11L)
             /**
-             * NOT logic operation (inverts the value). See also `LOGIC_OP_COPY`.
+             * NOT logic operation (inverts the value). See also `LogicOperation.COPY`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_COPY_INVERTED
              */
             val COPY_INVERTED: LogicOperation get() = LogicOperation(12L)
             /**
-             * OR logic operation with the source operand being inverted. See also `LOGIC_OP_OR_REVERSE`.
+             * OR logic operation with the source operand being inverted. See also `LogicOperation.OR_REVERSE`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_OR_INVERTED
              */
@@ -4321,7 +4490,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              */
             val NAND: LogicOperation get() = LogicOperation(14L)
             /**
-             * SET logic operation (result is always `1`). See also `LOGIC_OP_CLEAR`.
+             * SET logic operation (result is always `1`). See also `LogicOperation.CLEAR`.
              *
              * Generated from Godot docs: RenderingDevice.LOGIC_OP_SET
              */
@@ -4335,6 +4504,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.BlendFactor` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.BlendFactor.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.BlendFactor
+     */
     @JvmInline
     value class BlendFactor(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4468,6 +4643,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.BlendOperation` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.BlendOperation.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.BlendOperation
+     */
     @JvmInline
     value class BlendOperation(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4510,6 +4691,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.PipelineDynamicStateFlags` bitfield as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingDevice.PipelineDynamicStateFlags.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.PipelineDynamicStateFlags
+     */
     @JvmInline
     value class PipelineDynamicStateFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: PipelineDynamicStateFlags): PipelineDynamicStateFlags = PipelineDynamicStateFlags(value or other.value)
@@ -4543,6 +4731,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.InitialAction` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.InitialAction.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.InitialAction
+     */
     @JvmInline
     value class InitialAction(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4579,6 +4773,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.FinalAction` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.FinalAction.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.FinalAction
+     */
     @JvmInline
     value class FinalAction(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4606,6 +4806,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.ShaderStage` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.ShaderStage.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.ShaderStage
+     */
     @JvmInline
     value class ShaderStage(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4684,61 +4890,61 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              */
             val MAX: ShaderStage get() = ShaderStage(10L)
             /**
-             * Vertex shader stage bit (see also `SHADER_STAGE_VERTEX`).
+             * Vertex shader stage bit (see also `ShaderStage.VERTEX`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_VERTEX_BIT
              */
             val VERTEX_BIT: ShaderStage get() = ShaderStage(1L)
             /**
-             * Fragment shader stage bit (see also `SHADER_STAGE_FRAGMENT`).
+             * Fragment shader stage bit (see also `ShaderStage.FRAGMENT`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_FRAGMENT_BIT
              */
             val FRAGMENT_BIT: ShaderStage get() = ShaderStage(2L)
             /**
-             * Tessellation control shader stage bit (see also `SHADER_STAGE_TESSELATION_CONTROL`).
+             * Tessellation control shader stage bit (see also `ShaderStage.TESSELATION_CONTROL`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_TESSELATION_CONTROL_BIT
              */
             val TESSELATION_CONTROL_BIT: ShaderStage get() = ShaderStage(4L)
             /**
-             * Tessellation evaluation shader stage bit (see also `SHADER_STAGE_TESSELATION_EVALUATION`).
+             * Tessellation evaluation shader stage bit (see also `ShaderStage.TESSELATION_EVALUATION`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_TESSELATION_EVALUATION_BIT
              */
             val TESSELATION_EVALUATION_BIT: ShaderStage get() = ShaderStage(8L)
             /**
-             * Compute shader stage bit (see also `SHADER_STAGE_COMPUTE`).
+             * Compute shader stage bit (see also `ShaderStage.COMPUTE`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_COMPUTE_BIT
              */
             val COMPUTE_BIT: ShaderStage get() = ShaderStage(16L)
             /**
-             * Ray generation shader stage bit (see also `SHADER_STAGE_RAYGEN`).
+             * Ray generation shader stage bit (see also `ShaderStage.RAYGEN`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_RAYGEN_BIT
              */
             val RAYGEN_BIT: ShaderStage get() = ShaderStage(32L)
             /**
-             * Any hit shader stage bit (see also `SHADER_STAGE_ANY_HIT`).
+             * Any hit shader stage bit (see also `ShaderStage.ANY_HIT`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_ANY_HIT_BIT
              */
             val ANY_HIT_BIT: ShaderStage get() = ShaderStage(64L)
             /**
-             * Closest hit shader stage bit (see also `SHADER_STAGE_CLOSEST_HIT`).
+             * Closest hit shader stage bit (see also `ShaderStage.CLOSEST_HIT`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_CLOSEST_HIT_BIT
              */
             val CLOSEST_HIT_BIT: ShaderStage get() = ShaderStage(128L)
             /**
-             * Miss shader stage bit (see also `SHADER_STAGE_MISS`).
+             * Miss shader stage bit (see also `ShaderStage.MISS`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_MISS_BIT
              */
             val MISS_BIT: ShaderStage get() = ShaderStage(256L)
             /**
-             * Intersection shader stage bit (see also `SHADER_STAGE_INTERSECTION`).
+             * Intersection shader stage bit (see also `ShaderStage.INTERSECTION`).
              *
              * Generated from Godot docs: RenderingDevice.SHADER_STAGE_INTERSECTION_BIT
              */
@@ -4746,6 +4952,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.ShaderLanguage` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.ShaderLanguage.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.ShaderLanguage
+     */
     @JvmInline
     value class ShaderLanguage(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4766,6 +4978,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.PipelineSpecializationConstantType` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingDevice.PipelineSpecializationConstantType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.PipelineSpecializationConstantType
+     */
     @JvmInline
     value class PipelineSpecializationConstantType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4790,6 +5009,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.Features` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RenderingDevice.Features.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.Features
+     */
     @JvmInline
     value class Features(override val value: Long) : GodotEnumValue {
         companion object {
@@ -4838,6 +5063,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.Limit` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RenderingDevice.Limit.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.Limit
+     */
     @JvmInline
     value class Limit(override val value: Long) : GodotEnumValue {
         companion object {
@@ -5088,6 +5319,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.MemoryType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.MemoryType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.MemoryType
+     */
     @JvmInline
     value class MemoryType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -5104,8 +5341,8 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              */
             val BUFFERS: MemoryType get() = MemoryType(1L)
             /**
-             * Total memory taken. This is greater than the sum of `MEMORY_TEXTURES` and `MEMORY_BUFFERS`, as
-             * it also includes miscellaneous memory usage.
+             * Total memory taken. This is greater than the sum of `MemoryType.TEXTURES` and
+             * `MemoryType.BUFFERS`, as it also includes miscellaneous memory usage.
              *
              * Generated from Godot docs: RenderingDevice.MEMORY_TOTAL
              */
@@ -5113,6 +5350,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.BreadcrumbMarker` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingDevice.BreadcrumbMarker.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.BreadcrumbMarker
+     */
     @JvmInline
     value class BreadcrumbMarker(override val value: Long) : GodotEnumValue {
         companion object {
@@ -5209,6 +5453,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         }
     }
 
+    /**
+     * Godot's `RenderingDevice.DrawFlags` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingDevice.DrawFlags.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingDevice.DrawFlags
+     */
     @JvmInline
     value class DrawFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: DrawFlags): DrawFlags = DrawFlags(value or other.value)

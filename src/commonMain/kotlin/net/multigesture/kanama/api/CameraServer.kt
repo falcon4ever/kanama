@@ -103,6 +103,12 @@ object CameraServer {
         const val cameraFeedsUpdated: String = "camera_feeds_updated"
     }
 
+    /**
+     * Godot's `CameraServer.FeedImage` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CameraServer.FeedImage.<NAME>`).
+     *
+     * Generated from Godot docs: CameraServer.FeedImage
+     */
     @JvmInline
     value class FeedImage(override val value: Long) : GodotEnumValue {
         companion object {

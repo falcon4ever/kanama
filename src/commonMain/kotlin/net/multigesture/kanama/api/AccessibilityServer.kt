@@ -408,7 +408,7 @@ object AccessibilityServer {
 
     /**
      * Adds support for a custom accessibility action. `action_id` is passed as an argument to the
-     * callback of `ACTION_CUSTOM` action.
+     * callback of `AccessibilityAction.CUSTOM` action.
      *
      * Generated from Godot docs: AccessibilityServer.update_add_custom_action
      */
@@ -789,6 +789,13 @@ object AccessibilityServer {
         ObjectCalls.ptrcallWithRIDAndColorArg(updateSetForegroundColorBind, singleton, id, color)
     }
 
+    /**
+     * Godot's `AccessibilityServer.AccessibilityRole` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityRole.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityRole
+     */
     @JvmInline
     value class AccessibilityRole(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1085,6 +1092,13 @@ object AccessibilityServer {
         }
     }
 
+    /**
+     * Godot's `AccessibilityServer.AccessibilityPopupType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityPopupType.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityPopupType
+     */
     @JvmInline
     value class AccessibilityPopupType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1115,6 +1129,13 @@ object AccessibilityServer {
         }
     }
 
+    /**
+     * Godot's `AccessibilityServer.AccessibilityFlags` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityFlags.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityFlags
+     */
     @JvmInline
     value class AccessibilityFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1181,6 +1202,13 @@ object AccessibilityServer {
         }
     }
 
+    /**
+     * Godot's `AccessibilityServer.AccessibilityAction` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityAction.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityAction
+     */
     @JvmInline
     value class AccessibilityAction(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1330,6 +1358,13 @@ object AccessibilityServer {
         }
     }
 
+    /**
+     * Godot's `AccessibilityServer.AccessibilityLiveMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityLiveMode.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityLiveMode
+     */
     @JvmInline
     value class AccessibilityLiveMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1356,6 +1391,13 @@ object AccessibilityServer {
         }
     }
 
+    /**
+     * Godot's `AccessibilityServer.AccessibilityScrollUnit` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityScrollUnit.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityScrollUnit
+     */
     @JvmInline
     value class AccessibilityScrollUnit(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1374,6 +1416,13 @@ object AccessibilityServer {
         }
     }
 
+    /**
+     * Godot's `AccessibilityServer.AccessibilityScrollHint` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityScrollHint.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityScrollHint
+     */
     @JvmInline
     value class AccessibilityScrollHint(override val value: Long) : GodotEnumValue {
         companion object {

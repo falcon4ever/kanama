@@ -953,7 +953,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The sphere's radius if `emission_shape` is set to `EMISSION_SHAPE_SPHERE`.
+     * The sphere's radius if `emission_shape` is set to `EmissionShape.SPHERE`.
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_sphere_radius
      */
@@ -962,7 +962,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The sphere's radius if `emission_shape` is set to `EMISSION_SHAPE_SPHERE`.
+     * The sphere's radius if `emission_shape` is set to `EmissionShape.SPHERE`.
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_sphere_radius
      */
@@ -971,7 +971,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The rectangle's extents if `emission_shape` is set to `EMISSION_SHAPE_RECTANGLE`.
+     * The rectangle's extents if `emission_shape` is set to `EmissionShape.RECTANGLE`.
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_rect_extents
      */
@@ -980,7 +980,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The rectangle's extents if `emission_shape` is set to `EMISSION_SHAPE_RECTANGLE`.
+     * The rectangle's extents if `emission_shape` is set to `EmissionShape.RECTANGLE`.
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_rect_extents
      */
@@ -989,8 +989,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the initial positions to spawn particles when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_points
      */
@@ -999,8 +999,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the initial positions to spawn particles when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the initial positions to spawn particles when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_points
      */
@@ -1009,7 +1009,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the direction the particles will be emitted in when using `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_normals
      */
@@ -1018,7 +1018,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the direction the particles will be emitted in when using `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the direction the particles will be emitted in when using `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_normals
      */
@@ -1027,8 +1027,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the `Color`s to modulate particles by when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the `Color`s to modulate particles by when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_colors
      */
@@ -1037,8 +1037,8 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the `Color`s to modulate particles by when using `EMISSION_SHAPE_POINTS` or
-     * `EMISSION_SHAPE_DIRECTED_POINTS`.
+     * Sets the `Color`s to modulate particles by when using `EmissionShape.POINTS` or
+     * `EmissionShape.DIRECTED_POINTS`.
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_colors
      */
@@ -1047,7 +1047,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The ring's inner radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     * The ring's inner radius if `emission_shape` is set to `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_ring_inner_radius
      */
@@ -1056,7 +1056,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The ring's inner radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     * The ring's inner radius if `emission_shape` is set to `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_ring_inner_radius
      */
@@ -1065,7 +1065,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The ring's outer radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     * The ring's outer radius if `emission_shape` is set to `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles2D.set_emission_ring_radius
      */
@@ -1074,7 +1074,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The ring's outer radius if `emission_shape` is set to `EMISSION_SHAPE_RING`.
+     * The ring's outer radius if `emission_shape` is set to `EmissionShape.RING`.
      *
      * Generated from Godot docs: CPUParticles2D.get_emission_ring_radius
      */
@@ -1174,6 +1174,12 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         const val finished: String = "finished"
     }
 
+    /**
+     * Godot's `CPUParticles2D.DrawOrder` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CPUParticles2D.DrawOrder.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles2D.DrawOrder
+     */
     @JvmInline
     value class DrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1193,6 +1199,12 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `CPUParticles2D.Parameter` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CPUParticles2D.Parameter.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles2D.Parameter
+     */
     @JvmInline
     value class Parameter(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1286,6 +1298,12 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `CPUParticles2D.ParticleFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CPUParticles2D.ParticleFlags.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles2D.ParticleFlags
+     */
     @JvmInline
     value class ParticleFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -1316,6 +1334,12 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `CPUParticles2D.EmissionShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CPUParticles2D.EmissionShape.<NAME>`).
+     *
+     * Generated from Godot docs: CPUParticles2D.EmissionShape
+     */
     @JvmInline
     value class EmissionShape(override val value: Long) : GodotEnumValue {
         companion object {

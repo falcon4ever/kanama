@@ -58,6 +58,12 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
         ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendShapesBind, segment, weights)
     }
 
+    /**
+     * Godot's `XRFaceTracker.BlendShapeEntry` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRFaceTracker.BlendShapeEntry.<NAME>`).
+     *
+     * Generated from Godot docs: XRFaceTracker.BlendShapeEntry
+     */
     @JvmInline
     value class BlendShapeEntry(override val value: Long) : GodotEnumValue {
         companion object {

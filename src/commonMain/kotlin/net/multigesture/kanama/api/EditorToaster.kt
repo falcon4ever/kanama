@@ -20,6 +20,12 @@ class EditorToaster(handle: GodotHandle) : HBoxContainer(handle) {
         ObjectCalls.ptrcallWithStringLongStringArgs(pushToastBind, segment, message, severity.value, tooltip)
     }
 
+    /**
+     * Godot's `EditorToaster.Severity` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`EditorToaster.Severity.<NAME>`).
+     *
+     * Generated from Godot docs: EditorToaster.Severity
+     */
     @JvmInline
     value class Severity(override val value: Long) : GodotEnumValue {
         companion object {

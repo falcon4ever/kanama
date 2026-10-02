@@ -180,9 +180,9 @@ object EditorInterface {
      * Returns the editor control responsible for main screen plugins and tools. Use it with plugins
      * that implement `EditorPlugin._has_main_screen`. Note: This node is a `VBoxContainer`, which
      * means that if you add a `Control` child to it, you need to set the child's
-     * `Control.size_flags_vertical` to `Control.SIZE_EXPAND_FILL` to make it use the full available
-     * space. Warning: Removing and freeing this node will render a part of the editor useless and may
-     * cause a crash.
+     * `Control.size_flags_vertical` to `Control.SizeFlags.EXPAND_FILL` to make it use the full
+     * available space. Warning: Removing and freeing this node will render a part of the editor
+     * useless and may cause a crash.
      *
      * Generated from Godot docs: EditorInterface.get_editor_main_screen
      */
@@ -697,7 +697,8 @@ object EditorInterface {
     }
 
     /**
-     * Saves the currently active scene. Returns either `OK` or `ERR_CANT_CREATE`.
+     * Saves the currently active scene. Returns either `GodotError.OK` or
+     * `GodotError.ERR_CANT_CREATE`.
      *
      * Generated from Godot docs: EditorInterface.save_scene
      */
@@ -727,8 +728,8 @@ object EditorInterface {
     }
 
     /**
-     * Closes the currently active scene, discarding any pending changes in the process. Returns `OK`
-     * on success or `ERR_DOES_NOT_EXIST` if there is no scene to close.
+     * Closes the currently active scene, discarding any pending changes in the process. Returns
+     * `GodotError.OK` on success or `GodotError.ERR_DOES_NOT_EXIST` if there is no scene to close.
      *
      * Generated from Godot docs: EditorInterface.close_scene
      */

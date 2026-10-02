@@ -34,7 +34,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     /**
      * The `Sky`'s radiance map size. The higher the radiance map size, the more detailed the lighting
      * from the `Sky` will be. Note: Some hardware will have trouble with higher radiance sizes,
-     * especially `RADIANCE_SIZE_512` and above. Only use such high values on high-end hardware.
+     * especially `RadianceSize.SIZE_512` and above. Only use such high values on high-end hardware.
      *
      * Generated from Godot docs: Sky.set_radiance_size
      */
@@ -46,7 +46,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     /**
      * The `Sky`'s radiance map size. The higher the radiance map size, the more detailed the lighting
      * from the `Sky` will be. Note: Some hardware will have trouble with higher radiance sizes,
-     * especially `RADIANCE_SIZE_512` and above. Only use such high values on high-end hardware.
+     * especially `RadianceSize.SIZE_512` and above. Only use such high values on high-end hardware.
      *
      * Generated from Godot docs: Sky.get_radiance_size
      */
@@ -101,6 +101,12 @@ class Sky(handle: GodotHandle) : Resource(handle) {
         return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
+    /**
+     * Godot's `Sky.RadianceSize` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Sky.RadianceSize.<NAME>`).
+     *
+     * Generated from Godot docs: Sky.RadianceSize
+     */
     @JvmInline
     value class RadianceSize(override val value: Long) : GodotEnumValue {
         companion object {
@@ -155,21 +161,27 @@ class Sky(handle: GodotHandle) : Resource(handle) {
         }
     }
 
+    /**
+     * Godot's `Sky.ProcessMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Sky.ProcessMode.<NAME>`).
+     *
+     * Generated from Godot docs: Sky.ProcessMode
+     */
     @JvmInline
     value class ProcessMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Automatically selects the appropriate process mode based on your sky shader. If your shader uses
-             * `TIME` or `POSITION`, this will use `PROCESS_MODE_REALTIME`. If your shader uses any of the
-             * `LIGHT_*` variables or any custom uniforms, this uses `PROCESS_MODE_INCREMENTAL`. Otherwise,
-             * this defaults to `PROCESS_MODE_QUALITY`.
+             * `TIME` or `POSITION`, this will use `ProcessMode.REALTIME`. If your shader uses any of the
+             * `LIGHT_*` variables or any custom uniforms, this uses `ProcessMode.INCREMENTAL`. Otherwise, this
+             * defaults to `ProcessMode.QUALITY`.
              *
              * Generated from Godot docs: Sky.PROCESS_MODE_AUTOMATIC
              */
             val AUTOMATIC: ProcessMode get() = ProcessMode(0L)
             /**
              * Uses high quality importance sampling to process the radiance map. In general, this results in
-             * much higher quality than `PROCESS_MODE_REALTIME` but takes much longer to generate. This should
+             * much higher quality than `ProcessMode.REALTIME` but takes much longer to generate. This should
              * not be used if you plan on changing the sky at runtime. If you are finding that the reflection
              * is not blurry enough and is showing sparkles or fireflies, try increasing
              * `ProjectSettings.rendering/reflections/sky_reflections/ggx_samples`.
@@ -179,7 +191,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
             val QUALITY: ProcessMode get() = ProcessMode(1L)
             /**
              * Uses the same high quality importance sampling to process the radiance map as
-             * `PROCESS_MODE_QUALITY`, but updates over several frames. The number of frames is determined by
+             * `ProcessMode.QUALITY`, but updates over several frames. The number of frames is determined by
              * `ProjectSettings.rendering/reflections/sky_reflections/roughness_layers`. Use this when you need
              * highest quality radiance maps, but have a sky that updates slowly.
              *
@@ -192,7 +204,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
              * update the sky every frame, consider turning on
              * `ProjectSettings.rendering/reflections/sky_reflections/fast_filter_high_quality`. Note: The fast
              * filtering algorithm is limited to 256×256 cubemaps, so `radiance_size` must be set to
-             * `RADIANCE_SIZE_256`. Otherwise, a warning is printed and the overridden radiance size is
+             * `RadianceSize.SIZE_256`. Otherwise, a warning is printed and the overridden radiance size is
              * ignored.
              *
              * Generated from Godot docs: Sky.PROCESS_MODE_REALTIME

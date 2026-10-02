@@ -399,10 +399,10 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * Sets the render priority for the text. Higher priority objects will be sorted in front of lower
-     * priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED` (default
-     * value). Note: This only applies to sorting of transparent objects. This will not impact how
-     * transparent objects are sorted relative to opaque objects. This is because opaque objects are
-     * not sorted, while transparent objects are sorted from back to front (subject to priority).
+     * priority objects. Note: This only applies if `alpha_cut` is set to `AlphaCutMode.DISABLED`
+     * (default value). Note: This only applies to sorting of transparent objects. This will not impact
+     * how transparent objects are sorted relative to opaque objects. This is because opaque objects
+     * are not sorted, while transparent objects are sorted from back to front (subject to priority).
      *
      * Generated from Godot docs: Label3D.set_render_priority
      */
@@ -412,10 +412,10 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * Sets the render priority for the text. Higher priority objects will be sorted in front of lower
-     * priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED` (default
-     * value). Note: This only applies to sorting of transparent objects. This will not impact how
-     * transparent objects are sorted relative to opaque objects. This is because opaque objects are
-     * not sorted, while transparent objects are sorted from back to front (subject to priority).
+     * priority objects. Note: This only applies if `alpha_cut` is set to `AlphaCutMode.DISABLED`
+     * (default value). Note: This only applies to sorting of transparent objects. This will not impact
+     * how transparent objects are sorted relative to opaque objects. This is because opaque objects
+     * are not sorted, while transparent objects are sorted from back to front (subject to priority).
      *
      * Generated from Godot docs: Label3D.get_render_priority
      */
@@ -425,10 +425,11 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * Sets the render priority for the text outline. Higher priority objects will be sorted in front
-     * of lower priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED`
-     * (default value). Note: This only applies to sorting of transparent objects. This will not impact
-     * how transparent objects are sorted relative to opaque objects. This is because opaque objects
-     * are not sorted, while transparent objects are sorted from back to front (subject to priority).
+     * of lower priority objects. Note: This only applies if `alpha_cut` is set to
+     * `AlphaCutMode.DISABLED` (default value). Note: This only applies to sorting of transparent
+     * objects. This will not impact how transparent objects are sorted relative to opaque objects.
+     * This is because opaque objects are not sorted, while transparent objects are sorted from back to
+     * front (subject to priority).
      *
      * Generated from Godot docs: Label3D.set_outline_render_priority
      */
@@ -438,10 +439,11 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * Sets the render priority for the text outline. Higher priority objects will be sorted in front
-     * of lower priority objects. Note: This only applies if `alpha_cut` is set to `ALPHA_CUT_DISABLED`
-     * (default value). Note: This only applies to sorting of transparent objects. This will not impact
-     * how transparent objects are sorted relative to opaque objects. This is because opaque objects
-     * are not sorted, while transparent objects are sorted from back to front (subject to priority).
+     * of lower priority objects. Note: This only applies if `alpha_cut` is set to
+     * `AlphaCutMode.DISABLED` (default value). Note: This only applies to sorting of transparent
+     * objects. This will not impact how transparent objects are sorted relative to opaque objects.
+     * This is because opaque objects are not sorted, while transparent objects are sorted from back to
+     * front (subject to priority).
      *
      * Generated from Godot docs: Label3D.get_outline_render_priority
      */
@@ -528,7 +530,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text.
      *
@@ -539,7 +541,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text.
      *
@@ -550,8 +552,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Label3D.set_autowrap_trim_flags
      */
@@ -560,8 +562,8 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Label3D.get_autowrap_trim_flags
      */
@@ -797,6 +799,12 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
+    /**
+     * Godot's `Label3D.DrawFlags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Label3D.DrawFlags.<NAME>`).
+     *
+     * Generated from Godot docs: Label3D.DrawFlags
+     */
     @JvmInline
     value class DrawFlags(override val value: Long) : GodotEnumValue {
         companion object {
@@ -835,6 +843,12 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         }
     }
 
+    /**
+     * Godot's `Label3D.AlphaCutMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Label3D.AlphaCutMode.<NAME>`).
+     *
+     * Generated from Godot docs: Label3D.AlphaCutMode
+     */
     @JvmInline
     value class AlphaCutMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -861,10 +875,10 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
             val DISCARD: AlphaCutMode get() = AlphaCutMode(1L)
             /**
              * This mode draws fully opaque pixels in the depth prepass. This is slower than
-             * `ALPHA_CUT_DISABLED` or `ALPHA_CUT_DISCARD`, but it allows displaying translucent areas and
-             * smooth edges while using proper sorting. Note: When using text with overlapping glyphs (e.g.,
-             * cursive scripts), this mode might have transparency sorting issues between the main text and the
-             * outline.
+             * `AlphaCutMode.DISABLED` or `AlphaCutMode.DISCARD`, but it allows displaying translucent areas
+             * and smooth edges while using proper sorting. Note: When using text with overlapping glyphs
+             * (e.g., cursive scripts), this mode might have transparency sorting issues between the main text
+             * and the outline.
              *
              * Generated from Godot docs: Label3D.ALPHA_CUT_OPAQUE_PREPASS
              */

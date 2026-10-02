@@ -729,6 +729,12 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isMarginDrawingEnabledBind, segment)
     }
 
+    /**
+     * Godot's `Camera2D.AnchorMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Camera2D.AnchorMode.<NAME>`).
+     *
+     * Generated from Godot docs: Camera2D.AnchorMode
+     */
     @JvmInline
     value class AnchorMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -747,6 +753,13 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `Camera2D.Camera2DProcessCallback` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`Camera2D.Camera2DProcessCallback.<NAME>`).
+     *
+     * Generated from Godot docs: Camera2D.Camera2DProcessCallback
+     */
     @JvmInline
     value class Camera2DProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {

@@ -189,6 +189,12 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
         const val textureChanged: String = "texture_changed"
     }
 
+    /**
+     * Godot's `NinePatchRect.AxisStretchMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`NinePatchRect.AxisStretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: NinePatchRect.AxisStretchMode
+     */
     @JvmInline
     value class AxisStretchMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -209,7 +215,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
             /**
              * Repeats the center texture across the NinePatchRect, but will also stretch the texture to make
              * sure each tile is visible in full. This may cause the texture to be distorted, but less than
-             * `AXIS_STRETCH_MODE_STRETCH`. The texture must be seamless for this to work without displaying
+             * `AxisStretchMode.STRETCH`. The texture must be seamless for this to work without displaying
              * artifacts between edges.
              *
              * Generated from Godot docs: NinePatchRect.AXIS_STRETCH_MODE_TILE_FIT

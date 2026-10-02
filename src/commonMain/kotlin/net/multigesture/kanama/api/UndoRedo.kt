@@ -114,7 +114,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Marks the next "do" and "undo" operations to be processed even if the action gets merged with
-     * another in the `MERGE_ENDS` mode. Return to normal operation using
+     * another in the `MergeMode.ENDS` mode. Return to normal operation using
      * `end_force_keep_in_merge_ends`.
      *
      * Generated from Godot docs: UndoRedo.start_force_keep_in_merge_ends
@@ -125,7 +125,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Stops marking operations as to be processed even if the action gets merged with another in the
-     * `MERGE_ENDS` mode. See `start_force_keep_in_merge_ends`.
+     * `MergeMode.ENDS` mode. See `start_force_keep_in_merge_ends`.
      *
      * Generated from Godot docs: UndoRedo.end_force_keep_in_merge_ends
      */
@@ -252,6 +252,12 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
         const val versionChanged: String = "version_changed"
     }
 
+    /**
+     * Godot's `UndoRedo.MergeMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`UndoRedo.MergeMode.<NAME>`).
+     *
+     * Generated from Godot docs: UndoRedo.MergeMode
+     */
     @JvmInline
     value class MergeMode(override val value: Long) : GodotEnumValue {
         companion object {

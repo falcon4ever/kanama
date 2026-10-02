@@ -332,8 +332,8 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Multiplier for particle's collision radius. `1.0` corresponds to the size of the sprite. If
      * particles appear to sink into the ground when colliding, increase this value. If particles
      * appear to float when colliding, decrease this value. Only effective if
-     * `ParticleProcessMaterial.collision_mode` is `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
+     * `ParticleProcessMaterial.collision_mode` is `ParticleProcessMaterial.CollisionMode.RIGID` or
+     * `ParticleProcessMaterial.CollisionMode.HIDE_ON_CONTACT`. Note: Particles always have a spherical
      * collision shape.
      *
      * Generated from Godot docs: GPUParticles2D.set_collision_base_size
@@ -524,8 +524,8 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Multiplier for particle's collision radius. `1.0` corresponds to the size of the sprite. If
      * particles appear to sink into the ground when colliding, increase this value. If particles
      * appear to float when colliding, decrease this value. Only effective if
-     * `ParticleProcessMaterial.collision_mode` is `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
+     * `ParticleProcessMaterial.collision_mode` is `ParticleProcessMaterial.CollisionMode.RIGID` or
+     * `ParticleProcessMaterial.CollisionMode.HIDE_ON_CONTACT`. Note: Particles always have a spherical
      * collision shape.
      *
      * Generated from Godot docs: GPUParticles2D.get_collision_base_size
@@ -822,6 +822,12 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         const val finished: String = "finished"
     }
 
+    /**
+     * Godot's `GPUParticles2D.DrawOrder` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GPUParticles2D.DrawOrder.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles2D.DrawOrder
+     */
     @JvmInline
     value class DrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
@@ -848,6 +854,12 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         }
     }
 
+    /**
+     * Godot's `GPUParticles2D.EmitFlags` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GPUParticles2D.EmitFlags.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles2D.EmitFlags
+     */
     @JvmInline
     value class EmitFlags(override val value: Long) : GodotEnumValue {
         companion object {

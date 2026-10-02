@@ -382,7 +382,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
     /**
      * If `true`, changing the `file_mode` property will set the window title accordingly (e.g. setting
-     * `file_mode` to `FILE_MODE_OPEN_FILE` will change the window title to "Open a File").
+     * `file_mode` to `FileMode.OPEN_FILE` will change the window title to "Open a File").
      *
      * Generated from Godot docs: FileDialog.set_mode_overrides_title
      */
@@ -392,7 +392,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
     /**
      * If `true`, changing the `file_mode` property will set the window title accordingly (e.g. setting
-     * `file_mode` to `FILE_MODE_OPEN_FILE` will change the window title to "Open a File").
+     * `file_mode` to `FileMode.OPEN_FILE` will change the window title to "Open a File").
      *
      * Generated from Godot docs: FileDialog.is_mode_overriding_title
      */
@@ -524,8 +524,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
     /**
      * If `true`, and if supported by the current `DisplayServer`, OS native dialog will be used
-     * instead of custom one. Note: On Android, it is only supported when using `ACCESS_FILESYSTEM`.
-     * For access mode `ACCESS_RESOURCES` and `ACCESS_USERDATA`, the system will fall back to custom
+     * instead of custom one. Note: On Android, it is only supported when using `Access.FILESYSTEM`.
+     * For access mode `Access.RESOURCES` and `Access.USERDATA`, the system will fall back to custom
      * FileDialog. Note: On Linux and macOS, sandboxed apps always use native dialogs to access the
      * host file system. Note: On macOS, sandboxed apps will save security-scoped bookmarks to retain
      * access to the opened folders across multiple sessions. Use `OS.get_granted_permissions` to get a
@@ -541,8 +541,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
     /**
      * If `true`, and if supported by the current `DisplayServer`, OS native dialog will be used
-     * instead of custom one. Note: On Android, it is only supported when using `ACCESS_FILESYSTEM`.
-     * For access mode `ACCESS_RESOURCES` and `ACCESS_USERDATA`, the system will fall back to custom
+     * instead of custom one. Note: On Android, it is only supported when using `Access.FILESYSTEM`.
+     * For access mode `Access.RESOURCES` and `Access.USERDATA`, the system will fall back to custom
      * FileDialog. Note: On Linux and macOS, sandboxed apps always use native dialogs to access the
      * host file system. Note: On macOS, sandboxed apps will save security-scoped bookmarks to retain
      * access to the opened folders across multiple sessions. Use `OS.get_granted_permissions` to get a
@@ -610,6 +610,12 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         const val filenameFilterChanged: String = "filename_filter_changed"
     }
 
+    /**
+     * Godot's `FileDialog.FileMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`FileDialog.FileMode.<NAME>`).
+     *
+     * Generated from Godot docs: FileDialog.FileMode
+     */
     @JvmInline
     value class FileMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -646,6 +652,12 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         }
     }
 
+    /**
+     * Godot's `FileDialog.Access` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`FileDialog.Access.<NAME>`).
+     *
+     * Generated from Godot docs: FileDialog.Access
+     */
     @JvmInline
     value class Access(override val value: Long) : GodotEnumValue {
         companion object {
@@ -670,6 +682,12 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         }
     }
 
+    /**
+     * Godot's `FileDialog.DisplayMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`FileDialog.DisplayMode.<NAME>`).
+     *
+     * Generated from Godot docs: FileDialog.DisplayMode
+     */
     @JvmInline
     value class DisplayMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -688,6 +706,12 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         }
     }
 
+    /**
+     * Godot's `FileDialog.Customization` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`FileDialog.Customization.<NAME>`).
+     *
+     * Generated from Godot docs: FileDialog.Customization
+     */
     @JvmInline
     value class Customization(override val value: Long) : GodotEnumValue {
         companion object {
@@ -699,8 +723,8 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
              */
             val HIDDEN_FILES: Customization get() = Customization(0L)
             /**
-             * If enabled, shows the button for creating new directories (when using `FILE_MODE_OPEN_DIR`,
-             * `FILE_MODE_OPEN_ANY`, or `FILE_MODE_SAVE_FILE`). Equivalent to `folder_creation_enabled`.
+             * If enabled, shows the button for creating new directories (when using `FileMode.OPEN_DIR`,
+             * `FileMode.OPEN_ANY`, or `FileMode.SAVE_FILE`). Equivalent to `folder_creation_enabled`.
              *
              * Generated from Godot docs: FileDialog.CUSTOMIZATION_CREATE_FOLDER
              */
@@ -805,9 +829,9 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         }
 
         /**
-         * Sets the callback used by the `FileDialog` nodes to get a file icon, when `DISPLAY_LIST` mode is
-         * used. The callback should take a single `String` argument (file path), and return a `Texture2D`.
-         * If an invalid texture is returned, the `file` icon will be used instead.
+         * Sets the callback used by the `FileDialog` nodes to get a file icon, when `DisplayMode.LIST`
+         * mode is used. The callback should take a single `String` argument (file path), and return a
+         * `Texture2D`. If an invalid texture is returned, the `file` icon will be used instead.
          *
          * Generated from Godot docs: FileDialog.set_get_icon_callback
          */
@@ -816,11 +840,11 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         }
 
         /**
-         * Sets the callback used by the `FileDialog` nodes to get a file icon, when `DISPLAY_THUMBNAILS`
-         * mode is used. The callback should take a single `String` argument (file path), and return a
-         * `Texture2D`. If an invalid texture is returned, the `file_thumbnail` icon will be used instead.
-         * Thumbnails are usually more complex and may take a while to load. To avoid stalling the
-         * application, you can use `ImageTexture` to asynchronously create the thumbnail.
+         * Sets the callback used by the `FileDialog` nodes to get a file icon, when
+         * `DisplayMode.THUMBNAILS` mode is used. The callback should take a single `String` argument (file
+         * path), and return a `Texture2D`. If an invalid texture is returned, the `file_thumbnail` icon
+         * will be used instead. Thumbnails are usually more complex and may take a while to load. To avoid
+         * stalling the application, you can use `ImageTexture` to asynchronously create the thumbnail.
          *
          * Generated from Godot docs: FileDialog.set_get_thumbnail_callback
          */

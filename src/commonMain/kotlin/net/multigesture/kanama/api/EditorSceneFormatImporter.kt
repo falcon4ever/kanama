@@ -32,6 +32,13 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithLongStringVariantLongStringIntArgs(addImportOptionAdvancedBind, segment, type.value, name, defaultValue, hint.value, hintString, usageFlags)
     }
 
+    /**
+     * Godot's `EditorSceneFormatImporter.ImportFlags` bitfield as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`EditorSceneFormatImporter.ImportFlags.<NAME>`).
+     *
+     * Generated from Godot docs: EditorSceneFormatImporter.ImportFlags
+     */
     @JvmInline
     value class ImportFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: ImportFlags): ImportFlags = ImportFlags(value or other.value)

@@ -11,6 +11,13 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
     // No conservative instance methods emitted yet.
 
+    /**
+     * Godot's `ScriptLanguageExtension.LookupResultType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ScriptLanguageExtension.LookupResultType.<NAME>`).
+     *
+     * Generated from Godot docs: ScriptLanguageExtension.LookupResultType
+     */
     @JvmInline
     value class LookupResultType(override val value: Long) : GodotEnumValue {
         companion object {
@@ -29,6 +36,13 @@ class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
         }
     }
 
+    /**
+     * Godot's `ScriptLanguageExtension.CodeCompletionLocation` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`ScriptLanguageExtension.CodeCompletionLocation.<NAME>`).
+     *
+     * Generated from Godot docs: ScriptLanguageExtension.CodeCompletionLocation
+     */
     @JvmInline
     value class CodeCompletionLocation(override val value: Long) : GodotEnumValue {
         companion object {
@@ -66,6 +80,13 @@ class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
         }
     }
 
+    /**
+     * Godot's `ScriptLanguageExtension.CodeCompletionKind` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ScriptLanguageExtension.CodeCompletionKind.<NAME>`).
+     *
+     * Generated from Godot docs: ScriptLanguageExtension.CodeCompletionKind
+     */
     @JvmInline
     value class CodeCompletionKind(override val value: Long) : GodotEnumValue {
         companion object {

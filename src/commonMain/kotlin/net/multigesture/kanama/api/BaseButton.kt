@@ -318,6 +318,12 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         const val toggled: String = "toggled"
     }
 
+    /**
+     * Godot's `BaseButton.DrawMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`BaseButton.DrawMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseButton.DrawMode
+     */
     @JvmInline
     value class DrawMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -354,6 +360,12 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         }
     }
 
+    /**
+     * Godot's `BaseButton.ActionMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseButton.ActionMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseButton.ActionMode
+     */
     @JvmInline
     value class ActionMode(override val value: Long) : GodotEnumValue {
         companion object {

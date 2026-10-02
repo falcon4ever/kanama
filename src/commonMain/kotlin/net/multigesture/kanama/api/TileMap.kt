@@ -360,8 +360,8 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the TileMap's collision shapes. If set to `VISIBILITY_MODE_DEFAULT`, this depends
-     * on the show collision debug settings.
+     * Show or hide the TileMap's collision shapes. If set to `VisibilityMode.DEFAULT`, this depends on
+     * the show collision debug settings.
      *
      * Generated from Godot docs: TileMap.set_collision_visibility_mode
      */
@@ -370,8 +370,8 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the TileMap's collision shapes. If set to `VISIBILITY_MODE_DEFAULT`, this depends
-     * on the show collision debug settings.
+     * Show or hide the TileMap's collision shapes. If set to `VisibilityMode.DEFAULT`, this depends on
+     * the show collision debug settings.
      *
      * Generated from Godot docs: TileMap.get_collision_visibility_mode
      */
@@ -380,7 +380,7 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the TileMap's navigation meshes. If set to `VISIBILITY_MODE_DEFAULT`, this depends
+     * Show or hide the TileMap's navigation meshes. If set to `VisibilityMode.DEFAULT`, this depends
      * on the show navigation debug settings.
      *
      * Generated from Godot docs: TileMap.set_navigation_visibility_mode
@@ -390,7 +390,7 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the TileMap's navigation meshes. If set to `VISIBILITY_MODE_DEFAULT`, this depends
+     * Show or hide the TileMap's navigation meshes. If set to `VisibilityMode.DEFAULT`, this depends
      * on the show navigation debug settings.
      *
      * Generated from Godot docs: TileMap.get_navigation_visibility_mode
@@ -729,6 +729,12 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
         const val changed: String = "changed"
     }
 
+    /**
+     * Godot's `TileMap.VisibilityMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TileMap.VisibilityMode.<NAME>`).
+     *
+     * Generated from Godot docs: TileMap.VisibilityMode
+     */
     @JvmInline
     value class VisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -359,6 +359,12 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
         const val scrollEnded: String = "scroll_ended"
     }
 
+    /**
+     * Godot's `ScrollContainer.ScrollMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ScrollContainer.ScrollMode.<NAME>`).
+     *
+     * Generated from Godot docs: ScrollContainer.ScrollMode
+     */
     @JvmInline
     value class ScrollMode(override val value: Long) : GodotEnumValue {
         companion object {
@@ -388,7 +394,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
              */
             val SHOW_NEVER: ScrollMode get() = ScrollMode(3L)
             /**
-             * Combines `SCROLL_MODE_AUTO` and `SCROLL_MODE_SHOW_ALWAYS`. The scrollbar is only visible if
+             * Combines `ScrollMode.AUTO` and `ScrollMode.SHOW_ALWAYS`. The scrollbar is only visible if
              * necessary, but the content size is adjusted as if it was always visible. It's useful for
              * ensuring that content size stays the same regardless if the scrollbar is visible.
              *
@@ -396,7 +402,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
              */
             val RESERVE: ScrollMode get() = ScrollMode(4L)
             /**
-             * Behaves like `SCROLL_MODE_AUTO`, but makes the `ScrollContainer` report a minimum size based on
+             * Behaves like `ScrollMode.AUTO`, but makes the `ScrollContainer` report a minimum size based on
              * its content (limited by `Control.custom_maximum_size` when set on the corresponding axis). This
              * allows it to grow first and only start scrolling once constrained.
              *
@@ -406,6 +412,12 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
         }
     }
 
+    /**
+     * Godot's `ScrollContainer.ScrollHintMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ScrollContainer.ScrollHintMode.<NAME>`).
+     *
+     * Generated from Godot docs: ScrollContainer.ScrollHintMode
+     */
     @JvmInline
     value class ScrollHintMode(override val value: Long) : GodotEnumValue {
         companion object {

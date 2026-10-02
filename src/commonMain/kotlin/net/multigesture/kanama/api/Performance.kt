@@ -101,6 +101,12 @@ object Performance {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getCustomMonitorTypesBind, singleton)
     }
 
+    /**
+     * Godot's `Performance.Monitor` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Performance.Monitor.<NAME>`).
+     *
+     * Generated from Godot docs: Performance.Monitor
+     */
     @JvmInline
     value class Monitor(override val value: Long) : GodotEnumValue {
         companion object {
@@ -204,7 +210,7 @@ object Performance {
             /**
              * The amount of video memory used (texture and vertex memory combined, in bytes). Since this
              * metric also includes miscellaneous allocations, this value is always greater than the sum of
-             * `RENDER_TEXTURE_MEM_USED` and `RENDER_BUFFER_MEM_USED`. Lower is better.
+             * `Monitor.RENDER_TEXTURE_MEM_USED` and `Monitor.RENDER_BUFFER_MEM_USED`. Lower is better.
              *
              * Generated from Godot docs: Performance.RENDER_VIDEO_MEM_USED
              */
@@ -501,6 +507,12 @@ object Performance {
         }
     }
 
+    /**
+     * Godot's `Performance.MonitorType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Performance.MonitorType.<NAME>`).
+     *
+     * Generated from Godot docs: Performance.MonitorType
+     */
     @JvmInline
     value class MonitorType(override val value: Long) : GodotEnumValue {
         companion object {

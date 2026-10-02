@@ -163,6 +163,12 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
         return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, segment))
     }
 
+    /**
+     * Godot's `LightmapGIData.ShadowmaskMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`LightmapGIData.ShadowmaskMode.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGIData.ShadowmaskMode
+     */
     @JvmInline
     value class ShadowmaskMode(override val value: Long) : GodotEnumValue {
         companion object {

@@ -38,6 +38,12 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
         return BlitMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
     }
 
+    /**
+     * Godot's `BlitMaterial.BlendMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BlitMaterial.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: BlitMaterial.BlendMode
+     */
     @JvmInline
     value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
