@@ -252,6 +252,11 @@ python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" --markdown "$ROOT_DIR/docs/r
 stage "API wrapper generator report docs check"
 python3 "$ROOT_DIR/scripts/api_wrapper_generator_report.py" --markdown "$ROOT_DIR/docs/reference/generated/wrapper-generator-report.md" --check
 
+stage "enum migration table docs check (task 128 A)"
+# docs/reference/generated/enum-migration.md maps every pre-0.5 enum constant to its typed spelling,
+# through the generator's one naming function and the frozen prefix lock.
+python3 "$ROOT_DIR/scripts/migrate_enum_constants.py" --table "$ROOT_DIR/docs/reference/generated/enum-migration.md" --check
+
 stage "gates index docs check"
 # docs/reference/generated/gates.md is derived from this file's stage lines, the workflows and the
 # gate ledger (task 99); regenerate with the same command minus --check.
@@ -365,6 +370,13 @@ stage "no public member an expect lacks on an actual (task 117 D1)"
 # retired check_wrapper_parity.py, now against the expect (ObjectCalls excluded; its parity gate
 # above owns it).
 python3 "$ROOT_DIR/scripts/check_actual_public_surface.py"
+
+stage "typed Godot enums and required returns (task 128 A)"
+# Every enum/bitfield slot of the api tree uses its value class (no raw Long), a `meta: "required"`
+# object return is non-null and goes through requireGodotReturn (others stay nullable), no generated
+# top-level name shadows a Kotlin default import or a public Kanama type, and every emitted value name
+# is the naming function under the frozen prefix lock.
+python3 "$ROOT_DIR/scripts/check_typed_enums.py"
 
 stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, task 117 P2')"
 # A zero instance is the generator's static-method marker (NULL_SEGMENT for an `is_static`

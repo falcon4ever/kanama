@@ -7,6 +7,99 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Changed — typed Godot enums and required returns (task 128 A) — BREAKING
+
+- **Every Godot enum and bitfield is a `@JvmInline value class`** wrapping its `Long`: 764 class
+  enums (37 bitfields), 22 global enums (4 bitfields) and the 7 enums of the builtin value types —
+  **793 value classes** on Godot 4.7.2. A class enum nests in its class (`Node.ProcessMode`,
+  `BaseMaterial3D.Flags`, `GodotObject.ConnectFlags`, `Vector3.Axis`); a global enum is top-level in
+  `net.multigesture.kanama.api` under Godot's name. Every generated parameter, return and property
+  Godot types `enum::X` / `bitfield::X` uses the type, and so do the hand-written per-platform classes
+  (`Tween`, `ResourceLoader`, `FileAccess`, `DirAccess`, `InputEventKey`, `InputEventMouseButton`,
+  `AudioStreamPlayer`, `LightmapGI`, `SurfaceTool`, `ConfigFile`, `Engine`, ...). Default arguments are
+  the named constant (`transType: Tween.TransitionType = Tween.TransitionType.LINEAR`). The ABI is
+  unchanged: the same `ptrcall*Long*` helpers carry the raw value (no `ObjectCalls` helper added), and
+  the JVM erases a non-null value class to `long`.
+- **Four global enums are renamed** because Godot's name collides: `Error` → **`GodotError`** (Kotlin
+  imports its own `Error` into every file), `PropertyHint` → **`GodotPropertyHint`** (Kanama's
+  `annotations.PropertyHint` constants for `@ScriptProperty` stay), `Variant.Type` → **`VariantType`**
+  and `Variant.Operator` → **`VariantOperator`**. Kanama's runtime keeps its internal
+  `net.multigesture.kanama.binding.runtime.VariantType` marshalling enum; scripts use the
+  `net.multigesture.kanama.api.VariantType` one (the processor's generated registrars import the
+  runtime one explicitly, which wins over the same-package name).
+- **Value names drop the enum's common prefix**, by Godot's C# rule (`bindings_generator.cpp`
+  `_determine_enum_prefix` / `_apply_prefix_to_enum_constants`, ported exactly), keeping
+  SCREAMING_CASE: `Node.PROCESS_MODE_ALWAYS` → `Node.ProcessMode.ALWAYS`, `InputEventKey.KEY_W` →
+  `Key.W`, `Tween.TRANS_SINE` → `Tween.TransitionType.SINE`. A remainder that would start with a digit
+  keeps a word (`Key.KEY_0`); the 12 enums with no common prefix keep Godot's names
+  (`GodotError.OK`, `GodotError.ERR_FILE_NOT_FOUND`). 5,626 values, no duplicate, no digit start.
+  The prefix of each enum is **frozen** in `scripts/enum_prefix_lock.json` (generated; never edited
+  by hand): a later Godot adding a value never renames its siblings — a value without the frozen
+  prefix keeps its full Godot name.
+- **Raw values stay reachable:** `ProcessMode(3L)` builds any value, `.value` reads the `Long`, and
+  `toString()` is the value-class default (`ProcessMode(value=3)`). **Bitfields** add `or`, `and`,
+  `xor`, `inv()` and `in` (`contains`); Godot names no zero for most of them, so the empty set is
+  `X(0L)`. **Dynamic calls** (`call`, `get`, `set`, `ConfigFile.setValue`, Variant returns) still take
+  and return `Long`: pass `.value` there — a value class handed to an `Any?` argument arrives boxed.
+- **Clean break, no deprecated aliases.** Removed: every `const val` enum value on the wrapper
+  companions (non-enum class constants such as `Node.NOTIFICATION_READY` stay `const val`), the hand
+  subsets `InputEventKey.KEY_*`, `InputEventMouseButton.MOUSE_BUTTON_*` and
+  `PhysicsBody3D.BODY_AXIS_*` (use `Key.*`, `MouseButton.*`, `PhysicsServer3D.BodyAxis.*`), and
+  Kanama's own `GodotObject.CONNECT_DEFAULT` (Godot names no zero flag; the default is
+  `GodotObject.ConnectFlags(0L)`).
+- **`connect` returns `GodotError` and takes `GodotObject.ConnectFlags`:** `GodotObject.connect`,
+  `GodotSignal.connect(target, method[, flags])` and the lambda overloads take
+  `flags: GodotObject.ConnectFlags`; `GodotObject.connect` / `GodotSignal.connect` return `GodotError`
+  and `SignalConnection.error` is a `GodotError` (compare with `GodotError.OK`, not `0L`). The KSP
+  signal helpers (`connect<Signal>(instance, target, flags = ...)`) and RPC helpers
+  (`rpc<Method>` / `rpcId<Method>` now return `GodotError`) follow on desktop/Android and iOS.
+- **`ResourceLoader.ThreadLoadStatus` (the data class) is now `ResourceLoader.ThreadLoadProgress`**
+  (`status: ResourceLoader.ThreadLoadStatus`, `progress: Double?`), because `ThreadLoadStatus` is
+  Godot's enum name. `ResourceLoader.loadThreadedRequest` returns `GodotError`,
+  `loadThreadedGetStatus` returns `ResourceLoader.ThreadLoadStatus`, and the `cacheMode` parameters
+  take `ResourceLoader.CacheMode`.
+- **The 38 object returns Godot marks `meta: "required"` are non-null** (the other two of Godot's 40
+  are the `_get_space_state` virtuals, which task 128 B types): `Node.createTween()`,
+  `SceneTree.createTween()` / `createTimer()` / `getRoot()` / `getMultiplayer()`,
+  `CanvasItem.makeInputLocal`, `InputEvent.xformedBy`, `PhysicsDirectBodyState2D/3D.getSpaceState`,
+  every `Tween` builder and fluent method, and the `PropertyTweener` / `MethodTweener` /
+  `CallbackTweener` / `SubtweenTweener` fluent setters — chains use `.` instead of `?.`
+  (`tween.tweenProperty(...).setTrans(...).setEase(...)`). A null from the engine is an engine bug and
+  **throws** `IllegalStateException("Godot returned null from required <Class>.<method>")` through one
+  shared helper (`binding.runtime.requireGodotReturn`) on every platform — the hand `Tween`'s
+  `wrapOrThis` no longer turns a null into `this`, and the iOS fluent path no longer ignores one.
+- **Tween and FileAccess get an enum-only `expect`.** Shared signatures name their enums
+  (`PropertyTweener.setTrans(trans: Tween.TransitionType)`, `ZIPPacker.startFile(permissions:
+  FileAccess.UnixPermissionFlags)`), so the generator emits `Tween.expect.kt` / `FileAccess.expect.kt`
+  declaring only the nested enum types; the hand-written classes on both platforms are their
+  `actual`s.
+- **Migration.** `scripts/migrate_enum_constants.py <kotlin-src>` rewrites `Owner.OLD_NAME` to
+  `Owner.Enum.NEW` (and the hand subsets, `InputEventKey.KEY_W` → `Key.W`), adds the imports a
+  by-name-importing file needs, and lists what a human must fix (raw numbers passed where an enum is
+  now required, typed values flowing into a dynamic `Any?` argument). The full old→new table is
+  [docs/reference/generated/enum-migration.md](docs/reference/generated/enum-migration.md). On the 11
+  demos it rewrote 145 references in 104 files; the remaining fixes were by hand (`== 0L` error checks,
+  `List<Long>` settings tables, `ConfigFile.setValue` of an enum, one probe that passed the wrong enum).
+- **Binary size and compile time** (macOS arm64, Godot 4.7.2, kanama 3bce70ac → this change):
+
+  | | before | after | |
+  |---|---:|---:|---:|
+  | `kanama.jar` (desktop addon, kotlin-stdlib bundled) | 12,247,869 B | 14,343,145 B | +17.1 % |
+  | iOS `libkanama_ios_runtime.a` debug (`linkDebugStaticIosArm64`) | 236,065,128 B | 230,610,648 B | −2.3 % |
+  | iOS `libkanama_ios_runtime.a` release (`linkReleaseStaticIosArm64`) | 124,691,160 B | 121,179,784 B | −2.8 % |
+  | clean `compileKotlinJvm` (task time, `--rerun-tasks --no-build-cache`) | 54.3 s | 59.5 s | +9.6 % |
+  | clean `compileKotlinIosArm64` (task time, same flags) | 38.0 s | 39.7 s | +4.5 % |
+
+  The enum values are getter-only companion properties (`val ALWAYS: ProcessMode get() =
+  ProcessMode(3L)`): no backing field and no companion static initialiser, the smallest JVM shape that
+  keeps them typed. Android release builds run R8, which drops the classes an app does not use.
+- Gates: `scripts/check_typed_enums.py` (local_ci) — no `Long` enum slot left (builtin value-type enums
+  included), required returns non-null and the rest nullable, no generated top-level name equal to a
+  Kotlin default import or a public Kanama type, and every value name equal to the naming function
+  under the frozen lock; the migration table has a `--check` docs stage. Not in this change: KSP
+  marshalling of enum-typed `@ScriptProperty` / `@RegisterFunction` / virtual signatures (task 128 B)
+  and the Web backend's wrappers (task 128 C) — Web scripts keep the `Long` constants until then.
+
 ### Changed — the API tree is common code (task 117 P4′)
 
 - **The Godot API wrapper tree moved from `src/sharedApi/kotlin` to
