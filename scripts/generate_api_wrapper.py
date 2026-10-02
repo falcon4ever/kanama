@@ -26,6 +26,127 @@ from wrapper_model import (
     object_type_names,
     scan_wrapper_classes,
 )
+from godot_enum_model import (
+    API_PACKAGE,
+    LOCK_PATH,
+    EnumSpec,
+    constant_for_value,
+    enum_key_of_type,
+    load_enums,
+    locked_prefixes,
+    read_lock,
+    render_enum_class,
+    render_lock,
+)
+
+
+# --- typed Godot enums (task 128 A) -----------------------------------------------------------
+# The enum model of the API being rendered: every enum/bitfield, and its frozen value-name prefix
+# (scripts/enum_prefix_lock.json, see godot_enum_model). Loaded by regenerate_tree() for its API
+# file; the single-class render paths fall back to the repository's extension_api.json.
+_ENUM_STATE: tuple[dict[str, EnumSpec], dict[str, str]] | None = None
+
+
+def load_enum_state(api_path: Path) -> dict[str, str]:
+    """Load the enum model of [api_path]; returns the lock as this regen leaves it."""
+    global _ENUM_STATE
+    enums = load_enums(api_path)
+    _ENUM_STATE = (enums, locked_prefixes(enums, read_lock()))
+    return _ENUM_STATE[1]
+
+
+def _enum_state() -> tuple[dict[str, EnumSpec], dict[str, str]]:
+    if _ENUM_STATE is None:
+        load_enum_state(ROOT / "extension_api.json")
+    assert _ENUM_STATE is not None
+    return _ENUM_STATE
+
+
+def enum_spec(type_name_or_key: str) -> EnumSpec:
+    key = enum_key_of_type(type_name_or_key) or type_name_or_key
+    enums, _ = _enum_state()
+    spec = enums.get(key)
+    if spec is None:
+        raise ValueError(f"unknown Godot enum {type_name_or_key!r} (builtin-class enums are not wrapped)")
+    return spec
+
+
+def enum_prefix(spec: EnumSpec) -> str:
+    return _enum_state()[1][spec.key]
+
+
+def class_enums(godot_class: str) -> list[EnumSpec]:
+    """The enums Godot declares on [godot_class], in API order."""
+    enums, _ = _enum_state()
+    return [spec for spec in enums.values() if spec.owner == godot_class]
+
+
+def global_enums() -> list[EnumSpec]:
+    enums, _ = _enum_state()
+    return [spec for spec in enums.values() if spec.owner is None]
+
+
+@functools.cache
+def _shadowed_global_names(enum_names: frozenset[str], global_names: frozenset[str]) -> frozenset[str]:
+    return global_names & enum_names
+
+
+def enum_type_ref(type_name: str) -> str:
+    """How generated code names an enum type. A class enum is always owner-qualified
+    (`Node.ProcessMode`), which no nested classifier can shadow. A global enum is its plain name,
+    except where a class enum of the same simple name exists (`Orientation`: `TextServer.Orientation`
+    and `PlaneMesh.Orientation` shadow it inside those classes and their subclasses), where it is
+    package-qualified everywhere."""
+    spec = enum_spec(type_name)
+    if spec.owner is not None:
+        return spec.kotlin_name
+    enums, _ = _enum_state()
+    shadowed = _shadowed_global_names(
+        frozenset(s.name for s in enums.values() if s.owner is not None),
+        frozenset(s.simple_name for s in enums.values() if s.owner is None),
+    )
+    return f"{API_PACKAGE}.{spec.simple_name}" if spec.simple_name in shadowed else spec.simple_name
+
+
+def enum_constant_expression(type_name: str, number: int) -> str:
+    """A Kotlin expression of enum type [type_name] with raw value [number]: the named constant when
+    one has that value (Godot's first on aliases), else the raw constructor."""
+    spec = enum_spec(type_name)
+    ref = enum_type_ref(type_name)
+    name = constant_for_value(spec, enum_prefix(spec), number)
+    return f"{ref}.{name}" if name is not None else f"{ref}({number}L)"
+
+
+def is_enum_kind(kind: str) -> bool:
+    return kind in ("enum", "bitfield")
+
+
+def is_typed_enum(kind: str, type_name: str) -> bool:
+    """Whether a slot surfaces as a value class: every enum/bitfield slot does, builtin-owned ones
+    (`Vector3.Axis`, nested in Kanama's value type) included."""
+    return is_enum_kind(kind) and enum_key_of_type(type_name) is not None
+
+
+def builtin_enum_owner_import(type_name: str) -> str | None:
+    """The `net.multigesture.kanama.types` owner a builtin-owned enum slot needs imported."""
+    key = enum_key_of_type(type_name)
+    if key is None:
+        return None
+    spec = enum_spec(key)
+    return spec.owner if spec.builtin else None
+
+
+def render_class_enums(godot_class: str, indent: str = "    ", mode: str = "plain", step: str = "    ") -> str | None:
+    """The nested value classes of [godot_class] in the spelling the current render target compiles
+    (`@JvmInline` everywhere but the Kotlin/Native-only iOS files)."""
+    specs = class_enums(godot_class)
+    if not specs:
+        return None
+    jvm_inline = RENDER_TARGET != "ios"
+    return "\n\n".join(
+        render_enum_class(spec, enum_prefix(spec), indent, jvm_inline=jvm_inline, mode=mode, step=step)
+        for spec in specs
+    )
 
 
 OWNERSHIP_SENSITIVE_OBJECT_TYPES = {"Callable"}
@@ -88,6 +209,8 @@ SCALAR_KOTLIN_TYPES = {
     "int32": "Int",
     "int64": "Long",
     "uint32": "Long",
+    # The ABI type of the helper that carries an enum/bitfield. The Kotlin SURFACE type is the
+    # generated value class (task 128 A; kotlin_type -> enum_type_ref).
     "enum": "Long",
     "bitfield": "Long",
     "float": "Double",
@@ -164,12 +287,14 @@ DEFAULT_IMPORTS = {
     "NULL_SEGMENT": "net.multigesture.kanama.binding.runtime.NULL_SEGMENT",
     "MemorySegment": "java.lang.foreign.MemorySegment",
     "JvmName": "kotlin.jvm.JvmName",
+    "JvmInline": "kotlin.jvm.JvmInline",
     "JvmStatic": "kotlin.jvm.JvmStatic",
     "Vector2": "net.multigesture.kanama.types.Vector2",
     "Vector2i": "net.multigesture.kanama.types.Vector2i",
     "Vector3": "net.multigesture.kanama.types.Vector3",
     "Vector3i": "net.multigesture.kanama.types.Vector3i",
     "Vector4": "net.multigesture.kanama.types.Vector4",
+    "Vector4i": "net.multigesture.kanama.types.Vector4i",
     "NodePath": "net.multigesture.kanama.types.NodePath",
     "Plane": "net.multigesture.kanama.types.Plane",
     "Projection": "net.multigesture.kanama.types.Projection",
@@ -183,6 +308,9 @@ DEFAULT_IMPORTS = {
     "Transform3D": "net.multigesture.kanama.types.Transform3D",
     "Quaternion": "net.multigesture.kanama.types.Quaternion",
 }
+
+# The shared helper every `meta: "required"` object return goes through (task 128 A, decision 9).
+REQUIRE_GODOT_RETURN_IMPORT = "net.multigesture.kanama.binding.runtime.requireGodotReturn"
 
 RESERVED_WORDS = {
     "as",
@@ -275,6 +403,25 @@ def _add_null_segment_import(content: str) -> str:
         return content
     anchor = f"import {DEFAULT_IMPORTS['ObjectCalls']}\n"
     return content.replace(anchor, marker + anchor, 1)
+
+
+def _add_import_if_used(content: str, symbol: str, fqn: str) -> str:
+    """Import [fqn] by name when [symbol] is called in the rendered body, keeping the leading import
+    block sorted (Kanama imports by name)."""
+    line = f"import {fqn}"
+    if line in content or f"{symbol}(" not in content:
+        return content
+    lines = content.split("\n")
+    imports = [i for i, text in enumerate(lines) if text.startswith("import ")]
+    if not imports:
+        return content
+    first, last = imports[0], imports[-1]
+    block = sorted([*lines[first : last + 1], line])
+    return "\n".join([*lines[:first], *block, *lines[last + 1 :]])
+
+
+def _add_required_import(content: str) -> str:
+    return _add_import_if_used(content, "requireGodotReturn", REQUIRE_GODOT_RETURN_IMPORT)
 
 
 def _null_segment() -> str:
@@ -790,25 +937,10 @@ IOS_MEMBER_SECTIONS = {
 
 # iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
 # 8-space indent). A shared class's iOS-only sugar belongs in IOS_EXTENSION_SECTIONS instead.
-IOS_COMPANION_MEMBER_SECTIONS = {
+IOS_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
     # (RefCounted's releaseHandle section left with task 117 P3', like its member section above.)
-    "InputEventKey": """
-        // Godot Key enum constants (subset used by gameplay code; values match @GlobalScope.Key).
-        const val KEY_ESCAPE = 4194305L
-        const val KEY_TAB = 4194306L
-        const val KEY_ENTER = 4194309L
-        const val KEY_F10 = 4194341L
-        const val KEY_F11 = 4194342L
-        const val KEY_SPACE = 32L
-        const val KEY_A = 65L
-        const val KEY_D = 68L
-        const val KEY_E = 69L
-        const val KEY_F = 70L
-        const val KEY_Q = 81L
-        const val KEY_R = 82L
-        const val KEY_S = 83L
-        const val KEY_W = 87L
-""".strip("\n"),
+    # (InputEventKey's hand KEY_* constant subset left with task 128 A: Godot's `Key` enum is the
+    # generated global value class `Key`, so scripts write `Key.ESCAPE` on every platform.)
 }
 
 
@@ -964,7 +1096,7 @@ SHARED_MEMBER_SECTIONS: dict[str, str] = {
      * (KanamaProcessor.kt / IosScriptCodeEmitter.kt), so its name and signature are load-bearing.
      */
     fun callLocalRpc(method: String, vararg extraArgs: Any?) {
-        if (rpc(method, *extraArgs) != 0L) {
+        if (rpc(method, *extraArgs) != GodotError.OK) {
             call(method, *extraArgs)
         }
     }
@@ -1091,9 +1223,9 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun quit(exitCode: Int = 0) = active().quit(exitCode)
 
-        fun changeSceneToFile(path: String): Long = active().changeSceneToFile(path)
+        fun changeSceneToFile(path: String): GodotError = active().changeSceneToFile(path)
 
-        fun reloadCurrentScene(): Long = active().reloadCurrentScene()
+        fun reloadCurrentScene(): GodotError = active().reloadCurrentScene()
 
         fun unloadCurrentScene() = active().unloadCurrentScene()
 
@@ -1122,9 +1254,9 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun queueDelete(obj: GodotObject) = active().queueDelete(obj)
 
-        fun changeSceneToPacked(packedScene: PackedScene): Long = active().changeSceneToPacked(packedScene)
+        fun changeSceneToPacked(packedScene: PackedScene): GodotError = active().changeSceneToPacked(packedScene)
 
-        fun changeSceneToNode(node: Node): Long = active().changeSceneToNode(node)
+        fun changeSceneToNode(node: Node): GodotError = active().changeSceneToNode(node)
 
         fun getEditedSceneRoot(): Node? = active().getEditedSceneRoot()
 
@@ -1214,17 +1346,9 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun isPhysicsInterpolationEnabled(): Boolean = active().isPhysicsInterpolationEnabled()
 """.strip("\n"),
-    "PhysicsBody3D": """
-        // PhysicsServer3D.BodyAxis flags, exposed on PhysicsBody3D to match the desktop/Android API
-        // (used by set_axis_lock). Aliases of the @GlobalScope PhysicsServer3D.BODY_AXIS_* bit flags,
-        // which the shared tree generates as `const val`s on PhysicsServer3D.
-        const val BODY_AXIS_LINEAR_X: Long = PhysicsServer3D.BODY_AXIS_LINEAR_X
-        const val BODY_AXIS_LINEAR_Y: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Y
-        const val BODY_AXIS_LINEAR_Z: Long = PhysicsServer3D.BODY_AXIS_LINEAR_Z
-        const val BODY_AXIS_ANGULAR_X: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_X
-        const val BODY_AXIS_ANGULAR_Y: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Y
-        const val BODY_AXIS_ANGULAR_Z: Long = PhysicsServer3D.BODY_AXIS_ANGULAR_Z
-""".strip("\n"),
+    # (PhysicsBody3D's BODY_AXIS_* aliases of PhysicsServer3D's BodyAxis constants left with task
+    # 128 A: setAxisLock takes the generated `PhysicsServer3D.BodyAxis` value class, whose values are
+    # `PhysicsServer3D.BodyAxis.LINEAR_X` ...; scripts/migrate_enum_constants.py rewrites old uses.)
 }
 
 
@@ -1308,7 +1432,7 @@ DESKTOP_EXTENSION_SECTIONS = {
 // in the shared companion, because their instance forms are desktop-only too (SceneTree.jvm.kt: iOS
 // hosts no Tween wrapper with a `wrap` helper). Import them by name to call them:
 // `import net.multigesture.kanama.api.createTween`.
-fun SceneTree.Companion.createTween(): Tween? =
+fun SceneTree.Companion.createTween(): Tween =
     SceneTree.active().createTween()
 
 fun SceneTree.Companion.getProcessedTweens(): List<Tween> =
@@ -1344,10 +1468,13 @@ IOS_EXTENSION_SECTIONS: dict[str, tuple[tuple[str, ...], str]] = {
 // hand-written iOS `Node` carried it as a member, so iOS keeps it as an extension: every
 // `self.createTween()` / `node.createTween()` call site resolves on both platforms
 // (task 117 P1'(b2); mirrors the SceneTree entry above).
-fun Node.createTween(): Tween? =
-    ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
-        .takeIf { it.address() != 0L }
-        ?.let { Tween(GodotHandle(it)) }
+fun Node.createTween(): Tween =
+    requireGodotReturn(
+        ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
+            .takeIf { it.address() != 0L }
+            ?.let { Tween(GodotHandle(it)) },
+        "Node.create_tween",
+    )
 
 private val nodeCreateTweenBind by lazy {
     ObjectCalls.getMethodBind("Node", "create_tween", 3426978995L)
@@ -1359,10 +1486,13 @@ private val nodeCreateTweenBind by lazy {
 // on a tree handle SIGSEGVs (the task-103 "F2 fix"); SceneTree is a MainLoop now, so nothing is
 // inherited and this is plain sugar. Mirrors the generated desktop SceneTree.createTween extension
 // in SceneTree.jvm.kt — iOS hosts no Tween.wrap, so it cannot be a shared member.
-fun SceneTree.createTween(): Tween? =
-    ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
-        .takeIf { it.address() != 0L }
-        ?.let { Tween(GodotHandle(it)) }
+fun SceneTree.createTween(): Tween =
+    requireGodotReturn(
+        ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
+            .takeIf { it.address() != 0L }
+            ?.let { Tween(GodotHandle(it)) },
+        "SceneTree.create_tween",
+    )
 
 private val sceneTreeCreateTweenBind by lazy {
     ObjectCalls.getMethodBind("SceneTree", "create_tween", 3426978995L)
@@ -1703,6 +1833,18 @@ def kotlin_default_expression(default_value: str | None, logical_kind: str) -> s
     if logical_kind == "Vector2" and default_value in {"Vector2(0, 0)", "Vector2(0.0, 0.0)"}:
         return "Vector2(0f, 0f)"
     return None
+
+
+def kotlin_enum_default_expression(default_value: str | None, logical_kind: str, type_name: str) -> str | None:
+    """[kotlin_default_expression] with enum/bitfield defaults rendered in the value-class type: the
+    named constant whose value equals Godot's default, else `X(<n>L)` (task 128 A)."""
+    if not is_typed_enum(logical_kind, type_name) or default_value is None:
+        return kotlin_default_expression(default_value, logical_kind)
+    try:
+        number = int(default_value, 0)
+    except ValueError:
+        return None
+    return enum_constant_expression(type_name, number)
 
 
 def _candidate_for_impl(method: ApiMethod, object_types: set[str]) -> CallShape | None:
@@ -2317,6 +2459,10 @@ def kotlin_type(logical_type: str, type_name: str, wrapper_classes: set[str], ap
         if wrapper_type is None:
             raise ValueError(f"unsupported object wrapper for {type_name}")
         return f"{wrapper_type}?" if is_resource_like(type_name, api_classes) else wrapper_type
+    if is_typed_enum(logical_type, type_name):
+        # Typed Godot enums (task 128 A): the Kotlin surface names the value class; the ABI keeps the
+        # logical kind (the same ptrcall*Long* helpers), with `.value` / `X(raw)` at the boundary.
+        return enum_type_ref(type_name)
     if logical_type not in SCALAR_KOTLIN_TYPES:
         raise ValueError(f"unsupported Kotlin type for {logical_type}")
     return SCALAR_KOTLIN_TYPES[logical_type]
@@ -2328,6 +2474,7 @@ def kotlin_return_type(
     wrapper_classes: set[str],
     api_classes: dict[str, ApiClass],
     api_dir: Path,
+    required: bool = False,
 ) -> str:
     if logical_type == "Callable":
         return "GodotCallable?"
@@ -2335,6 +2482,10 @@ def kotlin_return_type(
         wrapper_type = api_object_wrapper_type(type_name, wrapper_classes)
         if wrapper_type is None:
             raise ValueError(f"unsupported object wrapper for {type_name}")
+        if required:
+            # `meta: "required"` (task 128 A, decision 9): Godot promises a non-null object, so the
+            # return is non-null and a null from the engine throws (requireGodotReturn), never silent.
+            return wrapper_type
         return f"{wrapper_type}?" if wrapper_has_wrap(api_dir, wrapper_type) else wrapper_type
     return kotlin_type(logical_type, type_name, wrapper_classes, api_classes)
 
@@ -2435,15 +2586,42 @@ def call_argument_expressions(
             # Signal args marshal as (owner handle, signal name); the helper constructs the
             # Signal builtin via Signal(Object, StringName) and destroys it after the call.
             expressions.extend([f"{name}.owner.segment", f"{name}.name"])
+        elif is_typed_enum(logical_kind, type_name):
+            # The value class crosses the ABI as its raw Long (task 128 A).
+            expressions.append(f"{name}.value")
         else:
             expressions.append(name)
     return expressions
 
 
-def render_return_expression(call: str, method: ApiMethod, wrapper_classes: set[str]) -> str:
+def enum_kind_of(type_name: str) -> str:
+    if type_name.startswith("enum::"):
+        return "enum"
+    if type_name.startswith("bitfield::"):
+        return "bitfield"
+    return ""
+
+
+def is_required_return(method: ApiMethod) -> bool:
+    """Godot's `meta: "required"` on an object return: never null on success (decision 9)."""
+    return method.return_meta == "required"
+
+
+def required_return_expression(expression: str, class_name: str, method: ApiMethod) -> str:
+    """Wrap a nullable wrapper expression so a null from a `required` return throws, naming the
+    Godot class and method (one shared helper, requireGodotReturn, on every platform)."""
+    return f'requireGodotReturn({expression}, "{class_name}.{method.name}")'
+
+
+def render_return_expression(
+    call: str, method: ApiMethod, wrapper_classes: set[str], class_name: str = "", object_types: set[str] | None = None
+) -> str:
     return_wrapper = api_object_wrapper_type(method.return_type, wrapper_classes)
     if return_wrapper:
-        return f"{return_wrapper}.wrap({call})"
+        wrapped = f"{return_wrapper}.wrap({call})"
+        return required_return_expression(wrapped, class_name, method) if is_required_return(method) else wrapped
+    if is_typed_enum(enum_kind_of(method.return_type), method.return_type):
+        return f"{enum_type_ref(method.return_type)}({call})"
     return call
 
 
@@ -2519,7 +2697,7 @@ def render_method(
         default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
         default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
             (class_name, method.name, raw_name),
-        ) or kotlin_default_expression(default_value, kind)
+        ) or kotlin_enum_default_expression(default_value, kind, type_name)
         type_text = kotlin_parameter_type(
             class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
         )
@@ -2542,12 +2720,12 @@ def render_method(
     else:
         receiver = singleton_expr if singleton else (_null_segment() if method.is_static else "segment")
         call = f"ObjectCalls.{shape.function}({', '.join([bind_name, receiver, *call_args])})"
-    return_expression = render_return_expression(call, method, wrapper_classes)
+    return_expression = render_return_expression(call, method, wrapper_classes, class_name)
     return_kind = method.logical_return_kind(object_types)
     return_type_text = (
         ""
         if shape.kotlin_return == "Unit"
-        else f": {kotlin_return_type(return_kind, method.return_type, wrapper_classes, api_classes, api_dir)}"
+        else f": {kotlin_return_type(return_kind, method.return_type, wrapper_classes, api_classes, api_dir, is_required_return(method))}"
     )
     collapse_wrapper = self_return_collapse_wrapper(
         class_name, method, object_types, wrapper_classes, api_classes, singleton,
@@ -2568,7 +2746,12 @@ def render_method(
                 "            RefCounted.releaseHandle(ret)",
                 "            return this",
                 "        }",
-                f"        return {collapse_wrapper}.wrap(ret)",
+                "        return "
+                + (
+                    required_return_expression(f"{collapse_wrapper}.wrap(ret)", class_name, method)
+                    if is_required_return(method)
+                    else f"{collapse_wrapper}.wrap(ret)"
+                ),
                 "    }",
             ],
         )
@@ -2614,7 +2797,7 @@ def render_vararg_method(
         default_value = DEFAULT_VALUE_OVERRIDES.get((class_name, method.name, raw_name), default_value)
         default_expression = KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.get(
             (class_name, method.name, raw_name),
-        ) or kotlin_default_expression(default_value, kind)
+        ) or kotlin_enum_default_expression(default_value, kind, type_name)
         type_text = kotlin_parameter_type(
             class_name, method.name, raw_name, arg_meta, kind, type_name, wrapper_classes, api_classes
         )
@@ -2622,7 +2805,12 @@ def render_vararg_method(
             f"{name}: {type_text} = {default_expression}" if default_expression is not None else f"{name}: {type_text}",
         )
     params = ", ".join([*fixed_params, "vararg extraArgs: Any?"])
-    fixed_args = ", ".join(param_names)
+    # A value-class enum argument goes into the Variant list as its raw Long (the Variant encoder
+    # knows Long, not the value class).
+    fixed_args = ", ".join(
+        f"{name}.value" if is_typed_enum(kind, type_name) else name
+        for name, kind, type_name in zip(param_names, logical_args, method.argument_types, strict=True)
+    )
     if fixed_args:
         call_args = f"listOf({fixed_args}, *extraArgs)"
     else:
@@ -2650,7 +2838,13 @@ def render_vararg_method(
         )
         return "\n".join(lines)
     return_type_text = kotlin_return_type(return_kind, method.return_type, wrapper_classes, api_classes, api_dir)
-    return_expression = f"({call} as Number).toLong()" if return_kind == "enum" else call
+    return_expression = (
+        f"{enum_type_ref(method.return_type)}(({call} as Number).toLong())"
+        if is_typed_enum(return_kind, method.return_type)
+        else f"({call} as Number).toLong()"
+        if return_kind == "enum"
+        else call
+    )
     lines = []
     if singleton:
         if _jvm_static():
@@ -2804,6 +2998,7 @@ def render_property(
         wrapper_classes,
         api_classes,
         api_dir,
+        is_required_return(getter_method),
     )
     # The bound index literal must match the accessor's first-arg Kotlin type: enum/int64 indices
     # are `Long` (getTexture(0L)), plain int32 indices are `Int` (getStream(0)). Plain accessors
@@ -2819,7 +3014,11 @@ def render_property(
             wrapper_classes,
             api_classes,
         )
-        index_arg = f"{prop_index}" if index_kotlin == "Int" else f"{prop_index}L"
+        index_kind = getter_method.logical_arg_kinds(object_types)[0]
+        if is_typed_enum(index_kind, getter_method.argument_types[0]):
+            index_arg = enum_constant_expression(getter_method.argument_types[0], int(prop_index))
+        else:
+            index_arg = f"{prop_index}" if index_kotlin == "Int" else f"{prop_index}L"
     else:
         index_arg = ""
     value_slot = 1 if has_index else 0
@@ -2892,16 +3091,8 @@ def render_companion_constants(cls: ApiClass) -> str | None:
             continue
         seen.add(name)
         lines.append(f"        const val {name}: Long = {value}L")
-    for enum in cls.enums:
-        for value_spec in enum.get("values") or ():
-            name = str(value_spec.get("name") or "")
-            if not name or name in seen:
-                continue
-            value = value_spec.get("value")
-            if not isinstance(value, int):
-                continue
-            seen.add(name)
-            lines.append(f"        const val {name}: Long = {value}L")
+    # Enum values are not companion constants since task 128 A: they live in the class's nested
+    # value classes (render_class_enums), `Node.ProcessMode.ALWAYS`.
     return "\n".join(lines) if lines else None
 
 
@@ -3042,6 +3233,16 @@ def render_singleton_wrap_helpers(class_name: str) -> str:
         ],
     )
     return "\n".join(lines)
+
+
+def _add_builtin_enum_imports(method: ApiMethod, imports: set[str]) -> None:
+    """`Vector3.Axis` slots name the Kanama value type `Vector3`: import it by name."""
+    for type_name in (*method.argument_types, method.return_type):
+        owner = builtin_enum_owner_import(type_name)
+        if owner is not None:
+            if owner not in DEFAULT_IMPORTS:
+                raise ValueError(f"builtin enum owner {owner} has no DEFAULT_IMPORTS entry")
+            imports.add(owner)
 
 
 def _add_kind_imports(kind: str, imports: set[str]) -> None:
@@ -3187,6 +3388,7 @@ def render_draft(
                 continue
             for kind in (*method.logical_arg_kinds(object_types), method.logical_return_kind(object_types)):
                 _add_kind_imports(kind, imports)
+            _add_builtin_enum_imports(method, imports)
             if method.is_vararg:
                 rendered_method = render_vararg_method(
                     cls.name,
@@ -3229,6 +3431,15 @@ def render_draft(
     parent = "GodotObject" if cls.inherits in {"", "Object"} or singleton_parent else cls.inherits
     class_keyword = "open class" if has_api_subclasses(cls.name, api_classes) else "class"
     extra_supertypes = "".join(f", {name}" for name in CLASS_EXTRA_SUPERTYPES.get(cls.name, ()))
+    # A per-platform generated class whose enums a shared signature names actualizes the enum-only
+    # expect the shared tree carries for it (task 128 A; see EXPECT_ENUM_OWNERS).
+    actual = RENDER_TARGET in ("desktop", "ios") and cls.name in EXPECT_ENUM_OWNERS
+    if actual and class_keyword != "class":
+        raise SystemExit(f"[generate_api_wrapper] {cls.name}: an enum-only expect of an open class is not supported")
+    actual_prefix = "actual " if actual else ""
+    nested_enums = render_class_enums(cls.name, "    ", "actual" if actual else "plain")
+    if nested_enums and RENDER_TARGET != "ios":
+        imports.add("JvmInline")
     import_lines = sorted(f"import {DEFAULT_IMPORTS[name]}" for name in imports)
     body_sections = []
     if properties:
@@ -3244,6 +3455,8 @@ def render_draft(
     signal_constants = render_signal_constants(cls)
     if signal_constants:
         body_sections.append(signal_constants)
+    if nested_enums:
+        body_sections.append(nested_enums)
     if singleton:
         singleton_constants = render_companion_constants(cls)
         if singleton_constants:
@@ -3259,7 +3472,7 @@ def render_draft(
                 "/**",
                 f" * Generated from Godot docs: {cls.name}",
                 " */",
-                f"object {cls.name} {{",
+                f"{actual_prefix}object {cls.name} {{",
                 f"    private val singleton: {_segment_type()} by lazy {{",
                 f'        ObjectCalls.getSingleton("{cls.name}")',
                 "    }",
@@ -3282,9 +3495,9 @@ def render_draft(
         custom_companion_members = _companion_section(cls.name)
         if custom_companion_members:
             companion_sections.append(custom_companion_members)
-        # After the custom section, not before it: the one class that has both (iOS `InputEventKey`)
-        # declares its hand-written Key constants in the section and its factories below them, and
-        # the table must not reorder the companion it took the helpers out of.
+        # After the custom section, not before it: a class with both keeps its hand-written section
+        # above its factories (iOS `InputEventKey` did until task 128 A moved its Key constants to
+        # the generated global `Key`).
         factory_helpers = render_factory_helpers(cls.name)
         if factory_helpers:
             companion_sections.append(factory_helpers)
@@ -3298,7 +3511,7 @@ def render_draft(
                 "/**",
                 f" * Generated from Godot docs: {cls.name}",
                 " */",
-                f"{class_keyword} {cls.name}(handle: GodotHandle) : {parent}(handle){extra_supertypes} {{",
+                f"{actual_prefix}{class_keyword} {cls.name}(handle: GodotHandle) : {parent}(handle){extra_supertypes} {{",
                 "\n\n".join(body_sections),
                 "",
                 "    companion object {",
@@ -3308,7 +3521,7 @@ def render_draft(
                 "",
             ],
         )
-    return _add_null_segment_import(content), skips
+    return _add_required_import(_add_null_segment_import(content)), skips
 
 
 # --- Shared wrapper tree (task 103) ---------------------------------------------------------------
@@ -3974,6 +4187,7 @@ def render_shared_class(
             for method in companion_methods:
                 for kind in (*method.logical_arg_kinds(object_types), method.logical_return_kind(object_types)):
                     _add_kind_imports(kind, imports)
+                _add_builtin_enum_imports(method, imports)
                 if method.is_vararg:
                     rendered = render_vararg_method(
                         cls.name, method, object_types, wrapper_classes, api_classes, api_dir,
@@ -4035,8 +4249,8 @@ def render_shared_class(
                 )
             if binds:
                 sections.append("\n\n".join(binds))
-            desktop_companion = _add_null_segment_import(
-                "\n".join(header) + "\n" + "\n\n".join(sections) + "\n"
+            desktop_companion = _add_required_import(
+                _add_null_segment_import("\n".join(header) + "\n" + "\n\n".join(sections) + "\n")
             )
 
         # 4. iOS-only sugar on a shared class: extension-style section into `<Class>.ios.kt`.
@@ -4196,10 +4410,237 @@ def render_gap_index(gap: dict[str, SharedRender], shared_count: int) -> str:
     return "\n".join(lines)
 
 
+# --- Typed enums outside the generated class files (task 128 A) ------------------------------------
+#
+# A Godot class whose Kotlin class is HAND-WRITTEN (the `hand`/`collision` cells of
+# PER_PLATFORM_WRAPPERS, and the shared hand roots GodotObject/RefCounted) still gets its nested enum
+# value classes as GENERATED text: a marked region inside the class body, rewritten by --write-tree
+# and checked by the drift gate like every generated file. The markers name the class, so a file
+# that hosts several classes (iOS IosGodotApi.kt) is unambiguous.
+#
+# A per-platform owner whose enum a SHARED signature names (`PropertyTweener.setTrans(trans:
+# Tween.TransitionType)`) cannot be seen from common code, so the generator gives it an enum-only
+# `expect` declaration in the shared tree (`<Class>.expect.kt`, generated) and renders the platform
+# regions as its `actual` nested types. The owners are found from the rendered shared tree, not from a
+# list: today Tween and FileAccess.
+GLOBAL_ENUMS_PATH = SHARED_API_DIR / "GlobalEnums.kt"
+TYPES_DIR = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/types"
+ENUM_REGION_BEGIN = "// ===== BEGIN GENERATED ENUMS: {name} (scripts/generate_api_wrapper.py — do not edit) ====="
+ENUM_REGION_END = "// ===== END GENERATED ENUMS: {name} ====="
+# Godot classes whose enum-only `expect` the current regen emits (set by regenerate_tree).
+EXPECT_ENUM_OWNERS: set[str] = set()
+_TOP_LEVEL_DECLARATION_RE = re.compile(
+    r"(?m)^((?:@[\w.]+(?:\([^)]*\))?\s+)*(?:(?:public|internal|actual|expect|open|abstract|data|sealed)\s+)*)"
+    r"(class|object)\s+(\w+)\b"
+)
+
+
+def _kotlin_owner_name(godot_class: str) -> str:
+    return "GodotObject" if godot_class == "Object" else godot_class
+
+
+def _top_level_declarations(text: str) -> list[tuple[int, str, str, str]]:
+    """(offset, modifiers, class|object, name) of every column-0 class/object declaration."""
+    return [(m.start(), m.group(1), m.group(2), m.group(3)) for m in _TOP_LEVEL_DECLARATION_RE.finditer(text)]
+
+
+def _find_declaring_file(directory: Path, kotlin_name: str) -> Path | None:
+    hits = [
+        path
+        for path in sorted(directory.glob("*.kt"))
+        if not path.name.endswith(".expect.kt")
+        and any(name == kotlin_name for _, _, _, name in _top_level_declarations(strip_comments(path.read_text(encoding="utf-8"))))
+    ]
+    if len(hits) > 1:
+        raise SystemExit(f"[generate_api_wrapper] {kotlin_name} is declared in several files: {[_rel(p) for p in hits]}")
+    return hits[0] if hits else None
+
+
+def enum_region_hosts(api_classes: dict[str, ApiClass]) -> list[tuple[str, Path, str]]:
+    """(Godot class, hand-written file, render target) of every hand-written class that owns enums."""
+    hosts: list[tuple[str, Path, str]] = []
+    for spec_owner, builtin in sorted({(spec.owner, spec.builtin) for spec in _enum_state()[0].values() if spec.owner}):
+        godot_class = str(spec_owner)
+        if builtin:
+            # Builtin value types (`Vector3.Axis`): Kanama's hand-written, ktfmt-formatted value type.
+            hosts.append((godot_class, TYPES_DIR / f"{godot_class}.kt", "types"))
+            continue
+        if godot_class not in api_classes:
+            continue
+        kotlin_name = _kotlin_owner_name(godot_class)
+        if godot_class == "Object" or godot_class in SHARED_HAND_ROOTS:
+            hosts.append((godot_class, SHARED_API_DIR / f"{kotlin_name}.kt", "shared"))
+            continue
+        home = PER_PLATFORM_WRAPPERS.get(godot_class)
+        if home is None:
+            continue
+        if home.desktop == "hand":
+            hosts.append((godot_class, DESKTOP_API_DIR / f"{kotlin_name}.kt", "desktop"))
+        if home.ios == "hand":
+            hosts.append((godot_class, IOS_API_DIR / f"{kotlin_name}.kt", "ios"))
+        elif home.ios == "collision":
+            path = _find_declaring_file(IOS_API_DIR, kotlin_name)
+            if path is None:
+                raise SystemExit(f"[generate_api_wrapper] iOS collision class {kotlin_name} is declared in no file under {_rel(IOS_API_DIR)}")
+            hosts.append((godot_class, path, "ios"))
+    return hosts
+
+
+def render_enum_region(godot_class: str, target: str, mode: str) -> str:
+    """The region body (markers included) for [target]'s compiler: 4-space indented in the api
+    files (excluded from ktfmt), 2-space in the ktfmt-formatted value types (`types`)."""
+    global RENDER_TARGET
+    previous = RENDER_TARGET
+    RENDER_TARGET = "shared" if target == "types" else target
+    unit = "  " if target == "types" else "    "
+    try:
+        body = render_class_enums(godot_class, unit, mode, unit) or ""
+    finally:
+        RENDER_TARGET = previous
+    name = _kotlin_owner_name(godot_class)
+    return "\n".join(
+        [
+            unit + ENUM_REGION_BEGIN.format(name=name),
+            body,
+            unit + ENUM_REGION_END.format(name=name),
+        ]
+    )
+
+
+def whitespace_insensitive(source: str) -> str:
+    """The comparison key of a ktfmt-formatted file holding a generated region (the value types):
+    ktfmt re-wraps the region, so the drift gate compares it with all whitespace collapsed."""
+    return re.sub(r"\s+", "", source)
+
+
+def splice_enum_region(source: str, godot_class: str, region: str, path: Path, mode: str) -> str:
+    """Replace the marked region of [godot_class] in [source]; refuse missing/duplicate/misplaced markers."""
+    name = _kotlin_owner_name(godot_class)
+    begin = ENUM_REGION_BEGIN.format(name=name)
+    end = ENUM_REGION_END.format(name=name)
+    if source.count(begin) != 1 or source.count(end) != 1:
+        raise SystemExit(
+            f"[generate_api_wrapper] {_rel(path)}: expected exactly one '{begin}' / '{end}' marker pair "
+            f"inside the body of {name} (task 128 A); add the pair once by hand, the generator fills it"
+        )
+    start = source.index(begin)
+    line_start = source.rfind("\n", 0, start) + 1
+    stop = source.index(end) + len(end)
+    if stop < start:
+        raise SystemExit(f"[generate_api_wrapper] {_rel(path)}: GENERATED ENUMS markers of {name} are out of order")
+    owners = [decl for decl in _top_level_declarations(source) if decl[0] < line_start]
+    if not owners or owners[-1][3] != name:
+        raise SystemExit(f"[generate_api_wrapper] {_rel(path)}: the GENERATED ENUMS region of {name} is not inside its body")
+    modifiers = owners[-1][1]
+    if (mode == "actual") != ("actual" in modifiers.split()):
+        need = "needs" if mode == "actual" else "must not carry"
+        raise SystemExit(
+            f"[generate_api_wrapper] {_rel(path)}: {owners[-1][2]} {name} {need} the `actual` modifier "
+            f"(its enum-only expect is {'' if mode == 'actual' else 'not '}generated in the shared tree)"
+        )
+    return source[:line_start] + region + source[stop:]
+
+
+def find_expect_enum_owners(shared_sources: list[str]) -> set[str]:
+    """Per-platform Godot classes whose enum a shared-tree source names: they need an enum-only expect."""
+    owners: set[str] = set()
+    candidates = [spec for spec in _enum_state()[0].values() if spec.owner in PER_PLATFORM_WRAPPERS]
+    text = "\n".join(strip_comments(source) for source in shared_sources)
+    for spec in candidates:
+        if re.search(rf"\b{re.escape(spec.kotlin_name)}\b", text):
+            owners.add(str(spec.owner))
+    return owners
+
+
+def _platform_declaration(godot_class: str) -> tuple[str, str]:
+    """The (modifiers, class|object) the platform files declare [godot_class] with; both must agree."""
+    kotlin_name = _kotlin_owner_name(godot_class)
+    found: list[tuple[str, str, str]] = []
+    for directory in (DESKTOP_API_DIR, IOS_API_DIR):
+        path = _find_declaring_file(directory, kotlin_name)
+        if path is None:
+            raise SystemExit(
+                f"[generate_api_wrapper] {kotlin_name} needs an enum-only expect (a shared signature names its "
+                f"enum) but has no declaration under {_rel(directory)}"
+            )
+        for _, modifiers, kind, name in _top_level_declarations(strip_comments(path.read_text(encoding="utf-8"))):
+            if name == kotlin_name:
+                found.append((_rel(path), modifiers, kind))
+    kinds = {kind for _, _, kind in found}
+    if len(kinds) != 1:
+        raise SystemExit(f"[generate_api_wrapper] {kotlin_name} is a class on one platform and an object on the other: {found}")
+    for rel, modifiers, _ in found:
+        if {"open", "abstract", "sealed"} & set(modifiers.split()):
+            raise SystemExit(
+                f"[generate_api_wrapper] {rel}: {kotlin_name} is not final; an enum-only expect of an open class "
+                "would have to repeat its supertypes -- extend render_enum_expect first"
+            )
+    return found[0][1], kinds.pop()
+
+
+def render_enum_expect(godot_class: str) -> str:
+    """`<Class>.expect.kt`: the enum-only expect declaration of a per-platform owner."""
+    _, kind = _platform_declaration(godot_class)
+    kotlin_name = _kotlin_owner_name(godot_class)
+    global RENDER_TARGET
+    previous = RENDER_TARGET
+    RENDER_TARGET = "shared"
+    try:
+        body = render_class_enums(godot_class, "    ", "expect") or ""
+    finally:
+        RENDER_TARGET = previous
+    return "\n".join(
+        [
+            "package net.multigesture.kanama.api",
+            "",
+            f"import {DEFAULT_IMPORTS['JvmInline']}",
+            "",
+            f"// GENERATED by scripts/generate_api_wrapper.py --write-tree -- do not edit (task 128 A).",
+            f"// {kotlin_name} is hand-written per platform, but a shared-tree signature names one of its",
+            "// enums, so common code needs the nested types: this enum-only expect declares them and each",
+            f"// platform's {kotlin_name} actualizes them in its GENERATED ENUMS region. The rest of the",
+            f"// platform {kotlin_name} surface is not in the expect (scripts/check_actual_public_surface.py",
+            "// scopes it out until the class is generated once).",
+            f"expect {kind} {kotlin_name} {{",
+            body,
+            "}",
+            "",
+        ]
+    )
+
+
+def render_global_enums() -> str:
+    """`GlobalEnums.kt`: the @GlobalScope enums, top-level in the api package."""
+    global RENDER_TARGET
+    previous = RENDER_TARGET
+    RENDER_TARGET = "shared"
+    try:
+        classes = [render_enum_class(spec, enum_prefix(spec), "", jvm_inline=True) for spec in global_enums()]
+    finally:
+        RENDER_TARGET = previous
+    return "\n".join(
+        [
+            "package net.multigesture.kanama.api",
+            "",
+            f"import {DEFAULT_IMPORTS['JvmInline']}",
+            "",
+            "// GENERATED by scripts/generate_api_wrapper.py --write-tree -- do not edit (task 128 A).",
+            "// Godot's global (@GlobalScope) enums, one value class each, under Godot's name; renamed only",
+            "// on a collision (Error -> GodotError, PropertyHint -> GodotPropertyHint, Variant.Type ->",
+            "// VariantType, Variant.Operator -> VariantOperator). scripts/check_typed_enums.py keeps the rule.",
+            "",
+            "\n\n".join(classes),
+            "",
+        ]
+    )
+
+
 def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     """Render the whole generated wrapper tree into memory, keyed by repository-relative path."""
-    global RENDER_TARGET
+    global RENDER_TARGET, EXPECT_ENUM_OWNERS
     api_classes = load_api_classes(api_path)
+    lock = load_enum_state(api_path)
+    EXPECT_ENUM_OWNERS = set()
     singleton_names = load_api_singletons(api_path)
     object_types = object_type_names(api_classes)
     shared, desktop_only, ios_only = tree_universe(api_classes)
@@ -4233,6 +4674,21 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             files[_rel(DESKTOP_API_DIR / f"{name}{DESKTOP_COMPANION_SUFFIX}")] = result.desktop_companion
         if result.ios_companion is not None:
             files[_rel(IOS_API_DIR / f"{name}{IOS_COMPANION_SUFFIX}")] = result.ios_companion
+
+    # Typed enums (task 128 A): the enum-only expects the shared tree needs, the global enums, the
+    # frozen prefix lock, and the GENERATED ENUMS regions of the hand-written owners.
+    EXPECT_ENUM_OWNERS = find_expect_enum_owners([r.shared for r in gap.values()])
+    for owner in sorted(EXPECT_ENUM_OWNERS):
+        files[_rel(SHARED_API_DIR / f"{_kotlin_owner_name(owner)}.expect.kt")] = render_enum_expect(owner)
+    files[_rel(GLOBAL_ENUMS_PATH)] = render_global_enums()
+    files[_rel(LOCK_PATH)] = render_lock(lock)
+    region_files: dict[Path, str] = {}
+    for owner, path, target in enum_region_hosts(api_classes):
+        mode = "actual" if owner in EXPECT_ENUM_OWNERS else "plain"
+        source = region_files.get(path) or path.read_text(encoding="utf-8")
+        region_files[path] = splice_enum_region(source, owner, render_enum_region(owner, target, mode), path, mode)
+    for path, content in region_files.items():
+        files[_rel(path)] = content
 
     previous_target = RENDER_TARGET
     try:
@@ -5167,6 +5623,14 @@ def tree_main(args: argparse.Namespace) -> int:
                 # ktfmt reformats the GENERATED MEMBERS region after every regen (the file is
                 # hand-written outside it), so leave the formatted copy alone when the member set is
                 # unchanged -- the drift gate compares the same set for the same reason.
+                continue
+            if (
+                target.parent == TYPES_DIR
+                and target.exists()
+                and whitespace_insensitive(target.read_text(encoding="utf-8")) == whitespace_insensitive(content)
+            ):
+                # A value type is ktfmt-formatted around its GENERATED ENUMS region (task 128 A): keep the
+                # formatted copy when only whitespace differs, as the drift gate does.
                 continue
             if not target.exists() or target.read_text(encoding="utf-8") != content:
                 target.write_text(content, encoding="utf-8")

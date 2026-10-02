@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -15,13 +16,13 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
-    var expandMode: Long
+    var expandMode: TextureRect.ExpandMode
         @JvmName("expandModeProperty")
         get() = getExpandMode()
         @JvmName("setExpandModeProperty")
         set(value) = setExpandMode(value)
 
-    var stretchMode: Long
+    var stretchMode: TextureRect.StretchMode
         @JvmName("stretchModeProperty")
         get() = getStretchMode()
         @JvmName("setStretchModeProperty")
@@ -47,12 +48,12 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
-    fun setExpandMode(expandMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setExpandModeBind, segment, expandMode)
+    fun setExpandMode(expandMode: TextureRect.ExpandMode) {
+        ObjectCalls.ptrcallWithLongArg(setExpandModeBind, segment, expandMode.value)
     }
 
-    fun getExpandMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, segment)
+    fun getExpandMode(): TextureRect.ExpandMode {
+        return TextureRect.ExpandMode(ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, segment))
     }
 
     fun setFlipH(enable: Boolean) {
@@ -71,29 +72,40 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
     }
 
-    fun setStretchMode(stretchMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode)
+    fun setStretchMode(stretchMode: TextureRect.StretchMode) {
+        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode.value)
     }
 
-    fun getStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment)
+    fun getStretchMode(): TextureRect.StretchMode {
+        return TextureRect.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
+    }
+
+    @JvmInline
+    value class ExpandMode(val value: Long) {
+        companion object {
+            val KEEP_SIZE: ExpandMode get() = ExpandMode(0L)
+            val IGNORE_SIZE: ExpandMode get() = ExpandMode(1L)
+            val FIT_WIDTH: ExpandMode get() = ExpandMode(2L)
+            val FIT_WIDTH_PROPORTIONAL: ExpandMode get() = ExpandMode(3L)
+            val FIT_HEIGHT: ExpandMode get() = ExpandMode(4L)
+            val FIT_HEIGHT_PROPORTIONAL: ExpandMode get() = ExpandMode(5L)
+        }
+    }
+
+    @JvmInline
+    value class StretchMode(val value: Long) {
+        companion object {
+            val SCALE: StretchMode get() = StretchMode(0L)
+            val TILE: StretchMode get() = StretchMode(1L)
+            val KEEP: StretchMode get() = StretchMode(2L)
+            val KEEP_CENTERED: StretchMode get() = StretchMode(3L)
+            val KEEP_ASPECT: StretchMode get() = StretchMode(4L)
+            val KEEP_ASPECT_CENTERED: StretchMode get() = StretchMode(5L)
+            val KEEP_ASPECT_COVERED: StretchMode get() = StretchMode(6L)
+        }
     }
 
     companion object {
-        const val EXPAND_KEEP_SIZE: Long = 0L
-        const val EXPAND_IGNORE_SIZE: Long = 1L
-        const val EXPAND_FIT_WIDTH: Long = 2L
-        const val EXPAND_FIT_WIDTH_PROPORTIONAL: Long = 3L
-        const val EXPAND_FIT_HEIGHT: Long = 4L
-        const val EXPAND_FIT_HEIGHT_PROPORTIONAL: Long = 5L
-        const val STRETCH_SCALE: Long = 0L
-        const val STRETCH_TILE: Long = 1L
-        const val STRETCH_KEEP: Long = 2L
-        const val STRETCH_KEEP_CENTERED: Long = 3L
-        const val STRETCH_KEEP_ASPECT: Long = 4L
-        const val STRETCH_KEEP_ASPECT_CENTERED: Long = 5L
-        const val STRETCH_KEEP_ASPECT_COVERED: Long = 6L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureRect? =
             wrap(handle.segment)

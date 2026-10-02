@@ -14,7 +14,8 @@ from pathlib import Path
 
 
 DEFAULT_GODOT_DOCS = Path(os.environ.get("GODOT_DOCS", "godot/doc/classes"))
-from wrapper_model import DESKTOP_API_DIR, wrapper_source_files
+from wrapper_model import DESKTOP_API_DIR, ROOT, wrapper_source_files
+from godot_enum_model import GLOBAL_ENUM_RENAMES, enum_value_name, load_enums, read_lock
 
 # The api scope covers the shared wrapper tree plus the desktop per-platform files and their
 # generated companions (task 103); pass --api-dir to sync one directory only.
@@ -32,8 +33,18 @@ METHOD_BIND_RE = re.compile(
 # The optional receiver (`fun Time.getX(`, `fun X.Companion.create(`) is the generated desktop
 # companion form (`<Class>.jvm.kt`, task 103): extension members over a shared-tree class.
 FUN_RE = re.compile(r"^(\s*)(?:public\s+)?fun\s+(?:<[^>]+>\s+)?(?:[A-Za-z_][\w.]*\.)?([A-Za-z_][A-Za-z0-9_]*)\s*\(")
-CLASS_RE = re.compile(r"^(\s*)(?:(?:open|abstract|sealed|data|value)\s+)*class\s+([A-Za-z_][A-Za-z0-9_]*)\b")
-OBJECT_RE = re.compile(r"^(\s*)object\s+([A-Za-z_][A-Za-z0-9_]*)\b")
+CLASS_RE = re.compile(r"^(\s*)(?:(?:actual|open|abstract|sealed|data|value)\s+)*class\s+([A-Za-z_][A-Za-z0-9_]*)\b")
+OBJECT_RE = re.compile(r"^(\s*)(?:actual\s+)?object\s+([A-Za-z_][A-Za-z0-9_]*)\b")
+# Typed enums (task 128 A): a nested / global `value class X(val value: Long)` and its companion
+# values (`val ALWAYS: ProcessMode get() = ProcessMode(3L)`, the actual form `actual val ...`,
+# the expect form `val ALWAYS: ProcessMode`). Each value gets the Godot doc of the constant it maps to.
+ENUM_CLASS_RE = re.compile(r"^\s*(?:(?:actual|expect)\s+)?value\s+class\s+([A-Za-z_][A-Za-z0-9_]*)\b")
+ENUM_VALUE_RE = re.compile(
+    r"^(\s*)(?:actual\s+)?val\s+([A-Z][A-Z0-9_]*)\s*:\s*([A-Za-z_]\w*)(?:\s*get\(\)\s*=\s*([A-Za-z_]\w*)\(-?\d+L\))?\s*$"
+)
+# The file of the @GlobalScope enums; its docs live in @GlobalScope.xml.
+GLOBAL_ENUMS_STEM = "GlobalEnums"
+GLOBAL_SCOPE_DOCS = "@GlobalScope"
 PROPERTY_RE = re.compile(r"^(\s*)(?:const\s+)?(?:val|var)\s+([A-Za-z_][A-Za-z0-9_]*)\b")
 
 
@@ -304,6 +315,8 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
         )
         documented_methods += 1
 
+    replacements.extend(collect_enum_value_replacements(lines, docs, path.stem.split(".")[0]))
+
     documented_godot_methods = {
         method_docs[match.group(2)][0]
         for line in lines
@@ -311,6 +324,61 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
     }
     missing_methods = len(wrapped_methods - documented_godot_methods)
     return replacements, documented_methods, missing_methods
+
+
+_ENUM_NAME_MAPS: dict[str, dict[str, str]] | None = None
+
+
+def _enum_name_maps() -> dict[str, dict[str, str]]:
+    """Godot enum key -> {Kotlin value name: Godot constant name}, through the generator's one naming
+    function and the frozen prefix lock."""
+    global _ENUM_NAME_MAPS
+    if _ENUM_NAME_MAPS is None:
+        lock = read_lock()
+        _ENUM_NAME_MAPS = {}
+        for key, spec in load_enums(ROOT / "extension_api.json").items():
+            prefix = lock.get(key)
+            if prefix is None:
+                continue
+            _ENUM_NAME_MAPS[key] = {enum_value_name(prefix, value.name): value.name for value in spec.values}
+    return _ENUM_NAME_MAPS
+
+
+def collect_enum_value_replacements(lines: list[str], docs: GodotClassDocs, file_stem: str) -> list[Replacement]:
+    """KDoc for each value of the typed enums in [lines] (task 128 A), from the Godot constant docs."""
+    replacements: list[Replacement] = []
+    renamed = {kotlin: godot for godot, kotlin in GLOBAL_ENUM_RENAMES.items()}
+    current: str | None = None
+    current_simple = ""
+    for index, line in enumerate(lines):
+        enum_match = ENUM_CLASS_RE.match(line)
+        if enum_match:
+            current_simple = enum_match.group(1)
+            if file_stem == GLOBAL_ENUMS_STEM:
+                current = renamed.get(current_simple, current_simple)
+            else:
+                current = f"{docs.class_name}.{current_simple}"
+            continue
+        if current is None:
+            continue
+        value_match = ENUM_VALUE_RE.match(line)
+        if not value_match or (value_match.group(3) or value_match.group(4)) != current_simple:
+            continue
+        godot_name = _enum_name_maps().get(current, {}).get(value_match.group(2))
+        description = docs.constants.get(godot_name) if godot_name else None
+        if not description:
+            continue
+        insert_at = find_insertion_index(lines, index)
+        replace_start = find_generated_kdoc_start(lines, index)
+        source = f"{GLOBAL_SCOPE_DOCS if file_stem == GLOBAL_ENUMS_STEM else docs.class_name}.{godot_name}"
+        replacements.append(
+            Replacement(
+                start=replace_start if replace_start is not None else insert_at,
+                end=insert_at,
+                lines=kdoc_block(value_match.group(1), description, source),
+            ),
+        )
+    return replacements
 
 
 def collect_builtin_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Replacement], int, int]:
@@ -434,6 +502,8 @@ def main() -> int:
 
     for scope, path in targets:
         class_name = path.stem.split(".")[0]  # `Time.jvm.kt` documents Time
+        if class_name == GLOBAL_ENUMS_STEM:
+            class_name = GLOBAL_SCOPE_DOCS
         if class_filter is not None and class_name not in class_filter:
             continue
         total_classes += 1
