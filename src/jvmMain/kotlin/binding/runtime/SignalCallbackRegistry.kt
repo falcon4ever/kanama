@@ -39,7 +39,9 @@ object SignalCallbackRegistry {
    * [SignalCallables].
    */
   fun invoke(id: Long, args: List<Any?>) {
-    callbacks[id]?.callback?.invoke(args)
+    // `?.let { it.callback(args) }`, never `?.invoke(`: the Android source remap rewrites
+    // `.invoke(` (MethodHandle calls) to `.invokeWithArguments(`.
+    callbacks[id]?.let { it.callback(args) }
   }
 
   /** Number of live closures (task 131 leak checks). */
