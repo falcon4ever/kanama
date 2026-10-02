@@ -570,11 +570,11 @@ if ! rg -q 'object HelloScriptRpcs' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC sender helper object is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun rpcReplaceSmokeScene\(instance: HelloScript\): Long =' "$hello_script_registrar"; then
+if ! rg -q 'fun rpcReplaceSmokeScene\(instance: HelloScript\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC sender helper is missing" >&2
   exit 1
 fi
-if ! rg -q 'fun rpcIdReplaceSmokeScene\(instance: HelloScript, peerId: Long\): Long =' "$hello_script_registrar"; then
+if ! rg -q 'fun rpcIdReplaceSmokeScene\(instance: HelloScript, peerId: Long\): net\.multigesture\.kanama\.api\.GodotError =' "$hello_script_registrar"; then
   echo "[local_ci] generated RPC peer-targeted sender helper is missing" >&2
   exit 1
 fi
