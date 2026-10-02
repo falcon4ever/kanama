@@ -677,7 +677,34 @@ def check_shared_tree_pointer() -> int:
     return 0
 
 
+RETIRED_SHARED_API_DIR = ROOT / "src/sharedApi"
+
+
+def check_no_shared_api_dir() -> int:
+    """`src/sharedApi` must not come back (task 117 P4').
+
+    The API tree moved to `src/commonMain/kotlin/net/multigesture/kanama/api/` and no source set
+    lists `src/sharedApi` any more, so files resurrected there (a stale branch, a bad merge, an old
+    script) would compile in NO lane: silently dead code that still looks like the API. Any entry,
+    even an empty directory, fails.
+    """
+    if RETIRED_SHARED_API_DIR.exists():
+        entries = sorted(_rel(path) for path in RETIRED_SHARED_API_DIR.rglob("*") if path.is_file())
+        print(
+            f"[wrapper_generator] FAIL {_rel(RETIRED_SHARED_API_DIR)} exists ({len(entries)} file(s)); the API "
+            "tree lives in src/commonMain/kotlin/net/multigesture/kanama/api since task 117 P4' and no "
+            "source set compiles src/sharedApi -- move the files there or delete the directory",
+            file=sys.stderr,
+        )
+        for rel in entries[:40]:
+            print(f"    {rel}", file=sys.stderr)
+        return 1
+    return 0
+
+
 def main() -> int:
+    if check_no_shared_api_dir() != 0:
+        return 1
     name_constants = subprocess.run(
         [sys.executable, str(ROOT / "scripts/generate_name_constants.py"), "--check"],
         cwd=ROOT,
