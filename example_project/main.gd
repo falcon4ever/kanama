@@ -100,6 +100,7 @@ func _ready() -> void:
 			push_error("Kanama script local RPC smoke failed")
 
 	_kanama_virtual_return_families_smoke()
+	_kanama_godot_enum_export_smoke()
 
 	#get_tree().quit()
 
@@ -547,6 +548,60 @@ func _kanama_virtual_return_families_smoke() -> void:
 	# hand the engine the zero default (a NIL return) instead of aborting the process.
 	var thrown_result = $HelloKanama.smoke_throw()
 	print("[kanama:gd] upcall containment survived=true result_null=", thrown_result == null)
+
+# task 128 B — Godot enum value classes as script members. `var mode: Node.ProcessMode` exports as
+# INT with PROPERTY_HINT_ENUM and Godot's names-with-values hint string, a bitfield with
+# PROPERTY_HINT_FLAGS, and `List<Node.ProcessMode>` as a typed int Array; the stored scene values
+# arrive as the Godot values (not ordinals), a @RegisterFunction takes and returns the enum as an
+# int, and engine virtuals with an enum parameter / return / required object return answer through
+# the script instance dispatch.
+func _kanama_godot_enum_export_smoke() -> void:
+	var node = $GodotEnumNode
+	var mode_meta := false
+	var flags_meta := false
+	var list_meta := false
+	var default_meta := false
+	for property in node.get_script().get_script_property_list():
+		var name = property.get("name", "")
+		var hint = int(property.get("hint", -1))
+		var hint_string = str(property.get("hint_string", ""))
+		var type = int(property.get("type", -1))
+		if name == "mode":
+			mode_meta = type == TYPE_INT and hint == PROPERTY_HINT_ENUM and hint_string == "Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4"
+		if name == "messages":
+			flags_meta = type == TYPE_INT and hint == PROPERTY_HINT_FLAGS and hint_string == "Messages:1,Messages Physics:2,Messages All:3"
+		if name == "modes":
+			list_meta = type == TYPE_ARRAY and hint == PROPERTY_HINT_TYPE_STRING and hint_string == "%d/%d:Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4" % [TYPE_INT, PROPERTY_HINT_ENUM]
+	default_meta = node.get_script().get_property_default_value("defaulted") == Node.PROCESS_MODE_WHEN_PAUSED
+	var tscn = node.mode == Node.PROCESS_MODE_ALWAYS and node.messages == 3 and node.modes == [1, 4]
+	node.mode = Node.PROCESS_MODE_DISABLED
+	node.messages = Node.FLAG_PROCESS_THREAD_MESSAGES_PHYSICS
+	node.modes = [Node.PROCESS_MODE_WHEN_PAUSED]
+	var roundtrip = node.mode == Node.PROCESS_MODE_DISABLED and node.messages == 2 and node.modes == [2]
+	var next_mode = node.next_mode(Node.PROCESS_MODE_PAUSABLE)
+	var function = typeof(next_mode) == TYPE_INT and next_mode == Node.PROCESS_MODE_WHEN_PAUSED and node.has_physics_messages(3) and not node.has_physics_messages(1)
+	print("[kanama:gd] godot enum export mode_meta=", mode_meta, " flags_meta=", flags_meta,
+		" list_meta=", list_meta, " default=", default_meta, " tscn=", tscn,
+		" roundtrip=", roundtrip, " function=", function)
+	if not (mode_meta and flags_meta and list_meta and default_meta and tscn and roundtrip and function):
+		push_error("Kanama Godot enum @ScriptProperty / @RegisterFunction smoke failed")
+
+	var ts_host = ClassDB.instantiate("TextServerExtension")
+	ts_host.set_script(load("res://EnumVirtualProbe.kt"))
+	var enum_arg = ts_host._has_feature(TextServer.FEATURE_SHAPING) and not ts_host._has_feature(TextServer.FEATURE_FONT_MSDF)
+	var material_host = ShaderMaterial.new()
+	material_host.set_script(load("res://MaterialEnumVirtualProbe.kt"))
+	var shader_mode = material_host._get_shader_mode()
+	var enum_return = typeof(shader_mode) == TYPE_INT and shader_mode == Shader.MODE_PARTICLES
+	var body_host = ClassDB.instantiate("PhysicsDirectBodyState2DExtension")
+	body_host.set_script(load("res://Body2dVirtualReturnProbe.kt"))
+	var space_state = body_host._get_space_state()
+	var required_return = typeof(space_state) == TYPE_OBJECT and space_state == body_host
+	body_host.free()
+	print("[kanama:gd] godot enum virtuals enum_arg=", enum_arg, " enum_return=", enum_return,
+		" required_object_return=", required_return)
+	if not (enum_arg and enum_return and required_return):
+		push_error("Kanama Godot enum virtual override smoke failed")
 
 func _process(_delta: float) -> void:
 	if OS.get_environment("KANAMA_IN_PROCESS_HOT_RELOAD_SMOKE") != "1":

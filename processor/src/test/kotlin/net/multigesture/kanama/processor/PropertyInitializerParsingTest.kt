@@ -60,6 +60,21 @@ class PropertyInitializerParsingTest {
   }
 
   @Test
+  fun initializerWrappedAfterTheEqualsSignParses() {
+    // Task 128 B: ktfmt wraps a long Godot-enum default after the `=`.
+    assertEquals(
+      "Node.ProcessThreadMessages.MESSAGES or Node.ProcessThreadMessages.MESSAGES_PHYSICS",
+      initializerOf(
+        "messages",
+        "var messages: Node.ProcessThreadMessages =",
+        "  Node.ProcessThreadMessages.MESSAGES or Node.ProcessThreadMessages.MESSAGES_PHYSICS",
+        "",
+        "@Signal fun modeChanged(mode: Node.ProcessMode) = Unit",
+      ),
+    )
+  }
+
+  @Test
   fun declarationsWithoutInitializersYieldNull() {
     assertEquals(null, initializerOf("node", "lateinit var node: Node3D"))
     assertEquals(null, initializerOf("other", "var mismatchedName = 1"))

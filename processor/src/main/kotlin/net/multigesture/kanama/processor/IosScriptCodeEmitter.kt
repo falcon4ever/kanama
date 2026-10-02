@@ -90,6 +90,8 @@ internal data class IosMethod(
   // A supported non-null type routes to `callVReturning`, which encodes the result PT-tagged for
   // the engine. Unsupported return types are skipped + warned (return dropped, as before 5.3b).
   val returnType: TypeMapping? = null,
+  // Task 128 B: a Godot enum return is encoded as its raw `.value` (INT64), not the boxed class.
+  val returnGodotEnum: GodotEnumRef? = null,
 ) {
   val argumentCount: Int
     get() = args.size
@@ -144,6 +146,9 @@ internal data class IosProperty(
   // compile on Kotlin/Native (`List<T>` is not assignable to `MutableList<T>`). Mirrors the
   // desktop emitter's `.toMutableList()` on `p.isMutable`.
   val isMutable: Boolean = false,
+  // Task 128 B: `List<Node.ProcessMode>` — delivered through the same integer-array path as
+  // `arrayElementEnumFqName`, but the integers are Godot values wrapped as-is (no ordinal lookup).
+  val arrayElementGodotEnum: GodotEnumRef? = null,
 )
 
 internal data class IosSignal(val godotName: String, val kotlinName: String)
@@ -280,6 +285,7 @@ internal class IosScriptCodeEmitter(
         script.properties.filter {
           it.scalarGetExpression.isNotEmpty() ||
             it.arrayElementEnumFqName.isNotEmpty() ||
+            it.arrayElementGodotEnum != null ||
             it.listElementIsString
         }
       if (readableProperties.isNotEmpty()) {
@@ -293,6 +299,8 @@ internal class IosScriptCodeEmitter(
               builder.appendLine(
                 "        $index -> script.${property.kotlinName}.map { it.ordinal.toLong() }"
               )
+            property.arrayElementGodotEnum != null ->
+              builder.appendLine("        $index -> script.${property.kotlinName}.map { it.value }")
             // List<String>: encodeIosReturn ships it as a PackedStringArray; without this
             // branch a String-list @ScriptProperty is read back as nil (write-only).
             property.listElementIsString ->
@@ -317,7 +325,9 @@ internal class IosScriptCodeEmitter(
           if (exprs.all { it != null }) {
             val invocation =
               invocationByArgCount(method, exprs.map { it!! }, "script.${method.kotlinName}")
-            builder.appendLine("        ${kotlinString(method.godotName)} -> $invocation")
+            // A Godot enum return leaves as its raw value (INT64), like the desktop registrar.
+            val returned = if (method.returnGodotEnum != null) "($invocation).value" else invocation
+            builder.appendLine("        ${kotlinString(method.godotName)} -> $returned")
           } else {
             warn(
               "[kanama-ios] ${script.className}.${method.kotlinName} (godot: ${method.godotName}) has an unaudited arg type — not dispatched on iOS"
@@ -401,7 +411,10 @@ internal class IosScriptCodeEmitter(
         builder.appendLine("        else -> false")
         builder.appendLine("    }")
       }
-      val enumListProperties = script.properties.filter { it.arrayElementEnumFqName.isNotEmpty() }
+      val enumListProperties =
+        script.properties.filter {
+          it.arrayElementEnumFqName.isNotEmpty() || it.arrayElementGodotEnum != null
+        }
       if (enumListProperties.isNotEmpty()) {
         builder.appendLine()
         builder.appendLine(
@@ -412,6 +425,11 @@ internal class IosScriptCodeEmitter(
             val fq = property.arrayElementEnumFqName
             builder.appendLine(
               "        $index -> { script.${property.kotlinName} = values.map { i -> $fq.entries[i.toInt().coerceIn(0, $fq.entries.lastIndex)] }${property.mutableSuffix()}; true }"
+            )
+          }
+          property.arrayElementGodotEnum?.let { element ->
+            builder.appendLine(
+              "        $index -> { script.${property.kotlinName} = values.map { i -> ${element.wrap("i")} }${property.mutableSuffix()}; true }"
             )
           }
         }
@@ -485,6 +503,7 @@ internal class IosScriptCodeEmitter(
       return true
     }
     if (property.arrayElementEnumFqName.isNotEmpty()) return true
+    if (property.arrayElementGodotEnum != null) return true
     if (property.valueTypeClassName.isNotEmpty()) return true
     return false
   }
@@ -730,7 +749,8 @@ internal class IosScriptCodeEmitter(
     when {
       virtualName in lifecycleIosVirtuals -> IosMethod(virtualName, kotlinMethodName, args)
       returnType == null -> IosMethod(virtualName, kotlinMethodName, args)
-      returnType in iosReturnTypes -> IosMethod(virtualName, kotlinMethodName, args, returnType)
+      returnType in iosReturnTypes ->
+        IosMethod(virtualName, kotlinMethodName, args, returnType, returnGodotEnum)
       else -> {
         warn(
           "[kanama-ios] $kotlinMethodName ($virtualName): @OverrideVirtual return type " +
@@ -747,6 +767,7 @@ internal class IosScriptCodeEmitter(
       kotlinName = kotlinName,
       args = args,
       returnType = returnType?.takeIf { it in iosReturnTypes },
+      returnGodotEnum = returnGodotEnum,
     )
 
   /** TypeMapping arg types the C inbound marshalling + decode handle (besides OBJECT wrappers). */
@@ -795,6 +816,10 @@ internal class IosScriptCodeEmitter(
       } else {
         "$w(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress($cell as Long)))"
       }
+    }
+    // Task 128 B: a Godot enum arrives as its INT value; wrap it into the value class.
+    a.godotEnum?.let {
+      return it.wrap("$cell as Long")
     }
     return if (a.type in iosCallArgTypes) "$cell as ${a.type.kotlinType}" else null
   }
@@ -847,6 +872,7 @@ internal class IosScriptCodeEmitter(
         isList -> ""
         customScript.isNotEmpty() -> ""
         enumFqName != null -> "Long"
+        godotEnum != null -> "Long"
         narrow == NarrowScalar.FLOAT32 -> "Double"
         narrow == NarrowScalar.INT32 -> "Long"
         else ->
@@ -879,6 +905,9 @@ internal class IosScriptCodeEmitter(
         isObject || isList || customScript.isNotEmpty() -> ""
         enumFqName != null ->
           "$enumFqName.entries[value.toInt().coerceIn(0, $enumFqName.entries.lastIndex)]"
+        // Task 128 B: the slot holds the Godot value itself; wrap it (no clamp, any value is
+        // valid).
+        godotEnum != null -> godotEnum.wrap("value")
         narrow == NarrowScalar.FLOAT32 -> "Double.fromBits(value).toFloat()"
         narrow == NarrowScalar.INT32 -> "value.toInt()"
         type == TypeMapping.INT -> "value"
@@ -896,6 +925,7 @@ internal class IosScriptCodeEmitter(
         // returned the node — the third-person bullet smoke caught it.
         isObject || customScript.isNotEmpty() -> "script.$kotlinName"
         enumFqName != null -> "script.$kotlinName.ordinal.toLong()"
+        godotEnum != null -> "script.$kotlinName.value"
         scalarSetExpression.isNotEmpty() -> "script.$kotlinName"
         // Types that write through a dedicated set path (Vector2/Vector3/NodePath via
         // setPropertyValue, String via setPropertyString) have an empty scalarSetExpression — but
@@ -963,6 +993,7 @@ internal class IosScriptCodeEmitter(
       scalarGetExpression = scalarGetExpression,
       arrayElementEnumFqName = if (isList) arrayElementEnumFqName.orEmpty() else "",
       isMutable = isMutable,
+      arrayElementGodotEnum = if (isList) arrayElementGodotEnum else null,
     )
   }
 

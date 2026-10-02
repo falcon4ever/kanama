@@ -9,7 +9,7 @@ package net.multigesture.kanama.processor
 // from that name. SCHEMA_VERSION is bumped whenever the shape changes; the consumer
 // fails closed on a mismatch.
 
-internal const val SCRIPT_MODEL_SCHEMA_VERSION = 6
+internal const val SCRIPT_MODEL_SCHEMA_VERSION = 7
 
 internal fun scriptModelToJson(model: ScriptModel): String {
   val sb = StringBuilder()
@@ -61,6 +61,8 @@ private fun JsonWriter.writeProperty(p: ScriptPropertyModel) = obj {
   field("mapValueNullable", p.mapValueNullable)
   field("isMutableMap", p.isMutableMap)
   field("isMutableList", p.isMutableList)
+  objectOrNullField("godotEnum", p.godotEnum) { writeGodotEnum(it) }
+  objectOrNullField("arrayElementGodotEnum", p.arrayElementGodotEnum) { writeGodotEnum(it) }
   objectOrNullField("exportCategory", p.exportCategory) { writeGroup(it) }
   objectOrNullField("exportGroup", p.exportGroup) { writeGroup(it) }
   objectOrNullField("exportSubgroup", p.exportSubgroup) { writeGroup(it) }
@@ -77,6 +79,7 @@ private fun JsonWriter.writeMethod(m: MethodModel) = obj {
   field("godotName", m.godotName)
   field("kind", m.kind.name)
   nullableField("returnType", m.returnType?.name)
+  objectOrNullField("returnGodotEnum", m.returnGodotEnum) { writeGodotEnum(it) }
   nullableField("propertyKotlinName", m.propertyKotlinName)
   arrayField("args", m.args) { writeArg(it) }
   objectOrNullField("rpc", m.rpc) { writeRpc(it) }
@@ -88,6 +91,13 @@ private fun JsonWriter.writeArg(a: ArgModel) = obj {
   nullableField("objectWrapperFqName", a.objectWrapperFqName)
   field("nullable", a.nullable)
   field("hasDefault", a.hasDefault)
+  objectOrNullField("godotEnum", a.godotEnum) { writeGodotEnum(it) }
+}
+
+// Task 128 B: a Godot enum value-class slot (INT on the wire).
+private fun JsonWriter.writeGodotEnum(e: GodotEnumRef) = obj {
+  field("kotlinFqName", e.kotlinFqName)
+  field("isBitfield", e.isBitfield)
 }
 
 private fun JsonWriter.writeRpc(r: RpcModel) = obj {
@@ -100,6 +110,8 @@ private fun JsonWriter.writeRpc(r: RpcModel) = obj {
 private fun JsonWriter.writeVirtual(v: VirtualModel) = obj {
   field("virtualName", v.virtualName)
   field("kotlinMethodName", v.kotlinMethodName)
+  nullableField("returnType", v.returnType?.name)
+  objectOrNullField("returnGodotEnum", v.returnGodotEnum) { writeGodotEnum(it) }
   arrayField("args", v.args) { writeArg(it) }
 }
 

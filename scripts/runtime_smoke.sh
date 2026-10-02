@@ -120,6 +120,13 @@ check "kt script enum export type=true hint=true hint_string=true tscn=true roun
 # ordinal-array round-trip via set/get, tscn deserialize, per-element clamp, and
 # inspector Add-Element null-fill defaulting to the first entry.
 check "kt script enum list export type=true hint=true hint_string=true tscn=true roundtrip=true clamp=true nullfill=true"
+# task 128 B — Godot enum value classes (`var mode: Node.ProcessMode`) as script members: INT +
+# PROPERTY_HINT_ENUM / _FLAGS with Godot's names-with-values hint, the Godot values (not ordinals)
+# through the scene, Object.set/get, a @RegisterFunction and a signal, read back typed in Kotlin;
+# engine virtuals with an enum parameter / return and the required `_get_space_state` object return.
+check "GodotEnumExportSmoke typed mode=true flags=true list=true default=true signal=true"
+check "godot enum export mode_meta=true flags_meta=true list_meta=true default=true tscn=true roundtrip=true function=true"
+check "godot enum virtuals enum_arg=true enum_return=true required_object_return=true"
 # task 50 — a throwing user @ScriptProperty accessor must be contained by ScriptBridge's
 # siSet/siGet rather than escaping the FFM upcall and aborting the process. A failed set is
 # rejected (previous value survives), a failed get yields null, and the property recovers.
