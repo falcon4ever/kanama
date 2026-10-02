@@ -121,8 +121,21 @@ versioning once public releases begin.
   included), required returns non-null and the rest nullable, no generated top-level name equal to a
   Kotlin default import or a public Kanama type, and every value name equal to the naming function
   under the frozen lock; the migration table has a `--check` docs stage. Not in this change: KSP
-  marshalling of enum-typed `@ScriptProperty` / `@RegisterFunction` / virtual signatures (task 128 B)
-  and the Web backend's wrappers (task 128 C) — Web scripts keep the `Long` constants until then.
+  marshalling of enum-typed `@ScriptProperty` / `@RegisterFunction` / virtual signatures (task 128 B).
+- **Web (task 128 C): the same types on Web.** The Kotlin/Wasm wrappers (`scripts/generate_web_wrappers.py`)
+  use the same value classes, names and frozen lock (`Node.ProcessMode.ALWAYS`, `Key.W`,
+  `GodotObject.ConnectFlags.ONE_SHOT`, `GodotError`); every Web class nests all its Godot enums, the
+  globals and `GodotEnumValue` are top-level, `PhysicsServer3D` is an enum-only `object` on Web, and the
+  hand facades (`Window.mode: Window.Mode`, `DisplayServer.VSyncMode`, `ResourceLoader.ThreadLoadProgress`,
+  `ENetMultiplayerPeer.createServer(): GodotError`) follow. `GodotSignal.connect*` take
+  `GodotObject.ConnectFlags` and return `GodotError`; the Web RPC helpers return `GodotError`. The 13
+  required returns Web exposes (`createTween`, `tweenProperty`, the Tween/PropertyTweener fluent
+  setters, `SceneTree.getRoot` / `createTimer`) are non-null through the same throwing
+  `requireGodotReturn`. The bridge ABI is unchanged, and the Web Variant encoders take a
+  `GodotEnumValue` as INT. Removed on Web: the hand subsets (`InputEventKey.KEY_*`,
+  `InputEventMouseButton.MOUSE_BUTTON_*`, `PhysicsBody3D.BODY_AXIS_*`), the enum `const val`s
+  (`Window.MODE_*`, `DisplayServer.VSYNC_*`, ...) and the Web-only top-level `BodyAxis` alias object
+  (use `PhysicsServer3D.BodyAxis`). Gate: `scripts/check_web_typed_enums.py` (local_ci).
 
 ### Changed — the API tree is common code (task 117 P4′)
 

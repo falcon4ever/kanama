@@ -8,4 +8,11 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class LightmapGIData(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class ShadowmaskMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: ShadowmaskMode get() = ShadowmaskMode(0L)
+      val REPLACE: ShadowmaskMode get() = ShadowmaskMode(1L)
+      val OVERLAY: ShadowmaskMode get() = ShadowmaskMode(2L)
+    }
+  }
 }

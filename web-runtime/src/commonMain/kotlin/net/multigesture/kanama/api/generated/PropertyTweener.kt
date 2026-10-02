@@ -11,22 +11,24 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class PropertyTweener(godotObject: GodotHandle) : Tweener(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  fun setTrans(trans: Long): PropertyTweener {
+  fun setTrans(trans: Tween.TransitionType): PropertyTweener {
     val returned = GodotBackendCalls.invokeLongRetHandle(
       D.PROPERTYTWEENER_SET_TRANS,
       requireOpenHandle(),
-      trans,
+      trans.value,
     )
-    return if (returned == null || returned.backendToken() == backendHandle.backendToken()) this else PropertyTweener(returned.toWebId())
+    val live = requireGodotReturn(returned, "PropertyTweener.set_trans")
+    return if (live.backendToken() == backendHandle.backendToken()) this else PropertyTweener(live.toWebId())
   }
 
-  fun setEase(ease: Long): PropertyTweener {
+  fun setEase(ease: Tween.EaseType): PropertyTweener {
     val returned = GodotBackendCalls.invokeLongRetHandle(
       D.PROPERTYTWEENER_SET_EASE,
       requireOpenHandle(),
-      ease,
+      ease.value,
     )
-    return if (returned == null || returned.backendToken() == backendHandle.backendToken()) this else PropertyTweener(returned.toWebId())
+    val live = requireGodotReturn(returned, "PropertyTweener.set_ease")
+    return if (live.backendToken() == backendHandle.backendToken()) this else PropertyTweener(live.toWebId())
   }
 
   /** Custom starting value, COLOR arm (task 64 tier 2); see the Any? overload for the arms that do not exist. */
@@ -36,7 +38,8 @@ class PropertyTweener(godotObject: GodotHandle) : Tweener(godotObject) {
       requireOpenHandle(),
       value.toBackend(),
     )
-    return if (returned == null || returned.backendToken() == backendHandle.backendToken()) this else PropertyTweener(returned.toWebId())
+    val live = requireGodotReturn(returned, "PropertyTweener.from")
+    return if (live.backendToken() == backendHandle.backendToken()) this else PropertyTweener(live.toWebId())
   }
 
   /** Variant-style starting value: Color is the one arm the Web backend has (Icone's fade). */
@@ -52,10 +55,10 @@ class PropertyTweener(godotObject: GodotHandle) : Tweener(godotObject) {
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun PropertyTweener.setTrans(trans: Long): PropertyTweener = setTrans(trans)
+fun PropertyTweener.setTrans(trans: Tween.TransitionType): PropertyTweener = setTrans(trans)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun PropertyTweener.setEase(ease: Long): PropertyTweener = setEase(ease)
+fun PropertyTweener.setEase(ease: Tween.EaseType): PropertyTweener = setEase(ease)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun PropertyTweener.from(value: Color): PropertyTweener = from(value)

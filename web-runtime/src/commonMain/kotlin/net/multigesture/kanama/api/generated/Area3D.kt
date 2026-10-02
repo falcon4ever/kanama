@@ -20,6 +20,16 @@ class Area3D(godotObject: GodotHandle) : CollisionObject3D(godotObject) {
     const val bodyEntered: String = "body_entered"
     const val bodyExited: String = "body_exited"
   }
+
+  value class SpaceOverride(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: SpaceOverride get() = SpaceOverride(0L)
+      val COMBINE: SpaceOverride get() = SpaceOverride(1L)
+      val COMBINE_REPLACE: SpaceOverride get() = SpaceOverride(2L)
+      val REPLACE: SpaceOverride get() = SpaceOverride(3L)
+      val REPLACE_COMBINE: SpaceOverride get() = SpaceOverride(4L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

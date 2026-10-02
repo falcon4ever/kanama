@@ -14,6 +14,13 @@ members the contract cannot express (compositions over several opcodes, Kotlin-s
 lifetime helpers). Both are checked by `--check`, which also fails if a hand-written file under
 `api/` dispatches an opcode the generated tree owns.
 
+Typed Godot enums (task 128 C): every `enum::`/`bitfield::` slot uses the value class the native
+generator emits, from the same model (`scripts/godot_enum_model.py`) and frozen prefix lock (read
+only here). Each generated class nests all its Godot enums, `GlobalEnums.kt` carries the globals and
+the `GodotEnumValue` marker, an enum owner a slot names but the tree lacks becomes an enum-only class,
+and each hand-written facade of an enum-owning Godot class carries a `GENERATED ENUMS` region this
+generator fills (and `--check` verifies).
+
 Usage:
     python3 scripts/generate_web_wrappers.py            # regenerate the tree
     python3 scripts/generate_web_wrappers.py --check    # committed == fresh regen, gate mode
@@ -31,6 +38,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from generate_web_backend import SIGNATURES  # noqa: E402  (SPI parameter list per call shape)
+from godot_enum_model import (  # noqa: E402  (task 128 C: the ONE enum model, shared with desktop/iOS)
+    API_PACKAGE,
+    LOCK_PATH,
+    MARKER_INTERFACE,
+    EnumSpec,
+    constant_for_value,
+    enum_key_of_type,
+    load_enums,
+    read_lock,
+    render_enum_class,
+)
 from platform_backend_contract import INITIAL_BACKEND_CALLS, BackendCallPolicy  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -58,6 +76,41 @@ class Api:
         self.utilities: dict[str, dict] = {u["name"]: u for u in payload["utility_functions"]}
         self.global_enums: dict[str, dict] = {e["name"]: e for e in payload["global_enums"]}
         self.singletons: set[str] = {s["name"] for s in payload.get("singletons", ())}
+        # Typed Godot enums (task 128 C): the same model, names and frozen prefix lock as the native
+        # generator. The lock is the native generator's output; this generator only reads it.
+        self.enums: dict[str, EnumSpec] = load_enums(path)
+        self.lock: dict[str, str] = read_lock()
+        unlocked = sorted(k for k in self.enums if k not in self.lock)
+        if unlocked:
+            raise GenerationError(
+                f"{LOCK_PATH.name} has no frozen prefix for {unlocked[:5]}; run scripts/generate_api_wrapper.py --write-tree first"
+            )
+        # A global enum whose simple name a class enum also uses (`Orientation`) is spelled
+        # package-qualified so the nested one cannot shadow it.
+        nested = {spec.name for spec in self.enums.values() if spec.owner}
+        self.shadowed_globals: set[str] = {spec.simple_name for spec in self.enums.values() if spec.owner is None} & nested
+        self.enum_by_kotlin: dict[str, EnumSpec] = {self.enum_type(spec): spec for spec in self.enums.values()}
+
+    def enum_type(self, spec: EnumSpec) -> str:
+        """The Kotlin type of [spec] as generated Web code spells it (`Node.ProcessMode`, `GodotError`)."""
+        if spec.owner is None and spec.simple_name in self.shadowed_globals:
+            return f"{API_PACKAGE}.{spec.simple_name}"
+        return spec.kotlin_name
+
+    def enum_for_godot_type(self, godot_type: str) -> EnumSpec | None:
+        key = enum_key_of_type(godot_type)
+        if key is None:
+            return None
+        spec = self.enums.get(key)
+        if spec is None:
+            raise GenerationError(f"enum {key} not in API")
+        if spec.builtin:
+            raise GenerationError(f"builtin-owned enum {key} has no Web value type yet")
+        return spec
+
+    def class_enums(self, godot_class: str) -> list[EnumSpec]:
+        """Every enum Godot declares on [godot_class], in Godot's order."""
+        return [self.enums[f"{godot_class}.{e['name']}"] for e in self.classes.get(godot_class, {}).get("enums") or ()]
 
     def parent(self, name: str) -> str | None:
         return self.classes[name].get("inherits")
@@ -86,16 +139,6 @@ class Api:
                 if prop.get("setter") == method_name or prop.get("getter") == method_name:
                     return prop
         return None
-
-    def enum_values(self, owner: str, enum: str) -> dict[str, int]:
-        source = (
-            self.global_enums.get(enum)
-            if owner == "@GlobalScope"
-            else next((e for e in self.classes[owner].get("enums", ()) if e["name"] == enum), None)
-        )
-        if source is None:
-            raise GenerationError(f"enum {owner}.{enum} not in API")
-        return {v["name"]: v["value"] for v in source["values"]}
 
     def constant(self, owner: str, name: str) -> int:
         for constant in self.classes[owner].get("constants", ()):
@@ -133,8 +176,11 @@ def kotlin_class_name(godot_name: str) -> str:
 
 # --------------------------------------------------------------------------------------------------
 # Type mapping. Kotlin public types follow the desktop generator (`wrapper_model.value_policy`):
-# int32-meta ints are Int, everything else Long, enums/bitfields Long, float Double. Conversions to
-# and from the SPI's contract value types are one-liners on the generated support file.
+# int32-meta ints are Int, everything else Long, float Double, and since task 128 every
+# `enum::`/`bitfield::` slot is its value class (`Node.ProcessMode`, `GodotError`). The ABI does not
+# change: an enum crosses the JS bridge as its raw number (`.value` at the argument boundary,
+# `X(raw)` at the return boundary). Conversions to and from the SPI's contract value types are
+# one-liners on the generated support file.
 # --------------------------------------------------------------------------------------------------
 
 INT32_METAS = {"int8", "int16", "int32", "char32", "uint8", "uint16"}
@@ -187,8 +233,9 @@ def api_param_type(tree: Tree, godot_type: str, meta: str, spi_type: str) -> str
         return "Boolean"
     if godot_type == "int":
         return "Int" if spi_type == "Int" else int_type(meta)
-    if godot_type.startswith("enum::") or godot_type.startswith("bitfield::"):
-        return "Long"
+    spec = tree.api.enum_for_godot_type(godot_type)
+    if spec is not None:
+        return tree.api.enum_type(spec)
     if godot_type == "float":
         return "Double"
     if godot_type in STRING_TYPES:
@@ -206,8 +253,14 @@ def api_param_type(tree: Tree, godot_type: str, meta: str, spi_type: str) -> str
     raise GenerationError(f"no Kotlin parameter type for Godot type {godot_type!r}")
 
 
-def to_backend(expr: str, kotlin_type: str, spi_type: str) -> str:
+def to_backend(tree: Tree, expr: str, kotlin_type: str, spi_type: str) -> str:
     """Expression converting a Kotlin API value to the SPI slot type."""
+    if kotlin_type in tree.api.enum_by_kotlin:
+        if spi_type == "Long":
+            return f"{expr}.value"
+        if spi_type == "Int":
+            return f"{expr}.value.toInt()"
+        raise GenerationError(f"enum {kotlin_type} bound to SPI slot type {spi_type}")
     if spi_type in ("GodotHandle", "GodotHandle?"):
         return f"{expr}?.requireOpenHandle()" if kotlin_type.endswith("?") else f"{expr}.requireOpenHandle()"
     if spi_type == "Long" and kotlin_type == "Int":
@@ -221,6 +274,14 @@ def api_return(tree: Tree, godot_type: str, meta: str, spi_ret: str) -> tuple[st
     """(Kotlin return type, conversion suffix applied to the SPI result expression)."""
     if spi_ret == "":
         return "", ""
+    spec = tree.api.enum_for_godot_type(godot_type)
+    if spec is not None:
+        enum_type = tree.api.enum_type(spec)
+        if spi_ret == "Long":
+            return enum_type, f".let {{ {enum_type}(it) }}"
+        if spi_ret == "Int":
+            return enum_type, f".let {{ {enum_type}(it.toLong()) }}"
+        raise GenerationError(f"enum return {godot_type} over SPI type {spi_ret}")
     if spi_ret in ("Boolean", "Double", "String"):
         return spi_ret, ""
     if spi_ret == "Int":
@@ -247,10 +308,18 @@ def api_return(tree: Tree, godot_type: str, meta: str, spi_ret: str) -> tuple[st
     raise GenerationError(f"no Kotlin return mapping for SPI type {spi_ret!r}")
 
 
-def kotlin_default(godot_default: str, kotlin_type: str) -> str | None:
-    """Kotlin literal for a Godot default value, or None when it cannot be expressed."""
+def kotlin_default(godot_default: str, kotlin_type: str, api: Api | None = None) -> str | None:
+    """Kotlin literal for a Godot default value, or None when it cannot be expressed.
+
+    An enum default is the named value equal to Godot's default (Godot's first on aliases), else
+    `X(<n>L)` -- the desktop generator's rule."""
     if godot_default in ("null", "[]", "{}"):
         return None
+    if api is not None and kotlin_type in api.enum_by_kotlin:
+        spec = api.enum_by_kotlin[kotlin_type]
+        number = int(godot_default)
+        named = constant_for_value(spec, api.lock[spec.key], number)
+        return f"{kotlin_type}.{named}" if named else f"{kotlin_type}({number}L)"
     if kotlin_type == "Boolean":
         return godot_default
     if kotlin_type == "Int":
@@ -345,8 +414,8 @@ def bind_arguments(tree: Tree, call: BackendCallPolicy, method: dict, policy: di
         kotlin_type = policy.get("param_types", {}).get(name) or api_param_type(
             tree, arg["type"], arg.get("meta", ""), slot_type
         )
-        default = kotlin_default(arg["default_value"], kotlin_type) if "default_value" in arg else None
-        params.append(Param(name, kotlin_type, default, to_backend(name, kotlin_type, slot_type)))
+        default = kotlin_default(arg["default_value"], kotlin_type, tree.api) if "default_value" in arg else None
+        params.append(Param(name, kotlin_type, default, to_backend(tree, name, kotlin_type, slot_type)))
     label = f"{call.class_name}.{call.method_name}"
     baked_values = dict(policy.get("baked", {}))
     for arg in godot_args[len(slots) :]:
@@ -357,7 +426,7 @@ def bind_arguments(tree: Tree, call: BackendCallPolicy, method: dict, policy: di
         if name in baked_values:
             default = str(baked_values.pop(name))
         elif "default_value" in arg:
-            default = kotlin_default(arg["default_value"], kotlin_type)
+            default = kotlin_default(arg["default_value"], kotlin_type, tree.api)
             if default is None:
                 continue  # Variant/Array defaults the shape cannot carry are not exposed at all
         else:
@@ -413,6 +482,13 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
     if policy.get("raw_handle_return"):
         ret, convert = "GodotHandle?", "?.let { it.toWebId() }"
     nonnull = policy.get("nonnull")
+    # Decision 9 (task 128): an object return Godot marks `meta: "required"` is non-null, and a null
+    # throws through the one helper (`requireGodotReturn`, same message as desktop/iOS).
+    required_label = None
+    if (method.get("return_value") or {}).get("meta") == "required" and "ret" not in policy:
+        required_label = f"{call.class_name}.{call.method_name}"
+        if not policy.get("fluent"):
+            nonnull = nonnull or required_label
     call_args = [f"D.{descriptor_name(call)}"]
     if has_receiver:
         call_args.append("requireOpenHandle()")
@@ -453,7 +529,16 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
     else:
         body += [f"    {line}" for line in pre]
         body += [f"    {g}" for g in guards]
-        if fluent:
+        if fluent and required_label:
+            body += wrap_call(invoke, call_args, "", "    ", "val returned = ")
+            body.append(f'    val live = requireGodotReturn(returned, "{required_label}")')
+            same = "live.backendToken() == backendHandle.backendToken()"
+            if fluent == "self":
+                body.append(f"    check({same}) {{ \"{owner}.{name} did not return its receiver\" }}")
+                body.append("    return this")
+            else:
+                body.append(f"    return if ({same}) this else {owner}(live.toWebId())")
+        elif fluent:
             body += wrap_call(invoke, call_args, "", "    ", "val returned = ")
             same = "returned.backendToken() == backendHandle.backendToken()"
             if fluent == "self":
@@ -461,6 +546,9 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
                 body.append("    return this")
             else:
                 body.append(f"    return if (returned == null || {same}) this else {owner}(returned.toWebId())")
+        elif nonnull and required_label:
+            body += wrap_call(invoke, call_args, convert, "    ", "val returned = ")
+            body.append(f'    return requireGodotReturn(returned, "{required_label}")')
         elif nonnull:
             body += wrap_call(invoke, call_args, convert, "    ", "val returned = ")
             body.append(f'    return checkNotNull(returned) {{ "{nonnull}" }}')
@@ -485,7 +573,7 @@ def emit_extras(tree: Tree, call: BackendCallPolicy, policy: dict, primary: Memb
         extras.append(Member(body, _alias(owner, extra, primary.params, primary.ret), extra, primary.params, primary.ret))
     for godot_type, extra in policy.get("typed_loads", {}).items():
         wrapper = tree.wrapper_for(godot_type)
-        params = [Param("path", "String"), Param("cacheMode", "Long", "1L")]
+        params = [Param("path", "String"), Param("cacheMode", "ResourceLoader.CacheMode", "ResourceLoader.CacheMode.REUSE")]
         signature = render_signature(extra, params, f"{wrapper}?")
         body = signature[:-1] + [f'{signature[-1]} = {primary.name}(path, "{godot_type}", cacheMode)?.let {{ {wrapper}(it.handle) }}']
         extras.append(Member(body, _alias(owner, extra, params, f"{wrapper}?"), extra, params, f"{wrapper}?"))
@@ -516,7 +604,7 @@ WRAPPER_POLICY: dict[int, dict] = {
             ("signal", "String", None, "signal"),
             ("target", "GodotObject", None, "target.requireOpenHandle()"),
             ("method", "String", None, "method"),
-            ("flags", "Long", "0L", "flags"),
+            ("flags", "GodotObject.ConnectFlags", "GodotObject.ConnectFlags(0L)", "flags.value"),
         ],
     },
     34: {
@@ -527,7 +615,7 @@ WRAPPER_POLICY: dict[int, dict] = {
             ("target", "GodotObject", None, "target.requireOpenHandle()"),
             ("method", "String", None, "method"),
             ("boundValue", "Long", None, "boundValue"),
-            ("flags", "Long", "0L", "flags"),
+            ("flags", "GodotObject.ConnectFlags", "GodotObject.ConnectFlags(0L)", "flags.value"),
         ],
     },
     193: {
@@ -570,6 +658,7 @@ WRAPPER_POLICY: dict[int, dict] = {
             '    is Boolean -> "b:$value"',
             '    is Long -> "i:$value"',
             '    is Int -> "i:$value"',
+            '    is GodotEnumValue -> "i:${value.value}"',
             '    is Double -> "f:$value"',
             '    is String -> "s:$value"',
             '    else -> error("Kanama Web ConfigFile does not carry ${value?.let { it::class }} values")',
@@ -708,7 +797,6 @@ WRAPPER_POLICY: dict[int, dict] = {
 # several opcodes, Kotlin-side mirrors, and the Variant-style dispatchers over the typed arms.
 CLASS_POLICY: dict[str, dict] = {
     "Object": {
-        "enums": ["ConnectFlags"],
         "custom": """
   val handle: GodotHandle
     get() = WebObjectId(backendHandle.backendToken().toInt())
@@ -728,6 +816,8 @@ CLASS_POLICY: dict[str, dict] = {
     when (val value = args.singleOrNull()) {
       is Int -> emitSignal(signal, value)
       is Long -> emitSignal(signal, value.toInt())
+      // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
+      is GodotEnumValue -> emitSignal(signal, value.value.toInt())
       is String -> emitSignal(signal, value)
       is GodotObject -> emitSignal(signal, value)
       is Vector2i -> emitSignal(signal, value)
@@ -737,7 +827,6 @@ CLASS_POLICY: dict[str, dict] = {
 """,
     },
     "Node": {
-        "enums": ["ProcessMode"],
         "custom": """
   fun <T : GodotObject> getAsOrNull(path: String, ctor: (GodotHandle) -> T): T? =
     getNodeOrNull(path)?.let { ctor(it.handle) }
@@ -940,7 +1029,6 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
     "AudioStream": {"release": "resource"},
     "PackedScene": {"release": "resource"},
     "Tween": {
-        "enums": ["TransitionType", "EaseType"],
         "signals": ["finished"],
         "custom": """
   /**
@@ -952,7 +1040,7 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
     property: String,
     finalValue: Any?,
     duration: Double,
-  ): PropertyTweener? =
+  ): PropertyTweener =
     when (finalValue) {
       is Vector2 -> tweenProperty(target, property, finalValue, duration)
       is Color -> tweenProperty(target, property, finalValue, duration)
@@ -1165,7 +1253,6 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
 """,
     },
     "Input": {
-        "enums": ["MouseMode"],
         "custom": """
   /**
    * Composed from two get_axis reads (deadzone-normalized identically for digital keys, the only
@@ -1197,9 +1284,8 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
         "instantiable": True,
         "release": "constructed",
         "from_class_check": True,
-        "enums": ["@GlobalScope.Key"],
     },
-    "InputEventMouseButton": {"from_class_check": True, "enums": ["@GlobalScope.MouseButton"]},
+    "InputEventMouseButton": {"from_class_check": True},
     "InputEventMouseMotion": {"from_class_check": True},
     # Task 64 parcel 8: MeshInstance3D.get_mesh hands back a tracked browser handle; tps-demo's
     # shared Part reads it once and closes it (`mesh.use { }`), so the wrapper owns a close().
@@ -1220,32 +1306,31 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
     "MeshLibrary": {"instantiable": True, "release": "constructed"},
     "KinematicCollision3D": {"release": "collision", "guard": True},
     "Light3D": {
-        "enums": ["Param"],
         "custom": """
   /** Write-only on Web: light_energy is Light3D.set_param(PARAM_ENERGY, value). */
   var lightEnergy: Double
     get() = unsupportedWebGameplayFamily("Light3D.get_light_energy")
-    set(value) = setParam(PARAM_ENERGY, value)
+    set(value) = setParam(Light3D.Param.ENERGY, value)
 
   /** Write-only on Web: shadow_opacity is Light3D.set_param(PARAM_SHADOW_OPACITY, value). */
   var shadowOpacity: Double
     get() = unsupportedWebGameplayFamily("Light3D.get_shadow_opacity")
-    set(value) = setParam(PARAM_SHADOW_OPACITY, value)
+    set(value) = setParam(Light3D.Param.SHADOW_OPACITY, value)
 """,
     },
-    "DirectionalLight3D": {"enums": ["SkyMode"]},
-    "Animation": {"enums": ["LoopMode"]},
     "GridMap": {"constants": ["INVALID_CELL_ITEM"]},
     "ResourceLoader": {
-        "enums": ["CacheMode", "ThreadLoadStatus"],
         "custom": """
-  /** Desktop's `ResourceLoader.ThreadLoadStatus`: the status enum value and the 0..1 progress. */
-  data class ThreadLoadStatus(val status: Long, val progress: Double?)
+  /**
+   * Desktop's `ResourceLoader.ThreadLoadProgress`: the status and the 0..1 progress. (Named
+   * `ThreadLoadStatus` before task 128, when that name became Godot's enum.)
+   */
+  data class ThreadLoadProgress(val status: ResourceLoader.ThreadLoadStatus, val progress: Double?)
 
   /**
    * Threaded-load family (task 64 parcel 8) over the synchronous facade in `WebFacades.kt`: the
    * Web export is a `nothreads` build, so a background load could never make progress. The
-   * request loads at once and every later poll reports THREAD_LOAD_LOADED with progress 1.0
+   * request loads at once and every later poll reports ThreadLoadStatus.LOADED with progress 1.0
    * (tps-demo's loading screen completes on its first poll). Desktop's signatures; `typeHint`,
    * `useSubThreads` and `cacheMode` are accepted and ignored; the result is Godot's OK.
    */
@@ -1253,17 +1338,17 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
     path: String,
     @Suppress("UNUSED_PARAMETER") typeHint: String = "",
     @Suppress("UNUSED_PARAMETER") useSubThreads: Boolean = false,
-    @Suppress("UNUSED_PARAMETER") cacheMode: Long = CACHE_MODE_REUSE,
-  ): Long {
+    @Suppress("UNUSED_PARAMETER") cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+  ): GodotError {
     ThreadedLoad.request(path)
-    return 0L
+    return GodotError.OK
   }
 
-  fun loadThreadedGetStatus(path: String): Long = ThreadedLoad.status(path)
+  fun loadThreadedGetStatus(path: String): ResourceLoader.ThreadLoadStatus = ThreadedLoad.status(path)
 
-  fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+  fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadProgress {
     val status = ThreadedLoad.status(path)
-    return ThreadLoadStatus(status, if (status == THREAD_LOAD_LOADED) 1.0 else 0.0)
+    return ThreadLoadProgress(status, if (status == ResourceLoader.ThreadLoadStatus.LOADED) 1.0 else 0.0)
   }
 
   /** The loaded resource (an owned handle: close it, or hand it to the tree). */
@@ -1272,18 +1357,6 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
   fun loadThreadedGetPackedScene(path: String): PackedScene? = ThreadedLoad.take(path)
 """,
     },
-    "RenderingServer": {
-        "enums": [
-            "ShadowQuality",
-            # Task 64 parcel 8: tps-demo's Settings / Menu / Level spell the quality tiers by name.
-            "EnvironmentSSAOQuality",
-            "EnvironmentSSILQuality",
-            "VoxelGIQuality",
-            "EnvironmentSDFGIRayCount",
-        ],
-    },
-    "Viewport": {"enums": ["Scaling3DMode", "MSAA", "ScreenSpaceAA"]},
-    "PhysicsBody3D": {"enums": ["PhysicsServer3D.BodyAxis"]},
     "OS": {
         "custom": """
   /** Web ships the release template; debug-gated tooling stays off. */
@@ -1319,6 +1392,14 @@ import net.multigesture.kanama.web.WebObjectId
 
 // Conversions between the public value types and the contract's value types; every generated
 // member goes through these, so the float/double policy lives in exactly one place.
+
+/**
+ * The one helper behind every Godot object return marked `meta: "required"` (task 128, decision 9):
+ * the wrapper returns a non-null type, and a null anyway is an engine bug that throws, naming the
+ * Godot class and method -- the desktop/iOS `requireGodotReturn`, same message and exception type.
+ */
+internal fun <T : Any> requireGodotReturn(value: T?, godotMethod: String): T =
+  value ?: throw IllegalStateException("Godot returned null from required $godotMethod")
 
 internal fun GodotHandle.toBackendHandle(): BackendGodotHandle =
   BackendGodotHandle.fromBackendToken(value.toLong())
@@ -1388,7 +1469,7 @@ PACKAGE_IMPORTS = {
 }
 
 
-def build_tree(api: Api) -> Tree:
+def build_tree(api: Api, hand_hosts: set[str] | frozenset[str] = frozenset()) -> Tree:
     classes: set[str] = set()
     for call in INITIAL_BACKEND_CALLS:
         if call.class_name != "@GlobalScope":
@@ -1396,7 +1477,112 @@ def build_tree(api: Api) -> Tree:
     for extra in EXTRA_CLASSES:
         classes.update(api.chain(extra))
     classes -= set(WEB_HANDSHAPED)
+    # Task 128 C: an enum a Web slot names must be reachable under its desktop spelling
+    # (`PhysicsBody3D.setAxisLock(axis: PhysicsServer3D.BodyAxis)`). An owner the tree does not
+    # already generate becomes an enum-only class (the same rule as parcel A's enum-only expects):
+    # derived from the contract, not listed.
+    hand = set(WEB_HANDSHAPED) | set(hand_hosts)
+    for call in INITIAL_BACKEND_CALLS:
+        method = api.method(call)
+        types = [a["type"] for a in method.get("arguments", ())]
+        types.append((method.get("return_value") or {}).get("type", ""))
+        for godot_type in types:
+            spec = api.enum_for_godot_type(godot_type)
+            if spec is not None and spec.owner and spec.owner not in classes and spec.owner not in hand:
+                classes.add(spec.owner)
     return Tree(api, classes)
+
+
+# --------------------------------------------------------------------------------------------------
+# Typed enums outside the per-class files (task 128 C): the global enums + the GodotEnumValue marker
+# in one generated file, and a generator-owned region inside each hand-written facade that stands in
+# for a Godot class with enums (desktop's GENERATED ENUMS regions, same markers but this generator).
+# --------------------------------------------------------------------------------------------------
+
+GLOBAL_ENUMS_FILE = "GlobalEnums.kt"
+ENUM_REGION_BEGIN = "// ===== BEGIN GENERATED ENUMS: {name} (scripts/generate_web_wrappers.py — do not edit) ====="
+ENUM_REGION_END = "// ===== END GENERATED ENUMS: {name} ====="
+_HAND_DECLARATION = re.compile(r"(?m)^(?:(?:open|abstract|internal|private|data)\s+)*(?:class|object)\s+([A-Z][A-Za-z0-9]*)")
+
+
+def render_global_enums(api: Api) -> str:
+    """`GlobalEnums.kt`: the GodotEnumValue marker and Godot's global enums, top-level (decision 1)."""
+    specs = [spec for spec in api.enums.values() if spec.owner is None]
+    lines = [
+        HEADER.rstrip("\n"),
+        "package net.multigesture.kanama.api",
+        "",
+        "// Godot's global (@GlobalScope) enums, one value class each, under Godot's name; renamed only on",
+        "// a collision (Error -> GodotError, PropertyHint -> GodotPropertyHint, Variant.Type ->",
+        "// VariantType, Variant.Operator -> VariantOperator) -- the native tree's GlobalEnums.kt, same",
+        "// names from the same model (scripts/godot_enum_model.py) and prefix lock.",
+        "",
+        "/**",
+        " * The marker every generated Godot enum / bitfield value class implements (task 128): the Web",
+        " * Variant encoders (generic call, ConfigFile.setValue, emitSignal) map a boxed one to INT with",
+        " * its [value], so a typed enum handed to a dynamic `Any?` argument reaches Godot as its number.",
+        " */",
+        f"interface {MARKER_INTERFACE} {{",
+        "  val value: Long",
+        "}",
+        "",
+        *render_enums(api, specs, ""),
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def hand_enum_hosts(api: Api, api_dir: Path) -> dict[str, Path]:
+    """Godot class -> the hand-written file under api/ whose top-level facade carries its name, for
+    every such class that owns enums (derived, not listed: a new facade of an enum owner fails the
+    regen until it carries the marker pair)."""
+    hosts: dict[str, Path] = {}
+    for path in sorted(api_dir.glob("*.kt")):
+        for match in _HAND_DECLARATION.finditer(path.read_text()):
+            name = match.group(1)
+            if name in api.classes and api.class_enums(name):
+                if name in hosts:
+                    raise GenerationError(f"{name} is declared in {hosts[name].name} and {path.name}")
+                hosts[name] = path
+    return hosts
+
+
+def render_enum_region(api: Api, godot_class: str) -> str:
+    return "\n".join(
+        [
+            "  " + ENUM_REGION_BEGIN.format(name=godot_class),
+            *emit_class_enums(api, godot_class),
+            "  " + ENUM_REGION_END.format(name=godot_class),
+        ]
+    )
+
+
+def splice_enum_regions(api: Api, api_dir: Path) -> dict[Path, str]:
+    """Every host file with its regions re-rendered (file -> new text); refuses missing, duplicate or
+    misplaced markers."""
+    by_file: dict[Path, list[str]] = {}
+    for name, path in hand_enum_hosts(api, api_dir).items():
+        by_file.setdefault(path, []).append(name)
+    result: dict[Path, str] = {}
+    for path, names in by_file.items():
+        text = path.read_text()
+        for name in sorted(names):
+            begin = ENUM_REGION_BEGIN.format(name=name)
+            end = ENUM_REGION_END.format(name=name)
+            if text.count(begin) != 1 or text.count(end) != 1:
+                raise GenerationError(
+                    f"{path.name}: expected exactly one '{begin}' / '{end}' marker pair inside the body of "
+                    f"{name} (task 128 C); add the pair once by hand, the generator fills it"
+                )
+            start = text.index(begin)
+            line_start = text.rfind("\n", 0, start) + 1
+            stop = text.index(end) + len(end)
+            owners = [m.group(1) for m in _HAND_DECLARATION.finditer(text) if m.start() < line_start]
+            if stop < start or not owners or owners[-1] != name:
+                raise GenerationError(f"{path.name}: the GENERATED ENUMS region of {name} is not inside its body")
+            text = text[:line_start] + render_enum_region(api, name) + text[stop:]
+        result[path] = text
+    return result
 
 
 def imports_for(body: str, extra: list[str]) -> list[str]:
@@ -1447,7 +1633,8 @@ def emit_properties(tree: Tree, godot_name: str, calls: list[BackendCallPolicy])
                 getter_method.get("return_value", {}).get("meta", ""),
                 SIGNATURES[getter.shape][1],
             )
-            if WRAPPER_POLICY.get(getter.opcode, {}).get("nonnull"):
+            getter_required = (getter_method.get("return_value") or {}).get("meta") == "required"
+            if WRAPPER_POLICY.get(getter.opcode, {}).get("nonnull") or getter_required:
                 kotlin_type = kotlin_type.rstrip("?")
             get_expr = f"{member_name(getter, WRAPPER_POLICY.get(getter.opcode, {}))}()"
         else:
@@ -1465,13 +1652,26 @@ def emit_properties(tree: Tree, godot_name: str, calls: list[BackendCallPolicy])
     return members
 
 
-def emit_constants(api: Api, godot_name: str, class_policy: dict) -> list[str]:
-    """`const val` lines: whole enums (`enums`), single class constants, from extension_api.json."""
+def render_enums(api: Api, specs: list[EnumSpec], indent: str) -> list[str]:
+    """The value classes of [specs] (task 128): the native generator's shape, rendered by the shared
+    model with the frozen prefix lock, 2-space indented. No `@JvmInline`: Kotlin/Wasm inlines a
+    value class without it (the annotation is a JVM `@OptionalExpectation`)."""
     lines: list[str] = []
-    for spec in class_policy.get("enums", ()):
-        owner, enum = spec.split(".") if "." in spec else (godot_name, spec)
-        for const_name, value in api.enum_values(owner, enum).items():
-            lines.append(f"    const val {const_name}: Long = {value}L")
+    for spec in specs:
+        if lines:
+            lines.append("")
+        lines += render_enum_class(spec, api.lock[spec.key], indent, jvm_inline=False, step="  ").split("\n")
+    return lines
+
+
+def emit_class_enums(api: Api, godot_name: str) -> list[str]:
+    """Every enum Godot declares on [godot_name], nested in its class body (decision 1)."""
+    return render_enums(api, api.class_enums(godot_name), "  ")
+
+
+def emit_constants(api: Api, godot_name: str, class_policy: dict) -> list[str]:
+    """`const val` lines for the class constants that are not enum values (`constants`)."""
+    lines: list[str] = []
     for const_name in class_policy.get("constants", ()):
         lines.append(f"    const val {const_name}: Long = {api.constant(godot_name, const_name)}L")
     return lines
@@ -1618,6 +1818,7 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
         sections.append(class_policy["custom"].strip("\n").split("\n"))
     sections.append(emit_release(godot_name, class_policy))
     sections.append(emit_signals(api, godot_name, class_policy))
+    sections.append(emit_class_enums(api, godot_name) if godot_name in api.classes else [])
     constants = emit_constants(api, godot_name, class_policy)
     if singleton:
         # An `object` has no companion: constants and factories sit directly in its body.
@@ -1645,9 +1846,9 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
     return file_text(lines, list(class_policy.get("imports", ())))
 
 
-def render_all(api: Api) -> dict[str, str]:
+def render_all(api: Api, api_dir: Path = API_DIR) -> dict[str, str]:
     """Render every generated file: file name -> content."""
-    tree = build_tree(api)
+    tree = build_tree(api, set(hand_enum_hosts(api, api_dir)))
     by_class: dict[str, list[BackendCallPolicy]] = {c: [] for c in tree.classes}
     by_class["@GlobalScope"] = []
     for call in INITIAL_BACKEND_CALLS:
@@ -1656,7 +1857,7 @@ def render_all(api: Api) -> dict[str, str]:
                 raise GenerationError(f"opcode {call.opcode} belongs to hand-shaped {call.class_name} but is not allowlisted")
             continue
         by_class[call.class_name].append(call)
-    files: dict[str, str] = {"WebWrapperSupport.kt": HEADER + SUPPORT_FILE}
+    files: dict[str, str] = {"WebWrapperSupport.kt": HEADER + SUPPORT_FILE, GLOBAL_ENUMS_FILE: render_global_enums(api)}
     for godot_name, calls in by_class.items():
         file_name = ("GD" if godot_name == "@GlobalScope" else kotlin_class_name(godot_name)) + ".kt"
         files[file_name] = render_class(tree, godot_name, sorted(calls, key=lambda c: c.opcode))
@@ -1709,8 +1910,9 @@ def main() -> int:
     args = parser.parse_args()
 
     api = Api()
-    rendered = render_all(api)
     out_dir: Path = args.output_dir
+    rendered = render_all(api, out_dir.parent)
+    regions = splice_enum_regions(api, out_dir.parent)
 
     if args.check:
         failures: list[str] = []
@@ -1724,6 +1926,9 @@ def main() -> int:
         for name in sorted(committed):
             failures.append(f"stray file in generated tree: {name}")
         failures += check_hand_written(out_dir.parent, rendered)
+        for path, text in regions.items():
+            if path.read_text() != text:
+                failures.append(f"drift in a GENERATED ENUMS region of {path.name}")
         if failures:
             for failure in failures:
                 print(f"{TAG} FAIL {failure}", file=sys.stderr)
@@ -1738,7 +1943,10 @@ def main() -> int:
             stale.unlink()
     for name, text in rendered.items():
         (out_dir / name).write_text(text)
-    print(f"{TAG} wrote {len(rendered)} files to {out_dir}")
+    for path, text in regions.items():
+        if path.read_text() != text:
+            path.write_text(text)
+    print(f"{TAG} wrote {len(rendered)} files to {out_dir} and {len(regions)} GENERATED ENUMS host file(s)")
     return 0
 
 

@@ -28,6 +28,64 @@ class LineEdit(godotObject: GodotHandle) : Control(godotObject) {
   var editable: Boolean
     get() = unsupportedWebGameplayFamily("LineEdit.is_editable")
     set(newValue) = setEditable(newValue)
+
+  value class MenuItems(override val value: Long) : GodotEnumValue {
+    companion object {
+      val CUT: MenuItems get() = MenuItems(0L)
+      val COPY: MenuItems get() = MenuItems(1L)
+      val PASTE: MenuItems get() = MenuItems(2L)
+      val CLEAR: MenuItems get() = MenuItems(3L)
+      val SELECT_ALL: MenuItems get() = MenuItems(4L)
+      val UNDO: MenuItems get() = MenuItems(5L)
+      val REDO: MenuItems get() = MenuItems(6L)
+      val SUBMENU_TEXT_DIR: MenuItems get() = MenuItems(7L)
+      val DIR_INHERITED: MenuItems get() = MenuItems(8L)
+      val DIR_AUTO: MenuItems get() = MenuItems(9L)
+      val DIR_LTR: MenuItems get() = MenuItems(10L)
+      val DIR_RTL: MenuItems get() = MenuItems(11L)
+      val DISPLAY_UCC: MenuItems get() = MenuItems(12L)
+      val SUBMENU_INSERT_UCC: MenuItems get() = MenuItems(13L)
+      val INSERT_LRM: MenuItems get() = MenuItems(14L)
+      val INSERT_RLM: MenuItems get() = MenuItems(15L)
+      val INSERT_LRE: MenuItems get() = MenuItems(16L)
+      val INSERT_RLE: MenuItems get() = MenuItems(17L)
+      val INSERT_LRO: MenuItems get() = MenuItems(18L)
+      val INSERT_RLO: MenuItems get() = MenuItems(19L)
+      val INSERT_PDF: MenuItems get() = MenuItems(20L)
+      val INSERT_ALM: MenuItems get() = MenuItems(21L)
+      val INSERT_LRI: MenuItems get() = MenuItems(22L)
+      val INSERT_RLI: MenuItems get() = MenuItems(23L)
+      val INSERT_FSI: MenuItems get() = MenuItems(24L)
+      val INSERT_PDI: MenuItems get() = MenuItems(25L)
+      val INSERT_ZWJ: MenuItems get() = MenuItems(26L)
+      val INSERT_ZWNJ: MenuItems get() = MenuItems(27L)
+      val INSERT_WJ: MenuItems get() = MenuItems(28L)
+      val INSERT_SHY: MenuItems get() = MenuItems(29L)
+      val EMOJI_AND_SYMBOL: MenuItems get() = MenuItems(30L)
+      val MAX: MenuItems get() = MenuItems(31L)
+    }
+  }
+
+  value class VirtualKeyboardType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DEFAULT: VirtualKeyboardType get() = VirtualKeyboardType(0L)
+      val MULTILINE: VirtualKeyboardType get() = VirtualKeyboardType(1L)
+      val NUMBER: VirtualKeyboardType get() = VirtualKeyboardType(2L)
+      val NUMBER_DECIMAL: VirtualKeyboardType get() = VirtualKeyboardType(3L)
+      val PHONE: VirtualKeyboardType get() = VirtualKeyboardType(4L)
+      val EMAIL_ADDRESS: VirtualKeyboardType get() = VirtualKeyboardType(5L)
+      val PASSWORD: VirtualKeyboardType get() = VirtualKeyboardType(6L)
+      val URL: VirtualKeyboardType get() = VirtualKeyboardType(7L)
+    }
+  }
+
+  value class ExpandMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ORIGINAL_SIZE: ExpandMode get() = ExpandMode(0L)
+      val FIT_TO_TEXT: ExpandMode get() = ExpandMode(1L)
+      val FIT_TO_LINE_EDIT: ExpandMode get() = ExpandMode(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

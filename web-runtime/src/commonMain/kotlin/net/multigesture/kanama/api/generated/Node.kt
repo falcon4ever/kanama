@@ -14,13 +14,17 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
   fun getChildCount(includeInternal: Boolean = false): Int =
     GodotBackendCalls.invokeBoolRetInt(D.NODE_GET_CHILD_COUNT, requireOpenHandle(), includeInternal)
 
-  fun addChild(node: Node, forceReadableName: Boolean = false, internalMode: Long = 0L) {
+  fun addChild(
+    node: Node,
+    forceReadableName: Boolean = false,
+    internalMode: Node.InternalMode = Node.InternalMode.DISABLED,
+  ) {
     GodotBackendCalls.invokeObjectBoolLongArgs(
       D.NODE_ADD_CHILD,
       requireOpenHandle(),
       node.requireOpenHandle(),
       forceReadableName,
-      internalMode,
+      internalMode.value,
     )
   }
 
@@ -49,11 +53,13 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
       requireOpenHandle(),
     )?.let { Viewport(it.toWebId()) }
 
-  fun createTween(): Tween? =
-    GodotBackendCalls.invokeNoArgsRetHandle(
+  fun createTween(): Tween {
+    val returned = GodotBackendCalls.invokeNoArgsRetHandle(
       D.NODE_CREATE_TWEEN,
       requireOpenHandle(),
     )?.let { Tween(it.toWebId()) }
+    return requireGodotReturn(returned, "Node.create_tween")
+  }
 
   fun getTree(): SceneTree {
     val returned = GodotBackendCalls.invokeNoArgsRetHandle(
@@ -129,12 +135,15 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
     )
   }
 
-  fun setProcessMode(mode: Long) {
-    GodotBackendCalls.invokeLongArg(D.NODE_SET_PROCESS_MODE, requireOpenHandle(), mode)
+  fun setProcessMode(mode: Node.ProcessMode) {
+    GodotBackendCalls.invokeLongArg(D.NODE_SET_PROCESS_MODE, requireOpenHandle(), mode.value)
   }
 
-  fun getProcessMode(): Long =
-    GodotBackendCalls.invokeNoArgsRetLong(D.NODE_GET_PROCESS_MODE, requireOpenHandle())
+  fun getProcessMode(): Node.ProcessMode =
+    GodotBackendCalls.invokeNoArgsRetLong(
+      D.NODE_GET_PROCESS_MODE,
+      requireOpenHandle(),
+    ).let { Node.ProcessMode(it) }
 
   fun isInsideTree(): Boolean =
     GodotBackendCalls.invokeNoArgsRetBool(D.NODE_IS_INSIDE_TREE, requireOpenHandle())
@@ -143,7 +152,7 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
     get() = getName()
     set(newValue) = setName(newValue)
 
-  var processMode: Long
+  var processMode: Node.ProcessMode
     get() = getProcessMode()
     set(newValue) = setProcessMode(newValue)
 
@@ -202,12 +211,75 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
     }
   }
 
-  companion object {
-    const val PROCESS_MODE_INHERIT: Long = 0L
-    const val PROCESS_MODE_PAUSABLE: Long = 1L
-    const val PROCESS_MODE_WHEN_PAUSED: Long = 2L
-    const val PROCESS_MODE_ALWAYS: Long = 3L
-    const val PROCESS_MODE_DISABLED: Long = 4L
+  value class ProcessMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERIT: ProcessMode get() = ProcessMode(0L)
+      val PAUSABLE: ProcessMode get() = ProcessMode(1L)
+      val WHEN_PAUSED: ProcessMode get() = ProcessMode(2L)
+      val ALWAYS: ProcessMode get() = ProcessMode(3L)
+      val DISABLED: ProcessMode get() = ProcessMode(4L)
+    }
+  }
+
+  value class ProcessThreadGroup(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERIT: ProcessThreadGroup get() = ProcessThreadGroup(0L)
+      val MAIN_THREAD: ProcessThreadGroup get() = ProcessThreadGroup(1L)
+      val SUB_THREAD: ProcessThreadGroup get() = ProcessThreadGroup(2L)
+    }
+  }
+
+  value class ProcessThreadMessages(override val value: Long) : GodotEnumValue {
+    infix fun or(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value or other.value)
+
+    infix fun and(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value and other.value)
+
+    infix fun xor(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value xor other.value)
+
+    fun inv(): ProcessThreadMessages = ProcessThreadMessages(value.inv())
+
+    operator fun contains(other: ProcessThreadMessages): Boolean = (value and other.value) == other.value
+
+    companion object {
+      val MESSAGES: ProcessThreadMessages get() = ProcessThreadMessages(1L)
+      val MESSAGES_PHYSICS: ProcessThreadMessages get() = ProcessThreadMessages(2L)
+      val MESSAGES_ALL: ProcessThreadMessages get() = ProcessThreadMessages(3L)
+    }
+  }
+
+  value class PhysicsInterpolationMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERIT: PhysicsInterpolationMode get() = PhysicsInterpolationMode(0L)
+      val ON: PhysicsInterpolationMode get() = PhysicsInterpolationMode(1L)
+      val OFF: PhysicsInterpolationMode get() = PhysicsInterpolationMode(2L)
+    }
+  }
+
+  value class DuplicateFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SIGNALS: DuplicateFlags get() = DuplicateFlags(1L)
+      val GROUPS: DuplicateFlags get() = DuplicateFlags(2L)
+      val SCRIPTS: DuplicateFlags get() = DuplicateFlags(4L)
+      val USE_INSTANTIATION: DuplicateFlags get() = DuplicateFlags(8L)
+      val INTERNAL_STATE: DuplicateFlags get() = DuplicateFlags(16L)
+      val DEFAULT: DuplicateFlags get() = DuplicateFlags(15L)
+    }
+  }
+
+  value class InternalMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: InternalMode get() = InternalMode(0L)
+      val FRONT: InternalMode get() = InternalMode(1L)
+      val BACK: InternalMode get() = InternalMode(2L)
+    }
+  }
+
+  value class AutoTranslateMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERIT: AutoTranslateMode get() = AutoTranslateMode(0L)
+      val ALWAYS: AutoTranslateMode get() = AutoTranslateMode(1L)
+      val DISABLED: AutoTranslateMode get() = AutoTranslateMode(2L)
+    }
   }
 }
 
@@ -215,7 +287,11 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
 fun Node.getChildCount(includeInternal: Boolean = false): Int = getChildCount(includeInternal)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Node.addChild(node: Node, forceReadableName: Boolean = false, internalMode: Long = 0L) = addChild(node, forceReadableName, internalMode)
+fun Node.addChild(
+  node: Node,
+  forceReadableName: Boolean = false,
+  internalMode: Node.InternalMode = Node.InternalMode.DISABLED,
+) = addChild(node, forceReadableName, internalMode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.removeChild(node: Node?) = removeChild(node)
@@ -230,7 +306,7 @@ fun Node.getNodeOrNull(path: String): Node? = getNodeOrNull(path)
 fun Node.getViewport(): Viewport? = getViewport()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Node.createTween(): Tween? = createTween()
+fun Node.createTween(): Tween = createTween()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.getTree(): SceneTree = getTree()
@@ -271,10 +347,10 @@ fun Node.getName(): String = getName()
 fun Node.propagateSet(property: String, value: Boolean) = propagateSet(property, value)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Node.setProcessMode(mode: Long) = setProcessMode(mode)
+fun Node.setProcessMode(mode: Node.ProcessMode) = setProcessMode(mode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Node.getProcessMode(): Long = getProcessMode()
+fun Node.getProcessMode(): Node.ProcessMode = getProcessMode()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Node.isInsideTree(): Boolean = isInsideTree()
@@ -287,7 +363,7 @@ var Node.name: String
   }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-var Node.processMode: Long
+var Node.processMode: Node.ProcessMode
   get() = processMode
   set(newValue) {
     processMode = newValue

@@ -11,26 +11,26 @@ object RenderingServer {
   fun getCurrentRenderingMethod(): String =
     GodotBackendCalls.invokeNoArgsRetStringSingleton(D.RENDERINGSERVER_GET_CURRENT_RENDERING_METHOD)
 
-  fun directionalSoftShadowFilterSetQuality(quality: Long) {
+  fun directionalSoftShadowFilterSetQuality(quality: RenderingServer.ShadowQuality) {
     GodotBackendCalls.invokeLongArgSingleton(
       D.RENDERINGSERVER_DIRECTIONAL_SOFT_SHADOW_FILTER_SET_QUALITY,
-      quality,
+      quality.value,
     )
   }
 
-  fun voxelGiSetQuality(quality: Long) {
-    GodotBackendCalls.invokeLongArgSingleton(D.RENDERINGSERVER_VOXEL_GI_SET_QUALITY, quality)
+  fun voxelGiSetQuality(quality: RenderingServer.VoxelGIQuality) {
+    GodotBackendCalls.invokeLongArgSingleton(D.RENDERINGSERVER_VOXEL_GI_SET_QUALITY, quality.value)
   }
 
-  fun environmentSetSdfgiRayCount(rayCount: Long) {
+  fun environmentSetSdfgiRayCount(rayCount: RenderingServer.EnvironmentSDFGIRayCount) {
     GodotBackendCalls.invokeLongArgSingleton(
       D.RENDERINGSERVER_ENVIRONMENT_SET_SDFGI_RAY_COUNT,
-      rayCount,
+      rayCount.value,
     )
   }
 
   fun environmentSetSsaoQuality(
-    quality: Long,
+    quality: RenderingServer.EnvironmentSSAOQuality,
     halfSize: Boolean,
     adaptiveTarget: Double,
     blurPasses: Int,
@@ -39,7 +39,7 @@ object RenderingServer {
   ) {
     GodotBackendCalls.invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
       D.RENDERINGSERVER_ENVIRONMENT_SET_SSAO_QUALITY,
-      quality,
+      quality.value,
       halfSize,
       adaptiveTarget,
       blurPasses.toLong(),
@@ -49,7 +49,7 @@ object RenderingServer {
   }
 
   fun environmentSetSsilQuality(
-    quality: Long,
+    quality: RenderingServer.EnvironmentSSILQuality,
     halfSize: Boolean,
     adaptiveTarget: Double,
     blurPasses: Int,
@@ -58,7 +58,7 @@ object RenderingServer {
   ) {
     GodotBackendCalls.invokeLongBoolDoubleLongDoubleDoubleArgSingleton(
       D.RENDERINGSERVER_ENVIRONMENT_SET_SSIL_QUALITY,
-      quality,
+      quality.value,
       halfSize,
       adaptiveTarget,
       blurPasses.toLong(),
@@ -72,50 +72,959 @@ object RenderingServer {
       D.RENDERINGSERVER_GET_CURRENT_RENDERING_DRIVER_NAME,
     )
 
-  const val SHADOW_QUALITY_HARD: Long = 0L
-  const val SHADOW_QUALITY_SOFT_VERY_LOW: Long = 1L
-  const val SHADOW_QUALITY_SOFT_LOW: Long = 2L
-  const val SHADOW_QUALITY_SOFT_MEDIUM: Long = 3L
-  const val SHADOW_QUALITY_SOFT_HIGH: Long = 4L
-  const val SHADOW_QUALITY_SOFT_ULTRA: Long = 5L
-  const val SHADOW_QUALITY_MAX: Long = 6L
-  const val ENV_SSAO_QUALITY_VERY_LOW: Long = 0L
-  const val ENV_SSAO_QUALITY_LOW: Long = 1L
-  const val ENV_SSAO_QUALITY_MEDIUM: Long = 2L
-  const val ENV_SSAO_QUALITY_HIGH: Long = 3L
-  const val ENV_SSAO_QUALITY_ULTRA: Long = 4L
-  const val ENV_SSIL_QUALITY_VERY_LOW: Long = 0L
-  const val ENV_SSIL_QUALITY_LOW: Long = 1L
-  const val ENV_SSIL_QUALITY_MEDIUM: Long = 2L
-  const val ENV_SSIL_QUALITY_HIGH: Long = 3L
-  const val ENV_SSIL_QUALITY_ULTRA: Long = 4L
-  const val VOXEL_GI_QUALITY_LOW: Long = 0L
-  const val VOXEL_GI_QUALITY_HIGH: Long = 1L
-  const val ENV_SDFGI_RAY_COUNT_4: Long = 0L
-  const val ENV_SDFGI_RAY_COUNT_8: Long = 1L
-  const val ENV_SDFGI_RAY_COUNT_16: Long = 2L
-  const val ENV_SDFGI_RAY_COUNT_32: Long = 3L
-  const val ENV_SDFGI_RAY_COUNT_64: Long = 4L
-  const val ENV_SDFGI_RAY_COUNT_96: Long = 5L
-  const val ENV_SDFGI_RAY_COUNT_128: Long = 6L
-  const val ENV_SDFGI_RAY_COUNT_MAX: Long = 7L
+  value class TextureType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val TYPE_2D: TextureType get() = TextureType(0L)
+      val LAYERED: TextureType get() = TextureType(1L)
+      val TYPE_3D: TextureType get() = TextureType(2L)
+    }
+  }
+
+  value class TextureLayeredType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LAYERED_2D_ARRAY: TextureLayeredType get() = TextureLayeredType(0L)
+      val CUBEMAP: TextureLayeredType get() = TextureLayeredType(1L)
+      val CUBEMAP_ARRAY: TextureLayeredType get() = TextureLayeredType(2L)
+    }
+  }
+
+  value class CubeMapLayer(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LEFT: CubeMapLayer get() = CubeMapLayer(0L)
+      val RIGHT: CubeMapLayer get() = CubeMapLayer(1L)
+      val BOTTOM: CubeMapLayer get() = CubeMapLayer(2L)
+      val TOP: CubeMapLayer get() = CubeMapLayer(3L)
+      val FRONT: CubeMapLayer get() = CubeMapLayer(4L)
+      val BACK: CubeMapLayer get() = CubeMapLayer(5L)
+    }
+  }
+
+  value class TextureDrawableFormat(override val value: Long) : GodotEnumValue {
+    companion object {
+      val RGBA8: TextureDrawableFormat get() = TextureDrawableFormat(0L)
+      val RGBA8_SRGB: TextureDrawableFormat get() = TextureDrawableFormat(1L)
+      val RGBAH: TextureDrawableFormat get() = TextureDrawableFormat(2L)
+      val RGBAF: TextureDrawableFormat get() = TextureDrawableFormat(3L)
+    }
+  }
+
+  value class ShaderMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SPATIAL: ShaderMode get() = ShaderMode(0L)
+      val CANVAS_ITEM: ShaderMode get() = ShaderMode(1L)
+      val PARTICLES: ShaderMode get() = ShaderMode(2L)
+      val SKY: ShaderMode get() = ShaderMode(3L)
+      val FOG: ShaderMode get() = ShaderMode(4L)
+      val TEXTURE_BLIT: ShaderMode get() = ShaderMode(5L)
+      val MAX: ShaderMode get() = ShaderMode(6L)
+    }
+  }
+
+  value class ArrayType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VERTEX: ArrayType get() = ArrayType(0L)
+      val NORMAL: ArrayType get() = ArrayType(1L)
+      val TANGENT: ArrayType get() = ArrayType(2L)
+      val COLOR: ArrayType get() = ArrayType(3L)
+      val TEX_UV: ArrayType get() = ArrayType(4L)
+      val TEX_UV2: ArrayType get() = ArrayType(5L)
+      val CUSTOM0: ArrayType get() = ArrayType(6L)
+      val CUSTOM1: ArrayType get() = ArrayType(7L)
+      val CUSTOM2: ArrayType get() = ArrayType(8L)
+      val CUSTOM3: ArrayType get() = ArrayType(9L)
+      val BONES: ArrayType get() = ArrayType(10L)
+      val WEIGHTS: ArrayType get() = ArrayType(11L)
+      val INDEX: ArrayType get() = ArrayType(12L)
+      val MAX: ArrayType get() = ArrayType(13L)
+    }
+  }
+
+  value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
+    companion object {
+      val RGBA8_UNORM: ArrayCustomFormat get() = ArrayCustomFormat(0L)
+      val RGBA8_SNORM: ArrayCustomFormat get() = ArrayCustomFormat(1L)
+      val RG_HALF: ArrayCustomFormat get() = ArrayCustomFormat(2L)
+      val RGBA_HALF: ArrayCustomFormat get() = ArrayCustomFormat(3L)
+      val R_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(4L)
+      val RG_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(5L)
+      val RGB_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(6L)
+      val RGBA_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(7L)
+      val MAX: ArrayCustomFormat get() = ArrayCustomFormat(8L)
+    }
+  }
+
+  value class ArrayFormat(override val value: Long) : GodotEnumValue {
+    infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
+
+    infix fun and(other: ArrayFormat): ArrayFormat = ArrayFormat(value and other.value)
+
+    infix fun xor(other: ArrayFormat): ArrayFormat = ArrayFormat(value xor other.value)
+
+    fun inv(): ArrayFormat = ArrayFormat(value.inv())
+
+    operator fun contains(other: ArrayFormat): Boolean = (value and other.value) == other.value
+
+    companion object {
+      val FORMAT_VERTEX: ArrayFormat get() = ArrayFormat(1L)
+      val FORMAT_NORMAL: ArrayFormat get() = ArrayFormat(2L)
+      val FORMAT_TANGENT: ArrayFormat get() = ArrayFormat(4L)
+      val FORMAT_COLOR: ArrayFormat get() = ArrayFormat(8L)
+      val FORMAT_TEX_UV: ArrayFormat get() = ArrayFormat(16L)
+      val FORMAT_TEX_UV2: ArrayFormat get() = ArrayFormat(32L)
+      val FORMAT_CUSTOM0: ArrayFormat get() = ArrayFormat(64L)
+      val FORMAT_CUSTOM1: ArrayFormat get() = ArrayFormat(128L)
+      val FORMAT_CUSTOM2: ArrayFormat get() = ArrayFormat(256L)
+      val FORMAT_CUSTOM3: ArrayFormat get() = ArrayFormat(512L)
+      val FORMAT_BONES: ArrayFormat get() = ArrayFormat(1024L)
+      val FORMAT_WEIGHTS: ArrayFormat get() = ArrayFormat(2048L)
+      val FORMAT_INDEX: ArrayFormat get() = ArrayFormat(4096L)
+      val FORMAT_BLEND_SHAPE_MASK: ArrayFormat get() = ArrayFormat(7L)
+      val FORMAT_CUSTOM_BASE: ArrayFormat get() = ArrayFormat(13L)
+      val FORMAT_CUSTOM_BITS: ArrayFormat get() = ArrayFormat(3L)
+      val FORMAT_CUSTOM0_SHIFT: ArrayFormat get() = ArrayFormat(13L)
+      val FORMAT_CUSTOM1_SHIFT: ArrayFormat get() = ArrayFormat(16L)
+      val FORMAT_CUSTOM2_SHIFT: ArrayFormat get() = ArrayFormat(19L)
+      val FORMAT_CUSTOM3_SHIFT: ArrayFormat get() = ArrayFormat(22L)
+      val FORMAT_CUSTOM_MASK: ArrayFormat get() = ArrayFormat(7L)
+      val COMPRESS_FLAGS_BASE: ArrayFormat get() = ArrayFormat(25L)
+      val FLAG_USE_2D_VERTICES: ArrayFormat get() = ArrayFormat(33554432L)
+      val FLAG_USE_DYNAMIC_UPDATE: ArrayFormat get() = ArrayFormat(67108864L)
+      val FLAG_USE_8_BONE_WEIGHTS: ArrayFormat get() = ArrayFormat(134217728L)
+      val FLAG_USES_EMPTY_VERTEX_ARRAY: ArrayFormat get() = ArrayFormat(268435456L)
+      val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
+      val FLAG_FORMAT_VERSION_BASE: ArrayFormat get() = ArrayFormat(35L)
+      val FLAG_FORMAT_VERSION_SHIFT: ArrayFormat get() = ArrayFormat(35L)
+      val FLAG_FORMAT_VERSION_1: ArrayFormat get() = ArrayFormat(0L)
+      val FLAG_FORMAT_VERSION_2: ArrayFormat get() = ArrayFormat(34359738368L)
+      val FLAG_FORMAT_CURRENT_VERSION: ArrayFormat get() = ArrayFormat(34359738368L)
+      val FLAG_FORMAT_VERSION_MASK: ArrayFormat get() = ArrayFormat(255L)
+    }
+  }
+
+  value class PrimitiveType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val POINTS: PrimitiveType get() = PrimitiveType(0L)
+      val LINES: PrimitiveType get() = PrimitiveType(1L)
+      val LINE_STRIP: PrimitiveType get() = PrimitiveType(2L)
+      val TRIANGLES: PrimitiveType get() = PrimitiveType(3L)
+      val TRIANGLE_STRIP: PrimitiveType get() = PrimitiveType(4L)
+      val MAX: PrimitiveType get() = PrimitiveType(5L)
+    }
+  }
+
+  value class BlendShapeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NORMALIZED: BlendShapeMode get() = BlendShapeMode(0L)
+      val RELATIVE: BlendShapeMode get() = BlendShapeMode(1L)
+    }
+  }
+
+  value class MultimeshTransformFormat(override val value: Long) : GodotEnumValue {
+    companion object {
+      val TRANSFORM_2D: MultimeshTransformFormat get() = MultimeshTransformFormat(0L)
+      val TRANSFORM_3D: MultimeshTransformFormat get() = MultimeshTransformFormat(1L)
+    }
+  }
+
+  value class MultimeshPhysicsInterpolationQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val FAST: MultimeshPhysicsInterpolationQuality get() = MultimeshPhysicsInterpolationQuality(0L)
+      val HIGH: MultimeshPhysicsInterpolationQuality get() = MultimeshPhysicsInterpolationQuality(1L)
+    }
+  }
+
+  value class LightProjectorFilter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NEAREST: LightProjectorFilter get() = LightProjectorFilter(0L)
+      val LINEAR: LightProjectorFilter get() = LightProjectorFilter(1L)
+      val NEAREST_MIPMAPS: LightProjectorFilter get() = LightProjectorFilter(2L)
+      val LINEAR_MIPMAPS: LightProjectorFilter get() = LightProjectorFilter(3L)
+      val NEAREST_MIPMAPS_ANISOTROPIC: LightProjectorFilter get() = LightProjectorFilter(4L)
+      val LINEAR_MIPMAPS_ANISOTROPIC: LightProjectorFilter get() = LightProjectorFilter(5L)
+    }
+  }
+
+  value class LightType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DIRECTIONAL: LightType get() = LightType(0L)
+      val OMNI: LightType get() = LightType(1L)
+      val SPOT: LightType get() = LightType(2L)
+      val AREA: LightType get() = LightType(3L)
+    }
+  }
+
+  value class LightParam(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ENERGY: LightParam get() = LightParam(0L)
+      val INDIRECT_ENERGY: LightParam get() = LightParam(1L)
+      val VOLUMETRIC_FOG_ENERGY: LightParam get() = LightParam(2L)
+      val SPECULAR: LightParam get() = LightParam(3L)
+      val RANGE: LightParam get() = LightParam(4L)
+      val SIZE: LightParam get() = LightParam(5L)
+      val ATTENUATION: LightParam get() = LightParam(6L)
+      val SPOT_ANGLE: LightParam get() = LightParam(7L)
+      val SPOT_ATTENUATION: LightParam get() = LightParam(8L)
+      val SHADOW_MAX_DISTANCE: LightParam get() = LightParam(9L)
+      val SHADOW_SPLIT_1_OFFSET: LightParam get() = LightParam(10L)
+      val SHADOW_SPLIT_2_OFFSET: LightParam get() = LightParam(11L)
+      val SHADOW_SPLIT_3_OFFSET: LightParam get() = LightParam(12L)
+      val SHADOW_FADE_START: LightParam get() = LightParam(13L)
+      val SHADOW_NORMAL_BIAS: LightParam get() = LightParam(14L)
+      val SHADOW_BIAS: LightParam get() = LightParam(15L)
+      val SHADOW_PANCAKE_SIZE: LightParam get() = LightParam(16L)
+      val SHADOW_OPACITY: LightParam get() = LightParam(17L)
+      val SHADOW_BLUR: LightParam get() = LightParam(18L)
+      val TRANSMITTANCE_BIAS: LightParam get() = LightParam(19L)
+      val INTENSITY: LightParam get() = LightParam(20L)
+      val MAX: LightParam get() = LightParam(21L)
+    }
+  }
+
+  value class LightBakeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: LightBakeMode get() = LightBakeMode(0L)
+      val STATIC: LightBakeMode get() = LightBakeMode(1L)
+      val DYNAMIC: LightBakeMode get() = LightBakeMode(2L)
+    }
+  }
+
+  value class LightOmniShadowMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DUAL_PARABOLOID: LightOmniShadowMode get() = LightOmniShadowMode(0L)
+      val CUBE: LightOmniShadowMode get() = LightOmniShadowMode(1L)
+    }
+  }
+
+  value class LightDirectionalShadowMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ORTHOGONAL: LightDirectionalShadowMode get() = LightDirectionalShadowMode(0L)
+      val PARALLEL_2_SPLITS: LightDirectionalShadowMode get() = LightDirectionalShadowMode(1L)
+      val PARALLEL_4_SPLITS: LightDirectionalShadowMode get() = LightDirectionalShadowMode(2L)
+    }
+  }
+
+  value class LightDirectionalSkyMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LIGHT_AND_SKY: LightDirectionalSkyMode get() = LightDirectionalSkyMode(0L)
+      val LIGHT_ONLY: LightDirectionalSkyMode get() = LightDirectionalSkyMode(1L)
+      val SKY_ONLY: LightDirectionalSkyMode get() = LightDirectionalSkyMode(2L)
+    }
+  }
+
+  value class ShadowQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val HARD: ShadowQuality get() = ShadowQuality(0L)
+      val SOFT_VERY_LOW: ShadowQuality get() = ShadowQuality(1L)
+      val SOFT_LOW: ShadowQuality get() = ShadowQuality(2L)
+      val SOFT_MEDIUM: ShadowQuality get() = ShadowQuality(3L)
+      val SOFT_HIGH: ShadowQuality get() = ShadowQuality(4L)
+      val SOFT_ULTRA: ShadowQuality get() = ShadowQuality(5L)
+      val MAX: ShadowQuality get() = ShadowQuality(6L)
+    }
+  }
+
+  value class ReflectionProbeUpdateMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ONCE: ReflectionProbeUpdateMode get() = ReflectionProbeUpdateMode(0L)
+      val ALWAYS: ReflectionProbeUpdateMode get() = ReflectionProbeUpdateMode(1L)
+    }
+  }
+
+  value class ReflectionProbeAmbientMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ReflectionProbeAmbientMode get() = ReflectionProbeAmbientMode(0L)
+      val ENVIRONMENT: ReflectionProbeAmbientMode get() = ReflectionProbeAmbientMode(1L)
+      val COLOR: ReflectionProbeAmbientMode get() = ReflectionProbeAmbientMode(2L)
+    }
+  }
+
+  value class DecalTexture(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ALBEDO: DecalTexture get() = DecalTexture(0L)
+      val NORMAL: DecalTexture get() = DecalTexture(1L)
+      val ORM: DecalTexture get() = DecalTexture(2L)
+      val EMISSION: DecalTexture get() = DecalTexture(3L)
+      val MAX: DecalTexture get() = DecalTexture(4L)
+    }
+  }
+
+  value class DecalFilter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NEAREST: DecalFilter get() = DecalFilter(0L)
+      val LINEAR: DecalFilter get() = DecalFilter(1L)
+      val NEAREST_MIPMAPS: DecalFilter get() = DecalFilter(2L)
+      val LINEAR_MIPMAPS: DecalFilter get() = DecalFilter(3L)
+      val NEAREST_MIPMAPS_ANISOTROPIC: DecalFilter get() = DecalFilter(4L)
+      val LINEAR_MIPMAPS_ANISOTROPIC: DecalFilter get() = DecalFilter(5L)
+    }
+  }
+
+  value class VoxelGIQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LOW: VoxelGIQuality get() = VoxelGIQuality(0L)
+      val HIGH: VoxelGIQuality get() = VoxelGIQuality(1L)
+    }
+  }
+
+  value class ParticlesMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val MODE_2D: ParticlesMode get() = ParticlesMode(0L)
+      val MODE_3D: ParticlesMode get() = ParticlesMode(1L)
+    }
+  }
+
+  value class ParticlesTransformAlign(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ParticlesTransformAlign get() = ParticlesTransformAlign(0L)
+      val Z_BILLBOARD: ParticlesTransformAlign get() = ParticlesTransformAlign(1L)
+      val Y_TO_VELOCITY: ParticlesTransformAlign get() = ParticlesTransformAlign(2L)
+      val Z_BILLBOARD_Y_TO_VELOCITY: ParticlesTransformAlign get() = ParticlesTransformAlign(3L)
+      val LOCAL_BILLBOARD: ParticlesTransformAlign get() = ParticlesTransformAlign(4L)
+    }
+  }
+
+  value class ParticlesTransformAlignCustomSrc(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(0L)
+      val X: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(1L)
+      val Y: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(2L)
+      val Z: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(3L)
+      val W: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(4L)
+    }
+  }
+
+  value class ParticlesTransformAlignAxis(override val value: Long) : GodotEnumValue {
+    companion object {
+      val X: ParticlesTransformAlignAxis get() = ParticlesTransformAlignAxis(0L)
+      val Y: ParticlesTransformAlignAxis get() = ParticlesTransformAlignAxis(1L)
+    }
+  }
+
+  value class ParticlesDrawOrder(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INDEX: ParticlesDrawOrder get() = ParticlesDrawOrder(0L)
+      val LIFETIME: ParticlesDrawOrder get() = ParticlesDrawOrder(1L)
+      val REVERSE_LIFETIME: ParticlesDrawOrder get() = ParticlesDrawOrder(2L)
+      val VIEW_DEPTH: ParticlesDrawOrder get() = ParticlesDrawOrder(3L)
+    }
+  }
+
+  value class ParticlesCollisionType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SPHERE_ATTRACT: ParticlesCollisionType get() = ParticlesCollisionType(0L)
+      val BOX_ATTRACT: ParticlesCollisionType get() = ParticlesCollisionType(1L)
+      val VECTOR_FIELD_ATTRACT: ParticlesCollisionType get() = ParticlesCollisionType(2L)
+      val SPHERE_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(3L)
+      val BOX_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(4L)
+      val SDF_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(5L)
+      val HEIGHTFIELD_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(6L)
+    }
+  }
+
+  value class ParticlesCollisionHeightfieldResolution(override val value: Long) : GodotEnumValue {
+    companion object {
+      val RESOLUTION_256: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(0L)
+      val RESOLUTION_512: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(1L)
+      val RESOLUTION_1024: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(2L)
+      val RESOLUTION_2048: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(3L)
+      val RESOLUTION_4096: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(4L)
+      val RESOLUTION_8192: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(5L)
+      val MAX: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(6L)
+    }
+  }
+
+  value class FogVolumeShape(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ELLIPSOID: FogVolumeShape get() = FogVolumeShape(0L)
+      val CONE: FogVolumeShape get() = FogVolumeShape(1L)
+      val CYLINDER: FogVolumeShape get() = FogVolumeShape(2L)
+      val BOX: FogVolumeShape get() = FogVolumeShape(3L)
+      val WORLD: FogVolumeShape get() = FogVolumeShape(4L)
+      val MAX: FogVolumeShape get() = FogVolumeShape(5L)
+    }
+  }
+
+  value class ViewportScaling3DMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BILINEAR: ViewportScaling3DMode get() = ViewportScaling3DMode(0L)
+      val FSR: ViewportScaling3DMode get() = ViewportScaling3DMode(1L)
+      val FSR2: ViewportScaling3DMode get() = ViewportScaling3DMode(2L)
+      val METALFX_SPATIAL: ViewportScaling3DMode get() = ViewportScaling3DMode(3L)
+      val METALFX_TEMPORAL: ViewportScaling3DMode get() = ViewportScaling3DMode(4L)
+      val NEAREST: ViewportScaling3DMode get() = ViewportScaling3DMode(5L)
+      val MAX: ViewportScaling3DMode get() = ViewportScaling3DMode(6L)
+    }
+  }
+
+  value class ViewportUpdateMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportUpdateMode get() = ViewportUpdateMode(0L)
+      val ONCE: ViewportUpdateMode get() = ViewportUpdateMode(1L)
+      val WHEN_VISIBLE: ViewportUpdateMode get() = ViewportUpdateMode(2L)
+      val WHEN_PARENT_VISIBLE: ViewportUpdateMode get() = ViewportUpdateMode(3L)
+      val ALWAYS: ViewportUpdateMode get() = ViewportUpdateMode(4L)
+    }
+  }
+
+  value class ViewportClearMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ALWAYS: ViewportClearMode get() = ViewportClearMode(0L)
+      val NEVER: ViewportClearMode get() = ViewportClearMode(1L)
+      val ONLY_NEXT_FRAME: ViewportClearMode get() = ViewportClearMode(2L)
+    }
+  }
+
+  value class ViewportEnvironmentMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportEnvironmentMode get() = ViewportEnvironmentMode(0L)
+      val ENABLED: ViewportEnvironmentMode get() = ViewportEnvironmentMode(1L)
+      val INHERIT: ViewportEnvironmentMode get() = ViewportEnvironmentMode(2L)
+      val MAX: ViewportEnvironmentMode get() = ViewportEnvironmentMode(3L)
+    }
+  }
+
+  value class ViewportSDFOversize(override val value: Long) : GodotEnumValue {
+    companion object {
+      val OVERSIZE_100_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(0L)
+      val OVERSIZE_120_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(1L)
+      val OVERSIZE_150_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(2L)
+      val OVERSIZE_200_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(3L)
+      val MAX: ViewportSDFOversize get() = ViewportSDFOversize(4L)
+    }
+  }
+
+  value class ViewportSDFScale(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SCALE_100_PERCENT: ViewportSDFScale get() = ViewportSDFScale(0L)
+      val SCALE_50_PERCENT: ViewportSDFScale get() = ViewportSDFScale(1L)
+      val SCALE_25_PERCENT: ViewportSDFScale get() = ViewportSDFScale(2L)
+      val MAX: ViewportSDFScale get() = ViewportSDFScale(3L)
+    }
+  }
+
+  value class ViewportMSAA(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportMSAA get() = ViewportMSAA(0L)
+      val MSAA_2X: ViewportMSAA get() = ViewportMSAA(1L)
+      val MSAA_4X: ViewportMSAA get() = ViewportMSAA(2L)
+      val MSAA_8X: ViewportMSAA get() = ViewportMSAA(3L)
+      val MAX: ViewportMSAA get() = ViewportMSAA(4L)
+    }
+  }
+
+  value class ViewportAnisotropicFiltering(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(0L)
+      val ANISOTROPY_2X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(1L)
+      val ANISOTROPY_4X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(2L)
+      val ANISOTROPY_8X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(3L)
+      val ANISOTROPY_16X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(4L)
+      val MAX: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(5L)
+    }
+  }
+
+  value class ViewportScreenSpaceAA(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(0L)
+      val FXAA: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(1L)
+      val SMAA: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(2L)
+      val MAX: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(3L)
+    }
+  }
+
+  value class ViewportOcclusionCullingBuildQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LOW: ViewportOcclusionCullingBuildQuality get() = ViewportOcclusionCullingBuildQuality(0L)
+      val MEDIUM: ViewportOcclusionCullingBuildQuality get() = ViewportOcclusionCullingBuildQuality(1L)
+      val HIGH: ViewportOcclusionCullingBuildQuality get() = ViewportOcclusionCullingBuildQuality(2L)
+    }
+  }
+
+  value class ViewportRenderInfo(override val value: Long) : GodotEnumValue {
+    companion object {
+      val OBJECTS_IN_FRAME: ViewportRenderInfo get() = ViewportRenderInfo(0L)
+      val PRIMITIVES_IN_FRAME: ViewportRenderInfo get() = ViewportRenderInfo(1L)
+      val DRAW_CALLS_IN_FRAME: ViewportRenderInfo get() = ViewportRenderInfo(2L)
+      val MAX: ViewportRenderInfo get() = ViewportRenderInfo(3L)
+    }
+  }
+
+  value class ViewportRenderInfoType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VISIBLE: ViewportRenderInfoType get() = ViewportRenderInfoType(0L)
+      val SHADOW: ViewportRenderInfoType get() = ViewportRenderInfoType(1L)
+      val CANVAS: ViewportRenderInfoType get() = ViewportRenderInfoType(2L)
+      val MAX: ViewportRenderInfoType get() = ViewportRenderInfoType(3L)
+    }
+  }
+
+  value class ViewportDebugDraw(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportDebugDraw get() = ViewportDebugDraw(0L)
+      val UNSHADED: ViewportDebugDraw get() = ViewportDebugDraw(1L)
+      val LIGHTING: ViewportDebugDraw get() = ViewportDebugDraw(2L)
+      val OVERDRAW: ViewportDebugDraw get() = ViewportDebugDraw(3L)
+      val WIREFRAME: ViewportDebugDraw get() = ViewportDebugDraw(4L)
+      val NORMAL_BUFFER: ViewportDebugDraw get() = ViewportDebugDraw(5L)
+      val VOXEL_GI_ALBEDO: ViewportDebugDraw get() = ViewportDebugDraw(6L)
+      val VOXEL_GI_LIGHTING: ViewportDebugDraw get() = ViewportDebugDraw(7L)
+      val VOXEL_GI_EMISSION: ViewportDebugDraw get() = ViewportDebugDraw(8L)
+      val SHADOW_ATLAS: ViewportDebugDraw get() = ViewportDebugDraw(9L)
+      val DIRECTIONAL_SHADOW_ATLAS: ViewportDebugDraw get() = ViewportDebugDraw(10L)
+      val SCENE_LUMINANCE: ViewportDebugDraw get() = ViewportDebugDraw(11L)
+      val SSAO: ViewportDebugDraw get() = ViewportDebugDraw(12L)
+      val SSIL: ViewportDebugDraw get() = ViewportDebugDraw(13L)
+      val PSSM_SPLITS: ViewportDebugDraw get() = ViewportDebugDraw(14L)
+      val DECAL_ATLAS: ViewportDebugDraw get() = ViewportDebugDraw(15L)
+      val SDFGI: ViewportDebugDraw get() = ViewportDebugDraw(16L)
+      val SDFGI_PROBES: ViewportDebugDraw get() = ViewportDebugDraw(17L)
+      val GI_BUFFER: ViewportDebugDraw get() = ViewportDebugDraw(18L)
+      val DISABLE_LOD: ViewportDebugDraw get() = ViewportDebugDraw(19L)
+      val CLUSTER_OMNI_LIGHTS: ViewportDebugDraw get() = ViewportDebugDraw(20L)
+      val CLUSTER_SPOT_LIGHTS: ViewportDebugDraw get() = ViewportDebugDraw(21L)
+      val CLUSTER_DECALS: ViewportDebugDraw get() = ViewportDebugDraw(22L)
+      val CLUSTER_REFLECTION_PROBES: ViewportDebugDraw get() = ViewportDebugDraw(23L)
+      val OCCLUDERS: ViewportDebugDraw get() = ViewportDebugDraw(24L)
+      val MOTION_VECTORS: ViewportDebugDraw get() = ViewportDebugDraw(25L)
+      val INTERNAL_BUFFER: ViewportDebugDraw get() = ViewportDebugDraw(26L)
+    }
+  }
+
+  value class ViewportVRSMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportVRSMode get() = ViewportVRSMode(0L)
+      val TEXTURE: ViewportVRSMode get() = ViewportVRSMode(1L)
+      val XR: ViewportVRSMode get() = ViewportVRSMode(2L)
+      val MAX: ViewportVRSMode get() = ViewportVRSMode(3L)
+    }
+  }
+
+  value class ViewportVRSUpdateMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(0L)
+      val ONCE: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(1L)
+      val ALWAYS: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(2L)
+      val MAX: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(3L)
+    }
+  }
+
+  value class SkyMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val AUTOMATIC: SkyMode get() = SkyMode(0L)
+      val QUALITY: SkyMode get() = SkyMode(1L)
+      val INCREMENTAL: SkyMode get() = SkyMode(2L)
+      val REALTIME: SkyMode get() = SkyMode(3L)
+    }
+  }
+
+  value class CompositorEffectFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ACCESS_RESOLVED_COLOR: CompositorEffectFlags get() = CompositorEffectFlags(1L)
+      val ACCESS_RESOLVED_DEPTH: CompositorEffectFlags get() = CompositorEffectFlags(2L)
+      val NEEDS_MOTION_VECTORS: CompositorEffectFlags get() = CompositorEffectFlags(4L)
+      val NEEDS_ROUGHNESS: CompositorEffectFlags get() = CompositorEffectFlags(8L)
+      val NEEDS_SEPARATE_SPECULAR: CompositorEffectFlags get() = CompositorEffectFlags(16L)
+    }
+  }
+
+  value class CompositorEffectCallbackType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PRE_OPAQUE: CompositorEffectCallbackType get() = CompositorEffectCallbackType(0L)
+      val POST_OPAQUE: CompositorEffectCallbackType get() = CompositorEffectCallbackType(1L)
+      val POST_SKY: CompositorEffectCallbackType get() = CompositorEffectCallbackType(2L)
+      val PRE_TRANSPARENT: CompositorEffectCallbackType get() = CompositorEffectCallbackType(3L)
+      val POST_TRANSPARENT: CompositorEffectCallbackType get() = CompositorEffectCallbackType(4L)
+      val ANY: CompositorEffectCallbackType get() = CompositorEffectCallbackType(-1L)
+    }
+  }
+
+  value class EnvironmentBG(override val value: Long) : GodotEnumValue {
+    companion object {
+      val CLEAR_COLOR: EnvironmentBG get() = EnvironmentBG(0L)
+      val COLOR: EnvironmentBG get() = EnvironmentBG(1L)
+      val SKY: EnvironmentBG get() = EnvironmentBG(2L)
+      val CANVAS: EnvironmentBG get() = EnvironmentBG(3L)
+      val KEEP: EnvironmentBG get() = EnvironmentBG(4L)
+      val CAMERA_FEED: EnvironmentBG get() = EnvironmentBG(5L)
+      val MAX: EnvironmentBG get() = EnvironmentBG(6L)
+    }
+  }
+
+  value class EnvironmentAmbientSource(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BG: EnvironmentAmbientSource get() = EnvironmentAmbientSource(0L)
+      val DISABLED: EnvironmentAmbientSource get() = EnvironmentAmbientSource(1L)
+      val COLOR: EnvironmentAmbientSource get() = EnvironmentAmbientSource(2L)
+      val SKY: EnvironmentAmbientSource get() = EnvironmentAmbientSource(3L)
+    }
+  }
+
+  value class EnvironmentReflectionSource(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BG: EnvironmentReflectionSource get() = EnvironmentReflectionSource(0L)
+      val DISABLED: EnvironmentReflectionSource get() = EnvironmentReflectionSource(1L)
+      val SKY: EnvironmentReflectionSource get() = EnvironmentReflectionSource(2L)
+    }
+  }
+
+  value class EnvironmentGlowBlendMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ADDITIVE: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(0L)
+      val SCREEN: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(1L)
+      val SOFTLIGHT: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(2L)
+      val REPLACE: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(3L)
+      val MIX: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(4L)
+    }
+  }
+
+  value class EnvironmentFogMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val EXPONENTIAL: EnvironmentFogMode get() = EnvironmentFogMode(0L)
+      val DEPTH: EnvironmentFogMode get() = EnvironmentFogMode(1L)
+    }
+  }
+
+  value class EnvironmentToneMapper(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LINEAR: EnvironmentToneMapper get() = EnvironmentToneMapper(0L)
+      val REINHARD: EnvironmentToneMapper get() = EnvironmentToneMapper(1L)
+      val FILMIC: EnvironmentToneMapper get() = EnvironmentToneMapper(2L)
+      val ACES: EnvironmentToneMapper get() = EnvironmentToneMapper(3L)
+      val AGX: EnvironmentToneMapper get() = EnvironmentToneMapper(4L)
+    }
+  }
+
+  value class EnvironmentSSRRoughnessQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(0L)
+      val LOW: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(1L)
+      val MEDIUM: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(2L)
+      val HIGH: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(3L)
+    }
+  }
+
+  value class EnvironmentSSAOQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VERY_LOW: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(0L)
+      val LOW: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(1L)
+      val MEDIUM: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(2L)
+      val HIGH: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(3L)
+      val ULTRA: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(4L)
+    }
+  }
+
+  value class EnvironmentSSILQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VERY_LOW: EnvironmentSSILQuality get() = EnvironmentSSILQuality(0L)
+      val LOW: EnvironmentSSILQuality get() = EnvironmentSSILQuality(1L)
+      val MEDIUM: EnvironmentSSILQuality get() = EnvironmentSSILQuality(2L)
+      val HIGH: EnvironmentSSILQuality get() = EnvironmentSSILQuality(3L)
+      val ULTRA: EnvironmentSSILQuality get() = EnvironmentSSILQuality(4L)
+    }
+  }
+
+  value class EnvironmentSDFGIYScale(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SCALE_50_PERCENT: EnvironmentSDFGIYScale get() = EnvironmentSDFGIYScale(0L)
+      val SCALE_75_PERCENT: EnvironmentSDFGIYScale get() = EnvironmentSDFGIYScale(1L)
+      val SCALE_100_PERCENT: EnvironmentSDFGIYScale get() = EnvironmentSDFGIYScale(2L)
+    }
+  }
+
+  value class EnvironmentSDFGIRayCount(override val value: Long) : GodotEnumValue {
+    companion object {
+      val COUNT_4: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(0L)
+      val COUNT_8: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(1L)
+      val COUNT_16: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(2L)
+      val COUNT_32: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(3L)
+      val COUNT_64: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(4L)
+      val COUNT_96: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(5L)
+      val COUNT_128: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(6L)
+      val MAX: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(7L)
+    }
+  }
+
+  value class EnvironmentSDFGIFramesToConverge(override val value: Long) : GodotEnumValue {
+    companion object {
+      val IN_5_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(0L)
+      val IN_10_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(1L)
+      val IN_15_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(2L)
+      val IN_20_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(3L)
+      val IN_25_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(4L)
+      val IN_30_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(5L)
+      val MAX: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(6L)
+    }
+  }
+
+  value class EnvironmentSDFGIFramesToUpdateLight(override val value: Long) : GodotEnumValue {
+    companion object {
+      val IN_1_FRAME: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(0L)
+      val IN_2_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(1L)
+      val IN_4_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(2L)
+      val IN_8_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(3L)
+      val IN_16_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(4L)
+      val MAX: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(5L)
+    }
+  }
+
+  value class SubSurfaceScatteringQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(0L)
+      val LOW: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(1L)
+      val MEDIUM: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(2L)
+      val HIGH: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(3L)
+    }
+  }
+
+  value class DOFBokehShape(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BOX: DOFBokehShape get() = DOFBokehShape(0L)
+      val HEXAGON: DOFBokehShape get() = DOFBokehShape(1L)
+      val CIRCLE: DOFBokehShape get() = DOFBokehShape(2L)
+    }
+  }
+
+  value class DOFBlurQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VERY_LOW: DOFBlurQuality get() = DOFBlurQuality(0L)
+      val LOW: DOFBlurQuality get() = DOFBlurQuality(1L)
+      val MEDIUM: DOFBlurQuality get() = DOFBlurQuality(2L)
+      val HIGH: DOFBlurQuality get() = DOFBlurQuality(3L)
+    }
+  }
+
+  value class InstanceType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: InstanceType get() = InstanceType(0L)
+      val MESH: InstanceType get() = InstanceType(1L)
+      val MULTIMESH: InstanceType get() = InstanceType(2L)
+      val PARTICLES: InstanceType get() = InstanceType(3L)
+      val PARTICLES_COLLISION: InstanceType get() = InstanceType(4L)
+      val LIGHT: InstanceType get() = InstanceType(5L)
+      val REFLECTION_PROBE: InstanceType get() = InstanceType(6L)
+      val DECAL: InstanceType get() = InstanceType(7L)
+      val VOXEL_GI: InstanceType get() = InstanceType(8L)
+      val LIGHTMAP: InstanceType get() = InstanceType(9L)
+      val OCCLUDER: InstanceType get() = InstanceType(10L)
+      val VISIBLITY_NOTIFIER: InstanceType get() = InstanceType(11L)
+      val FOG_VOLUME: InstanceType get() = InstanceType(12L)
+      val MAX: InstanceType get() = InstanceType(13L)
+      val GEOMETRY_MASK: InstanceType get() = InstanceType(14L)
+    }
+  }
+
+  value class InstanceFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val USE_BAKED_LIGHT: InstanceFlags get() = InstanceFlags(0L)
+      val USE_DYNAMIC_GI: InstanceFlags get() = InstanceFlags(1L)
+      val DRAW_NEXT_FRAME_IF_VISIBLE: InstanceFlags get() = InstanceFlags(2L)
+      val IGNORE_OCCLUSION_CULLING: InstanceFlags get() = InstanceFlags(3L)
+      val MAX: InstanceFlags get() = InstanceFlags(4L)
+    }
+  }
+
+  value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
+    companion object {
+      val OFF: ShadowCastingSetting get() = ShadowCastingSetting(0L)
+      val ON: ShadowCastingSetting get() = ShadowCastingSetting(1L)
+      val DOUBLE_SIDED: ShadowCastingSetting get() = ShadowCastingSetting(2L)
+      val SHADOWS_ONLY: ShadowCastingSetting get() = ShadowCastingSetting(3L)
+    }
+  }
+
+  value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(0L)
+      val SELF: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(1L)
+      val DEPENDENCIES: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(2L)
+    }
+  }
+
+  value class BakeChannels(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ALBEDO_ALPHA: BakeChannels get() = BakeChannels(0L)
+      val NORMAL: BakeChannels get() = BakeChannels(1L)
+      val ORM: BakeChannels get() = BakeChannels(2L)
+      val EMISSION: BakeChannels get() = BakeChannels(3L)
+    }
+  }
+
+  value class CanvasTextureChannel(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DIFFUSE: CanvasTextureChannel get() = CanvasTextureChannel(0L)
+      val NORMAL: CanvasTextureChannel get() = CanvasTextureChannel(1L)
+      val SPECULAR: CanvasTextureChannel get() = CanvasTextureChannel(2L)
+    }
+  }
+
+  value class NinePatchAxisMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val STRETCH: NinePatchAxisMode get() = NinePatchAxisMode(0L)
+      val TILE: NinePatchAxisMode get() = NinePatchAxisMode(1L)
+      val TILE_FIT: NinePatchAxisMode get() = NinePatchAxisMode(2L)
+    }
+  }
+
+  value class CanvasItemTextureFilter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DEFAULT: CanvasItemTextureFilter get() = CanvasItemTextureFilter(0L)
+      val NEAREST: CanvasItemTextureFilter get() = CanvasItemTextureFilter(1L)
+      val LINEAR: CanvasItemTextureFilter get() = CanvasItemTextureFilter(2L)
+      val NEAREST_WITH_MIPMAPS: CanvasItemTextureFilter get() = CanvasItemTextureFilter(3L)
+      val LINEAR_WITH_MIPMAPS: CanvasItemTextureFilter get() = CanvasItemTextureFilter(4L)
+      val NEAREST_WITH_MIPMAPS_ANISOTROPIC: CanvasItemTextureFilter get() = CanvasItemTextureFilter(5L)
+      val LINEAR_WITH_MIPMAPS_ANISOTROPIC: CanvasItemTextureFilter get() = CanvasItemTextureFilter(6L)
+      val MAX: CanvasItemTextureFilter get() = CanvasItemTextureFilter(7L)
+    }
+  }
+
+  value class CanvasItemTextureRepeat(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DEFAULT: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(0L)
+      val DISABLED: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(1L)
+      val ENABLED: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(2L)
+      val MIRROR: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(3L)
+      val MAX: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(4L)
+    }
+  }
+
+  value class CanvasGroupMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: CanvasGroupMode get() = CanvasGroupMode(0L)
+      val CLIP_ONLY: CanvasGroupMode get() = CanvasGroupMode(1L)
+      val CLIP_AND_DRAW: CanvasGroupMode get() = CanvasGroupMode(2L)
+      val TRANSPARENT: CanvasGroupMode get() = CanvasGroupMode(3L)
+    }
+  }
+
+  value class CanvasLightMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val POINT: CanvasLightMode get() = CanvasLightMode(0L)
+      val DIRECTIONAL: CanvasLightMode get() = CanvasLightMode(1L)
+    }
+  }
+
+  value class CanvasLightBlendMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ADD: CanvasLightBlendMode get() = CanvasLightBlendMode(0L)
+      val SUB: CanvasLightBlendMode get() = CanvasLightBlendMode(1L)
+      val MIX: CanvasLightBlendMode get() = CanvasLightBlendMode(2L)
+    }
+  }
+
+  value class CanvasLightShadowFilter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: CanvasLightShadowFilter get() = CanvasLightShadowFilter(0L)
+      val PCF5: CanvasLightShadowFilter get() = CanvasLightShadowFilter(1L)
+      val PCF13: CanvasLightShadowFilter get() = CanvasLightShadowFilter(2L)
+      val MAX: CanvasLightShadowFilter get() = CanvasLightShadowFilter(3L)
+    }
+  }
+
+  value class CanvasOccluderPolygonCullMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: CanvasOccluderPolygonCullMode get() = CanvasOccluderPolygonCullMode(0L)
+      val CLOCKWISE: CanvasOccluderPolygonCullMode get() = CanvasOccluderPolygonCullMode(1L)
+      val COUNTER_CLOCKWISE: CanvasOccluderPolygonCullMode get() = CanvasOccluderPolygonCullMode(2L)
+    }
+  }
+
+  value class GlobalShaderParameterType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BOOL: GlobalShaderParameterType get() = GlobalShaderParameterType(0L)
+      val BVEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(1L)
+      val BVEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(2L)
+      val BVEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(3L)
+      val INT: GlobalShaderParameterType get() = GlobalShaderParameterType(4L)
+      val IVEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(5L)
+      val IVEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(6L)
+      val IVEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(7L)
+      val RECT2I: GlobalShaderParameterType get() = GlobalShaderParameterType(8L)
+      val UINT: GlobalShaderParameterType get() = GlobalShaderParameterType(9L)
+      val UVEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(10L)
+      val UVEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(11L)
+      val UVEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(12L)
+      val FLOAT: GlobalShaderParameterType get() = GlobalShaderParameterType(13L)
+      val VEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(14L)
+      val VEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(15L)
+      val VEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(16L)
+      val COLOR: GlobalShaderParameterType get() = GlobalShaderParameterType(17L)
+      val RECT2: GlobalShaderParameterType get() = GlobalShaderParameterType(18L)
+      val MAT2: GlobalShaderParameterType get() = GlobalShaderParameterType(19L)
+      val MAT3: GlobalShaderParameterType get() = GlobalShaderParameterType(20L)
+      val MAT4: GlobalShaderParameterType get() = GlobalShaderParameterType(21L)
+      val TRANSFORM_2D: GlobalShaderParameterType get() = GlobalShaderParameterType(22L)
+      val TRANSFORM: GlobalShaderParameterType get() = GlobalShaderParameterType(23L)
+      val SAMPLER2D: GlobalShaderParameterType get() = GlobalShaderParameterType(24L)
+      val SAMPLER2DARRAY: GlobalShaderParameterType get() = GlobalShaderParameterType(25L)
+      val SAMPLER3D: GlobalShaderParameterType get() = GlobalShaderParameterType(26L)
+      val SAMPLERCUBE: GlobalShaderParameterType get() = GlobalShaderParameterType(27L)
+      val SAMPLEREXT: GlobalShaderParameterType get() = GlobalShaderParameterType(28L)
+      val MAX: GlobalShaderParameterType get() = GlobalShaderParameterType(29L)
+    }
+  }
+
+  value class RenderingInfo(override val value: Long) : GodotEnumValue {
+    companion object {
+      val TOTAL_OBJECTS_IN_FRAME: RenderingInfo get() = RenderingInfo(0L)
+      val TOTAL_PRIMITIVES_IN_FRAME: RenderingInfo get() = RenderingInfo(1L)
+      val TOTAL_DRAW_CALLS_IN_FRAME: RenderingInfo get() = RenderingInfo(2L)
+      val TEXTURE_MEM_USED: RenderingInfo get() = RenderingInfo(3L)
+      val BUFFER_MEM_USED: RenderingInfo get() = RenderingInfo(4L)
+      val VIDEO_MEM_USED: RenderingInfo get() = RenderingInfo(5L)
+      val PIPELINE_COMPILATIONS_CANVAS: RenderingInfo get() = RenderingInfo(6L)
+      val PIPELINE_COMPILATIONS_MESH: RenderingInfo get() = RenderingInfo(7L)
+      val PIPELINE_COMPILATIONS_SURFACE: RenderingInfo get() = RenderingInfo(8L)
+      val PIPELINE_COMPILATIONS_DRAW: RenderingInfo get() = RenderingInfo(9L)
+      val PIPELINE_COMPILATIONS_SPECIALIZATION: RenderingInfo get() = RenderingInfo(10L)
+    }
+  }
+
+  value class PipelineSource(override val value: Long) : GodotEnumValue {
+    companion object {
+      val CANVAS: PipelineSource get() = PipelineSource(0L)
+      val MESH: PipelineSource get() = PipelineSource(1L)
+      val SURFACE: PipelineSource get() = PipelineSource(2L)
+      val DRAW: PipelineSource get() = PipelineSource(3L)
+      val SPECIALIZATION: PipelineSource get() = PipelineSource(4L)
+      val MAX: PipelineSource get() = PipelineSource(5L)
+    }
+  }
+
+  value class SplashStretchMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: SplashStretchMode get() = SplashStretchMode(0L)
+      val KEEP: SplashStretchMode get() = SplashStretchMode(1L)
+      val KEEP_WIDTH: SplashStretchMode get() = SplashStretchMode(2L)
+      val KEEP_HEIGHT: SplashStretchMode get() = SplashStretchMode(3L)
+      val COVER: SplashStretchMode get() = SplashStretchMode(4L)
+      val IGNORE: SplashStretchMode get() = SplashStretchMode(5L)
+    }
+  }
+
+  value class Features(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SHADERS: Features get() = Features(0L)
+      val MULTITHREADED: Features get() = Features(1L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun RenderingServer.getCurrentRenderingMethod(): String = getCurrentRenderingMethod()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun RenderingServer.directionalSoftShadowFilterSetQuality(quality: Long) = directionalSoftShadowFilterSetQuality(quality)
+fun RenderingServer.directionalSoftShadowFilterSetQuality(quality: RenderingServer.ShadowQuality) = directionalSoftShadowFilterSetQuality(quality)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun RenderingServer.voxelGiSetQuality(quality: Long) = voxelGiSetQuality(quality)
+fun RenderingServer.voxelGiSetQuality(quality: RenderingServer.VoxelGIQuality) = voxelGiSetQuality(quality)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun RenderingServer.environmentSetSdfgiRayCount(rayCount: Long) = environmentSetSdfgiRayCount(rayCount)
+fun RenderingServer.environmentSetSdfgiRayCount(rayCount: RenderingServer.EnvironmentSDFGIRayCount) = environmentSetSdfgiRayCount(rayCount)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun RenderingServer.environmentSetSsaoQuality(
-  quality: Long,
+  quality: RenderingServer.EnvironmentSSAOQuality,
   halfSize: Boolean,
   adaptiveTarget: Double,
   blurPasses: Int,
@@ -125,7 +1034,7 @@ fun RenderingServer.environmentSetSsaoQuality(
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun RenderingServer.environmentSetSsilQuality(
-  quality: Long,
+  quality: RenderingServer.EnvironmentSSILQuality,
   halfSize: Boolean,
   adaptiveTarget: Double,
   blurPasses: Int,

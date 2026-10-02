@@ -341,6 +341,9 @@ tasks.register<Exec>("generateWebWrappers") {
     inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
     inputs.file(webBackendPolicy)
     inputs.file(rootProject.file("extension_api.json"))
+    // Task 128 C: the typed enums come from the shared enum model and its frozen prefix lock.
+    inputs.file(rootProject.file("scripts/godot_enum_model.py"))
+    inputs.file(rootProject.file("scripts/enum_prefix_lock.json"))
     outputs.dir(webWrapperTree)
     commandLine("python3", webWrapperGenerator.absolutePath)
 }
@@ -353,6 +356,9 @@ tasks.register<Exec>("checkWebWrappers") {
     inputs.file(rootProject.file("scripts/platform_backend_contract.py"))
     inputs.file(webBackendPolicy)
     inputs.file(rootProject.file("extension_api.json"))
+    // Task 128 C: the typed enums come from the shared enum model and its frozen prefix lock.
+    inputs.file(rootProject.file("scripts/godot_enum_model.py"))
+    inputs.file(rootProject.file("scripts/enum_prefix_lock.json"))
     inputs.dir(layout.projectDirectory.dir("src/commonMain/kotlin/net/multigesture/kanama/api"))
     commandLine("python3", webWrapperGenerator.absolutePath, "--check")
 }

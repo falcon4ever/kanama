@@ -46,6 +46,54 @@ class CPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
 
   val lifetime: Double
     get() = getLifetime()
+
+  value class DrawOrder(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INDEX: DrawOrder get() = DrawOrder(0L)
+      val LIFETIME: DrawOrder get() = DrawOrder(1L)
+      val VIEW_DEPTH: DrawOrder get() = DrawOrder(2L)
+    }
+  }
+
+  value class Parameter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INITIAL_LINEAR_VELOCITY: Parameter get() = Parameter(0L)
+      val ANGULAR_VELOCITY: Parameter get() = Parameter(1L)
+      val ORBIT_VELOCITY: Parameter get() = Parameter(2L)
+      val LINEAR_ACCEL: Parameter get() = Parameter(3L)
+      val RADIAL_ACCEL: Parameter get() = Parameter(4L)
+      val TANGENTIAL_ACCEL: Parameter get() = Parameter(5L)
+      val DAMPING: Parameter get() = Parameter(6L)
+      val ANGLE: Parameter get() = Parameter(7L)
+      val SCALE: Parameter get() = Parameter(8L)
+      val HUE_VARIATION: Parameter get() = Parameter(9L)
+      val ANIM_SPEED: Parameter get() = Parameter(10L)
+      val ANIM_OFFSET: Parameter get() = Parameter(11L)
+      val MAX: Parameter get() = Parameter(12L)
+    }
+  }
+
+  value class ParticleFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ALIGN_Y_TO_VELOCITY: ParticleFlags get() = ParticleFlags(0L)
+      val ROTATE_Y: ParticleFlags get() = ParticleFlags(1L)
+      val DISABLE_Z: ParticleFlags get() = ParticleFlags(2L)
+      val MAX: ParticleFlags get() = ParticleFlags(3L)
+    }
+  }
+
+  value class EmissionShape(override val value: Long) : GodotEnumValue {
+    companion object {
+      val POINT: EmissionShape get() = EmissionShape(0L)
+      val SPHERE: EmissionShape get() = EmissionShape(1L)
+      val SPHERE_SURFACE: EmissionShape get() = EmissionShape(2L)
+      val BOX: EmissionShape get() = EmissionShape(3L)
+      val POINTS: EmissionShape get() = EmissionShape(4L)
+      val DIRECTED_POINTS: EmissionShape get() = EmissionShape(5L)
+      val RING: EmissionShape get() = EmissionShape(6L)
+      val MAX: EmissionShape get() = EmissionShape(7L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

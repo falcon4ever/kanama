@@ -51,6 +51,14 @@ open class CollisionObject3D(godotObject: GodotHandle) : Node3D(godotObject) {
   var collisionMask: Long
     get() = unsupportedWebGameplayFamily("CollisionObject3D.get_collision_mask")
     set(newValue) = setCollisionMask(newValue)
+
+  value class DisableMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val REMOVE: DisableMode get() = DisableMode(0L)
+      val MAKE_STATIC: DisableMode get() = DisableMode(1L)
+      val KEEP_ACTIVE: DisableMode get() = DisableMode(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

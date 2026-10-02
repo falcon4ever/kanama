@@ -8,14 +8,45 @@ import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 object ResourceSaver {
-  fun save(resource: Resource, path: String = "", flags: Long = 0L): Long =
+  fun save(
+    resource: Resource,
+    path: String = "",
+    flags: ResourceSaver.SaverFlags = ResourceSaver.SaverFlags.NONE,
+  ): GodotError =
     GodotBackendCalls.invokeObjectStringRetLongSingleton(
       D.RESOURCESAVER_SAVE,
       resource.requireOpenHandle(),
       path,
-      flags,
-    )
+      flags.value,
+    ).let { GodotError(it) }
+
+  value class SaverFlags(override val value: Long) : GodotEnumValue {
+    infix fun or(other: SaverFlags): SaverFlags = SaverFlags(value or other.value)
+
+    infix fun and(other: SaverFlags): SaverFlags = SaverFlags(value and other.value)
+
+    infix fun xor(other: SaverFlags): SaverFlags = SaverFlags(value xor other.value)
+
+    fun inv(): SaverFlags = SaverFlags(value.inv())
+
+    operator fun contains(other: SaverFlags): Boolean = (value and other.value) == other.value
+
+    companion object {
+      val NONE: SaverFlags get() = SaverFlags(0L)
+      val RELATIVE_PATHS: SaverFlags get() = SaverFlags(1L)
+      val BUNDLE_RESOURCES: SaverFlags get() = SaverFlags(2L)
+      val CHANGE_PATH: SaverFlags get() = SaverFlags(4L)
+      val OMIT_EDITOR_PROPERTIES: SaverFlags get() = SaverFlags(8L)
+      val SAVE_BIG_ENDIAN: SaverFlags get() = SaverFlags(16L)
+      val COMPRESS: SaverFlags get() = SaverFlags(32L)
+      val REPLACE_SUBRESOURCE_PATHS: SaverFlags get() = SaverFlags(64L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ResourceSaver.save(resource: Resource, path: String = "", flags: Long = 0L): Long = save(resource, path, flags)
+fun ResourceSaver.save(
+  resource: Resource,
+  path: String = "",
+  flags: ResourceSaver.SaverFlags = ResourceSaver.SaverFlags.NONE,
+): GodotError = save(resource, path, flags)

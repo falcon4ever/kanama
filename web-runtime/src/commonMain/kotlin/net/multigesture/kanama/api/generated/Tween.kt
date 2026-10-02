@@ -26,7 +26,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       requireOpenHandle(),
       parallel,
     )
-    return if (returned == null || returned.backendToken() == backendHandle.backendToken()) this else Tween(returned.toWebId())
+    val live = requireGodotReturn(returned, "Tween.set_parallel")
+    return if (live.backendToken() == backendHandle.backendToken()) this else Tween(live.toWebId())
   }
 
   fun tweenProperty(
@@ -34,8 +35,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
     property: String,
     finalVal: Vector2,
     duration: Double,
-  ): PropertyTweener? =
-    GodotBackendCalls.invokeObjectNodePathVector2DoubleRetHandle(
+  ): PropertyTweener {
+    val returned = GodotBackendCalls.invokeObjectNodePathVector2DoubleRetHandle(
       D.TWEEN_TWEEN_PROPERTY_VECTOR2,
       requireOpenHandle(),
       target.requireOpenHandle(),
@@ -43,14 +44,16 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       finalVal.toBackend(),
       duration,
     )?.let { PropertyTweener(it.toWebId()) }
+    return requireGodotReturn(returned, "Tween.tween_property")
+  }
 
   fun tweenProperty(
     target: GodotObject,
     property: String,
     finalVal: Color,
     duration: Double,
-  ): PropertyTweener? =
-    GodotBackendCalls.invokeObjectNodePathColorDoubleRetHandle(
+  ): PropertyTweener {
+    val returned = GodotBackendCalls.invokeObjectNodePathColorDoubleRetHandle(
       D.TWEEN_TWEEN_PROPERTY_COLOR,
       requireOpenHandle(),
       target.requireOpenHandle(),
@@ -58,6 +61,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       finalVal.toBackend(),
       duration,
     )?.let { PropertyTweener(it.toWebId()) }
+    return requireGodotReturn(returned, "Tween.tween_property")
+  }
 
   fun bindNode(node: Node): Tween {
     val returned = GodotBackendCalls.invokeObjectRetHandle(
@@ -65,17 +70,19 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       requireOpenHandle(),
       node.requireOpenHandle(),
     )
-    check(returned != null && returned.backendToken() == backendHandle.backendToken()) { "Tween.bindNode did not return its receiver" }
+    val live = requireGodotReturn(returned, "Tween.bind_node")
+    check(live.backendToken() == backendHandle.backendToken()) { "Tween.bindNode did not return its receiver" }
     return this
   }
 
-  fun setEase(ease: Long): Tween {
+  fun setEase(ease: Tween.EaseType): Tween {
     val returned = GodotBackendCalls.invokeLongRetHandle(
       D.TWEEN_SET_EASE,
       requireOpenHandle(),
-      ease,
+      ease.value,
     )
-    check(returned != null && returned.backendToken() == backendHandle.backendToken()) { "Tween.setEase did not return its receiver" }
+    val live = requireGodotReturn(returned, "Tween.set_ease")
+    check(live.backendToken() == backendHandle.backendToken()) { "Tween.setEase did not return its receiver" }
     return this
   }
 
@@ -84,8 +91,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
     property: String,
     finalVal: Vector3,
     duration: Double,
-  ): PropertyTweener? =
-    GodotBackendCalls.invokeObjectNodePathVector3DoubleRetHandle(
+  ): PropertyTweener {
+    val returned = GodotBackendCalls.invokeObjectNodePathVector3DoubleRetHandle(
       D.TWEEN_TWEEN_PROPERTY_VECTOR3,
       requireOpenHandle(),
       target.requireOpenHandle(),
@@ -93,6 +100,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       finalVal.toBackend(),
       duration,
     )?.let { PropertyTweener(it.toWebId()) }
+    return requireGodotReturn(returned, "Tween.tween_property")
+  }
 
   /** Chain a callback step to a registered method on a Kanama script (FPS change_weapon). */
   fun tweenCallback(target: GodotObject, method: String) {
@@ -122,8 +131,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
     property: String,
     finalVal: Double,
     duration: Double,
-  ): PropertyTweener? =
-    GodotBackendCalls.invokeObjectNodePathDoubleDoubleRetHandle(
+  ): PropertyTweener {
+    val returned = GodotBackendCalls.invokeObjectNodePathDoubleDoubleRetHandle(
       D.TWEEN_TWEEN_PROPERTY_DOUBLE,
       requireOpenHandle(),
       target.requireOpenHandle(),
@@ -131,6 +140,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       finalVal,
       duration,
     )?.let { PropertyTweener(it.toWebId()) }
+    return requireGodotReturn(returned, "Tween.tween_property")
+  }
 
   /**
    * Variant-style final value over the typed arms; a component path such as `"position:y"` takes a
@@ -141,7 +152,7 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
     property: String,
     finalValue: Any?,
     duration: Double,
-  ): PropertyTweener? =
+  ): PropertyTweener =
     when (finalValue) {
       is Vector2 -> tweenProperty(target, property, finalValue, duration)
       is Color -> tweenProperty(target, property, finalValue, duration)
@@ -160,23 +171,45 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
     const val finished: String = "finished"
   }
 
-  companion object {
-    const val TRANS_LINEAR: Long = 0L
-    const val TRANS_SINE: Long = 1L
-    const val TRANS_QUINT: Long = 2L
-    const val TRANS_QUART: Long = 3L
-    const val TRANS_QUAD: Long = 4L
-    const val TRANS_EXPO: Long = 5L
-    const val TRANS_ELASTIC: Long = 6L
-    const val TRANS_CUBIC: Long = 7L
-    const val TRANS_CIRC: Long = 8L
-    const val TRANS_BOUNCE: Long = 9L
-    const val TRANS_BACK: Long = 10L
-    const val TRANS_SPRING: Long = 11L
-    const val EASE_IN: Long = 0L
-    const val EASE_OUT: Long = 1L
-    const val EASE_IN_OUT: Long = 2L
-    const val EASE_OUT_IN: Long = 3L
+  value class TweenProcessMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PHYSICS: TweenProcessMode get() = TweenProcessMode(0L)
+      val IDLE: TweenProcessMode get() = TweenProcessMode(1L)
+    }
+  }
+
+  value class TweenPauseMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BOUND: TweenPauseMode get() = TweenPauseMode(0L)
+      val STOP: TweenPauseMode get() = TweenPauseMode(1L)
+      val PROCESS: TweenPauseMode get() = TweenPauseMode(2L)
+    }
+  }
+
+  value class TransitionType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LINEAR: TransitionType get() = TransitionType(0L)
+      val SINE: TransitionType get() = TransitionType(1L)
+      val QUINT: TransitionType get() = TransitionType(2L)
+      val QUART: TransitionType get() = TransitionType(3L)
+      val QUAD: TransitionType get() = TransitionType(4L)
+      val EXPO: TransitionType get() = TransitionType(5L)
+      val ELASTIC: TransitionType get() = TransitionType(6L)
+      val CUBIC: TransitionType get() = TransitionType(7L)
+      val CIRC: TransitionType get() = TransitionType(8L)
+      val BOUNCE: TransitionType get() = TransitionType(9L)
+      val BACK: TransitionType get() = TransitionType(10L)
+      val SPRING: TransitionType get() = TransitionType(11L)
+    }
+  }
+
+  value class EaseType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val IN: EaseType get() = EaseType(0L)
+      val OUT: EaseType get() = EaseType(1L)
+      val IN_OUT: EaseType get() = EaseType(2L)
+      val OUT_IN: EaseType get() = EaseType(3L)
+    }
   }
 }
 
@@ -192,7 +225,7 @@ fun Tween.tweenProperty(
   property: String,
   finalVal: Vector2,
   duration: Double,
-): PropertyTweener? = tweenProperty(target, property, finalVal, duration)
+): PropertyTweener = tweenProperty(target, property, finalVal, duration)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Tween.tweenProperty(
@@ -200,13 +233,13 @@ fun Tween.tweenProperty(
   property: String,
   finalVal: Color,
   duration: Double,
-): PropertyTweener? = tweenProperty(target, property, finalVal, duration)
+): PropertyTweener = tweenProperty(target, property, finalVal, duration)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Tween.bindNode(node: Node): Tween = bindNode(node)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Tween.setEase(ease: Long): Tween = setEase(ease)
+fun Tween.setEase(ease: Tween.EaseType): Tween = setEase(ease)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Tween.tweenProperty(
@@ -214,7 +247,7 @@ fun Tween.tweenProperty(
   property: String,
   finalVal: Vector3,
   duration: Double,
-): PropertyTweener? = tweenProperty(target, property, finalVal, duration)
+): PropertyTweener = tweenProperty(target, property, finalVal, duration)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Tween.tweenCallback(target: GodotObject, method: String) = tweenCallback(target, method)
@@ -234,4 +267,4 @@ fun Tween.tweenProperty(
   property: String,
   finalVal: Double,
   duration: Double,
-): PropertyTweener? = tweenProperty(target, property, finalVal, duration)
+): PropertyTweener = tweenProperty(target, property, finalVal, duration)

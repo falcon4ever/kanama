@@ -49,6 +49,29 @@ class Camera3D(godotObject: GodotHandle) : Node3D(godotObject) {
     get() = getFov()
     set(newValue) = setFov(newValue)
 
+  value class ProjectionType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PERSPECTIVE: ProjectionType get() = ProjectionType(0L)
+      val ORTHOGONAL: ProjectionType get() = ProjectionType(1L)
+      val FRUSTUM: ProjectionType get() = ProjectionType(2L)
+    }
+  }
+
+  value class KeepAspect(override val value: Long) : GodotEnumValue {
+    companion object {
+      val WIDTH: KeepAspect get() = KeepAspect(0L)
+      val HEIGHT: KeepAspect get() = KeepAspect(1L)
+    }
+  }
+
+  value class DopplerTracking(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: DopplerTracking get() = DopplerTracking(0L)
+      val IDLE_STEP: DopplerTracking get() = DopplerTracking(1L)
+      val PHYSICS_STEP: DopplerTracking get() = DopplerTracking(2L)
+    }
+  }
+
   companion object {
     /** Constructs a new Camera3D engine-side; the wrapper owns the handle (close what you create). */
     fun create(): Camera3D =

@@ -5,6 +5,7 @@ package net.multigesture.kanama.web
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsExport
+import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.releaseWebConstructedObject
 import net.multigesture.kanama.api.releaseWebResource
@@ -22,9 +23,9 @@ import net.multigesture.kanama.api.releaseWebTrackedObject
  *
  * Argument encoding: each argument crosses as `typeTag:value`, arguments joined with the unit
  * separator (the established packed-string transport). Supported tags: `n` (null), `b` (bool), `i`
- * (int), `d` (double), `s` (string; `%` and separator payload bytes are percent-escaped), and `h`
- * (an already-tracked object handle, resolved through `_kanama_object_handles` in the GDScript
- * arm).
+ * (int; a typed Godot enum / bitfield -- a `GodotEnumValue` -- crosses as its number), `d`
+ * (double), `s` (string; `%` and separator payload bytes are percent-escaped), and `h` (an
+ * already-tracked object handle, resolved through `_kanama_object_handles` in the GDScript arm).
  *
  * Return encoding (immediate calls): `typeTag<US>payload...`. Object returns resolve to an
  * already-tracked handle first (`_kanama_ensure_created` for script-backed objects, `is_same` scan
@@ -103,6 +104,8 @@ object WebExperimentalGenericCall {
       is Float -> "d:${arg.toDouble()}"
       is String -> "s:${escapeStringPayload(arg)}"
       is GodotObject -> "h:${arg.handle.value}"
+      // Task 128: a typed Godot enum / bitfield crosses as the INT it stands for.
+      is GodotEnumValue -> encodeArg(arg.value)
       else -> error("Kanama Web generic call cannot encode argument type ${arg::class.simpleName}")
     }
 }

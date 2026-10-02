@@ -64,6 +64,29 @@ open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject) {
   object Signals {
     const val animationFinished: String = "animation_finished"
   }
+
+  value class AnimationCallbackModeProcess(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PHYSICS: AnimationCallbackModeProcess get() = AnimationCallbackModeProcess(0L)
+      val IDLE: AnimationCallbackModeProcess get() = AnimationCallbackModeProcess(1L)
+      val MANUAL: AnimationCallbackModeProcess get() = AnimationCallbackModeProcess(2L)
+    }
+  }
+
+  value class AnimationCallbackModeMethod(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DEFERRED: AnimationCallbackModeMethod get() = AnimationCallbackModeMethod(0L)
+      val IMMEDIATE: AnimationCallbackModeMethod get() = AnimationCallbackModeMethod(1L)
+    }
+  }
+
+  value class AnimationCallbackModeDiscrete(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DOMINANT: AnimationCallbackModeDiscrete get() = AnimationCallbackModeDiscrete(0L)
+      val RECESSIVE: AnimationCallbackModeDiscrete get() = AnimationCallbackModeDiscrete(1L)
+      val FORCE_CONTINUOUS: AnimationCallbackModeDiscrete get() = AnimationCallbackModeDiscrete(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

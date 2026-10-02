@@ -30,15 +30,20 @@ open class GodotObject(godotObject: GodotHandle) {
     )
   }
 
-  internal fun connect(signal: String, target: GodotObject, method: String, flags: Long = 0L): Long =
+  internal fun connect(
+    signal: String,
+    target: GodotObject,
+    method: String,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+  ): GodotError =
     GodotBackendCalls.invokeStringNameCallableLongRetLong(
       D.OBJECT_CONNECT,
       requireOpenHandle(),
       signal,
       target.requireOpenHandle(),
       method,
-      flags,
-    )
+      flags.value,
+    ).let { GodotError(it) }
 
   fun isClass(className: String): Boolean =
     GodotBackendCalls.invokeStringNameRetBool(D.OBJECT_IS_CLASS, requireOpenHandle(), className)
@@ -57,8 +62,8 @@ open class GodotObject(godotObject: GodotHandle) {
     target: GodotObject,
     method: String,
     boundValue: Long,
-    flags: Long = 0L,
-  ): Long =
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+  ): GodotError =
     GodotBackendCalls.invokeStringNameBoundCallableLongRetLong(
       D.OBJECT_CONNECT_BOUND_LONG,
       requireOpenHandle(),
@@ -66,8 +71,8 @@ open class GodotObject(godotObject: GodotHandle) {
       target.requireOpenHandle(),
       method,
       boundValue,
-      flags,
-    )
+      flags.value,
+    ).let { GodotError(it) }
 
   fun emitSignal(signal: String) {
     GodotBackendCalls.invokeStringNameRetInt(
@@ -249,6 +254,8 @@ open class GodotObject(godotObject: GodotHandle) {
     when (val value = args.singleOrNull()) {
       is Int -> emitSignal(signal, value)
       is Long -> emitSignal(signal, value.toInt())
+      // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
+      is GodotEnumValue -> emitSignal(signal, value.value.toInt())
       is String -> emitSignal(signal, value)
       is GodotObject -> emitSignal(signal, value)
       is Vector2i -> emitSignal(signal, value)
@@ -256,12 +263,24 @@ open class GodotObject(godotObject: GodotHandle) {
     }
   }
 
-  companion object {
-    const val CONNECT_DEFERRED: Long = 1L
-    const val CONNECT_PERSIST: Long = 2L
-    const val CONNECT_ONE_SHOT: Long = 4L
-    const val CONNECT_REFERENCE_COUNTED: Long = 8L
-    const val CONNECT_APPEND_SOURCE_OBJECT: Long = 16L
+  value class ConnectFlags(override val value: Long) : GodotEnumValue {
+    infix fun or(other: ConnectFlags): ConnectFlags = ConnectFlags(value or other.value)
+
+    infix fun and(other: ConnectFlags): ConnectFlags = ConnectFlags(value and other.value)
+
+    infix fun xor(other: ConnectFlags): ConnectFlags = ConnectFlags(value xor other.value)
+
+    fun inv(): ConnectFlags = ConnectFlags(value.inv())
+
+    operator fun contains(other: ConnectFlags): Boolean = (value and other.value) == other.value
+
+    companion object {
+      val DEFERRED: ConnectFlags get() = ConnectFlags(1L)
+      val PERSIST: ConnectFlags get() = ConnectFlags(2L)
+      val ONE_SHOT: ConnectFlags get() = ConnectFlags(4L)
+      val REFERENCE_COUNTED: ConnectFlags get() = ConnectFlags(8L)
+      val APPEND_SOURCE_OBJECT: ConnectFlags get() = ConnectFlags(16L)
+    }
   }
 }
 

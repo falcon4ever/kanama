@@ -22,6 +22,51 @@ class LightmapGI(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
     get() = unsupportedWebGameplayFamily("LightmapGI.get_light_data")
     set(newValue) = setLightData(newValue)
 
+  value class BakeQuality(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LOW: BakeQuality get() = BakeQuality(0L)
+      val MEDIUM: BakeQuality get() = BakeQuality(1L)
+      val HIGH: BakeQuality get() = BakeQuality(2L)
+      val ULTRA: BakeQuality get() = BakeQuality(3L)
+    }
+  }
+
+  value class GenerateProbes(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: GenerateProbes get() = GenerateProbes(0L)
+      val SUBDIV_4: GenerateProbes get() = GenerateProbes(1L)
+      val SUBDIV_8: GenerateProbes get() = GenerateProbes(2L)
+      val SUBDIV_16: GenerateProbes get() = GenerateProbes(3L)
+      val SUBDIV_32: GenerateProbes get() = GenerateProbes(4L)
+    }
+  }
+
+  value class BakeError(override val value: Long) : GodotEnumValue {
+    companion object {
+      val OK: BakeError get() = BakeError(0L)
+      val NO_SCENE_ROOT: BakeError get() = BakeError(1L)
+      val FOREIGN_DATA: BakeError get() = BakeError(2L)
+      val NO_LIGHTMAPPER: BakeError get() = BakeError(3L)
+      val NO_SAVE_PATH: BakeError get() = BakeError(4L)
+      val NO_MESHES: BakeError get() = BakeError(5L)
+      val MESHES_INVALID: BakeError get() = BakeError(6L)
+      val CANT_CREATE_IMAGE: BakeError get() = BakeError(7L)
+      val USER_ABORTED: BakeError get() = BakeError(8L)
+      val TEXTURE_SIZE_TOO_SMALL: BakeError get() = BakeError(9L)
+      val LIGHTMAP_TOO_SMALL: BakeError get() = BakeError(10L)
+      val ATLAS_TOO_SMALL: BakeError get() = BakeError(11L)
+    }
+  }
+
+  value class EnvironmentMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: EnvironmentMode get() = EnvironmentMode(0L)
+      val SCENE: EnvironmentMode get() = EnvironmentMode(1L)
+      val CUSTOM_SKY: EnvironmentMode get() = EnvironmentMode(2L)
+      val CUSTOM_COLOR: EnvironmentMode get() = EnvironmentMode(3L)
+    }
+  }
+
   companion object {
     /** Constructs a new LightmapGI engine-side; the wrapper owns the handle (close what you create). */
     fun create(): LightmapGI =

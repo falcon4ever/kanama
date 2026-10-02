@@ -1024,12 +1024,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine(
         "  /** Broadcast (peer 0): no remote peers on Web, so only the local leg can run. */"
       )
-      appendLine("  fun rpc$suffix($instanceParam$params): Long {")
+      appendLine(
+        "  fun rpc$suffix($instanceParam$params): net.multigesture.kanama.api.GodotError {"
+      )
       if (callLocal) appendLine("    $localCall")
-      appendLine("    return 0L")
+      appendLine("    return net.multigesture.kanama.api.GodotError.OK")
       appendLine("  }")
       appendLine()
-      appendLine("  fun rpcId$suffix(instance: $fq, peerId: Long$params): Long {")
+      appendLine(
+        "  fun rpcId$suffix(instance: $fq, peerId: Long$params): net.multigesture.kanama.api.GodotError {"
+      )
       appendLine("    if (peerId != 0L && peerId != 1L) {")
       appendLine(
         "      error(\"Kanama Web has no remote peers: rpc_id(\$peerId, \\\"$godotName\\\") on ${model.simpleName}\")"
@@ -1044,7 +1048,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         )
         appendLine("    }")
       }
-      appendLine("    return 0L")
+      appendLine("    return net.multigesture.kanama.api.GodotError.OK")
       appendLine("  }")
       if (callLocal) {
         appendLine()

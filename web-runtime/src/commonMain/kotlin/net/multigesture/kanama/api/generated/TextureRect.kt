@@ -21,6 +21,29 @@ class TextureRect(godotObject: GodotHandle) : Control(godotObject) {
   var texture: Texture2D?
     get() = unsupportedWebGameplayFamily("TextureRect.get_texture")
     set(newValue) = setTexture(newValue)
+
+  value class ExpandMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val KEEP_SIZE: ExpandMode get() = ExpandMode(0L)
+      val IGNORE_SIZE: ExpandMode get() = ExpandMode(1L)
+      val FIT_WIDTH: ExpandMode get() = ExpandMode(2L)
+      val FIT_WIDTH_PROPORTIONAL: ExpandMode get() = ExpandMode(3L)
+      val FIT_HEIGHT: ExpandMode get() = ExpandMode(4L)
+      val FIT_HEIGHT_PROPORTIONAL: ExpandMode get() = ExpandMode(5L)
+    }
+  }
+
+  value class StretchMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SCALE: StretchMode get() = StretchMode(0L)
+      val TILE: StretchMode get() = StretchMode(1L)
+      val KEEP: StretchMode get() = StretchMode(2L)
+      val KEEP_CENTERED: StretchMode get() = StretchMode(3L)
+      val KEEP_ASPECT: StretchMode get() = StretchMode(4L)
+      val KEEP_ASPECT_CENTERED: StretchMode get() = StretchMode(5L)
+      val KEEP_ASPECT_COVERED: StretchMode get() = StretchMode(6L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

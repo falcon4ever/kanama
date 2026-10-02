@@ -31,6 +31,7 @@ class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoClosea
         is Boolean -> "b:$value"
         is Long -> "i:$value"
         is Int -> "i:$value"
+        is GodotEnumValue -> "i:${value.value}"
         is Double -> "f:$value"
         is String -> "s:$value"
         else -> error("Kanama Web ConfigFile does not carry ${value?.let { it::class }} values")

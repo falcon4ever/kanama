@@ -17,6 +17,16 @@ class PathFollow3D(godotObject: GodotHandle) : Node3D(godotObject) {
   var progressRatio: Double
     get() = unsupportedWebGameplayFamily("PathFollow3D.get_progress_ratio")
     set(newValue) = setProgressRatio(newValue)
+
+  value class RotationMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: RotationMode get() = RotationMode(0L)
+      val Y: RotationMode get() = RotationMode(1L)
+      val XY: RotationMode get() = RotationMode(2L)
+      val XYZ: RotationMode get() = RotationMode(3L)
+      val ORIENTED: RotationMode get() = RotationMode(4L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

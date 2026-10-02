@@ -127,15 +127,19 @@ internal object WebSignalCallbackRegistry {
 }
 
 class GodotSignal internal constructor(private val owner: GodotObject, private val name: String) {
-  fun connect(target: GodotObject, method: String, flags: Long = 0L): Long =
+  fun connect(
+    target: GodotObject,
+    method: String,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+  ): GodotError =
     owner.connect(name, target, method, flags)
 
   fun connect(
     target: GodotObject,
     argumentCount: Int = 0,
-    flags: Long = 0L,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
     callback: () -> Unit,
-  ): Long {
+  ): GodotError {
     require(argumentCount in 0..1) {
       "Kanama Web signal lambda callbacks currently support at most one emitted argument"
     }
@@ -143,13 +147,13 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
       WebSignalCallbackRegistry.register(
         target.handle.value,
         owner.handle.value,
-        oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
+        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
         callback,
       )
     val dispatchMethod =
       if (argumentCount == 0) "_kanama_web_signal_dispatch0" else "_kanama_web_signal_dispatch1"
     val result = owner.connectBound(name, target, dispatchMethod, callbackId.toLong(), flags)
-    if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
+    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
     return result
   }
 
@@ -162,42 +166,62 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
    */
   private fun <T> connectScalar(
     target: GodotObject,
-    flags: Long,
+    flags: GodotObject.ConnectFlags,
     parse: (String) -> T,
     callback: (T) -> Unit,
-  ): Long {
+  ): GodotError {
     val callbackId =
       WebSignalCallbackRegistry.registerScalar(
         target.handle.value,
         owner.handle.value,
-        oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
+        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
       ) { packed ->
         callback(parse(packed))
       }
     val result =
       owner.connectBound(name, target, "_kanama_web_signal_dispatch1", callbackId.toLong(), flags)
-    if (result != 0L) WebSignalCallbackRegistry.unregister(callbackId)
+    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
     return result
   }
 
   /** Connects a one-`int` signal, delivering the emitted value. */
-  fun connectLong(target: GodotObject, flags: Long = 0L, callback: (Long) -> Unit): Long =
+  fun connectLong(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Long) -> Unit,
+  ): GodotError =
     connectScalar(target, flags, { it.trim().toLong() }, callback)
 
   /** Connects a one-`float` signal, delivering the emitted value. */
-  fun connectDouble(target: GodotObject, flags: Long = 0L, callback: (Double) -> Unit): Long =
+  fun connectDouble(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Double) -> Unit,
+  ): GodotError =
     connectScalar(target, flags, { it.trim().toDouble() }, callback)
 
   /** Connects a one-`bool` signal, delivering the emitted value. */
-  fun connectBoolean(target: GodotObject, flags: Long = 0L, callback: (Boolean) -> Unit): Long =
+  fun connectBoolean(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Boolean) -> Unit,
+  ): GodotError =
     connectScalar(target, flags, { it == "1" }, callback)
 
   /** Connects a one-`String` signal, delivering the emitted value. */
-  fun connectString(target: GodotObject, flags: Long = 0L, callback: (String) -> Unit): Long =
+  fun connectString(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (String) -> Unit,
+  ): GodotError =
     connectScalar(target, flags, { it }, callback)
 
   /** Connects a one-`Vector2` signal, delivering the emitted value. */
-  fun connectVector2(target: GodotObject, flags: Long = 0L, callback: (Vector2) -> Unit): Long =
+  fun connectVector2(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Vector2) -> Unit,
+  ): GodotError =
     connectScalar(
       target,
       flags,
@@ -206,7 +230,11 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     )
 
   /** Connects a one-`Vector2i` signal, delivering the emitted value. */
-  fun connectVector2i(target: GodotObject, flags: Long = 0L, callback: (Vector2i) -> Unit): Long =
+  fun connectVector2i(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Vector2i) -> Unit,
+  ): GodotError =
     connectScalar(
       target,
       flags,
@@ -217,7 +245,11 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     )
 
   /** Connects a one-`Vector3` signal, delivering the emitted value. */
-  fun connectVector3(target: GodotObject, flags: Long = 0L, callback: (Vector3) -> Unit): Long =
+  fun connectVector3(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Vector3) -> Unit,
+  ): GodotError =
     connectScalar(
       target,
       flags,
@@ -236,14 +268,14 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
    */
   fun connectObject(
     target: GodotObject,
-    flags: Long = 0L,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
     callback: (GodotObject) -> Unit,
   ): SignalConnection? {
     val callbackId =
       WebSignalCallbackRegistry.registerObject(
         target.handle.value,
         owner.handle.value,
-        oneShot = flags and GodotObject.CONNECT_ONE_SHOT != 0L,
+        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
       ) { argHandle ->
         callback(GodotObject(WebObjectId(argHandle)))
       }
@@ -255,7 +287,7 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
         callbackId.toLong(),
         flags,
       )
-    if (result != 0L) {
+    if (result != GodotError.OK) {
       WebSignalCallbackRegistry.unregister(callbackId)
       return null
     }
@@ -268,7 +300,7 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
       "Kanama Web signal await currently supports at most one emitted argument"
     }
     suspendCancellableCoroutine { continuation ->
-      connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) {
+      connect(target, argumentCount, GodotObject.ConnectFlags.ONE_SHOT) {
         if (continuation.isActive) continuation.resume(Unit)
       }
     }

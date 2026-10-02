@@ -22,6 +22,35 @@ class RigidBody2D(godotObject: GodotHandle) : PhysicsBody2D(godotObject) {
   var linearVelocity: Vector2
     get() = unsupportedWebGameplayFamily("RigidBody2D.get_linear_velocity")
     set(newValue) = setLinearVelocity(newValue)
+
+  value class FreezeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val STATIC: FreezeMode get() = FreezeMode(0L)
+      val KINEMATIC: FreezeMode get() = FreezeMode(1L)
+    }
+  }
+
+  value class CenterOfMassMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val AUTO: CenterOfMassMode get() = CenterOfMassMode(0L)
+      val CUSTOM: CenterOfMassMode get() = CenterOfMassMode(1L)
+    }
+  }
+
+  value class DampMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val COMBINE: DampMode get() = DampMode(0L)
+      val REPLACE: DampMode get() = DampMode(1L)
+    }
+  }
+
+  value class CCDMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: CCDMode get() = CCDMode(0L)
+      val CAST_RAY: CCDMode get() = CCDMode(1L)
+      val CAST_SHAPE: CCDMode get() = CCDMode(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

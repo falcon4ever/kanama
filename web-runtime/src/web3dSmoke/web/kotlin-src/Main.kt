@@ -2,6 +2,7 @@ package web3d
 
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlinx.coroutines.launch
 import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnProcess
@@ -14,8 +15,8 @@ import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.Camera3D
 import net.multigesture.kanama.api.CanvasLayer
-import net.multigesture.kanama.api.Curve
 import net.multigesture.kanama.api.Control
+import net.multigesture.kanama.api.Curve
 import net.multigesture.kanama.api.DirectionalLight3D
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -25,6 +26,7 @@ import net.multigesture.kanama.api.InputMap
 import net.multigesture.kanama.api.KanamaCoroutineOwner
 import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Key
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.MeshInstance3D
 import net.multigesture.kanama.api.Node
@@ -45,7 +47,6 @@ import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebExperimentalGenericCall
-import kotlinx.coroutines.launch
 
 /**
  * Kanama Web 3D rendering-foundation smoke (Task 60c).
@@ -465,10 +466,10 @@ class Main(godotObject: GodotHandle) :
 
     val key = InputEventKey.create()
     try {
-      key.keycode = InputEventKey.KEY_F11
-      key.physicalKeycode = InputEventKey.KEY_F10
+      key.keycode = Key.F11
+      key.physicalKeycode = Key.F10
       if (
-        key.getKeycode() == InputEventKey.KEY_F11 && key.getPhysicalKeycode() == InputEventKey.KEY_F10
+        key.getKeycode() == Key.F11 && key.getPhysicalKeycode() == Key.F10
       ) {
         mask = mask or 2L
       }
@@ -487,12 +488,13 @@ class Main(godotObject: GodotHandle) :
     InputMap.eraseAction(action)
     if (!InputMap.hasAction(action)) mask = mask or 32L
 
-    self.setProcessMode(Node.PROCESS_MODE_ALWAYS)
-    if (self.getProcessMode() == Node.PROCESS_MODE_ALWAYS) mask = mask or 64L
-    self.setProcessMode(Node.PROCESS_MODE_INHERIT)
+    self.setProcessMode(Node.ProcessMode.ALWAYS)
+    if (self.getProcessMode() == Node.ProcessMode.ALWAYS) mask = mask or 64L
+    self.setProcessMode(Node.ProcessMode.INHERIT)
 
     val root = Window(self.getTree().getRoot())
-    if (root.getMode() in Window.MODE_WINDOWED..Window.MODE_EXCLUSIVE_FULLSCREEN) mask = mask or 128L
+    val mode = root.getMode().value
+    if (mode in Window.Mode.WINDOWED.value..Window.Mode.EXCLUSIVE_FULLSCREEN.value) mask = mask or 128L
     return mask
   }
 
@@ -629,7 +631,7 @@ class Main(godotObject: GodotHandle) :
     if (spinner != null && members.size == 1 && members[0].isSameInstance(spinner)) {
       mask = mask or 2L
     }
-    if (!Input.isKeyPressed(InputEventKey.KEY_W)) mask = mask or 4L
+    if (!Input.isKeyPressed(Key.W)) mask = mask or 4L
     val mouseVelocity = Input.getLastMouseVelocity()
     if (mouseVelocity.x.isFinite() && mouseVelocity.y.isFinite()) mask = mask or 8L
     probeCamera.setCurrent(false)
@@ -672,12 +674,12 @@ class Main(godotObject: GodotHandle) :
     if (RenderingServer.getCurrentRenderingDriverName().isNotEmpty()) mask = mask or 1L
     if (OS.getName() == "Web") mask = mask or 2L
 
-    RenderingServer.voxelGiSetQuality(RenderingServer.VOXEL_GI_QUALITY_LOW)
-    RenderingServer.environmentSetSdfgiRayCount(RenderingServer.ENV_SDFGI_RAY_COUNT_32)
+    RenderingServer.voxelGiSetQuality(RenderingServer.VoxelGIQuality.LOW)
+    RenderingServer.environmentSetSdfgiRayCount(RenderingServer.EnvironmentSDFGIRayCount.COUNT_32)
     mask = mask or 4L
 
     RenderingServer.environmentSetSsaoQuality(
-      RenderingServer.ENV_SSAO_QUALITY_MEDIUM,
+      RenderingServer.EnvironmentSSAOQuality.MEDIUM,
       true,
       0.5,
       2,
@@ -685,7 +687,7 @@ class Main(godotObject: GodotHandle) :
       300.0,
     )
     RenderingServer.environmentSetSsilQuality(
-      RenderingServer.ENV_SSIL_QUALITY_MEDIUM,
+      RenderingServer.EnvironmentSSILQuality.MEDIUM,
       false,
       0.5,
       2,
@@ -1000,7 +1002,7 @@ class Main(godotObject: GodotHandle) :
   private fun armSignalPayloadProbe() {
     self
       .signal("dispatch_probe_scalar")
-      .connectLong(self, GodotObject.CONNECT_ONE_SHOT) { payload -> probeSignalPayload = payload }
+      .connectLong(self, GodotObject.ConnectFlags.ONE_SHOT) { payload -> probeSignalPayload = payload }
     self.emitSignal("dispatch_probe_scalar", PROBE_COUNT)
   }
 
@@ -1009,12 +1011,12 @@ class Main(godotObject: GodotHandle) :
    * the callback-drain assertion is unaffected.
    */
   private fun armSignalShapeProbes() {
-    self.signal("conf_signal_zero").connect(self, flags = GodotObject.CONNECT_ONE_SHOT) {
+    self.signal("conf_signal_zero").connect(self, flags = GodotObject.ConnectFlags.ONE_SHOT) {
       confZeroFired = true
     }
     self.emitSignal("conf_signal_zero")
 
-    self.signal("conf_signal_object").connectObject(self, GodotObject.CONNECT_ONE_SHOT) { node ->
+    self.signal("conf_signal_object").connectObject(self, GodotObject.ConnectFlags.ONE_SHOT) { node ->
       confObjectHandleLive = node != null
     }
     self.emitSignal("conf_signal_object", self)

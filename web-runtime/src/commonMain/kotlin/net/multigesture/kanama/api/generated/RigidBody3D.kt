@@ -110,6 +110,27 @@ class RigidBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
   var linearVelocity: Vector3
     get() = unsupportedWebGameplayFamily("RigidBody3D.get_linear_velocity")
     set(newValue) = setLinearVelocity(newValue)
+
+  value class FreezeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val STATIC: FreezeMode get() = FreezeMode(0L)
+      val KINEMATIC: FreezeMode get() = FreezeMode(1L)
+    }
+  }
+
+  value class CenterOfMassMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val AUTO: CenterOfMassMode get() = CenterOfMassMode(0L)
+      val CUSTOM: CenterOfMassMode get() = CenterOfMassMode(1L)
+    }
+  }
+
+  value class DampMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val COMBINE: DampMode get() = DampMode(0L)
+      val REPLACE: DampMode get() = DampMode(1L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
