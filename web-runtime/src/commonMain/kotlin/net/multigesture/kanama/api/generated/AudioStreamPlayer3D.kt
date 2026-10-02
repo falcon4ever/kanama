@@ -63,6 +63,23 @@ class AudioStreamPlayer3D(godotObject: GodotHandle) : Node3D(godotObject) {
   object Signals {
     const val finished: String = "finished"
   }
+
+  value class AttenuationModel(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INVERSE_DISTANCE: AttenuationModel get() = AttenuationModel(0L)
+      val INVERSE_SQUARE_DISTANCE: AttenuationModel get() = AttenuationModel(1L)
+      val LOGARITHMIC: AttenuationModel get() = AttenuationModel(2L)
+      val DISABLED: AttenuationModel get() = AttenuationModel(3L)
+    }
+  }
+
+  value class DopplerTracking(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: DopplerTracking get() = DopplerTracking(0L)
+      val IDLE_STEP: DopplerTracking get() = DopplerTracking(1L)
+      val PHYSICS_STEP: DopplerTracking get() = DopplerTracking(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

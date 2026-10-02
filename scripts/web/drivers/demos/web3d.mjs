@@ -440,8 +440,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 64 tier 3: every InputMap / InputEventKey / process-mode / Window-mode family delivered
     // its VALUE -- has_action flips on add and erase, two queued keycodes read back, is_action
     // flips on attach, the new action presses, process_mode reads 3, the root window reports a
-    // legal mode. Any dropped call clears a bit.
-    inputMapFamiliesDeliverValues: inputMapProbe === 255,
+    // legal mode, and (task 128 C, protocol 29) a constructed InputEventMouseButton reads its
+    // button back and binds to the action. Any dropped call clears a bit.
+    inputMapFamiliesDeliverValues: inputMapProbe === 511,
     // Task 80 slice 2: every admitted dispatch shape round-tripped its VALUE, not just its call.
     dispatchShapesRoundTrip: dispatchProbe === 127,
     // _process ran many frames (the spinner) with its Node3D.rotation mutations applied.

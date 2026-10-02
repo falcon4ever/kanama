@@ -8,4 +8,15 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class TextureButton(godotObject: GodotHandle) : BaseButton(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class StretchMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SCALE: StretchMode get() = StretchMode(0L)
+      val TILE: StretchMode get() = StretchMode(1L)
+      val KEEP: StretchMode get() = StretchMode(2L)
+      val KEEP_CENTERED: StretchMode get() = StretchMode(3L)
+      val KEEP_ASPECT: StretchMode get() = StretchMode(4L)
+      val KEEP_ASPECT_CENTERED: StretchMode get() = StretchMode(5L)
+      val KEEP_ASPECT_COVERED: StretchMode get() = StretchMode(6L)
+    }
+  }
 }

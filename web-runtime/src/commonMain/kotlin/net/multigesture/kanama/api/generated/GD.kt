@@ -65,12 +65,15 @@ object GD {
 
   /** Web adaptation: Godot's print lands on the browser console via Wasm stdout. */
   fun print(message: Any?) {
-    println(message)
+    println(printable(message))
   }
 
   fun pushError(message: Any?) {
-    println("ERROR: $message")
+    println("ERROR: ${printable(message)}")
   }
+
+  /** Desktop parity (task 128 C): Godot prints a typed enum as its number, not `ProcessMode(value=2)`. */
+  private fun printable(message: Any?): Any? = if (message is GodotEnumValue) message.value else message
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

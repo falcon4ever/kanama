@@ -2089,7 +2089,7 @@ object InitialGodotCallDescriptors {
       className = "OS",
       methodName = "shell_open",
       hash = 166001499L,
-      shape = GodotCallShape.STRINGNAME_ARG_SINGLETON,
+      shape = GodotCallShape.STRINGNAME_RET_LONG_SINGLETON,
       executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
@@ -2903,8 +2903,8 @@ object InitialGodotCallDescriptors {
       className = "ConfigFile",
       methodName = "load",
       hash = 166001499L,
-      shape = GodotCallShape.STRINGNAME_ARG,
-      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      shape = GodotCallShape.STRINGNAME_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
@@ -2914,8 +2914,8 @@ object InitialGodotCallDescriptors {
       className = "ConfigFile",
       methodName = "save",
       hash = 166001499L,
-      shape = GodotCallShape.STRINGNAME_ARG,
-      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      shape = GodotCallShape.STRINGNAME_RET_LONG,
+      executionMode = GodotExecutionMode.IMMEDIATE_RESULT,
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
@@ -3656,6 +3656,28 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val INPUTEVENTMOUSEBUTTON_SET_BUTTON_INDEX =
+    GodotCallDescriptor(
+      opcode = 333,
+      className = "InputEventMouseButton",
+      methodName = "set_button_index",
+      hash = 3624991109L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
+  val INPUTEVENT_SET_DEVICE =
+    GodotCallDescriptor(
+      opcode = 334,
+      className = "InputEvent",
+      methodName = "set_device",
+      hash = 1286410249L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 332
+  const val MAX_OPCODE = 334
 }

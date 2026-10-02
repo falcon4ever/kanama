@@ -193,6 +193,14 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject) {
   fun orthonormalize() {
     basis = basis.orthonormalized()
   }
+
+  value class RotationEditMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val EULER: RotationEditMode get() = RotationEditMode(0L)
+      val QUATERNION: RotationEditMode get() = RotationEditMode(1L)
+      val BASIS: RotationEditMode get() = RotationEditMode(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

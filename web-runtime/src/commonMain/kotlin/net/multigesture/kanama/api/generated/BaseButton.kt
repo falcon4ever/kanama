@@ -44,6 +44,23 @@ open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
   object Signals {
     const val pressed: String = "pressed"
   }
+
+  value class DrawMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NORMAL: DrawMode get() = DrawMode(0L)
+      val PRESSED: DrawMode get() = DrawMode(1L)
+      val HOVER: DrawMode get() = DrawMode(2L)
+      val DISABLED: DrawMode get() = DrawMode(3L)
+      val HOVER_PRESSED: DrawMode get() = DrawMode(4L)
+    }
+  }
+
+  value class ActionMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PRESS: ActionMode get() = ActionMode(0L)
+      val RELEASE: ActionMode get() = ActionMode(1L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

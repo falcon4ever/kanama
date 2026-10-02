@@ -175,7 +175,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
     require(
       descriptor.opcode in
-        setOf(52, 115, 129, 140, 185, 189, 209, 273, 274, 285, 286, 295, 297, 301, 302)
+        setOf(52, 115, 129, 140, 185, 189, 209, 273, 274, 285, 286, 295, 297, 301, 302, 333, 334)
     )
     require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
       "Kanama Web ${descriptor.className}.${descriptor.methodName} argument must fit Godot's int32 ABI"
@@ -468,7 +468,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.QUEUED_MUTATION)
-    require(descriptor.opcode in setOf(47, 57, 66, 128, 150, 258, 260, 264, 265, 267, 277, 280))
+    require(descriptor.opcode in setOf(47, 57, 66, 128, 150, 258, 260, 267, 277, 280))
     commands.appendStringNameMutation(descriptor.opcode, receiver.webId(), value)
   }
 
@@ -853,6 +853,32 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
     return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value) != 0
   }
 
+  override fun invokeStringNameRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode in setOf(264, 265))
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value).toLong()
+  }
+
+  override fun invokeStringNameRetLongSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Long {
+    requireOpcode(descriptor, callSite)
+    require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
+    require(descriptor.opcode == 190)
+    commands.flush()
+    return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
+      .toLong()
+  }
+
   override fun invokeNoArgsRetBool(
     descriptor: GodotCallDescriptor,
     callSite: GodotCallSite,
@@ -1156,7 +1182,7 @@ internal object WebCommonGodotBackend : GodotBackendSpi {
   ) {
     requireOpcode(descriptor, callSite)
     require(descriptor.executionMode == GodotExecutionMode.IMMEDIATE_RESULT)
-    require(descriptor.opcode in setOf(86, 87, 190, 292, 294))
+    require(descriptor.opcode in setOf(86, 87, 292, 294))
     commands.flush()
     immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value)
   }

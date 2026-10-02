@@ -10,11 +10,11 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class PackedScene(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  fun instantiate(editState: Long = 0L): Node? =
+  fun instantiate(editState: PackedScene.GenEditState = PackedScene.GenEditState.DISABLED): Node? =
     GodotBackendCalls.invokeLongRetHandle(
       D.PACKEDSCENE_INSTANTIATE,
       requireOpenHandle(),
-      editState,
+      editState.value,
     )?.let { Node(it.toWebId()) }
 
   fun getState(): SceneState? =
@@ -27,10 +27,21 @@ class PackedScene(godotObject: GodotHandle) : Resource(godotObject), AutoCloseab
   override fun close() {
     releaseWebResource(handle.value)
   }
+
+  value class GenEditState(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: GenEditState get() = GenEditState(0L)
+      val INSTANCE: GenEditState get() = GenEditState(1L)
+      val MAIN: GenEditState get() = GenEditState(2L)
+      val MAIN_INHERITED: GenEditState get() = GenEditState(3L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun PackedScene.instantiate(editState: Long = 0L): Node? = instantiate(editState)
+fun PackedScene.instantiate(
+  editState: PackedScene.GenEditState = PackedScene.GenEditState.DISABLED,
+): Node? = instantiate(editState)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun PackedScene.getState(): SceneState? = getState()

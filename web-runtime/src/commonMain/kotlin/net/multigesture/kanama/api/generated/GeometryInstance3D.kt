@@ -8,4 +8,38 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class GeometryInstance3D(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
+    companion object {
+      val OFF: ShadowCastingSetting get() = ShadowCastingSetting(0L)
+      val ON: ShadowCastingSetting get() = ShadowCastingSetting(1L)
+      val DOUBLE_SIDED: ShadowCastingSetting get() = ShadowCastingSetting(2L)
+      val SHADOWS_ONLY: ShadowCastingSetting get() = ShadowCastingSetting(3L)
+    }
+  }
+
+  value class GIMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: GIMode get() = GIMode(0L)
+      val STATIC: GIMode get() = GIMode(1L)
+      val DYNAMIC: GIMode get() = GIMode(2L)
+    }
+  }
+
+  value class LightmapScale(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SCALE_1X: LightmapScale get() = LightmapScale(0L)
+      val SCALE_2X: LightmapScale get() = LightmapScale(1L)
+      val SCALE_4X: LightmapScale get() = LightmapScale(2L)
+      val SCALE_8X: LightmapScale get() = LightmapScale(3L)
+      val MAX: LightmapScale get() = LightmapScale(4L)
+    }
+  }
+
+  value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(0L)
+      val SELF: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(1L)
+      val DEPENDENCIES: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(2L)
+    }
+  }
 }

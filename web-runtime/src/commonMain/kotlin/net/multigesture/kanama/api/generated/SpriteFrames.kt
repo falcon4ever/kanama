@@ -15,6 +15,14 @@ class SpriteFrames(godotObject: GodotHandle) : Resource(godotObject) {
       D.SPRITEFRAMES_GET_ANIMATION_NAMES,
       requireOpenHandle(),
     )
+
+  value class LoopMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: LoopMode get() = LoopMode(0L)
+      val LINEAR: LoopMode get() = LoopMode(1L)
+      val PINGPONG: LoopMode get() = LoopMode(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

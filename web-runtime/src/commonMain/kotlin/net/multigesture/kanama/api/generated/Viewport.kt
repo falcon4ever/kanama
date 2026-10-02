@@ -33,23 +33,169 @@ class Viewport(godotObject: GodotHandle) : Node(godotObject) {
     GodotBackendCalls.invokeNoArgsVoid(D.VIEWPORT_SET_INPUT_AS_HANDLED, requireOpenHandle())
   }
 
-  companion object {
-    const val SCALING_3D_MODE_BILINEAR: Long = 0L
-    const val SCALING_3D_MODE_FSR: Long = 1L
-    const val SCALING_3D_MODE_FSR2: Long = 2L
-    const val SCALING_3D_MODE_METALFX_SPATIAL: Long = 3L
-    const val SCALING_3D_MODE_METALFX_TEMPORAL: Long = 4L
-    const val SCALING_3D_MODE_NEAREST: Long = 5L
-    const val SCALING_3D_MODE_MAX: Long = 6L
-    const val MSAA_DISABLED: Long = 0L
-    const val MSAA_2X: Long = 1L
-    const val MSAA_4X: Long = 2L
-    const val MSAA_8X: Long = 3L
-    const val MSAA_MAX: Long = 4L
-    const val SCREEN_SPACE_AA_DISABLED: Long = 0L
-    const val SCREEN_SPACE_AA_FXAA: Long = 1L
-    const val SCREEN_SPACE_AA_SMAA: Long = 2L
-    const val SCREEN_SPACE_AA_MAX: Long = 3L
+  value class PositionalShadowAtlasQuadrantSubdiv(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(0L)
+      val SUBDIV_1: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(1L)
+      val SUBDIV_4: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(2L)
+      val SUBDIV_16: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(3L)
+      val SUBDIV_64: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(4L)
+      val SUBDIV_256: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(5L)
+      val SUBDIV_1024: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(6L)
+      val MAX: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(7L)
+    }
+  }
+
+  value class Scaling3DMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BILINEAR: Scaling3DMode get() = Scaling3DMode(0L)
+      val FSR: Scaling3DMode get() = Scaling3DMode(1L)
+      val FSR2: Scaling3DMode get() = Scaling3DMode(2L)
+      val METALFX_SPATIAL: Scaling3DMode get() = Scaling3DMode(3L)
+      val METALFX_TEMPORAL: Scaling3DMode get() = Scaling3DMode(4L)
+      val NEAREST: Scaling3DMode get() = Scaling3DMode(5L)
+      val MAX: Scaling3DMode get() = Scaling3DMode(6L)
+    }
+  }
+
+  value class MSAA(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: MSAA get() = MSAA(0L)
+      val MSAA_2X: MSAA get() = MSAA(1L)
+      val MSAA_4X: MSAA get() = MSAA(2L)
+      val MSAA_8X: MSAA get() = MSAA(3L)
+      val MAX: MSAA get() = MSAA(4L)
+    }
+  }
+
+  value class AnisotropicFiltering(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: AnisotropicFiltering get() = AnisotropicFiltering(0L)
+      val ANISOTROPY_2X: AnisotropicFiltering get() = AnisotropicFiltering(1L)
+      val ANISOTROPY_4X: AnisotropicFiltering get() = AnisotropicFiltering(2L)
+      val ANISOTROPY_8X: AnisotropicFiltering get() = AnisotropicFiltering(3L)
+      val ANISOTROPY_16X: AnisotropicFiltering get() = AnisotropicFiltering(4L)
+      val MAX: AnisotropicFiltering get() = AnisotropicFiltering(5L)
+    }
+  }
+
+  value class ScreenSpaceAA(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ScreenSpaceAA get() = ScreenSpaceAA(0L)
+      val FXAA: ScreenSpaceAA get() = ScreenSpaceAA(1L)
+      val SMAA: ScreenSpaceAA get() = ScreenSpaceAA(2L)
+      val MAX: ScreenSpaceAA get() = ScreenSpaceAA(3L)
+    }
+  }
+
+  value class RenderInfo(override val value: Long) : GodotEnumValue {
+    companion object {
+      val OBJECTS_IN_FRAME: RenderInfo get() = RenderInfo(0L)
+      val PRIMITIVES_IN_FRAME: RenderInfo get() = RenderInfo(1L)
+      val DRAW_CALLS_IN_FRAME: RenderInfo get() = RenderInfo(2L)
+      val MAX: RenderInfo get() = RenderInfo(3L)
+    }
+  }
+
+  value class RenderInfoType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VISIBLE: RenderInfoType get() = RenderInfoType(0L)
+      val SHADOW: RenderInfoType get() = RenderInfoType(1L)
+      val CANVAS: RenderInfoType get() = RenderInfoType(2L)
+      val MAX: RenderInfoType get() = RenderInfoType(3L)
+    }
+  }
+
+  value class DebugDraw(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: DebugDraw get() = DebugDraw(0L)
+      val UNSHADED: DebugDraw get() = DebugDraw(1L)
+      val LIGHTING: DebugDraw get() = DebugDraw(2L)
+      val OVERDRAW: DebugDraw get() = DebugDraw(3L)
+      val WIREFRAME: DebugDraw get() = DebugDraw(4L)
+      val NORMAL_BUFFER: DebugDraw get() = DebugDraw(5L)
+      val VOXEL_GI_ALBEDO: DebugDraw get() = DebugDraw(6L)
+      val VOXEL_GI_LIGHTING: DebugDraw get() = DebugDraw(7L)
+      val VOXEL_GI_EMISSION: DebugDraw get() = DebugDraw(8L)
+      val SHADOW_ATLAS: DebugDraw get() = DebugDraw(9L)
+      val DIRECTIONAL_SHADOW_ATLAS: DebugDraw get() = DebugDraw(10L)
+      val SCENE_LUMINANCE: DebugDraw get() = DebugDraw(11L)
+      val SSAO: DebugDraw get() = DebugDraw(12L)
+      val SSIL: DebugDraw get() = DebugDraw(13L)
+      val PSSM_SPLITS: DebugDraw get() = DebugDraw(14L)
+      val DECAL_ATLAS: DebugDraw get() = DebugDraw(15L)
+      val SDFGI: DebugDraw get() = DebugDraw(16L)
+      val SDFGI_PROBES: DebugDraw get() = DebugDraw(17L)
+      val GI_BUFFER: DebugDraw get() = DebugDraw(18L)
+      val DISABLE_LOD: DebugDraw get() = DebugDraw(19L)
+      val CLUSTER_OMNI_LIGHTS: DebugDraw get() = DebugDraw(20L)
+      val CLUSTER_SPOT_LIGHTS: DebugDraw get() = DebugDraw(21L)
+      val CLUSTER_DECALS: DebugDraw get() = DebugDraw(22L)
+      val CLUSTER_REFLECTION_PROBES: DebugDraw get() = DebugDraw(23L)
+      val OCCLUDERS: DebugDraw get() = DebugDraw(24L)
+      val MOTION_VECTORS: DebugDraw get() = DebugDraw(25L)
+      val INTERNAL_BUFFER: DebugDraw get() = DebugDraw(26L)
+      val CLUSTER_AREA_LIGHTS: DebugDraw get() = DebugDraw(27L)
+      val AREA_LIGHT_ATLAS: DebugDraw get() = DebugDraw(28L)
+    }
+  }
+
+  value class DefaultCanvasItemTextureFilter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NEAREST: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(0L)
+      val LINEAR: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(1L)
+      val LINEAR_WITH_MIPMAPS: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(2L)
+      val NEAREST_WITH_MIPMAPS: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(3L)
+      val PARENT_NODE: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(4L)
+      val MAX: DefaultCanvasItemTextureFilter get() = DefaultCanvasItemTextureFilter(5L)
+    }
+  }
+
+  value class DefaultCanvasItemTextureRepeat(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(0L)
+      val ENABLED: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(1L)
+      val MIRROR: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(2L)
+      val PARENT_NODE: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(3L)
+      val MAX: DefaultCanvasItemTextureRepeat get() = DefaultCanvasItemTextureRepeat(4L)
+    }
+  }
+
+  value class SDFOversize(override val value: Long) : GodotEnumValue {
+    companion object {
+      val OVERSIZE_100_PERCENT: SDFOversize get() = SDFOversize(0L)
+      val OVERSIZE_120_PERCENT: SDFOversize get() = SDFOversize(1L)
+      val OVERSIZE_150_PERCENT: SDFOversize get() = SDFOversize(2L)
+      val OVERSIZE_200_PERCENT: SDFOversize get() = SDFOversize(3L)
+      val MAX: SDFOversize get() = SDFOversize(4L)
+    }
+  }
+
+  value class SDFScale(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SCALE_100_PERCENT: SDFScale get() = SDFScale(0L)
+      val SCALE_50_PERCENT: SDFScale get() = SDFScale(1L)
+      val SCALE_25_PERCENT: SDFScale get() = SDFScale(2L)
+      val MAX: SDFScale get() = SDFScale(3L)
+    }
+  }
+
+  value class VRSMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: VRSMode get() = VRSMode(0L)
+      val TEXTURE: VRSMode get() = VRSMode(1L)
+      val XR: VRSMode get() = VRSMode(2L)
+      val MAX: VRSMode get() = VRSMode(3L)
+    }
+  }
+
+  value class VRSUpdateMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: VRSUpdateMode get() = VRSUpdateMode(0L)
+      val ONCE: VRSUpdateMode get() = VRSUpdateMode(1L)
+      val ALWAYS: VRSUpdateMode get() = VRSUpdateMode(2L)
+      val MAX: VRSUpdateMode get() = VRSUpdateMode(3L)
+    }
   }
 }
 

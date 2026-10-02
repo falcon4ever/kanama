@@ -1150,6 +1150,29 @@ class HelloScript(godotObject: GodotHandle) :
     System.err.println(
       "[kanama:kt] typed enum dynamic set=$dynamicEnumSet config_roundtrip=$dynamicEnumConfig"
     )
+    // InputEventMouseButton.create() (task 128 C): an owned event with a typed button, added to a
+    // scratch action. The action keeps its own reference, so after the wrapper's close() a fresh
+    // RIGHT event still matches the action (the event survived); then the action is erased.
+    val mouseButtonRow =
+      runCatching {
+          val action = "kanama_smoke_mouse_action"
+          InputMap.addAction(action)
+          val button = InputEventMouseButton.create()
+          button.setButtonIndex(MouseButton.RIGHT)
+          val readBack = button.getButtonIndex() == MouseButton.RIGHT
+          InputMap.actionAddEvent(action, button)
+          val hasEvent = InputMap.actionHasEvent(action, button)
+          button.close()
+          val survives =
+            InputEventMouseButton.create().use { probe ->
+              probe.setButtonIndex(MouseButton.RIGHT)
+              probe.isAction(action)
+            }
+          InputMap.eraseAction(action)
+          "read_back=$readBack has_event=$hasEvent survives_close=$survives erased=${!InputMap.hasAction(action)}"
+        }
+        .getOrElse { "error:${it.message}" }
+    System.err.println("[kanama:kt] input mouse_button $mouseButtonRow")
     selfNode.setProcessThreadGroupOrder(2)
     val selfProcessThreadGroupOrder = selfNode.getProcessThreadGroupOrder()
     selfNode.setProcessInternal(true)

@@ -27,8 +27,11 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
     )
   }
 
-  fun reloadCurrentScene(): Long =
-    GodotBackendCalls.invokeNoArgsRetLong(D.SCENETREE_RELOAD_CURRENT_SCENE, requireOpenHandle())
+  fun reloadCurrentScene(): GodotError =
+    GodotBackendCalls.invokeNoArgsRetLong(
+      D.SCENETREE_RELOAD_CURRENT_SCENE,
+      requireOpenHandle(),
+    ).let { GodotError(it) }
 
   fun setPause(enable: Boolean) {
     GodotBackendCalls.invokeBoolArg(D.SCENETREE_SET_PAUSE, requireOpenHandle(), enable)
@@ -36,13 +39,13 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
 
   fun setPaused(enable: Boolean) = setPause(enable)
 
-  /** Root window as a tracked handle; wrap it with [Window] to reach the mode calls, or use [root] for the Viewport view. */
-  fun getRoot(): GodotHandle {
+  /** The root window (desktop/iOS shape: `Window`, non-null); [root] is its Viewport view. */
+  fun getRoot(): Window {
     val returned = GodotBackendCalls.invokeNoArgsRetHandle(
       D.SCENETREE_GET_ROOT,
       requireOpenHandle(),
-    )?.let { it.toWebId() }
-    return checkNotNull(returned) { "SceneTree has no root window" }
+    )?.let { Window(it.toWebId()) }
+    return requireGodotReturn(returned, "SceneTree.get_root")
   }
 
   fun isPaused(): Boolean =
@@ -64,15 +67,16 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
     processAlways: Boolean = true,
     processInPhysics: Boolean = false,
     ignoreTimeScale: Boolean = false,
-  ): RefCounted? {
+  ): RefCounted {
     require(processAlways == true) { "Web SceneTree.create_timer supports only processAlways = true" }
     require(processInPhysics == false) { "Web SceneTree.create_timer supports only processInPhysics = false" }
     require(ignoreTimeScale == false) { "Web SceneTree.create_timer supports only ignoreTimeScale = false" }
-    return GodotBackendCalls.invokeDoubleRetHandle(
+    val returned = GodotBackendCalls.invokeDoubleRetHandle(
       D.SCENETREE_CREATE_TIMER,
       requireOpenHandle(),
       timeSec,
     )?.let { RefCounted(it.toWebId()) }
+    return requireGodotReturn(returned, "SceneTree.create_timer")
   }
 
   var paused: Boolean
@@ -81,10 +85,19 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
 
   /** The root window as its Viewport face (the tps corpus's `getTree().root`). */
   val root: Viewport
-    get() = Viewport(getRoot())
+    get() = Viewport(getRoot().handle)
 
   /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
   suspend fun delaySeconds(seconds: Double) = SceneTree.delaySeconds(seconds)
+
+  value class GroupCallFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DEFAULT: GroupCallFlags get() = GroupCallFlags(0L)
+      val REVERSE: GroupCallFlags get() = GroupCallFlags(1L)
+      val DEFERRED: GroupCallFlags get() = GroupCallFlags(2L)
+      val UNIQUE: GroupCallFlags get() = GroupCallFlags(4L)
+    }
+  }
 
   companion object {
     suspend fun delaySeconds(seconds: Double) {
@@ -123,7 +136,7 @@ fun SceneTree.quit(exitCode: Long = 0L) = quit(exitCode)
 fun SceneTree.callGroup(group: String, method: String) = callGroup(group, method)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun SceneTree.reloadCurrentScene(): Long = reloadCurrentScene()
+fun SceneTree.reloadCurrentScene(): GodotError = reloadCurrentScene()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun SceneTree.setPause(enable: Boolean) = setPause(enable)
@@ -132,7 +145,7 @@ fun SceneTree.setPause(enable: Boolean) = setPause(enable)
 fun SceneTree.setPaused(enable: Boolean) = setPaused(enable)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun SceneTree.getRoot(): GodotHandle = getRoot()
+fun SceneTree.getRoot(): Window = getRoot()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun SceneTree.isPaused(): Boolean = isPaused()
@@ -149,7 +162,7 @@ fun SceneTree.createTimer(
   processAlways: Boolean = true,
   processInPhysics: Boolean = false,
   ignoreTimeScale: Boolean = false,
-): RefCounted? = createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
+): RefCounted = createTimer(timeSec, processAlways, processInPhysics, ignoreTimeScale)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 var SceneTree.paused: Boolean

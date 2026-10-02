@@ -68,6 +68,21 @@ class AnimationPlayer(godotObject: GodotHandle) : AnimationMixer(godotObject) {
     genericWebGameplayFallback("AnimationPlayer.get_current_animation")
     return webGenericImmediateStringCall(this, "get_current_animation")
   }
+
+  value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)
+      val IDLE: AnimationProcessCallback get() = AnimationProcessCallback(1L)
+      val MANUAL: AnimationProcessCallback get() = AnimationProcessCallback(2L)
+    }
+  }
+
+  value class AnimationMethodCallMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DEFERRED: AnimationMethodCallMode get() = AnimationMethodCallMode(0L)
+      val IMMEDIATE: AnimationMethodCallMode get() = AnimationMethodCallMode(1L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

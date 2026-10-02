@@ -8,29 +8,48 @@ import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 object ResourceLoader {
-  fun load(path: String, typeHint: String = "", cacheMode: Long = 1L): Resource? =
+  fun load(
+    path: String,
+    typeHint: String = "",
+    cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+  ): Resource? =
     GodotBackendCalls.invokeStringStringLongRetHandle(
       D.RESOURCELOADER_LOAD,
       path,
       typeHint,
-      cacheMode,
+      cacheMode.value,
     )?.let { Resource(it.toWebId()) }
 
-  fun loadTexture2D(path: String, cacheMode: Long = 1L): Texture2D? = load(path, "Texture2D", cacheMode)?.let { Texture2D(it.handle) }
+  fun loadTexture2D(
+    path: String,
+    cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+  ): Texture2D? = load(path, "Texture2D", cacheMode)?.let { Texture2D(it.handle) }
 
-  fun loadPackedScene(path: String, cacheMode: Long = 1L): PackedScene? = load(path, "PackedScene", cacheMode)?.let { PackedScene(it.handle) }
+  fun loadPackedScene(
+    path: String,
+    cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+  ): PackedScene? = load(path, "PackedScene", cacheMode)?.let { PackedScene(it.handle) }
 
-  fun loadAudioStream(path: String, cacheMode: Long = 1L): AudioStream? = load(path, "AudioStream", cacheMode)?.let { AudioStream(it.handle) }
+  fun loadAudioStream(
+    path: String,
+    cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+  ): AudioStream? = load(path, "AudioStream", cacheMode)?.let { AudioStream(it.handle) }
 
-  fun loadLightmapGIData(path: String, cacheMode: Long = 1L): LightmapGIData? = load(path, "LightmapGIData", cacheMode)?.let { LightmapGIData(it.handle) }
+  fun loadLightmapGIData(
+    path: String,
+    cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+  ): LightmapGIData? = load(path, "LightmapGIData", cacheMode)?.let { LightmapGIData(it.handle) }
 
-  /** Desktop's `ResourceLoader.ThreadLoadStatus`: the status enum value and the 0..1 progress. */
-  data class ThreadLoadStatus(val status: Long, val progress: Double?)
+  /**
+   * Desktop's `ResourceLoader.ThreadLoadProgress`: the status and the 0..1 progress. (Named
+   * `ThreadLoadStatus` before task 128, when that name became Godot's enum.)
+   */
+  data class ThreadLoadProgress(val status: ResourceLoader.ThreadLoadStatus, val progress: Double?)
 
   /**
    * Threaded-load family (task 64 parcel 8) over the synchronous facade in `WebFacades.kt`: the
    * Web export is a `nothreads` build, so a background load could never make progress. The
-   * request loads at once and every later poll reports THREAD_LOAD_LOADED with progress 1.0
+   * request loads at once and every later poll reports ThreadLoadStatus.LOADED with progress 1.0
    * (tps-demo's loading screen completes on its first poll). Desktop's signatures; `typeHint`,
    * `useSubThreads` and `cacheMode` are accepted and ignored; the result is Godot's OK.
    */
@@ -38,17 +57,17 @@ object ResourceLoader {
     path: String,
     @Suppress("UNUSED_PARAMETER") typeHint: String = "",
     @Suppress("UNUSED_PARAMETER") useSubThreads: Boolean = false,
-    @Suppress("UNUSED_PARAMETER") cacheMode: Long = CACHE_MODE_REUSE,
-  ): Long {
+    @Suppress("UNUSED_PARAMETER") cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+  ): GodotError {
     ThreadedLoad.request(path)
-    return 0L
+    return GodotError.OK
   }
 
-  fun loadThreadedGetStatus(path: String): Long = ThreadedLoad.status(path)
+  fun loadThreadedGetStatus(path: String): ResourceLoader.ThreadLoadStatus = ThreadedLoad.status(path)
 
-  fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+  fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadProgress {
     val status = ThreadedLoad.status(path)
-    return ThreadLoadStatus(status, if (status == THREAD_LOAD_LOADED) 1.0 else 0.0)
+    return ThreadLoadProgress(status, if (status == ResourceLoader.ThreadLoadStatus.LOADED) 1.0 else 0.0)
   }
 
   /** The loaded resource (an owned handle: close it, or hand it to the tree). */
@@ -56,28 +75,53 @@ object ResourceLoader {
 
   fun loadThreadedGetPackedScene(path: String): PackedScene? = ThreadedLoad.take(path)
 
-  const val CACHE_MODE_IGNORE: Long = 0L
-  const val CACHE_MODE_REUSE: Long = 1L
-  const val CACHE_MODE_REPLACE: Long = 2L
-  const val CACHE_MODE_IGNORE_DEEP: Long = 3L
-  const val CACHE_MODE_REPLACE_DEEP: Long = 4L
-  const val THREAD_LOAD_INVALID_RESOURCE: Long = 0L
-  const val THREAD_LOAD_IN_PROGRESS: Long = 1L
-  const val THREAD_LOAD_FAILED: Long = 2L
-  const val THREAD_LOAD_LOADED: Long = 3L
+  value class ThreadLoadStatus(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INVALID_RESOURCE: ThreadLoadStatus get() = ThreadLoadStatus(0L)
+      val IN_PROGRESS: ThreadLoadStatus get() = ThreadLoadStatus(1L)
+      val FAILED: ThreadLoadStatus get() = ThreadLoadStatus(2L)
+      val LOADED: ThreadLoadStatus get() = ThreadLoadStatus(3L)
+    }
+  }
+
+  value class CacheMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val IGNORE: CacheMode get() = CacheMode(0L)
+      val REUSE: CacheMode get() = CacheMode(1L)
+      val REPLACE: CacheMode get() = CacheMode(2L)
+      val IGNORE_DEEP: CacheMode get() = CacheMode(3L)
+      val REPLACE_DEEP: CacheMode get() = CacheMode(4L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ResourceLoader.load(path: String, typeHint: String = "", cacheMode: Long = 1L): Resource? = load(path, typeHint, cacheMode)
+fun ResourceLoader.load(
+  path: String,
+  typeHint: String = "",
+  cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+): Resource? = load(path, typeHint, cacheMode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ResourceLoader.loadTexture2D(path: String, cacheMode: Long = 1L): Texture2D? = loadTexture2D(path, cacheMode)
+fun ResourceLoader.loadTexture2D(
+  path: String,
+  cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+): Texture2D? = loadTexture2D(path, cacheMode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ResourceLoader.loadPackedScene(path: String, cacheMode: Long = 1L): PackedScene? = loadPackedScene(path, cacheMode)
+fun ResourceLoader.loadPackedScene(
+  path: String,
+  cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+): PackedScene? = loadPackedScene(path, cacheMode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ResourceLoader.loadAudioStream(path: String, cacheMode: Long = 1L): AudioStream? = loadAudioStream(path, cacheMode)
+fun ResourceLoader.loadAudioStream(
+  path: String,
+  cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+): AudioStream? = loadAudioStream(path, cacheMode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ResourceLoader.loadLightmapGIData(path: String, cacheMode: Long = 1L): LightmapGIData? = loadLightmapGIData(path, cacheMode)
+fun ResourceLoader.loadLightmapGIData(
+  path: String,
+  cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+): LightmapGIData? = loadLightmapGIData(path, cacheMode)

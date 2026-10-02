@@ -10,8 +10,13 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Light3D(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  fun setParam(param: Long, value: Double) {
-    GodotBackendCalls.invokeLongDoubleArg(D.LIGHT3D_SET_PARAM, requireOpenHandle(), param, value)
+  fun setParam(param: Light3D.Param, value: Double) {
+    GodotBackendCalls.invokeLongDoubleArg(
+      D.LIGHT3D_SET_PARAM,
+      requireOpenHandle(),
+      param.value,
+      value,
+    )
   }
 
   fun setShadow(enabled: Boolean) {
@@ -25,41 +30,51 @@ open class Light3D(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
   /** Write-only on Web: light_energy is Light3D.set_param(PARAM_ENERGY, value). */
   var lightEnergy: Double
     get() = unsupportedWebGameplayFamily("Light3D.get_light_energy")
-    set(value) = setParam(PARAM_ENERGY, value)
+    set(value) = setParam(Light3D.Param.ENERGY, value)
 
   /** Write-only on Web: shadow_opacity is Light3D.set_param(PARAM_SHADOW_OPACITY, value). */
   var shadowOpacity: Double
     get() = unsupportedWebGameplayFamily("Light3D.get_shadow_opacity")
-    set(value) = setParam(PARAM_SHADOW_OPACITY, value)
+    set(value) = setParam(Light3D.Param.SHADOW_OPACITY, value)
 
-  companion object {
-    const val PARAM_ENERGY: Long = 0L
-    const val PARAM_INDIRECT_ENERGY: Long = 1L
-    const val PARAM_VOLUMETRIC_FOG_ENERGY: Long = 2L
-    const val PARAM_SPECULAR: Long = 3L
-    const val PARAM_RANGE: Long = 4L
-    const val PARAM_SIZE: Long = 5L
-    const val PARAM_ATTENUATION: Long = 6L
-    const val PARAM_SPOT_ANGLE: Long = 7L
-    const val PARAM_SPOT_ATTENUATION: Long = 8L
-    const val PARAM_SHADOW_MAX_DISTANCE: Long = 9L
-    const val PARAM_SHADOW_SPLIT_1_OFFSET: Long = 10L
-    const val PARAM_SHADOW_SPLIT_2_OFFSET: Long = 11L
-    const val PARAM_SHADOW_SPLIT_3_OFFSET: Long = 12L
-    const val PARAM_SHADOW_FADE_START: Long = 13L
-    const val PARAM_SHADOW_NORMAL_BIAS: Long = 14L
-    const val PARAM_SHADOW_BIAS: Long = 15L
-    const val PARAM_SHADOW_PANCAKE_SIZE: Long = 16L
-    const val PARAM_SHADOW_OPACITY: Long = 17L
-    const val PARAM_SHADOW_BLUR: Long = 18L
-    const val PARAM_TRANSMITTANCE_BIAS: Long = 19L
-    const val PARAM_INTENSITY: Long = 20L
-    const val PARAM_MAX: Long = 21L
+  value class Param(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ENERGY: Param get() = Param(0L)
+      val INDIRECT_ENERGY: Param get() = Param(1L)
+      val VOLUMETRIC_FOG_ENERGY: Param get() = Param(2L)
+      val SPECULAR: Param get() = Param(3L)
+      val RANGE: Param get() = Param(4L)
+      val SIZE: Param get() = Param(5L)
+      val ATTENUATION: Param get() = Param(6L)
+      val SPOT_ANGLE: Param get() = Param(7L)
+      val SPOT_ATTENUATION: Param get() = Param(8L)
+      val SHADOW_MAX_DISTANCE: Param get() = Param(9L)
+      val SHADOW_SPLIT_1_OFFSET: Param get() = Param(10L)
+      val SHADOW_SPLIT_2_OFFSET: Param get() = Param(11L)
+      val SHADOW_SPLIT_3_OFFSET: Param get() = Param(12L)
+      val SHADOW_FADE_START: Param get() = Param(13L)
+      val SHADOW_NORMAL_BIAS: Param get() = Param(14L)
+      val SHADOW_BIAS: Param get() = Param(15L)
+      val SHADOW_PANCAKE_SIZE: Param get() = Param(16L)
+      val SHADOW_OPACITY: Param get() = Param(17L)
+      val SHADOW_BLUR: Param get() = Param(18L)
+      val TRANSMITTANCE_BIAS: Param get() = Param(19L)
+      val INTENSITY: Param get() = Param(20L)
+      val MAX: Param get() = Param(21L)
+    }
+  }
+
+  value class BakeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: BakeMode get() = BakeMode(0L)
+      val STATIC: BakeMode get() = BakeMode(1L)
+      val DYNAMIC: BakeMode get() = BakeMode(2L)
+    }
   }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Light3D.setParam(param: Long, value: Double) = setParam(param, value)
+fun Light3D.setParam(param: Light3D.Param, value: Double) = setParam(param, value)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Light3D.setShadow(enabled: Boolean) = setShadow(enabled)

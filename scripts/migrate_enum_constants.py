@@ -318,6 +318,9 @@ def main() -> int:
     class_constants = {
         f"{kotlin_owner(c['name'])}.{k['name']}" for c in data["classes"] for k in c.get("constants") or ()
     }
+    # An all-caps nested enum TYPE (`Viewport.MSAA`, `Viewport.SDFScale`-style names that happen to be
+    # SCREAMING_CASE) is a type reference, not an unmatched value: never report it (task 128 C).
+    class_constants |= {f"{kotlin_owner(str(spec.owner))}.{spec.name}" for spec in specs if spec.owner}
     methods = enum_typed_methods(args.api)
     files = [p for path in args.paths for p in ([path] if path.is_file() else sorted(path.rglob("*.kt")))]
     changed_total = 0

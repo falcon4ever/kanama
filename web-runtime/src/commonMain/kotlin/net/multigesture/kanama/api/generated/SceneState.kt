@@ -42,6 +42,15 @@ class SceneState(godotObject: GodotHandle) : RefCounted(godotObject) {
       idx.toLong(),
       propIdx.toLong(),
     )?.let { GodotObject(it.toWebId()) }
+
+  value class GenEditState(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: GenEditState get() = GenEditState(0L)
+      val INSTANCE: GenEditState get() = GenEditState(1L)
+      val MAIN: GenEditState get() = GenEditState(2L)
+      val MAIN_INHERITED: GenEditState get() = GenEditState(3L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

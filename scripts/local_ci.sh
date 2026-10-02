@@ -719,6 +719,11 @@ if [[ $skip_web -eq 0 ]]; then
   stage "web wrapper tree drift gate"
   python3 "$ROOT_DIR/scripts/generate_web_wrappers.py" --check
 
+  # Typed Godot enums on Web (task 128 C): every Web wrapper enum/bitfield slot uses its value
+  # class, required returns are non-null, and Web value names equal the shared naming function.
+  stage "web typed Godot enums and required returns (task 128 C)"
+  python3 "$ROOT_DIR/scripts/check_web_typed_enums.py"
+
   # Kotlin/Wasm compile + the fail-loud gameplay coverage gate. The Web build
   # needs the in-process Kotlin compiler; the daemon can exhaust memory here.
   stage "web Wasm compile + coverage gate"

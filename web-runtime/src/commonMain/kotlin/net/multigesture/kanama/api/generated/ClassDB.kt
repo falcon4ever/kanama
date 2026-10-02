@@ -11,4 +11,14 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 internal object ClassDB {
   internal fun instantiate(className: String): BackendGodotHandle? =
     GodotBackendCalls.invokeStringNameRetHandle(D.CLASSDB_INSTANTIATE, className)
+
+  value class APIType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val CORE: APIType get() = APIType(0L)
+      val EDITOR: APIType get() = APIType(1L)
+      val EXTENSION: APIType get() = APIType(2L)
+      val EDITOR_EXTENSION: APIType get() = APIType(3L)
+      val NONE: APIType get() = APIType(4L)
+    }
+  }
 }

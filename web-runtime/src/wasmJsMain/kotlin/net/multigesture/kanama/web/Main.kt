@@ -8,6 +8,7 @@ import kotlin.js.JsExport
 import kotlinx.coroutines.launch
 import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.GPUParticles2D
+import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.MainThread
@@ -970,7 +971,7 @@ fun kanamaWebMatch3Group4Probe(tileObjectId: Int): Int {
     signalSource.signal("visibility_changed").connect(
       tile,
       argumentCount = 0,
-      flags = GodotObject.CONNECT_ONE_SHOT,
+      flags = GodotObject.ConnectFlags.ONE_SHOT,
     ) {
       callbackCalls += 1
     }
@@ -980,7 +981,7 @@ fun kanamaWebMatch3Group4Probe(tileObjectId: Int): Int {
   signalSource.emitSignal("visibility_changed")
 
   var result = 0
-  if (connectResult == 0L) result = result or 1
+  if (connectResult == GodotError.OK) result = result or 1
   if (callbacksAfterConnect == callbacksBefore + 1) result = result or 2
   if (callbackCalls == 1) result = result or 4
   if (callbacksAfterFirstEmit == callbacksBefore) result = result or 8
@@ -994,27 +995,27 @@ fun kanamaWebMatch3Group5Probe(tileObjectId: Int): Int {
   val sprite = Node2D((tile.getNodeOrNull("Sprite2D") ?: return 0).handle)
 
   var result = 0
-  val tween = tile.createTween() ?: return result
+  // Task 128: create_tween / tween_property are `meta: "required"` returns -- non-null, and a null
+  // throws (requireGodotReturn) -- so reaching the next line is the bit.
+  val tween = tile.createTween()
   result = result or 1
   if (tween.setParallel(true).isSameInstance(tween)) result = result or 2
   val scaleTweener = tween.tweenProperty(sprite, "scale", Vector2(1.05, 0.95), 0.05)
-  if (scaleTweener != null) result = result or 4
+  result = result or 4
   if (
-    scaleTweener != null &&
-      scaleTweener.setTrans(Tween.TRANS_BACK).isSameInstance(scaleTweener) &&
-      scaleTweener.setEase(Tween.EASE_OUT).isSameInstance(scaleTweener)
+    scaleTweener.setTrans(Tween.TransitionType.BACK).isSameInstance(scaleTweener) &&
+      scaleTweener.setEase(Tween.EaseType.OUT).isSameInstance(scaleTweener)
   ) {
     result = result or 8
   }
-  if (tween.tweenProperty(sprite, "modulate", Color(0.9f, 0.8f, 0.7f, 1.0f), 0.05) != null) {
-    result = result or 16
-  }
+  tween.tweenProperty(sprite, "modulate", Color(0.9f, 0.8f, 0.7f, 1.0f), 0.05)
+  result = result or 16
   if (
     tween.signal(Tween.Signals.finished).connect(
       tile,
       argumentCount = 0,
-      flags = GodotObject.CONNECT_ONE_SHOT,
-    ) {} == 0L
+      flags = GodotObject.ConnectFlags.ONE_SHOT,
+    ) {} == GodotError.OK
   ) {
     result = result or 32
   }
@@ -1023,19 +1024,18 @@ fun kanamaWebMatch3Group5Probe(tileObjectId: Int): Int {
   var killedCallbackCalls = 0
   val killedTween = tile.createTween()
   val killedConnection =
-    killedTween?.signal(Tween.Signals.finished)?.connect(
+    killedTween.signal(Tween.Signals.finished).connect(
       tile,
       argumentCount = 0,
-      flags = GodotObject.CONNECT_ONE_SHOT,
+      flags = GodotObject.ConnectFlags.ONE_SHOT,
     ) {
       killedCallbackCalls += 1
     }
-  if (killedTween != null && killedTween.tweenProperty(sprite, "scale", Vector2.ONE, 1.0) != null) {
-    killedTween.kill()
-    result = result or 64
-  }
+  killedTween.tweenProperty(sprite, "scale", Vector2.ONE, 1.0)
+  killedTween.kill()
+  result = result or 64
   if (
-    killedConnection == 0L &&
+    killedConnection == GodotError.OK &&
       killedCallbackCalls == 0 &&
       WebSignalCallbackRegistry.size == callbacksBeforeKilledTween
   ) {

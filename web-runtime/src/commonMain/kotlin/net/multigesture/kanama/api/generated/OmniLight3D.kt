@@ -8,4 +8,10 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class OmniLight3D(godotObject: GodotHandle) : Light3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class ShadowMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DUAL_PARABOLOID: ShadowMode get() = ShadowMode(0L)
+      val CUBE: ShadowMode get() = ShadowMode(1L)
+    }
+  }
 }

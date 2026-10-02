@@ -26,6 +26,14 @@ import net.multigesture.kanama.web.WebObjectId
 // Conversions between the public value types and the contract's value types; every generated
 // member goes through these, so the float/double policy lives in exactly one place.
 
+/**
+ * The one helper behind every Godot object return marked `meta: "required"` (task 128, decision 9):
+ * the wrapper returns a non-null type, and a null anyway is an engine bug that throws, naming the
+ * Godot class and method -- the desktop/iOS `requireGodotReturn`, same message and exception type.
+ */
+internal fun <T : Any> requireGodotReturn(value: T?, godotMethod: String): T =
+  value ?: throw IllegalStateException("Godot returned null from required $godotMethod")
+
 internal fun GodotHandle.toBackendHandle(): BackendGodotHandle =
   BackendGodotHandle.fromBackendToken(value.toLong())
 

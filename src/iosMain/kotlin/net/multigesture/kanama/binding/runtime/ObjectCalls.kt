@@ -42017,6 +42017,30 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         (config.getValue("video", "display_mode") as? Number)?.toLong() == 3L,
       )
     }
+    // InputEventMouseButton.create() (task 128 C): an owned event with a typed button, added to an
+    // action. The action keeps its own reference, so after the wrapper's close() a fresh RIGHT
+    // event still matches the action (the event survived); then the scratch action is erased.
+    run {
+      val im = net.multigesture.kanama.api.InputMap
+      val rmb = net.multigesture.kanama.api.MouseButton.RIGHT
+      val action = "kanama_selftest_mouse_action"
+      im.addAction(action)
+      val button = net.multigesture.kanama.api.InputEventMouseButton.create()
+      button.setButtonIndex(rmb)
+      val readBack = button.getButtonIndex() == rmb
+      im.actionAddEvent(action, button)
+      val hasEvent = im.actionHasEvent(action, button)
+      button.close()
+      val probe = net.multigesture.kanama.api.InputEventMouseButton.create()
+      probe.setButtonIndex(rmb)
+      val survives = probe.isAction(action)
+      probe.close()
+      im.eraseAction(action)
+      check(
+        "input-mouse-button(create + setButtonIndex RIGHT + actionAddEvent, survives close, erase)",
+        readBack && hasEvent && survives && !im.hasAction(action),
+      )
+    }
   }
 
   // RefCounted return-slot ownership (task 31 iOS mirror): every RefCounted-typed ptrcall

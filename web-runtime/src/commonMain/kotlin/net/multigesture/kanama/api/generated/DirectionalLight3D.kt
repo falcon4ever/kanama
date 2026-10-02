@@ -10,26 +10,40 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class DirectionalLight3D(godotObject: GodotHandle) : Light3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  fun setSkyMode(mode: Long) {
-    GodotBackendCalls.invokeLongArg(D.DIRECTIONALLIGHT3D_SET_SKY_MODE, requireOpenHandle(), mode)
+  fun setSkyMode(mode: DirectionalLight3D.SkyMode) {
+    GodotBackendCalls.invokeLongArg(
+      D.DIRECTIONALLIGHT3D_SET_SKY_MODE,
+      requireOpenHandle(),
+      mode.value,
+    )
   }
 
-  var skyMode: Long
+  var skyMode: DirectionalLight3D.SkyMode
     get() = unsupportedWebGameplayFamily("DirectionalLight3D.get_sky_mode")
     set(newValue) = setSkyMode(newValue)
 
-  companion object {
-    const val SKY_MODE_LIGHT_AND_SKY: Long = 0L
-    const val SKY_MODE_LIGHT_ONLY: Long = 1L
-    const val SKY_MODE_SKY_ONLY: Long = 2L
+  value class ShadowMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ORTHOGONAL: ShadowMode get() = ShadowMode(0L)
+      val PARALLEL_2_SPLITS: ShadowMode get() = ShadowMode(1L)
+      val PARALLEL_4_SPLITS: ShadowMode get() = ShadowMode(2L)
+    }
+  }
+
+  value class SkyMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LIGHT_AND_SKY: SkyMode get() = SkyMode(0L)
+      val LIGHT_ONLY: SkyMode get() = SkyMode(1L)
+      val SKY_ONLY: SkyMode get() = SkyMode(2L)
+    }
   }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun DirectionalLight3D.setSkyMode(mode: Long) = setSkyMode(mode)
+fun DirectionalLight3D.setSkyMode(mode: DirectionalLight3D.SkyMode) = setSkyMode(mode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-var DirectionalLight3D.skyMode: Long
+var DirectionalLight3D.skyMode: DirectionalLight3D.SkyMode
   get() = skyMode
   set(newValue) {
     skyMode = newValue

@@ -65,6 +65,70 @@ class Environment(godotObject: GodotHandle) : Resource(godotObject) {
   var volumetricFogEnabled: Boolean
     get() = unsupportedWebGameplayFamily("Environment.is_volumetric_fog_enabled")
     set(newValue) = setVolumetricFogEnabled(newValue)
+
+  value class BGMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val CLEAR_COLOR: BGMode get() = BGMode(0L)
+      val COLOR: BGMode get() = BGMode(1L)
+      val SKY: BGMode get() = BGMode(2L)
+      val CANVAS: BGMode get() = BGMode(3L)
+      val KEEP: BGMode get() = BGMode(4L)
+      val CAMERA_FEED: BGMode get() = BGMode(5L)
+      val MAX: BGMode get() = BGMode(6L)
+    }
+  }
+
+  value class AmbientSource(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BG: AmbientSource get() = AmbientSource(0L)
+      val DISABLED: AmbientSource get() = AmbientSource(1L)
+      val COLOR: AmbientSource get() = AmbientSource(2L)
+      val SKY: AmbientSource get() = AmbientSource(3L)
+    }
+  }
+
+  value class ReflectionSource(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BG: ReflectionSource get() = ReflectionSource(0L)
+      val DISABLED: ReflectionSource get() = ReflectionSource(1L)
+      val SKY: ReflectionSource get() = ReflectionSource(2L)
+    }
+  }
+
+  value class ToneMapper(override val value: Long) : GodotEnumValue {
+    companion object {
+      val LINEAR: ToneMapper get() = ToneMapper(0L)
+      val REINHARDT: ToneMapper get() = ToneMapper(1L)
+      val FILMIC: ToneMapper get() = ToneMapper(2L)
+      val ACES: ToneMapper get() = ToneMapper(3L)
+      val AGX: ToneMapper get() = ToneMapper(4L)
+    }
+  }
+
+  value class GlowBlendMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ADDITIVE: GlowBlendMode get() = GlowBlendMode(0L)
+      val SCREEN: GlowBlendMode get() = GlowBlendMode(1L)
+      val SOFTLIGHT: GlowBlendMode get() = GlowBlendMode(2L)
+      val REPLACE: GlowBlendMode get() = GlowBlendMode(3L)
+      val MIX: GlowBlendMode get() = GlowBlendMode(4L)
+    }
+  }
+
+  value class FogMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val EXPONENTIAL: FogMode get() = FogMode(0L)
+      val DEPTH: FogMode get() = FogMode(1L)
+    }
+  }
+
+  value class SDFGIYScale(override val value: Long) : GodotEnumValue {
+    companion object {
+      val SCALE_50_PERCENT: SDFGIYScale get() = SDFGIYScale(0L)
+      val SCALE_75_PERCENT: SDFGIYScale get() = SDFGIYScale(1L)
+      val SCALE_100_PERCENT: SDFGIYScale get() = SDFGIYScale(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

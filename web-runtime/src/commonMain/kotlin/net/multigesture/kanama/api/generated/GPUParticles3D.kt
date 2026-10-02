@@ -21,6 +21,35 @@ class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
   var emitting: Boolean
     get() = unsupportedWebGameplayFamily("GPUParticles3D.is_emitting")
     set(newValue) = setEmitting(newValue)
+
+  value class DrawOrder(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INDEX: DrawOrder get() = DrawOrder(0L)
+      val LIFETIME: DrawOrder get() = DrawOrder(1L)
+      val REVERSE_LIFETIME: DrawOrder get() = DrawOrder(2L)
+      val VIEW_DEPTH: DrawOrder get() = DrawOrder(3L)
+    }
+  }
+
+  value class EmitFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val POSITION: EmitFlags get() = EmitFlags(1L)
+      val ROTATION_SCALE: EmitFlags get() = EmitFlags(2L)
+      val VELOCITY: EmitFlags get() = EmitFlags(4L)
+      val COLOR: EmitFlags get() = EmitFlags(8L)
+      val CUSTOM: EmitFlags get() = EmitFlags(16L)
+    }
+  }
+
+  value class TransformAlign(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: TransformAlign get() = TransformAlign(0L)
+      val Z_BILLBOARD: TransformAlign get() = TransformAlign(1L)
+      val Y_TO_VELOCITY: TransformAlign get() = TransformAlign(2L)
+      val Z_BILLBOARD_Y_TO_VELOCITY: TransformAlign get() = TransformAlign(3L)
+      val LOCAL_BILLBOARD: TransformAlign get() = TransformAlign(4L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

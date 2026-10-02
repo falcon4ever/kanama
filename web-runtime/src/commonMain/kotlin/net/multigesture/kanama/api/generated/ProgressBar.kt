@@ -8,4 +8,12 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class ProgressBar(godotObject: GodotHandle) : Range(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class FillMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BEGIN_TO_END: FillMode get() = FillMode(0L)
+      val END_TO_BEGIN: FillMode get() = FillMode(1L)
+      val TOP_TO_BOTTOM: FillMode get() = FillMode(2L)
+      val BOTTOM_TO_TOP: FillMode get() = FillMode(3L)
+    }
+  }
 }

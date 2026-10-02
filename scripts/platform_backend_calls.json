@@ -2965,9 +2965,9 @@
         "String"
       ],
       "returnType": "enum::Error",
-      "shape": "STRINGNAME_ARG_SINGLETON",
+      "shape": "STRINGNAME_RET_LONG_SINGLETON",
       "executionMode": "IMMEDIATE_RESULT",
-      "semantics": "Open a URL (the browser opens a new tab; menu link buttons).",
+      "semantics": "Open a URL (the browser opens a new tab; menu link buttons). Returns Godot's Error like desktop/iOS (protocol 29, task 128 C).",
       "returnOwnership": "BORROWED",
       "introducedBy": "60f-third-person"
     },
@@ -4138,10 +4138,10 @@
         "String"
       ],
       "returnType": "enum::Error",
-      "shape": "STRINGNAME_ARG",
-      "executionMode": "QUEUED_MUTATION",
+      "shape": "STRINGNAME_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
-      "semantics": "Queue a config load from user:// (result intentionally unchecked; missing files leave the defaults).",
+      "semantics": "Config load from user:// (immediate since protocol 29, task 128 C: returns Godot's Error like desktop/iOS; the path rides the object-query string channel).",
       "introducedBy": "60i-tpsdemo"
     },
     {
@@ -4154,10 +4154,10 @@
         "String"
       ],
       "returnType": "enum::Error",
-      "shape": "STRINGNAME_ARG",
-      "executionMode": "QUEUED_MUTATION",
+      "shape": "STRINGNAME_RET_LONG",
+      "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
-      "semantics": "Queue a config save to user:// (result intentionally unchecked).",
+      "semantics": "Config save to user:// (immediate since protocol 29, task 128 C: returns Godot's Error like desktop/iOS; the path rides the object-query string channel).",
       "introducedBy": "60i-tpsdemo"
     },
     {
@@ -5225,6 +5225,38 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a Control's size (keep_offsets keeps Godot's default false); the SafeArea shrink that follows set_position.",
       "introducedBy": "64-parcel8-tps-window"
+    },
+    {
+      "opcode": 333,
+      "scope": "class",
+      "className": "InputEventMouseButton",
+      "methodName": "set_button_index",
+      "hash": 3624991109,
+      "arguments": [
+        "enum::MouseButton"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the button of a constructed InputEventMouseButton (the MouseButton enum crosses as its integer value): the portable InputEventMouseButton.create() + buttonIndex form a shared script registers a mouse-button input action with. Ordered before the action_add_event that follows because the immediate call flushes the queue first.",
+      "introducedBy": "128C-mouse-button-actions"
+    },
+    {
+      "opcode": 334,
+      "scope": "class",
+      "className": "InputEvent",
+      "methodName": "set_device",
+      "hash": 1286410249,
+      "arguments": [
+        "int"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the device of a constructed InputEvent (-1 = all devices, as project.godot input maps spell it): a shared script's fallback input actions match every device. Ordered before the action_add_event that follows because the immediate call flushes the queue first.",
+      "introducedBy": "128C-mouse-button-actions"
     }
   ],
   "compositions": [
@@ -5263,6 +5295,13 @@
         12
       ],
       "semantics": "Compose the existing ClassDB.instantiate call with class name InputEventKey; the returned handle is OWNED (a NODE-kind constructed handle in the Web bookkeeping, released with the constructed-object release, never the resource release). Attach it with InputMap.action_add_event, then close() it -- the InputMap keeps its own reference."
+    },
+    {
+      "name": "ClassDB.instantiate_InputEventMouseButton",
+      "opcodes": [
+        12
+      ],
+      "semantics": "Compose the existing ClassDB.instantiate call with class name InputEventMouseButton; the returned handle is OWNED (a constructed handle in the Web bookkeeping, released with the constructed-object release). Set its button (333), attach it with InputMap.action_add_event, then close() it -- the InputMap keeps its own reference."
     }
   ]
 }

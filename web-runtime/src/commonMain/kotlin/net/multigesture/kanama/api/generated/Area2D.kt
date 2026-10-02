@@ -8,4 +8,13 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Area2D(godotObject: GodotHandle) : CollisionObject2D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class SpaceOverride(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: SpaceOverride get() = SpaceOverride(0L)
+      val COMBINE: SpaceOverride get() = SpaceOverride(1L)
+      val COMBINE_REPLACE: SpaceOverride get() = SpaceOverride(2L)
+      val REPLACE: SpaceOverride get() = SpaceOverride(3L)
+      val REPLACE_COMBINE: SpaceOverride get() = SpaceOverride(4L)
+    }
+  }
 }

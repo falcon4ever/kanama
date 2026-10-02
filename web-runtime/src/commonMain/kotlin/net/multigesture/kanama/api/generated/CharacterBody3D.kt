@@ -68,6 +68,21 @@ class CharacterBody3D(godotObject: GodotHandle) : PhysicsBody3D(godotObject) {
   var upDirection: Vector3
     get() = unsupportedWebGameplayFamily("CharacterBody3D.get_up_direction")
     set(newValue) = setUpDirection(newValue)
+
+  value class MotionMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val GROUNDED: MotionMode get() = MotionMode(0L)
+      val FLOATING: MotionMode get() = MotionMode(1L)
+    }
+  }
+
+  value class PlatformOnLeave(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ADD_VELOCITY: PlatformOnLeave get() = PlatformOnLeave(0L)
+      val ADD_UPWARD_VELOCITY: PlatformOnLeave get() = PlatformOnLeave(1L)
+      val DO_NOTHING: PlatformOnLeave get() = PlatformOnLeave(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

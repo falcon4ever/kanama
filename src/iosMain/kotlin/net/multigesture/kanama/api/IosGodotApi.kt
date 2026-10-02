@@ -484,16 +484,24 @@ private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long, godotM
     RefCounted.releaseHandle(MemorySegment.ofAddress(returned))
 }
 
-class InputEventMouseButton(handle: GodotHandle) : GodotObject(handle) {
+// An InputEvent (task 128 C), so `InputMap.actionAddEvent(action, InputEventMouseButton.create())` is the
+// same call on every backend. `from` also wraps an InputEventScreenTouch (touch drives the mouse-button
+// paths on iOS); that is still a valid InputEvent, so the inherited InputEvent members (isPressed,
+// isReleased, ...) are correct for both, while the button members check the real class.
+class InputEventMouseButton(handle: GodotHandle) : InputEvent(handle) {
+    var buttonIndex: MouseButton
+        get() = getButtonIndex()
+        set(value) = setButtonIndex(value)
+
     fun getButtonIndex(): MouseButton =
         MouseButton(if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(segment.address())
         else MouseButton.LEFT.value)
 
-    fun isPressed(): Boolean =
-        IosGodot.inputEventIsPressed(segment.address())
-
-    fun isReleased(): Boolean =
-        IosGodot.inputEventIsReleased(segment.address())
+    fun setButtonIndex(buttonIndex: MouseButton) {
+        checkOpen()
+        check(isClass("InputEventMouseButton")) { "setButtonIndex on a touch event wrapped as InputEventMouseButton" }
+        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex.value)
+    }
 
     companion object {
 
@@ -501,6 +509,14 @@ class InputEventMouseButton(handle: GodotHandle) : GodotObject(handle) {
             if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle)
             else if (value.isClass("InputEventScreenTouch")) InputEventMouseButton(value.handle)
             else null
+
+        // Instantiate an InputEventMouseButton (owned: close() it, or `use { }`).
+        fun create(): InputEventMouseButton =
+            InputEventMouseButton(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventMouseButton"))))
+
+        private val setButtonIndexBind by lazy {
+            ObjectCalls.getMethodBind("InputEventMouseButton", "set_button_index", 3624991109L)
+        }
     }
 }
 

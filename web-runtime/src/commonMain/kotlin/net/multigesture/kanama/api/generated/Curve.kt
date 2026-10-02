@@ -12,6 +12,14 @@ class Curve(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun sample(offset: Double): Double =
     GodotBackendCalls.invokeDoubleRetDouble(D.CURVE_SAMPLE, requireOpenHandle(), offset)
+
+  value class TangentMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val FREE: TangentMode get() = TangentMode(0L)
+      val LINEAR: TangentMode get() = TangentMode(1L)
+      val MODE_COUNT: TangentMode get() = TangentMode(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

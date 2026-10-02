@@ -66,6 +66,14 @@ class GridMap(godotObject: GodotHandle) : Node3D(godotObject) {
     get() = unsupportedWebGameplayFamily("GridMap.get_mesh_library")
     set(newValue) = setMeshLibrary(newValue)
 
+  value class DebugVisibilityMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DEFAULT: DebugVisibilityMode get() = DebugVisibilityMode(0L)
+      val FORCE_SHOW: DebugVisibilityMode get() = DebugVisibilityMode(1L)
+      val FORCE_HIDE: DebugVisibilityMode get() = DebugVisibilityMode(2L)
+    }
+  }
+
   companion object {
     const val INVALID_CELL_ITEM: Long = -1L
   }
