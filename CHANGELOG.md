@@ -145,7 +145,9 @@ versioning once public releases begin.
   desktop/iOS type; it was a raw `GodotHandle` to wrap by hand), so a shared
   `getTree().getRoot().setMode(...)` compiles on Web; `Window.handle` exposes the engine handle.
   Gate: `scripts/check_web_typed_enums.py` (local_ci), which also rejects a Web object return
-  surfaced as a raw `GodotHandle`.
+  surfaced as a raw `GodotHandle`. Size: the web3d fixture's Kotlin/Wasm module (`buildWebScripts`, release)
+  is 262,837 B on kanama 9a6024d6 and 266,395 B with this change (+3,558 B, +1.4 %; every Web class
+  nests all its Godot enums, but Kotlin/Wasm drops the value classes a build never names).
 - **`InputEventMouseButton.create()` on every backend (task 128 C; Web protocol 28 → 29).** A shared
   script registers a mouse-button input action the same way everywhere:
   `InputEventMouseButton.create().also { it.buttonIndex = MouseButton.LEFT }`, then
