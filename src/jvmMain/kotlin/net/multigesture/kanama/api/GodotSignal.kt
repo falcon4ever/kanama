@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import net.multigesture.kanama.binding.runtime.SignalCallables
 import net.multigesture.kanama.binding.runtime.SignalCallbackRegistry
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -12,7 +13,8 @@ import kotlin.coroutines.resume
  * This is intentionally a thin Callable-based bridge. It connects a signal to
  * a method on another Godot object or Kanama script instance, which keeps
  * lifetime ownership in Godot; lambda connections go through [SignalCallbackRegistry]
- * and a bound Callable. The overloads replace default arguments (D24).
+ * and a custom Callable ([SignalCallables]) whose free_func releases the closure. The overloads
+ * replace default arguments (D24).
  */
 actual class GodotSignal
 internal actual constructor(
@@ -47,21 +49,15 @@ internal actual constructor(
     ): SignalConnection {
         require(argumentCount in 0..3) { "Signal lambda callbacks currently support 0..3 emitted arguments" }
         val oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags
-        // The receiver's instance id lets its script free release the closure, and a one-shot
-        // entry releases itself when it fires (task 131): Godot drops the connection in both cases.
-        val id = SignalCallbackRegistry.register(target.instanceId, oneShot, callback)
-        val method = "__kanama_signal_dispatch$argumentCount"
-        val boundArgs = listOf(id)
-        val error = owner.connectBound(name, target, method, boundArgs, flags)
-        if (error != GodotError.OK) {
-            SignalCallbackRegistry.unregister(id)
-        }
+        val id = SignalCallbackRegistry.register(argumentCount, callback)
+        // A custom Callable bound to the receiver: Godot calls its free_func -- releasing the
+        // closure -- whenever it drops the connection (receiver or emitter freed, one-shot fired,
+        // disconnected, failed connect). Task 131; the iOS shim works the same way.
+        val error = GodotError(SignalCallables.connect(owner.segment, name, target.instanceId, id, flags.value))
         return SignalConnection(
             owner = owner,
             signal = name,
-            target = target,
-            method = method,
-            boundArgs = boundArgs,
+            receiverInstanceId = target.instanceId,
             callbackId = id,
             error = error,
             disconnectOnClose = !oneShot,
@@ -106,9 +102,7 @@ internal actual constructor(
 actual class SignalConnection internal constructor(
     private val owner: GodotObject,
     private val signal: String,
-    private val target: GodotObject,
-    private val method: String,
-    private val boundArgs: List<Any?>,
+    private val receiverInstanceId: Long,
     private val callbackId: Long,
     actual val error: GodotError,
     private val disconnectOnClose: Boolean,
@@ -119,8 +113,10 @@ actual class SignalConnection internal constructor(
         if (closed) return
         closed = true
         SignalCallbackRegistry.unregister(callbackId)
-        if (error == GodotError.OK && disconnectOnClose) {
-            owner.disconnectBound(signal, target, method, boundArgs)
+        // A freed emitter already dropped the connection (and must not be called); a one-shot one
+        // may already have fired, and Godot drops it then.
+        if (error == GodotError.OK && disconnectOnClose && GD.isInstanceIdValid(owner.instanceId)) {
+            SignalCallables.disconnect(owner.segment, signal, receiverInstanceId, callbackId)
         }
     }
 }

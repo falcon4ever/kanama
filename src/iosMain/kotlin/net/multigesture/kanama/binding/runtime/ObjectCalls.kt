@@ -113,6 +113,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceCallV
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
@@ -41186,6 +41187,35 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       .exceptionOrNull()
       ?.let { IosScriptErrors.reportFor(it, "selfTest") }
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST script-error report=$scriptErrorReport")
+  // Task 131 (F4) through the REAL containment path: a built-in script whose method throws is
+  // called via the call_v @CName export the shim uses. Contained (the self-test survives), the call
+  // reports success with a nil return (as GDScript does for a runtime error in a called function),
+  // and one script error reached Godot -- the device log shows its SCRIPT ERROR line.
+  run {
+    val throwingOwner = requireObject("Node")
+    if (throwingOwner.address() != 0L) {
+      val script =
+        KanamaIosRuntime.createScriptResource(KanamaIosRuntime.THROWING_PROBE_SCRIPT_PATH)
+      val instance = KanamaIosRuntime.createScriptInstance(script, throwingOwner.address())
+      val reportsBefore = IosScriptErrors.reportCount
+      val callResult =
+        if (instance != 0L) {
+          kanamaIosRuntimeScriptInstanceCallV(instance, 0, null, null, 0, null, null)
+        } else -1
+      val reported = IosScriptErrors.reportCount - reportsBefore
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST script-error containment call=$callResult " +
+          "reported=$reported"
+      )
+      check(
+        "script-error(throwing script method contained, call ok, one report)",
+        instance != 0L && callResult == 1 && reported == 1,
+      )
+      if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
+      KanamaIosRuntime.freeScriptResource(script)
+      ObjectCalls.destroyObject(throwingOwner)
+    } else check("script-error(throwing script method contained) (instance absent)", false)
+  }
   check(
     "script-error(report carries class and message)",
     scriptErrorReport?.description == "kotlin.IllegalStateException" &&

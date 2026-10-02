@@ -114,6 +114,35 @@ class ScriptErrorsTest {
   }
 
   @Test
+  fun anR8FrameWithoutSourceIsNeverAttributedAsGameCode() {
+    // R8 renames classes and files; `a.b.c` here may be an obfuscated runtime class.
+    val t =
+      throwable(
+        "minified",
+        frame("a.b.c", "a", "SourceFile", 12),
+        frame("a.b.d", "b", null, -1),
+        frame("net.multigesture.kanama.binding.ScriptBridge", "siCall", null, -1),
+      )
+
+    val report = ScriptErrors.reportFor(t, "Player._process")
+
+    assertEquals("Player._process", report.function) // the containment label
+    assertEquals("", report.file)
+    assertEquals(0, report.line)
+  }
+
+  @Test
+  fun aGamePackageUnderTheKanamaRootIsGameCodeButTheRootRuntimeClassIsNot() {
+    assertFalse(ScriptErrorReport.isRuntimeClass("net.multigesture.kanama.example.HelloScript"))
+    assertFalse(ScriptErrorReport.isRuntimeClass("net.multigesture.kanama.example")) // K/N package
+    assertFalse(ScriptErrorReport.isRuntimeClass("net.multigesture.kanama.mygame.Player"))
+    assertTrue(ScriptErrorReport.isRuntimeClass("net.multigesture.kanama.KanamaBinding"))
+    assertTrue(ScriptErrorReport.isRuntimeClass("net.multigesture.kanama.KanamaBinding\$init\$1"))
+    assertTrue(ScriptErrorReport.isRuntimeClass("net.multigesture.kanama.binding.runtime"))
+    assertFalse(ScriptErrorReport.isRuntimeClass("")) // a default-package top-level function
+  }
+
+  @Test
   fun aTopLevelFunctionKeepsItsFileFacade() {
     val t = throwable("x", frame("com.example.game.HelpersKt", "spawn", "Helpers.kt", 5))
     assertEquals("HelpersKt.spawn", ScriptErrors.reportFor(t, "site").function)
@@ -195,6 +224,73 @@ class ScriptErrorsTest {
     assertEquals(0, withoutSource.line)
 
     assertNull(ScriptErrorReport.parseNativeFrame("at 9   libdyld.dylib   0x1 start + 4"))
+
+    // A top-level function in the default package has an empty owner.
+    val defaultPackage =
+      ScriptErrorReport.parseNativeFrame("at 2 lib 0x3 kfun:#spawn(){} + 9 (/g/Main.kt:7:3)")
+    assertNotNull(defaultPackage)
+    assertEquals("", defaultPackage.className)
+    assertEquals("spawn", defaultPackage.methodName)
+    assertEquals(7, defaultPackage.line)
+  }
+
+  @Test
+  fun aNativeGameExceptionReportsItsThrowSiteNotItsConstructor() {
+    // Kotlin/Native traces start inside the constructor chain, unlike the JVM's.
+    val frames =
+      listOf(
+          "at 0 lib 0x1 kfun:kotlin.Throwable#<init>(kotlin.String?){} + 8 (/k/Throwable.kt:24:37)",
+          "at 1 lib 0x2 kfun:kotlin.Exception#<init>(kotlin.String?){} + 4 (/k/Exceptions.kt:23:1)",
+          "at 2 lib 0x3 kfun:com.example.game.SpawnError#<init>(kotlin.String){} + 4 (/g/SpawnError.kt:3:1)",
+          "at 3 lib 0x4 kfun:com.example.game.Spawner#spawn(){} + 9 (/g/Spawner.kt:31:9)",
+        )
+        .mapNotNull(ScriptErrorReport::parseNativeFrame)
+
+    val dropped = ScriptErrorReport.dropOwnConstructorFrames(frames, "com.example.game.SpawnError")
+    assertEquals("spawn", dropped.first().methodName)
+
+    // A game constructor that threw a platform exception is kept: it is the throw site.
+    val inInit =
+      listOf(
+          "at 0 lib 0x1 kfun:kotlin.Throwable#<init>(kotlin.String?){} + 8 (/k/Throwable.kt:24:37)",
+          "at 1 lib 0x2 kfun:kotlin.IllegalStateException#<init>(kotlin.String?){} + 4 (/k/E.kt:7:1)",
+          "at 2 lib 0x3 kfun:com.example.game.Board#<init>(){} + 4 (/g/Board.kt:12:5)",
+        )
+        .mapNotNull(ScriptErrorReport::parseNativeFrame)
+    assertEquals(
+      "com.example.game.Board",
+      ScriptErrorReport.dropOwnConstructorFrames(inInit, "kotlin.IllegalStateException")
+        .first()
+        .className,
+    )
+    // An unknown exception name drops only the platform constructor frames.
+    assertEquals(
+      "com.example.game.SpawnError",
+      ScriptErrorReport.dropOwnConstructorFrames(frames, "<unknown>").first().className,
+    )
+  }
+
+  @Test
+  fun aNativeReleaseFrameWithoutSourceStillNamesTheGameFunction() {
+    val lines =
+      listOf(
+        "at 0 lib 0x1 kfun:com.example.game.Player#ready(){} + 52",
+        "at 1 lib 0x2 kfun:net.multigesture.kanama.ios#kanamaIosRuntimeScriptInstanceReady(){} + 4",
+      )
+
+    val report =
+      ScriptErrorReport.of(
+        IllegalStateException("x"),
+        "site",
+        "kotlin.IllegalStateException",
+        sourcelessGameFrames = true,
+      ) {
+        lines.mapNotNull(ScriptErrorReport::parseNativeFrame)
+      }
+
+    assertEquals("Player.ready", report.function)
+    assertEquals("", report.file)
+    assertEquals(0, report.line)
   }
 
   @Test

@@ -145,6 +145,12 @@ internal object KanamaIosRuntime {
   private const val PROBE_GROUP = "kanama_ios_probe"
   private const val PROBE_LABEL_GIVE_UP_FRAME = 120
   private const val PROBE_SCRIPT_PATH = "res://kanama_ios_probe.kt"
+
+  /**
+   * Built-in script for the debug self-test's containment row (task 131): its one method throws, so
+   * the row drives the real `kanama_ios_runtime_script_instance_call_v` containment path.
+   */
+  internal const val THROWING_PROBE_SCRIPT_PATH = "res://kanama_ios_throwing_probe.kt"
   private const val LABEL_SET_TEXT_HASH = 83702148L
 
   private var initialized = false
@@ -567,6 +573,17 @@ internal object KanamaIosRuntime {
   }
 
   private fun builtInProbeDescriptor(path: String): KanamaIosScriptDescriptor? {
+    if (path == THROWING_PROBE_SCRIPT_PATH) {
+      return KanamaIosScriptDescriptor(
+        path = path,
+        baseType = "Node",
+        methods = listOf(KanamaIosScriptMethod("throw_probe")),
+        properties = emptyList(),
+        signals = emptyList(),
+        rpcConfigs = emptyList(),
+        factory = { _ -> ThrowingProbeScript() },
+      )
+    }
     if (path != PROBE_SCRIPT_PATH) {
       return null
     }
@@ -600,6 +617,11 @@ internal object KanamaIosRuntime {
     val bridge: KanamaIosScriptBridge,
     var readyCalled: Boolean = false,
   )
+
+  private class ThrowingProbeScript : KanamaIosScriptBridge {
+    override fun callV(methodName: String, args: List<Any?>): Boolean =
+      throw IllegalStateException("kanama self-test: deliberate script method failure")
+  }
 
   private class BuiltInProbeScript(private val ownerObject: Long) : KanamaIosScriptBridge {
     override fun callV(methodName: String, args: List<Any?>): Boolean {
@@ -1085,19 +1107,21 @@ fun kanamaIosRuntimeScriptInstanceCallV(
   retTag: CPointer<IntVar>?,
   retBuf: CPointer<ByteVar>?,
 ): Int {
-  val args: List<Any?> =
-    if (argCount <= 0 || argTags == null || argPtrs == null) {
-      emptyList()
-    } else {
-      List(argCount) { i -> decodeIosCallArg(argTags[i], argPtrs[i]?.reinterpret()) }
-    }
   retTag?.set(0, IOS_PT_VOID)
   // Contain a throwing script method or virtual (task 131), the iOS twin of desktop's
-  // ScriptBridge.siCall: an exception crossing this @CName export terminates the app. It is
-  // printed,
-  // reported as a Godot script error with the Kotlin file:line, and the call returns 0, which the
-  // shim turns into a failed call error -- as desktop does.
+  // ScriptBridge.siCall: an exception crossing this @CName export terminates the app. The argument
+  // decode is inside the try too. The exception is printed and reported as a Godot script error
+  // with
+  // the Kotlin file:line, and the call returns 1 with a nil return, as GDScript does for a runtime
+  // error in a called function (gdscript_vm.cpp: the error is printed, r_err stays CALL_OK): a
+  // failed-call status would make Godot add a misleading error for a method that exists.
   try {
+    val args: List<Any?> =
+      if (argCount <= 0 || argTags == null || argPtrs == null) {
+        emptyList()
+      } else {
+        List(argCount) { i -> decodeIosCallArg(argTags[i], argPtrs[i]?.reinterpret()) }
+      }
     val rv = KanamaIosRuntime.callScriptInstanceReturning(instanceHandle, methodIndex, args)
     if (rv !== KanamaIosNoReturn) {
       encodeIosReturn(rv, retTag, retBuf)
@@ -1107,7 +1131,7 @@ fun kanamaIosRuntimeScriptInstanceCallV(
   } catch (t: Throwable) {
     retTag?.set(0, IOS_PT_VOID)
     IosScriptErrors.report(t, KanamaIosRuntime.scriptCallLabel(instanceHandle, methodIndex))
-    return 0
+    return 1
   }
 }
 

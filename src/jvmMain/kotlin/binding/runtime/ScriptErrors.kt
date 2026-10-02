@@ -6,6 +6,7 @@ import java.lang.foreign.ValueLayout.ADDRESS
 import java.lang.foreign.ValueLayout.JAVA_BYTE
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.invoke.MethodHandle
+import net.multigesture.kanama.api.FileAccess
 import net.multigesture.kanama.ffi.GodotFFI
 
 /**
@@ -66,6 +67,31 @@ object ScriptErrors {
       }
     }
 
+  private val resolvedPaths = java.util.concurrent.ConcurrentHashMap<String, String>()
+
+  /**
+   * Maps the bare file name of [report] to its `res://` path when the source is in the project, so
+   * the editor's Errors tab can open it: `res://kotlin-src/<package path>/<File>.kt` (the source
+   * layout Kanama projects use), else `res://<File>.kt`. Kept bare when neither exists (an exported
+   * game ships no `.kt`). One cached `FileAccess.file_exists` pair per class and file.
+   */
+  private fun withProjectPath(report: ScriptErrorReport): ScriptErrorReport {
+    if (report.file.isEmpty() || report.file.startsWith("res://")) return report
+    val key = "${report.frameClass}|${report.file}"
+    val path =
+      resolvedPaths.getOrPut(key) {
+        val packagePath = report.frameClass.substringBeforeLast('.', "").replace('.', '/')
+        listOf(
+            if (packagePath.isEmpty()) "res://kotlin-src/${report.file}"
+            else "res://kotlin-src/$packagePath/${report.file}",
+            "res://${report.file}",
+          )
+          .firstOrNull { runCatching { FileAccess.fileExists(it) }.getOrDefault(false) }
+          ?: report.file
+      }
+    return if (path == report.file) report else report.withFile(path)
+  }
+
   /**
    * Sends [t] to Godot as a script error; [where] names the containment site (it stands in for the
    * function when no user frame is found). Returns true when the error reached the engine (or the
@@ -81,14 +107,17 @@ object ScriptErrors {
         return true
       }
       val handle = printScriptError ?: return false
+      val sent = withProjectPath(report)
       Arena.ofConfined().use { arena ->
         handle.invoke(
-          arena.allocateFrom(report.description),
-          arena.allocateFrom(report.message),
-          arena.allocateFrom(report.function),
-          arena.allocateFrom(report.file),
-          report.line,
-          1.toByte(), // p_editor_notify
+          arena.allocateFrom(sent.description),
+          arena.allocateFrom(sent.message),
+          arena.allocateFrom(sent.function),
+          arena.allocateFrom(sent.file),
+          sent.line,
+          // p_editor_notify false, as GDScript's runtime errors (gdscript_vm.cpp): the debugger's
+          // Errors tab still gets it, without an editor toast per error.
+          0.toByte(),
         )
       }
       return true

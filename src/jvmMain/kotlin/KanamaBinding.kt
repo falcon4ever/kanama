@@ -32,6 +32,13 @@ object KanamaBinding {
 
   private lateinit var library: MemorySegment
 
+  /**
+   * The `GDExtensionClassLibraryPtr`, which also serves as this extension's Callable `token`
+   * (SignalCallables); NULL before [init] (JVM unit tests).
+   */
+  internal val libraryToken: MemorySegment
+    get() = if (::library.isInitialized) library else MemorySegment.NULL
+
   @JvmStatic
   fun init(procAddr: Long, library: Long, initPtr: Long) {
     System.err.println(

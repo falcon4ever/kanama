@@ -268,13 +268,18 @@ check "upcall containment survived=true result_null=true"
 # line appeared: the trace went to stderr and the failed _ready was silent in Godot's output.
 script_error_line="$(grep -n 'deliberate _ready failure' "$PROJECT_DIR/ScriptErrorSmoke.kt" | cut -d: -f1)"
 check "^SCRIPT ERROR: java\.lang\.IllegalStateException: kanama smoke: deliberate _ready failure$"
-check "^ +at: ScriptErrorSmoke\.ready \(ScriptErrorSmoke\.kt:${script_error_line}\)$"
+# The file is reported as its res:// path (the editor's Errors tab can open it).
+check "^ +at: ScriptErrorSmoke\.ready \(res://ScriptErrorSmoke\.kt:${script_error_line}\)$"
 # The stderr trace is kept beside it.
 check "\[kanama:kt\] script method failed script=net\.multigesture\.kanama\.example\.ScriptErrorSmoke "
-# task 131 (F9) -- a lambda connection's closure is released when its receiver is freed and when a
-# ONE_SHOT connection fires: the registry returns to its size before the connect. Before task 131
-# both *_released were false (only SignalConnection.close() released an entry).
-check "SignalLeakSmoke connected=1 fired=1 free_released=true after_free_fired=0 one_shot_connected=1 one_shot_fired=1 one_shot_released=true"
+# task 131 (F9) -- a lambda connection's closure is released whenever Godot drops the connection's
+# custom Callable: the receiver freed, the emitter freed, a ONE_SHOT connection fired. The registry
+# returns to its size before the connect. Before task 131 every *_released was false (only
+# SignalConnection.close() released an entry).
+check "SignalLeakSmoke connected=1 fired=1 free_released=true after_free_fired=0 emitter_connected=1 emitter_released=true one_shot_connected=1 one_shot_fired=1 one_shot_released=true"
+# A contained Kotlin error returns CALL_OK with a nil return, as a GDScript runtime error does, so
+# Godot adds no "method not found" style follow-up for a method that exists.
+check_absent "Invalid call\. Nonexistent function"
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.

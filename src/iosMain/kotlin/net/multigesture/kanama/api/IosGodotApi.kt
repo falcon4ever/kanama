@@ -10,6 +10,7 @@ import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.CName
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
+import net.multigesture.kanama.binding.runtime.IosScriptErrors
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.LongVar
 import kotlinx.cinterop.alloc
@@ -1182,22 +1183,29 @@ fun kanamaIosRuntimeDispatchCallable(
     argumentTypes: CPointer<IntVar>?,
     argumentValues: CPointer<LongVar>?,
 ) {
-    val count = argumentCount.coerceIn(0, MAX_CALLABLE_ARGUMENTS)
-    val args = ArrayList<Any?>(count)
-    for (i in 0 until count) {
-        val type = argumentTypes?.get(i) ?: VT_NIL
-        val value = argumentValues?.get(i) ?: 0L
-        args.add(
-            when (type) {
-                VT_BOOL -> value != 0L
-                VT_INT -> value
-                VT_FLOAT -> Double.fromBits(value)
-                VT_OBJECT -> GodotObject.wrap(RawSegment.ofAddress(value))
-                else -> null
-            },
-        )
+    // A throwing signal lambda is contained here (task 131): an exception crossing this @CName
+    // export terminates the app. It is printed and reported as a Godot script error; the Callable
+    // call itself still completes, as a GDScript lambda's runtime error does.
+    try {
+        val count = argumentCount.coerceIn(0, MAX_CALLABLE_ARGUMENTS)
+        val args = ArrayList<Any?>(count)
+        for (i in 0 until count) {
+            val type = argumentTypes?.get(i) ?: VT_NIL
+            val value = argumentValues?.get(i) ?: 0L
+            args.add(
+                when (type) {
+                    VT_BOOL -> value != 0L
+                    VT_INT -> value
+                    VT_FLOAT -> Double.fromBits(value)
+                    VT_OBJECT -> GodotObject.wrap(RawSegment.ofAddress(value))
+                    else -> null
+                },
+            )
+        }
+        IosCallableRegistry.dispatch(callbackId, args)
+    } catch (t: Throwable) {
+        IosScriptErrors.report(t, "signal lambda")
     }
-    IosCallableRegistry.dispatch(callbackId, args)
 }
 
 private const val MAX_CALLABLE_ARGUMENTS = 4

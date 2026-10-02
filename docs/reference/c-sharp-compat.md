@@ -70,7 +70,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 |---|---|---|
 | Custom signal declarations | SUPPORTED | `@Signal` metadata and generated `*Signals` emit helpers are available. |
 | Godot signal connections | SUPPORTED | Use `object.signal(Name.Signals.foo).connect(...)` and generated method-name constants. |
-| Lambda signal callbacks | PARTIAL | Zero to three emitted arguments are supported through generated dispatcher methods used by Kanama's signal connection helpers. |
+| Lambda signal callbacks | PARTIAL | Zero to three emitted arguments are supported. A lambda connection is a Godot custom Callable bound to its target and is released when Godot drops the connection (desktop, Android, iOS). |
 | Runtime custom resources | SUPPORTED | `newScriptInstance<T>()` creates a script-backed `Resource` from Kotlin (GDScript `.new()` parity); or create a Godot `Resource`, attach a loaded Kanama script, then resolve `kotlinScriptInstance<T>()`. `newScriptInstance` is desktop/Android only (deferred on iOS; use the attach-then-resolve path there). |
 | Inspector exports | PARTIAL | Scalars (including `Int`/`Float` narrow slots), strings, enums, enum lists, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported across desktop, Android, and iOS. Flags and broader resource arrays remain intentionally conservative. |
 | Coroutines | SUPPORTED | `KanamaScope`, Godot main-thread dispatch, `awaitNextFrame`, `SceneTree.delaySeconds`, and signal awaits are available. |

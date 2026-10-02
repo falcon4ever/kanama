@@ -175,10 +175,9 @@ wrapped yet, or invoking methods discovered by name at runtime.
 
 ## Lambda Callbacks And Await
 
-For Kotlin lambda callbacks, generated `@ScriptClass` instances expose small
-dispatcher methods that Godot can call through its Callable system. Pass the
-script's owning object as the target so Godot has a real object lifetime to
-connect against:
+A Kotlin lambda callback is connected as a Godot Callable bound to a target
+object. Pass the script's owning object (`self`) as the target so the connection
+has a real object lifetime:
 
 ```kotlin
 val connection = area.signal(Area3D.Signals.bodyEntered).connectObject(self) { body ->
@@ -191,10 +190,11 @@ connection.close()
 ```
 
 `close()` disconnects early. You do not have to keep the connection just to
-release it: like a GDScript lambda connection, it dies with its target. When the
-target is freed, Godot drops the connection and Kanama releases the lambda (and
-everything it captured), and a `ConnectFlags.ONE_SHOT` connection is released
-once it fires.
+release it: like a GDScript lambda connection, it dies with its target. Whenever
+Godot drops the connection (the target or the emitting object is freed, or a
+`ConnectFlags.ONE_SHOT` connection fires), Kanama releases the lambda and
+everything it captured. This holds on desktop, Android and iOS; the Web backend
+does not release them yet.
 
 `connect(target, argumentCount) { args -> ... }` supports zero to three emitted
 arguments today. `connectObject` is the common one-argument shortcut for signals

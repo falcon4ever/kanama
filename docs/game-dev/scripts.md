@@ -164,25 +164,30 @@ was started from, or in a `--headless` log. The editor starts the game without
 capturing either stream, so they never reach its Output panel, and a game
 started from the Dock or Finder shows them nowhere.
 
-An exception that escapes your code at an engine boundary (a script method, a
-lifecycle callback such as `_ready` or `_process`, a signal lambda, a property
-accessor) does not crash the game. Kanama catches it, prints the full stack
-trace to stderr, and reports it to Godot as a script error, the way a GDScript
-runtime error is reported:
+On desktop, Android and iOS, an exception that escapes your code at an engine
+boundary (a script method, a lifecycle callback such as `_ready` or `_process`,
+a signal lambda, a property accessor, a `MainThread` task) does not crash the
+game. Kanama catches it, prints the full stack trace to stderr, and reports it to
+Godot as a script error, the way a GDScript runtime error is reported. Godot's
+log shows (desktop console output):
 
 ```text
 SCRIPT ERROR: java.lang.IllegalStateException: no target
-   at: Player.ready (Player.kt:42)
+          at: Player.ready (res://kotlin-src/com/example/game/Player.kt:42)
 ```
 
 It appears in Godot's log (the Output panel, a terminal, a device log) and, when
 you run from the editor, in the Debugger's Errors tab. The file and line are the
 top frame of your own code: Kanama, generated, Kotlin and JDK frames are
-skipped. The rest of that call does not run, and Godot sees a failed call (a
-GDScript caller gets a call error); the next frame calls `_process` again as
-usual. On iOS the file and line need a build with debug info (a release build
-names the class and method with line 0), and an R8-minified Android release
-build may report obfuscated names.
+skipped. When the file is in the project (`res://kotlin-src/<package path>/` or
+the project root) the `res://` path is reported, so the Errors tab can open it;
+otherwise the bare file name. The rest of that call does not run and the caller
+gets `null`, as with a GDScript runtime error; the next frame calls `_process`
+again as usual. On iOS the file and line need a build with debug info (a release
+build names the class and method with line 0). In an R8-minified Android release
+build a frame without source info is not attributed, and the error names the
+callback that failed instead. The Web backend does not report Kotlin exceptions
+to Godot yet.
 
 ## Rebuild Required
 

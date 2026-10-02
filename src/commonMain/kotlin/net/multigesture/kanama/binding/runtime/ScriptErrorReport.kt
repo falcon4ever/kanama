@@ -22,25 +22,36 @@ class ScriptErrorReport(
   val file: String,
   /** The line in [file], or 0 when unknown. */
   val line: Int,
+  /** The reported frame's class (or Kotlin/Native package), `""` when none: locates [file]. */
+  val frameClass: String = "",
 ) {
+  /** This report with [file] replaced by [path] (a `res://` path the editor can open). */
+  fun withFile(path: String): ScriptErrorReport =
+    ScriptErrorReport(description, message, function, path, line, frameClass)
+
   override fun toString(): String = "$message at $function ($file:$line)"
 
   companion object {
     /**
      * Builds the report for [t]. The reported frame is the top frame of [t] (then of its causes)
-     * that is not Kanama runtime, generated glue, the Kotlin/Java standard library or a platform
-     * class -- the line of the game script that threw or that made the throwing call. [where] names
-     * the containment site and stands in for the function when no frame qualifies. [exceptionName]
-     * is the backend's name for `t`'s class (`t.javaClass.name` on the JVM: plain Java reflection,
-     * which survives R8, unlike `KClass.qualifiedName`).
+     * that is game code -- not Kanama runtime, generated glue, the Kotlin/Java standard library or
+     * a platform class -- and carries a source file and line: the line of the game script that
+     * threw or that made the throwing call. A frame without source info (an R8-minified Android
+     * build names classes `a.b`, files `SourceFile`) is never attributed as game code, since its
+     * class may be an obfuscated runtime one; [sourcelessGameFrames] relaxes that for
+     * Kotlin/Native, whose release frames keep real names but carry no file. Failing a game frame,
+     * the top Kanama frame with source is reported, then just [where], the containment site.
+     * [exceptionName] is the backend's name for `t`'s class (`t.javaClass.name` on the JVM: plain
+     * Java reflection, which survives R8, unlike `KClass.qualifiedName`).
      */
     fun of(
       t: Throwable,
       where: String,
       exceptionName: String,
+      sourcelessGameFrames: Boolean = false,
       framesOf: (Throwable) -> List<ScriptErrorFrame>,
     ): ScriptErrorReport {
-      val frame = reportedFrame(t, framesOf)
+      val frame = reportedFrame(t, sourcelessGameFrames, framesOf)
       val text = t.message
       return ScriptErrorReport(
         description = exceptionName,
@@ -48,6 +59,7 @@ class ScriptErrorReport(
         function = frame?.let(::functionName) ?: where,
         file = frame?.fileName.orEmpty(),
         line = frame?.line ?: 0,
+        frameClass = frame?.className.orEmpty(),
       )
     }
 
@@ -61,40 +73,65 @@ class ScriptErrorReport(
       else frame.methodName
     }
 
-    /**
-     * The top game frame of [t] or its causes; failing that (the runtime itself threw), the top
-     * Kanama frame with a file, then any frame with a file.
-     */
+    private fun hasSource(frame: ScriptErrorFrame): Boolean =
+      frame.line > 0 &&
+        frame.fileName.isNotEmpty() &&
+        frame.fileName != "SourceFile" &&
+        frame.fileName != "Unknown Source"
+
     private fun reportedFrame(
       t: Throwable,
+      sourcelessGameFrames: Boolean,
       framesOf: (Throwable) -> List<ScriptErrorFrame>,
     ): ScriptErrorFrame? {
       var current: Throwable? = t
       var depth = 0
+      var sourcelessGame: ScriptErrorFrame? = null
       var kanamaFrame: ScriptErrorFrame? = null
-      var anyFrame: ScriptErrorFrame? = null
       while (current != null && depth < MAX_CAUSE_DEPTH) {
         val frames = framesOf(current)
         frames
-          .firstOrNull { !isRuntimeClass(it.className) }
+          .firstOrNull { !isRuntimeClass(it.className) && hasSource(it) }
           ?.let {
             return it
           }
-        if (kanamaFrame == null) {
-          kanamaFrame =
-            frames.firstOrNull { it.fileName.isNotEmpty() && !isPlatformClass(it.className) }
+        if (sourcelessGameFrames && sourcelessGame == null) {
+          sourcelessGame = frames.firstOrNull { !isRuntimeClass(it.className) }
         }
-        if (anyFrame == null) anyFrame = frames.firstOrNull { it.fileName.isNotEmpty() }
+        if (kanamaFrame == null) {
+          kanamaFrame = frames.firstOrNull { isKanamaClass(it.className) && hasSource(it) }
+        }
         current = current.cause
         depth++
       }
-      return kanamaFrame ?: anyFrame
+      return sourcelessGame ?: kanamaFrame
+    }
+
+    /**
+     * Drops the exception's own constructor frames from the top of a Kotlin/Native trace, which
+     * (unlike the JVM's) starts inside `Throwable`'s constructor chain: `kotlin.Throwable#<init>`,
+     * ..., `com.example.MyError#<init>`, then the throw site. Without this a game-defined exception
+     * class would be reported as its own constructor. The run is dropped through the frame of
+     * [exceptionClassName]; if that name is not found, only the leading platform (`kotlin.*`)
+     * constructor frames are dropped, so a game constructor that threw is kept.
+     */
+    fun dropOwnConstructorFrames(
+      frames: List<ScriptErrorFrame>,
+      exceptionClassName: String,
+    ): List<ScriptErrorFrame> {
+      val run =
+        frames.indexOfFirst { it.methodName != "<init>" }.let { if (it < 0) frames.size else it }
+      val own = (0 until run).lastOrNull { frames[it].className == exceptionClassName }
+      if (own != null) return frames.drop(own + 1)
+      val platform = (0 until run).takeWhile { isPlatformClass(frames[it].className) }.count()
+      return frames.drop(platform)
     }
 
     private const val MAX_CAUSE_DEPTH = 8
 
-    // Kanama's own packages. Game scripts may live under net.multigesture.kanama.* too (the example
-    // project does), so the runtime is listed package by package, not by the root.
+    // Kanama's runtime packages, listed one by one: game scripts may live under
+    // net.multigesture.kanama.* too (the example project uses net.multigesture.kanama.example), so
+    // the root package is never matched as a prefix.
     private val KANAMA_PREFIXES =
       listOf(
         "net.multigesture.kanama.api.",
@@ -104,6 +141,10 @@ class ScriptErrorReport(
         "net.multigesture.kanama.types.",
         "net.multigesture.kanama.ios.",
         "net.multigesture.kanama.annotations.",
+        "net.multigesture.kanama.web.",
+        // The one runtime class in the root package (src/jvmMain/kotlin/KanamaBinding.kt).
+        "net.multigesture.kanama.KanamaBinding.",
+        "net.multigesture.kanama.KanamaBinding$",
       )
 
     private val PLATFORM_PREFIXES =
@@ -124,14 +165,15 @@ class ScriptErrorReport(
 
     /**
      * True for a class (or, for a Kotlin/Native top-level function, a package) that belongs to the
-     * runtime or the platform rather than to the game: such a frame is skipped when choosing the
-     * reported line.
+     * runtime or the platform rather than to the game: such a frame is never the reported game
+     * line. An empty owner is a top-level function in the default package: game code.
      */
-    fun isRuntimeClass(className: String): Boolean {
-      if (className.isEmpty() || isPlatformClass(className)) return true
-      if (className.substringBeforeLast('.', "") == "net.multigesture.kanama") return true
+    fun isRuntimeClass(className: String): Boolean =
+      isPlatformClass(className) || isKanamaClass(className)
+
+    private fun isKanamaClass(className: String): Boolean {
       val dotted = "$className."
-      return KANAMA_PREFIXES.any { dotted.startsWith(it) }
+      return KANAMA_PREFIXES.any { dotted.startsWith(it) || className.startsWith(it) }
     }
 
     private fun isPlatformClass(className: String): Boolean {
@@ -139,7 +181,9 @@ class ScriptErrorReport(
       return PLATFORM_PREFIXES.any { dotted.startsWith(it) }
     }
 
-    private val NATIVE_FRAME = Regex("""kfun:([^#\s(]+)#([^(\s]*)""")
+    // `kfun:<owner>#<function>`; the owner is empty for a top-level function in the default
+    // package.
+    private val NATIVE_FRAME = Regex("""kfun:([^#\s(]*)#([^(\s]*)""")
     private val NATIVE_SOURCE = Regex("""\(([^()\s]*?)([^/()\s]+\.kt):(\d+)(?::\d+)?\)\s*$""")
 
     /**
