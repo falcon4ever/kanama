@@ -64,7 +64,8 @@ a one-argument signal (for two or more arguments `await*` returns the raw
 @Signal
 fun modeChanged(mode: Node.ProcessMode) = Unit
 
-PlayerSignals.connectModeChanged(this, self) { mode -> if (mode == Node.ProcessMode.DISABLED) pause() }
+val connection =
+    PlayerSignals.connectModeChanged(this, self) { mode -> if (mode == Node.ProcessMode.DISABLED) pause() }
 PlayerSignals.modeChanged(this, Node.ProcessMode.DISABLED)
 ```
 
@@ -214,6 +215,8 @@ Godot drops the connection (the target or the emitting object is freed, or a
 `ConnectFlags.ONE_SHOT` connection fires), Kanama releases the lambda and
 everything it captured. This holds on desktop, Android and iOS; the Web backend
 does not release them yet.
+A one-off connection can also be scoped with `use { }`, which closes it as soon
+as the block ends.
 
 `connect(target, argumentCount) { args -> ... }` supports zero to three emitted
 arguments today. `connectObject` is the common one-argument shortcut for signals

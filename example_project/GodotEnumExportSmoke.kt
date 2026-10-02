@@ -51,10 +51,12 @@ class GodotEnumExportSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotO
 
   @OnReady
   fun ready() {
+    // The typed connect* callback receives the enum; the connection is scoped to the one emit
+    // (closing early is fine, and Godot releases it with the node anyway since task 131).
     GodotEnumExportSmokeSignals.connectModeChanged(this, GodotObject(godotObject)) {
-      signalled = it
-    }
-    GodotEnumExportSmokeSignals.modeChanged(this, Node.ProcessMode.DISABLED)
+        signalled = it
+      }
+      .use { GodotEnumExportSmokeSignals.modeChanged(this, Node.ProcessMode.DISABLED) }
     val typedMode = mode == Node.ProcessMode.ALWAYS
     val typedFlags =
       messages == Node.ProcessThreadMessages.MESSAGES_ALL &&
