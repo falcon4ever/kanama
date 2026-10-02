@@ -9,11 +9,15 @@ import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 object Input {
-  fun setCustomMouseCursor(image: Resource?, shape: Long = 0L, hotspot: Vector2 = Vector2.ZERO) {
+  fun setCustomMouseCursor(
+    image: Resource?,
+    shape: Input.CursorShape = Input.CursorShape.ARROW,
+    hotspot: Vector2 = Vector2.ZERO,
+  ) {
     GodotBackendCalls.invokeObjectLongVector2Args(
       D.INPUT_SET_CUSTOM_MOUSE_CURSOR,
       image?.requireOpenHandle(),
-      shape,
+      shape.value,
       hotspot.toBackend(),
     )
   }
@@ -47,12 +51,14 @@ object Input {
       positiveAction,
     )
 
-  fun setMouseMode(mode: Long) {
-    GodotBackendCalls.invokeLongArgSingleton(D.INPUT_SET_MOUSE_MODE, mode)
+  fun setMouseMode(mode: Input.MouseMode) {
+    GodotBackendCalls.invokeLongArgSingleton(D.INPUT_SET_MOUSE_MODE, mode.value)
   }
 
-  fun getMouseMode(): Long =
-    GodotBackendCalls.invokeNoArgsRetLongSingleton(D.INPUT_GET_MOUSE_MODE)
+  fun getMouseMode(): Input.MouseMode =
+    GodotBackendCalls.invokeNoArgsRetLongSingleton(
+      D.INPUT_GET_MOUSE_MODE,
+    ).let { Input.MouseMode(it) }
 
   fun getActionRawStrength(action: String, exactMatch: Boolean = false): Double {
     require(exactMatch == false) { "Web Input.get_action_raw_strength supports only exactMatch = false" }
@@ -78,13 +84,13 @@ object Input {
   fun getConnectedJoypads(): List<Long> =
     GodotBackendCalls.invokeNoArgsRetLongListSingleton(D.INPUT_GET_CONNECTED_JOYPADS)
 
-  fun isKeyPressed(keycode: Long): Boolean =
-    GodotBackendCalls.invokeLongRetBoolSingleton(D.INPUT_IS_KEY_PRESSED, keycode)
+  fun isKeyPressed(keycode: Key): Boolean =
+    GodotBackendCalls.invokeLongRetBoolSingleton(D.INPUT_IS_KEY_PRESSED, keycode.value)
 
   fun getLastMouseVelocity(): Vector2 =
     GodotBackendCalls.invokeNoArgsRetVector2Singleton(D.INPUT_GET_LAST_MOUSE_VELOCITY).toApi()
 
-  var mouseMode: Long
+  var mouseMode: Input.MouseMode
     get() = getMouseMode()
     set(newValue) = setMouseMode(newValue)
 
@@ -110,16 +116,46 @@ object Input {
     return if (length > 1.0) vector / length else vector
   }
 
-  const val MOUSE_MODE_VISIBLE: Long = 0L
-  const val MOUSE_MODE_HIDDEN: Long = 1L
-  const val MOUSE_MODE_CAPTURED: Long = 2L
-  const val MOUSE_MODE_CONFINED: Long = 3L
-  const val MOUSE_MODE_CONFINED_HIDDEN: Long = 4L
-  const val MOUSE_MODE_MAX: Long = 5L
+  value class MouseMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VISIBLE: MouseMode get() = MouseMode(0L)
+      val HIDDEN: MouseMode get() = MouseMode(1L)
+      val CAPTURED: MouseMode get() = MouseMode(2L)
+      val CONFINED: MouseMode get() = MouseMode(3L)
+      val CONFINED_HIDDEN: MouseMode get() = MouseMode(4L)
+      val MAX: MouseMode get() = MouseMode(5L)
+    }
+  }
+
+  value class CursorShape(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ARROW: CursorShape get() = CursorShape(0L)
+      val IBEAM: CursorShape get() = CursorShape(1L)
+      val POINTING_HAND: CursorShape get() = CursorShape(2L)
+      val CROSS: CursorShape get() = CursorShape(3L)
+      val WAIT: CursorShape get() = CursorShape(4L)
+      val BUSY: CursorShape get() = CursorShape(5L)
+      val DRAG: CursorShape get() = CursorShape(6L)
+      val CAN_DROP: CursorShape get() = CursorShape(7L)
+      val FORBIDDEN: CursorShape get() = CursorShape(8L)
+      val VSIZE: CursorShape get() = CursorShape(9L)
+      val HSIZE: CursorShape get() = CursorShape(10L)
+      val BDIAGSIZE: CursorShape get() = CursorShape(11L)
+      val FDIAGSIZE: CursorShape get() = CursorShape(12L)
+      val MOVE: CursorShape get() = CursorShape(13L)
+      val VSPLIT: CursorShape get() = CursorShape(14L)
+      val HSPLIT: CursorShape get() = CursorShape(15L)
+      val HELP: CursorShape get() = CursorShape(16L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Input.setCustomMouseCursor(image: Resource?, shape: Long = 0L, hotspot: Vector2 = Vector2.ZERO) = setCustomMouseCursor(image, shape, hotspot)
+fun Input.setCustomMouseCursor(
+  image: Resource?,
+  shape: Input.CursorShape = Input.CursorShape.ARROW,
+  hotspot: Vector2 = Vector2.ZERO,
+) = setCustomMouseCursor(image, shape, hotspot)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Input.isActionPressed(action: String, exactMatch: Boolean = false): Boolean = isActionPressed(action, exactMatch)
@@ -137,10 +173,10 @@ fun Input.isActionJustPressed(action: String, exactMatch: Boolean = false): Bool
 fun Input.getAxis(negativeAction: String, positiveAction: String): Double = getAxis(negativeAction, positiveAction)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Input.setMouseMode(mode: Long) = setMouseMode(mode)
+fun Input.setMouseMode(mode: Input.MouseMode) = setMouseMode(mode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Input.getMouseMode(): Long = getMouseMode()
+fun Input.getMouseMode(): Input.MouseMode = getMouseMode()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Input.getActionRawStrength(action: String, exactMatch: Boolean = false): Double = getActionRawStrength(action, exactMatch)
@@ -155,13 +191,13 @@ fun Input.getActionStrength(action: String, exactMatch: Boolean = false): Double
 fun Input.getConnectedJoypads(): List<Long> = getConnectedJoypads()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Input.isKeyPressed(keycode: Long): Boolean = isKeyPressed(keycode)
+fun Input.isKeyPressed(keycode: Key): Boolean = isKeyPressed(keycode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Input.getLastMouseVelocity(): Vector2 = getLastMouseVelocity()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-var Input.mouseMode: Long
+var Input.mouseMode: Input.MouseMode
   get() = mouseMode
   set(newValue) {
     mouseMode = newValue

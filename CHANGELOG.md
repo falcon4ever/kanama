@@ -121,8 +121,46 @@ versioning once public releases begin.
   included), required returns non-null and the rest nullable, no generated top-level name equal to a
   Kotlin default import or a public Kanama type, and every value name equal to the naming function
   under the frozen lock; the migration table has a `--check` docs stage. Not in this change: KSP
-  marshalling of enum-typed `@ScriptProperty` / `@RegisterFunction` / virtual signatures (task 128 B)
-  and the Web backend's wrappers (task 128 C) — Web scripts keep the `Long` constants until then.
+  marshalling of enum-typed `@ScriptProperty` / `@RegisterFunction` / virtual signatures (task 128 B).
+- **Web (task 128 C): the same types on Web.** The Kotlin/Wasm wrappers (`scripts/generate_web_wrappers.py`)
+  use the same value classes, names and frozen lock (`Node.ProcessMode.ALWAYS`, `Key.W`,
+  `GodotObject.ConnectFlags.ONE_SHOT`, `GodotError`); every Web class nests all its Godot enums, the
+  globals and `GodotEnumValue` are top-level, `PhysicsServer3D` is an enum-only `object` on Web, and the
+  hand facades (`Window.mode: Window.Mode`, `DisplayServer.VSyncMode`, `ResourceLoader.ThreadLoadProgress`,
+  `ENetMultiplayerPeer.createServer(): GodotError`) follow. Every `GodotSignal.connect*` overload
+  takes `flags: GodotObject.ConnectFlags`; `connect`, the lambda `connect` and the typed
+  `connectLong` / `connectDouble` / `connectBoolean` / `connectString` / `connectVector2` /
+  `connectVector2i` / `connectVector3` return `GodotError`, while `connectObject` keeps returning
+  `SignalConnection?` (null when the connect failed). The Web RPC helpers return `GodotError`. The 15
+  required returns Web exposes (`createTween`, `tweenProperty`, `tweenCallback` / `tweenMethod`, the
+  Tween/PropertyTweener fluent setters, `SceneTree.getRoot` / `createTimer`) are non-null through the
+  same throwing `requireGodotReturn`. The Web Variant paths take a `GodotEnumValue` as INT
+  (`GodotObject.set(path, enumValue)`, `ConfigFile.setValue`, the Variant-style `emitSignal` -- whose
+  int arm now fails loud on a value outside int32 instead of truncating -- the generic call, and
+  `Tween.tweenProperty(…, finalValue: Any?)`), and `GD.print` / `pushError` print a typed enum as its
+  number like desktop. Removed on Web: the hand subsets (`InputEventKey.KEY_*`,
+  `InputEventMouseButton.MOUSE_BUTTON_*`, `PhysicsBody3D.BODY_AXIS_*`), the enum `const val`s
+  (`Window.MODE_*`, `DisplayServer.VSYNC_*`, ...) and the Web-only top-level `BodyAxis` alias object
+  (use `PhysicsServer3D.BodyAxis`). **Web `SceneTree.getRoot()` returns `Window`** (non-null, the
+  desktop/iOS type; it was a raw `GodotHandle` to wrap by hand), so a shared
+  `getTree().getRoot().setMode(...)` compiles on Web; `Window.handle` exposes the engine handle.
+  Gate: `scripts/check_web_typed_enums.py` (local_ci), which also rejects a Web object return
+  surfaced as a raw `GodotHandle`. Size: the web3d fixture's Kotlin/Wasm module (`buildWebScripts`, release)
+  is 262,837 B on kanama 9a6024d6 and 266,395 B with this change (+3,558 B, +1.4 %; every Web class
+  nests all its Godot enums, but Kotlin/Wasm drops the value classes a build never names).
+- **`InputEventMouseButton.create()` on every backend (task 128 C; Web protocol 28 → 29).** A shared
+  script registers a mouse-button input action the same way everywhere:
+  `InputEventMouseButton.create().also { it.buttonIndex = MouseButton.LEFT }`, then
+  `InputMap.actionAddEvent(action, event)` and `close()` (owned, `use { }` works). Desktop: a `create()`
+  factory on the hand class. iOS: the hand class is now an `InputEvent` (it was a bare `GodotObject`),
+  so it can be added to an action, and gains `create()` and a `buttonIndex` setter. Web: the class is
+  constructed like `InputEventKey`, and the new queued opcode 333
+  (`InputEventMouseButton.set_button_index`) carries the button; opcode 334 (`InputEvent.set_device`)
+  lets a fallback event bind to every device (-1) as project.godot does. Protocol 29 also closes three
+  older Web return gaps: `ConfigFile.load` / `save` (now immediate, `STRINGNAME_RET_LONG`) and
+  `OS.shellOpen` (`STRINGNAME_RET_LONG_SINGLETON`) return `GodotError`, and `Tween.tweenCallback` /
+  `tweenMethod` return their `CallbackTweener` / `MethodTweener` like desktop. The bridge and the
+  generated proxies move to protocol 29 together.
 
 ### Changed — the API tree is common code (task 117 P4′)
 

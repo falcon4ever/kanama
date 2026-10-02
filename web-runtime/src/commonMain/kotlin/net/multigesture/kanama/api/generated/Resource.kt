@@ -17,6 +17,14 @@ open class Resource(godotObject: GodotHandle) : RefCounted(godotObject) {
       deep,
     )?.let { Resource(it.toWebId()) }
 
+  value class DeepDuplicateMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: DeepDuplicateMode get() = DeepDuplicateMode(0L)
+      val INTERNAL: DeepDuplicateMode get() = DeepDuplicateMode(1L)
+      val ALL: DeepDuplicateMode get() = DeepDuplicateMode(2L)
+    }
+  }
+
   companion object {
     /** Re-types any Godot object as a Resource (the Web bridge carries no class metadata). */
     fun fromObject(value: GodotObject?): Resource? = value?.let { Resource(it.handle) }

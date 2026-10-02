@@ -375,6 +375,8 @@ WEB_POLICY: dict[int, dict[str, object]] = {
     330: {},
     331: {},
     332: {},
+    333: {},
+    334: {},
 }
 
 
@@ -1417,6 +1419,27 @@ def body_STRINGNAME_RET_BOOL(calls):
     ]
 
 
+def body_STRINGNAME_RET_LONG(calls):
+    """Task 128 C (protocol 29): a String argument with an int result on the object-query channel
+    (ConfigFile.load / save return Godot's Error, which the Kotlin wrapper types as GodotError)."""
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "return immediateWebObjectQuery(descriptor.opcode, receiver.webId(), value).toLong()",
+    ]
+
+
+def body_STRINGNAME_RET_LONG_SINGLETON(calls):
+    """The singleton twin (OS.shell_open's Error): the active script's query channel stands in."""
+    return [
+        f"require(descriptor.executionMode == {_IMMEDIATE})",
+        f"require({_opcode_guard(calls)})",
+        "commands.flush()",
+        "return immediateWebObjectQuery(descriptor.opcode, requireActiveWebScriptHandle(), value).toLong()",
+    ]
+
+
 def body_STRINGNAME_RET_BOOL_SINGLETON(calls):
     return [
         f"require(descriptor.executionMode == {_IMMEDIATE})",
@@ -2173,6 +2196,8 @@ SIGNATURES: dict[str, tuple[list[str], str]] = {
     ),
     "STRINGNAME_RET_INT": (["receiver: GodotHandle", "value: String"], "Int"),
     "STRINGNAME_RET_BOOL": (["receiver: GodotHandle", "value: String"], "Boolean"),
+    "STRINGNAME_RET_LONG": (["receiver: GodotHandle", "value: String"], "Long"),
+    "STRINGNAME_RET_LONG_SINGLETON": (["value: String"], "Long"),
     "STRINGNAME_RET_BOOL_SINGLETON": (["value: String"], "Boolean"),
     "NOARGS_RET_BOOL": (["receiver: GodotHandle"], "Boolean"),
     "NOARGS_RET_DOUBLE": (["receiver: GodotHandle"], "Double"),
@@ -2397,6 +2422,8 @@ EMIT_ORDER = [
     "STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG",
     "STRINGNAME_RET_BOOL",
     "STRINGNAME_RET_BOOL_SINGLETON",
+    "STRINGNAME_RET_LONG",
+    "STRINGNAME_RET_LONG_SINGLETON",
     "NOARGS_RET_BOOL",
     "NOARGS_RET_DOUBLE",
     "NOARGS_RET_LONG",

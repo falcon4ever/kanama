@@ -72,6 +72,47 @@ open class CanvasItem(godotObject: GodotHandle) : Node(godotObject) {
   fun hide() {
     visible = false
   }
+
+  value class TextureFilter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PARENT_NODE: TextureFilter get() = TextureFilter(0L)
+      val NEAREST: TextureFilter get() = TextureFilter(1L)
+      val LINEAR: TextureFilter get() = TextureFilter(2L)
+      val NEAREST_WITH_MIPMAPS: TextureFilter get() = TextureFilter(3L)
+      val LINEAR_WITH_MIPMAPS: TextureFilter get() = TextureFilter(4L)
+      val NEAREST_WITH_MIPMAPS_ANISOTROPIC: TextureFilter get() = TextureFilter(5L)
+      val LINEAR_WITH_MIPMAPS_ANISOTROPIC: TextureFilter get() = TextureFilter(6L)
+      val MAX: TextureFilter get() = TextureFilter(7L)
+    }
+  }
+
+  value class TextureRepeat(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PARENT_NODE: TextureRepeat get() = TextureRepeat(0L)
+      val DISABLED: TextureRepeat get() = TextureRepeat(1L)
+      val ENABLED: TextureRepeat get() = TextureRepeat(2L)
+      val MIRROR: TextureRepeat get() = TextureRepeat(3L)
+      val MAX: TextureRepeat get() = TextureRepeat(4L)
+    }
+  }
+
+  value class ClipChildrenMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: ClipChildrenMode get() = ClipChildrenMode(0L)
+      val ONLY: ClipChildrenMode get() = ClipChildrenMode(1L)
+      val AND_DRAW: ClipChildrenMode get() = ClipChildrenMode(2L)
+      val MAX: ClipChildrenMode get() = ClipChildrenMode(3L)
+    }
+  }
+
+  value class OversamplingWithScale(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PARENT_NODE: OversamplingWithScale get() = OversamplingWithScale(0L)
+      val DISABLED: OversamplingWithScale get() = OversamplingWithScale(1L)
+      val ENABLED: OversamplingWithScale get() = OversamplingWithScale(2L)
+      val MAX: OversamplingWithScale get() = OversamplingWithScale(3L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

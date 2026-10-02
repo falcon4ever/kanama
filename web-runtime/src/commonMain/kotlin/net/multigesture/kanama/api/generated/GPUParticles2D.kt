@@ -26,6 +26,24 @@ class GPUParticles2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
   val lifetime: Double
     get() = getLifetime()
+
+  value class DrawOrder(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INDEX: DrawOrder get() = DrawOrder(0L)
+      val LIFETIME: DrawOrder get() = DrawOrder(1L)
+      val REVERSE_LIFETIME: DrawOrder get() = DrawOrder(2L)
+    }
+  }
+
+  value class EmitFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val POSITION: EmitFlags get() = EmitFlags(1L)
+      val ROTATION_SCALE: EmitFlags get() = EmitFlags(2L)
+      val VELOCITY: EmitFlags get() = EmitFlags(4L)
+      val COLOR: EmitFlags get() = EmitFlags(8L)
+      val CUSTOM: EmitFlags get() = EmitFlags(16L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

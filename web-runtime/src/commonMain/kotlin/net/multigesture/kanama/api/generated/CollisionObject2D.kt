@@ -8,4 +8,11 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class CollisionObject2D(godotObject: GodotHandle) : Node2D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class DisableMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val REMOVE: DisableMode get() = DisableMode(0L)
+      val MAKE_STATIC: DisableMode get() = DisableMode(1L)
+      val KEEP_ACTIVE: DisableMode get() = DisableMode(2L)
+    }
+  }
 }

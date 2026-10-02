@@ -30,6 +30,13 @@ class Timer(godotObject: GodotHandle) : Node(godotObject) {
   object Signals {
     const val timeout: String = "timeout"
   }
+
+  value class TimerProcessCallback(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PHYSICS: TimerProcessCallback get() = TimerProcessCallback(0L)
+      val IDLE: TimerProcessCallback get() = TimerProcessCallback(1L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

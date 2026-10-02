@@ -148,7 +148,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `set_size` (331-332). The LONG_OBJECT_ARG slot also became nullable in 28, so
      * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0).
      */
-    const val PROTOCOL_VERSION = 28
+    const val PROTOCOL_VERSION = 29
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -1024,12 +1024,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine(
         "  /** Broadcast (peer 0): no remote peers on Web, so only the local leg can run. */"
       )
-      appendLine("  fun rpc$suffix($instanceParam$params): Long {")
+      appendLine(
+        "  fun rpc$suffix($instanceParam$params): net.multigesture.kanama.api.GodotError {"
+      )
       if (callLocal) appendLine("    $localCall")
-      appendLine("    return 0L")
+      appendLine("    return net.multigesture.kanama.api.GodotError.OK")
       appendLine("  }")
       appendLine()
-      appendLine("  fun rpcId$suffix(instance: $fq, peerId: Long$params): Long {")
+      appendLine(
+        "  fun rpcId$suffix(instance: $fq, peerId: Long$params): net.multigesture.kanama.api.GodotError {"
+      )
       appendLine("    if (peerId != 0L && peerId != 1L) {")
       appendLine(
         "      error(\"Kanama Web has no remote peers: rpc_id(\$peerId, \\\"$godotName\\\") on ${model.simpleName}\")"
@@ -1044,7 +1048,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         )
         appendLine("    }")
       }
-      appendLine("    return 0L")
+      appendLine("    return net.multigesture.kanama.api.GodotError.OK")
       appendLine("  }")
       if (callLocal) {
         appendLine()
@@ -3246,18 +3250,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as Range).value = bytes.decode_double(offset + 8)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
-    appendLine("\t\telif opcode == 264 and target_object is ConfigFile:")
-    appendLine(
-      "\t\t\t(target_object as ConfigFile).load(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))))"
-    )
-    appendLine("\t\t\tapplied += 1")
-    appendLine("\t\t\toffset += 12")
-    appendLine("\t\telif opcode == 265 and target_object is ConfigFile:")
-    appendLine(
-      "\t\t\t(target_object as ConfigFile).save(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))))"
-    )
-    appendLine("\t\t\tapplied += 1")
-    appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 267 and target_object is ConfigFile:")
     appendLine(
       "\t\t\tvar config_parts := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))).split(\"\\u001f\")"
@@ -3352,6 +3344,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     // engine-property spelling matches the sky_mode arm above, which the export accepts.
     appendLine("\t\telif opcode == 295 and target_object is InputEventKey:")
     appendLine("\t\t\t(target_object as InputEventKey).keycode = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    // Task 128 C (protocol 29): the button of a constructed InputEventMouseButton, so a shared
+    // script registers a mouse-button input action the same way on every backend.
+    appendLine("\t\telif opcode == 333 and target_object is InputEventMouseButton:")
+    appendLine(
+      "\t\t\t(target_object as InputEventMouseButton).button_index = bytes.decode_s32(offset + 8)"
+    )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 334 and target_object is InputEvent:")
+    appendLine("\t\t\t(target_object as InputEvent).device = bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 297 and target_object is InputEventKey:")
@@ -4308,6 +4312,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int(round((value as AudioStreamPlayer3D).pitch_scale * 1000.0))")
     appendLine("\t\telif opcode == 190:")
     appendLine("\t\t\tresult = int(OS.shell_open(String(args[2])))")
+    // Task 128 C (protocol 29): ConfigFile.load / save answer Godot's Error on the query channel
+    // (they were fire-and-forget queued mutations), so the Web wrapper returns GodotError.
+    appendLine("\t\telif opcode == 264 and value is ConfigFile:")
+    appendLine("\t\t\tresult = int((value as ConfigFile).load(String(args[2])))")
+    appendLine("\t\telif opcode == 265 and value is ConfigFile:")
+    appendLine("\t\t\tresult = int((value as ConfigFile).save(String(args[2])))")
     appendLine("\t\telif opcode == 0:")
     appendLine("\t\t\t# Reserved runtime crossing (not a contract opcode): instantiate a Kanama")
     appendLine("\t\t\t# scripted resource by class simple name and hydrate its Kotlin instance.")

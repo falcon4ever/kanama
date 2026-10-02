@@ -10,26 +10,76 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Animation(godotObject: GodotHandle) : Resource(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  fun setLoopMode(loopMode: Long) {
-    GodotBackendCalls.invokeLongArg(D.ANIMATION_SET_LOOP_MODE, requireOpenHandle(), loopMode)
+  fun setLoopMode(loopMode: Animation.LoopMode) {
+    GodotBackendCalls.invokeLongArg(D.ANIMATION_SET_LOOP_MODE, requireOpenHandle(), loopMode.value)
   }
 
-  var loopMode: Long
+  var loopMode: Animation.LoopMode
     get() = unsupportedWebGameplayFamily("Animation.get_loop_mode")
     set(newValue) = setLoopMode(newValue)
 
-  companion object {
-    const val LOOP_NONE: Long = 0L
-    const val LOOP_LINEAR: Long = 1L
-    const val LOOP_PINGPONG: Long = 2L
+  value class TrackType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VALUE: TrackType get() = TrackType(0L)
+      val POSITION_3D: TrackType get() = TrackType(1L)
+      val ROTATION_3D: TrackType get() = TrackType(2L)
+      val SCALE_3D: TrackType get() = TrackType(3L)
+      val BLEND_SHAPE: TrackType get() = TrackType(4L)
+      val METHOD: TrackType get() = TrackType(5L)
+      val BEZIER: TrackType get() = TrackType(6L)
+      val AUDIO: TrackType get() = TrackType(7L)
+      val ANIMATION: TrackType get() = TrackType(8L)
+    }
+  }
+
+  value class InterpolationType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NEAREST: InterpolationType get() = InterpolationType(0L)
+      val LINEAR: InterpolationType get() = InterpolationType(1L)
+      val CUBIC: InterpolationType get() = InterpolationType(2L)
+      val LINEAR_ANGLE: InterpolationType get() = InterpolationType(3L)
+      val CUBIC_ANGLE: InterpolationType get() = InterpolationType(4L)
+    }
+  }
+
+  value class UpdateMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val CONTINUOUS: UpdateMode get() = UpdateMode(0L)
+      val DISCRETE: UpdateMode get() = UpdateMode(1L)
+      val CAPTURE: UpdateMode get() = UpdateMode(2L)
+    }
+  }
+
+  value class LoopMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: LoopMode get() = LoopMode(0L)
+      val LINEAR: LoopMode get() = LoopMode(1L)
+      val PINGPONG: LoopMode get() = LoopMode(2L)
+    }
+  }
+
+  value class LoopedFlag(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: LoopedFlag get() = LoopedFlag(0L)
+      val END: LoopedFlag get() = LoopedFlag(1L)
+      val START: LoopedFlag get() = LoopedFlag(2L)
+    }
+  }
+
+  value class FindMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NEAREST: FindMode get() = FindMode(0L)
+      val APPROX: FindMode get() = FindMode(1L)
+      val EXACT: FindMode get() = FindMode(2L)
+    }
   }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Animation.setLoopMode(loopMode: Long) = setLoopMode(loopMode)
+fun Animation.setLoopMode(loopMode: Animation.LoopMode) = setLoopMode(loopMode)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-var Animation.loopMode: Long
+var Animation.loopMode: Animation.LoopMode
   get() = loopMode
   set(newValue) {
     loopMode = newValue

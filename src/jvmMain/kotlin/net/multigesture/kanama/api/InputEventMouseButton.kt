@@ -122,6 +122,12 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         fun from(value: GodotObject): InputEventMouseButton? =
             if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle) else null
 
+        // Instantiate an InputEventMouseButton (owned: close() it, or `use { }`; task 128 C -- the same
+        // create() on desktop, iOS and Web, for registering mouse-button input actions portably).
+        @JvmStatic
+        fun create(): InputEventMouseButton =
+            InputEventMouseButton(GodotHandle(ObjectCalls.constructObject("InputEventMouseButton")))
+
         internal fun wrap(handle: MemorySegment): InputEventMouseButton? =
             if (handle.address() == 0L) null else InputEventMouseButton(GodotHandle(handle))
 

@@ -31,6 +31,98 @@ class Mesh(godotObject: GodotHandle) : Resource(godotObject), AutoCloseable {
     releaseWebTrackedObject(handle.value)
   }
 
+  value class PrimitiveType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val POINTS: PrimitiveType get() = PrimitiveType(0L)
+      val LINES: PrimitiveType get() = PrimitiveType(1L)
+      val LINE_STRIP: PrimitiveType get() = PrimitiveType(2L)
+      val TRIANGLES: PrimitiveType get() = PrimitiveType(3L)
+      val TRIANGLE_STRIP: PrimitiveType get() = PrimitiveType(4L)
+    }
+  }
+
+  value class ArrayType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VERTEX: ArrayType get() = ArrayType(0L)
+      val NORMAL: ArrayType get() = ArrayType(1L)
+      val TANGENT: ArrayType get() = ArrayType(2L)
+      val COLOR: ArrayType get() = ArrayType(3L)
+      val TEX_UV: ArrayType get() = ArrayType(4L)
+      val TEX_UV2: ArrayType get() = ArrayType(5L)
+      val CUSTOM0: ArrayType get() = ArrayType(6L)
+      val CUSTOM1: ArrayType get() = ArrayType(7L)
+      val CUSTOM2: ArrayType get() = ArrayType(8L)
+      val CUSTOM3: ArrayType get() = ArrayType(9L)
+      val BONES: ArrayType get() = ArrayType(10L)
+      val WEIGHTS: ArrayType get() = ArrayType(11L)
+      val INDEX: ArrayType get() = ArrayType(12L)
+      val MAX: ArrayType get() = ArrayType(13L)
+    }
+  }
+
+  value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
+    companion object {
+      val RGBA8_UNORM: ArrayCustomFormat get() = ArrayCustomFormat(0L)
+      val RGBA8_SNORM: ArrayCustomFormat get() = ArrayCustomFormat(1L)
+      val RG_HALF: ArrayCustomFormat get() = ArrayCustomFormat(2L)
+      val RGBA_HALF: ArrayCustomFormat get() = ArrayCustomFormat(3L)
+      val R_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(4L)
+      val RG_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(5L)
+      val RGB_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(6L)
+      val RGBA_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(7L)
+      val MAX: ArrayCustomFormat get() = ArrayCustomFormat(8L)
+    }
+  }
+
+  value class ArrayFormat(override val value: Long) : GodotEnumValue {
+    infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
+
+    infix fun and(other: ArrayFormat): ArrayFormat = ArrayFormat(value and other.value)
+
+    infix fun xor(other: ArrayFormat): ArrayFormat = ArrayFormat(value xor other.value)
+
+    fun inv(): ArrayFormat = ArrayFormat(value.inv())
+
+    operator fun contains(other: ArrayFormat): Boolean = (value and other.value) == other.value
+
+    companion object {
+      val FORMAT_VERTEX: ArrayFormat get() = ArrayFormat(1L)
+      val FORMAT_NORMAL: ArrayFormat get() = ArrayFormat(2L)
+      val FORMAT_TANGENT: ArrayFormat get() = ArrayFormat(4L)
+      val FORMAT_COLOR: ArrayFormat get() = ArrayFormat(8L)
+      val FORMAT_TEX_UV: ArrayFormat get() = ArrayFormat(16L)
+      val FORMAT_TEX_UV2: ArrayFormat get() = ArrayFormat(32L)
+      val FORMAT_CUSTOM0: ArrayFormat get() = ArrayFormat(64L)
+      val FORMAT_CUSTOM1: ArrayFormat get() = ArrayFormat(128L)
+      val FORMAT_CUSTOM2: ArrayFormat get() = ArrayFormat(256L)
+      val FORMAT_CUSTOM3: ArrayFormat get() = ArrayFormat(512L)
+      val FORMAT_BONES: ArrayFormat get() = ArrayFormat(1024L)
+      val FORMAT_WEIGHTS: ArrayFormat get() = ArrayFormat(2048L)
+      val FORMAT_INDEX: ArrayFormat get() = ArrayFormat(4096L)
+      val FORMAT_BLEND_SHAPE_MASK: ArrayFormat get() = ArrayFormat(7L)
+      val FORMAT_CUSTOM_BASE: ArrayFormat get() = ArrayFormat(13L)
+      val FORMAT_CUSTOM_BITS: ArrayFormat get() = ArrayFormat(3L)
+      val FORMAT_CUSTOM0_SHIFT: ArrayFormat get() = ArrayFormat(13L)
+      val FORMAT_CUSTOM1_SHIFT: ArrayFormat get() = ArrayFormat(16L)
+      val FORMAT_CUSTOM2_SHIFT: ArrayFormat get() = ArrayFormat(19L)
+      val FORMAT_CUSTOM3_SHIFT: ArrayFormat get() = ArrayFormat(22L)
+      val FORMAT_CUSTOM_MASK: ArrayFormat get() = ArrayFormat(7L)
+      val COMPRESS_FLAGS_BASE: ArrayFormat get() = ArrayFormat(25L)
+      val FLAG_USE_2D_VERTICES: ArrayFormat get() = ArrayFormat(33554432L)
+      val FLAG_USE_DYNAMIC_UPDATE: ArrayFormat get() = ArrayFormat(67108864L)
+      val FLAG_USE_8_BONE_WEIGHTS: ArrayFormat get() = ArrayFormat(134217728L)
+      val FLAG_USES_EMPTY_VERTEX_ARRAY: ArrayFormat get() = ArrayFormat(268435456L)
+      val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
+    }
+  }
+
+  value class BlendShapeMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NORMALIZED: BlendShapeMode get() = BlendShapeMode(0L)
+      val RELATIVE: BlendShapeMode get() = BlendShapeMode(1L)
+    }
+  }
+
   companion object {
     fun fromObject(value: GodotObject?): Mesh? =
       value?.takeIf { it.isClass("Mesh") }?.let { Mesh(it.handle) }

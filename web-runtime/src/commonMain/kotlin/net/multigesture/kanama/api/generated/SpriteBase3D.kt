@@ -8,4 +8,23 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class SpriteBase3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class DrawFlags(override val value: Long) : GodotEnumValue {
+    companion object {
+      val TRANSPARENT: DrawFlags get() = DrawFlags(0L)
+      val SHADED: DrawFlags get() = DrawFlags(1L)
+      val DOUBLE_SIDED: DrawFlags get() = DrawFlags(2L)
+      val DISABLE_DEPTH_TEST: DrawFlags get() = DrawFlags(3L)
+      val FIXED_SIZE: DrawFlags get() = DrawFlags(4L)
+      val MAX: DrawFlags get() = DrawFlags(5L)
+    }
+  }
+
+  value class AlphaCutMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DISABLED: AlphaCutMode get() = AlphaCutMode(0L)
+      val DISCARD: AlphaCutMode get() = AlphaCutMode(1L)
+      val OPAQUE_PREPASS: AlphaCutMode get() = AlphaCutMode(2L)
+      val HASH: AlphaCutMode get() = AlphaCutMode(3L)
+    }
+  }
 }

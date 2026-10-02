@@ -94,6 +94,14 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject) {
     const val finished: String = "finished"
   }
 
+  value class MixTarget(override val value: Long) : GodotEnumValue {
+    companion object {
+      val STEREO: MixTarget get() = MixTarget(0L)
+      val SURROUND: MixTarget get() = MixTarget(1L)
+      val CENTER: MixTarget get() = MixTarget(2L)
+    }
+  }
+
   companion object {
     /** Constructs a new AudioStreamPlayer engine-side; the wrapper owns the handle (close what you create). */
     fun create(): AudioStreamPlayer =

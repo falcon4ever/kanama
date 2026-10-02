@@ -11,9 +11,8 @@ object OS {
   fun hasFeature(tagName: String): Boolean =
     GodotBackendCalls.invokeStringNameRetBoolSingleton(D.OS_HAS_FEATURE, tagName)
 
-  fun shellOpen(uri: String) {
-    GodotBackendCalls.invokeStringNameArgSingleton(D.OS_SHELL_OPEN, uri)
-  }
+  fun shellOpen(uri: String): GodotError =
+    GodotBackendCalls.invokeStringNameRetLongSingleton(D.OS_SHELL_OPEN, uri).let { GodotError(it) }
 
   fun getStaticMemoryUsage(): Long =
     GodotBackendCalls.invokeNoArgsRetLongSingleton(D.OS_GET_STATIC_MEMORY_USAGE)
@@ -23,13 +22,45 @@ object OS {
 
   /** Web ships the release template; debug-gated tooling stays off. */
   fun isDebugBuild(): Boolean = false
+
+  value class RenderingDriver(override val value: Long) : GodotEnumValue {
+    companion object {
+      val VULKAN: RenderingDriver get() = RenderingDriver(0L)
+      val OPENGL3: RenderingDriver get() = RenderingDriver(1L)
+      val D3D12: RenderingDriver get() = RenderingDriver(2L)
+      val METAL: RenderingDriver get() = RenderingDriver(3L)
+    }
+  }
+
+  value class SystemDir(override val value: Long) : GodotEnumValue {
+    companion object {
+      val DESKTOP: SystemDir get() = SystemDir(0L)
+      val DCIM: SystemDir get() = SystemDir(1L)
+      val DOCUMENTS: SystemDir get() = SystemDir(2L)
+      val DOWNLOADS: SystemDir get() = SystemDir(3L)
+      val MOVIES: SystemDir get() = SystemDir(4L)
+      val MUSIC: SystemDir get() = SystemDir(5L)
+      val PICTURES: SystemDir get() = SystemDir(6L)
+      val RINGTONES: SystemDir get() = SystemDir(7L)
+    }
+  }
+
+  value class StdHandleType(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INVALID: StdHandleType get() = StdHandleType(0L)
+      val CONSOLE: StdHandleType get() = StdHandleType(1L)
+      val FILE: StdHandleType get() = StdHandleType(2L)
+      val PIPE: StdHandleType get() = StdHandleType(3L)
+      val UNKNOWN: StdHandleType get() = StdHandleType(4L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun OS.hasFeature(tagName: String): Boolean = hasFeature(tagName)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun OS.shellOpen(uri: String) = shellOpen(uri)
+fun OS.shellOpen(uri: String): GodotError = shellOpen(uri)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun OS.getStaticMemoryUsage(): Long = getStaticMemoryUsage()

@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 28); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 29); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -181,13 +181,42 @@ and the property table:
   argument the shape does not carry is exposed with Godot's default and a
   `require(...)` guard, so Web says "supports only the default" loudly instead
   of dropping it silently. Int widths follow the desktop generator (`int32`
-  meta → `Int`, else `Long`, enums `Long`); handle returns wrap into the
-  nearest generated class (`Node?`, `Tween?`, `Material?`).
+  meta → `Int`, else `Long`); handle returns wrap into the nearest generated
+  class (`Node?`, `Material?`), and the object returns Godot marks
+  `meta: "required"` are non-null (`Node.createTween(): Tween`) through the
+  same `requireGodotReturn` as desktop/iOS — a null throws
+  `IllegalStateException("Godot returned null from required <Class>.<method>")`.
+  No object return is a raw `GodotHandle`: a class whose Web wrapper is a
+  `WEB_HANDSHAPED` facade is wrapped in it (`wrap_facade` policy:
+  `SceneTree.getRoot(): Window`), and the gate rejects a raw handle.
+- **Typed enums (task 128 C).** Every slot Godot types `enum::X` /
+  `bitfield::X` uses the same value class as desktop/iOS (`Node.ProcessMode`,
+  `GodotObject.ConnectFlags`, `GodotError`), with the same value names: the
+  generator imports `scripts/godot_enum_model.py` and reads the frozen prefix
+  lock `scripts/enum_prefix_lock.json` (it never writes it; the native generator
+  owns it). The bridge ABI is unchanged — an enum crosses as its raw number
+  (`.value` into the command, `X(raw)` out of a return). Each generated class
+  nests ALL its Godot enums (desktop parity, not only the ones a Web slot
+  names); the 22 global enums and the `GodotEnumValue` marker are in the
+  generated `GlobalEnums.kt` (with desktop's four renames); an enum owner a Web
+  slot names but the tree does not generate becomes an enum-only class
+  (`object PhysicsServer3D`, for `PhysicsBody3D.setAxisLock(axis:
+  PhysicsServer3D.BodyAxis)`); and each hand-written facade under `api/` that
+  stands in for an enum-owning Godot class (`Window`, `DisplayServer`, `Time`,
+  `IP`, the multiplayer facades) carries a `GENERATED ENUMS` region the
+  generator fills and `--check` holds to a regen. No `@JvmInline`: Kotlin/Wasm
+  inlines a value class without it. The Web `Any?` encoders (generic call,
+  `ConfigFile.setValue`, Variant-style `emitSignal`) map a `GodotEnumValue` to
+  INT. `scripts/check_web_typed_enums.py` (local_ci) gates the slots (a member
+  is tied to its Godot method by the opcode descriptor it dispatches, a hand
+  facade member by owner + name, a facade property by the Godot property of the
+  same name), the required returns, that no Godot enum/object return a native
+  backend exposes comes back as `Unit` on Web, and the names.
 - **Properties come from Godot's property table.** Both accessors admitted →
   `var`; setter only → a write-only `var` whose getter is the
   `unsupportedWebGameplayFamily("Class.getter")` coverage marker; getter only →
-  `val`. Enums and class constants (`Node.PROCESS_MODE_*`,
-  `Tween.TRANS_*`, `InputEventKey.KEY_*`) render from the API with their values.
+  `val`. Non-enum class constants (`GridMap.INVALID_CELL_ITEM`) render from the
+  API as `const val`; enums are value classes (above).
 - **Every member has an import-compat extension** (`fun Node.setProcess(...)
   = setProcess(...)`, suppressed shadowing), because the Web-only override
   sources in the demos import members by name; the 25 hand-written aliases

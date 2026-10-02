@@ -8,4 +8,11 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class AnimationTree(godotObject: GodotHandle) : AnimationMixer(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
+    companion object {
+      val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)
+      val IDLE: AnimationProcessCallback get() = AnimationProcessCallback(1L)
+      val MANUAL: AnimationProcessCallback get() = AnimationProcessCallback(2L)
+    }
+  }
 }

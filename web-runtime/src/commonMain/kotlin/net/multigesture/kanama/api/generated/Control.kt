@@ -45,6 +45,148 @@ open class Control(godotObject: GodotHandle) : CanvasItem(godotObject) {
 
   val size: Vector2
     get() = getSize()
+
+  value class FocusMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val NONE: FocusMode get() = FocusMode(0L)
+      val CLICK: FocusMode get() = FocusMode(1L)
+      val ALL: FocusMode get() = FocusMode(2L)
+      val ACCESSIBILITY: FocusMode get() = FocusMode(3L)
+    }
+  }
+
+  value class FocusBehaviorRecursive(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERITED: FocusBehaviorRecursive get() = FocusBehaviorRecursive(0L)
+      val DISABLED: FocusBehaviorRecursive get() = FocusBehaviorRecursive(1L)
+      val ENABLED: FocusBehaviorRecursive get() = FocusBehaviorRecursive(2L)
+    }
+  }
+
+  value class MouseBehaviorRecursive(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERITED: MouseBehaviorRecursive get() = MouseBehaviorRecursive(0L)
+      val DISABLED: MouseBehaviorRecursive get() = MouseBehaviorRecursive(1L)
+      val ENABLED: MouseBehaviorRecursive get() = MouseBehaviorRecursive(2L)
+    }
+  }
+
+  value class CursorShape(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ARROW: CursorShape get() = CursorShape(0L)
+      val IBEAM: CursorShape get() = CursorShape(1L)
+      val POINTING_HAND: CursorShape get() = CursorShape(2L)
+      val CROSS: CursorShape get() = CursorShape(3L)
+      val WAIT: CursorShape get() = CursorShape(4L)
+      val BUSY: CursorShape get() = CursorShape(5L)
+      val DRAG: CursorShape get() = CursorShape(6L)
+      val CAN_DROP: CursorShape get() = CursorShape(7L)
+      val FORBIDDEN: CursorShape get() = CursorShape(8L)
+      val VSIZE: CursorShape get() = CursorShape(9L)
+      val HSIZE: CursorShape get() = CursorShape(10L)
+      val BDIAGSIZE: CursorShape get() = CursorShape(11L)
+      val FDIAGSIZE: CursorShape get() = CursorShape(12L)
+      val MOVE: CursorShape get() = CursorShape(13L)
+      val VSPLIT: CursorShape get() = CursorShape(14L)
+      val HSPLIT: CursorShape get() = CursorShape(15L)
+      val HELP: CursorShape get() = CursorShape(16L)
+    }
+  }
+
+  value class LayoutPreset(override val value: Long) : GodotEnumValue {
+    companion object {
+      val TOP_LEFT: LayoutPreset get() = LayoutPreset(0L)
+      val TOP_RIGHT: LayoutPreset get() = LayoutPreset(1L)
+      val BOTTOM_LEFT: LayoutPreset get() = LayoutPreset(2L)
+      val BOTTOM_RIGHT: LayoutPreset get() = LayoutPreset(3L)
+      val CENTER_LEFT: LayoutPreset get() = LayoutPreset(4L)
+      val CENTER_TOP: LayoutPreset get() = LayoutPreset(5L)
+      val CENTER_RIGHT: LayoutPreset get() = LayoutPreset(6L)
+      val CENTER_BOTTOM: LayoutPreset get() = LayoutPreset(7L)
+      val CENTER: LayoutPreset get() = LayoutPreset(8L)
+      val LEFT_WIDE: LayoutPreset get() = LayoutPreset(9L)
+      val TOP_WIDE: LayoutPreset get() = LayoutPreset(10L)
+      val RIGHT_WIDE: LayoutPreset get() = LayoutPreset(11L)
+      val BOTTOM_WIDE: LayoutPreset get() = LayoutPreset(12L)
+      val VCENTER_WIDE: LayoutPreset get() = LayoutPreset(13L)
+      val HCENTER_WIDE: LayoutPreset get() = LayoutPreset(14L)
+      val FULL_RECT: LayoutPreset get() = LayoutPreset(15L)
+    }
+  }
+
+  value class LayoutPresetMode(override val value: Long) : GodotEnumValue {
+    companion object {
+      val MINSIZE: LayoutPresetMode get() = LayoutPresetMode(0L)
+      val KEEP_WIDTH: LayoutPresetMode get() = LayoutPresetMode(1L)
+      val KEEP_HEIGHT: LayoutPresetMode get() = LayoutPresetMode(2L)
+      val KEEP_SIZE: LayoutPresetMode get() = LayoutPresetMode(3L)
+    }
+  }
+
+  value class SizeFlags(override val value: Long) : GodotEnumValue {
+    infix fun or(other: SizeFlags): SizeFlags = SizeFlags(value or other.value)
+
+    infix fun and(other: SizeFlags): SizeFlags = SizeFlags(value and other.value)
+
+    infix fun xor(other: SizeFlags): SizeFlags = SizeFlags(value xor other.value)
+
+    fun inv(): SizeFlags = SizeFlags(value.inv())
+
+    operator fun contains(other: SizeFlags): Boolean = (value and other.value) == other.value
+
+    companion object {
+      val SHRINK_BEGIN: SizeFlags get() = SizeFlags(0L)
+      val FILL: SizeFlags get() = SizeFlags(1L)
+      val EXPAND: SizeFlags get() = SizeFlags(2L)
+      val EXPAND_FILL: SizeFlags get() = SizeFlags(3L)
+      val SHRINK_CENTER: SizeFlags get() = SizeFlags(4L)
+      val SHRINK_END: SizeFlags get() = SizeFlags(8L)
+    }
+  }
+
+  value class MouseFilter(override val value: Long) : GodotEnumValue {
+    companion object {
+      val STOP: MouseFilter get() = MouseFilter(0L)
+      val PASS: MouseFilter get() = MouseFilter(1L)
+      val IGNORE: MouseFilter get() = MouseFilter(2L)
+    }
+  }
+
+  value class GrowDirection(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BEGIN: GrowDirection get() = GrowDirection(0L)
+      val END: GrowDirection get() = GrowDirection(1L)
+      val BOTH: GrowDirection get() = GrowDirection(2L)
+    }
+  }
+
+  value class Anchor(override val value: Long) : GodotEnumValue {
+    companion object {
+      val BEGIN: Anchor get() = Anchor(0L)
+      val END: Anchor get() = Anchor(1L)
+    }
+  }
+
+  value class LayoutDirection(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERITED: LayoutDirection get() = LayoutDirection(0L)
+      val APPLICATION_LOCALE: LayoutDirection get() = LayoutDirection(1L)
+      val LTR: LayoutDirection get() = LayoutDirection(2L)
+      val RTL: LayoutDirection get() = LayoutDirection(3L)
+      val SYSTEM_LOCALE: LayoutDirection get() = LayoutDirection(4L)
+      val MAX: LayoutDirection get() = LayoutDirection(5L)
+      val LOCALE: LayoutDirection get() = LayoutDirection(1L)
+    }
+  }
+
+  value class TextDirection(override val value: Long) : GodotEnumValue {
+    companion object {
+      val INHERITED: TextDirection get() = TextDirection(3L)
+      val AUTO: TextDirection get() = TextDirection(0L)
+      val LTR: TextDirection get() = TextDirection(1L)
+      val RTL: TextDirection get() = TextDirection(2L)
+    }
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

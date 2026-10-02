@@ -11,11 +11,11 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class PhysicsBody3D(godotObject: GodotHandle) : CollisionObject3D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  fun setAxisLock(axis: Long, lock: Boolean) {
+  fun setAxisLock(axis: PhysicsServer3D.BodyAxis, lock: Boolean) {
     GodotBackendCalls.invokeLongBoolArg(
       D.PHYSICSBODY3D_SET_AXIS_LOCK,
       requireOpenHandle(),
-      axis,
+      axis.value,
       lock,
     )
   }
@@ -51,19 +51,10 @@ open class PhysicsBody3D(godotObject: GodotHandle) : CollisionObject3D(godotObje
       D.PHYSICSBODY3D_GET_GRAVITY,
       requireOpenHandle(),
     ).toApi()
-
-  companion object {
-    const val BODY_AXIS_LINEAR_X: Long = 1L
-    const val BODY_AXIS_LINEAR_Y: Long = 2L
-    const val BODY_AXIS_LINEAR_Z: Long = 4L
-    const val BODY_AXIS_ANGULAR_X: Long = 8L
-    const val BODY_AXIS_ANGULAR_Y: Long = 16L
-    const val BODY_AXIS_ANGULAR_Z: Long = 32L
-  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun PhysicsBody3D.setAxisLock(axis: Long, lock: Boolean) = setAxisLock(axis, lock)
+fun PhysicsBody3D.setAxisLock(axis: PhysicsServer3D.BodyAxis, lock: Boolean) = setAxisLock(axis, lock)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun PhysicsBody3D.addCollisionExceptionWith(body: Node?) = addCollisionExceptionWith(body)
