@@ -402,6 +402,19 @@ val shouldBuildNativeBootstrap =
   providers.gradleProperty("kanamaBuildNativeBootstrap").map(String::toBoolean).orElse(true)
 val nativeBootstrapBuildDir = layout.buildDirectory.dir("bootstrap")
 
+/** The linked library under the CMake build dir (`Release/` on multi-config generators). */
+fun nativeBootstrapLinkOutputs(): List<File> =
+  nativeBootstrapBuildDir
+    .get()
+    .asFile
+    .walkTopDown()
+    .maxDepth(2)
+    .filter { it.name == hostNativeBootstrapArtifactName() && !it.isDirectory }
+    .toList()
+
+fun nativeBootstrapArtifactCopies(): List<File> =
+  nativeBootstrapLinkOutputs() + nativeBootstrapArtifact.asFile
+
 val configureNativeBootstrap by
   tasks.registering(Exec::class) {
     group = "build"
@@ -437,6 +450,16 @@ val buildNativeBootstrap by
 
     onlyIf { shouldBuildNativeBootstrap.get() }
 
+    // A link interrupted mid-write leaves a 0-byte library that CMake's dependency check treats as
+    // up to date (newer than its sources). Delete every 0-byte copy of the artifact (the link output
+    // under build/bootstrap and the example_project copy) so `cmake --build` relinks and recopies.
+    doFirst {
+      nativeBootstrapArtifactCopies().filter { it.isFile && it.length() == 0L }.forEach {
+        logger.warn("Deleting empty native bootstrap artifact ${it.absolutePath} so it is rebuilt")
+        it.delete()
+      }
+    }
+
     commandLine(
       "cmake",
       "--build",
@@ -446,10 +469,26 @@ val buildNativeBootstrap by
     )
 
     doLast {
-      if (!nativeBootstrapArtifact.asFile.isFile) {
+      // The link output and the example_project copy (written by the CMake kanama_bootstrap_install
+      // target on every build) must both exist and be non-empty.
+      val linked = nativeBootstrapLinkOutputs()
+      if (linked.isEmpty()) {
         throw GradleException(
-          "Native bootstrap build completed but ${nativeBootstrapArtifact.asFile.absolutePath} was not created"
+          "Native bootstrap build completed but no ${hostNativeBootstrapArtifactName()} was linked " +
+            "under ${nativeBootstrapBuildDir.get().asFile.absolutePath}"
         )
+      }
+      (linked + nativeBootstrapArtifact.asFile).forEach { artifact ->
+        if (!artifact.isFile) {
+          throw GradleException(
+            "Native bootstrap build completed but ${artifact.absolutePath} was not created"
+          )
+        }
+        if (artifact.length() == 0L) {
+          throw GradleException(
+            "Native bootstrap build completed but ${artifact.absolutePath} is empty (0 bytes)"
+          )
+        }
       }
     }
   }

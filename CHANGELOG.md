@@ -7,6 +7,19 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — the native bootstrap build no longer accepts a truncated library (task 119 item 39)
+
+- **`buildNativeBootstrap` fails on a missing or empty artifact**, and deletes a 0-byte
+  `libkanama_bootstrap.dylib` / `.so` / `kanama_bootstrap.dll` (both the `build/bootstrap` link output and
+  the `example_project/addons/kanama` copy) before `cmake --build`, so a retry relinks. A link
+  interrupted mid-write used to leave an empty library that CMake treated as up to date, Gradle
+  accepted, and `installAddonJar` copied into every demo (the P4' Pixel run: `Can't open dynamic
+  library ... libkanama_bootstrap.dylib ... ()`).
+- **The `example_project` copy no longer rides on a link-time hook.** `bootstrap/CMakeLists.txt` installs
+  it with an `ALL` target (`kanama_bootstrap_install`, `copy_if_different`) instead of a `POST_BUILD`
+  step on the library, so deleting or truncating only the copy is repaired by the next build rather than
+  failing with "was not created".
+
 ### Changed — typed Godot enums and required returns (task 128 A) — BREAKING
 
 - **Every Godot enum and bitfield is a `@JvmInline value class`** wrapping its `Long`: 764 class
