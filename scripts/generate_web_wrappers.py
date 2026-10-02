@@ -636,12 +636,10 @@ WRAPPER_POLICY: dict[int, dict] = {
         "extra_args": ["-1L"],
     },
     137: {
-        "ret": "Unit",
         "doc": "Chain a callback step to a registered method on a Kanama script (FPS change_weapon).",
         "bind": [("target", "GodotObject", None, "target.requireOpenHandle()"), ("method", "String", None, "method")],
     },
     192: {
-        "ret": "Unit",
         "doc": "Tween a registered method with an interpolated double (the Callable binds proxy-side).",
         "bind": [
             ("target", "GodotObject", None, "target.requireOpenHandle()"),
@@ -820,14 +818,30 @@ CLASS_POLICY: dict[str, dict] = {
     if (args.isEmpty()) return emitSignal(signal)
     when (val value = args.singleOrNull()) {
       is Int -> emitSignal(signal, value)
-      is Long -> emitSignal(signal, value.toInt())
+      is Long -> emitSignal(signal, int32Argument(signal, value))
       // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
-      is GodotEnumValue -> emitSignal(signal, value.value.toInt())
+      is GodotEnumValue -> emitSignal(signal, int32Argument(signal, value.value))
       is String -> emitSignal(signal, value)
       is GodotObject -> emitSignal(signal, value)
       is Vector2i -> emitSignal(signal, value)
       else -> unsupportedWebGameplayFamily("GodotObject.emit_signal_typed")
     }
+  }
+
+  /** The typed int arm carries Godot's int32 transport: a wider value fails loud, never truncates. */
+  private fun int32Argument(signal: String, value: Long): Int {
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
+      "Web emitSignal('$signal') int argument $value does not fit the int32 transport"
+    }
+    return value.toInt()
+  }
+
+  /**
+   * Desktop parity (task 128 C): a typed Godot enum written through the dynamic `set` crosses as
+   * the INT it stands for, like desktop/iOS encode a `GodotEnumValue` Variant.
+   */
+  fun set(propertyPath: String, value: GodotEnumValue) {
+    set(propertyPath, value.value)
   }
 """,
     },
@@ -1054,6 +1068,8 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
       is Float -> tweenProperty(target, property, finalValue.toDouble(), duration)
       is Int -> tweenProperty(target, property, finalValue.toDouble(), duration)
       is Long -> tweenProperty(target, property, finalValue.toDouble(), duration)
+      // A typed Godot enum tweens its number, as a Long does (task 128 C).
+      is GodotEnumValue -> tweenProperty(target, property, finalValue.value.toDouble(), duration)
       else ->
         unsupportedWebGameplayCall(
           "Tween.tween_property final value ${finalValue?.let { it::class.simpleName } ?: "null"}"
@@ -1243,12 +1259,15 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
 
   /** Web adaptation: Godot's print lands on the browser console via Wasm stdout. */
   fun print(message: Any?) {
-    println(message)
+    println(printable(message))
   }
 
   fun pushError(message: Any?) {
-    println("ERROR: $message")
+    println("ERROR: ${printable(message)}")
   }
+
+  /** Desktop parity (task 128 C): Godot prints a typed enum as its number, not `ProcessMode(value=2)`. */
+  private fun printable(message: Any?): Any? = if (message is GodotEnumValue) message.value else message
 """,
         "imports": ["net.multigesture.kanama.web.webScriptInstance"],
         "top_level": """
@@ -1444,7 +1463,8 @@ internal fun Transform3D.toBackend(): GodotTransform3D =
 '''
 # Leaf and intermediate Godot classes the corpus types against that own no opcode themselves.
 EXTRA_CLASSES: tuple[str, ...] = (
-    "AnimationTree", "Area2D", "AudioStream", "BoneAttachment3D", "ButtonGroup", "ColorRect",
+    "AnimationTree", "Area2D", "AudioStream", "BoneAttachment3D", "ButtonGroup", "CallbackTweener",
+    "ColorRect", "MethodTweener",
     "LightmapGIData", "Marker2D", "Marker3D", "MultiMeshInstance3D", "OmniLight3D", "ProgressBar",
     "SpinBox", "SpotLight3D", "StaticBody3D", "Texture2D", "TextureButton",
 )

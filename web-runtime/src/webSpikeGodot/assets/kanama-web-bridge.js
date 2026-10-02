@@ -53,8 +53,6 @@
       opcode === 257 ||
       opcode === 258 ||
       opcode === 260 ||
-      opcode === 264 ||
-      opcode === 265 ||
       opcode === 267 ||
       opcode === 273 ||
       opcode === 274 ||
@@ -69,8 +67,10 @@
       opcode === 297 ||
       opcode === 301 ||
       opcode === 302 ||
-      // Task 128 C: InputEventMouseButton.set_button_index (the portable mouse-button action).
+      // Task 128 C: InputEventMouseButton.set_button_index (the portable mouse-button action) and
+      // InputEvent.set_device (-1 = all devices, as project.godot spells input maps).
       opcode === 333 ||
+      opcode === 334 ||
       opcode === 66
     ) return 3;
     if (

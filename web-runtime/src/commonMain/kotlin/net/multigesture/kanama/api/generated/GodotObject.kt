@@ -253,14 +253,30 @@ open class GodotObject(godotObject: GodotHandle) {
     if (args.isEmpty()) return emitSignal(signal)
     when (val value = args.singleOrNull()) {
       is Int -> emitSignal(signal, value)
-      is Long -> emitSignal(signal, value.toInt())
+      is Long -> emitSignal(signal, int32Argument(signal, value))
       // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
-      is GodotEnumValue -> emitSignal(signal, value.value.toInt())
+      is GodotEnumValue -> emitSignal(signal, int32Argument(signal, value.value))
       is String -> emitSignal(signal, value)
       is GodotObject -> emitSignal(signal, value)
       is Vector2i -> emitSignal(signal, value)
       else -> unsupportedWebGameplayFamily("GodotObject.emit_signal_typed")
     }
+  }
+
+  /** The typed int arm carries Godot's int32 transport: a wider value fails loud, never truncates. */
+  private fun int32Argument(signal: String, value: Long): Int {
+    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
+      "Web emitSignal('$signal') int argument $value does not fit the int32 transport"
+    }
+    return value.toInt()
+  }
+
+  /**
+   * Desktop parity (task 128 C): a typed Godot enum written through the dynamic `set` crosses as
+   * the INT it stands for, like desktop/iOS encode a `GodotEnumValue` Variant.
+   */
+  fun set(propertyPath: String, value: GodotEnumValue) {
+    set(propertyPath, value.value)
   }
 
   value class ConnectFlags(override val value: Long) : GodotEnumValue {

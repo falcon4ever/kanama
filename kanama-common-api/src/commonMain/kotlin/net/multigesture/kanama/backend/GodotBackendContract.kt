@@ -47,6 +47,8 @@ enum class GodotCallShape {
   STRINGNAME_BOUND_CALLABLE_LONG_RET_LONG,
   STRINGNAME_RET_INT,
   STRINGNAME_RET_BOOL,
+  STRINGNAME_RET_LONG,
+  STRINGNAME_RET_LONG_SINGLETON,
   STRINGNAME_RET_BOOL_SINGLETON,
   NOARGS_RET_BOOL,
   NOARGS_RET_DOUBLE,
@@ -353,6 +355,21 @@ interface GodotBackendSpi {
     receiver: GodotHandle,
     value: String,
   ): Boolean
+
+  /** One String argument, a Long (enum) result: `ConfigFile.load` / `save` return Godot's Error. */
+  fun invokeStringNameRetLong(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    receiver: GodotHandle,
+    value: String,
+  ): Long
+
+  /** Singleton (no receiver) String argument, a Long (enum) result: `OS.shell_open`'s Error. */
+  fun invokeStringNameRetLongSingleton(
+    descriptor: GodotCallDescriptor,
+    callSite: GodotCallSite,
+    value: String,
+  ): Long
 
   /** Singleton query (no receiver): the backend supplies the calling context itself. */
   fun invokeStringNameRetBoolSingleton(
@@ -1243,6 +1260,32 @@ object GodotBackendCalls {
       descriptor,
       resolve(selected, descriptor),
       receiver,
+      value,
+    )
+  }
+
+  fun invokeStringNameRetLong(
+    descriptor: GodotCallDescriptor,
+    receiver: GodotHandle,
+    value: String,
+  ): Long {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_LONG)
+    val selected = requireBackend()
+    selected.requireLive(receiver)
+    return selected.invokeStringNameRetLong(
+      descriptor,
+      resolve(selected, descriptor),
+      receiver,
+      value,
+    )
+  }
+
+  fun invokeStringNameRetLongSingleton(descriptor: GodotCallDescriptor, value: String): Long {
+    requireShape(descriptor, GodotCallShape.STRINGNAME_RET_LONG_SINGLETON)
+    val selected = requireBackend()
+    return selected.invokeStringNameRetLongSingleton(
+      descriptor,
+      resolve(selected, descriptor),
       value,
     )
   }

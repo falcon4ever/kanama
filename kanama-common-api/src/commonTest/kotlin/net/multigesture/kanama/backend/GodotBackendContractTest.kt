@@ -1134,6 +1134,19 @@ class GodotBackendContractTest {
       value: String,
     ): Boolean = value == "InputEventMouseButton"
 
+    override fun invokeStringNameRetLong(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      receiver: GodotHandle,
+      value: String,
+    ): Long = 0L
+
+    override fun invokeStringNameRetLongSingleton(
+      descriptor: GodotCallDescriptor,
+      callSite: GodotCallSite,
+      value: String,
+    ): Long = 0L
+
     override fun invokeNoArgsRetBool(
       descriptor: GodotCallDescriptor,
       callSite: GodotCallSite,

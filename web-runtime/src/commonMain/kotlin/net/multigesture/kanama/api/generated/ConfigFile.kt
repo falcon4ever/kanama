@@ -10,13 +10,19 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
-  fun load(path: String) {
-    GodotBackendCalls.invokeStringNameArg(D.CONFIGFILE_LOAD, requireOpenHandle(), path)
-  }
+  fun load(path: String): GodotError =
+    GodotBackendCalls.invokeStringNameRetLong(
+      D.CONFIGFILE_LOAD,
+      requireOpenHandle(),
+      path,
+    ).let { GodotError(it) }
 
-  fun save(path: String) {
-    GodotBackendCalls.invokeStringNameArg(D.CONFIGFILE_SAVE, requireOpenHandle(), path)
-  }
+  fun save(path: String): GodotError =
+    GodotBackendCalls.invokeStringNameRetLong(
+      D.CONFIGFILE_SAVE,
+      requireOpenHandle(),
+      path,
+    ).let { GodotError(it) }
 
   fun hasSectionKey(section: String, key: String): Boolean =
     GodotBackendCalls.invokeStringNameRetBool(
@@ -69,10 +75,10 @@ class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoClosea
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ConfigFile.load(path: String) = load(path)
+fun ConfigFile.load(path: String): GodotError = load(path)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun ConfigFile.save(path: String) = save(path)
+fun ConfigFile.save(path: String): GodotError = save(path)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun ConfigFile.hasSectionKey(section: String, key: String): Boolean = hasSectionKey(section, key)

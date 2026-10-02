@@ -41,6 +41,14 @@ open class InputEvent(godotObject: GodotHandle) : Resource(godotObject) {
       action,
     )
   }
+
+  fun setDevice(device: Int) {
+    GodotBackendCalls.invokeLongArg(D.INPUTEVENT_SET_DEVICE, requireOpenHandle(), device.toLong())
+  }
+
+  var device: Int
+    get() = unsupportedWebGameplayFamily("InputEvent.get_device")
+    set(newValue) = setDevice(newValue)
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
@@ -61,3 +69,13 @@ fun InputEvent.isEcho(): Boolean = isEcho()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun InputEvent.isAction(action: String, exactMatch: Boolean = false): Boolean = isAction(action, exactMatch)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+fun InputEvent.setDevice(device: Int) = setDevice(device)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var InputEvent.device: Int
+  get() = device
+  set(newValue) {
+    device = newValue
+  }

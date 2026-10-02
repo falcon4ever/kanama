@@ -104,18 +104,25 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
   }
 
   /** Chain a callback step to a registered method on a Kanama script (FPS change_weapon). */
-  fun tweenCallback(target: GodotObject, method: String) {
-    GodotBackendCalls.invokeCallableRetHandle(
+  fun tweenCallback(target: GodotObject, method: String): CallbackTweener {
+    val returned = GodotBackendCalls.invokeCallableRetHandle(
       D.TWEEN_TWEEN_CALLBACK,
       requireOpenHandle(),
       target.requireOpenHandle(),
       method,
-    )
+    )?.let { CallbackTweener(it.toWebId()) }
+    return requireGodotReturn(returned, "Tween.tween_callback")
   }
 
   /** Tween a registered method with an interpolated double (the Callable binds proxy-side). */
-  fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double) {
-    GodotBackendCalls.invokeCallableDoubleRangeRetHandle(
+  fun tweenMethod(
+    target: GodotObject,
+    method: String,
+    from: Double,
+    to: Double,
+    duration: Double,
+  ): MethodTweener {
+    val returned = GodotBackendCalls.invokeCallableDoubleRangeRetHandle(
       D.TWEEN_TWEEN_METHOD,
       requireOpenHandle(),
       target.requireOpenHandle(),
@@ -123,7 +130,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       from,
       to,
       duration,
-    )
+    )?.let { MethodTweener(it.toWebId()) }
+    return requireGodotReturn(returned, "Tween.tween_method")
   }
 
   fun tweenProperty(
@@ -161,6 +169,8 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
       is Float -> tweenProperty(target, property, finalValue.toDouble(), duration)
       is Int -> tweenProperty(target, property, finalValue.toDouble(), duration)
       is Long -> tweenProperty(target, property, finalValue.toDouble(), duration)
+      // A typed Godot enum tweens its number, as a Long does (task 128 C).
+      is GodotEnumValue -> tweenProperty(target, property, finalValue.value.toDouble(), duration)
       else ->
         unsupportedWebGameplayCall(
           "Tween.tween_property final value ${finalValue?.let { it::class.simpleName } ?: "null"}"
@@ -250,7 +260,7 @@ fun Tween.tweenProperty(
 ): PropertyTweener = tweenProperty(target, property, finalVal, duration)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun Tween.tweenCallback(target: GodotObject, method: String) = tweenCallback(target, method)
+fun Tween.tweenCallback(target: GodotObject, method: String): CallbackTweener = tweenCallback(target, method)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Tween.tweenMethod(
@@ -259,7 +269,7 @@ fun Tween.tweenMethod(
   from: Double,
   to: Double,
   duration: Double,
-) = tweenMethod(target, method, from, to, duration)
+): MethodTweener = tweenMethod(target, method, from, to, duration)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun Tween.tweenProperty(

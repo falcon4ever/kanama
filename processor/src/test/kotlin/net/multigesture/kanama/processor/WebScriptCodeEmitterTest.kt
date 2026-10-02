@@ -514,7 +514,16 @@ class WebScriptCodeEmitterTest {
     assertTrue(
       proxy.contains("(target_object as InputEventKey).keycode = bytes.decode_s32(offset + 8)")
     )
-    // Task 128 C (protocol 29): the portable InputEventMouseButton.create() + buttonIndex.
+    // Task 128 C (protocol 29): the portable InputEventMouseButton.create() + buttonIndex, the
+    // event device, and ConfigFile.load / save answering Godot's Error on the query channel.
+    assertTrue(proxy.contains("elif opcode == 334 and target_object is InputEvent:"))
+    assertTrue(
+      proxy.contains("(target_object as InputEvent).device = bytes.decode_s32(offset + 8)")
+    )
+    assertTrue(proxy.contains("elif opcode == 264 and value is ConfigFile:"))
+    assertTrue(proxy.contains("result = int((value as ConfigFile).load(String(args[2])))"))
+    assertTrue(proxy.contains("elif opcode == 265 and value is ConfigFile:"))
+    assertFalse(proxy.contains("elif opcode == 264 and target_object is ConfigFile:"))
     assertTrue(proxy.contains("elif opcode == 333 and target_object is InputEventMouseButton:"))
     assertTrue(
       proxy.contains(

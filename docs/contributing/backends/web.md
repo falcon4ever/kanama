@@ -207,8 +207,11 @@ and the property table:
   generator fills and `--check` holds to a regen. No `@JvmInline`: Kotlin/Wasm
   inlines a value class without it. The Web `Any?` encoders (generic call,
   `ConfigFile.setValue`, Variant-style `emitSignal`) map a `GodotEnumValue` to
-  INT. `scripts/check_web_typed_enums.py` (local_ci) gates the slots, the
-  required returns and the names.
+  INT. `scripts/check_web_typed_enums.py` (local_ci) gates the slots (a member
+  is tied to its Godot method by the opcode descriptor it dispatches, a hand
+  facade member by owner + name, a facade property by the Godot property of the
+  same name), the required returns, that no Godot enum/object return a native
+  backend exposes comes back as `Unit` on Web, and the names.
 - **Properties come from Godot's property table.** Both accessors admitted →
   `var`; setter only → a write-only `var` whose getter is the
   `unsupportedWebGameplayFamily("Class.getter")` coverage marker; getter only →

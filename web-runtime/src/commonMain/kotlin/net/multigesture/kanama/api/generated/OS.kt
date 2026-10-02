@@ -11,9 +11,8 @@ object OS {
   fun hasFeature(tagName: String): Boolean =
     GodotBackendCalls.invokeStringNameRetBoolSingleton(D.OS_HAS_FEATURE, tagName)
 
-  fun shellOpen(uri: String) {
-    GodotBackendCalls.invokeStringNameArgSingleton(D.OS_SHELL_OPEN, uri)
-  }
+  fun shellOpen(uri: String): GodotError =
+    GodotBackendCalls.invokeStringNameRetLongSingleton(D.OS_SHELL_OPEN, uri).let { GodotError(it) }
 
   fun getStaticMemoryUsage(): Long =
     GodotBackendCalls.invokeNoArgsRetLongSingleton(D.OS_GET_STATIC_MEMORY_USAGE)
@@ -61,7 +60,7 @@ object OS {
 fun OS.hasFeature(tagName: String): Boolean = hasFeature(tagName)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun OS.shellOpen(uri: String) = shellOpen(uri)
+fun OS.shellOpen(uri: String): GodotError = shellOpen(uri)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun OS.getStaticMemoryUsage(): Long = getStaticMemoryUsage()

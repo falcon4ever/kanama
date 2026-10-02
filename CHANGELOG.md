@@ -127,12 +127,18 @@ versioning once public releases begin.
   `GodotObject.ConnectFlags.ONE_SHOT`, `GodotError`); every Web class nests all its Godot enums, the
   globals and `GodotEnumValue` are top-level, `PhysicsServer3D` is an enum-only `object` on Web, and the
   hand facades (`Window.mode: Window.Mode`, `DisplayServer.VSyncMode`, `ResourceLoader.ThreadLoadProgress`,
-  `ENetMultiplayerPeer.createServer(): GodotError`) follow. `GodotSignal.connect*` take
-  `GodotObject.ConnectFlags` and return `GodotError`; the Web RPC helpers return `GodotError`. The 13
-  required returns Web exposes (`createTween`, `tweenProperty`, the Tween/PropertyTweener fluent
-  setters, `SceneTree.getRoot` / `createTimer`) are non-null through the same throwing
-  `requireGodotReturn`. The bridge ABI is unchanged, and the Web Variant encoders take a
-  `GodotEnumValue` as INT. Removed on Web: the hand subsets (`InputEventKey.KEY_*`,
+  `ENetMultiplayerPeer.createServer(): GodotError`) follow. Every `GodotSignal.connect*` overload
+  takes `flags: GodotObject.ConnectFlags`; `connect`, the lambda `connect` and the typed
+  `connectLong` / `connectDouble` / `connectBoolean` / `connectString` / `connectVector2` /
+  `connectVector2i` / `connectVector3` return `GodotError`, while `connectObject` keeps returning
+  `SignalConnection?` (null when the connect failed). The Web RPC helpers return `GodotError`. The 15
+  required returns Web exposes (`createTween`, `tweenProperty`, `tweenCallback` / `tweenMethod`, the
+  Tween/PropertyTweener fluent setters, `SceneTree.getRoot` / `createTimer`) are non-null through the
+  same throwing `requireGodotReturn`. The Web Variant paths take a `GodotEnumValue` as INT
+  (`GodotObject.set(path, enumValue)`, `ConfigFile.setValue`, the Variant-style `emitSignal` -- whose
+  int arm now fails loud on a value outside int32 instead of truncating -- the generic call, and
+  `Tween.tweenProperty(…, finalValue: Any?)`), and `GD.print` / `pushError` print a typed enum as its
+  number like desktop. Removed on Web: the hand subsets (`InputEventKey.KEY_*`,
   `InputEventMouseButton.MOUSE_BUTTON_*`, `PhysicsBody3D.BODY_AXIS_*`), the enum `const val`s
   (`Window.MODE_*`, `DisplayServer.VSYNC_*`, ...) and the Web-only top-level `BodyAxis` alias object
   (use `PhysicsServer3D.BodyAxis`). **Web `SceneTree.getRoot()` returns `Window`** (non-null, the
@@ -147,8 +153,12 @@ versioning once public releases begin.
   factory on the hand class. iOS: the hand class is now an `InputEvent` (it was a bare `GodotObject`),
   so it can be added to an action, and gains `create()` and a `buttonIndex` setter. Web: the class is
   constructed like `InputEventKey`, and the new queued opcode 333
-  (`InputEventMouseButton.set_button_index`) carries the button; the bridge and the generated proxies
-  move to protocol 29 together.
+  (`InputEventMouseButton.set_button_index`) carries the button; opcode 334 (`InputEvent.set_device`)
+  lets a fallback event bind to every device (-1) as project.godot does. Protocol 29 also closes three
+  older Web return gaps: `ConfigFile.load` / `save` (now immediate, `STRINGNAME_RET_LONG`) and
+  `OS.shellOpen` (`STRINGNAME_RET_LONG_SINGLETON`) return `GodotError`, and `Tween.tweenCallback` /
+  `tweenMethod` return their `CallbackTweener` / `MethodTweener` like desktop. The bridge and the
+  generated proxies move to protocol 29 together.
 
 ### Changed — the API tree is common code (task 117 P4′)
 

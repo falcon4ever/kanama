@@ -451,8 +451,10 @@ class Main(godotObject: GodotHandle) :
    * - 64: `set_process_mode(ALWAYS)` reads back 3 (then restored to INHERIT).
    * - 128: `getTree().getRoot().getMode()` is a legal Window.Mode.
    * - 256 (task 128 C, protocol 29): a constructed InputEventMouseButton reads its button back as
-   *   RIGHT (the queued set_button_index landed) and `is_action` flips on `action_add_event` -- the
-   *   portable mouse-button action shared scripts register (third-person's Player.kt).
+   *   RIGHT (the queued set_button_index landed), `is_action` flips on `action_add_event`, and after
+   *   the wrapper's close() a fresh RIGHT event still matches the action (the InputMap kept its own
+   *   reference) -- the portable mouse-button action shared scripts register (third-person's
+   *   Player.kt).
    *
    * A healthy run returns 511. The event handle is closed in `finally`, after the attach: the
    * InputMap keeps its own reference (the create/close contract on Web, see docs/contributing/backends/web.md).
@@ -487,15 +489,22 @@ class Main(godotObject: GodotHandle) :
     }
 
     val button = InputEventMouseButton.create()
+    var buttonBound = false
     try {
       button.buttonIndex = MouseButton.RIGHT
       val boundBefore = button.isAction(action)
       InputMap.actionAddEvent(action, button)
-      if (button.getButtonIndex() == MouseButton.RIGHT && !boundBefore && button.isAction(action)) {
-        mask = mask or 256L
-      }
+      buttonBound =
+        button.getButtonIndex() == MouseButton.RIGHT && !boundBefore && button.isAction(action)
     } finally {
       button.close()
+    }
+    val probe = InputEventMouseButton.create()
+    try {
+      probe.buttonIndex = MouseButton.RIGHT
+      if (buttonBound && probe.isAction(action)) mask = mask or 256L
+    } finally {
+      probe.close()
     }
 
     Input.actionPress(action)

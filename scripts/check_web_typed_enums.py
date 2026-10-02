@@ -59,57 +59,137 @@ def main() -> int:
             names.add(spec.name)  # inside the owner's own body
         return names
 
-    slots = required = 0
+    decl_re = re.compile(r"(?m)^(?:(?:open|abstract|internal|private|data)\s+)*(?:class|object)\s+(\w+)")
+    # Godot methods whose native wrapper returns Unit too, so a Web Unit is parity, not a lost result.
+    NATIVE_UNIT_RETURNS = {("Object", "emit_signal"), ("Object", "disconnect")}
+
+    def godot_owner(kotlin_name: str | None) -> str | None:
+        name = "Object" if kotlin_name == "GodotObject" else kotlin_name
+        return name if name in api.classes else None
+
+    def chain(godot_class: str):
+        cursor: str | None = godot_class
+        while cursor:
+            yield api.classes[cursor]
+            cursor = api.classes[cursor].get("inherits")
+
+    def method_by_name(godot_class: str, kotlin_name: str) -> dict | None:
+        for cls in chain(godot_class):
+            for method in cls.get("methods", ()):
+                if web.camel(method["name"]) == kotlin_name and not method.get("is_virtual"):
+                    return method
+        return None
+
+    def property_type(godot_class: str, kotlin_name: str) -> str | None:
+        """The enum/bitfield type a Godot property surfaces with (its setter's argument, else its
+        getter's return), for a non-indexed property whose camelCase name is [kotlin_name]."""
+        for cls in chain(godot_class):
+            for prop in cls.get("properties", ()):
+                if "index" in prop or web.camel(prop["name"]) != kotlin_name:
+                    continue
+                setter = method_by_name(godot_class, web.camel(prop.get("setter", ""))) if prop.get("setter") else None
+                if setter and setter.get("arguments"):
+                    return setter["arguments"][0]["type"]
+                getter = method_by_name(godot_class, web.camel(prop.get("getter", ""))) if prop.get("getter") else None
+                return (getter or {}).get("return_value", {}).get("type")
+        return None
+
+    slots = required = name_tied = 0
     for path in files:
         text = blank_comments(path.read_text(encoding="utf-8"))
         rel = path.relative_to(root)
+        decls = [(m.start(), m.group(1)) for m in decl_re.finditer(text)]
+        line_offsets = [0]
+        for line in text.split("\n"):
+            line_offsets.append(line_offsets[-1] + len(line) + 1)
+
+        def owner_at(line_no: int) -> str | None:
+            offset = line_offsets[line_no - 1]
+            owner = None
+            for decl_start, name in decls:
+                if decl_start <= offset:
+                    owner = name
+            return godot_owner(owner)
+
         fun_returns: dict[str, str] = {}
         for fun in parse_functions(text):
             used = {by_descriptor[d] for d in DESCRIPTOR_RE.findall(fun.body) if d in by_descriptor}
-            if len(used) != 1:
+            policy: dict = {}
+            by_descriptor_tie = len(used) == 1
+            if len(used) == 1:
+                call = used.pop()
+                method = api.method(call)
+                policy = web.WRAPPER_POLICY.get(call.opcode, {})
+                godot_class, godot_method = call.class_name, call.method_name
+                primary = fun.name in (web.member_name(call, policy), web.camel(call.method_name))
+            elif not used:
+                # A hand-shaped facade (Window, DisplayServer, ENetMultiplayerPeer, ...) or a custom
+                # member: tied to its Godot method by owner + name, like the native gate.
+                owner = owner_at(fun.line)
+                method = method_by_name(owner, fun.name) if owner else None
+                if method is None:
+                    continue
+                name_tied += 1
+                godot_class, godot_method = owner, method["name"]
+                primary = True
+            else:
                 continue
-            call = used.pop()
-            method = api.method(call)
-            policy = web.WRAPPER_POLICY.get(call.opcode, {})
-            args_by_name = {web.param_name(a["name"]): a["type"] for a in method.get("arguments", ())}
-            for pname, ptype in fun.params:
-                want = expected(args_by_name.get(pname, ""))
+            label = f"{godot_class}.{godot_method}"
+            godot_args = list(method.get("arguments", ()))
+            args_by_name = {web.param_name(a["name"]): a["type"] for a in godot_args}
+            for index, (pname, ptype) in enumerate(fun.params):
+                gtype = args_by_name.get(pname)
+                if gtype is None and not by_descriptor_tie and index < len(godot_args):
+                    # A hand facade may rename a parameter (`windowSetVsyncMode(mode)` for Godot's
+                    # `vsync_mode`): fall back to the argument at the same position.
+                    gtype = godot_args[index]["type"]
+                    args_by_name.setdefault(pname, gtype)
+                want = expected(gtype or "")
                 if want is None:
                     continue
                 slots += 1
                 if ptype.rstrip("?") not in want:
                     failures.append(
-                        f"{rel}:{fun.line}: {fun.name}({pname}: {ptype}) -- Godot {call.class_name}.{call.method_name} "
+                        f"{rel}:{fun.line}: {fun.name}({pname}: {ptype}) -- Godot {label} "
                         f"types `{pname}` {args_by_name[pname]}; expected {' / '.join(sorted(want))}"
                     )
             rv = method.get("return_value") or {}
-            primary = fun.name in (web.member_name(call, policy), web.camel(call.method_name))
-            if not primary or fun.ret is None or "ret" in policy:
+            rtype = rv.get("type", "void")
+            if not primary:
+                continue
+            native_type = expected(rtype) is not None or rtype in api.classes
+            if fun.ret in (None, "Unit") and native_type and (godot_class, godot_method) not in NATIVE_UNIT_RETURNS:
+                failures.append(
+                    f"{rel}:{fun.line}: {fun.name}() returns Unit -- Godot {label} returns {rtype}, which "
+                    "desktop/iOS expose; a Web wrapper must not drop it"
+                )
+                continue
+            if fun.ret is None or "ret" in policy:
                 continue
             fun_returns[fun.name] = fun.ret
-            want = expected(rv.get("type", ""))
+            want = expected(rtype)
             if want is not None:
                 slots += 1
                 if fun.ret.rstrip("?") not in want:
                     failures.append(
-                        f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot {call.class_name}.{call.method_name} "
-                        f"returns {rv['type']}; expected {' / '.join(sorted(want))}"
+                        f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot {label} "
+                        f"returns {rtype}; expected {' / '.join(sorted(want))}"
                     )
-            elif rv.get("type") in api.classes and fun.ret.rstrip("?") == "GodotHandle":
+            elif rtype in api.classes and fun.ret.rstrip("?") == "GodotHandle":
                 failures.append(
-                    f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- {call.class_name}.{call.method_name} returns "
-                    f"{rv['type']}; a raw GodotHandle diverges from desktop/iOS (wrap it in its Web class)"
+                    f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- {label} returns "
+                    f"{rtype}; a raw GodotHandle diverges from desktop/iOS (wrap it in its Web class)"
                 )
-            if rv.get("type") in api.classes and rv.get("meta") == "required" and want is None:
+            if rtype in api.classes and rv.get("meta") == "required" and want is None and by_descriptor_tie:
                 required += 1
                 if fun.ret.endswith("?"):
                     failures.append(
-                        f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot marks {call.class_name}.{call.method_name} "
+                        f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot marks {label} "
                         "`meta: \"required\"`: the return must be non-null (decision 9)"
                     )
                 elif "requireGodotReturn" not in fun.body:
                     failures.append(
-                        f"{rel}:{fun.line}: {fun.name}() -- required return of {call.class_name}.{call.method_name} "
+                        f"{rel}:{fun.line}: {fun.name}() -- required return of {label} "
                         "does not go through requireGodotReturn (a null must throw, never pass silently)"
                     )
         for m in PROPERTY_RE.finditer(text):
@@ -117,6 +197,22 @@ def main() -> int:
             if getter in fun_returns and fun_returns[getter] != ptype:
                 line = text.count("\n", 0, m.start()) + 1
                 failures.append(f"{rel}:{line}: property {prop}: {ptype} -- its getter {getter}() returns {fun_returns[getter]}")
+        # Every class-body property whose name is a Godot property of its owner (hand facades'
+        # plain `var scaling3dMode: …` included) has the property's enum type.
+        for m in re.finditer(r"(?m)^  (?:override\s+|open\s+)?(?:val|var)\s+(\w+)\s*:\s*([\w.<>?]+)", text):
+            line = text.count("\n", 0, m.start()) + 1
+            owner = owner_at(line)
+            if owner is None:
+                continue
+            want = expected(property_type(owner, m.group(1)) or "")
+            if want is None:
+                continue
+            slots += 1
+            if m.group(2).rstrip("?") not in want:
+                failures.append(
+                    f"{rel}:{line}: property {m.group(1)}: {m.group(2)} -- Godot {owner}.{m.group(1)} is "
+                    f"{property_type(owner, m.group(1))}; expected {' / '.join(sorted(want))}"
+                )
 
     # (c) value names under the lock, value classes known to the model under that owner.
     by_owner = {(s.kotlin_owner, s.simple_name): s for s in api.enums.values()}
@@ -166,7 +262,8 @@ def main() -> int:
             print(f"    {failure}", file=sys.stderr)
         return 1
     print(
-        f"{TAG} PASS {slots} Web enum/bitfield slots typed, {required} required returns non-null via "
+        f"{TAG} PASS {slots} Web enum/bitfield slots typed ({name_tied} hand/custom functions tied by name), "
+        f"{required} required returns non-null via "
         f"requireGodotReturn, {classes} value classes / {values} value names match the model and lock "
         f"({len(files)} Web api files)"
     )

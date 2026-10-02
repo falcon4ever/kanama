@@ -3250,18 +3250,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\t(target_object as Range).value = bytes.decode_double(offset + 8)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 16")
-    appendLine("\t\telif opcode == 264 and target_object is ConfigFile:")
-    appendLine(
-      "\t\t\t(target_object as ConfigFile).load(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))))"
-    )
-    appendLine("\t\t\tapplied += 1")
-    appendLine("\t\t\toffset += 12")
-    appendLine("\t\telif opcode == 265 and target_object is ConfigFile:")
-    appendLine(
-      "\t\t\t(target_object as ConfigFile).save(String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))))"
-    )
-    appendLine("\t\t\tapplied += 1")
-    appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 267 and target_object is ConfigFile:")
     appendLine(
       "\t\t\tvar config_parts := String(_kanama_bridge.resolveCommandStringName(bytes.decode_s32(offset + 8))).split(\"\\u001f\")"
@@ -3364,6 +3352,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine(
       "\t\t\t(target_object as InputEventMouseButton).button_index = bytes.decode_s32(offset + 8)"
     )
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    appendLine("\t\telif opcode == 334 and target_object is InputEvent:")
+    appendLine("\t\t\t(target_object as InputEvent).device = bytes.decode_s32(offset + 8)")
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 297 and target_object is InputEventKey:")
@@ -4320,6 +4312,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = int(round((value as AudioStreamPlayer3D).pitch_scale * 1000.0))")
     appendLine("\t\telif opcode == 190:")
     appendLine("\t\t\tresult = int(OS.shell_open(String(args[2])))")
+    // Task 128 C (protocol 29): ConfigFile.load / save answer Godot's Error on the query channel
+    // (they were fire-and-forget queued mutations), so the Web wrapper returns GodotError.
+    appendLine("\t\telif opcode == 264 and value is ConfigFile:")
+    appendLine("\t\t\tresult = int((value as ConfigFile).load(String(args[2])))")
+    appendLine("\t\telif opcode == 265 and value is ConfigFile:")
+    appendLine("\t\t\tresult = int((value as ConfigFile).save(String(args[2])))")
     appendLine("\t\telif opcode == 0:")
     appendLine("\t\t\t# Reserved runtime crossing (not a contract opcode): instantiate a Kanama")
     appendLine("\t\t\t# scripted resource by class simple name and hydrate its Kotlin instance.")

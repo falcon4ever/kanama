@@ -345,6 +345,10 @@ tasks.register<Exec>("generateWebWrappers") {
     inputs.file(rootProject.file("scripts/godot_enum_model.py"))
     inputs.file(rootProject.file("scripts/enum_prefix_lock.json"))
     outputs.dir(webWrapperTree)
+    // The GENERATED ENUMS regions of the hand facades (Window, DisplayServer, ...) live here.
+    outputs.file(
+        layout.projectDirectory.file("src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt")
+    )
     commandLine("python3", webWrapperGenerator.absolutePath)
 }
 
