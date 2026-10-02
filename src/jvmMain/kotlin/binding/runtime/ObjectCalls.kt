@@ -380,25 +380,32 @@ actual object ObjectCalls {
   }
 
   /**
-   * Calls a vararg Object MethodBind with scalar Variant arguments and decodes the scalar Variant
-   * return value.
-   */
-  /**
-   * Generic Variant `Object.call` dispatch.
+   * Generic Variant `Object.call` dispatch with the borrowed return decode: calls a vararg Object
+   * MethodBind with Variant arguments and decodes the scalar Variant return value.
    *
-   * [owned] selects the return decode for calls that mint a fresh object whose sole reference lives
-   * in the return Variant. With the default borrowed decode the handle would die when this function
-   * destroys the return Variant in its `finally`. Pass `owned = true` to retain RefCounted results
-   * before that destroy and hand back the owning [net.multigesture.kanama.api.RefCounted] wrapper.
-   * Owned callers should use the named [callWithVariantArgsOwned] wrapper so the generator can
-   * select it as a dispatch helper via `METHOD_CALL_SHAPE_OVERRIDES` (the vararg analogue of
-   * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate).
+   * The `expect object ObjectCalls` member (task 117 D27). It carries no `owned` flag: an `expect`
+   * declaration takes no default argument (D24), so the owned decode is its own member,
+   * [callWithVariantArgsOwned], and the flag is a private detail of this file.
    */
-  fun callWithVariantArgs(
+  actual fun callWithVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     args: List<Any?>,
-    owned: Boolean = false,
+  ): Any? = callWithVariantArgs(methodBind, instance, args, owned = false)
+
+  /**
+   * The body of [callWithVariantArgs] and [callWithVariantArgsOwned].
+   *
+   * [owned] selects the return decode for calls that mint a fresh object whose sole reference lives
+   * in the return Variant. With the borrowed decode the handle would die when this function
+   * destroys the return Variant in its `finally`. `owned = true` retains RefCounted results before
+   * that destroy and hands back the owning [net.multigesture.kanama.api.RefCounted] wrapper.
+   */
+  private fun callWithVariantArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    args: List<Any?>,
+    owned: Boolean,
   ): Any? {
     Arena.ofConfined().use { arena ->
       val variantBuffer =
@@ -12203,7 +12210,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTypedMaterialListArg(
+  actual fun ptrcallWithTypedMaterialListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Material>,
@@ -23914,7 +23921,10 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallNoArgsRetCallable(methodBind: MemorySegment, instance: MemorySegment): GodotCallable? {
+  actual fun ptrcallNoArgsRetCallable(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): GodotCallable? {
     Arena.ofConfined().use { arena ->
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
@@ -23926,7 +23936,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntArgRetCallable(
+  actual fun ptrcallWithIntArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -23946,7 +23956,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDArgRetCallable(
+  actual fun ptrcallWithRIDArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23966,7 +23976,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithRIDIntArgsRetCallable(
+  actual fun ptrcallWithRIDIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -23990,7 +24000,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringIntArgsRetCallable(
+  actual fun ptrcallWithStringIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,

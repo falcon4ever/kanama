@@ -106,7 +106,7 @@ TAG = "[ios_static_dispatch]"
 # entry point named in a comment or a KDoc example is never read as a call. Shared with the other
 # Kotlin-source gates rather than re-implemented: one function cannot disagree with itself.
 sys.path.insert(0, str(SCRIPTS))
-from check_wrapper_parity import strip_noise  # noqa: E402
+from generate_api_wrapper import strip_noise  # noqa: E402
 
 C_SHIM = ROOT / "ios/bootstrap/kanama_ios_shim.c"
 C_HEADER = ROOT / "ios/include/kanama_ios.h"

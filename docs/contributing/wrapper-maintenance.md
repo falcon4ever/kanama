@@ -111,16 +111,21 @@ helpers `GDExtensionManager.loadExtensionFromFunction(initFunc)`,
 `OpenXRAPIExtension.setCustomPlaySpace(space)` take a raw native pointer, not an
 object handle, and are the only public signatures left that name a
 `java.lang.foreign` type. `check_wrapper_generator.py` fails if any file under
-`src/commonMain` or `src/sharedApi` names one at all (comments excluded: the
+`src/commonMain` (which holds the wrapper tree) names one at all (comments excluded: the
 `expect` files' KDoc names the JVM type when it explains the typealias).
 
 Generated wrappers are held to a **single-tree drift gate**. There is one generated
-wrapper tree, `src/sharedApi/kotlin/net/multigesture/kanama/api`, a source directory
-of BOTH platform source sets of the one multiplatform module (`jvmMain` and
-`iosMain`), also copied through the PanamaPort remap by the Android plugin. It is
-shared SOURCE, not KMP common code: its sources still name per-platform classes
-(`GodotSignal`, `Engine`, `MainThread`), which a common source file
-may not name — task 117 P4′ is the parcel that moves the tree to `commonMain`. The shared
+wrapper tree, `src/commonMain/kotlin/net/multigesture/kanama/api`, part of the KMP
+common fragment of the one multiplatform module since task 117 P4′: the JVM and both
+iOS targets compile it as common code, and the Android plugin's remapped copy of
+`commonMain` carries it. `compileCommonMainKotlinMetadata` compiles it on its own, so a
+tree file that names a platform-only declaration fails the build — the API is
+platform-neutral by construction. The few platform classes the tree names are `expect`
+declarations beside it (`GodotSignal.expect.kt` with `SignalConnection`,
+`MainThread.expect.kt`) with one `actual` per platform, and an `expect` declaration
+carries **no default argument** (overloads instead): the Android copy skips
+`*.expect.kt` and strips `actual`, so a default declared only on the `expect` would not
+exist there. `scripts/check_expect_no_defaults.py` (a local_ci stage) fails on one. The shared
 file of a class carries the members both native backends can call: the method set is
 the iOS-audited helper-shape set (`IOS_AUDIT_ONLY`), the surface is desktop's
 (`@JvmStatic`, factory helpers). Members desktop can call but iOS cannot yet (no
@@ -176,7 +181,7 @@ described next.
 
 **The roots are written once (task 117 P3′).** `GodotObject`, `RefCounted` and
 `GodotCallable` are hand-written files in the shared tree
-(`src/sharedApi/kotlin/.../api/{GodotObject,RefCounted,GodotCallable}.kt`), compiled by every
+(`src/commonMain/kotlin/.../api/{GodotObject,RefCounted,GodotCallable}.kt`), compiled by every
 platform like the generated classes they are the base of; neither platform has a copy.
 `RefCounted` shares its name with a Godot class, so `SHARED_HAND_ROOTS` in the generator keeps it
 out of the tree universe (and `--ios-emit-class RefCounted` refuses it); `GodotObject` (Godot's
@@ -200,10 +205,18 @@ like any other referenced helper; on iOS the generator emits them from the root 
 `GENERATED MEMBERS` marker (listed in `IOS_HANDWRITTEN_HELPERS`). `GodotSignal` and
 `SignalConnection` are the two genuinely per-platform classes left (desktop
 `SignalCallbackRegistry` + bound Callable, iOS `IosCallableRegistry` + the shim's custom
-Callable); `scripts/check_wrapper_parity.py` holds their two copies to one public shape until the
-tree move lets them become `expect`/`actual`. The drift gate and the parity gate both fail on a
-stale per-platform copy of a root (a `<Root>.kt` in a platform api directory, or a `class <Root>`
-declared in any platform api file).
+Callable): since task 117 P4′ they are `expect class`es in
+`src/commonMain/.../api/GodotSignal.expect.kt` with one `actual` per platform, and `MainThread`
+is an `expect object` the same way — the compiler holds both platforms to every member of the
+expect, and `scripts/check_actual_public_surface.py` (a local_ci stage) fails on an `actual` that
+declares a public member the expect does not, which the compiler allows; so the old
+`scripts/check_wrapper_parity.py` and its allowlist are retired. Their former default
+arguments are overloads (`connect(target, method)` + `connect(target, method, flags)`,
+`connect(target, argumentCount, callback)` + `connect(target, argumentCount, flags, callback)`,
+`connectObject(target, callback)` + `connectObject(target, flags, callback)`, `await(target)` +
+`await(target, argumentCount)`). The drift gate fails on a stale per-platform copy of a root (a
+`<Root>.kt` in a platform api directory, or a `class <Root>` declared in any platform api file);
+a non-`actual` platform copy of an `expect` class is a compile error.
 
 `check_single_tree` in `scripts/check_wrapper_generator.py` regenerates the whole tree
 in-process (a few seconds) and fails if any generated file — a shared class, a
@@ -219,8 +232,9 @@ platforms cannot drift from each other. Re-adopt with
 `sync_kdoc_from_godot_docs.py --godot-docs … --write` (the regen output carries no
 KDoc); `--emit-class <Class> --allow-overwrite` does the same for one class, writing it
 into its home (the shared file plus companions, or its per-platform directory).
-Android has no separate committed tree — `prepareAndroidKanamaSources` copies the
-shared tree and the desktop sources through the PanamaPort remap, so the desktop side
+Android has no separate committed tree — `prepareAndroidKanamaSources` copies
+`src/commonMain` (minus `*.expect.kt`, so the tree comes with it) and the desktop sources
+through the PanamaPort remap, so the desktop side
 of the gate covers it transitively. Adopted classes with skipped methods are only
 accepted when every skip is a Godot virtual callback that belongs to the
 override-registration design rather than the public ptrcall wrapper surface. How the
@@ -529,7 +543,7 @@ non-virtual skips and the skipped properties found:
       `EditorExportPlatform.export_project` and `Font.find_variation` were on
       that list until task 117 P1'(a): both classes left `PER_PLATFORM_WRAPPERS`,
       so the generator now emits those methods itself into
-      `src/sharedApi/.../EditorExportPlatform.kt` and `.../Font.kt` on the same
+      `src/commonMain/.../api/EditorExportPlatform.kt` and `.../Font.kt` on the same
       current 4.7 binds.
 
     After task 28, the generator report's non-virtual skips are **only** the
@@ -658,9 +672,13 @@ desktop (Android gets it through the source remap), and
 `src/iosMain/.../binding/runtime/ObjectCalls.kt` over the C shim for iOS. Since task 104
 step 3 both are `actual object ObjectCalls`, actualizing the GENERATED
 `expect object ObjectCalls` in
-`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt` — 1,443 of
-the 1,450 helpers the tree calls (task 117 P3′), with seven documented exceptions in
-`scripts/check_objectcalls_parity.py`. The compiler, not a script, is the parity contract.
+`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.expect.kt` — all
+1,450 helpers the tree calls. Until task 117 P4′ seven were documented exceptions (six named a
+wrapper class the common fragment could not see, `callWithVariantArgs` carried an `owned`
+default); `scripts/check_objectcalls_parity.py` now fails on any exception. The compiler, not a
+script, is the parity contract. A helper whose desktop signature carries a default argument stops
+`--write-tree`: split it into overloads, as `callWithVariantArgs` (borrowed) /
+`callWithVariantArgsOwned` were.
 
 **One file per platform.** The iOS file is hand-written except for a marked region at the
 end of the `object ObjectCalls` body:

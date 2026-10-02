@@ -24,14 +24,11 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
         exclude("example/**")
         remapForeignImports()
     }
-    // The shared generated wrapper tree (task 103), now src/sharedApi: the same files the root
-    // module's JVM and iOS targets compile, remapped exactly like the desktop sources.
-    from(kanamaRoot.dir("src/sharedApi/kotlin")) {
-        remapForeignImports()
-    }
     // The root module's KMP common fragment (task 104 step 3 parcel C'): the value types,
-    // GodotHandle and the expect seams. `*.expect.kt` files are skipped -- an expect declaration
-    // has no body to remap and Android compiles the jvmMain actual with its `actual ` stripped.
+    // GodotHandle, the expect seams and, since task 117 P4', the whole generated wrapper tree
+    // (net/multigesture/kanama/api) -- this one copy carries it; there is no second tree root.
+    // `*.expect.kt` files are skipped -- an expect declaration has no body to remap and Android
+    // compiles the jvmMain actual with its `actual ` stripped.
     from(kanamaRoot.dir("src/commonMain/kotlin")) {
         exclude("**/*${KanamaAndroidRemap.EXPECT_FILE_SUFFIX}")
         remapForeignImports()

@@ -3,8 +3,8 @@
 Kanama shipped two committed generated wrapper trees for the native backends:
 desktop/Android under `src/main/kotlin/net/multigesture/kanama/api` and iOS under
 `ios-runtime/src/iosMain/kotlin/net/multigesture/kanama/api` (today: one tree under
-`src/sharedApi/kotlin/net/multigesture/kanama/api`, and neither of those modules exists any more
-— see the 2026-09-15 section at the end). The task-21 design
+`src/commonMain/kotlin/net/multigesture/kanama/api`, KMP common code, and neither of those modules
+exists any more — see the 2026-09-15 and 2026-10-01 sections at the end). The task-21 design
 ("commonMain unification") proposed one shared tree with an `expect/actual
 ObjectCalls` seam; the drift gate landed, the physical move did not. Task 103
 re-opened the move. This page records what the code said when the move was
@@ -36,7 +36,7 @@ to answer.
 | iOS KDoc stripping | **Not a blocker.** KDoc is owned by `sync_kdoc_from_godot_docs.py` and stripped by the drift gate's `comparable_source`; emitting it once is a flag, not a design problem. |
 | iOS collision classes and the two hand-shaped lists | **Not a blocker, but larger than "~55".** The union of `DESKTOP_HANDSHAPED` (47), `IOS_HANDSHAPED` (8), `IOS_HANDWRITTEN_COLLISION_CLASSES` (12) and `IOS_UNSUPPORTED_CLASSES` (2) is 56 classes that need a per-platform file. 34 desktop hand-shaped classes are *generated* on iOS and 5 iOS hand-shaped ones are generated on desktop, so "per-platform variant" often means "generated on one side, hand-written on the other", not two hand files. |
 | `Node.createTween()` openness | **Not only openness.** iOS `SceneTree` is a `Node` subclass that overrides `createTween()`; desktop `SceneTree` is an `object` facade with `@JvmStatic createTween()`. `Node` is hand-shaped on desktop and generated (with an iOS custom section) on iOS, so it is a per-platform file either way; making it `open` on both is a one-word alignment once the trees merge. |
-| iOS-only `GodotObject : AutoCloseable` and public `unreference()` | **Independent of the tree move.** Historical (until task 117 P3′): both lived in per-platform base files (`GodotObject.kt` / `IosGodotApi.kt`), so aligning them was a small standalone change (task 97 R10c). Task 117 P3′ wrote `GodotObject` and `RefCounted` once in `src/sharedApi`; `unreference()` is gone. |
+| iOS-only `GodotObject : AutoCloseable` and public `unreference()` | **Independent of the tree move.** Historical (until task 117 P3′): both lived in per-platform base files (`GodotObject.kt` / `IosGodotApi.kt`), so aligning them was a small standalone change (task 97 R10c). Task 117 P3′ wrote `GodotObject` and `RefCounted` once in the shared tree (then `src/sharedApi`, `src/commonMain` since P4′); `unreference()` is gone. |
 | Two-tree assumptions in tooling | **Real but mechanical.** `check_wrapper_generator.py` (`API_DIR`/`IOS_API_DIR`, two exemption sets), `upgrade_godot.sh` step 5, `check_ios_no_silent_stubs.py`, `api_wrapper_coverage.py`; `sync_kdoc_from_godot_docs.py` only knows the desktop tree. |
 
 ## Blockers the design did not name
@@ -209,3 +209,61 @@ measured rather than assumed.
 - The Android remap learned decision D's two rules: skip `*.expect.kt`, strip a leading `actual`
   modifier; its audit now strips block comments as well as line comments and matches declaration
   keywords by regex instead of the two fragments `expect class` / `actual class`.
+
+## What was done (2026-10-01, task 117 P4′)
+
+Mechanism (a) landed for the tree too: the API wrapper tree is KMP common code.
+
+- **The blocker shrank to nine names.** Task 117 P1′–P3′ generated the hand-shaped classes once and
+  wrote the three roots once, so the 93,637 errors above became, in a throwaway rewiring of
+  `src/sharedApi/kotlin` as a `commonMain` source directory, **26 errors, all `Unresolved
+  reference`, nine distinct names**: `callWithVariantArgs`, the six `ObjectCalls` helpers whose
+  signatures name `GodotCallable`/`Material`, `GodotSignal` and `MainThread`.
+- **The move.** The tree (1,010 generated classes + `GodotObject`, `RefCounted`, `GodotCallable`)
+  lives in `src/commonMain/kotlin/net/multigesture/kanama/api/`; `src/sharedApi` is deleted, the
+  `jvmMain`/`iosMain` source directories are gone, the generator writes to `commonMain`, and the
+  Android plugin's single copy of `commonMain` (minus `*.expect.kt`) carries the tree.
+  `compileCommonMainKotlinMetadata` compiles the whole API.
+- **The nine names.** All 1,450 `ObjectCalls` helpers the tree calls are `expect` members (the
+  six wrapper-typed helpers joined as-is, iOS `ptrcallWithTypedMaterialListArg` now takes
+  `List<Material>`; `callWithVariantArgs` lost its `owned = false` default — the flag is private
+  on each platform behind `callWithVariantArgsOwned`), and `check_objectcalls_parity.py` fails on
+  any exception. `GodotSignal`/`SignalConnection` are `expect class`es and `MainThread` an
+  `expect object`, each with one `actual` per platform; the hand-shaped parity gate
+  (`check_wrapper_parity.py`) retired with them. Its one-sided-member check — an `actual` with a
+  public member the other platform lacks, which the compiler allows — lives on as
+  `check_actual_public_surface.py`, now against the `expect` (P4′ review).
+- **`expect` declarations carry no default argument** (D24): the Android copy skips `*.expect.kt`,
+  so a default would vanish there. `GodotSignal`'s defaults became overloads;
+  `check_expect_no_defaults.py` holds the rule.
+- **`@JvmStatic` on an `expect` is not enough on the JVM.** With the annotation on the `expect
+  object MainThread` members only, K2 compiles with a warning ("Annotation `@JvmStatic` is missing
+  on actual declaration") and the JVM class has no static methods. D6's fallback applies: the
+  annotation is on the expect and mirrored on both actuals.
+- **Still per platform, and legal:** the 24 `PER_PLATFORM_WRAPPERS` classes (Tween, Engine,
+  FileAccess, …) extend common classes from platform code; nothing in the tree references them.
+  Generating them once is a follow-up task. The `iosMain` metadata compilation stays disabled: the
+  iOS-only api files still carry `@JvmStatic`/`@JvmName` (263 `@OptionalExpectation` errors in 16
+  files when re-enabled, nothing else).
+- **Build cost** (one Mac, each task alone with `--rerun-tasks --no-build-cache` after a warm-up,
+  task time from Gradle's `--profile`; task 104's parcel-E spike numbers, from another machine,
+  for scale):
+
+| | task 104 parcel E (spike, machine C) | before (main `689960f8`) | after (task 117 P4′) |
+|---|---|---|---|
+| `compileKotlinJvm` | 34 s | 54.97 s (76 s wall) | 51.32 s (73 s wall) |
+| `compileKotlinIosArm64` | 29 s | 34.27 s (58 s wall) | 36.47 s (62 s wall) |
+| `linkDebugStaticIosArm64` | 75 s | 113.75 s (171 s wall) | 121.55 s (182 s wall) |
+| `linkReleaseStaticIosArm64` | — | 529.94 s; 1,506.08 s on a re-run | 1,269.73 s; 1,071.76 s on a re-run |
+| `installAddonJar` (whole build) | — | 93.89 s (95 s wall) | 82.63 s (83 s wall) |
+| `libkanama_ios_runtime.a` debug | 224.8 MiB | 235,775,424 B (224.9 MiB) | 236,065,128 B (225.1 MiB) |
+| `libkanama_ios_runtime.a` release | — | 124,719,880 B (118.9 MiB) | 124,691,160 B (118.9 MiB) |
+| `kanama.jar` | 11.6 MiB | 12,245,507 B (11.68 MiB) | 12,247,869 B (11.68 MiB) |
+
+The compile, debug-link and install numbers move within run-to-run noise, and the artifacts are
+the same size to 0.12 %. The release link is not comparable on this machine: the same baseline
+commit took 530 s once and 1,506 s on a re-run, tracking background load (load average 5–9 during
+the slow runs; a first after-run of `installAddonJar` under the same load took 1,439 s and was
+re-run). Commands: `./gradlew --no-daemon -Pkotlin.compiler.execution.strategy=in-process
+--no-build-cache --rerun-tasks --profile <task>` (`installAddonJar` with
+`-PkanamaProjectDir=<checkout>/example_project`).

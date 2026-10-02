@@ -90,7 +90,7 @@ flowchart TB
 
     subgraph APP["Exported iOS app (.xcframework, device arm64)"]
         KN["Kotlin/Native runtime<br/>Kanama runtime + scripts, RawSegment aliases the MemorySegment shim"]
-        WRAP["Shared generated wrappers<br/>src/sharedApi, the same files desktop/Android compile"]
+        WRAP["Shared generated wrappers<br/>src/commonMain api tree, the same files desktop/Android compile"]
         OC["ObjectCalls (iOS actual)<br/>typed ptrcall helpers"]
         SHIM["C GDExtension shim<br/>entry, get_method_bind, generic ptrcall dispatch"]
     end
@@ -297,7 +297,7 @@ of `real_t` components, aliased once per platform in `Real.kt` — while a scala
 A wrapper's identity is `net.multigesture.kanama.api.GodotHandle`, a zero-cost
 `@JvmInline value class` that is the only handle type a public signature may name
 (task 104 step 1). Since step 3 it is ONE shared file in
-`src/sharedApi/kotlin/net/multigesture/kanama/api`, because what it wraps is now
+`src/commonMain/kotlin/net/multigesture/kanama/api`, because what it wraps is now
 also Kanama-named: `net.multigesture.kanama.binding.runtime.RawSegment`, the raw
 engine pointer, declared as a plain `typealias` once per backend — the FFM
 `MemorySegment` on desktop (`com.v7878.foreign.MemorySegment` after the Android
@@ -305,13 +305,13 @@ remap), the Kotlin/Native shim of the same name on iOS — with the null pointer
 beside it as a top-level `NULL_SEGMENT`. Web declares its own `GodotHandle` under
 the same fully-qualified name over a generation-tagged registry id.
 
-Nothing in `src/commonMain` or `src/sharedApi` names a `java.lang.foreign` type any more, which is what
-the rest of task 104 step 3 needs: a real KMP `commonMain` can neither declare nor
-`expect` a JDK package, so the later parcels turn this pair into
-`expect class RawSegment` / `expect val NULL_SEGMENT` with the two typealiases as
-their `actual`s. Because `RawSegment` *is* each platform's pointer type today, the
-runtime seam (`ObjectCalls`, `GodotObject.requireOpenHandle()`, the KSP glue) is
-unchanged by the rename.
+Nothing in `src/commonMain` — the value types, the seams and, since task 117 P4′, the
+whole API wrapper tree — names a `java.lang.foreign` type, because a KMP `commonMain`
+can neither declare nor `expect` a JDK package: `RawSegment` is
+`expect sealed interface RawSegment` with `NULL_SEGMENT` an `expect val`, and each
+platform actualizes them over its own pointer type (the FFM `MemorySegment` on desktop,
+the Kotlin/Native shim on iOS). The runtime seam (`ObjectCalls`,
+`GodotObject.requireOpenHandle()`, the KSP glue) carries `RawSegment` throughout.
 
 ## Value types
 
@@ -341,12 +341,13 @@ signed zero canonicalized in the hash). Methods split by who computes them:
   `cross`, `length`, `distanceTo`, `hasPoint`, and the `is_equal_approx` family
   (which replicates `Math::is_equal_approx` exactly; see `ApproxMath.kt`).
 
-`BuiltinCalls` exists once per backend under one fully-qualified name, over
-Panama/FFM for desktop and Android and over the C shim for iOS, because the root
-is a plain JVM module and the Android remap forbids `expect`/`actual`. Nothing in
-the compiler proves the two halves agree, so
-`expect object BuiltinCalls` in the common fragment holds their public member sets as a
-local CI stage; step 3 of task 104 replaces it with an `expect object`.
+`BuiltinCalls` is `expect object BuiltinCalls` in the common fragment
+(`src/commonMain/.../binding/runtime/BuiltinCalls.expect.kt`, task 104 step 3) with one
+`actual` per backend — over Panama/FFM for desktop and Android, over the C shim for iOS —
+so the compiler proves the two halves agree. Android compiles a remapped copy of the common
+and JVM sources as a plain Kotlin library: the copy skips every `*.expect.kt` file and strips
+the `actual` modifier, which is also why an `expect` declaration carries no default argument
+(task 117 D24; `scripts/check_expect_no_defaults.py`).
 
 ## Object lifetime
 

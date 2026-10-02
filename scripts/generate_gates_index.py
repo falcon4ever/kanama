@@ -190,6 +190,16 @@ RETIRED_GATES = (
         "subsumed_by": "scripts/audit_ptrcall_helper_layouts.py",
         "evidence": "The layout audit fails any helper without a Color slot that uses JAVA_FLOAT and any float-slot helper that does not use JAVA_DOUBLE (`audit_helper`), across all 1,500 parsed helpers; the retired script name-matched 30 `ptrcall*Float*` helpers (20 of them packed-array helpers) and a ±10-line \"Color\" text window. Measured at retirement: all 30 helpers and all 464 JAVA_FLOAT sites in ObjectCalls.kt lie inside layout-audited bodies. Not carried over: the KDoc-wording check that those 30 helpers say \"scalar float\".",
     },
+    {
+        "script": "scripts/check_wrapper_parity.py",
+        "retired": "2026-10-01 (task 117 P4′)",
+        "subsumed_by": (
+            "the Kotlin compiler (expect/actual)",
+            "scripts/check_wrapper_generator.py",
+            "scripts/check_actual_public_surface.py",
+        ),
+        "evidence": "The gate (with `scripts/wrapper_parity_allowlist.txt`) diffed the desktop and iOS copies of the hand-shaped per-platform classes, `GodotSignal` and `SignalConnection` at the end, member by member. Since P4′ they are `expect class`es in `src/commonMain/.../api/GodotSignal.expect.kt` and `MainThread` an `expect object`, so the compiler fails any expect member without an actual on either platform, and a mismatched kind, modality, supertype, constructor or signature. The gate's stale-root check (a per-platform copy of `GodotObject` / `RefCounted` / `GodotCallable`) stayed in the drift gate `check_wrapper_generator.py` (red run in b375b019). What the compiler does NOT reject — an `actual` carrying an extra public member, D1's one-sided-member finding — is `check_actual_public_surface.py`. Not carried over: comparing the two actuals' parameter NAMES (expect/actual matching is by signature; common callers see the expect's names).",
+    },
 )
 
 # Considered for retirement and KEPT, with the gap that keeps them.
@@ -523,7 +533,11 @@ def render(carried: dict[str, str] | None) -> str:
     out("| Script | Retired | Subsumed by | Evidence |")
     out("| --- | --- | --- | --- |")
     for gate in RETIRED_GATES:
-        out(f"| {code(gate['script'])} | {md_cell(gate['retired'])} | {code(gate['subsumed_by'])} | {md_cell(gate['evidence'])} |")
+        subsumed = gate["subsumed_by"]
+        if isinstance(subsumed, str):
+            subsumed = (subsumed,)
+        subsumed_cell = "; ".join(code(item) if item.startswith("scripts/") else md_cell(item) for item in subsumed)
+        out(f"| {code(gate['script'])} | {md_cell(gate['retired'])} | {subsumed_cell} | {md_cell(gate['evidence'])} |")
     out("")
     out("Reviewed as a retirement candidate and kept:")
     out("")

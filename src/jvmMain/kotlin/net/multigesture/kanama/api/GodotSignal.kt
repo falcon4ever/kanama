@@ -6,31 +6,43 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 /**
- * Small Kotlin-facing handle for a named Godot signal on an object.
+ * Small Kotlin-facing handle for a named Godot signal on an object — the desktop/Android actual of
+ * `src/commonMain/.../api/GodotSignal.expect.kt` (task 117 P4′, D25).
  *
  * This is intentionally a thin Callable-based bridge. It connects a signal to
  * a method on another Godot object or Kanama script instance, which keeps
- * lifetime ownership in Godot until a later Kotlin lambda registry exists.
+ * lifetime ownership in Godot; lambda connections go through [SignalCallbackRegistry]
+ * and a bound Callable. The overloads replace default arguments (D24).
  */
-class GodotSignal internal constructor(
+actual class GodotSignal
+internal actual constructor(
     internal val owner: GodotObject,
-    val name: String,
+    actual val name: String,
 ) {
-    fun connect(target: GodotObject, method: String, flags: Long = GodotObject.CONNECT_DEFAULT): Long =
+    actual fun connect(target: GodotObject, method: String): Long =
+        connect(target, method, GodotObject.CONNECT_DEFAULT)
+
+    actual fun connect(target: GodotObject, method: String, flags: Long): Long =
         owner.connect(name, target, method, flags)
 
-    fun disconnect(target: GodotObject, method: String) {
+    actual fun disconnect(target: GodotObject, method: String) {
         owner.disconnect(name, target, method)
     }
 
-    fun emit(vararg args: Any?) {
+    actual fun emit(vararg args: Any?) {
         owner.emitSignal(name, *args)
     }
 
-    fun connect(
+    actual fun connect(
         target: GodotObject,
         argumentCount: Int,
-        flags: Long = GodotObject.CONNECT_DEFAULT,
+        callback: (List<Any?>) -> Unit,
+    ): SignalConnection = connect(target, argumentCount, GodotObject.CONNECT_DEFAULT, callback)
+
+    actual fun connect(
+        target: GodotObject,
+        argumentCount: Int,
+        flags: Long,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         require(argumentCount in 0..3) { "Signal lambda callbacks currently support 0..3 emitted arguments" }
@@ -53,16 +65,21 @@ class GodotSignal internal constructor(
         )
     }
 
-    fun connectObject(
+    actual fun connectObject(target: GodotObject, callback: (GodotObject) -> Unit): SignalConnection =
+        connectObject(target, GodotObject.CONNECT_DEFAULT, callback)
+
+    actual fun connectObject(
         target: GodotObject,
-        flags: Long = GodotObject.CONNECT_DEFAULT,
+        flags: Long,
         callback: (GodotObject) -> Unit,
     ): SignalConnection =
         connect(target, argumentCount = 1, flags = flags) { args ->
             (args.firstOrNull() as? GodotObject)?.let(callback)
         }
 
-    suspend fun await(target: GodotObject, argumentCount: Int = 0): List<Any?> =
+    actual suspend fun await(target: GodotObject): List<Any?> = await(target, argumentCount = 0)
+
+    actual suspend fun await(target: GodotObject, argumentCount: Int): List<Any?> =
         suspendCancellableCoroutine { continuation ->
             var connection: SignalConnection? = null
             connection = connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) { args ->
@@ -79,23 +96,23 @@ class GodotSignal internal constructor(
             }
         }
 
-    suspend fun awaitObject(target: GodotObject): GodotObject? =
+    actual suspend fun awaitObject(target: GodotObject): GodotObject? =
         await(target, argumentCount = 1).firstOrNull() as? GodotObject
 }
 
-class SignalConnection internal constructor(
+actual class SignalConnection internal constructor(
     private val owner: GodotObject,
     private val signal: String,
     private val target: GodotObject,
     private val method: String,
     private val boundArgs: List<Any?>,
     private val callbackId: Long,
-    val error: Long,
+    actual val error: Long,
     private val disconnectOnClose: Boolean,
 ) : AutoCloseable {
     private var closed = false
 
-    override fun close() {
+    actual override fun close() {
         if (closed) return
         closed = true
         SignalCallbackRegistry.unregister(callbackId)

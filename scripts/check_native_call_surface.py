@@ -34,7 +34,6 @@ ROOT = Path(__file__).resolve().parent.parent
 SCAN_ROOTS = (
     Path("src/jvmMain/kotlin"),
     Path("src/commonMain/kotlin"),
-    Path("src/sharedApi/kotlin"),
     Path("processor/src/main/kotlin"),
 )
 

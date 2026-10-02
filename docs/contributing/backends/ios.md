@@ -82,8 +82,8 @@ model described next.
 
 iOS reuses the desktop/Android solution. The Godot API wrappers are **generated**
 ("Generated from Godot docs") by `scripts/generate_api_wrapper.py` from
-`extension_api.json`, once, into the shared tree `src/commonMain/kotlin/.../api/`,
-which iOS compiles as-is (task 103). Since task 30 iOS hosts the **full
+`extension_api.json`, once, into the shared tree `src/commonMain/kotlin/.../api/` —
+the module's KMP common fragment since task 117 P4′ — which iOS compiles as-is (task 103). Since task 30 iOS hosts the **full
 desktop-equivalent class set** (the shared classes plus its iOS-only generated,
 hand-shaped and hand-written collision classes; the only exceptions are the documented
 `IOS_UNSUPPORTED_CLASSES`). Methods whose ptrcall shape is not audited on iOS are
@@ -107,7 +107,7 @@ the same wrapper source runs on both backends. A wrapper BODY unwraps it once th
 the internal `GodotObject.segment`; the raw type never appears in a public signature.
 
 **The roots are shared too (task 117 P3′).** `GodotObject`, `RefCounted` and `GodotCallable`
-are written once, by hand, in `src/sharedApi/kotlin/.../api/` — iOS no longer has its own
+are written once, by hand, in `src/commonMain/kotlin/.../api/` — iOS no longer has its own
 copies (the old iOS `GodotObject` lived inside `IosGodotApi.kt`). Every member is the desktop
 ptrcall body over `ObjectCalls`, so iOS carries the full desktop `GodotObject` surface
 (`setMeta`/`getMeta`, `setIndexed`/`getIndexed`, `callv`, `tr`/`trN`, `addUserSignal`,
@@ -126,9 +126,13 @@ The root `Object` helpers behind those members are generated into the iOS `Objec
 in the generator); four are hand-written above the marker — `connect` delegates to
 `IosGodot.objectConnect`, the two bound-Callable shapes to the existing
 `ObjectCalls.connectBound`/`disconnectBound`, and `add_user_signal` (desktop's helper name) to
-the Variant path. `GodotSignal`/`SignalConnection` stay per-platform
-(`src/iosMain/.../api/GodotSignal.kt`: `IosCallableRegistry` + the shim's custom Callable)
-with the desktop public surface, held by `scripts/check_wrapper_parity.py`.
+the Variant path. `GodotSignal`/`SignalConnection` are the platform classes: `expect class`es
+in `src/commonMain/.../api/GodotSignal.expect.kt` whose iOS `actual`s
+(`src/iosMain/.../api/GodotSignal.kt`) dispatch through `IosCallableRegistry` + the shim's
+custom Callable; `MainThread` is an `expect object` whose iOS actual
+(`src/iosMain/.../api/MainThread.kt`) runs `post`/`runOnMainThread` inline and pumps its frame
+queues from `KanamaIosRuntime.frame()`. The compiler holds both to the desktop public surface
+(task 117 P4′).
 
 ```
 extension_api.json
@@ -151,8 +155,10 @@ The proven runtime stayed; the hand-written API was replaced with generated wrap
   (`scripts/check_wrapper_generator.py`). See `docs/contributing/wrapper-maintenance.md`.
 - The iOS emission target decides the shared tree's method set, renders the iOS-only
   generated wrappers (`src/iosMain/.../api`) and the matching `ObjectCalls` helper
-  bodies (generated from the CallShape set); the `expect/actual ObjectCalls` form is
-  a separate task (see the Shared Wrapper Tree design check).
+  bodies (generated from the CallShape set) inside the `GENERATED MEMBERS` region of
+  the iOS `actual object ObjectCalls`; the generator also writes the common
+  `expect object ObjectCalls` (every helper the tree calls), so the compiler proves
+  iOS implements each one.
 - The hand-written layer is now only genuinely bespoke runtime pieces:
   `KanamaScript` base, `KanamaScope`, `Input`/InputMap glue, the signal/Callable
   registry, lifecycle. Everything else is generated.
@@ -160,7 +166,7 @@ The proven runtime stayed; the hand-written API was replaced with generated wrap
 ## Contract: generic ptrcall dispatch (iOS ObjectCalls)
 
 Informed by a survey of the desktop `ObjectCalls.*` helper shapes
-(regenerable with `grep -rhoE "ObjectCalls\.[A-Za-z0-9_]+" src/sharedApi/.../api/ | sort -u`):
+(regenerable with `grep -rhoE "ObjectCalls\.[A-Za-z0-9_]+" src/commonMain/kotlin/net/multigesture/kanama/api/ | sort -u`):
 the generated wrappers reference ~1500 distinct `ObjectCalls.*` helper shapes (1467 at
 the task-30 survey; 121 for
 the platformer's classes alone), of which only ~7% map to an existing iOS C

@@ -4,10 +4,10 @@ package net.multigesture.kanama.binding.runtime
  * The platform-bound half of the root wrappers (task 117 P3′, decision D20).
  *
  * `GodotObject`, `RefCounted` and `GodotCallable` are written ONCE, by hand, in
- * `src/sharedApi/kotlin/net/multigesture/kanama/api/`. Every body there is a ptrcall through
- * [ObjectCalls] except these four hooks, which each backend implements differently — so they are
- * the whole seam, and the compiler holds both backends to it the way it holds them to [ObjectCalls]
- * and [BuiltinCalls]:
+ * `src/commonMain/kotlin/net/multigesture/kanama/api/` (common code since task 117 P4′). Every body
+ * there is a ptrcall through [ObjectCalls] except these four hooks, which each backend implements
+ * differently — so they are the whole seam, and the compiler holds both backends to it the way it
+ * holds them to [ObjectCalls] and [BuiltinCalls]:
  * - [instanceIdOf]: the engine instance id `GodotObject` captures once at construction (desktop:
  *   the `object_get_instance_id` interface downcall; iOS: the shim's entry of the same name);
  * - [emitSignal]: `Object.emit_signal(name, *args)` (desktop: `Signals.emitAny`, a Variant

@@ -6,24 +6,25 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 /**
- * Main-thread queue for safe Godot API handoff.
+ * Main-thread queue for safe Godot API handoff — the desktop/Android actual of the common
+ * `expect object MainThread` (`src/commonMain/.../api/MainThread.expect.kt`, task 117 P4′ D26).
  *
  * Background work can enqueue actions here; Kanama pumps this queue once per
- * engine frame from ScriptLanguage._frame.
+ * engine frame from ScriptLanguage._frame. `@JvmStatic` is mirrored from the expect (see there).
  */
-object MainThread {
+actual object MainThread {
 
     private val tasks = ConcurrentLinkedQueue<() -> Unit>()
     private val nextFrameTasks = ConcurrentLinkedQueue<() -> Unit>()
     private val nextFrameContinuations = ConcurrentLinkedQueue<CancellableContinuation<Unit>>()
 
     @JvmStatic
-    fun runOnMainThread(action: () -> Unit) {
+    actual fun runOnMainThread(action: () -> Unit) {
         tasks.add(action)
     }
 
     @JvmStatic
-    fun post(action: () -> Unit) {
+    actual fun post(action: () -> Unit) {
         runOnMainThread(action)
     }
 
@@ -31,7 +32,7 @@ object MainThread {
      * Enqueue an action to run after at least one ScriptLanguage._frame pump.
      */
     @JvmStatic
-    fun postNextFrame(action: () -> Unit) {
+    actual fun postNextFrame(action: () -> Unit) {
         nextFrameTasks.add(action)
     }
 
@@ -39,7 +40,7 @@ object MainThread {
      * Enqueue an action to run after at least [frames] ScriptLanguage._frame pumps.
      */
     @JvmStatic
-    fun postAfterFrames(frames: Int, action: () -> Unit) {
+    actual fun postAfterFrames(frames: Int, action: () -> Unit) {
         if (frames <= 0) {
             post(action)
             return
@@ -53,7 +54,7 @@ object MainThread {
     /**
      * Resume on the next frame pumped by Kanama's ScriptLanguage._frame callback.
      */
-    suspend fun awaitNextFrame() {
+    actual suspend fun awaitNextFrame() {
         suspendCancellableCoroutine { continuation ->
             nextFrameContinuations.add(continuation)
             continuation.invokeOnCancellation {

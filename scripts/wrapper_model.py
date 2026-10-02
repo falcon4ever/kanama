@@ -563,7 +563,7 @@ def abi_kind(type_name: str, meta: str | None = None) -> str:
 
 def scan_wrappers(api_dir: Path) -> dict[str, set[str]]:
     """Method coverage per class over the shared tree AND the platform directory (task 117 P1'(a):
-    a class that moves into src/sharedApi used to drop to 0/N because only the platform dir was
+    a class that moves into the shared tree used to drop to 0/N because only the platform dir was
     read; companion files count too, they carry generated sugar)."""
     wrapped: dict[str, set[str]] = {}
     for path in wrapper_source_files(api_dir, companions=True):
@@ -585,13 +585,14 @@ def scan_wrappers(api_dir: Path) -> dict[str, set[str]]:
     return wrapped
 
 
-# One shared generated wrapper tree, compiled by every native backend (task 103): the root JVM
-# module and :ios-runtime add SHARED_API_DIR as a source root, and the Android plugin copies it
-# next to the desktop sources. The per-platform directories hold only what is not shared: the
-# hand-shaped classes, the classes generated for one platform only, and the generated companion
-# files (`<Class>.jvm.kt` desktop-only members, `<Class>.ios.kt` iOS-only sugar).
+# One shared generated wrapper tree, compiled by every native backend (task 103): since task 117
+# P4' it is part of the module's KMP common fragment (src/commonMain), so the JVM and both iOS
+# targets compile it as common code and the Android plugin's copy of commonMain carries it. The
+# per-platform directories hold only what is not shared: the `actual`s of the common `expect`
+# classes, the hand-shaped classes, the classes generated for one platform only, and the generated
+# companion files (`<Class>.jvm.kt` desktop-only members, `<Class>.ios.kt` iOS-only sugar).
 ROOT = Path(__file__).resolve().parents[1]
-SHARED_API_DIR = ROOT / "src/sharedApi/kotlin/net/multigesture/kanama/api"
+SHARED_API_DIR = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api"
 DESKTOP_API_DIR = ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api"
 IOS_API_DIR = ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"
 PLATFORM_API_DIRS = (DESKTOP_API_DIR, IOS_API_DIR)

@@ -81,8 +81,13 @@ object KanamaAndroidRemap {
     private const val LEADING_MODIFIERS =
         """(?:@[\w.]+(?:\([^)]*\))?\s+|(?:public|internal|private|protected|open|final|abstract|override|inline|infix|operator|suspend|external|tailrec|companion|data|value|sealed|enum|annotation|inner|const|lateinit)\s+)*"""
 
-    /** The declaration keywords an `expect`/`actual` modifier can precede. */
-    private const val DECLARATION_KEYWORDS = """(class|object|interface|val|var|fun|typealias)"""
+    /**
+     * The declaration keywords an `expect`/`actual` modifier can precede. `constructor` since task
+     * 117 P4': `expect class GodotSignal internal constructor(...)` makes its actuals declare
+     * `internal actual constructor(`, which the actuals put at a line start so [ACTUAL_MODIFIER]
+     * strips it; the audit catches one that ever sits mid-line.
+     */
+    private const val DECLARATION_KEYWORDS = """(class|object|interface|val|var|fun|typealias|constructor)"""
 
     /**
      * The `actual` modifier of a `src/jvmMain` declaration, dropped on the way in.

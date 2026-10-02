@@ -5,34 +5,45 @@ import kotlinx.coroutines.CompletableDeferred
 // KANAMA-IOS-HANDWRITTEN: [runtime] signal/connect/emitSignal/await use the custom GDExtension
 // Callable + IosCallableRegistry (lambda/bound dispatch); bespoke runtime, not generated.
 /**
- * Small Kotlin-facing handle for a named Godot signal on an object — the iOS implementation.
+ * Small Kotlin-facing handle for a named Godot signal on an object — the iOS actual of
+ * `src/commonMain/.../api/GodotSignal.expect.kt` (task 117 P4′, D25).
  *
- * One of the two genuinely per-platform classes left among the roots (task 117 P3′, D21): desktop
- * dispatches lambda connections through `SignalCallbackRegistry` and a bound Callable, iOS through
- * [IosCallableRegistry] and a custom Callable built in the C shim. The public surface is desktop's
- * (`src/jvmMain/.../api/GodotSignal.kt`), held by `scripts/check_wrapper_parity.py`.
+ * One of the two genuinely per-platform classes left among the roots (D21): desktop dispatches
+ * lambda connections through `SignalCallbackRegistry` and a bound Callable, iOS through
+ * [IosCallableRegistry] and a custom Callable built in the C shim. The public surface is the
+ * expect's, checked by the compiler; the overloads replace default arguments (D24).
  */
-class GodotSignal internal constructor(
+actual class GodotSignal
+internal actual constructor(
     internal val owner: GodotObject,
-    val name: String,
+    actual val name: String,
 ) {
-    fun connect(target: GodotObject, method: String, flags: Long = GodotObject.CONNECT_DEFAULT): Long =
+    actual fun connect(target: GodotObject, method: String): Long =
+        connect(target, method, GodotObject.CONNECT_DEFAULT)
+
+    actual fun connect(target: GodotObject, method: String, flags: Long): Long =
         owner.connect(name, target, method, flags)
 
     // Object.disconnect(signal, Callable(target, method)) — symmetric to connect(target, method).
-    fun disconnect(target: GodotObject, method: String) {
+    actual fun disconnect(target: GodotObject, method: String) {
         owner.disconnect(name, target, method)
     }
 
     /** Emits this signal (matches desktop Signal.emit). Delegates to the owner's emit_signal path. */
-    fun emit(vararg args: Any?) {
+    actual fun emit(vararg args: Any?) {
         owner.emitSignal(name, *args)
     }
 
-    fun connect(
+    actual fun connect(
         target: GodotObject,
         argumentCount: Int,
-        flags: Long = GodotObject.CONNECT_DEFAULT,
+        callback: (List<Any?>) -> Unit,
+    ): SignalConnection = connect(target, argumentCount, GodotObject.CONNECT_DEFAULT, callback)
+
+    actual fun connect(
+        target: GodotObject,
+        argumentCount: Int,
+        flags: Long,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         val callbackId = IosCallableRegistry.register(callback)
@@ -48,16 +59,21 @@ class GodotSignal internal constructor(
         return SignalConnection(result, owner, name, callbackId, target)
     }
 
-    fun connectObject(
+    actual fun connectObject(target: GodotObject, callback: (GodotObject) -> Unit): SignalConnection =
+        connectObject(target, GodotObject.CONNECT_DEFAULT, callback)
+
+    actual fun connectObject(
         target: GodotObject,
-        flags: Long = GodotObject.CONNECT_DEFAULT,
+        flags: Long,
         callback: (GodotObject) -> Unit,
     ): SignalConnection =
         connect(target, argumentCount = 1, flags = flags) { args ->
             (args.firstOrNull() as? GodotObject)?.let(callback)
         }
 
-    suspend fun await(target: GodotObject, argumentCount: Int = 0): List<Any?> {
+    actual suspend fun await(target: GodotObject): List<Any?> = await(target, argumentCount = 0)
+
+    actual suspend fun await(target: GodotObject, argumentCount: Int): List<Any?> {
         // Connect a one-shot callable that completes the deferred when the signal
         // fires, then suspend until then. CONNECT_ONE_SHOT makes Godot drop the
         // connection after it fires, which releases the registry entry via free_func.
@@ -69,13 +85,13 @@ class GodotSignal internal constructor(
     }
 
     // Desktop's awaitObject, over the one-shot [await] above (task 117 P3′, D21).
-    suspend fun awaitObject(target: GodotObject): GodotObject? =
+    actual suspend fun awaitObject(target: GodotObject): GodotObject? =
         await(target, argumentCount = 1).firstOrNull() as? GodotObject
 }
 
-class SignalConnection internal constructor(
+actual class SignalConnection internal constructor(
     // Real Object.connect return Error (0 == OK) from the lambda-connect path.
-    val error: Long = 0L,
+    actual val error: Long = 0L,
     private val owner: GodotObject? = null,
     private val signalName: String = "",
     private val callbackId: Long = 0L,
@@ -90,7 +106,7 @@ class SignalConnection internal constructor(
     // connection's free_func then releases the registry entry. No-op if the connect failed or
     // close() was already called. (A CONNECT_ONE_SHOT connection auto-disconnects when it fires;
     // calling close() afterwards is a benign redundant disconnect.) Phase 4.1b.
-    override fun close() {
+    actual override fun close() {
         if (closed || error != 0L || owner == null || callbackId == 0L) {
             return
         }

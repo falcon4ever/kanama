@@ -405,7 +405,8 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
 # too but carry no Godot class name, so the tree universe never sees them; this table is for a root
 # that DOES share its name with a Godot class and would otherwise be generated into the shared tree
 # over the hand file. Their platform-bound hooks go through the internal `ObjectRuntime` seam in
-# src/commonMain. scripts/check_wrapper_parity.py fails when a per-platform copy of one reappears.
+# src/commonMain. scripts/check_wrapper_generator.py (stale_hand_root_copies) fails when a
+# per-platform copy of one reappears.
 SHARED_HAND_ROOTS: dict[str, str] = {
     "RefCounted": "lifetime policy root (checkOpen/close/retain/releaseHandle over ObjectCalls)",
 }
@@ -3350,26 +3351,13 @@ OBJECTCALLS_EXPECT = (
 )
 COMMON_SOURCE_ROOT = ROOT / "src/commonMain/kotlin"
 
-# Hand-shaped per-platform wrapper classes (task 117): a helper whose SIGNATURE names one of these
-# cannot be an `expect` member, because the common fragment cannot see the class. Those helpers stay
-# plain members on both platforms -- the shared api tree is platform-compiled source, so it calls
-# them exactly as before -- and `check_objectcalls_parity.py` carries them as its documented
-# exceptions; the parity gate reads this list back through render_objectcalls_expect(), so there is no second list to edit.
-# Kept out of the common `expect object ObjectCalls` because the common fragment cannot NAME these
-# classes: GodotCallable is a per-platform root; Material is generated once now (task 117 P1'(a)) but
-# lives in src/sharedApi, which is compiled PER PLATFORM, not in commonMain, until task 117 P4'. Do
-# not delete an entry because the class stopped being hand-written — delete it when it is common.
-PLATFORM_ONLY_SIGNATURE_TYPES = ("GodotCallable", "Material")
-
-# Referenced helpers with a DEFAULT ARGUMENT, which cannot be `expect` members. An `actual` may not
-# restate a default ("Actual function cannot have default argument values. They must be declared in
-# the expected function"), so the default would have to live on the `expect` declaration -- and
-# ANDROID compiles a copy of these same sources with no common fragment at all (the `*.expect.kt`
-# files are skipped, the `actual ` modifiers stripped), so on that lane the default would simply be
-# gone and every caller that omits the argument would fail to compile. Keeping the helper out of the
-# `expect` object keeps one default in one place on all four lanes; the desktop/iOS parameter-name
-# parity of these helpers is still gated by scripts/check_objectcalls_parity.py.
-EXPECT_DEFAULT_ARG_EXCLUSIONS = {"callWithVariantArgs"}
+# Every referenced helper is an `expect` member since task 117 P4' (D27): the six whose signatures
+# name a wrapper class (`GodotCallable`, `Material`) joined when the tree moved into commonMain, and
+# `callWithVariantArgs` when its `owned` default became the separate `callWithVariantArgsOwned`.
+# `scripts/check_objectcalls_parity.py` fails if a referenced helper is ever left out again. A
+# signature naming an api class gets that class imported into the expect file
+# (OBJECTCALLS_EXPECT_API_IMPORT below).
+OBJECTCALLS_EXPECT_API_IMPORT = "net.multigesture.kanama.api"
 
 # Desktop OVERLOADS that stay platform-only. Desktop declares two type-differentiated overloads of
 # these two helpers (`value: Int` / `value: Long`, `path: NodePath` / `path: String`) and iOS has
@@ -3462,6 +3450,71 @@ def strip_comments(src: str) -> str:
     return "".join(out)
 
 
+def strip_noise(src: str) -> str:
+    """Blank comments AND string/char literals in place, keeping every newline.
+
+    Unlike [strip_comments], offsets and line numbers survive, so a gate can report `file:line`
+    and an identifier inside a comment or a string is never read as code. Moved here from the
+    retired `check_wrapper_parity.py` (task 117 P4') for the gates that imported it
+    (`check_ios_static_dispatch.py`, `check_pt_tag_tables.py`).
+    """
+    out = list(src)
+    i = 0
+    n = len(src)
+    while i < n:
+        c = src[i]
+        if c == "/" and i + 1 < n and src[i + 1] == "/":
+            j = src.find("\n", i)
+            if j == -1:
+                j = n
+            for k in range(i, j):
+                out[k] = " "
+            i = j
+        elif c == "/" and i + 1 < n and src[i + 1] == "*":
+            depth = 1
+            j = i + 2
+            while j < n and depth > 0:
+                if src[j] == "/" and j + 1 < n and src[j + 1] == "*":
+                    depth += 1
+                    j += 2
+                elif src[j] == "*" and j + 1 < n and src[j + 1] == "/":
+                    depth -= 1
+                    j += 2
+                else:
+                    j += 1
+            for k in range(i, min(j, n)):
+                if out[k] != "\n":
+                    out[k] = " "
+            i = j
+        elif src.startswith('"""', i):
+            j = src.find('"""', i + 3)
+            j = n if j == -1 else j + 3
+            for k in range(i, j):
+                if out[k] != "\n":
+                    out[k] = " "
+            i = j
+        elif c in "\"'":
+            q = c
+            j = i + 1
+            while j < n:
+                if src[j] == "\\":
+                    j += 2
+                    continue
+                if src[j] == q:
+                    j += 1
+                    break
+                if src[j] == "\n":
+                    break
+                j += 1
+            for k in range(i, min(j, n)):
+                if out[k] != "\n":
+                    out[k] = " "
+            i = j
+        else:
+            i += 1
+    return "".join(out)
+
+
 def match_closer(src: str, start: int) -> int:
     """Index of the closer matching the opener at [start] ('{', '(' or '[')."""
     pairs = {"{": "}", "(": ")", "[": "]"}
@@ -3528,10 +3581,10 @@ def desktop_objectcalls_declarations() -> list[tuple[str, str]]:
     return out
 
 
-# The sources that call the seam: the generated wrapper tree (compiled per platform) and the common
-# fragment beside it (the value types reach the engine through BuiltinCalls, not ObjectCalls, but
-# scanning both means a future common caller is covered too).
-SHARED_TREES = (SHARED_API_DIR.parents[3], COMMON_SOURCE_ROOT)
+# The sources that call the seam: the common fragment, which since task 117 P4' includes the
+# generated wrapper tree (SHARED_API_DIR is under it). The value types reach the engine through
+# BuiltinCalls, not ObjectCalls, but scanning the whole fragment covers any future common caller.
+SHARED_TREES = (COMMON_SOURCE_ROOT,)
 
 # A call through the seam. The opening parenthesis is required and comments are stripped first: the
 # common fragment's KDoc names the backends' files (`.../binding/runtime/ObjectCalls.kt`), which a
@@ -3556,70 +3609,55 @@ def referenced_objectcalls_helpers(trees: tuple[Path, ...] = SHARED_TREES) -> se
     return names
 
 
-def render_objectcalls_expect() -> tuple[str, list[str], list[str]]:
-    """The generated `expect object ObjectCalls` file, the excluded helpers and the member list."""
+def render_objectcalls_expect() -> tuple[str, list[str]]:
+    """The generated `expect object ObjectCalls` file and its member list."""
     declarations = desktop_objectcalls_declarations()
     referenced = referenced_objectcalls_helpers()
+    api_classes = {path.name.removesuffix(".kt") for path in SHARED_API_DIR.glob("*.kt")}
     members: list[str] = []
-    excluded: list[str] = []
     excluded_overloads: list[str] = []
     for name, signature in declarations:
         if name not in referenced:
-            continue
-        if any(re.search(rf"\b{t}\b", signature) for t in PLATFORM_ONLY_SIGNATURE_TYPES):
-            excluded.append(name)
             continue
         signature = signature.replace("MemorySegment", "RawSegment")
         if signature in EXPECT_OVERLOAD_EXCLUSIONS:
             excluded_overloads.append(signature)
             continue
         if "=" in _read_parens(signature, signature.index("(")):
-            if name not in EXPECT_DEFAULT_ARG_EXCLUSIONS:
-                raise SystemExit(
-                    f"{name}: the desktop signature carries a default argument, which an `expect` "
-                    "member cannot express on the Android lane; add it to "
-                    "EXPECT_DEFAULT_ARG_EXCLUSIONS in scripts/generate_api_wrapper.py"
-                )
-            excluded.append(name)
-            continue
+            # An `expect` member takes no default argument (task 117 D24): the Android lane skips
+            # `*.expect.kt` and strips `actual`, so the default would not exist there. Split the
+            # desktop helper into overloads (`callWithVariantArgs` / `callWithVariantArgsOwned` is
+            # the precedent) instead of excluding it from the seam.
+            raise SystemExit(
+                f"{name}: the desktop signature carries a default argument, which an `expect` "
+                "member cannot carry (task 117 D24); split it into overloads"
+            )
         members.append(f"  {signature}")
     members.sort()
-    excluded = sorted(set(excluded))
-    types_used = sorted(
-        {
-            token
-            for member in members
-            for token in re.findall(r"\b[A-Z]\w+\b", member)
-            if token in KANAMA_VALUE_TYPES
-        }
+    tokens = {token for member in members for token in re.findall(r"\b[A-Z]\w+\b", member)}
+    api_used = sorted(token for token in tokens if token in api_classes)
+    types_used = sorted(token for token in tokens if token in KANAMA_VALUE_TYPES)
+    imports = "".join(f"import {OBJECTCALLS_EXPECT_API_IMPORT}.{t}\n" for t in api_used) + "".join(
+        f"import net.multigesture.kanama.types.{t}\n" for t in types_used
     )
-    imports = "".join(f"import net.multigesture.kanama.types.{t}\n" for t in types_used)
     overload_note = (
-        " "
+        "Every helper the tree calls is a member. "
         + " ".join(
             f"The `{signature.split('(')[0].split()[-1]}` overload taking "
             f"`{signature.split('(')[1].split(')')[0].split(',')[-1].strip()}` is desktop-only and "
-            "stays platform-only for the same reason."
+            "stays platform-only: iOS has only the overload the tree calls, and an `expect` member "
+            "must be actualized on both backends."
             for signature in sorted(excluded_overloads)
         )
         if excluded_overloads
-        else ""
+        else "Every helper the tree calls is a member."
     )
-    excluded_note = (
-        "Excluded, and listed in the gate as such: "
-        + ", ".join(f"`{name}`" for name in excluded)
-        + " -- their signatures name a wrapper class the common fragment cannot see (per-platform "
-        "or shared-tree, until task 117 moves the tree to commonMain) or carry a default argument (which an `expect` "
-        "member cannot express on the Android lane)."
-        if excluded
-        else "No referenced helper is excluded."
-    ) + overload_note
     header = OBJECTCALLS_EXPECT_HEADER.format(
         imports=imports + "\n" if imports else "",
-        desktop_only=len(declarations) - len(members) - len(excluded),
-        excluded_note=excluded_note,
+        desktop_only=len(declarations) - len(members),
+        excluded_note=overload_note,
     )
-    return header + "\n\n".join(members) + "\n}\n", excluded, members
+    return header + "\n\n".join(members) + "\n}\n", members
 
 
 def _inject_ios_helper_import(content: str) -> str:
@@ -4115,7 +4153,7 @@ def render_gap_index(gap: dict[str, SharedRender], shared_count: int) -> str:
         "<!-- GENERATED by scripts/generate_api_wrapper.py --write-tree. DO NOT EDIT BY HAND; the drift gate",
         "     (scripts/check_wrapper_generator.py) fails when this page is stale. -->",
         "",
-        "The shared wrapper tree (`src/sharedApi/kotlin/net/multigesture/kanama/api`) holds the members",
+        "The shared wrapper tree (`src/commonMain/kotlin/net/multigesture/kanama/api`) holds the members",
         "both native backends can call. Every member below is generated for desktop/Android only, as an",
         "extension in the class's `<Class>.jvm.kt` companion, because iOS has no audited `ObjectCalls`",
         "helper for its ptrcall shape yet, or does not host a wrapper type it uses. When the helper lands",
@@ -4227,7 +4265,7 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
             # `actual` on the region members that actualize an `expect object ObjectCalls` member
             # (task 104 step 3 parcel C'): the iOS-only overloads in the same region stay plain,
             # which is why the marker keys on the parameter names and not just the helper name.
-            _, _, expect_members = render_objectcalls_expect()
+            _, expect_members = render_objectcalls_expect()
             region, marked = mark_actual_members(
                 render_ios_objectcalls(registry, unnamed), expect_member_keys(expect_members)
             )
@@ -4418,6 +4456,18 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
     if kind in IOS_TYPED_ARRAY_ARGS:
         param_type, helper = IOS_TYPED_ARRAY_ARGS[kind]
         return (param_type, "PT_TYPED_ARRAY_BLOB", [f"val {c} = {helper}({a})"], f"{c}.reinterpret<CPointed>()")
+    if kind == "TypedMaterialArray":
+        # The one typed-object-array arg desktop spells with its element class:
+        # `ptrcallWithTypedMaterialListArg(values: List<Material>)` (119 finding 18). Since task 117
+        # P4' the helper is an `expect object ObjectCalls` member -- `Material` is common code now --
+        # so iOS must spell the parameter TYPE exactly like desktop. The descriptor is the same
+        # untyped object Array as below; only the Kotlin parameter type differs.
+        return (
+            "List<Material>",
+            "PT_TYPED_ARRAY_BLOB",
+            [f"val {c} = packTypedObjectArrayDesc({a})"],
+            f"{c}.reinterpret<CPointed>()",
+        )
     typed_object_element = typed_object_array_element_any(kind)
     if typed_object_element is not None:
         # Array[Object subclass] arg: the wrapper passes List<Element>; List is covariant, so the
@@ -5097,17 +5147,12 @@ def tree_main(args: argparse.Namespace) -> int:
             target.write_text(content, encoding="utf-8")
         print(f"{summary} -> {args.regen_tree}")
     if args.write_tree:
-        expect_content, expect_excluded, expect_members = render_objectcalls_expect()
+        expect_content, expect_members = render_objectcalls_expect()
         OBJECTCALLS_EXPECT.parent.mkdir(parents=True, exist_ok=True)
         OBJECTCALLS_EXPECT.write_text(expect_content, encoding="utf-8")
         print(
             f"[generate_api_wrapper] expect ObjectCalls: {len(expect_members)} member(s) -> "
             f"{_rel(OBJECTCALLS_EXPECT)}"
-            + (
-                f"; excluded (platform-typed signature, task 117): {', '.join(expect_excluded)}"
-                if expect_excluded
-                else ""
-            )
         )
         written = 0
         for rel_path, content in tree.files.items():
@@ -5325,7 +5370,7 @@ def main() -> int:
             unnamed: set[str] = set()
             # Marked exactly as the tree path marks the real region, so the fixture keeps locking
             # what actually lands in the iOS ObjectCalls.kt (task 104 step 3 parcel C').
-            _, _, fixture_expect_members = render_objectcalls_expect()
+            _, fixture_expect_members = render_objectcalls_expect()
             region, _ = mark_actual_members(
                 render_ios_objectcalls(registry, unnamed),
                 expect_member_keys(fixture_expect_members),
