@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: InputEventJoypadMotion
  */
 class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
-    var axis: Long
+    var axis: JoyAxis
         @JvmName("axisProperty")
         get() = getAxis()
         @JvmName("setAxisProperty")
@@ -28,9 +28,9 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      *
      * Generated from Godot docs: InputEventJoypadMotion.set_axis
      */
-    fun setAxis(axis: Long) {
+    fun setAxis(axis: JoyAxis) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis)
+        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis.value)
     }
 
     /**
@@ -38,9 +38,9 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
      *
      * Generated from Godot docs: InputEventJoypadMotion.get_axis
      */
-    fun getAxis(): Long {
+    fun getAxis(): JoyAxis {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment)
+        return JoyAxis(ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment))
     }
 
     /**

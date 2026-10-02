@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -23,9 +24,9 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Shader.get_mode
      */
-    fun getMode(): Long {
+    fun getMode(): Shader.Mode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
+        return Shader.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
     }
 
     /**
@@ -100,14 +101,55 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(inspectNativeShaderCodeBind, segment)
     }
 
-    companion object {
-        const val MODE_SPATIAL: Long = 0L
-        const val MODE_CANVAS_ITEM: Long = 1L
-        const val MODE_PARTICLES: Long = 2L
-        const val MODE_SKY: Long = 3L
-        const val MODE_FOG: Long = 4L
-        const val MODE_TEXTURE_BLIT: Long = 5L
+    /**
+     * Godot's `Shader.Mode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Shader.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: Shader.Mode
+     */
+    @JvmInline
+    value class Mode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Mode used to draw all 3D objects.
+             *
+             * Generated from Godot docs: Shader.MODE_SPATIAL
+             */
+            val SPATIAL: Mode get() = Mode(0L)
+            /**
+             * Mode used to draw all 2D objects.
+             *
+             * Generated from Godot docs: Shader.MODE_CANVAS_ITEM
+             */
+            val CANVAS_ITEM: Mode get() = Mode(1L)
+            /**
+             * Mode used to calculate particle information on a per-particle basis. Not used for drawing.
+             *
+             * Generated from Godot docs: Shader.MODE_PARTICLES
+             */
+            val PARTICLES: Mode get() = Mode(2L)
+            /**
+             * Mode used for drawing skies. Only works with shaders attached to `Sky` objects.
+             *
+             * Generated from Godot docs: Shader.MODE_SKY
+             */
+            val SKY: Mode get() = Mode(3L)
+            /**
+             * Mode used for setting the color and density of volumetric fog effect.
+             *
+             * Generated from Godot docs: Shader.MODE_FOG
+             */
+            val FOG: Mode get() = Mode(4L)
+            /**
+             * Mode used for drawing to DrawableTexture resources via blit calls.
+             *
+             * Generated from Godot docs: Shader.MODE_TEXTURE_BLIT
+             */
+            val TEXTURE_BLIT: Mode get() = Mode(5L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Shader? =
             wrap(handle.segment)

@@ -210,8 +210,8 @@ object ProjectSettings {
      * Generated from Godot docs: ProjectSettings.save
      */
     @JvmStatic
-    fun save(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(saveBind, singleton)
+    fun save(): GodotError {
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(saveBind, singleton))
     }
 
     /**
@@ -239,8 +239,8 @@ object ProjectSettings {
      * Generated from Godot docs: ProjectSettings.save_custom
      */
     @JvmStatic
-    fun saveCustom(file: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveCustomBind, singleton, file)
+    fun saveCustom(file: String): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveCustomBind, singleton, file))
     }
 
     /**

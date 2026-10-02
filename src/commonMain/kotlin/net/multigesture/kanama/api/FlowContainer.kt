@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,13 +13,13 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: FlowContainer
  */
 open class FlowContainer(handle: GodotHandle) : Container(handle) {
-    var alignment: Long
+    var alignment: FlowContainer.AlignmentMode
         @JvmName("alignmentProperty")
         get() = getAlignment()
         @JvmName("setAlignmentProperty")
         set(value) = setAlignment(value)
 
-    var lastWrapAlignment: Long
+    var lastWrapAlignment: FlowContainer.LastWrapAlignmentMode
         @JvmName("lastWrapAlignmentProperty")
         get() = getLastWrapAlignment()
         @JvmName("setLastWrapAlignmentProperty")
@@ -46,45 +47,45 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.set_alignment
      */
-    fun setAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment)
+    fun setAlignment(alignment: FlowContainer.AlignmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment.value)
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.get_alignment
      */
-    fun getAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment)
+    fun getAlignment(): FlowContainer.AlignmentMode {
+        return FlowContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment))
     }
 
     /**
      * The wrap behavior of the last, partially filled row or column (must be one of
-     * `LAST_WRAP_ALIGNMENT_INHERIT`, `LAST_WRAP_ALIGNMENT_BEGIN`, `LAST_WRAP_ALIGNMENT_CENTER`, or
-     * `LAST_WRAP_ALIGNMENT_END`).
+     * `LastWrapAlignmentMode.INHERIT`, `LastWrapAlignmentMode.BEGIN`, `LastWrapAlignmentMode.CENTER`,
+     * or `LastWrapAlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.set_last_wrap_alignment
      */
-    fun setLastWrapAlignment(lastWrapAlignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLastWrapAlignmentBind, segment, lastWrapAlignment)
+    fun setLastWrapAlignment(lastWrapAlignment: FlowContainer.LastWrapAlignmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setLastWrapAlignmentBind, segment, lastWrapAlignment.value)
     }
 
     /**
      * The wrap behavior of the last, partially filled row or column (must be one of
-     * `LAST_WRAP_ALIGNMENT_INHERIT`, `LAST_WRAP_ALIGNMENT_BEGIN`, `LAST_WRAP_ALIGNMENT_CENTER`, or
-     * `LAST_WRAP_ALIGNMENT_END`).
+     * `LastWrapAlignmentMode.INHERIT`, `LastWrapAlignmentMode.BEGIN`, `LastWrapAlignmentMode.CENTER`,
+     * or `LastWrapAlignmentMode.END`).
      *
      * Generated from Godot docs: FlowContainer.get_last_wrap_alignment
      */
-    fun getLastWrapAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLastWrapAlignmentBind, segment)
+    fun getLastWrapAlignment(): FlowContainer.LastWrapAlignmentMode {
+        return FlowContainer.LastWrapAlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getLastWrapAlignmentBind, segment))
     }
 
     /**
@@ -129,15 +130,80 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isReverseFillBind, segment)
     }
 
-    companion object {
-        const val ALIGNMENT_BEGIN: Long = 0L
-        const val ALIGNMENT_CENTER: Long = 1L
-        const val ALIGNMENT_END: Long = 2L
-        const val LAST_WRAP_ALIGNMENT_INHERIT: Long = 0L
-        const val LAST_WRAP_ALIGNMENT_BEGIN: Long = 1L
-        const val LAST_WRAP_ALIGNMENT_CENTER: Long = 2L
-        const val LAST_WRAP_ALIGNMENT_END: Long = 3L
+    /**
+     * Godot's `FlowContainer.AlignmentMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`FlowContainer.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: FlowContainer.AlignmentMode
+     */
+    @JvmInline
+    value class AlignmentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The child controls will be arranged at the beginning of the container, i.e. top if orientation
+             * is vertical, left if orientation is horizontal (right for RTL layout).
+             *
+             * Generated from Godot docs: FlowContainer.ALIGNMENT_BEGIN
+             */
+            val BEGIN: AlignmentMode get() = AlignmentMode(0L)
+            /**
+             * The child controls will be centered in the container.
+             *
+             * Generated from Godot docs: FlowContainer.ALIGNMENT_CENTER
+             */
+            val CENTER: AlignmentMode get() = AlignmentMode(1L)
+            /**
+             * The child controls will be arranged at the end of the container, i.e. bottom if orientation is
+             * vertical, right if orientation is horizontal (left for RTL layout).
+             *
+             * Generated from Godot docs: FlowContainer.ALIGNMENT_END
+             */
+            val END: AlignmentMode get() = AlignmentMode(2L)
+        }
+    }
 
+    /**
+     * Godot's `FlowContainer.LastWrapAlignmentMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`FlowContainer.LastWrapAlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: FlowContainer.LastWrapAlignmentMode
+     */
+    @JvmInline
+    value class LastWrapAlignmentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The last partially filled row or column will wrap aligned to the previous row or column in
+             * accordance with `alignment`.
+             *
+             * Generated from Godot docs: FlowContainer.LAST_WRAP_ALIGNMENT_INHERIT
+             */
+            val INHERIT: LastWrapAlignmentMode get() = LastWrapAlignmentMode(0L)
+            /**
+             * The last partially filled row or column will wrap aligned to the beginning of the previous row
+             * or column.
+             *
+             * Generated from Godot docs: FlowContainer.LAST_WRAP_ALIGNMENT_BEGIN
+             */
+            val BEGIN: LastWrapAlignmentMode get() = LastWrapAlignmentMode(1L)
+            /**
+             * The last partially filled row or column will wrap aligned to the center of the previous row or
+             * column.
+             *
+             * Generated from Godot docs: FlowContainer.LAST_WRAP_ALIGNMENT_CENTER
+             */
+            val CENTER: LastWrapAlignmentMode get() = LastWrapAlignmentMode(2L)
+            /**
+             * The last partially filled row or column will wrap aligned to the end of the previous row or
+             * column.
+             *
+             * Generated from Godot docs: FlowContainer.LAST_WRAP_ALIGNMENT_END
+             */
+            val END: LastWrapAlignmentMode get() = LastWrapAlignmentMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FlowContainer? =
             wrap(handle.segment)

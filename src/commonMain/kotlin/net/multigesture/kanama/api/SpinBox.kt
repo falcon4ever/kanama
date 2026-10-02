@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: SpinBox
  */
 class SpinBox(handle: GodotHandle) : Range(handle) {
-    var alignment: Long
+    var alignment: HorizontalAlignment
         @JvmName("alignmentProperty")
         get() = getHorizontalAlignment()
         @JvmName("setAlignmentProperty")
@@ -64,8 +64,8 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: SpinBox.set_horizontal_alignment
      */
-    fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
+    fun setHorizontalAlignment(alignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -73,8 +73,8 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: SpinBox.get_horizontal_alignment
      */
-    fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
+    fun getHorizontalAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
     }
 
     /**

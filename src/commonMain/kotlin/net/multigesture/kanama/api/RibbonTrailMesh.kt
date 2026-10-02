@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: RibbonTrailMesh
  */
 class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
-    var shape: Long
+    var shape: RibbonTrailMesh.Shape
         @JvmName("shapeProperty")
         get() = getShape()
         @JvmName("setShapeProperty")
@@ -161,9 +162,9 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: RibbonTrailMesh.set_shape
      */
-    fun setShape(shape: Long) {
+    fun setShape(shape: RibbonTrailMesh.Shape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape)
+        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape.value)
     }
 
     /**
@@ -171,15 +172,36 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: RibbonTrailMesh.get_shape
      */
-    fun getShape(): Long {
+    fun getShape(): RibbonTrailMesh.Shape {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment)
+        return RibbonTrailMesh.Shape(ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment))
+    }
+
+    /**
+     * Godot's `RibbonTrailMesh.Shape` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RibbonTrailMesh.Shape.<NAME>`).
+     *
+     * Generated from Godot docs: RibbonTrailMesh.Shape
+     */
+    @JvmInline
+    value class Shape(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Gives the mesh a single flat face.
+             *
+             * Generated from Godot docs: RibbonTrailMesh.SHAPE_FLAT
+             */
+            val FLAT: Shape get() = Shape(0L)
+            /**
+             * Gives the mesh two perpendicular flat faces, making a cross shape.
+             *
+             * Generated from Godot docs: RibbonTrailMesh.SHAPE_CROSS
+             */
+            val CROSS: Shape get() = Shape(1L)
+        }
     }
 
     companion object {
-        const val SHAPE_FLAT: Long = 0L
-        const val SHAPE_CROSS: Long = 1L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RibbonTrailMesh? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -47,503 +48,6 @@ object RenderingServer {
     const val PARTICLES_EMIT_FLAG_VELOCITY: Long = 4L
     const val PARTICLES_EMIT_FLAG_COLOR: Long = 8L
     const val PARTICLES_EMIT_FLAG_CUSTOM: Long = 16L
-    const val TEXTURE_TYPE_2D: Long = 0L
-    const val TEXTURE_TYPE_LAYERED: Long = 1L
-    const val TEXTURE_TYPE_3D: Long = 2L
-    const val TEXTURE_LAYERED_2D_ARRAY: Long = 0L
-    const val TEXTURE_LAYERED_CUBEMAP: Long = 1L
-    const val TEXTURE_LAYERED_CUBEMAP_ARRAY: Long = 2L
-    const val CUBEMAP_LAYER_LEFT: Long = 0L
-    const val CUBEMAP_LAYER_RIGHT: Long = 1L
-    const val CUBEMAP_LAYER_BOTTOM: Long = 2L
-    const val CUBEMAP_LAYER_TOP: Long = 3L
-    const val CUBEMAP_LAYER_FRONT: Long = 4L
-    const val CUBEMAP_LAYER_BACK: Long = 5L
-    const val TEXTURE_DRAWABLE_FORMAT_RGBA8: Long = 0L
-    const val TEXTURE_DRAWABLE_FORMAT_RGBA8_SRGB: Long = 1L
-    const val TEXTURE_DRAWABLE_FORMAT_RGBAH: Long = 2L
-    const val TEXTURE_DRAWABLE_FORMAT_RGBAF: Long = 3L
-    const val SHADER_SPATIAL: Long = 0L
-    const val SHADER_CANVAS_ITEM: Long = 1L
-    const val SHADER_PARTICLES: Long = 2L
-    const val SHADER_SKY: Long = 3L
-    const val SHADER_FOG: Long = 4L
-    const val SHADER_TEXTURE_BLIT: Long = 5L
-    const val SHADER_MAX: Long = 6L
-    const val ARRAY_VERTEX: Long = 0L
-    const val ARRAY_NORMAL: Long = 1L
-    const val ARRAY_TANGENT: Long = 2L
-    const val ARRAY_COLOR: Long = 3L
-    const val ARRAY_TEX_UV: Long = 4L
-    const val ARRAY_TEX_UV2: Long = 5L
-    const val ARRAY_CUSTOM0: Long = 6L
-    const val ARRAY_CUSTOM1: Long = 7L
-    const val ARRAY_CUSTOM2: Long = 8L
-    const val ARRAY_CUSTOM3: Long = 9L
-    const val ARRAY_BONES: Long = 10L
-    const val ARRAY_WEIGHTS: Long = 11L
-    const val ARRAY_INDEX: Long = 12L
-    const val ARRAY_MAX: Long = 13L
-    const val ARRAY_CUSTOM_RGBA8_UNORM: Long = 0L
-    const val ARRAY_CUSTOM_RGBA8_SNORM: Long = 1L
-    const val ARRAY_CUSTOM_RG_HALF: Long = 2L
-    const val ARRAY_CUSTOM_RGBA_HALF: Long = 3L
-    const val ARRAY_CUSTOM_R_FLOAT: Long = 4L
-    const val ARRAY_CUSTOM_RG_FLOAT: Long = 5L
-    const val ARRAY_CUSTOM_RGB_FLOAT: Long = 6L
-    const val ARRAY_CUSTOM_RGBA_FLOAT: Long = 7L
-    const val ARRAY_CUSTOM_MAX: Long = 8L
-    const val ARRAY_FORMAT_VERTEX: Long = 1L
-    const val ARRAY_FORMAT_NORMAL: Long = 2L
-    const val ARRAY_FORMAT_TANGENT: Long = 4L
-    const val ARRAY_FORMAT_COLOR: Long = 8L
-    const val ARRAY_FORMAT_TEX_UV: Long = 16L
-    const val ARRAY_FORMAT_TEX_UV2: Long = 32L
-    const val ARRAY_FORMAT_CUSTOM0: Long = 64L
-    const val ARRAY_FORMAT_CUSTOM1: Long = 128L
-    const val ARRAY_FORMAT_CUSTOM2: Long = 256L
-    const val ARRAY_FORMAT_CUSTOM3: Long = 512L
-    const val ARRAY_FORMAT_BONES: Long = 1024L
-    const val ARRAY_FORMAT_WEIGHTS: Long = 2048L
-    const val ARRAY_FORMAT_INDEX: Long = 4096L
-    const val ARRAY_FORMAT_BLEND_SHAPE_MASK: Long = 7L
-    const val ARRAY_FORMAT_CUSTOM_BASE: Long = 13L
-    const val ARRAY_FORMAT_CUSTOM_BITS: Long = 3L
-    const val ARRAY_FORMAT_CUSTOM0_SHIFT: Long = 13L
-    const val ARRAY_FORMAT_CUSTOM1_SHIFT: Long = 16L
-    const val ARRAY_FORMAT_CUSTOM2_SHIFT: Long = 19L
-    const val ARRAY_FORMAT_CUSTOM3_SHIFT: Long = 22L
-    const val ARRAY_FORMAT_CUSTOM_MASK: Long = 7L
-    const val ARRAY_COMPRESS_FLAGS_BASE: Long = 25L
-    const val ARRAY_FLAG_USE_2D_VERTICES: Long = 33554432L
-    const val ARRAY_FLAG_USE_DYNAMIC_UPDATE: Long = 67108864L
-    const val ARRAY_FLAG_USE_8_BONE_WEIGHTS: Long = 134217728L
-    const val ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY: Long = 268435456L
-    const val ARRAY_FLAG_COMPRESS_ATTRIBUTES: Long = 536870912L
-    const val ARRAY_FLAG_FORMAT_VERSION_BASE: Long = 35L
-    const val ARRAY_FLAG_FORMAT_VERSION_SHIFT: Long = 35L
-    const val ARRAY_FLAG_FORMAT_VERSION_1: Long = 0L
-    const val ARRAY_FLAG_FORMAT_VERSION_2: Long = 34359738368L
-    const val ARRAY_FLAG_FORMAT_CURRENT_VERSION: Long = 34359738368L
-    const val ARRAY_FLAG_FORMAT_VERSION_MASK: Long = 255L
-    const val PRIMITIVE_POINTS: Long = 0L
-    const val PRIMITIVE_LINES: Long = 1L
-    const val PRIMITIVE_LINE_STRIP: Long = 2L
-    const val PRIMITIVE_TRIANGLES: Long = 3L
-    const val PRIMITIVE_TRIANGLE_STRIP: Long = 4L
-    const val PRIMITIVE_MAX: Long = 5L
-    const val BLEND_SHAPE_MODE_NORMALIZED: Long = 0L
-    const val BLEND_SHAPE_MODE_RELATIVE: Long = 1L
-    const val MULTIMESH_TRANSFORM_2D: Long = 0L
-    const val MULTIMESH_TRANSFORM_3D: Long = 1L
-    const val MULTIMESH_INTERP_QUALITY_FAST: Long = 0L
-    const val MULTIMESH_INTERP_QUALITY_HIGH: Long = 1L
-    const val LIGHT_PROJECTOR_FILTER_NEAREST: Long = 0L
-    const val LIGHT_PROJECTOR_FILTER_LINEAR: Long = 1L
-    const val LIGHT_PROJECTOR_FILTER_NEAREST_MIPMAPS: Long = 2L
-    const val LIGHT_PROJECTOR_FILTER_LINEAR_MIPMAPS: Long = 3L
-    const val LIGHT_PROJECTOR_FILTER_NEAREST_MIPMAPS_ANISOTROPIC: Long = 4L
-    const val LIGHT_PROJECTOR_FILTER_LINEAR_MIPMAPS_ANISOTROPIC: Long = 5L
-    const val LIGHT_DIRECTIONAL: Long = 0L
-    const val LIGHT_OMNI: Long = 1L
-    const val LIGHT_SPOT: Long = 2L
-    const val LIGHT_AREA: Long = 3L
-    const val LIGHT_PARAM_ENERGY: Long = 0L
-    const val LIGHT_PARAM_INDIRECT_ENERGY: Long = 1L
-    const val LIGHT_PARAM_VOLUMETRIC_FOG_ENERGY: Long = 2L
-    const val LIGHT_PARAM_SPECULAR: Long = 3L
-    const val LIGHT_PARAM_RANGE: Long = 4L
-    const val LIGHT_PARAM_SIZE: Long = 5L
-    const val LIGHT_PARAM_ATTENUATION: Long = 6L
-    const val LIGHT_PARAM_SPOT_ANGLE: Long = 7L
-    const val LIGHT_PARAM_SPOT_ATTENUATION: Long = 8L
-    const val LIGHT_PARAM_SHADOW_MAX_DISTANCE: Long = 9L
-    const val LIGHT_PARAM_SHADOW_SPLIT_1_OFFSET: Long = 10L
-    const val LIGHT_PARAM_SHADOW_SPLIT_2_OFFSET: Long = 11L
-    const val LIGHT_PARAM_SHADOW_SPLIT_3_OFFSET: Long = 12L
-    const val LIGHT_PARAM_SHADOW_FADE_START: Long = 13L
-    const val LIGHT_PARAM_SHADOW_NORMAL_BIAS: Long = 14L
-    const val LIGHT_PARAM_SHADOW_BIAS: Long = 15L
-    const val LIGHT_PARAM_SHADOW_PANCAKE_SIZE: Long = 16L
-    const val LIGHT_PARAM_SHADOW_OPACITY: Long = 17L
-    const val LIGHT_PARAM_SHADOW_BLUR: Long = 18L
-    const val LIGHT_PARAM_TRANSMITTANCE_BIAS: Long = 19L
-    const val LIGHT_PARAM_INTENSITY: Long = 20L
-    const val LIGHT_PARAM_MAX: Long = 21L
-    const val LIGHT_BAKE_DISABLED: Long = 0L
-    const val LIGHT_BAKE_STATIC: Long = 1L
-    const val LIGHT_BAKE_DYNAMIC: Long = 2L
-    const val LIGHT_OMNI_SHADOW_DUAL_PARABOLOID: Long = 0L
-    const val LIGHT_OMNI_SHADOW_CUBE: Long = 1L
-    const val LIGHT_DIRECTIONAL_SHADOW_ORTHOGONAL: Long = 0L
-    const val LIGHT_DIRECTIONAL_SHADOW_PARALLEL_2_SPLITS: Long = 1L
-    const val LIGHT_DIRECTIONAL_SHADOW_PARALLEL_4_SPLITS: Long = 2L
-    const val LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_AND_SKY: Long = 0L
-    const val LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_ONLY: Long = 1L
-    const val LIGHT_DIRECTIONAL_SKY_MODE_SKY_ONLY: Long = 2L
-    const val SHADOW_QUALITY_HARD: Long = 0L
-    const val SHADOW_QUALITY_SOFT_VERY_LOW: Long = 1L
-    const val SHADOW_QUALITY_SOFT_LOW: Long = 2L
-    const val SHADOW_QUALITY_SOFT_MEDIUM: Long = 3L
-    const val SHADOW_QUALITY_SOFT_HIGH: Long = 4L
-    const val SHADOW_QUALITY_SOFT_ULTRA: Long = 5L
-    const val SHADOW_QUALITY_MAX: Long = 6L
-    const val REFLECTION_PROBE_UPDATE_ONCE: Long = 0L
-    const val REFLECTION_PROBE_UPDATE_ALWAYS: Long = 1L
-    const val REFLECTION_PROBE_AMBIENT_DISABLED: Long = 0L
-    const val REFLECTION_PROBE_AMBIENT_ENVIRONMENT: Long = 1L
-    const val REFLECTION_PROBE_AMBIENT_COLOR: Long = 2L
-    const val DECAL_TEXTURE_ALBEDO: Long = 0L
-    const val DECAL_TEXTURE_NORMAL: Long = 1L
-    const val DECAL_TEXTURE_ORM: Long = 2L
-    const val DECAL_TEXTURE_EMISSION: Long = 3L
-    const val DECAL_TEXTURE_MAX: Long = 4L
-    const val DECAL_FILTER_NEAREST: Long = 0L
-    const val DECAL_FILTER_LINEAR: Long = 1L
-    const val DECAL_FILTER_NEAREST_MIPMAPS: Long = 2L
-    const val DECAL_FILTER_LINEAR_MIPMAPS: Long = 3L
-    const val DECAL_FILTER_NEAREST_MIPMAPS_ANISOTROPIC: Long = 4L
-    const val DECAL_FILTER_LINEAR_MIPMAPS_ANISOTROPIC: Long = 5L
-    const val VOXEL_GI_QUALITY_LOW: Long = 0L
-    const val VOXEL_GI_QUALITY_HIGH: Long = 1L
-    const val PARTICLES_MODE_2D: Long = 0L
-    const val PARTICLES_MODE_3D: Long = 1L
-    const val PARTICLES_TRANSFORM_ALIGN_DISABLED: Long = 0L
-    const val PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD: Long = 1L
-    const val PARTICLES_TRANSFORM_ALIGN_Y_TO_VELOCITY: Long = 2L
-    const val PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY: Long = 3L
-    const val PARTICLES_TRANSFORM_ALIGN_LOCAL_BILLBOARD: Long = 4L
-    const val PARTICLES_ALIGN_CHANNEL_FILTER_DISABLED: Long = 0L
-    const val PARTICLES_ALIGN_CHANNEL_FILTER_X: Long = 1L
-    const val PARTICLES_ALIGN_CHANNEL_FILTER_Y: Long = 2L
-    const val PARTICLES_ALIGN_CHANNEL_FILTER_Z: Long = 3L
-    const val PARTICLES_ALIGN_CHANNEL_FILTER_W: Long = 4L
-    const val PARTICLES_ALIGN_AXIS_X: Long = 0L
-    const val PARTICLES_ALIGN_AXIS_Y: Long = 1L
-    const val PARTICLES_DRAW_ORDER_INDEX: Long = 0L
-    const val PARTICLES_DRAW_ORDER_LIFETIME: Long = 1L
-    const val PARTICLES_DRAW_ORDER_REVERSE_LIFETIME: Long = 2L
-    const val PARTICLES_DRAW_ORDER_VIEW_DEPTH: Long = 3L
-    const val PARTICLES_COLLISION_TYPE_SPHERE_ATTRACT: Long = 0L
-    const val PARTICLES_COLLISION_TYPE_BOX_ATTRACT: Long = 1L
-    const val PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT: Long = 2L
-    const val PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE: Long = 3L
-    const val PARTICLES_COLLISION_TYPE_BOX_COLLIDE: Long = 4L
-    const val PARTICLES_COLLISION_TYPE_SDF_COLLIDE: Long = 5L
-    const val PARTICLES_COLLISION_TYPE_HEIGHTFIELD_COLLIDE: Long = 6L
-    const val PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_256: Long = 0L
-    const val PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_512: Long = 1L
-    const val PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_1024: Long = 2L
-    const val PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_2048: Long = 3L
-    const val PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_4096: Long = 4L
-    const val PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_8192: Long = 5L
-    const val PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_MAX: Long = 6L
-    const val FOG_VOLUME_SHAPE_ELLIPSOID: Long = 0L
-    const val FOG_VOLUME_SHAPE_CONE: Long = 1L
-    const val FOG_VOLUME_SHAPE_CYLINDER: Long = 2L
-    const val FOG_VOLUME_SHAPE_BOX: Long = 3L
-    const val FOG_VOLUME_SHAPE_WORLD: Long = 4L
-    const val FOG_VOLUME_SHAPE_MAX: Long = 5L
-    const val VIEWPORT_SCALING_3D_MODE_BILINEAR: Long = 0L
-    const val VIEWPORT_SCALING_3D_MODE_FSR: Long = 1L
-    const val VIEWPORT_SCALING_3D_MODE_FSR2: Long = 2L
-    const val VIEWPORT_SCALING_3D_MODE_METALFX_SPATIAL: Long = 3L
-    const val VIEWPORT_SCALING_3D_MODE_METALFX_TEMPORAL: Long = 4L
-    const val VIEWPORT_SCALING_3D_MODE_NEAREST: Long = 5L
-    const val VIEWPORT_SCALING_3D_MODE_MAX: Long = 6L
-    const val VIEWPORT_UPDATE_DISABLED: Long = 0L
-    const val VIEWPORT_UPDATE_ONCE: Long = 1L
-    const val VIEWPORT_UPDATE_WHEN_VISIBLE: Long = 2L
-    const val VIEWPORT_UPDATE_WHEN_PARENT_VISIBLE: Long = 3L
-    const val VIEWPORT_UPDATE_ALWAYS: Long = 4L
-    const val VIEWPORT_CLEAR_ALWAYS: Long = 0L
-    const val VIEWPORT_CLEAR_NEVER: Long = 1L
-    const val VIEWPORT_CLEAR_ONLY_NEXT_FRAME: Long = 2L
-    const val VIEWPORT_ENVIRONMENT_DISABLED: Long = 0L
-    const val VIEWPORT_ENVIRONMENT_ENABLED: Long = 1L
-    const val VIEWPORT_ENVIRONMENT_INHERIT: Long = 2L
-    const val VIEWPORT_ENVIRONMENT_MAX: Long = 3L
-    const val VIEWPORT_SDF_OVERSIZE_100_PERCENT: Long = 0L
-    const val VIEWPORT_SDF_OVERSIZE_120_PERCENT: Long = 1L
-    const val VIEWPORT_SDF_OVERSIZE_150_PERCENT: Long = 2L
-    const val VIEWPORT_SDF_OVERSIZE_200_PERCENT: Long = 3L
-    const val VIEWPORT_SDF_OVERSIZE_MAX: Long = 4L
-    const val VIEWPORT_SDF_SCALE_100_PERCENT: Long = 0L
-    const val VIEWPORT_SDF_SCALE_50_PERCENT: Long = 1L
-    const val VIEWPORT_SDF_SCALE_25_PERCENT: Long = 2L
-    const val VIEWPORT_SDF_SCALE_MAX: Long = 3L
-    const val VIEWPORT_MSAA_DISABLED: Long = 0L
-    const val VIEWPORT_MSAA_2X: Long = 1L
-    const val VIEWPORT_MSAA_4X: Long = 2L
-    const val VIEWPORT_MSAA_8X: Long = 3L
-    const val VIEWPORT_MSAA_MAX: Long = 4L
-    const val VIEWPORT_ANISOTROPY_DISABLED: Long = 0L
-    const val VIEWPORT_ANISOTROPY_2X: Long = 1L
-    const val VIEWPORT_ANISOTROPY_4X: Long = 2L
-    const val VIEWPORT_ANISOTROPY_8X: Long = 3L
-    const val VIEWPORT_ANISOTROPY_16X: Long = 4L
-    const val VIEWPORT_ANISOTROPY_MAX: Long = 5L
-    const val VIEWPORT_SCREEN_SPACE_AA_DISABLED: Long = 0L
-    const val VIEWPORT_SCREEN_SPACE_AA_FXAA: Long = 1L
-    const val VIEWPORT_SCREEN_SPACE_AA_SMAA: Long = 2L
-    const val VIEWPORT_SCREEN_SPACE_AA_MAX: Long = 3L
-    const val VIEWPORT_OCCLUSION_BUILD_QUALITY_LOW: Long = 0L
-    const val VIEWPORT_OCCLUSION_BUILD_QUALITY_MEDIUM: Long = 1L
-    const val VIEWPORT_OCCLUSION_BUILD_QUALITY_HIGH: Long = 2L
-    const val VIEWPORT_RENDER_INFO_OBJECTS_IN_FRAME: Long = 0L
-    const val VIEWPORT_RENDER_INFO_PRIMITIVES_IN_FRAME: Long = 1L
-    const val VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME: Long = 2L
-    const val VIEWPORT_RENDER_INFO_MAX: Long = 3L
-    const val VIEWPORT_RENDER_INFO_TYPE_VISIBLE: Long = 0L
-    const val VIEWPORT_RENDER_INFO_TYPE_SHADOW: Long = 1L
-    const val VIEWPORT_RENDER_INFO_TYPE_CANVAS: Long = 2L
-    const val VIEWPORT_RENDER_INFO_TYPE_MAX: Long = 3L
-    const val VIEWPORT_DEBUG_DRAW_DISABLED: Long = 0L
-    const val VIEWPORT_DEBUG_DRAW_UNSHADED: Long = 1L
-    const val VIEWPORT_DEBUG_DRAW_LIGHTING: Long = 2L
-    const val VIEWPORT_DEBUG_DRAW_OVERDRAW: Long = 3L
-    const val VIEWPORT_DEBUG_DRAW_WIREFRAME: Long = 4L
-    const val VIEWPORT_DEBUG_DRAW_NORMAL_BUFFER: Long = 5L
-    const val VIEWPORT_DEBUG_DRAW_VOXEL_GI_ALBEDO: Long = 6L
-    const val VIEWPORT_DEBUG_DRAW_VOXEL_GI_LIGHTING: Long = 7L
-    const val VIEWPORT_DEBUG_DRAW_VOXEL_GI_EMISSION: Long = 8L
-    const val VIEWPORT_DEBUG_DRAW_SHADOW_ATLAS: Long = 9L
-    const val VIEWPORT_DEBUG_DRAW_DIRECTIONAL_SHADOW_ATLAS: Long = 10L
-    const val VIEWPORT_DEBUG_DRAW_SCENE_LUMINANCE: Long = 11L
-    const val VIEWPORT_DEBUG_DRAW_SSAO: Long = 12L
-    const val VIEWPORT_DEBUG_DRAW_SSIL: Long = 13L
-    const val VIEWPORT_DEBUG_DRAW_PSSM_SPLITS: Long = 14L
-    const val VIEWPORT_DEBUG_DRAW_DECAL_ATLAS: Long = 15L
-    const val VIEWPORT_DEBUG_DRAW_SDFGI: Long = 16L
-    const val VIEWPORT_DEBUG_DRAW_SDFGI_PROBES: Long = 17L
-    const val VIEWPORT_DEBUG_DRAW_GI_BUFFER: Long = 18L
-    const val VIEWPORT_DEBUG_DRAW_DISABLE_LOD: Long = 19L
-    const val VIEWPORT_DEBUG_DRAW_CLUSTER_OMNI_LIGHTS: Long = 20L
-    const val VIEWPORT_DEBUG_DRAW_CLUSTER_SPOT_LIGHTS: Long = 21L
-    const val VIEWPORT_DEBUG_DRAW_CLUSTER_DECALS: Long = 22L
-    const val VIEWPORT_DEBUG_DRAW_CLUSTER_REFLECTION_PROBES: Long = 23L
-    const val VIEWPORT_DEBUG_DRAW_OCCLUDERS: Long = 24L
-    const val VIEWPORT_DEBUG_DRAW_MOTION_VECTORS: Long = 25L
-    const val VIEWPORT_DEBUG_DRAW_INTERNAL_BUFFER: Long = 26L
-    const val VIEWPORT_VRS_DISABLED: Long = 0L
-    const val VIEWPORT_VRS_TEXTURE: Long = 1L
-    const val VIEWPORT_VRS_XR: Long = 2L
-    const val VIEWPORT_VRS_MAX: Long = 3L
-    const val VIEWPORT_VRS_UPDATE_DISABLED: Long = 0L
-    const val VIEWPORT_VRS_UPDATE_ONCE: Long = 1L
-    const val VIEWPORT_VRS_UPDATE_ALWAYS: Long = 2L
-    const val VIEWPORT_VRS_UPDATE_MAX: Long = 3L
-    const val SKY_MODE_AUTOMATIC: Long = 0L
-    const val SKY_MODE_QUALITY: Long = 1L
-    const val SKY_MODE_INCREMENTAL: Long = 2L
-    const val SKY_MODE_REALTIME: Long = 3L
-    const val COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_COLOR: Long = 1L
-    const val COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_DEPTH: Long = 2L
-    const val COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_VECTORS: Long = 4L
-    const val COMPOSITOR_EFFECT_FLAG_NEEDS_ROUGHNESS: Long = 8L
-    const val COMPOSITOR_EFFECT_FLAG_NEEDS_SEPARATE_SPECULAR: Long = 16L
-    const val COMPOSITOR_EFFECT_CALLBACK_TYPE_PRE_OPAQUE: Long = 0L
-    const val COMPOSITOR_EFFECT_CALLBACK_TYPE_POST_OPAQUE: Long = 1L
-    const val COMPOSITOR_EFFECT_CALLBACK_TYPE_POST_SKY: Long = 2L
-    const val COMPOSITOR_EFFECT_CALLBACK_TYPE_PRE_TRANSPARENT: Long = 3L
-    const val COMPOSITOR_EFFECT_CALLBACK_TYPE_POST_TRANSPARENT: Long = 4L
-    const val COMPOSITOR_EFFECT_CALLBACK_TYPE_ANY: Long = -1L
-    const val ENV_BG_CLEAR_COLOR: Long = 0L
-    const val ENV_BG_COLOR: Long = 1L
-    const val ENV_BG_SKY: Long = 2L
-    const val ENV_BG_CANVAS: Long = 3L
-    const val ENV_BG_KEEP: Long = 4L
-    const val ENV_BG_CAMERA_FEED: Long = 5L
-    const val ENV_BG_MAX: Long = 6L
-    const val ENV_AMBIENT_SOURCE_BG: Long = 0L
-    const val ENV_AMBIENT_SOURCE_DISABLED: Long = 1L
-    const val ENV_AMBIENT_SOURCE_COLOR: Long = 2L
-    const val ENV_AMBIENT_SOURCE_SKY: Long = 3L
-    const val ENV_REFLECTION_SOURCE_BG: Long = 0L
-    const val ENV_REFLECTION_SOURCE_DISABLED: Long = 1L
-    const val ENV_REFLECTION_SOURCE_SKY: Long = 2L
-    const val ENV_GLOW_BLEND_MODE_ADDITIVE: Long = 0L
-    const val ENV_GLOW_BLEND_MODE_SCREEN: Long = 1L
-    const val ENV_GLOW_BLEND_MODE_SOFTLIGHT: Long = 2L
-    const val ENV_GLOW_BLEND_MODE_REPLACE: Long = 3L
-    const val ENV_GLOW_BLEND_MODE_MIX: Long = 4L
-    const val ENV_FOG_MODE_EXPONENTIAL: Long = 0L
-    const val ENV_FOG_MODE_DEPTH: Long = 1L
-    const val ENV_TONE_MAPPER_LINEAR: Long = 0L
-    const val ENV_TONE_MAPPER_REINHARD: Long = 1L
-    const val ENV_TONE_MAPPER_FILMIC: Long = 2L
-    const val ENV_TONE_MAPPER_ACES: Long = 3L
-    const val ENV_TONE_MAPPER_AGX: Long = 4L
-    const val ENV_SSR_ROUGHNESS_QUALITY_DISABLED: Long = 0L
-    const val ENV_SSR_ROUGHNESS_QUALITY_LOW: Long = 1L
-    const val ENV_SSR_ROUGHNESS_QUALITY_MEDIUM: Long = 2L
-    const val ENV_SSR_ROUGHNESS_QUALITY_HIGH: Long = 3L
-    const val ENV_SSAO_QUALITY_VERY_LOW: Long = 0L
-    const val ENV_SSAO_QUALITY_LOW: Long = 1L
-    const val ENV_SSAO_QUALITY_MEDIUM: Long = 2L
-    const val ENV_SSAO_QUALITY_HIGH: Long = 3L
-    const val ENV_SSAO_QUALITY_ULTRA: Long = 4L
-    const val ENV_SSIL_QUALITY_VERY_LOW: Long = 0L
-    const val ENV_SSIL_QUALITY_LOW: Long = 1L
-    const val ENV_SSIL_QUALITY_MEDIUM: Long = 2L
-    const val ENV_SSIL_QUALITY_HIGH: Long = 3L
-    const val ENV_SSIL_QUALITY_ULTRA: Long = 4L
-    const val ENV_SDFGI_Y_SCALE_50_PERCENT: Long = 0L
-    const val ENV_SDFGI_Y_SCALE_75_PERCENT: Long = 1L
-    const val ENV_SDFGI_Y_SCALE_100_PERCENT: Long = 2L
-    const val ENV_SDFGI_RAY_COUNT_4: Long = 0L
-    const val ENV_SDFGI_RAY_COUNT_8: Long = 1L
-    const val ENV_SDFGI_RAY_COUNT_16: Long = 2L
-    const val ENV_SDFGI_RAY_COUNT_32: Long = 3L
-    const val ENV_SDFGI_RAY_COUNT_64: Long = 4L
-    const val ENV_SDFGI_RAY_COUNT_96: Long = 5L
-    const val ENV_SDFGI_RAY_COUNT_128: Long = 6L
-    const val ENV_SDFGI_RAY_COUNT_MAX: Long = 7L
-    const val ENV_SDFGI_CONVERGE_IN_5_FRAMES: Long = 0L
-    const val ENV_SDFGI_CONVERGE_IN_10_FRAMES: Long = 1L
-    const val ENV_SDFGI_CONVERGE_IN_15_FRAMES: Long = 2L
-    const val ENV_SDFGI_CONVERGE_IN_20_FRAMES: Long = 3L
-    const val ENV_SDFGI_CONVERGE_IN_25_FRAMES: Long = 4L
-    const val ENV_SDFGI_CONVERGE_IN_30_FRAMES: Long = 5L
-    const val ENV_SDFGI_CONVERGE_MAX: Long = 6L
-    const val ENV_SDFGI_UPDATE_LIGHT_IN_1_FRAME: Long = 0L
-    const val ENV_SDFGI_UPDATE_LIGHT_IN_2_FRAMES: Long = 1L
-    const val ENV_SDFGI_UPDATE_LIGHT_IN_4_FRAMES: Long = 2L
-    const val ENV_SDFGI_UPDATE_LIGHT_IN_8_FRAMES: Long = 3L
-    const val ENV_SDFGI_UPDATE_LIGHT_IN_16_FRAMES: Long = 4L
-    const val ENV_SDFGI_UPDATE_LIGHT_MAX: Long = 5L
-    const val SUB_SURFACE_SCATTERING_QUALITY_DISABLED: Long = 0L
-    const val SUB_SURFACE_SCATTERING_QUALITY_LOW: Long = 1L
-    const val SUB_SURFACE_SCATTERING_QUALITY_MEDIUM: Long = 2L
-    const val SUB_SURFACE_SCATTERING_QUALITY_HIGH: Long = 3L
-    const val DOF_BOKEH_BOX: Long = 0L
-    const val DOF_BOKEH_HEXAGON: Long = 1L
-    const val DOF_BOKEH_CIRCLE: Long = 2L
-    const val DOF_BLUR_QUALITY_VERY_LOW: Long = 0L
-    const val DOF_BLUR_QUALITY_LOW: Long = 1L
-    const val DOF_BLUR_QUALITY_MEDIUM: Long = 2L
-    const val DOF_BLUR_QUALITY_HIGH: Long = 3L
-    const val INSTANCE_NONE: Long = 0L
-    const val INSTANCE_MESH: Long = 1L
-    const val INSTANCE_MULTIMESH: Long = 2L
-    const val INSTANCE_PARTICLES: Long = 3L
-    const val INSTANCE_PARTICLES_COLLISION: Long = 4L
-    const val INSTANCE_LIGHT: Long = 5L
-    const val INSTANCE_REFLECTION_PROBE: Long = 6L
-    const val INSTANCE_DECAL: Long = 7L
-    const val INSTANCE_VOXEL_GI: Long = 8L
-    const val INSTANCE_LIGHTMAP: Long = 9L
-    const val INSTANCE_OCCLUDER: Long = 10L
-    const val INSTANCE_VISIBLITY_NOTIFIER: Long = 11L
-    const val INSTANCE_FOG_VOLUME: Long = 12L
-    const val INSTANCE_MAX: Long = 13L
-    const val INSTANCE_GEOMETRY_MASK: Long = 14L
-    const val INSTANCE_FLAG_USE_BAKED_LIGHT: Long = 0L
-    const val INSTANCE_FLAG_USE_DYNAMIC_GI: Long = 1L
-    const val INSTANCE_FLAG_DRAW_NEXT_FRAME_IF_VISIBLE: Long = 2L
-    const val INSTANCE_FLAG_IGNORE_OCCLUSION_CULLING: Long = 3L
-    const val INSTANCE_FLAG_MAX: Long = 4L
-    const val SHADOW_CASTING_SETTING_OFF: Long = 0L
-    const val SHADOW_CASTING_SETTING_ON: Long = 1L
-    const val SHADOW_CASTING_SETTING_DOUBLE_SIDED: Long = 2L
-    const val SHADOW_CASTING_SETTING_SHADOWS_ONLY: Long = 3L
-    const val VISIBILITY_RANGE_FADE_DISABLED: Long = 0L
-    const val VISIBILITY_RANGE_FADE_SELF: Long = 1L
-    const val VISIBILITY_RANGE_FADE_DEPENDENCIES: Long = 2L
-    const val BAKE_CHANNEL_ALBEDO_ALPHA: Long = 0L
-    const val BAKE_CHANNEL_NORMAL: Long = 1L
-    const val BAKE_CHANNEL_ORM: Long = 2L
-    const val BAKE_CHANNEL_EMISSION: Long = 3L
-    const val CANVAS_TEXTURE_CHANNEL_DIFFUSE: Long = 0L
-    const val CANVAS_TEXTURE_CHANNEL_NORMAL: Long = 1L
-    const val CANVAS_TEXTURE_CHANNEL_SPECULAR: Long = 2L
-    const val NINE_PATCH_STRETCH: Long = 0L
-    const val NINE_PATCH_TILE: Long = 1L
-    const val NINE_PATCH_TILE_FIT: Long = 2L
-    const val CANVAS_ITEM_TEXTURE_FILTER_DEFAULT: Long = 0L
-    const val CANVAS_ITEM_TEXTURE_FILTER_NEAREST: Long = 1L
-    const val CANVAS_ITEM_TEXTURE_FILTER_LINEAR: Long = 2L
-    const val CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS: Long = 3L
-    const val CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS: Long = 4L
-    const val CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC: Long = 5L
-    const val CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC: Long = 6L
-    const val CANVAS_ITEM_TEXTURE_FILTER_MAX: Long = 7L
-    const val CANVAS_ITEM_TEXTURE_REPEAT_DEFAULT: Long = 0L
-    const val CANVAS_ITEM_TEXTURE_REPEAT_DISABLED: Long = 1L
-    const val CANVAS_ITEM_TEXTURE_REPEAT_ENABLED: Long = 2L
-    const val CANVAS_ITEM_TEXTURE_REPEAT_MIRROR: Long = 3L
-    const val CANVAS_ITEM_TEXTURE_REPEAT_MAX: Long = 4L
-    const val CANVAS_GROUP_MODE_DISABLED: Long = 0L
-    const val CANVAS_GROUP_MODE_CLIP_ONLY: Long = 1L
-    const val CANVAS_GROUP_MODE_CLIP_AND_DRAW: Long = 2L
-    const val CANVAS_GROUP_MODE_TRANSPARENT: Long = 3L
-    const val CANVAS_LIGHT_MODE_POINT: Long = 0L
-    const val CANVAS_LIGHT_MODE_DIRECTIONAL: Long = 1L
-    const val CANVAS_LIGHT_BLEND_MODE_ADD: Long = 0L
-    const val CANVAS_LIGHT_BLEND_MODE_SUB: Long = 1L
-    const val CANVAS_LIGHT_BLEND_MODE_MIX: Long = 2L
-    const val CANVAS_LIGHT_FILTER_NONE: Long = 0L
-    const val CANVAS_LIGHT_FILTER_PCF5: Long = 1L
-    const val CANVAS_LIGHT_FILTER_PCF13: Long = 2L
-    const val CANVAS_LIGHT_FILTER_MAX: Long = 3L
-    const val CANVAS_OCCLUDER_POLYGON_CULL_DISABLED: Long = 0L
-    const val CANVAS_OCCLUDER_POLYGON_CULL_CLOCKWISE: Long = 1L
-    const val CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE: Long = 2L
-    const val GLOBAL_VAR_TYPE_BOOL: Long = 0L
-    const val GLOBAL_VAR_TYPE_BVEC2: Long = 1L
-    const val GLOBAL_VAR_TYPE_BVEC3: Long = 2L
-    const val GLOBAL_VAR_TYPE_BVEC4: Long = 3L
-    const val GLOBAL_VAR_TYPE_INT: Long = 4L
-    const val GLOBAL_VAR_TYPE_IVEC2: Long = 5L
-    const val GLOBAL_VAR_TYPE_IVEC3: Long = 6L
-    const val GLOBAL_VAR_TYPE_IVEC4: Long = 7L
-    const val GLOBAL_VAR_TYPE_RECT2I: Long = 8L
-    const val GLOBAL_VAR_TYPE_UINT: Long = 9L
-    const val GLOBAL_VAR_TYPE_UVEC2: Long = 10L
-    const val GLOBAL_VAR_TYPE_UVEC3: Long = 11L
-    const val GLOBAL_VAR_TYPE_UVEC4: Long = 12L
-    const val GLOBAL_VAR_TYPE_FLOAT: Long = 13L
-    const val GLOBAL_VAR_TYPE_VEC2: Long = 14L
-    const val GLOBAL_VAR_TYPE_VEC3: Long = 15L
-    const val GLOBAL_VAR_TYPE_VEC4: Long = 16L
-    const val GLOBAL_VAR_TYPE_COLOR: Long = 17L
-    const val GLOBAL_VAR_TYPE_RECT2: Long = 18L
-    const val GLOBAL_VAR_TYPE_MAT2: Long = 19L
-    const val GLOBAL_VAR_TYPE_MAT3: Long = 20L
-    const val GLOBAL_VAR_TYPE_MAT4: Long = 21L
-    const val GLOBAL_VAR_TYPE_TRANSFORM_2D: Long = 22L
-    const val GLOBAL_VAR_TYPE_TRANSFORM: Long = 23L
-    const val GLOBAL_VAR_TYPE_SAMPLER2D: Long = 24L
-    const val GLOBAL_VAR_TYPE_SAMPLER2DARRAY: Long = 25L
-    const val GLOBAL_VAR_TYPE_SAMPLER3D: Long = 26L
-    const val GLOBAL_VAR_TYPE_SAMPLERCUBE: Long = 27L
-    const val GLOBAL_VAR_TYPE_SAMPLEREXT: Long = 28L
-    const val GLOBAL_VAR_TYPE_MAX: Long = 29L
-    const val RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME: Long = 0L
-    const val RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME: Long = 1L
-    const val RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME: Long = 2L
-    const val RENDERING_INFO_TEXTURE_MEM_USED: Long = 3L
-    const val RENDERING_INFO_BUFFER_MEM_USED: Long = 4L
-    const val RENDERING_INFO_VIDEO_MEM_USED: Long = 5L
-    const val RENDERING_INFO_PIPELINE_COMPILATIONS_CANVAS: Long = 6L
-    const val RENDERING_INFO_PIPELINE_COMPILATIONS_MESH: Long = 7L
-    const val RENDERING_INFO_PIPELINE_COMPILATIONS_SURFACE: Long = 8L
-    const val RENDERING_INFO_PIPELINE_COMPILATIONS_DRAW: Long = 9L
-    const val RENDERING_INFO_PIPELINE_COMPILATIONS_SPECIALIZATION: Long = 10L
-    const val PIPELINE_SOURCE_CANVAS: Long = 0L
-    const val PIPELINE_SOURCE_MESH: Long = 1L
-    const val PIPELINE_SOURCE_SURFACE: Long = 2L
-    const val PIPELINE_SOURCE_DRAW: Long = 3L
-    const val PIPELINE_SOURCE_SPECIALIZATION: Long = 4L
-    const val PIPELINE_SOURCE_MAX: Long = 5L
-    const val SPLASH_STRETCH_MODE_DISABLED: Long = 0L
-    const val SPLASH_STRETCH_MODE_KEEP: Long = 1L
-    const val SPLASH_STRETCH_MODE_KEEP_WIDTH: Long = 2L
-    const val SPLASH_STRETCH_MODE_KEEP_HEIGHT: Long = 3L
-    const val SPLASH_STRETCH_MODE_COVER: Long = 4L
-    const val SPLASH_STRETCH_MODE_IGNORE: Long = 5L
-    const val FEATURE_SHADERS: Long = 0L
-    const val FEATURE_MULTITHREADED: Long = 1L
 
     var renderLoopEnabled: Boolean
         @JvmName("renderLoopEnabledProperty")
@@ -575,8 +79,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.texture_2d_layered_create
      */
     @JvmStatic
-    fun texture2dLayeredCreate(layers: List<Image>, layeredType: Long): RID {
-        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(texture2dLayeredCreateBind, singleton, layers, layeredType)
+    fun texture2dLayeredCreate(layers: List<Image>, layeredType: RenderingServer.TextureLayeredType): RID {
+        return ObjectCalls.ptrcallWithObjectListLongArgsRetRID(texture2dLayeredCreateBind, singleton, layers, layeredType.value)
     }
 
     /**
@@ -585,8 +89,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.texture_3d_create
      */
     @JvmStatic
-    fun texture3dCreate(format: Long, width: Int, height: Int, depth: Int, mipmaps: Boolean, data: List<Image>): RID {
-        return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetRID(texture3dCreateBind, singleton, format, width, height, depth, mipmaps, data)
+    fun texture3dCreate(format: Image.Format, width: Int, height: Int, depth: Int, mipmaps: Boolean, data: List<Image>): RID {
+        return ObjectCalls.ptrcallWithLongThreeIntBoolObjectListArgsRetRID(texture3dCreateBind, singleton, format.value, width, height, depth, mipmaps, data)
     }
 
     /**
@@ -609,8 +113,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.texture_create_from_native_handle
      */
     @JvmStatic
-    fun textureCreateFromNativeHandle(type: Long, format: Long, nativeHandle: Long, width: Int, height: Int, depth: Int, layers: Int = 1, layeredType: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithThreeLongFourIntLongArgsRetRID(textureCreateFromNativeHandleBind, singleton, type, format, nativeHandle, width, height, depth, layers, layeredType)
+    fun textureCreateFromNativeHandle(type: RenderingServer.TextureType, format: Image.Format, nativeHandle: Long, width: Int, height: Int, depth: Int, layers: Int = 1, layeredType: RenderingServer.TextureLayeredType = RenderingServer.TextureLayeredType.LAYERED_2D_ARRAY): RID {
+        return ObjectCalls.ptrcallWithThreeLongFourIntLongArgsRetRID(textureCreateFromNativeHandleBind, singleton, type.value, format.value, nativeHandle, width, height, depth, layers, layeredType.value)
     }
 
     /**
@@ -622,8 +126,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.texture_drawable_create
      */
     @JvmStatic
-    fun textureDrawableCreate(width: Int, height: Int, format: Long, color: Color, withMipmaps: Boolean = false): RID {
-        return ObjectCalls.ptrcallWithTwoIntLongColorBoolArgsRetRID(textureDrawableCreateBind, singleton, width, height, format, color, withMipmaps)
+    fun textureDrawableCreate(width: Int, height: Int, format: RenderingServer.TextureDrawableFormat, color: Color, withMipmaps: Boolean = false): RID {
+        return ObjectCalls.ptrcallWithTwoIntLongColorBoolArgsRetRID(textureDrawableCreateBind, singleton, width, height, format.value, color, withMipmaps)
     }
 
     /**
@@ -701,8 +205,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.texture_2d_layered_placeholder_create
      */
     @JvmStatic
-    fun texture2dLayeredPlaceholderCreate(layeredType: Long): RID {
-        return ObjectCalls.ptrcallWithLongArgRetRID(texture2dLayeredPlaceholderCreateBind, singleton, layeredType)
+    fun texture2dLayeredPlaceholderCreate(layeredType: RenderingServer.TextureLayeredType): RID {
+        return ObjectCalls.ptrcallWithLongArgRetRID(texture2dLayeredPlaceholderCreateBind, singleton, layeredType.value)
     }
 
     /**
@@ -820,8 +324,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.texture_get_format
      */
     @JvmStatic
-    fun textureGetFormat(texture: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(textureGetFormatBind, singleton, texture)
+    fun textureGetFormat(texture: RID): Image.Format {
+        return Image.Format(ObjectCalls.ptrcallWithRIDArgRetLong(textureGetFormatBind, singleton, texture))
     }
 
     /**
@@ -845,8 +349,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.texture_rd_create
      */
     @JvmStatic
-    fun textureRdCreate(rdTexture: RID, layerType: Long = 0L): RID {
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(textureRdCreateBind, singleton, rdTexture, layerType)
+    fun textureRdCreate(rdTexture: RID, layerType: RenderingServer.TextureLayeredType = RenderingServer.TextureLayeredType.LAYERED_2D_ARRAY): RID {
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetRID(textureRdCreateBind, singleton, rdTexture, layerType.value)
     }
 
     /**
@@ -1076,8 +580,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_surface_get_format_offset
      */
     @JvmStatic
-    fun meshSurfaceGetFormatOffset(format: Long, vertexCount: Int, arrayIndex: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndTwoIntArgsRetUInt32(meshSurfaceGetFormatOffsetBind, singleton, format, vertexCount, arrayIndex)
+    fun meshSurfaceGetFormatOffset(format: RenderingServer.ArrayFormat, vertexCount: Int, arrayIndex: Int): Long {
+        return ObjectCalls.ptrcallWithLongAndTwoIntArgsRetUInt32(meshSurfaceGetFormatOffsetBind, singleton, format.value, vertexCount, arrayIndex)
     }
 
     /**
@@ -1088,8 +592,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_surface_get_format_vertex_stride
      */
     @JvmStatic
-    fun meshSurfaceGetFormatVertexStride(format: Long, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatVertexStrideBind, singleton, format, vertexCount)
+    fun meshSurfaceGetFormatVertexStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatVertexStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -1100,8 +604,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_surface_get_format_normal_tangent_stride
      */
     @JvmStatic
-    fun meshSurfaceGetFormatNormalTangentStride(format: Long, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatNormalTangentStrideBind, singleton, format, vertexCount)
+    fun meshSurfaceGetFormatNormalTangentStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatNormalTangentStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -1110,8 +614,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_surface_get_format_attribute_stride
      */
     @JvmStatic
-    fun meshSurfaceGetFormatAttributeStride(format: Long, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatAttributeStrideBind, singleton, format, vertexCount)
+    fun meshSurfaceGetFormatAttributeStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatAttributeStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -1120,8 +624,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_surface_get_format_skin_stride
      */
     @JvmStatic
-    fun meshSurfaceGetFormatSkinStride(format: Long, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatSkinStrideBind, singleton, format, vertexCount)
+    fun meshSurfaceGetFormatSkinStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatSkinStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -1130,8 +634,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_surface_get_format_index_stride
      */
     @JvmStatic
-    fun meshSurfaceGetFormatIndexStride(format: Long, vertexCount: Int): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatIndexStrideBind, singleton, format, vertexCount)
+    fun meshSurfaceGetFormatIndexStride(format: RenderingServer.ArrayFormat, vertexCount: Int): Long {
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetUInt32(meshSurfaceGetFormatIndexStrideBind, singleton, format.value, vertexCount)
     }
 
     /**
@@ -1150,34 +654,34 @@ object RenderingServer {
      * Creates a new surface on the given `mesh`. `mesh_get_surface_count` will become the surface
      * index for this new surface. Surfaces are created to be rendered using a `primitive`, which may
      * be any of the values defined in `Mesh.PrimitiveType`. The `arrays` argument is an array of
-     * arrays. Each of the `Mesh.ARRAY_MAX` elements contains an array with some of the mesh data for
-     * this surface as described by the corresponding member of `Mesh.ArrayType` or `null` if it is not
-     * used by the surface. For example, `arrays[0]` is the array of vertices. That first vertex
+     * arrays. Each of the `Mesh.ArrayType.MAX` elements contains an array with some of the mesh data
+     * for this surface as described by the corresponding member of `Mesh.ArrayType` or `null` if it is
+     * not used by the surface. For example, `arrays[0]` is the array of vertices. That first vertex
      * sub-array is always required; the others are optional. Adding an index array puts this surface
      * into "index mode" where the vertex and other arrays become the sources of data and the index
      * array defines the vertex order. All sub-arrays must have the same length as the vertex array (or
      * be an exact multiple of the vertex array's length, when multiple elements of a sub-array
-     * correspond to a single vertex) or be empty, except for `Mesh.ARRAY_INDEX` if it is used. The
+     * correspond to a single vertex) or be empty, except for `Mesh.ArrayType.INDEX` if it is used. The
      * `blend_shapes` argument is an array of vertex data for each blend shape. Each element is an
-     * array of the same structure as `arrays`, but `Mesh.ARRAY_VERTEX`, `Mesh.ARRAY_NORMAL`, and
-     * `Mesh.ARRAY_TANGENT` are set if and only if they are set in `arrays` and all other entries are
-     * `null`. The `lods` argument is a dictionary with `float` keys and `PackedInt32Array` values.
-     * Each entry in the dictionary represents an LOD level of the surface, where the value is the
-     * `Mesh.ARRAY_INDEX` array to use for the LOD level and the key is roughly proportional to the
-     * distance at which the LOD stats being used. I.e., increasing the key of an LOD also increases
-     * the distance that the objects has to be from the camera before the LOD is used. The
+     * array of the same structure as `arrays`, but `Mesh.ArrayType.VERTEX`, `Mesh.ArrayType.NORMAL`,
+     * and `Mesh.ArrayType.TANGENT` are set if and only if they are set in `arrays` and all other
+     * entries are `null`. The `lods` argument is a dictionary with `float` keys and `PackedInt32Array`
+     * values. Each entry in the dictionary represents an LOD level of the surface, where the value is
+     * the `Mesh.ArrayType.INDEX` array to use for the LOD level and the key is roughly proportional to
+     * the distance at which the LOD stats being used. I.e., increasing the key of an LOD also
+     * increases the distance that the objects has to be from the camera before the LOD is used. The
      * `compress_format` argument is the bitwise OR of, as required: One value of `ArrayFormat` left
      * shifted by `ARRAY_FORMAT_CUSTOMn_SHIFT` for each custom channel in use,
-     * `ARRAY_FLAG_USE_DYNAMIC_UPDATE`, `ARRAY_FLAG_USE_8_BONE_WEIGHTS`, or
-     * `ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY`. See `ArrayMesh.add_surface_from_arrays` and
+     * `ArrayFormat.FLAG_USE_DYNAMIC_UPDATE`, `ArrayFormat.FLAG_USE_8_BONE_WEIGHTS`, or
+     * `ArrayFormat.FLAG_USES_EMPTY_VERTEX_ARRAY`. See `ArrayMesh.add_surface_from_arrays` and
      * `ImporterMesh.add_surface` for higher-level equivalents of this method. Note: When using
      * indices, it is recommended to only use points, lines, or triangles.
      *
      * Generated from Godot docs: RenderingServer.mesh_add_surface_from_arrays
      */
     @JvmStatic
-    fun meshAddSurfaceFromArrays(mesh: RID, primitive: Long, arrays: List<Any?>, blendShapes: List<Any?> = emptyList(), lods: Map<String, Any?> = emptyMap(), compressFormat: Long = 0L) {
-        ObjectCalls.ptrcallWithRIDLongTwoArrayDictionaryLongArgs(meshAddSurfaceFromArraysBind, singleton, mesh, primitive, arrays, blendShapes, lods, compressFormat)
+    fun meshAddSurfaceFromArrays(mesh: RID, primitive: RenderingServer.PrimitiveType, arrays: List<Any?>, blendShapes: List<Any?> = emptyList(), lods: Map<String, Any?> = emptyMap(), compressFormat: RenderingServer.ArrayFormat = RenderingServer.ArrayFormat.FLAG_FORMAT_VERSION_1) {
+        ObjectCalls.ptrcallWithRIDLongTwoArrayDictionaryLongArgs(meshAddSurfaceFromArraysBind, singleton, mesh, primitive.value, arrays, blendShapes, lods, compressFormat.value)
     }
 
     /**
@@ -1196,8 +700,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_set_blend_shape_mode
      */
     @JvmStatic
-    fun meshSetBlendShapeMode(mesh: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(meshSetBlendShapeModeBind, singleton, mesh, mode)
+    fun meshSetBlendShapeMode(mesh: RID, mode: RenderingServer.BlendShapeMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(meshSetBlendShapeModeBind, singleton, mesh, mode.value)
     }
 
     /**
@@ -1206,8 +710,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.mesh_get_blend_shape_mode
      */
     @JvmStatic
-    fun meshGetBlendShapeMode(mesh: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(meshGetBlendShapeModeBind, singleton, mesh)
+    fun meshGetBlendShapeMode(mesh: RID): RenderingServer.BlendShapeMode {
+        return RenderingServer.BlendShapeMode(ObjectCalls.ptrcallWithRIDArgRetLong(meshGetBlendShapeModeBind, singleton, mesh))
     }
 
     /**
@@ -1411,8 +915,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.multimesh_allocate_data
      */
     @JvmStatic
-    fun multimeshAllocateData(multimesh: RID, instances: Int, transformFormat: Long, colorFormat: Boolean = false, customDataFormat: Boolean = false, useIndirect: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDIntLongThreeBoolArgs(multimeshAllocateDataBind, singleton, multimesh, instances, transformFormat, colorFormat, customDataFormat, useIndirect)
+    fun multimeshAllocateData(multimesh: RID, instances: Int, transformFormat: RenderingServer.MultimeshTransformFormat, colorFormat: Boolean = false, customDataFormat: Boolean = false, useIndirect: Boolean = false) {
+        ObjectCalls.ptrcallWithRIDIntLongThreeBoolArgs(multimeshAllocateDataBind, singleton, multimesh, instances, transformFormat.value, colorFormat, customDataFormat, useIndirect)
     }
 
     /**
@@ -1657,14 +1161,14 @@ object RenderingServer {
 
     /**
      * Sets the physics interpolation quality for the `MultiMesh`. A value of
-     * `MULTIMESH_INTERP_QUALITY_FAST` gives fast but low quality interpolation, a value of
-     * `MULTIMESH_INTERP_QUALITY_HIGH` gives slower but higher quality interpolation.
+     * `MultimeshPhysicsInterpolationQuality.FAST` gives fast but low quality interpolation, a value of
+     * `MultimeshPhysicsInterpolationQuality.HIGH` gives slower but higher quality interpolation.
      *
      * Generated from Godot docs: RenderingServer.multimesh_set_physics_interpolation_quality
      */
     @JvmStatic
-    fun multimeshSetPhysicsInterpolationQuality(multimesh: RID, quality: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(multimeshSetPhysicsInterpolationQualityBind, singleton, multimesh, quality)
+    fun multimeshSetPhysicsInterpolationQuality(multimesh: RID, quality: RenderingServer.MultimeshPhysicsInterpolationQuality) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(multimeshSetPhysicsInterpolationQualityBind, singleton, multimesh, quality.value)
     }
 
     /**
@@ -1847,8 +1351,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.light_set_param
      */
     @JvmStatic
-    fun lightSetParam(light: RID, param: Long, value: Double) {
-        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(lightSetParamBind, singleton, light, param, value)
+    fun lightSetParam(light: RID, param: RenderingServer.LightParam, value: Double) {
+        ObjectCalls.ptrcallWithRIDLongAndDoubleArgs(lightSetParamBind, singleton, light, param.value, value)
     }
 
     /**
@@ -1937,8 +1441,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.light_set_bake_mode
      */
     @JvmStatic
-    fun lightSetBakeMode(light: RID, bakeMode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightSetBakeModeBind, singleton, light, bakeMode)
+    fun lightSetBakeMode(light: RID, bakeMode: RenderingServer.LightBakeMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(lightSetBakeModeBind, singleton, light, bakeMode.value)
     }
 
     /**
@@ -1959,8 +1463,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.light_omni_set_shadow_mode
      */
     @JvmStatic
-    fun lightOmniSetShadowMode(light: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightOmniSetShadowModeBind, singleton, light, mode)
+    fun lightOmniSetShadowMode(light: RID, mode: RenderingServer.LightOmniShadowMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(lightOmniSetShadowModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -1970,8 +1474,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.light_directional_set_shadow_mode
      */
     @JvmStatic
-    fun lightDirectionalSetShadowMode(light: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightDirectionalSetShadowModeBind, singleton, light, mode)
+    fun lightDirectionalSetShadowMode(light: RID, mode: RenderingServer.LightDirectionalShadowMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(lightDirectionalSetShadowModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -1993,8 +1497,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.light_directional_set_sky_mode
      */
     @JvmStatic
-    fun lightDirectionalSetSkyMode(light: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(lightDirectionalSetSkyModeBind, singleton, light, mode)
+    fun lightDirectionalSetSkyMode(light: RID, mode: RenderingServer.LightDirectionalSkyMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(lightDirectionalSetSkyModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -2027,8 +1531,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.light_projectors_set_filter
      */
     @JvmStatic
-    fun lightProjectorsSetFilter(filter: Long) {
-        ObjectCalls.ptrcallWithLongArg(lightProjectorsSetFilterBind, singleton, filter)
+    fun lightProjectorsSetFilter(filter: RenderingServer.LightProjectorFilter) {
+        ObjectCalls.ptrcallWithLongArg(lightProjectorsSetFilterBind, singleton, filter.value)
     }
 
     /**
@@ -2050,8 +1554,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.positional_soft_shadow_filter_set_quality
      */
     @JvmStatic
-    fun positionalSoftShadowFilterSetQuality(quality: Long) {
-        ObjectCalls.ptrcallWithLongArg(positionalSoftShadowFilterSetQualityBind, singleton, quality)
+    fun positionalSoftShadowFilterSetQuality(quality: RenderingServer.ShadowQuality) {
+        ObjectCalls.ptrcallWithLongArg(positionalSoftShadowFilterSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -2062,8 +1566,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.directional_soft_shadow_filter_set_quality
      */
     @JvmStatic
-    fun directionalSoftShadowFilterSetQuality(quality: Long) {
-        ObjectCalls.ptrcallWithLongArg(directionalSoftShadowFilterSetQualityBind, singleton, quality)
+    fun directionalSoftShadowFilterSetQuality(quality: RenderingServer.ShadowQuality) {
+        ObjectCalls.ptrcallWithLongArg(directionalSoftShadowFilterSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -2098,8 +1602,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.reflection_probe_set_update_mode
      */
     @JvmStatic
-    fun reflectionProbeSetUpdateMode(probe: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(reflectionProbeSetUpdateModeBind, singleton, probe, mode)
+    fun reflectionProbeSetUpdateMode(probe: RID, mode: RenderingServer.ReflectionProbeUpdateMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(reflectionProbeSetUpdateModeBind, singleton, probe, mode.value)
     }
 
     /**
@@ -2129,8 +1633,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.reflection_probe_set_ambient_mode
      */
     @JvmStatic
-    fun reflectionProbeSetAmbientMode(probe: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(reflectionProbeSetAmbientModeBind, singleton, probe, mode)
+    fun reflectionProbeSetAmbientMode(probe: RID, mode: RenderingServer.ReflectionProbeAmbientMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(reflectionProbeSetAmbientModeBind, singleton, probe, mode.value)
     }
 
     /**
@@ -2295,8 +1799,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.decal_set_texture
      */
     @JvmStatic
-    fun decalSetTexture(decal: RID, type: Long, texture: RID) {
-        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(decalSetTextureBind, singleton, decal, type, texture)
+    fun decalSetTexture(decal: RID, type: RenderingServer.DecalTexture, texture: RID) {
+        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(decalSetTextureBind, singleton, decal, type.value, texture)
     }
 
     /**
@@ -2382,8 +1886,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.decals_set_filter
      */
     @JvmStatic
-    fun decalsSetFilter(filter: Long) {
-        ObjectCalls.ptrcallWithLongArg(decalsSetFilterBind, singleton, filter)
+    fun decalsSetFilter(filter: RenderingServer.DecalFilter) {
+        ObjectCalls.ptrcallWithLongArg(decalsSetFilterBind, singleton, filter.value)
     }
 
     /**
@@ -2584,8 +2088,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.voxel_gi_set_quality
      */
     @JvmStatic
-    fun voxelGiSetQuality(quality: Long) {
-        ObjectCalls.ptrcallWithLongArg(voxelGiSetQualityBind, singleton, quality)
+    fun voxelGiSetQuality(quality: RenderingServer.VoxelGIQuality) {
+        ObjectCalls.ptrcallWithLongArg(voxelGiSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -2752,8 +2256,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.particles_set_mode
      */
     @JvmStatic
-    fun particlesSetMode(particles: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetModeBind, singleton, particles, mode)
+    fun particlesSetMode(particles: RID, mode: RenderingServer.ParticlesMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetModeBind, singleton, particles, mode.value)
     }
 
     /**
@@ -2979,8 +2483,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.particles_set_transform_align
      */
     @JvmStatic
-    fun particlesSetTransformAlign(particles: RID, align: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignBind, singleton, particles, align)
+    fun particlesSetTransformAlign(particles: RID, align: RenderingServer.ParticlesTransformAlign) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignBind, singleton, particles, align.value)
     }
 
     /**
@@ -2989,8 +2493,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.particles_set_transform_align_channel_filter
      */
     @JvmStatic
-    fun particlesSetTransformAlignChannelFilter(particles: RID, channelFilter: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignChannelFilterBind, singleton, particles, channelFilter)
+    fun particlesSetTransformAlignChannelFilter(particles: RID, channelFilter: RenderingServer.ParticlesTransformAlignCustomSrc) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignChannelFilterBind, singleton, particles, channelFilter.value)
     }
 
     /**
@@ -2999,8 +2503,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.particles_set_transform_align_axis
      */
     @JvmStatic
-    fun particlesSetTransformAlignAxis(particles: RID, rotationAxis: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignAxisBind, singleton, particles, rotationAxis)
+    fun particlesSetTransformAlignAxis(particles: RID, rotationAxis: RenderingServer.ParticlesTransformAlignAxis) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetTransformAlignAxisBind, singleton, particles, rotationAxis.value)
     }
 
     /**
@@ -3087,8 +2591,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.particles_set_draw_order
      */
     @JvmStatic
-    fun particlesSetDrawOrder(particles: RID, order: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetDrawOrderBind, singleton, particles, order)
+    fun particlesSetDrawOrder(particles: RID, order: RenderingServer.ParticlesDrawOrder) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(particlesSetDrawOrderBind, singleton, particles, order.value)
     }
 
     /**
@@ -3154,8 +2658,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.particles_collision_set_collision_type
      */
     @JvmStatic
-    fun particlesCollisionSetCollisionType(particlesCollision: RID, type: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesCollisionSetCollisionTypeBind, singleton, particlesCollision, type)
+    fun particlesCollisionSetCollisionType(particlesCollision: RID, type: RenderingServer.ParticlesCollisionType) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(particlesCollisionSetCollisionTypeBind, singleton, particlesCollision, type.value)
     }
 
     /**
@@ -3261,8 +2765,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.particles_collision_set_height_field_resolution
      */
     @JvmStatic
-    fun particlesCollisionSetHeightFieldResolution(particlesCollision: RID, resolution: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(particlesCollisionSetHeightFieldResolutionBind, singleton, particlesCollision, resolution)
+    fun particlesCollisionSetHeightFieldResolution(particlesCollision: RID, resolution: RenderingServer.ParticlesCollisionHeightfieldResolution) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(particlesCollisionSetHeightFieldResolutionBind, singleton, particlesCollision, resolution.value)
     }
 
     /**
@@ -3290,21 +2794,21 @@ object RenderingServer {
     }
 
     /**
-     * Sets the shape of the fog volume to either `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CONE`, `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_BOX` or `RenderingServer.FOG_VOLUME_SHAPE_WORLD`.
+     * Sets the shape of the fog volume to either `RenderingServer.FogVolumeShape.ELLIPSOID`,
+     * `RenderingServer.FogVolumeShape.CONE`, `RenderingServer.FogVolumeShape.CYLINDER`,
+     * `RenderingServer.FogVolumeShape.BOX` or `RenderingServer.FogVolumeShape.WORLD`.
      *
      * Generated from Godot docs: RenderingServer.fog_volume_set_shape
      */
     @JvmStatic
-    fun fogVolumeSetShape(fogVolume: RID, shape: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(fogVolumeSetShapeBind, singleton, fogVolume, shape)
+    fun fogVolumeSetShape(fogVolume: RID, shape: RenderingServer.FogVolumeShape) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(fogVolumeSetShapeBind, singleton, fogVolume, shape.value)
     }
 
     /**
-     * Sets the size of the fog volume when shape is `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CONE`, `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_BOX`.
+     * Sets the size of the fog volume when shape is `RenderingServer.FogVolumeShape.ELLIPSOID`,
+     * `RenderingServer.FogVolumeShape.CONE`, `RenderingServer.FogVolumeShape.CYLINDER` or
+     * `RenderingServer.FogVolumeShape.BOX`.
      *
      * Generated from Godot docs: RenderingServer.fog_volume_set_size
      */
@@ -3482,8 +2986,9 @@ object RenderingServer {
     }
 
     /**
-     * If `true`, preserves the horizontal aspect ratio which is equivalent to `Camera3D.KEEP_WIDTH`.
-     * If `false`, preserves the vertical aspect ratio which is equivalent to `Camera3D.KEEP_HEIGHT`.
+     * If `true`, preserves the horizontal aspect ratio which is equivalent to
+     * `Camera3D.KeepAspect.WIDTH`. If `false`, preserves the vertical aspect ratio which is equivalent
+     * to `Camera3D.KeepAspect.HEIGHT`.
      *
      * Generated from Godot docs: RenderingServer.camera_set_use_vertical_aspect
      */
@@ -3600,8 +3105,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_scaling_3d_mode
      */
     @JvmStatic
-    fun viewportSetScaling3dMode(viewport: RID, scaling3dMode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetScaling3dModeBind, singleton, viewport, scaling3dMode)
+    fun viewportSetScaling3dMode(viewport: RID, scaling3dMode: RenderingServer.ViewportScaling3DMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetScaling3dModeBind, singleton, viewport, scaling3dMode.value)
     }
 
     /**
@@ -3663,19 +3168,19 @@ object RenderingServer {
      * `ProjectSettings.rendering/textures/decals/filter` and
      * `ProjectSettings.rendering/textures/light_projectors/filter`. Note: In 3D, for this setting to
      * have an effect, set `BaseMaterial3D.texture_filter` to
-     * `BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
+     * `BaseMaterial3D.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `BaseMaterial3D.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on materials. Note: In 2D, for
      * this setting to have an effect, set `CanvasItem.texture_filter` to
-     * `CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
-     * `CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
+     * `CanvasItem.TextureFilter.LINEAR_WITH_MIPMAPS_ANISOTROPIC` or
+     * `CanvasItem.TextureFilter.NEAREST_WITH_MIPMAPS_ANISOTROPIC` on the `CanvasItem` node displaying
      * the texture (or in `CanvasTexture`). However, anisotropic filtering is rarely useful in 2D, so
      * only enable it for textures in 2D if it makes a meaningful visual difference.
      *
      * Generated from Godot docs: RenderingServer.viewport_set_anisotropic_filtering_level
      */
     @JvmStatic
-    fun viewportSetAnisotropicFilteringLevel(viewport: RID, anisotropicFilteringLevel: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetAnisotropicFilteringLevelBind, singleton, viewport, anisotropicFilteringLevel)
+    fun viewportSetAnisotropicFilteringLevel(viewport: RID, anisotropicFilteringLevel: RenderingServer.ViewportAnisotropicFiltering) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetAnisotropicFilteringLevelBind, singleton, viewport, anisotropicFilteringLevel.value)
     }
 
     /**
@@ -3684,8 +3189,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_update_mode
      */
     @JvmStatic
-    fun viewportSetUpdateMode(viewport: RID, updateMode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetUpdateModeBind, singleton, viewport, updateMode)
+    fun viewportSetUpdateMode(viewport: RID, updateMode: RenderingServer.ViewportUpdateMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetUpdateModeBind, singleton, viewport, updateMode.value)
     }
 
     /**
@@ -3695,8 +3200,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_get_update_mode
      */
     @JvmStatic
-    fun viewportGetUpdateMode(viewport: RID): Long {
-        return ObjectCalls.ptrcallWithRIDArgRetLong(viewportGetUpdateModeBind, singleton, viewport)
+    fun viewportGetUpdateMode(viewport: RID): RenderingServer.ViewportUpdateMode {
+        return RenderingServer.ViewportUpdateMode(ObjectCalls.ptrcallWithRIDArgRetLong(viewportGetUpdateModeBind, singleton, viewport))
     }
 
     /**
@@ -3705,8 +3210,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_clear_mode
      */
     @JvmStatic
-    fun viewportSetClearMode(viewport: RID, clearMode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetClearModeBind, singleton, viewport, clearMode)
+    fun viewportSetClearMode(viewport: RID, clearMode: RenderingServer.ViewportClearMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetClearModeBind, singleton, viewport, clearMode.value)
     }
 
     /**
@@ -3753,15 +3258,15 @@ object RenderingServer {
      * Sets the viewport's environment mode which allows enabling or disabling rendering of 3D
      * environment over 2D canvas. When disabled, 2D will not be affected by the environment. When
      * enabled, 2D will be affected by the environment if the environment background mode is
-     * `ENV_BG_CANVAS`. The default behavior is to inherit the setting from the viewport's parent. If
-     * the topmost parent is also set to `VIEWPORT_ENVIRONMENT_INHERIT`, then the behavior will be the
-     * same as if it was set to `VIEWPORT_ENVIRONMENT_ENABLED`.
+     * `EnvironmentBG.CANVAS`. The default behavior is to inherit the setting from the viewport's
+     * parent. If the topmost parent is also set to `ViewportEnvironmentMode.INHERIT`, then the
+     * behavior will be the same as if it was set to `ViewportEnvironmentMode.ENABLED`.
      *
      * Generated from Godot docs: RenderingServer.viewport_set_environment_mode
      */
     @JvmStatic
-    fun viewportSetEnvironmentMode(viewport: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetEnvironmentModeBind, singleton, viewport, mode)
+    fun viewportSetEnvironmentMode(viewport: RID, mode: RenderingServer.ViewportEnvironmentMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetEnvironmentModeBind, singleton, viewport, mode.value)
     }
 
     /**
@@ -3837,8 +3342,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_default_canvas_item_texture_filter
      */
     @JvmStatic
-    fun viewportSetDefaultCanvasItemTextureFilter(viewport: RID, filter: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDefaultCanvasItemTextureFilterBind, singleton, viewport, filter)
+    fun viewportSetDefaultCanvasItemTextureFilter(viewport: RID, filter: RenderingServer.CanvasItemTextureFilter) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDefaultCanvasItemTextureFilterBind, singleton, viewport, filter.value)
     }
 
     /**
@@ -3847,8 +3352,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_default_canvas_item_texture_repeat
      */
     @JvmStatic
-    fun viewportSetDefaultCanvasItemTextureRepeat(viewport: RID, repeat: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDefaultCanvasItemTextureRepeatBind, singleton, viewport, repeat)
+    fun viewportSetDefaultCanvasItemTextureRepeat(viewport: RID, repeat: RenderingServer.CanvasItemTextureRepeat) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDefaultCanvasItemTextureRepeatBind, singleton, viewport, repeat.value)
     }
 
     /**
@@ -3903,8 +3408,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_sdf_oversize_and_scale
      */
     @JvmStatic
-    fun viewportSetSdfOversizeAndScale(viewport: RID, oversize: Long, scale: Long) {
-        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(viewportSetSdfOversizeAndScaleBind, singleton, viewport, oversize, scale)
+    fun viewportSetSdfOversizeAndScale(viewport: RID, oversize: RenderingServer.ViewportSDFOversize, scale: RenderingServer.ViewportSDFScale) {
+        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(viewportSetSdfOversizeAndScaleBind, singleton, viewport, oversize.value, scale.value)
     }
 
     /**
@@ -3941,8 +3446,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_msaa_3d
      */
     @JvmStatic
-    fun viewportSetMsaa3d(viewport: RID, msaa: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetMsaa3dBind, singleton, viewport, msaa)
+    fun viewportSetMsaa3d(viewport: RID, msaa: RenderingServer.ViewportMSAA) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetMsaa3dBind, singleton, viewport, msaa.value)
     }
 
     /**
@@ -3952,8 +3457,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_msaa_2d
      */
     @JvmStatic
-    fun viewportSetMsaa2d(viewport: RID, msaa: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetMsaa2dBind, singleton, viewport, msaa)
+    fun viewportSetMsaa2d(viewport: RID, msaa: RenderingServer.ViewportMSAA) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetMsaa2dBind, singleton, viewport, msaa.value)
     }
 
     /**
@@ -3980,8 +3485,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_screen_space_aa
      */
     @JvmStatic
-    fun viewportSetScreenSpaceAa(viewport: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetScreenSpaceAaBind, singleton, viewport, mode)
+    fun viewportSetScreenSpaceAa(viewport: RID, mode: RenderingServer.ViewportScreenSpaceAA) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetScreenSpaceAaBind, singleton, viewport, mode.value)
     }
 
     /**
@@ -4035,8 +3540,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_occlusion_culling_build_quality
      */
     @JvmStatic
-    fun viewportSetOcclusionCullingBuildQuality(quality: Long) {
-        ObjectCalls.ptrcallWithLongArg(viewportSetOcclusionCullingBuildQualityBind, singleton, quality)
+    fun viewportSetOcclusionCullingBuildQuality(quality: RenderingServer.ViewportOcclusionCullingBuildQuality) {
+        ObjectCalls.ptrcallWithLongArg(viewportSetOcclusionCullingBuildQualityBind, singleton, quality.value)
     }
 
     /**
@@ -4051,8 +3556,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_get_render_info
      */
     @JvmStatic
-    fun viewportGetRenderInfo(viewport: RID, type: Long, info: Long): Int {
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetInt(viewportGetRenderInfoBind, singleton, viewport, type, info)
+    fun viewportGetRenderInfo(viewport: RID, type: RenderingServer.ViewportRenderInfoType, info: RenderingServer.ViewportRenderInfo): Int {
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetInt(viewportGetRenderInfoBind, singleton, viewport, type.value, info.value)
     }
 
     /**
@@ -4061,8 +3566,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_debug_draw
      */
     @JvmStatic
-    fun viewportSetDebugDraw(viewport: RID, draw: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDebugDrawBind, singleton, viewport, draw)
+    fun viewportSetDebugDraw(viewport: RID, draw: RenderingServer.ViewportDebugDraw) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetDebugDrawBind, singleton, viewport, draw.value)
     }
 
     /**
@@ -4124,27 +3629,27 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.viewport_set_vrs_mode
      */
     @JvmStatic
-    fun viewportSetVrsMode(viewport: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetVrsModeBind, singleton, viewport, mode)
+    fun viewportSetVrsMode(viewport: RID, mode: RenderingServer.ViewportVRSMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetVrsModeBind, singleton, viewport, mode.value)
     }
 
     /**
      * Sets the update mode for Variable Rate Shading (VRS) for the viewport. VRS requires the input
      * texture to be converted to the format usable by the VRS method supported by the hardware. The
      * update mode defines how often this happens. If the GPU does not support VRS, or VRS is not
-     * enabled, this property is ignored. If set to `RenderingServer.VIEWPORT_VRS_UPDATE_ONCE`, the
+     * enabled, this property is ignored. If set to `RenderingServer.ViewportVRSUpdateMode.ONCE`, the
      * input texture is copied once and the mode is changed to
-     * `RenderingServer.VIEWPORT_VRS_UPDATE_DISABLED`.
+     * `RenderingServer.ViewportVRSUpdateMode.DISABLED`.
      *
      * Generated from Godot docs: RenderingServer.viewport_set_vrs_update_mode
      */
     @JvmStatic
-    fun viewportSetVrsUpdateMode(viewport: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetVrsUpdateModeBind, singleton, viewport, mode)
+    fun viewportSetVrsUpdateMode(viewport: RID, mode: RenderingServer.ViewportVRSUpdateMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(viewportSetVrsUpdateModeBind, singleton, viewport, mode.value)
     }
 
     /**
-     * The texture to use when the VRS mode is set to `RenderingServer.VIEWPORT_VRS_TEXTURE`.
+     * The texture to use when the VRS mode is set to `RenderingServer.ViewportVRSMode.TEXTURE`.
      * Equivalent to `ProjectSettings.rendering/vrs/texture`.
      *
      * Generated from Godot docs: RenderingServer.viewport_set_vrs_texture
@@ -4183,8 +3688,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.sky_set_mode
      */
     @JvmStatic
-    fun skySetMode(sky: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(skySetModeBind, singleton, sky, mode)
+    fun skySetMode(sky: RID, mode: RenderingServer.SkyMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(skySetModeBind, singleton, sky, mode.value)
     }
 
     /**
@@ -4246,8 +3751,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.compositor_effect_set_callback
      */
     @JvmStatic
-    fun compositorEffectSetCallback(effect: RID, callbackType: Long, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(compositorEffectSetCallbackBind, singleton, effect, callbackType, callback.target.segment, callback.method)
+    fun compositorEffectSetCallback(effect: RID, callbackType: RenderingServer.CompositorEffectCallbackType, callback: GodotCallable) {
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(compositorEffectSetCallbackBind, singleton, effect, callbackType.value, callback.target.segment, callback.method)
     }
 
     /**
@@ -4256,8 +3761,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.compositor_effect_set_flag
      */
     @JvmStatic
-    fun compositorEffectSetFlag(effect: RID, flag: Long, set: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(compositorEffectSetFlagBind, singleton, effect, flag, set)
+    fun compositorEffectSetFlag(effect: RID, flag: RenderingServer.CompositorEffectFlags, set: Boolean) {
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(compositorEffectSetFlagBind, singleton, effect, flag.value, set)
     }
 
     /**
@@ -4302,8 +3807,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_background
      */
     @JvmStatic
-    fun environmentSetBackground(env: RID, bg: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(environmentSetBackgroundBind, singleton, env, bg)
+    fun environmentSetBackground(env: RID, bg: RenderingServer.EnvironmentBG) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(environmentSetBackgroundBind, singleton, env, bg.value)
     }
 
     /**
@@ -4350,7 +3855,7 @@ object RenderingServer {
     }
 
     /**
-     * Color displayed for clear areas of the scene. Only effective if using the `ENV_BG_COLOR`
+     * Color displayed for clear areas of the scene. Only effective if using the `EnvironmentBG.COLOR`
      * background mode.
      *
      * Generated from Godot docs: RenderingServer.environment_set_bg_color
@@ -4386,8 +3891,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_ambient_light
      */
     @JvmStatic
-    fun environmentSetAmbientLight(env: RID, color: Color, ambient: Long = 0L, energy: Double = 1.0, skyContribution: Double = 0.0, reflectionSource: Long = 0L) {
-        ObjectCalls.ptrcallWithRIDColorLongTwoDoubleLongArgs(environmentSetAmbientLightBind, singleton, env, color, ambient, energy, skyContribution, reflectionSource)
+    fun environmentSetAmbientLight(env: RID, color: Color, ambient: RenderingServer.EnvironmentAmbientSource = RenderingServer.EnvironmentAmbientSource.BG, energy: Double = 1.0, skyContribution: Double = 0.0, reflectionSource: RenderingServer.EnvironmentReflectionSource = RenderingServer.EnvironmentReflectionSource.BG) {
+        ObjectCalls.ptrcallWithRIDColorLongTwoDoubleLongArgs(environmentSetAmbientLightBind, singleton, env, color, ambient.value, energy, skyContribution, reflectionSource.value)
     }
 
     /**
@@ -4397,8 +3902,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_glow
      */
     @JvmStatic
-    fun environmentSetGlow(env: RID, enable: Boolean, levels: List<Float>, intensity: Double, strength: Double, mix: Double, bloomThreshold: Double, blendMode: Long, hdrBleedThreshold: Double, hdrBleedScale: Double, hdrLuminanceCap: Double, glowMapStrength: Double, glowMap: RID) {
-        ObjectCalls.ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(environmentSetGlowBind, singleton, env, enable, levels, intensity, strength, mix, bloomThreshold, blendMode, hdrBleedThreshold, hdrBleedScale, hdrLuminanceCap, glowMapStrength, glowMap)
+    fun environmentSetGlow(env: RID, enable: Boolean, levels: List<Float>, intensity: Double, strength: Double, mix: Double, bloomThreshold: Double, blendMode: RenderingServer.EnvironmentGlowBlendMode, hdrBleedThreshold: Double, hdrBleedScale: Double, hdrLuminanceCap: Double, glowMapStrength: Double, glowMap: RID) {
+        ObjectCalls.ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs(environmentSetGlowBind, singleton, env, enable, levels, intensity, strength, mix, bloomThreshold, blendMode.value, hdrBleedThreshold, hdrBleedScale, hdrLuminanceCap, glowMapStrength, glowMap)
     }
 
     /**
@@ -4408,8 +3913,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_tonemap
      */
     @JvmStatic
-    fun environmentSetTonemap(env: RID, toneMapper: Long, exposure: Double, white: Double) {
-        ObjectCalls.ptrcallWithRIDLongTwoDoubleArgs(environmentSetTonemapBind, singleton, env, toneMapper, exposure, white)
+    fun environmentSetTonemap(env: RID, toneMapper: RenderingServer.EnvironmentToneMapper, exposure: Double, white: Double) {
+        ObjectCalls.ptrcallWithRIDLongTwoDoubleArgs(environmentSetTonemapBind, singleton, env, toneMapper.value, exposure, white)
     }
 
     /**
@@ -4462,14 +3967,14 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_fog
      */
     @JvmStatic
-    fun environmentSetFog(env: RID, enable: Boolean, lightColor: Color, lightEnergy: Double, sunScatter: Double, density: Double, height: Double, heightDensity: Double, aerialPerspective: Double, skyAffect: Double, fogMode: Long = 0L) {
-        ObjectCalls.ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs(environmentSetFogBind, singleton, env, enable, lightColor, lightEnergy, sunScatter, density, height, heightDensity, aerialPerspective, skyAffect, fogMode)
+    fun environmentSetFog(env: RID, enable: Boolean, lightColor: Color, lightEnergy: Double, sunScatter: Double, density: Double, height: Double, heightDensity: Double, aerialPerspective: Double, skyAffect: Double, fogMode: RenderingServer.EnvironmentFogMode = RenderingServer.EnvironmentFogMode.EXPONENTIAL) {
+        ObjectCalls.ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs(environmentSetFogBind, singleton, env, enable, lightColor, lightEnergy, sunScatter, density, height, heightDensity, aerialPerspective, skyAffect, fogMode.value)
     }
 
     /**
      * Configures fog depth for the specified environment RID. Only has an effect when the fog mode of
-     * the environment is `ENV_FOG_MODE_DEPTH`. See `fog_depth_*` properties in `Environment` for more
-     * information.
+     * the environment is `EnvironmentFogMode.DEPTH`. See `fog_depth_*` properties in `Environment` for
+     * more information.
      *
      * Generated from Godot docs: RenderingServer.environment_set_fog_depth
      */
@@ -4485,8 +3990,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_sdfgi
      */
     @JvmStatic
-    fun environmentSetSdfgi(env: RID, enable: Boolean, cascades: Int, minCellSize: Double, yScale: Long, useOcclusion: Boolean, bounceFeedback: Double, readSky: Boolean, energy: Double, normalBias: Double, probeBias: Double) {
-        ObjectCalls.ptrcallWithRIDBoolIntDoubleLongBoolDoubleBoolThreeDoubleArgs(environmentSetSdfgiBind, singleton, env, enable, cascades, minCellSize, yScale, useOcclusion, bounceFeedback, readSky, energy, normalBias, probeBias)
+    fun environmentSetSdfgi(env: RID, enable: Boolean, cascades: Int, minCellSize: Double, yScale: RenderingServer.EnvironmentSDFGIYScale, useOcclusion: Boolean, bounceFeedback: Double, readSky: Boolean, energy: Double, normalBias: Double, probeBias: Double) {
+        ObjectCalls.ptrcallWithRIDBoolIntDoubleLongBoolDoubleBoolThreeDoubleArgs(environmentSetSdfgiBind, singleton, env, enable, cascades, minCellSize, yScale.value, useOcclusion, bounceFeedback, readSky, energy, normalBias, probeBias)
     }
 
     /**
@@ -4525,8 +4030,8 @@ object RenderingServer {
     }
 
     @JvmStatic
-    fun environmentSetSsrRoughnessQuality(quality: Long) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSsrRoughnessQualityBind, singleton, quality)
+    fun environmentSetSsrRoughnessQuality(quality: RenderingServer.EnvironmentSSRRoughnessQuality) {
+        ObjectCalls.ptrcallWithLongArg(environmentSetSsrRoughnessQualityBind, singleton, quality.value)
     }
 
     /**
@@ -4536,8 +4041,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_ssao_quality
      */
     @JvmStatic
-    fun environmentSetSsaoQuality(quality: Long, halfSize: Boolean, adaptiveTarget: Double, blurPasses: Int, fadeoutFrom: Double, fadeoutTo: Double) {
-        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(environmentSetSsaoQualityBind, singleton, quality, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
+    fun environmentSetSsaoQuality(quality: RenderingServer.EnvironmentSSAOQuality, halfSize: Boolean, adaptiveTarget: Double, blurPasses: Int, fadeoutFrom: Double, fadeoutTo: Double) {
+        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(environmentSetSsaoQualityBind, singleton, quality.value, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
     }
 
     /**
@@ -4547,8 +4052,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_ssil_quality
      */
     @JvmStatic
-    fun environmentSetSsilQuality(quality: Long, halfSize: Boolean, adaptiveTarget: Double, blurPasses: Int, fadeoutFrom: Double, fadeoutTo: Double) {
-        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(environmentSetSsilQualityBind, singleton, quality, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
+    fun environmentSetSsilQuality(quality: RenderingServer.EnvironmentSSILQuality, halfSize: Boolean, adaptiveTarget: Double, blurPasses: Int, fadeoutFrom: Double, fadeoutTo: Double) {
+        ObjectCalls.ptrcallWithLongBoolDoubleIntAndTwoDoubleArgs(environmentSetSsilQualityBind, singleton, quality.value, halfSize, adaptiveTarget, blurPasses, fadeoutFrom, fadeoutTo)
     }
 
     /**
@@ -4559,8 +4064,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_sdfgi_ray_count
      */
     @JvmStatic
-    fun environmentSetSdfgiRayCount(rayCount: Long) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiRayCountBind, singleton, rayCount)
+    fun environmentSetSdfgiRayCount(rayCount: RenderingServer.EnvironmentSDFGIRayCount) {
+        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiRayCountBind, singleton, rayCount.value)
     }
 
     /**
@@ -4570,8 +4075,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_sdfgi_frames_to_converge
      */
     @JvmStatic
-    fun environmentSetSdfgiFramesToConverge(frames: Long) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiFramesToConvergeBind, singleton, frames)
+    fun environmentSetSdfgiFramesToConverge(frames: RenderingServer.EnvironmentSDFGIFramesToConverge) {
+        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiFramesToConvergeBind, singleton, frames.value)
     }
 
     /**
@@ -4582,8 +4087,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.environment_set_sdfgi_frames_to_update_light
      */
     @JvmStatic
-    fun environmentSetSdfgiFramesToUpdateLight(frames: Long) {
-        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiFramesToUpdateLightBind, singleton, frames)
+    fun environmentSetSdfgiFramesToUpdateLight(frames: RenderingServer.EnvironmentSDFGIFramesToUpdateLight) {
+        ObjectCalls.ptrcallWithLongArg(environmentSetSdfgiFramesToUpdateLightBind, singleton, frames.value)
     }
 
     /**
@@ -4649,8 +4154,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.sub_surface_scattering_set_quality
      */
     @JvmStatic
-    fun subSurfaceScatteringSetQuality(quality: Long) {
-        ObjectCalls.ptrcallWithLongArg(subSurfaceScatteringSetQualityBind, singleton, quality)
+    fun subSurfaceScatteringSetQuality(quality: RenderingServer.SubSurfaceScatteringQuality) {
+        ObjectCalls.ptrcallWithLongArg(subSurfaceScatteringSetQualityBind, singleton, quality.value)
     }
 
     /**
@@ -4686,8 +4191,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.camera_attributes_set_dof_blur_quality
      */
     @JvmStatic
-    fun cameraAttributesSetDofBlurQuality(quality: Long, useJitter: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(cameraAttributesSetDofBlurQualityBind, singleton, quality, useJitter)
+    fun cameraAttributesSetDofBlurQuality(quality: RenderingServer.DOFBlurQuality, useJitter: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(cameraAttributesSetDofBlurQualityBind, singleton, quality.value, useJitter)
     }
 
     /**
@@ -4697,8 +4202,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.camera_attributes_set_dof_blur_bokeh_shape
      */
     @JvmStatic
-    fun cameraAttributesSetDofBlurBokehShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(cameraAttributesSetDofBlurBokehShapeBind, singleton, shape)
+    fun cameraAttributesSetDofBlurBokehShape(shape: RenderingServer.DOFBokehShape) {
+        ObjectCalls.ptrcallWithLongArg(cameraAttributesSetDofBlurBokehShapeBind, singleton, shape.value)
     }
 
     /**
@@ -5008,8 +4513,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.instance_geometry_set_flag
      */
     @JvmStatic
-    fun instanceGeometrySetFlag(instance: RID, flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(instanceGeometrySetFlagBind, singleton, instance, flag, enabled)
+    fun instanceGeometrySetFlag(instance: RID, flag: RenderingServer.InstanceFlags, enabled: Boolean) {
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(instanceGeometrySetFlagBind, singleton, instance, flag.value, enabled)
     }
 
     /**
@@ -5018,8 +4523,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.instance_geometry_set_cast_shadows_setting
      */
     @JvmStatic
-    fun instanceGeometrySetCastShadowsSetting(instance: RID, shadowCastingSetting: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(instanceGeometrySetCastShadowsSettingBind, singleton, instance, shadowCastingSetting)
+    fun instanceGeometrySetCastShadowsSetting(instance: RID, shadowCastingSetting: RenderingServer.ShadowCastingSetting) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(instanceGeometrySetCastShadowsSettingBind, singleton, instance, shadowCastingSetting.value)
     }
 
     /**
@@ -5051,8 +4556,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.instance_geometry_set_visibility_range
      */
     @JvmStatic
-    fun instanceGeometrySetVisibilityRange(instance: RID, min: Double, max: Double, minMargin: Double, maxMargin: Double, fadeMode: Long) {
-        ObjectCalls.ptrcallWithRIDFourDoubleLongArgs(instanceGeometrySetVisibilityRangeBind, singleton, instance, min, max, minMargin, maxMargin, fadeMode)
+    fun instanceGeometrySetVisibilityRange(instance: RID, min: Double, max: Double, minMargin: Double, maxMargin: Double, fadeMode: RenderingServer.VisibilityRangeFadeMode) {
+        ObjectCalls.ptrcallWithRIDFourDoubleLongArgs(instanceGeometrySetVisibilityRangeBind, singleton, instance, min, max, minMargin, maxMargin, fadeMode.value)
     }
 
     /**
@@ -5265,8 +4770,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_texture_set_channel
      */
     @JvmStatic
-    fun canvasTextureSetChannel(canvasTexture: RID, channel: Long, texture: RID) {
-        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(canvasTextureSetChannelBind, singleton, canvasTexture, channel, texture)
+    fun canvasTextureSetChannel(canvasTexture: RID, channel: RenderingServer.CanvasTextureChannel, texture: RID) {
+        ObjectCalls.ptrcallWithRIDLongAndRIDArgs(canvasTextureSetChannelBind, singleton, canvasTexture, channel.value, texture)
     }
 
     /**
@@ -5288,8 +4793,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_texture_set_texture_filter
      */
     @JvmStatic
-    fun canvasTextureSetTextureFilter(canvasTexture: RID, filter: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasTextureSetTextureFilterBind, singleton, canvasTexture, filter)
+    fun canvasTextureSetTextureFilter(canvasTexture: RID, filter: RenderingServer.CanvasItemTextureFilter) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasTextureSetTextureFilterBind, singleton, canvasTexture, filter.value)
     }
 
     /**
@@ -5299,8 +4804,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_texture_set_texture_repeat
      */
     @JvmStatic
-    fun canvasTextureSetTextureRepeat(canvasTexture: RID, repeat: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasTextureSetTextureRepeatBind, singleton, canvasTexture, repeat)
+    fun canvasTextureSetTextureRepeat(canvasTexture: RID, repeat: RenderingServer.CanvasItemTextureRepeat) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasTextureSetTextureRepeatBind, singleton, canvasTexture, repeat.value)
     }
 
     /**
@@ -5334,8 +4839,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_item_set_default_texture_filter
      */
     @JvmStatic
-    fun canvasItemSetDefaultTextureFilter(item: RID, filter: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasItemSetDefaultTextureFilterBind, singleton, item, filter)
+    fun canvasItemSetDefaultTextureFilter(item: RID, filter: RenderingServer.CanvasItemTextureFilter) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasItemSetDefaultTextureFilterBind, singleton, item, filter.value)
     }
 
     /**
@@ -5345,8 +4850,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_item_set_default_texture_repeat
      */
     @JvmStatic
-    fun canvasItemSetDefaultTextureRepeat(item: RID, repeat: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasItemSetDefaultTextureRepeatBind, singleton, item, repeat)
+    fun canvasItemSetDefaultTextureRepeat(item: RID, repeat: RenderingServer.CanvasItemTextureRepeat) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasItemSetDefaultTextureRepeatBind, singleton, item, repeat.value)
     }
 
     /**
@@ -5613,8 +5118,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_item_add_nine_patch
      */
     @JvmStatic
-    fun canvasItemAddNinePatch(item: RID, rect: Rect2, source: Rect2, texture: RID, topleft: Vector2, bottomright: Vector2, xAxisMode: Long = 0L, yAxisMode: Long = 0L, drawCenter: Boolean = true, modulate: Color) {
-        ObjectCalls.ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs(canvasItemAddNinePatchBind, singleton, item, rect, source, texture, topleft, bottomright, xAxisMode, yAxisMode, drawCenter, modulate)
+    fun canvasItemAddNinePatch(item: RID, rect: Rect2, source: Rect2, texture: RID, topleft: Vector2, bottomright: Vector2, xAxisMode: RenderingServer.NinePatchAxisMode = RenderingServer.NinePatchAxisMode.STRETCH, yAxisMode: RenderingServer.NinePatchAxisMode = RenderingServer.NinePatchAxisMode.STRETCH, drawCenter: Boolean = true, modulate: Color) {
+        ObjectCalls.ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs(canvasItemAddNinePatchBind, singleton, item, rect, source, texture, topleft, bottomright, xAxisMode.value, yAxisMode.value, drawCenter, modulate)
     }
 
     /**
@@ -5882,8 +5387,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_item_set_canvas_group_mode
      */
     @JvmStatic
-    fun canvasItemSetCanvasGroupMode(item: RID, mode: Long, clearMargin: Double = 5.0, fitEmpty: Boolean = false, fitMargin: Double = 0.0, blurMipmaps: Boolean = false) {
-        ObjectCalls.ptrcallWithRIDLongDoubleBoolDoubleBoolArgs(canvasItemSetCanvasGroupModeBind, singleton, item, mode, clearMargin, fitEmpty, fitMargin, blurMipmaps)
+    fun canvasItemSetCanvasGroupMode(item: RID, mode: RenderingServer.CanvasGroupMode, clearMargin: Double = 5.0, fitEmpty: Boolean = false, fitMargin: Double = 0.0, blurMipmaps: Boolean = false) {
+        ObjectCalls.ptrcallWithRIDLongDoubleBoolDoubleBoolArgs(canvasItemSetCanvasGroupModeBind, singleton, item, mode.value, clearMargin, fitEmpty, fitMargin, blurMipmaps)
     }
 
     /**
@@ -6049,8 +5554,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_light_set_mode
      */
     @JvmStatic
-    fun canvasLightSetMode(light: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetModeBind, singleton, light, mode)
+    fun canvasLightSetMode(light: RID, mode: RenderingServer.CanvasLightMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -6069,8 +5574,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_light_set_shadow_filter
      */
     @JvmStatic
-    fun canvasLightSetShadowFilter(light: RID, filter: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetShadowFilterBind, singleton, light, filter)
+    fun canvasLightSetShadowFilter(light: RID, filter: RenderingServer.CanvasLightShadowFilter) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetShadowFilterBind, singleton, light, filter.value)
     }
 
     /**
@@ -6099,8 +5604,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_light_set_blend_mode
      */
     @JvmStatic
-    fun canvasLightSetBlendMode(light: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetBlendModeBind, singleton, light, mode)
+    fun canvasLightSetBlendMode(light: RID, mode: RenderingServer.CanvasLightBlendMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasLightSetBlendModeBind, singleton, light, mode.value)
     }
 
     /**
@@ -6274,8 +5779,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.canvas_occluder_polygon_set_cull_mode
      */
     @JvmStatic
-    fun canvasOccluderPolygonSetCullMode(occluderPolygon: RID, mode: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(canvasOccluderPolygonSetCullModeBind, singleton, occluderPolygon, mode)
+    fun canvasOccluderPolygonSetCullMode(occluderPolygon: RID, mode: RenderingServer.CanvasOccluderPolygonCullMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(canvasOccluderPolygonSetCullModeBind, singleton, occluderPolygon, mode.value)
     }
 
     /**
@@ -6295,8 +5800,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.global_shader_parameter_add
      */
     @JvmStatic
-    fun globalShaderParameterAdd(name: String, type: Long, defaultValue: Any?) {
-        ObjectCalls.ptrcallWithStringNameLongVariantArgs(globalShaderParameterAddBind, singleton, name, type, defaultValue)
+    fun globalShaderParameterAdd(name: String, type: RenderingServer.GlobalShaderParameterType, defaultValue: Any?) {
+        ObjectCalls.ptrcallWithStringNameLongVariantArgs(globalShaderParameterAddBind, singleton, name, type.value, defaultValue)
     }
 
     /**
@@ -6370,8 +5875,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.global_shader_parameter_get_type
      */
     @JvmStatic
-    fun globalShaderParameterGetType(name: String): Long {
-        return ObjectCalls.ptrcallWithStringNameArgRetLong(globalShaderParameterGetTypeBind, singleton, name)
+    fun globalShaderParameterGetType(name: String): RenderingServer.GlobalShaderParameterType {
+        return RenderingServer.GlobalShaderParameterType(ObjectCalls.ptrcallWithStringNameArgRetLong(globalShaderParameterGetTypeBind, singleton, name))
     }
 
     /**
@@ -6418,8 +5923,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.get_rendering_info
      */
     @JvmStatic
-    fun getRenderingInfo(info: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(getRenderingInfoBind, singleton, info)
+    fun getRenderingInfo(info: RenderingServer.RenderingInfo): Long {
+        return ObjectCalls.ptrcallWithLongArgRetLong(getRenderingInfoBind, singleton, info.value)
     }
 
     /**
@@ -6452,13 +5957,13 @@ object RenderingServer {
      * device type can be used as a basis for automatic graphics settings adjustment. However, this is
      * not always true, so make sure to provide users with a way to manually override graphics
      * settings. Note: When using the OpenGL rendering driver or when running in headless mode, this
-     * function always returns `RenderingDevice.DEVICE_TYPE_OTHER`.
+     * function always returns `RenderingDevice.DeviceType.OTHER`.
      *
      * Generated from Godot docs: RenderingServer.get_video_adapter_type
      */
     @JvmStatic
-    fun getVideoAdapterType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVideoAdapterTypeBind, singleton)
+    fun getVideoAdapterType(): RenderingDevice.DeviceType {
+        return RenderingDevice.DeviceType(ObjectCalls.ptrcallNoArgsRetLong(getVideoAdapterTypeBind, singleton))
     }
 
     /**
@@ -6529,7 +6034,7 @@ object RenderingServer {
     }
 
     /**
-     * Returns the RID of a 256×256 texture with a testing pattern on it (in `Image.FORMAT_RGB8`
+     * Returns the RID of a 256×256 texture with a testing pattern on it (in `Image.Format.RGB8`
      * format). This texture will be created and returned on the first call to `get_test_texture`, then
      * it will be cached for subsequent calls. See also `get_white_texture`.
      *
@@ -6541,7 +6046,7 @@ object RenderingServer {
     }
 
     /**
-     * Returns the ID of a 4×4 white texture (in `Image.FORMAT_RGB8` format). This texture will be
+     * Returns the ID of a 4×4 white texture (in `Image.Format.RGB8` format). This texture will be
      * created and returned on the first call to `get_white_texture`, then it will be cached for
      * subsequent calls. See also `get_test_texture`.
      *
@@ -6561,8 +6066,8 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.set_boot_image_with_stretch
      */
     @JvmStatic
-    fun setBootImageWithStretch(image: Image?, color: Color, stretchMode: Long, useFilter: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectColorLongBoolArgs(setBootImageWithStretchBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, stretchMode, useFilter)
+    fun setBootImageWithStretch(image: Image?, color: Color, stretchMode: RenderingServer.SplashStretchMode, useFilter: Boolean = true) {
+        ObjectCalls.ptrcallWithObjectColorLongBoolArgs(setBootImageWithStretchBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, color, stretchMode.value, useFilter)
     }
 
     /**
@@ -6733,13 +6238,4426 @@ object RenderingServer {
      * Generated from Godot docs: RenderingServer.has_feature
      */
     @JvmStatic
-    fun hasFeature(feature: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature)
+    fun hasFeature(feature: RenderingServer.Features): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature.value)
     }
 
     object Signals {
         const val framePreDraw: String = "frame_pre_draw"
         const val framePostDraw: String = "frame_post_draw"
+    }
+
+    /**
+     * Godot's `RenderingServer.TextureType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.TextureType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.TextureType
+     */
+    @JvmInline
+    value class TextureType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * 2D texture.
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_TYPE_2D
+             */
+            val TYPE_2D: TextureType get() = TextureType(0L)
+            /**
+             * Layered texture.
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_TYPE_LAYERED
+             */
+            val LAYERED: TextureType get() = TextureType(1L)
+            /**
+             * 3D texture.
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_TYPE_3D
+             */
+            val TYPE_3D: TextureType get() = TextureType(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.TextureLayeredType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.TextureLayeredType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.TextureLayeredType
+     */
+    @JvmInline
+    value class TextureLayeredType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Array of 2-dimensional textures (see `Texture2DArray`).
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_LAYERED_2D_ARRAY
+             */
+            val LAYERED_2D_ARRAY: TextureLayeredType get() = TextureLayeredType(0L)
+            /**
+             * Cubemap texture (see `Cubemap`).
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_LAYERED_CUBEMAP
+             */
+            val CUBEMAP: TextureLayeredType get() = TextureLayeredType(1L)
+            /**
+             * Array of cubemap textures (see `CubemapArray`).
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_LAYERED_CUBEMAP_ARRAY
+             */
+            val CUBEMAP_ARRAY: TextureLayeredType get() = TextureLayeredType(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CubeMapLayer` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.CubeMapLayer.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CubeMapLayer
+     */
+    @JvmInline
+    value class CubeMapLayer(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Left face of a `Cubemap`.
+             *
+             * Generated from Godot docs: RenderingServer.CUBEMAP_LAYER_LEFT
+             */
+            val LEFT: CubeMapLayer get() = CubeMapLayer(0L)
+            /**
+             * Right face of a `Cubemap`.
+             *
+             * Generated from Godot docs: RenderingServer.CUBEMAP_LAYER_RIGHT
+             */
+            val RIGHT: CubeMapLayer get() = CubeMapLayer(1L)
+            /**
+             * Bottom face of a `Cubemap`.
+             *
+             * Generated from Godot docs: RenderingServer.CUBEMAP_LAYER_BOTTOM
+             */
+            val BOTTOM: CubeMapLayer get() = CubeMapLayer(2L)
+            /**
+             * Top face of a `Cubemap`.
+             *
+             * Generated from Godot docs: RenderingServer.CUBEMAP_LAYER_TOP
+             */
+            val TOP: CubeMapLayer get() = CubeMapLayer(3L)
+            /**
+             * Front face of a `Cubemap`.
+             *
+             * Generated from Godot docs: RenderingServer.CUBEMAP_LAYER_FRONT
+             */
+            val FRONT: CubeMapLayer get() = CubeMapLayer(4L)
+            /**
+             * Back face of a `Cubemap`.
+             *
+             * Generated from Godot docs: RenderingServer.CUBEMAP_LAYER_BACK
+             */
+            val BACK: CubeMapLayer get() = CubeMapLayer(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.TextureDrawableFormat` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.TextureDrawableFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.TextureDrawableFormat
+     */
+    @JvmInline
+    value class TextureDrawableFormat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * OpenGL texture format RGBA with four components, each with a bitdepth of 8.
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_DRAWABLE_FORMAT_RGBA8
+             */
+            val RGBA8: TextureDrawableFormat get() = TextureDrawableFormat(0L)
+            /**
+             * OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, an
+             * sRGB to linear color space conversion is performed.
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_DRAWABLE_FORMAT_RGBA8_SRGB
+             */
+            val RGBA8_SRGB: TextureDrawableFormat get() = TextureDrawableFormat(1L)
+            /**
+             * OpenGL texture format GL_RGBA16F where there are four components, each a 16-bit "half-precision"
+             * floating-point value.
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_DRAWABLE_FORMAT_RGBAH
+             */
+            val RGBAH: TextureDrawableFormat get() = TextureDrawableFormat(2L)
+            /**
+             * OpenGL texture format GL_RGBA32F where there are four components, each a 32-bit floating-point
+             * value.
+             *
+             * Generated from Godot docs: RenderingServer.TEXTURE_DRAWABLE_FORMAT_RGBAF
+             */
+            val RGBAF: TextureDrawableFormat get() = TextureDrawableFormat(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ShaderMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ShaderMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ShaderMode
+     */
+    @JvmInline
+    value class ShaderMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Shader is a 3D shader.
+             *
+             * Generated from Godot docs: RenderingServer.SHADER_SPATIAL
+             */
+            val SPATIAL: ShaderMode get() = ShaderMode(0L)
+            /**
+             * Shader is a 2D shader.
+             *
+             * Generated from Godot docs: RenderingServer.SHADER_CANVAS_ITEM
+             */
+            val CANVAS_ITEM: ShaderMode get() = ShaderMode(1L)
+            /**
+             * Shader is a particle shader (can be used in both 2D and 3D).
+             *
+             * Generated from Godot docs: RenderingServer.SHADER_PARTICLES
+             */
+            val PARTICLES: ShaderMode get() = ShaderMode(2L)
+            /**
+             * Shader is a 3D sky shader.
+             *
+             * Generated from Godot docs: RenderingServer.SHADER_SKY
+             */
+            val SKY: ShaderMode get() = ShaderMode(3L)
+            /**
+             * Shader is a 3D fog shader.
+             *
+             * Generated from Godot docs: RenderingServer.SHADER_FOG
+             */
+            val FOG: ShaderMode get() = ShaderMode(4L)
+            /**
+             * Shader is a texture_blit shader.
+             *
+             * Generated from Godot docs: RenderingServer.SHADER_TEXTURE_BLIT
+             */
+            val TEXTURE_BLIT: ShaderMode get() = ShaderMode(5L)
+            /**
+             * Represents the size of the `ShaderMode` enum.
+             *
+             * Generated from Godot docs: RenderingServer.SHADER_MAX
+             */
+            val MAX: ShaderMode get() = ShaderMode(6L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ArrayType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ArrayType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ArrayType
+     */
+    @JvmInline
+    value class ArrayType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Array is a vertex position array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_VERTEX
+             */
+            val VERTEX: ArrayType get() = ArrayType(0L)
+            /**
+             * Array is a normal array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_NORMAL
+             */
+            val NORMAL: ArrayType get() = ArrayType(1L)
+            /**
+             * Array is a tangent array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_TANGENT
+             */
+            val TANGENT: ArrayType get() = ArrayType(2L)
+            /**
+             * Array is a vertex color array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_COLOR
+             */
+            val COLOR: ArrayType get() = ArrayType(3L)
+            /**
+             * Array is a UV coordinates array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_TEX_UV
+             */
+            val TEX_UV: ArrayType get() = ArrayType(4L)
+            /**
+             * Array is a UV coordinates array for the second set of UV coordinates.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_TEX_UV2
+             */
+            val TEX_UV2: ArrayType get() = ArrayType(5L)
+            /**
+             * Array is a custom data array for the first set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM0
+             */
+            val CUSTOM0: ArrayType get() = ArrayType(6L)
+            /**
+             * Array is a custom data array for the second set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM1
+             */
+            val CUSTOM1: ArrayType get() = ArrayType(7L)
+            /**
+             * Array is a custom data array for the third set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM2
+             */
+            val CUSTOM2: ArrayType get() = ArrayType(8L)
+            /**
+             * Array is a custom data array for the fourth set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM3
+             */
+            val CUSTOM3: ArrayType get() = ArrayType(9L)
+            /**
+             * Array contains bone information.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_BONES
+             */
+            val BONES: ArrayType get() = ArrayType(10L)
+            /**
+             * Array is weight information.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_WEIGHTS
+             */
+            val WEIGHTS: ArrayType get() = ArrayType(11L)
+            /**
+             * Array is an index array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_INDEX
+             */
+            val INDEX: ArrayType get() = ArrayType(12L)
+            /**
+             * Represents the size of the `ArrayType` enum.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_MAX
+             */
+            val MAX: ArrayType get() = ArrayType(13L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ArrayCustomFormat` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ArrayCustomFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ArrayCustomFormat
+     */
+    @JvmInline
+    value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Custom data array contains 8-bit-per-channel red/green/blue/alpha color data. Values are
+             * normalized, unsigned floating-point in the `[0.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_RGBA8_UNORM
+             */
+            val RGBA8_UNORM: ArrayCustomFormat get() = ArrayCustomFormat(0L)
+            /**
+             * Custom data array contains 8-bit-per-channel red/green/blue/alpha color data. Values are
+             * normalized, signed floating-point in the `[-1.0, 1.0]` range.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_RGBA8_SNORM
+             */
+            val RGBA8_SNORM: ArrayCustomFormat get() = ArrayCustomFormat(1L)
+            /**
+             * Custom data array contains 16-bit-per-channel red/green color data. Values are floating-point in
+             * half precision.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_RG_HALF
+             */
+            val RG_HALF: ArrayCustomFormat get() = ArrayCustomFormat(2L)
+            /**
+             * Custom data array contains 16-bit-per-channel red/green/blue/alpha color data. Values are
+             * floating-point in half precision.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_RGBA_HALF
+             */
+            val RGBA_HALF: ArrayCustomFormat get() = ArrayCustomFormat(3L)
+            /**
+             * Custom data array contains 32-bit-per-channel red color data. Values are floating-point in
+             * single precision.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_R_FLOAT
+             */
+            val R_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(4L)
+            /**
+             * Custom data array contains 32-bit-per-channel red/green color data. Values are floating-point in
+             * single precision.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_RG_FLOAT
+             */
+            val RG_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(5L)
+            /**
+             * Custom data array contains 32-bit-per-channel red/green/blue color data. Values are
+             * floating-point in single precision.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_RGB_FLOAT
+             */
+            val RGB_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(6L)
+            /**
+             * Custom data array contains 32-bit-per-channel red/green/blue/alpha color data. Values are
+             * floating-point in single precision.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_RGBA_FLOAT
+             */
+            val RGBA_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(7L)
+            /**
+             * Represents the size of the `ArrayCustomFormat` enum.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_CUSTOM_MAX
+             */
+            val MAX: ArrayCustomFormat get() = ArrayCustomFormat(8L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ArrayFormat` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.ArrayFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ArrayFormat
+     */
+    @JvmInline
+    value class ArrayFormat(override val value: Long) : GodotEnumValue {
+        infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
+
+        infix fun and(other: ArrayFormat): ArrayFormat = ArrayFormat(value and other.value)
+
+        infix fun xor(other: ArrayFormat): ArrayFormat = ArrayFormat(value xor other.value)
+
+        fun inv(): ArrayFormat = ArrayFormat(value.inv())
+
+        operator fun contains(other: ArrayFormat): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Flag used to mark a vertex position array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_VERTEX
+             */
+            val FORMAT_VERTEX: ArrayFormat get() = ArrayFormat(1L)
+            /**
+             * Flag used to mark a normal array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_NORMAL
+             */
+            val FORMAT_NORMAL: ArrayFormat get() = ArrayFormat(2L)
+            /**
+             * Flag used to mark a tangent array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_TANGENT
+             */
+            val FORMAT_TANGENT: ArrayFormat get() = ArrayFormat(4L)
+            /**
+             * Flag used to mark a vertex color array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_COLOR
+             */
+            val FORMAT_COLOR: ArrayFormat get() = ArrayFormat(8L)
+            /**
+             * Flag used to mark a UV coordinates array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_TEX_UV
+             */
+            val FORMAT_TEX_UV: ArrayFormat get() = ArrayFormat(16L)
+            /**
+             * Flag used to mark a UV coordinates array for the second UV coordinates.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_TEX_UV2
+             */
+            val FORMAT_TEX_UV2: ArrayFormat get() = ArrayFormat(32L)
+            /**
+             * Flag used to mark an array of custom per-vertex data for the first set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM0
+             */
+            val FORMAT_CUSTOM0: ArrayFormat get() = ArrayFormat(64L)
+            /**
+             * Flag used to mark an array of custom per-vertex data for the second set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM1
+             */
+            val FORMAT_CUSTOM1: ArrayFormat get() = ArrayFormat(128L)
+            /**
+             * Flag used to mark an array of custom per-vertex data for the third set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM2
+             */
+            val FORMAT_CUSTOM2: ArrayFormat get() = ArrayFormat(256L)
+            /**
+             * Flag used to mark an array of custom per-vertex data for the fourth set of custom data.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM3
+             */
+            val FORMAT_CUSTOM3: ArrayFormat get() = ArrayFormat(512L)
+            /**
+             * Flag used to mark a bone information array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_BONES
+             */
+            val FORMAT_BONES: ArrayFormat get() = ArrayFormat(1024L)
+            /**
+             * Flag used to mark a weights array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_WEIGHTS
+             */
+            val FORMAT_WEIGHTS: ArrayFormat get() = ArrayFormat(2048L)
+            /**
+             * Flag used to mark an index array.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_INDEX
+             */
+            val FORMAT_INDEX: ArrayFormat get() = ArrayFormat(4096L)
+            /**
+             * Mask of mesh channels permitted in blend shapes.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_BLEND_SHAPE_MASK
+             */
+            val FORMAT_BLEND_SHAPE_MASK: ArrayFormat get() = ArrayFormat(7L)
+            /**
+             * Shift of first custom channel.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM_BASE
+             */
+            val FORMAT_CUSTOM_BASE: ArrayFormat get() = ArrayFormat(13L)
+            /**
+             * Number of format bits per custom channel. See `ArrayCustomFormat`.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM_BITS
+             */
+            val FORMAT_CUSTOM_BITS: ArrayFormat get() = ArrayFormat(3L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 0.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM0_SHIFT
+             */
+            val FORMAT_CUSTOM0_SHIFT: ArrayFormat get() = ArrayFormat(13L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 1.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM1_SHIFT
+             */
+            val FORMAT_CUSTOM1_SHIFT: ArrayFormat get() = ArrayFormat(16L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 2.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM2_SHIFT
+             */
+            val FORMAT_CUSTOM2_SHIFT: ArrayFormat get() = ArrayFormat(19L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 3.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM3_SHIFT
+             */
+            val FORMAT_CUSTOM3_SHIFT: ArrayFormat get() = ArrayFormat(22L)
+            /**
+             * Mask of custom format bits per custom channel. Must be shifted by one of the SHIFT constants.
+             * See `ArrayCustomFormat`.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FORMAT_CUSTOM_MASK
+             */
+            val FORMAT_CUSTOM_MASK: ArrayFormat get() = ArrayFormat(7L)
+            /**
+             * Shift of first compress flag. Compress flags should be passed to
+             * `ArrayMesh.add_surface_from_arrays` and `SurfaceTool.commit`.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_COMPRESS_FLAGS_BASE
+             */
+            val COMPRESS_FLAGS_BASE: ArrayFormat get() = ArrayFormat(25L)
+            /**
+             * Flag used to mark that the array contains 2D vertices.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_USE_2D_VERTICES
+             */
+            val FLAG_USE_2D_VERTICES: ArrayFormat get() = ArrayFormat(33554432L)
+            /**
+             * Flag used to mark that the mesh data will use `GL_DYNAMIC_DRAW` on GLES. Unused on Vulkan.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_USE_DYNAMIC_UPDATE
+             */
+            val FLAG_USE_DYNAMIC_UPDATE: ArrayFormat get() = ArrayFormat(67108864L)
+            /**
+             * Flag used to mark that the array uses 8 bone weights instead of 4.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+             */
+            val FLAG_USE_8_BONE_WEIGHTS: ArrayFormat get() = ArrayFormat(134217728L)
+            /**
+             * Flag used to mark that the mesh does not have a vertex array and instead will infer vertex
+             * positions in the shader using indices and other information.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY
+             */
+            val FLAG_USES_EMPTY_VERTEX_ARRAY: ArrayFormat get() = ArrayFormat(268435456L)
+            /**
+             * Flag used to mark that a mesh is using compressed attributes (vertices, normals, tangents, UVs).
+             * When this form of compression is enabled, vertex positions will be packed into an RGBA16UNORM
+             * attribute and scaled in the vertex shader. The normal and tangent will be packed into an
+             * RG16UNORM representing an axis, and a 16-bit float stored in the A-channel of the vertex. UVs
+             * will use 16-bit normalized floats instead of full 32-bit signed floats. When using this
+             * compression mode you must use either vertices, normals, and tangents or only vertices. You
+             * cannot use normals without tangents. Importers will automatically enable this compression if
+             * they can.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_COMPRESS_ATTRIBUTES
+             */
+            val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
+            /**
+             * Flag used to mark the start of the bits used to store the mesh version.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_BASE
+             */
+            val FLAG_FORMAT_VERSION_BASE: ArrayFormat get() = ArrayFormat(35L)
+            /**
+             * Flag used to shift a mesh format int to bring the version into the lowest digits.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_SHIFT
+             */
+            val FLAG_FORMAT_VERSION_SHIFT: ArrayFormat get() = ArrayFormat(35L)
+            /**
+             * Flag used to record the format used by prior mesh versions before the introduction of a version.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_1
+             */
+            val FLAG_FORMAT_VERSION_1: ArrayFormat get() = ArrayFormat(0L)
+            /**
+             * Flag used to record the second iteration of the mesh version flag. The primary difference
+             * between this and `ArrayFormat.FLAG_FORMAT_VERSION_1` is that this version supports
+             * `ArrayFormat.FLAG_COMPRESS_ATTRIBUTES` and in this version vertex positions are de-interleaved
+             * from normals and tangents.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_2
+             */
+            val FLAG_FORMAT_VERSION_2: ArrayFormat get() = ArrayFormat(34359738368L)
+            /**
+             * Flag used to record the current version that the engine expects. Currently this is the same as
+             * `ArrayFormat.FLAG_FORMAT_VERSION_2`.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_CURRENT_VERSION
+             */
+            val FLAG_FORMAT_CURRENT_VERSION: ArrayFormat get() = ArrayFormat(34359738368L)
+            /**
+             * Flag used to isolate the bits used for mesh version after using
+             * `ArrayFormat.FLAG_FORMAT_VERSION_SHIFT` to shift them into place.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_MASK
+             */
+            val FLAG_FORMAT_VERSION_MASK: ArrayFormat get() = ArrayFormat(255L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.PrimitiveType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.PrimitiveType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.PrimitiveType
+     */
+    @JvmInline
+    value class PrimitiveType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Primitive to draw consists of points.
+             *
+             * Generated from Godot docs: RenderingServer.PRIMITIVE_POINTS
+             */
+            val POINTS: PrimitiveType get() = PrimitiveType(0L)
+            /**
+             * Primitive to draw consists of lines.
+             *
+             * Generated from Godot docs: RenderingServer.PRIMITIVE_LINES
+             */
+            val LINES: PrimitiveType get() = PrimitiveType(1L)
+            /**
+             * Primitive to draw consists of a line strip from start to end.
+             *
+             * Generated from Godot docs: RenderingServer.PRIMITIVE_LINE_STRIP
+             */
+            val LINE_STRIP: PrimitiveType get() = PrimitiveType(2L)
+            /**
+             * Primitive to draw consists of triangles.
+             *
+             * Generated from Godot docs: RenderingServer.PRIMITIVE_TRIANGLES
+             */
+            val TRIANGLES: PrimitiveType get() = PrimitiveType(3L)
+            /**
+             * Primitive to draw consists of a triangle strip (the last 3 vertices are always combined to make
+             * a triangle).
+             *
+             * Generated from Godot docs: RenderingServer.PRIMITIVE_TRIANGLE_STRIP
+             */
+            val TRIANGLE_STRIP: PrimitiveType get() = PrimitiveType(4L)
+            /**
+             * Represents the size of the `PrimitiveType` enum.
+             *
+             * Generated from Godot docs: RenderingServer.PRIMITIVE_MAX
+             */
+            val MAX: PrimitiveType get() = PrimitiveType(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.BlendShapeMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.BlendShapeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.BlendShapeMode
+     */
+    @JvmInline
+    value class BlendShapeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Blend shapes are normalized.
+             *
+             * Generated from Godot docs: RenderingServer.BLEND_SHAPE_MODE_NORMALIZED
+             */
+            val NORMALIZED: BlendShapeMode get() = BlendShapeMode(0L)
+            /**
+             * Blend shapes are relative to base weight.
+             *
+             * Generated from Godot docs: RenderingServer.BLEND_SHAPE_MODE_RELATIVE
+             */
+            val RELATIVE: BlendShapeMode get() = BlendShapeMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.MultimeshTransformFormat` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.MultimeshTransformFormat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.MultimeshTransformFormat
+     */
+    @JvmInline
+    value class MultimeshTransformFormat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use `Transform2D` to store MultiMesh transform.
+             *
+             * Generated from Godot docs: RenderingServer.MULTIMESH_TRANSFORM_2D
+             */
+            val TRANSFORM_2D: MultimeshTransformFormat get() = MultimeshTransformFormat(0L)
+            /**
+             * Use `Transform3D` to store MultiMesh transform.
+             *
+             * Generated from Godot docs: RenderingServer.MULTIMESH_TRANSFORM_3D
+             */
+            val TRANSFORM_3D: MultimeshTransformFormat get() = MultimeshTransformFormat(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.MultimeshPhysicsInterpolationQuality` enum as a typed value: `.value`
+     * is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.MultimeshPhysicsInterpolationQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.MultimeshPhysicsInterpolationQuality
+     */
+    @JvmInline
+    value class MultimeshPhysicsInterpolationQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * MultiMesh physics interpolation favors speed over quality.
+             *
+             * Generated from Godot docs: RenderingServer.MULTIMESH_INTERP_QUALITY_FAST
+             */
+            val FAST: MultimeshPhysicsInterpolationQuality get() = MultimeshPhysicsInterpolationQuality(0L)
+            /**
+             * MultiMesh physics interpolation favors quality over speed.
+             *
+             * Generated from Godot docs: RenderingServer.MULTIMESH_INTERP_QUALITY_HIGH
+             */
+            val HIGH: MultimeshPhysicsInterpolationQuality get() = MultimeshPhysicsInterpolationQuality(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.LightProjectorFilter` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightProjectorFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightProjectorFilter
+     */
+    @JvmInline
+    value class LightProjectorFilter(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Nearest-neighbor filter for light projectors (use for pixel art light projectors). No mipmaps
+             * are used for rendering, which means light projectors at a distance will look sharp but grainy.
+             * This has roughly the same performance cost as using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PROJECTOR_FILTER_NEAREST
+             */
+            val NEAREST: LightProjectorFilter get() = LightProjectorFilter(0L)
+            /**
+             * Linear filter for light projectors (use for non-pixel art light projectors). No mipmaps are used
+             * for rendering, which means light projectors at a distance will look smooth but blurry. This has
+             * roughly the same performance cost as using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PROJECTOR_FILTER_LINEAR
+             */
+            val LINEAR: LightProjectorFilter get() = LightProjectorFilter(1L)
+            /**
+             * Nearest-neighbor filter for light projectors (use for pixel art light projectors). Isotropic
+             * mipmaps are used for rendering, which means light projectors at a distance will look smooth but
+             * blurry. This has roughly the same performance cost as not using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PROJECTOR_FILTER_NEAREST_MIPMAPS
+             */
+            val NEAREST_MIPMAPS: LightProjectorFilter get() = LightProjectorFilter(2L)
+            /**
+             * Linear filter for light projectors (use for non-pixel art light projectors). Isotropic mipmaps
+             * are used for rendering, which means light projectors at a distance will look smooth but blurry.
+             * This has roughly the same performance cost as not using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PROJECTOR_FILTER_LINEAR_MIPMAPS
+             */
+            val LINEAR_MIPMAPS: LightProjectorFilter get() = LightProjectorFilter(3L)
+            /**
+             * Nearest-neighbor filter for light projectors (use for pixel art light projectors). Anisotropic
+             * mipmaps are used for rendering, which means light projectors at a distance will look smooth and
+             * sharp when viewed from oblique angles. This looks better compared to isotropic mipmaps, but is
+             * slower. The level of anisotropic filtering is defined by
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PROJECTOR_FILTER_NEAREST_MIPMAPS_ANISOTROPIC
+             */
+            val NEAREST_MIPMAPS_ANISOTROPIC: LightProjectorFilter get() = LightProjectorFilter(4L)
+            /**
+             * Linear filter for light projectors (use for non-pixel art light projectors). Anisotropic mipmaps
+             * are used for rendering, which means light projectors at a distance will look smooth and sharp
+             * when viewed from oblique angles. This looks better compared to isotropic mipmaps, but is slower.
+             * The level of anisotropic filtering is defined by
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PROJECTOR_FILTER_LINEAR_MIPMAPS_ANISOTROPIC
+             */
+            val LINEAR_MIPMAPS_ANISOTROPIC: LightProjectorFilter get() = LightProjectorFilter(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.LightType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.LightType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightType
+     */
+    @JvmInline
+    value class LightType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Directional (sun/moon) light (see `DirectionalLight3D`).
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_DIRECTIONAL
+             */
+            val DIRECTIONAL: LightType get() = LightType(0L)
+            /**
+             * Omni light (see `OmniLight3D`).
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_OMNI
+             */
+            val OMNI: LightType get() = LightType(1L)
+            /**
+             * Spot light (see `SpotLight3D`).
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_SPOT
+             */
+            val SPOT: LightType get() = LightType(2L)
+            /**
+             * Area light (see `AreaLight3D`).
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_AREA
+             */
+            val AREA: LightType get() = LightType(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.LightParam` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.LightParam.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightParam
+     */
+    @JvmInline
+    value class LightParam(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The light's energy multiplier.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_ENERGY
+             */
+            val ENERGY: LightParam get() = LightParam(0L)
+            /**
+             * The light's indirect energy multiplier (final indirect energy is `LightParam.ENERGY` *
+             * `LightParam.INDIRECT_ENERGY`).
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_INDIRECT_ENERGY
+             */
+            val INDIRECT_ENERGY: LightParam get() = LightParam(1L)
+            /**
+             * The light's volumetric fog energy multiplier (final volumetric fog energy is `LightParam.ENERGY`
+             * * `LightParam.VOLUMETRIC_FOG_ENERGY`).
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_VOLUMETRIC_FOG_ENERGY
+             */
+            val VOLUMETRIC_FOG_ENERGY: LightParam get() = LightParam(2L)
+            /**
+             * The light's influence on specularity.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SPECULAR
+             */
+            val SPECULAR: LightParam get() = LightParam(3L)
+            /**
+             * The light's range.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_RANGE
+             */
+            val RANGE: LightParam get() = LightParam(4L)
+            /**
+             * The size of the light when using spot light or omni light. The angular size of the light when
+             * using directional light.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SIZE
+             */
+            val SIZE: LightParam get() = LightParam(5L)
+            /**
+             * The light's attenuation.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_ATTENUATION
+             */
+            val ATTENUATION: LightParam get() = LightParam(6L)
+            /**
+             * The spotlight's angle.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SPOT_ANGLE
+             */
+            val SPOT_ANGLE: LightParam get() = LightParam(7L)
+            /**
+             * The spotlight's attenuation.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SPOT_ATTENUATION
+             */
+            val SPOT_ATTENUATION: LightParam get() = LightParam(8L)
+            /**
+             * The maximum distance for shadow splits. Increasing this value will make directional shadows
+             * visible from further away, at the cost of lower overall shadow detail and performance (since
+             * more objects need to be included in the directional shadow rendering).
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_MAX_DISTANCE
+             */
+            val SHADOW_MAX_DISTANCE: LightParam get() = LightParam(9L)
+            /**
+             * Proportion of shadow atlas occupied by the first split.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_SPLIT_1_OFFSET
+             */
+            val SHADOW_SPLIT_1_OFFSET: LightParam get() = LightParam(10L)
+            /**
+             * Proportion of shadow atlas occupied by the second split.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_SPLIT_2_OFFSET
+             */
+            val SHADOW_SPLIT_2_OFFSET: LightParam get() = LightParam(11L)
+            /**
+             * Proportion of shadow atlas occupied by the third split. The fourth split occupies the rest.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_SPLIT_3_OFFSET
+             */
+            val SHADOW_SPLIT_3_OFFSET: LightParam get() = LightParam(12L)
+            /**
+             * Proportion of shadow max distance where the shadow will start to fade out.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_FADE_START
+             */
+            val SHADOW_FADE_START: LightParam get() = LightParam(13L)
+            /**
+             * Normal bias used to offset shadow lookup by object normal. Can be used to fix self-shadowing
+             * artifacts.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_NORMAL_BIAS
+             */
+            val SHADOW_NORMAL_BIAS: LightParam get() = LightParam(14L)
+            /**
+             * Bias for the shadow lookup to fix self-shadowing artifacts.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_BIAS
+             */
+            val SHADOW_BIAS: LightParam get() = LightParam(15L)
+            /**
+             * Sets the size of the directional shadow pancake. The pancake offsets the start of the shadow's
+             * camera frustum to provide a higher effective depth resolution for the shadow. However, a high
+             * pancake size can cause artifacts in the shadows of large objects that are close to the edge of
+             * the frustum. Reducing the pancake size can help. Setting the size to `0` turns off the pancaking
+             * effect.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_PANCAKE_SIZE
+             */
+            val SHADOW_PANCAKE_SIZE: LightParam get() = LightParam(16L)
+            /**
+             * The light's shadow opacity. Values lower than `1.0` make the light appear through shadows. This
+             * can be used to fake global illumination at a low performance cost.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_OPACITY
+             */
+            val SHADOW_OPACITY: LightParam get() = LightParam(17L)
+            /**
+             * Blurs the edges of the shadow. Can be used to hide pixel artifacts in low resolution shadow
+             * maps. A high value can make shadows appear grainy and can cause other unwanted artifacts. Try to
+             * keep as near default as possible.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_SHADOW_BLUR
+             */
+            val SHADOW_BLUR: LightParam get() = LightParam(18L)
+            val TRANSMITTANCE_BIAS: LightParam get() = LightParam(19L)
+            /**
+             * Constant representing the intensity of the light, measured in Lumens when dealing with a
+             * `SpotLight3D` or `OmniLight3D`, or measured in Lux with a `DirectionalLight3D`. Only used when
+             * `ProjectSettings.rendering/lights_and_shadows/use_physical_light_units` is `true`.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_INTENSITY
+             */
+            val INTENSITY: LightParam get() = LightParam(20L)
+            /**
+             * Represents the size of the `LightParam` enum.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_MAX
+             */
+            val MAX: LightParam get() = LightParam(21L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.LightBakeMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.LightBakeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightBakeMode
+     */
+    @JvmInline
+    value class LightBakeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Light is ignored when baking. This is the fastest mode, but the light will be taken into account
+             * when baking global illumination. This mode should generally be used for dynamic lights that
+             * change quickly, as the effect of global illumination is less noticeable on those lights.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_BAKE_DISABLED
+             */
+            val DISABLED: LightBakeMode get() = LightBakeMode(0L)
+            /**
+             * Light is taken into account in static baking (`VoxelGI`, `LightmapGI`, SDFGI
+             * (`Environment.sdfgi_enabled`)). The light can be moved around or modified, but its global
+             * illumination will not update in real-time. This is suitable for subtle changes (such as
+             * flickering torches), but generally not large changes such as toggling a light on and off.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_BAKE_STATIC
+             */
+            val STATIC: LightBakeMode get() = LightBakeMode(1L)
+            /**
+             * Light is taken into account in dynamic baking (`VoxelGI` and SDFGI (`Environment.sdfgi_enabled`)
+             * only). The light can be moved around or modified with global illumination updating in real-time.
+             * The light's global illumination appearance will be slightly different compared to
+             * `LightBakeMode.STATIC`. This has a greater performance cost compared to `LightBakeMode.STATIC`.
+             * When using SDFGI, the update speed of dynamic lights is affected by
+             * `ProjectSettings.rendering/global_illumination/sdfgi/frames_to_update_lights`.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_BAKE_DYNAMIC
+             */
+            val DYNAMIC: LightBakeMode get() = LightBakeMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.LightOmniShadowMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightOmniShadowMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightOmniShadowMode
+     */
+    @JvmInline
+    value class LightOmniShadowMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use a dual paraboloid shadow map for omni lights.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_OMNI_SHADOW_DUAL_PARABOLOID
+             */
+            val DUAL_PARABOLOID: LightOmniShadowMode get() = LightOmniShadowMode(0L)
+            /**
+             * Use a cubemap shadow map for omni lights. Slower but better quality than dual paraboloid.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_OMNI_SHADOW_CUBE
+             */
+            val CUBE: LightOmniShadowMode get() = LightOmniShadowMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.LightDirectionalShadowMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightDirectionalShadowMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightDirectionalShadowMode
+     */
+    @JvmInline
+    value class LightDirectionalShadowMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use orthogonal shadow projection for directional light.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_DIRECTIONAL_SHADOW_ORTHOGONAL
+             */
+            val ORTHOGONAL: LightDirectionalShadowMode get() = LightDirectionalShadowMode(0L)
+            /**
+             * Use 2 splits for shadow projection when using directional light.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_DIRECTIONAL_SHADOW_PARALLEL_2_SPLITS
+             */
+            val PARALLEL_2_SPLITS: LightDirectionalShadowMode get() = LightDirectionalShadowMode(1L)
+            /**
+             * Use 4 splits for shadow projection when using directional light.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_DIRECTIONAL_SHADOW_PARALLEL_4_SPLITS
+             */
+            val PARALLEL_4_SPLITS: LightDirectionalShadowMode get() = LightDirectionalShadowMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.LightDirectionalSkyMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.LightDirectionalSkyMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.LightDirectionalSkyMode
+     */
+    @JvmInline
+    value class LightDirectionalSkyMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use DirectionalLight3D in both sky rendering and scene lighting.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_AND_SKY
+             */
+            val LIGHT_AND_SKY: LightDirectionalSkyMode get() = LightDirectionalSkyMode(0L)
+            /**
+             * Only use DirectionalLight3D in scene lighting.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_DIRECTIONAL_SKY_MODE_LIGHT_ONLY
+             */
+            val LIGHT_ONLY: LightDirectionalSkyMode get() = LightDirectionalSkyMode(1L)
+            /**
+             * Only use DirectionalLight3D in sky rendering.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_DIRECTIONAL_SKY_MODE_SKY_ONLY
+             */
+            val SKY_ONLY: LightDirectionalSkyMode get() = LightDirectionalSkyMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ShadowQuality` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ShadowQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ShadowQuality
+     */
+    @JvmInline
+    value class ShadowQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Lowest shadow filtering quality (fastest). Soft shadows are not available with this quality
+             * setting, which means the `Light3D.shadow_blur` property is ignored if `Light3D.light_size` and
+             * `Light3D.light_angular_distance` is `0.0`. Note: The variable shadow blur performed by
+             * `Light3D.light_size` and `Light3D.light_angular_distance` is still effective when using hard
+             * shadow filtering. In this case, `Light3D.shadow_blur` is taken into account. However, the
+             * results will not be blurred, instead the blur amount is treated as a maximum radius for the
+             * penumbra.
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_QUALITY_HARD
+             */
+            val HARD: ShadowQuality get() = ShadowQuality(0L)
+            /**
+             * Very low shadow filtering quality (faster). When using this quality setting,
+             * `Light3D.shadow_blur` is automatically multiplied by 0.75× to avoid introducing too much noise.
+             * This division only applies to lights whose `Light3D.light_size` or
+             * `Light3D.light_angular_distance` is `0.0`).
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_QUALITY_SOFT_VERY_LOW
+             */
+            val SOFT_VERY_LOW: ShadowQuality get() = ShadowQuality(1L)
+            /**
+             * Low shadow filtering quality (fast).
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_QUALITY_SOFT_LOW
+             */
+            val SOFT_LOW: ShadowQuality get() = ShadowQuality(2L)
+            /**
+             * Medium low shadow filtering quality (average).
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_QUALITY_SOFT_MEDIUM
+             */
+            val SOFT_MEDIUM: ShadowQuality get() = ShadowQuality(3L)
+            /**
+             * High low shadow filtering quality (slow). When using this quality setting, `Light3D.shadow_blur`
+             * is automatically multiplied by 1.5× to better make use of the high sample count. This increased
+             * blur also improves the stability of dynamic object shadows. This multiplier only applies to
+             * lights whose `Light3D.light_size` or `Light3D.light_angular_distance` is `0.0`).
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_QUALITY_SOFT_HIGH
+             */
+            val SOFT_HIGH: ShadowQuality get() = ShadowQuality(4L)
+            /**
+             * Highest low shadow filtering quality (slowest). When using this quality setting,
+             * `Light3D.shadow_blur` is automatically multiplied by 2× to better make use of the high sample
+             * count. This increased blur also improves the stability of dynamic object shadows. This
+             * multiplier only applies to lights whose `Light3D.light_size` or `Light3D.light_angular_distance`
+             * is `0.0`).
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_QUALITY_SOFT_ULTRA
+             */
+            val SOFT_ULTRA: ShadowQuality get() = ShadowQuality(5L)
+            /**
+             * Represents the size of the `ShadowQuality` enum.
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_QUALITY_MAX
+             */
+            val MAX: ShadowQuality get() = ShadowQuality(6L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ReflectionProbeUpdateMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ReflectionProbeUpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ReflectionProbeUpdateMode
+     */
+    @JvmInline
+    value class ReflectionProbeUpdateMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Reflection probe will update reflections once and then stop.
+             *
+             * Generated from Godot docs: RenderingServer.REFLECTION_PROBE_UPDATE_ONCE
+             */
+            val ONCE: ReflectionProbeUpdateMode get() = ReflectionProbeUpdateMode(0L)
+            /**
+             * Reflection probe will update each frame. This mode is necessary to capture moving objects.
+             *
+             * Generated from Godot docs: RenderingServer.REFLECTION_PROBE_UPDATE_ALWAYS
+             */
+            val ALWAYS: ReflectionProbeUpdateMode get() = ReflectionProbeUpdateMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ReflectionProbeAmbientMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ReflectionProbeAmbientMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ReflectionProbeAmbientMode
+     */
+    @JvmInline
+    value class ReflectionProbeAmbientMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not apply any ambient lighting inside the reflection probe's box defined by its size.
+             *
+             * Generated from Godot docs: RenderingServer.REFLECTION_PROBE_AMBIENT_DISABLED
+             */
+            val DISABLED: ReflectionProbeAmbientMode get() = ReflectionProbeAmbientMode(0L)
+            /**
+             * Apply automatically-sourced environment lighting inside the reflection probe's box defined by
+             * its size.
+             *
+             * Generated from Godot docs: RenderingServer.REFLECTION_PROBE_AMBIENT_ENVIRONMENT
+             */
+            val ENVIRONMENT: ReflectionProbeAmbientMode get() = ReflectionProbeAmbientMode(1L)
+            /**
+             * Apply custom ambient lighting inside the reflection probe's box defined by its size. See
+             * `reflection_probe_set_ambient_color` and `reflection_probe_set_ambient_energy`.
+             *
+             * Generated from Godot docs: RenderingServer.REFLECTION_PROBE_AMBIENT_COLOR
+             */
+            val COLOR: ReflectionProbeAmbientMode get() = ReflectionProbeAmbientMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.DecalTexture` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DecalTexture.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DecalTexture
+     */
+    @JvmInline
+    value class DecalTexture(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Albedo texture slot in a decal (`Decal.texture_albedo`).
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_TEXTURE_ALBEDO
+             */
+            val ALBEDO: DecalTexture get() = DecalTexture(0L)
+            /**
+             * Normal map texture slot in a decal (`Decal.texture_normal`).
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_TEXTURE_NORMAL
+             */
+            val NORMAL: DecalTexture get() = DecalTexture(1L)
+            /**
+             * Occlusion/Roughness/Metallic texture slot in a decal (`Decal.texture_orm`).
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_TEXTURE_ORM
+             */
+            val ORM: DecalTexture get() = DecalTexture(2L)
+            /**
+             * Emission texture slot in a decal (`Decal.texture_emission`).
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_TEXTURE_EMISSION
+             */
+            val EMISSION: DecalTexture get() = DecalTexture(3L)
+            /**
+             * Represents the size of the `DecalTexture` enum.
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_TEXTURE_MAX
+             */
+            val MAX: DecalTexture get() = DecalTexture(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.DecalFilter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DecalFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DecalFilter
+     */
+    @JvmInline
+    value class DecalFilter(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Nearest-neighbor filter for decals (use for pixel art decals). No mipmaps are used for
+             * rendering, which means decals at a distance will look sharp but grainy. This has roughly the
+             * same performance cost as using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_FILTER_NEAREST
+             */
+            val NEAREST: DecalFilter get() = DecalFilter(0L)
+            /**
+             * Linear filter for decals (use for non-pixel art decals). No mipmaps are used for rendering,
+             * which means decals at a distance will look smooth but blurry. This has roughly the same
+             * performance cost as using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_FILTER_LINEAR
+             */
+            val LINEAR: DecalFilter get() = DecalFilter(1L)
+            /**
+             * Nearest-neighbor filter for decals (use for pixel art decals). Isotropic mipmaps are used for
+             * rendering, which means decals at a distance will look smooth but blurry. This has roughly the
+             * same performance cost as not using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_FILTER_NEAREST_MIPMAPS
+             */
+            val NEAREST_MIPMAPS: DecalFilter get() = DecalFilter(2L)
+            /**
+             * Linear filter for decals (use for non-pixel art decals). Isotropic mipmaps are used for
+             * rendering, which means decals at a distance will look smooth but blurry. This has roughly the
+             * same performance cost as not using mipmaps.
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_FILTER_LINEAR_MIPMAPS
+             */
+            val LINEAR_MIPMAPS: DecalFilter get() = DecalFilter(3L)
+            /**
+             * Nearest-neighbor filter for decals (use for pixel art decals). Anisotropic mipmaps are used for
+             * rendering, which means decals at a distance will look smooth and sharp when viewed from oblique
+             * angles. This looks better compared to isotropic mipmaps, but is slower. The level of anisotropic
+             * filtering is defined by
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`.
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_FILTER_NEAREST_MIPMAPS_ANISOTROPIC
+             */
+            val NEAREST_MIPMAPS_ANISOTROPIC: DecalFilter get() = DecalFilter(4L)
+            /**
+             * Linear filter for decals (use for non-pixel art decals). Anisotropic mipmaps are used for
+             * rendering, which means decals at a distance will look smooth and sharp when viewed from oblique
+             * angles. This looks better compared to isotropic mipmaps, but is slower. The level of anisotropic
+             * filtering is defined by
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`.
+             *
+             * Generated from Godot docs: RenderingServer.DECAL_FILTER_LINEAR_MIPMAPS_ANISOTROPIC
+             */
+            val LINEAR_MIPMAPS_ANISOTROPIC: DecalFilter get() = DecalFilter(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.VoxelGIQuality` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.VoxelGIQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.VoxelGIQuality
+     */
+    @JvmInline
+    value class VoxelGIQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Low `VoxelGI` rendering quality using 4 cones.
+             *
+             * Generated from Godot docs: RenderingServer.VOXEL_GI_QUALITY_LOW
+             */
+            val LOW: VoxelGIQuality get() = VoxelGIQuality(0L)
+            /**
+             * High `VoxelGI` rendering quality using 6 cones.
+             *
+             * Generated from Godot docs: RenderingServer.VOXEL_GI_QUALITY_HIGH
+             */
+            val HIGH: VoxelGIQuality get() = VoxelGIQuality(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ParticlesMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ParticlesMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesMode
+     */
+    @JvmInline
+    value class ParticlesMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * 2D particles.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_MODE_2D
+             */
+            val MODE_2D: ParticlesMode get() = ParticlesMode(0L)
+            /**
+             * 3D particles.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_MODE_3D
+             */
+            val MODE_3D: ParticlesMode get() = ParticlesMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ParticlesTransformAlign` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesTransformAlign.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesTransformAlign
+     */
+    @JvmInline
+    value class ParticlesTransformAlign(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not align particle transforms relative to the camera or velocity.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_TRANSFORM_ALIGN_DISABLED
+             */
+            val DISABLED: ParticlesTransformAlign get() = ParticlesTransformAlign(0L)
+            /**
+             * Align each particle's Z axis to face the camera.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD
+             */
+            val Z_BILLBOARD: ParticlesTransformAlign get() = ParticlesTransformAlign(1L)
+            /**
+             * Align each particle's Y axis to the velocity vector.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_TRANSFORM_ALIGN_Y_TO_VELOCITY
+             */
+            val Y_TO_VELOCITY: ParticlesTransformAlign get() = ParticlesTransformAlign(2L)
+            /**
+             * Align each particle's Z axis to face the camera and Y axis to the velocity vector.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY
+             */
+            val Z_BILLBOARD_Y_TO_VELOCITY: ParticlesTransformAlign get() = ParticlesTransformAlign(3L)
+            /**
+             * Billboard each particles around a local axis.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_TRANSFORM_ALIGN_LOCAL_BILLBOARD
+             */
+            val LOCAL_BILLBOARD: ParticlesTransformAlign get() = ParticlesTransformAlign(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ParticlesTransformAlignCustomSrc` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesTransformAlignCustomSrc.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesTransformAlignCustomSrc
+     */
+    @JvmInline
+    value class ParticlesTransformAlignCustomSrc(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not read from CUSTOM when performing billboarding.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_ALIGN_CHANNEL_FILTER_DISABLED
+             */
+            val DISABLED: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(0L)
+            /**
+             * Read from `CUSTOM.x` when performing billboarding and use it as an angle, in radians.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_ALIGN_CHANNEL_FILTER_X
+             */
+            val X: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(1L)
+            /**
+             * Read from `CUSTOM.y` when performing billboarding and use it as an angle, in radians.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_ALIGN_CHANNEL_FILTER_Y
+             */
+            val Y: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(2L)
+            /**
+             * Read from `CUSTOM.z` when performing billboarding and use it as an angle, in radians.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_ALIGN_CHANNEL_FILTER_Z
+             */
+            val Z: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(3L)
+            /**
+             * Read from `CUSTOM.w` when performing billboarding and use it as an angle, in radians.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_ALIGN_CHANNEL_FILTER_W
+             */
+            val W: ParticlesTransformAlignCustomSrc get() = ParticlesTransformAlignCustomSrc(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ParticlesTransformAlignAxis` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesTransformAlignAxis.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesTransformAlignAxis
+     */
+    @JvmInline
+    value class ParticlesTransformAlignAxis(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use the X axis for local billboarding.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_ALIGN_AXIS_X
+             */
+            val X: ParticlesTransformAlignAxis get() = ParticlesTransformAlignAxis(0L)
+            /**
+             * Use the Y axis for local billboarding.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_ALIGN_AXIS_Y
+             */
+            val Y: ParticlesTransformAlignAxis get() = ParticlesTransformAlignAxis(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ParticlesDrawOrder` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesDrawOrder.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesDrawOrder
+     */
+    @JvmInline
+    value class ParticlesDrawOrder(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Draw particles in the order that they appear in the particles array.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_DRAW_ORDER_INDEX
+             */
+            val INDEX: ParticlesDrawOrder get() = ParticlesDrawOrder(0L)
+            /**
+             * Sort particles based on their lifetime. In other words, the particle with the highest lifetime
+             * is drawn at the front.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_DRAW_ORDER_LIFETIME
+             */
+            val LIFETIME: ParticlesDrawOrder get() = ParticlesDrawOrder(1L)
+            /**
+             * Sort particles based on the inverse of their lifetime. In other words, the particle with the
+             * lowest lifetime is drawn at the front.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_DRAW_ORDER_REVERSE_LIFETIME
+             */
+            val REVERSE_LIFETIME: ParticlesDrawOrder get() = ParticlesDrawOrder(2L)
+            /**
+             * Sort particles based on their distance to the camera.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_DRAW_ORDER_VIEW_DEPTH
+             */
+            val VIEW_DEPTH: ParticlesDrawOrder get() = ParticlesDrawOrder(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ParticlesCollisionType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesCollisionType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesCollisionType
+     */
+    @JvmInline
+    value class ParticlesCollisionType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Sphere attractor type for `GPUParticles3D` (see `GPUParticlesAttractorSphere3D`).
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_TYPE_SPHERE_ATTRACT
+             */
+            val SPHERE_ATTRACT: ParticlesCollisionType get() = ParticlesCollisionType(0L)
+            /**
+             * Box attractor type for `GPUParticles3D` (see `GPUParticlesAttractorBox3D`).
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_TYPE_BOX_ATTRACT
+             */
+            val BOX_ATTRACT: ParticlesCollisionType get() = ParticlesCollisionType(1L)
+            /**
+             * Vector field attractor type for `GPUParticles3D` (see `GPUParticlesAttractorVectorField3D`).
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT
+             */
+            val VECTOR_FIELD_ATTRACT: ParticlesCollisionType get() = ParticlesCollisionType(2L)
+            /**
+             * Sphere collision type for `GPUParticles3D` (see `GPUParticlesCollisionSphere3D`).
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE
+             */
+            val SPHERE_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(3L)
+            /**
+             * Box collision type for `GPUParticles3D` (see `GPUParticlesCollisionBox3D`).
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_TYPE_BOX_COLLIDE
+             */
+            val BOX_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(4L)
+            /**
+             * Signed distance field collision type for `GPUParticles3D` (see `GPUParticlesCollisionSDF3D`).
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_TYPE_SDF_COLLIDE
+             */
+            val SDF_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(5L)
+            /**
+             * Heightfield collision type for `GPUParticles3D` (see `GPUParticlesCollisionHeightField3D`).
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_TYPE_HEIGHTFIELD_COLLIDE
+             */
+            val HEIGHTFIELD_COLLIDE: ParticlesCollisionType get() = ParticlesCollisionType(6L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ParticlesCollisionHeightfieldResolution` enum as a typed value:
+     * `.value` is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ParticlesCollisionHeightfieldResolution.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ParticlesCollisionHeightfieldResolution
+     */
+    @JvmInline
+    value class ParticlesCollisionHeightfieldResolution(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * 256×256 heightfield resolution for `GPUParticlesCollisionHeightField3D`.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_256
+             */
+            val RESOLUTION_256: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(0L)
+            /**
+             * 512×512 heightfield resolution for `GPUParticlesCollisionHeightField3D`.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_512
+             */
+            val RESOLUTION_512: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(1L)
+            /**
+             * 1024×1024 heightfield resolution for `GPUParticlesCollisionHeightField3D`.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_1024
+             */
+            val RESOLUTION_1024: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(2L)
+            /**
+             * 2048×2048 heightfield resolution for `GPUParticlesCollisionHeightField3D`.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_2048
+             */
+            val RESOLUTION_2048: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(3L)
+            /**
+             * 4096×4096 heightfield resolution for `GPUParticlesCollisionHeightField3D`.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_4096
+             */
+            val RESOLUTION_4096: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(4L)
+            /**
+             * 8192×8192 heightfield resolution for `GPUParticlesCollisionHeightField3D`.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_8192
+             */
+            val RESOLUTION_8192: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(5L)
+            /**
+             * Represents the size of the `ParticlesCollisionHeightfieldResolution` enum.
+             *
+             * Generated from Godot docs: RenderingServer.PARTICLES_COLLISION_HEIGHTFIELD_RESOLUTION_MAX
+             */
+            val MAX: ParticlesCollisionHeightfieldResolution get() = ParticlesCollisionHeightfieldResolution(6L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.FogVolumeShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.FogVolumeShape.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.FogVolumeShape
+     */
+    @JvmInline
+    value class FogVolumeShape(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * `FogVolume` will be shaped like an ellipsoid (stretched sphere).
+             *
+             * Generated from Godot docs: RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID
+             */
+            val ELLIPSOID: FogVolumeShape get() = FogVolumeShape(0L)
+            /**
+             * `FogVolume` will be shaped like a cone pointing upwards (in local coordinates). The cone's angle
+             * is set automatically to fill the size. The cone will be adjusted to fit within the size. Rotate
+             * the `FogVolume` node to reorient the cone. Non-uniform scaling via size is not supported (scale
+             * the `FogVolume` node instead).
+             *
+             * Generated from Godot docs: RenderingServer.FOG_VOLUME_SHAPE_CONE
+             */
+            val CONE: FogVolumeShape get() = FogVolumeShape(1L)
+            /**
+             * `FogVolume` will be shaped like an upright cylinder (in local coordinates). Rotate the
+             * `FogVolume` node to reorient the cylinder. The cylinder will be adjusted to fit within the size.
+             * Non-uniform scaling via size is not supported (scale the `FogVolume` node instead).
+             *
+             * Generated from Godot docs: RenderingServer.FOG_VOLUME_SHAPE_CYLINDER
+             */
+            val CYLINDER: FogVolumeShape get() = FogVolumeShape(2L)
+            /**
+             * `FogVolume` will be shaped like a box.
+             *
+             * Generated from Godot docs: RenderingServer.FOG_VOLUME_SHAPE_BOX
+             */
+            val BOX: FogVolumeShape get() = FogVolumeShape(3L)
+            /**
+             * `FogVolume` will have no shape, will cover the whole world and will not be culled.
+             *
+             * Generated from Godot docs: RenderingServer.FOG_VOLUME_SHAPE_WORLD
+             */
+            val WORLD: FogVolumeShape get() = FogVolumeShape(4L)
+            /**
+             * Represents the size of the `FogVolumeShape` enum.
+             *
+             * Generated from Godot docs: RenderingServer.FOG_VOLUME_SHAPE_MAX
+             */
+            val MAX: FogVolumeShape get() = FogVolumeShape(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportScaling3DMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportScaling3DMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportScaling3DMode
+     */
+    @JvmInline
+    value class ViewportScaling3DMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use bilinear scaling for the viewport's 3D buffer. The amount of scaling can be set using
+             * `Viewport.scaling_3d_scale`. Values less than `1.0` will result in undersampling while values
+             * greater than `1.0` will result in supersampling. A value of `1.0` disables scaling.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCALING_3D_MODE_BILINEAR
+             */
+            val BILINEAR: ViewportScaling3DMode get() = ViewportScaling3DMode(0L)
+            /**
+             * Use AMD FidelityFX Super Resolution 1.0 upscaling for the viewport's 3D buffer. The amount of
+             * scaling can be set using `Viewport.scaling_3d_scale`. Values less than `1.0` will result in the
+             * viewport being upscaled using FSR. Values greater than `1.0` are not supported and bilinear
+             * downsampling will be used instead. A value of `1.0` disables scaling.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCALING_3D_MODE_FSR
+             */
+            val FSR: ViewportScaling3DMode get() = ViewportScaling3DMode(1L)
+            /**
+             * Use AMD FidelityFX Super Resolution 2.2 upscaling for the viewport's 3D buffer. The amount of
+             * scaling can be set using `Viewport.scaling_3d_scale`. Values less than `1.0` will result in the
+             * viewport being upscaled using FSR2. Values greater than `1.0` are not supported and bilinear
+             * downsampling will be used instead. A value of `1.0` will use FSR2 at native resolution as a TAA
+             * solution.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCALING_3D_MODE_FSR2
+             */
+            val FSR2: ViewportScaling3DMode get() = ViewportScaling3DMode(2L)
+            /**
+             * Use MetalFX spatial upscaling for the viewport's 3D buffer. The amount of scaling can be set
+             * using `Viewport.scaling_3d_scale`. Values less than `1.0` will result in the viewport being
+             * upscaled using MetalFX. Values greater than `1.0` are not supported and bilinear downsampling
+             * will be used instead. A value of `1.0` disables scaling. Note: Only supported when the Metal
+             * rendering driver is in use, which limits this scaling mode to macOS and iOS.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCALING_3D_MODE_METALFX_SPATIAL
+             */
+            val METALFX_SPATIAL: ViewportScaling3DMode get() = ViewportScaling3DMode(3L)
+            /**
+             * Use MetalFX temporal upscaling for the viewport's 3D buffer. The amount of scaling can be set
+             * using `Viewport.scaling_3d_scale`. Values less than `1.0` will result in the viewport being
+             * upscaled using MetalFX. Values greater than `1.0` are not supported and bilinear downsampling
+             * will be used instead. A value of `1.0` will use MetalFX at native resolution as a TAA solution.
+             * Note: Only supported when the Metal rendering driver is in use, which limits this scaling mode
+             * to macOS and iOS.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCALING_3D_MODE_METALFX_TEMPORAL
+             */
+            val METALFX_TEMPORAL: ViewportScaling3DMode get() = ViewportScaling3DMode(4L)
+            /**
+             * Use nearest-neighbor filtering for the viewport's 3D buffer. This looks crisper than
+             * `ViewportScaling3DMode.BILINEAR` and has no additional rendering cost. The amount of scaling can
+             * be set using `Viewport.scaling_3d_scale`. Values greater than `1.0` are not supported and
+             * bilinear downsampling will be used instead. A value of `1.0` disables scaling. Note: When using
+             * the Nearest scaling mode, to avoid uneven pixel scaling, it's highly recommended to use a value
+             * equal to an integer divisor with a dividend of `1`. For example, it's best to use a scale of
+             * `0.5` (1/2), `0.3333` (1/3), `0.25` (1/4), `0.2` (1/5), and so on.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCALING_3D_MODE_NEAREST
+             */
+            val NEAREST: ViewportScaling3DMode get() = ViewportScaling3DMode(5L)
+            /**
+             * Represents the size of the `ViewportScaling3DMode` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCALING_3D_MODE_MAX
+             */
+            val MAX: ViewportScaling3DMode get() = ViewportScaling3DMode(6L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportUpdateMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportUpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportUpdateMode
+     */
+    @JvmInline
+    value class ViewportUpdateMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not update the viewport's render target.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_UPDATE_DISABLED
+             */
+            val DISABLED: ViewportUpdateMode get() = ViewportUpdateMode(0L)
+            /**
+             * Update the viewport's render target once, then switch to `ViewportUpdateMode.DISABLED`.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_UPDATE_ONCE
+             */
+            val ONCE: ViewportUpdateMode get() = ViewportUpdateMode(1L)
+            /**
+             * Update the viewport's render target only when it is visible. This is the default value.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_UPDATE_WHEN_VISIBLE
+             */
+            val WHEN_VISIBLE: ViewportUpdateMode get() = ViewportUpdateMode(2L)
+            /**
+             * Update the viewport's render target only when its parent is visible.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_UPDATE_WHEN_PARENT_VISIBLE
+             */
+            val WHEN_PARENT_VISIBLE: ViewportUpdateMode get() = ViewportUpdateMode(3L)
+            /**
+             * Always update the viewport's render target.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_UPDATE_ALWAYS
+             */
+            val ALWAYS: ViewportUpdateMode get() = ViewportUpdateMode(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportClearMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportClearMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportClearMode
+     */
+    @JvmInline
+    value class ViewportClearMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Always clear the viewport's render target before drawing.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_CLEAR_ALWAYS
+             */
+            val ALWAYS: ViewportClearMode get() = ViewportClearMode(0L)
+            /**
+             * Never clear the viewport's render target.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_CLEAR_NEVER
+             */
+            val NEVER: ViewportClearMode get() = ViewportClearMode(1L)
+            /**
+             * Clear the viewport's render target on the next frame, then switch to `ViewportClearMode.NEVER`.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_CLEAR_ONLY_NEXT_FRAME
+             */
+            val ONLY_NEXT_FRAME: ViewportClearMode get() = ViewportClearMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportEnvironmentMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportEnvironmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportEnvironmentMode
+     */
+    @JvmInline
+    value class ViewportEnvironmentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disable rendering of 3D environment over 2D canvas.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ENVIRONMENT_DISABLED
+             */
+            val DISABLED: ViewportEnvironmentMode get() = ViewportEnvironmentMode(0L)
+            /**
+             * Enable rendering of 3D environment over 2D canvas.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ENVIRONMENT_ENABLED
+             */
+            val ENABLED: ViewportEnvironmentMode get() = ViewportEnvironmentMode(1L)
+            /**
+             * Inherit enable/disable value from parent. If the topmost parent is also set to
+             * `ViewportEnvironmentMode.INHERIT`, then this has the same behavior as
+             * `ViewportEnvironmentMode.ENABLED`.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ENVIRONMENT_INHERIT
+             */
+            val INHERIT: ViewportEnvironmentMode get() = ViewportEnvironmentMode(2L)
+            /**
+             * Represents the size of the `ViewportEnvironmentMode` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ENVIRONMENT_MAX
+             */
+            val MAX: ViewportEnvironmentMode get() = ViewportEnvironmentMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportSDFOversize` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportSDFOversize.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportSDFOversize
+     */
+    @JvmInline
+    value class ViewportSDFOversize(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not oversize the 2D signed distance field. Occluders may disappear when touching the
+             * viewport's edges, and `GPUParticles3D` collision may stop working earlier than intended. This
+             * has the lowest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_OVERSIZE_100_PERCENT
+             */
+            val OVERSIZE_100_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(0L)
+            /**
+             * 2D signed distance field covers 20% of the viewport's size outside the viewport on each side
+             * (top, right, bottom, left).
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_OVERSIZE_120_PERCENT
+             */
+            val OVERSIZE_120_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(1L)
+            /**
+             * 2D signed distance field covers 50% of the viewport's size outside the viewport on each side
+             * (top, right, bottom, left).
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_OVERSIZE_150_PERCENT
+             */
+            val OVERSIZE_150_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(2L)
+            /**
+             * 2D signed distance field covers 100% of the viewport's size outside the viewport on each side
+             * (top, right, bottom, left). This has the highest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_OVERSIZE_200_PERCENT
+             */
+            val OVERSIZE_200_PERCENT: ViewportSDFOversize get() = ViewportSDFOversize(3L)
+            /**
+             * Represents the size of the `ViewportSDFOversize` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_OVERSIZE_MAX
+             */
+            val MAX: ViewportSDFOversize get() = ViewportSDFOversize(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportSDFScale` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportSDFScale.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportSDFScale
+     */
+    @JvmInline
+    value class ViewportSDFScale(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Full resolution 2D signed distance field scale. This has the highest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_SCALE_100_PERCENT
+             */
+            val SCALE_100_PERCENT: ViewportSDFScale get() = ViewportSDFScale(0L)
+            /**
+             * Half resolution 2D signed distance field scale on each axis (25% of the viewport pixel count).
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_SCALE_50_PERCENT
+             */
+            val SCALE_50_PERCENT: ViewportSDFScale get() = ViewportSDFScale(1L)
+            /**
+             * Quarter resolution 2D signed distance field scale on each axis (6.25% of the viewport pixel
+             * count). This has the lowest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_SCALE_25_PERCENT
+             */
+            val SCALE_25_PERCENT: ViewportSDFScale get() = ViewportSDFScale(2L)
+            /**
+             * Represents the size of the `ViewportSDFScale` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SDF_SCALE_MAX
+             */
+            val MAX: ViewportSDFScale get() = ViewportSDFScale(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportMSAA` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.ViewportMSAA.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportMSAA
+     */
+    @JvmInline
+    value class ViewportMSAA(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Multisample antialiasing for 3D is disabled. This is the default value, and also the fastest
+             * setting.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_MSAA_DISABLED
+             */
+            val DISABLED: ViewportMSAA get() = ViewportMSAA(0L)
+            /**
+             * Multisample antialiasing uses 2 samples per pixel for 3D. This has a moderate impact on
+             * performance.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_MSAA_2X
+             */
+            val MSAA_2X: ViewportMSAA get() = ViewportMSAA(1L)
+            /**
+             * Multisample antialiasing uses 4 samples per pixel for 3D. This has a high impact on performance.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_MSAA_4X
+             */
+            val MSAA_4X: ViewportMSAA get() = ViewportMSAA(2L)
+            /**
+             * Multisample antialiasing uses 8 samples per pixel for 3D. This has a very high impact on
+             * performance. Likely unsupported on low-end and older hardware.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_MSAA_8X
+             */
+            val MSAA_8X: ViewportMSAA get() = ViewportMSAA(3L)
+            /**
+             * Represents the size of the `ViewportMSAA` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_MSAA_MAX
+             */
+            val MAX: ViewportMSAA get() = ViewportMSAA(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportAnisotropicFiltering` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportAnisotropicFiltering.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportAnisotropicFiltering
+     */
+    @JvmInline
+    value class ViewportAnisotropicFiltering(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Anisotropic filtering is disabled.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ANISOTROPY_DISABLED
+             */
+            val DISABLED: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(0L)
+            /**
+             * Use 2× anisotropic filtering.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ANISOTROPY_2X
+             */
+            val ANISOTROPY_2X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(1L)
+            /**
+             * Use 4× anisotropic filtering. This is the default value.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ANISOTROPY_4X
+             */
+            val ANISOTROPY_4X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(2L)
+            /**
+             * Use 8× anisotropic filtering.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ANISOTROPY_8X
+             */
+            val ANISOTROPY_8X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(3L)
+            /**
+             * Use 16× anisotropic filtering.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ANISOTROPY_16X
+             */
+            val ANISOTROPY_16X: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(4L)
+            /**
+             * Represents the size of the `ViewportAnisotropicFiltering` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_ANISOTROPY_MAX
+             */
+            val MAX: ViewportAnisotropicFiltering get() = ViewportAnisotropicFiltering(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportScreenSpaceAA` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportScreenSpaceAA.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportScreenSpaceAA
+     */
+    @JvmInline
+    value class ViewportScreenSpaceAA(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not perform any antialiasing in the full screen post-process.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCREEN_SPACE_AA_DISABLED
+             */
+            val DISABLED: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(0L)
+            /**
+             * Use fast approximate antialiasing. FXAA is a popular screen-space antialiasing method, which is
+             * fast but will make the image look blurry, especially at lower resolutions. It can still work
+             * relatively well at large resolutions such as 1440p and 4K.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCREEN_SPACE_AA_FXAA
+             */
+            val FXAA: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(1L)
+            /**
+             * Use subpixel morphological antialiasing. SMAA may produce clearer results than FXAA, but at a
+             * slightly higher performance cost.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCREEN_SPACE_AA_SMAA
+             */
+            val SMAA: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(2L)
+            /**
+             * Represents the size of the `ViewportScreenSpaceAA` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_SCREEN_SPACE_AA_MAX
+             */
+            val MAX: ViewportScreenSpaceAA get() = ViewportScreenSpaceAA(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportOcclusionCullingBuildQuality` enum as a typed value: `.value`
+     * is the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportOcclusionCullingBuildQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportOcclusionCullingBuildQuality
+     */
+    @JvmInline
+    value class ViewportOcclusionCullingBuildQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Low occlusion culling BVH build quality (as defined by Embree). Results in the lowest CPU usage,
+             * but least effective culling.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_OCCLUSION_BUILD_QUALITY_LOW
+             */
+            val LOW: ViewportOcclusionCullingBuildQuality get() = ViewportOcclusionCullingBuildQuality(0L)
+            /**
+             * Medium occlusion culling BVH build quality (as defined by Embree).
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_OCCLUSION_BUILD_QUALITY_MEDIUM
+             */
+            val MEDIUM: ViewportOcclusionCullingBuildQuality get() = ViewportOcclusionCullingBuildQuality(1L)
+            /**
+             * High occlusion culling BVH build quality (as defined by Embree). Results in the highest CPU
+             * usage, but most effective culling.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_OCCLUSION_BUILD_QUALITY_HIGH
+             */
+            val HIGH: ViewportOcclusionCullingBuildQuality get() = ViewportOcclusionCullingBuildQuality(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportRenderInfo` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportRenderInfo.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportRenderInfo
+     */
+    @JvmInline
+    value class ViewportRenderInfo(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Number of objects drawn in a single frame.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_OBJECTS_IN_FRAME
+             */
+            val OBJECTS_IN_FRAME: ViewportRenderInfo get() = ViewportRenderInfo(0L)
+            /**
+             * Number of points, lines, or triangles drawn in a single frame.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_PRIMITIVES_IN_FRAME
+             */
+            val PRIMITIVES_IN_FRAME: ViewportRenderInfo get() = ViewportRenderInfo(1L)
+            /**
+             * Number of draw calls during this frame.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME
+             */
+            val DRAW_CALLS_IN_FRAME: ViewportRenderInfo get() = ViewportRenderInfo(2L)
+            /**
+             * Represents the size of the `ViewportRenderInfo` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_MAX
+             */
+            val MAX: ViewportRenderInfo get() = ViewportRenderInfo(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportRenderInfoType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportRenderInfoType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportRenderInfoType
+     */
+    @JvmInline
+    value class ViewportRenderInfoType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Visible render pass (excluding shadows).
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_TYPE_VISIBLE
+             */
+            val VISIBLE: ViewportRenderInfoType get() = ViewportRenderInfoType(0L)
+            /**
+             * Shadow render pass. Objects will be rendered several times depending on the number of amounts of
+             * lights with shadows and the number of directional shadow splits.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_TYPE_SHADOW
+             */
+            val SHADOW: ViewportRenderInfoType get() = ViewportRenderInfoType(1L)
+            /**
+             * Canvas item rendering. This includes all 2D rendering.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_TYPE_CANVAS
+             */
+            val CANVAS: ViewportRenderInfoType get() = ViewportRenderInfoType(2L)
+            /**
+             * Represents the size of the `ViewportRenderInfoType` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_RENDER_INFO_TYPE_MAX
+             */
+            val MAX: ViewportRenderInfoType get() = ViewportRenderInfoType(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportDebugDraw` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportDebugDraw.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportDebugDraw
+     */
+    @JvmInline
+    value class ViewportDebugDraw(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Debug draw is disabled. Default setting.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_DISABLED
+             */
+            val DISABLED: ViewportDebugDraw get() = ViewportDebugDraw(0L)
+            /**
+             * Objects are displayed without light information.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_UNSHADED
+             */
+            val UNSHADED: ViewportDebugDraw get() = ViewportDebugDraw(1L)
+            /**
+             * Objects are displayed with only light information. Note: When using this debug draw mode, custom
+             * shaders are ignored since all materials in the scene temporarily use a debug material. This
+             * means the result from custom shader functions (such as vertex displacement) won't be visible
+             * anymore when using this debug draw mode.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_LIGHTING
+             */
+            val LIGHTING: ViewportDebugDraw get() = ViewportDebugDraw(2L)
+            /**
+             * Objects are displayed semi-transparent with additive blending so you can see where they are
+             * drawing over top of one another. A higher overdraw (represented by brighter colors) means you
+             * are wasting performance on drawing pixels that are being hidden behind others. Note: When using
+             * this debug draw mode, custom shaders are ignored since all materials in the scene temporarily
+             * use a debug material. This means the result from custom shader functions (such as vertex
+             * displacement) won't be visible anymore when using this debug draw mode.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_OVERDRAW
+             */
+            val OVERDRAW: ViewportDebugDraw get() = ViewportDebugDraw(3L)
+            /**
+             * Debug draw draws objects in wireframe. Note: `set_debug_generate_wireframes` must be called
+             * before loading any meshes for wireframes to be visible when using the Compatibility renderer.
+             * Note: In the Compatibility renderer, backfaces are always visible when using wireframe
+             * rendering. In the Forward+ and Mobile renderers, wireframes follow the material's backface
+             * culling properties instead.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_WIREFRAME
+             */
+            val WIREFRAME: ViewportDebugDraw get() = ViewportDebugDraw(4L)
+            /**
+             * Normal buffer is drawn instead of regular scene so you can see the per-pixel normals that will
+             * be used by post-processing effects.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_NORMAL_BUFFER
+             */
+            val NORMAL_BUFFER: ViewportDebugDraw get() = ViewportDebugDraw(5L)
+            /**
+             * Objects are displayed with only the albedo value from `VoxelGI`s. Requires at least one visible
+             * `VoxelGI` node that has been baked to have a visible effect. Note: Only supported when using the
+             * Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_VOXEL_GI_ALBEDO
+             */
+            val VOXEL_GI_ALBEDO: ViewportDebugDraw get() = ViewportDebugDraw(6L)
+            /**
+             * Objects are displayed with only the lighting value from `VoxelGI`s. Requires at least one
+             * visible `VoxelGI` node that has been baked to have a visible effect. Note: Only supported when
+             * using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_VOXEL_GI_LIGHTING
+             */
+            val VOXEL_GI_LIGHTING: ViewportDebugDraw get() = ViewportDebugDraw(7L)
+            /**
+             * Objects are displayed with only the emission color from `VoxelGI`s. Requires at least one
+             * visible `VoxelGI` node that has been baked to have a visible effect. Note: Only supported when
+             * using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_VOXEL_GI_EMISSION
+             */
+            val VOXEL_GI_EMISSION: ViewportDebugDraw get() = ViewportDebugDraw(8L)
+            /**
+             * Draws the shadow atlas that stores shadows from `OmniLight3D`s and `SpotLight3D`s in the upper
+             * left quadrant of the `Viewport`.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_SHADOW_ATLAS
+             */
+            val SHADOW_ATLAS: ViewportDebugDraw get() = ViewportDebugDraw(9L)
+            /**
+             * Draws the shadow atlas that stores shadows from `DirectionalLight3D`s in the upper left quadrant
+             * of the `Viewport`. The slice of the camera frustum related to the shadow map cascade is
+             * superimposed to visualize coverage. The color of each slice matches the colors used for
+             * `ViewportDebugDraw.PSSM_SPLITS`. When shadow cascades are blended the overlap is taken into
+             * account when drawing the frustum slices. The last cascade shows all frustum slices to illustrate
+             * the coverage of all slices.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_DIRECTIONAL_SHADOW_ATLAS
+             */
+            val DIRECTIONAL_SHADOW_ATLAS: ViewportDebugDraw get() = ViewportDebugDraw(10L)
+            /**
+             * Draws the estimated scene luminance. This is a 1×1 texture that is generated when autoexposure
+             * is enabled to control the scene's exposure. Note: Only supported when using the Forward+ or
+             * Mobile rendering methods.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_SCENE_LUMINANCE
+             */
+            val SCENE_LUMINANCE: ViewportDebugDraw get() = ViewportDebugDraw(11L)
+            /**
+             * Draws the screen space ambient occlusion texture instead of the scene so that you can clearly
+             * see how it is affecting objects. In order for this display mode to work, you must have
+             * `Environment.ssao_enabled` set in your `WorldEnvironment`. Note: Only supported when using the
+             * Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_SSAO
+             */
+            val SSAO: ViewportDebugDraw get() = ViewportDebugDraw(12L)
+            /**
+             * Draws the screen space indirect lighting texture instead of the scene so that you can clearly
+             * see how it is affecting objects. In order for this display mode to work, you must have
+             * `Environment.ssil_enabled` set in your `WorldEnvironment`. Note: Only supported when using the
+             * Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_SSIL
+             */
+            val SSIL: ViewportDebugDraw get() = ViewportDebugDraw(13L)
+            /**
+             * Colors each PSSM split for the `DirectionalLight3D`s in the scene a different color so you can
+             * see where the splits are. In order (from closest to furthest from the camera), they are colored
+             * red, green, blue, and yellow. Note: When using this debug draw mode, custom shaders are ignored
+             * since all materials in the scene temporarily use a debug material. This means the result from
+             * custom shader functions (such as vertex displacement) won't be visible anymore when using this
+             * debug draw mode. Note: Only supported when using the Forward+ or Mobile rendering methods.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_PSSM_SPLITS
+             */
+            val PSSM_SPLITS: ViewportDebugDraw get() = ViewportDebugDraw(14L)
+            /**
+             * Draws the decal atlas that stores decal textures from `Decal`s. Note: Only supported when using
+             * the Forward+ or Mobile rendering methods.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_DECAL_ATLAS
+             */
+            val DECAL_ATLAS: ViewportDebugDraw get() = ViewportDebugDraw(15L)
+            /**
+             * Draws SDFGI cascade data. This is the data structure that is used to bounce lighting against and
+             * create reflections. Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_SDFGI
+             */
+            val SDFGI: ViewportDebugDraw get() = ViewportDebugDraw(16L)
+            /**
+             * Draws SDFGI probe data. This is the data structure that is used to give indirect lighting
+             * dynamic objects moving within the scene. When in the editor, left-clicking a probe will display
+             * additional bright dots that show its occlusion information. A white dot means the light is not
+             * occluded at all at the dot's position, while a red dot means the light is fully occluded.
+             * Intermediate values are possible. Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_SDFGI_PROBES
+             */
+            val SDFGI_PROBES: ViewportDebugDraw get() = ViewportDebugDraw(17L)
+            /**
+             * Draws the global illumination buffer from `VoxelGI` or SDFGI. Requires `VoxelGI` (at least one
+             * visible baked VoxelGI node) or SDFGI (`Environment.sdfgi_enabled`) to be enabled to have a
+             * visible effect. Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_GI_BUFFER
+             */
+            val GI_BUFFER: ViewportDebugDraw get() = ViewportDebugDraw(18L)
+            /**
+             * Disable mesh LOD. All meshes are drawn with full detail, which can be used to compare
+             * performance.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_DISABLE_LOD
+             */
+            val DISABLE_LOD: ViewportDebugDraw get() = ViewportDebugDraw(19L)
+            /**
+             * Draws the `OmniLight3D` cluster. Clustering determines where lights are positioned in
+             * screen-space, which allows the engine to only process these portions of the screen for lighting.
+             * Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_CLUSTER_OMNI_LIGHTS
+             */
+            val CLUSTER_OMNI_LIGHTS: ViewportDebugDraw get() = ViewportDebugDraw(20L)
+            /**
+             * Draws the `SpotLight3D` cluster. Clustering determines where lights are positioned in
+             * screen-space, which allows the engine to only process these portions of the screen for lighting.
+             * Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_CLUSTER_SPOT_LIGHTS
+             */
+            val CLUSTER_SPOT_LIGHTS: ViewportDebugDraw get() = ViewportDebugDraw(21L)
+            /**
+             * Draws the `Decal` cluster. Clustering determines where decals are positioned in screen-space,
+             * which allows the engine to only process these portions of the screen for decals. Note: Only
+             * supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_CLUSTER_DECALS
+             */
+            val CLUSTER_DECALS: ViewportDebugDraw get() = ViewportDebugDraw(22L)
+            /**
+             * Draws the `ReflectionProbe` cluster. Clustering determines where reflection probes are
+             * positioned in screen-space, which allows the engine to only process these portions of the screen
+             * for reflection probes. Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_CLUSTER_REFLECTION_PROBES
+             */
+            val CLUSTER_REFLECTION_PROBES: ViewportDebugDraw get() = ViewportDebugDraw(23L)
+            /**
+             * Draws the occlusion culling buffer. This low-resolution occlusion culling buffer is rasterized
+             * on the CPU and is used to check whether instances are occluded by other objects. Note: Only
+             * supported when using the Forward+ or Mobile rendering methods.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_OCCLUDERS
+             */
+            val OCCLUDERS: ViewportDebugDraw get() = ViewportDebugDraw(24L)
+            /**
+             * Draws the motion vectors buffer. This is used by temporal antialiasing to correct for motion
+             * that occurs during gameplay. Note: Only supported when using the Forward+ rendering method.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_MOTION_VECTORS
+             */
+            val MOTION_VECTORS: ViewportDebugDraw get() = ViewportDebugDraw(25L)
+            /**
+             * Internal buffer is drawn instead of regular scene so you can see the per-pixel output that will
+             * be used by post-processing effects. Note: Only supported when using the Forward+ or Mobile
+             * rendering methods.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_DEBUG_DRAW_INTERNAL_BUFFER
+             */
+            val INTERNAL_BUFFER: ViewportDebugDraw get() = ViewportDebugDraw(26L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportVRSMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.ViewportVRSMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportVRSMode
+     */
+    @JvmInline
+    value class ViewportVRSMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Variable rate shading is disabled.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_DISABLED
+             */
+            val DISABLED: ViewportVRSMode get() = ViewportVRSMode(0L)
+            /**
+             * Variable rate shading uses a texture. Note, for stereoscopic use a texture atlas with a texture
+             * for each view.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_TEXTURE
+             */
+            val TEXTURE: ViewportVRSMode get() = ViewportVRSMode(1L)
+            /**
+             * Variable rate shading texture is supplied by the primary `XRInterface`. Note that this may
+             * override the update mode.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_XR
+             */
+            val XR: ViewportVRSMode get() = ViewportVRSMode(2L)
+            /**
+             * Represents the size of the `ViewportVRSMode` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_MAX
+             */
+            val MAX: ViewportVRSMode get() = ViewportVRSMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ViewportVRSUpdateMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.ViewportVRSUpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ViewportVRSUpdateMode
+     */
+    @JvmInline
+    value class ViewportVRSUpdateMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The input texture for variable rate shading will not be processed.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_UPDATE_DISABLED
+             */
+            val DISABLED: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(0L)
+            /**
+             * The input texture for variable rate shading will be processed once.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_UPDATE_ONCE
+             */
+            val ONCE: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(1L)
+            /**
+             * The input texture for variable rate shading will be processed each frame.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_UPDATE_ALWAYS
+             */
+            val ALWAYS: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(2L)
+            /**
+             * Represents the size of the `ViewportVRSUpdateMode` enum.
+             *
+             * Generated from Godot docs: RenderingServer.VIEWPORT_VRS_UPDATE_MAX
+             */
+            val MAX: ViewportVRSUpdateMode get() = ViewportVRSUpdateMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.SkyMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RenderingServer.SkyMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.SkyMode
+     */
+    @JvmInline
+    value class SkyMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Automatically selects the appropriate process mode based on your sky shader. If your shader uses
+             * `TIME` or `POSITION`, this will use `SkyMode.REALTIME`. If your shader uses any of the `LIGHT_*`
+             * variables or any custom uniforms, this uses `SkyMode.INCREMENTAL`. Otherwise, this defaults to
+             * `SkyMode.QUALITY`.
+             *
+             * Generated from Godot docs: RenderingServer.SKY_MODE_AUTOMATIC
+             */
+            val AUTOMATIC: SkyMode get() = SkyMode(0L)
+            /**
+             * Uses high quality importance sampling to process the radiance map. In general, this results in
+             * much higher quality than `SkyMode.REALTIME` but takes much longer to generate. This should not
+             * be used if you plan on changing the sky at runtime. If you are finding that the reflection is
+             * not blurry enough and is showing sparkles or fireflies, try increasing
+             * `ProjectSettings.rendering/reflections/sky_reflections/ggx_samples`.
+             *
+             * Generated from Godot docs: RenderingServer.SKY_MODE_QUALITY
+             */
+            val QUALITY: SkyMode get() = SkyMode(1L)
+            /**
+             * Uses the same high quality importance sampling to process the radiance map as `SkyMode.QUALITY`,
+             * but updates over several frames. The number of frames is determined by
+             * `ProjectSettings.rendering/reflections/sky_reflections/roughness_layers`. Use this when you need
+             * highest quality radiance maps, but have a sky that updates slowly.
+             *
+             * Generated from Godot docs: RenderingServer.SKY_MODE_INCREMENTAL
+             */
+            val INCREMENTAL: SkyMode get() = SkyMode(2L)
+            /**
+             * Uses the fast filtering algorithm to process the radiance map. In general this results in lower
+             * quality, but substantially faster run times. If you need better quality, but still need to
+             * update the sky every frame, consider turning on
+             * `ProjectSettings.rendering/reflections/sky_reflections/fast_filter_high_quality`. Note: The fast
+             * filtering algorithm is limited to 256×256 cubemaps, so `sky_set_radiance_size` must be set to
+             * `256`. Otherwise, a warning is printed and the overridden radiance size is ignored.
+             *
+             * Generated from Godot docs: RenderingServer.SKY_MODE_REALTIME
+             */
+            val REALTIME: SkyMode get() = SkyMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CompositorEffectFlags` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CompositorEffectFlags.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CompositorEffectFlags
+     */
+    @JvmInline
+    value class CompositorEffectFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The rendering effect requires the color buffer to be resolved if MSAA is enabled.
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_COLOR
+             */
+            val ACCESS_RESOLVED_COLOR: CompositorEffectFlags get() = CompositorEffectFlags(1L)
+            /**
+             * The rendering effect requires the depth buffer to be resolved if MSAA is enabled.
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_FLAG_ACCESS_RESOLVED_DEPTH
+             */
+            val ACCESS_RESOLVED_DEPTH: CompositorEffectFlags get() = CompositorEffectFlags(2L)
+            /**
+             * The rendering effect requires motion vectors to be produced.
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_FLAG_NEEDS_MOTION_VECTORS
+             */
+            val NEEDS_MOTION_VECTORS: CompositorEffectFlags get() = CompositorEffectFlags(4L)
+            /**
+             * The rendering effect requires normals and roughness g-buffer to be produced (Forward+ only).
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_FLAG_NEEDS_ROUGHNESS
+             */
+            val NEEDS_ROUGHNESS: CompositorEffectFlags get() = CompositorEffectFlags(8L)
+            /**
+             * The rendering effect requires specular data to be separated out (Forward+ only).
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_FLAG_NEEDS_SEPARATE_SPECULAR
+             */
+            val NEEDS_SEPARATE_SPECULAR: CompositorEffectFlags get() = CompositorEffectFlags(16L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CompositorEffectCallbackType` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CompositorEffectCallbackType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CompositorEffectCallbackType
+     */
+    @JvmInline
+    value class CompositorEffectCallbackType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The callback is called before our opaque rendering pass, but after depth prepass (if
+             * applicable).
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_CALLBACK_TYPE_PRE_OPAQUE
+             */
+            val PRE_OPAQUE: CompositorEffectCallbackType get() = CompositorEffectCallbackType(0L)
+            /**
+             * The callback is called after our opaque rendering pass, but before our sky is rendered.
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_CALLBACK_TYPE_POST_OPAQUE
+             */
+            val POST_OPAQUE: CompositorEffectCallbackType get() = CompositorEffectCallbackType(1L)
+            /**
+             * The callback is called after our sky is rendered, but before our back buffers are created (and
+             * if enabled, before subsurface scattering and/or screen space reflections).
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_CALLBACK_TYPE_POST_SKY
+             */
+            val POST_SKY: CompositorEffectCallbackType get() = CompositorEffectCallbackType(2L)
+            /**
+             * The callback is called before our transparent rendering pass, but after our sky is rendered and
+             * we've created our back buffers.
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_CALLBACK_TYPE_PRE_TRANSPARENT
+             */
+            val PRE_TRANSPARENT: CompositorEffectCallbackType get() = CompositorEffectCallbackType(3L)
+            /**
+             * The callback is called after our transparent rendering pass, but before any built-in
+             * post-processing effects and output to our render target.
+             *
+             * Generated from Godot docs: RenderingServer.COMPOSITOR_EFFECT_CALLBACK_TYPE_POST_TRANSPARENT
+             */
+            val POST_TRANSPARENT: CompositorEffectCallbackType get() = CompositorEffectCallbackType(4L)
+            val ANY: CompositorEffectCallbackType get() = CompositorEffectCallbackType(-1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentBG` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.EnvironmentBG.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentBG
+     */
+    @JvmInline
+    value class EnvironmentBG(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use the clear color as background.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_BG_CLEAR_COLOR
+             */
+            val CLEAR_COLOR: EnvironmentBG get() = EnvironmentBG(0L)
+            /**
+             * Use a specified color as the background.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_BG_COLOR
+             */
+            val COLOR: EnvironmentBG get() = EnvironmentBG(1L)
+            /**
+             * Use a sky resource for the background.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_BG_SKY
+             */
+            val SKY: EnvironmentBG get() = EnvironmentBG(2L)
+            /**
+             * Use a specified canvas layer as the background. This can be useful for instantiating a 2D scene
+             * in a 3D world.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_BG_CANVAS
+             */
+            val CANVAS: EnvironmentBG get() = EnvironmentBG(3L)
+            /**
+             * Do not clear the background, use whatever was rendered last frame as the background.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_BG_KEEP
+             */
+            val KEEP: EnvironmentBG get() = EnvironmentBG(4L)
+            /**
+             * Displays a camera feed in the background.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_BG_CAMERA_FEED
+             */
+            val CAMERA_FEED: EnvironmentBG get() = EnvironmentBG(5L)
+            /**
+             * Represents the size of the `EnvironmentBG` enum.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_BG_MAX
+             */
+            val MAX: EnvironmentBG get() = EnvironmentBG(6L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentAmbientSource` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentAmbientSource.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentAmbientSource
+     */
+    @JvmInline
+    value class EnvironmentAmbientSource(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Gather ambient light from whichever source is specified as the background.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_AMBIENT_SOURCE_BG
+             */
+            val BG: EnvironmentAmbientSource get() = EnvironmentAmbientSource(0L)
+            /**
+             * Disable ambient light.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_AMBIENT_SOURCE_DISABLED
+             */
+            val DISABLED: EnvironmentAmbientSource get() = EnvironmentAmbientSource(1L)
+            /**
+             * Specify a specific `Color` for ambient light.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_AMBIENT_SOURCE_COLOR
+             */
+            val COLOR: EnvironmentAmbientSource get() = EnvironmentAmbientSource(2L)
+            /**
+             * Gather ambient light from the `Sky` regardless of what the background is.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_AMBIENT_SOURCE_SKY
+             */
+            val SKY: EnvironmentAmbientSource get() = EnvironmentAmbientSource(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentReflectionSource` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentReflectionSource.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentReflectionSource
+     */
+    @JvmInline
+    value class EnvironmentReflectionSource(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use the background for reflections.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_REFLECTION_SOURCE_BG
+             */
+            val BG: EnvironmentReflectionSource get() = EnvironmentReflectionSource(0L)
+            /**
+             * Disable reflections.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_REFLECTION_SOURCE_DISABLED
+             */
+            val DISABLED: EnvironmentReflectionSource get() = EnvironmentReflectionSource(1L)
+            /**
+             * Use the `Sky` for reflections regardless of what the background is.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_REFLECTION_SOURCE_SKY
+             */
+            val SKY: EnvironmentReflectionSource get() = EnvironmentReflectionSource(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentGlowBlendMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentGlowBlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentGlowBlendMode
+     */
+    @JvmInline
+    value class EnvironmentGlowBlendMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Adds the glow effect to the scene.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_GLOW_BLEND_MODE_ADDITIVE
+             */
+            val ADDITIVE: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(0L)
+            /**
+             * Adds the glow effect to the scene after modifying the glow influence based on the scene value;
+             * dark values will be highly influenced by glow and bright values will not be influenced by glow.
+             * This approach avoids bright values becoming overly bright from the glow effect.
+             * `Environment.tonemap_white` is used to determine the maximum scene value where the glow should
+             * have no influence. When `Environment.tonemap_mode` is set to `Environment.ToneMapper.LINEAR` and
+             * `Viewport.use_hdr_2d` is `true`, the parent window's `Window.get_output_max_linear_value` will
+             * be used as the maximum scene value.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_GLOW_BLEND_MODE_SCREEN
+             */
+            val SCREEN: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(1L)
+            /**
+             * Adds the glow effect to the tonemapped image after modifying the glow influence based on the
+             * image value; dark values and bright values will not be influenced by glow and mid-range values
+             * will be highly influenced by glow. This approach avoids bright values becoming overly bright
+             * from the glow effect. The glow will have the largest influence on image values of `0.25` and
+             * will have no influence when applied to image values greater than `1.0`. Note: This blend mode
+             * does not support HDR output because expects a maximum output value of `1.0`. It is recommended
+             * to use a different blend mode when rendering to an HDR screen.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_GLOW_BLEND_MODE_SOFTLIGHT
+             */
+            val SOFTLIGHT: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(2L)
+            /**
+             * Replaces all pixels' color by the glow effect. This can be used to simulate a full-screen blur
+             * effect by tweaking the glow parameters to match the original image's brightness or to preview
+             * glow configuration in the editor.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_GLOW_BLEND_MODE_REPLACE
+             */
+            val REPLACE: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(3L)
+            /**
+             * Mixes the glow image with the scene image. Best used with `Environment.glow_bloom` to avoid
+             * darkening the scene.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_GLOW_BLEND_MODE_MIX
+             */
+            val MIX: EnvironmentGlowBlendMode get() = EnvironmentGlowBlendMode(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentFogMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentFogMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentFogMode
+     */
+    @JvmInline
+    value class EnvironmentFogMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use a physically-based fog model defined primarily by fog density.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_FOG_MODE_EXPONENTIAL
+             */
+            val EXPONENTIAL: EnvironmentFogMode get() = EnvironmentFogMode(0L)
+            /**
+             * Use a simple fog model defined by start and end positions and a custom curve. While not
+             * physically accurate, this model can be useful when you need more artistic control.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_FOG_MODE_DEPTH
+             */
+            val DEPTH: EnvironmentFogMode get() = EnvironmentFogMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentToneMapper` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentToneMapper.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentToneMapper
+     */
+    @JvmInline
+    value class EnvironmentToneMapper(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Does not modify color data, resulting in a linear tonemapping curve which unnaturally clips
+             * bright values, causing bright lighting to look blown out. The simplest and fastest tonemapper.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_LINEAR
+             */
+            val LINEAR: EnvironmentToneMapper get() = EnvironmentToneMapper(0L)
+            /**
+             * A simple tonemapping curve that rolls off bright values to prevent clipping. This results in an
+             * image that can appear dull and low contrast. Slower than `EnvironmentToneMapper.LINEAR`. Note:
+             * When `Environment.tonemap_white` is left at the default value of `1.0`,
+             * `EnvironmentToneMapper.REINHARD` produces an identical image to `EnvironmentToneMapper.LINEAR`.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_REINHARD
+             */
+            val REINHARD: EnvironmentToneMapper get() = EnvironmentToneMapper(1L)
+            /**
+             * Uses a film-like tonemapping curve to prevent clipping of bright values and provide better
+             * contrast than `EnvironmentToneMapper.REINHARD`. Slightly slower than
+             * `EnvironmentToneMapper.REINHARD`. Note: This tonemapper does not support HDR output because it
+             * produces output in the SDR range. It is recommended to use a different tonemapper when rendering
+             * to an HDR screen.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_FILMIC
+             */
+            val FILMIC: EnvironmentToneMapper get() = EnvironmentToneMapper(2L)
+            /**
+             * Uses a high-contrast film-like tonemapping curve and desaturates bright values for a more
+             * realistic appearance. Slightly slower than `EnvironmentToneMapper.FILMIC`. Note: This
+             * tonemapping operator is called "ACES Fitted" in Godot 3.x. Note: This tonemapper does not
+             * support HDR output because it produces output in the SDR range. It is recommended to use a
+             * different tonemapper when rendering to an HDR screen.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_ACES
+             */
+            val ACES: EnvironmentToneMapper get() = EnvironmentToneMapper(3L)
+            /**
+             * Uses an adjustable film-like tonemapping curve and desaturates bright values for a more
+             * realistic appearance. Better than other tonemappers at maintaining the hue of colors as they
+             * become brighter. The slowest tonemapping option.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_TONE_MAPPER_AGX
+             */
+            val AGX: EnvironmentToneMapper get() = EnvironmentToneMapper(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentSSRRoughnessQuality` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSSRRoughnessQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSSRRoughnessQuality
+     */
+    @JvmInline
+    value class EnvironmentSSRRoughnessQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Lowest quality of roughness filter for screen-space reflections. Rough materials will not have
+             * blurrier screen-space reflections compared to smooth (non-rough) materials. This is the fastest
+             * option.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSR_ROUGHNESS_QUALITY_DISABLED
+             */
+            val DISABLED: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(0L)
+            /**
+             * Low quality of roughness filter for screen-space reflections.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSR_ROUGHNESS_QUALITY_LOW
+             */
+            val LOW: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(1L)
+            /**
+             * Medium quality of roughness filter for screen-space reflections.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSR_ROUGHNESS_QUALITY_MEDIUM
+             */
+            val MEDIUM: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(2L)
+            /**
+             * High quality of roughness filter for screen-space reflections. This is the slowest option.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSR_ROUGHNESS_QUALITY_HIGH
+             */
+            val HIGH: EnvironmentSSRRoughnessQuality get() = EnvironmentSSRRoughnessQuality(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentSSAOQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSSAOQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSSAOQuality
+     */
+    @JvmInline
+    value class EnvironmentSSAOQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Lowest quality of screen-space ambient occlusion.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSAO_QUALITY_VERY_LOW
+             */
+            val VERY_LOW: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(0L)
+            /**
+             * Low quality screen-space ambient occlusion.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSAO_QUALITY_LOW
+             */
+            val LOW: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(1L)
+            /**
+             * Medium quality screen-space ambient occlusion.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSAO_QUALITY_MEDIUM
+             */
+            val MEDIUM: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(2L)
+            /**
+             * High quality screen-space ambient occlusion.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSAO_QUALITY_HIGH
+             */
+            val HIGH: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(3L)
+            /**
+             * Highest quality screen-space ambient occlusion. Uses the adaptive target setting which can be
+             * dynamically adjusted to smoothly balance performance and visual quality.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSAO_QUALITY_ULTRA
+             */
+            val ULTRA: EnvironmentSSAOQuality get() = EnvironmentSSAOQuality(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentSSILQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSSILQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSSILQuality
+     */
+    @JvmInline
+    value class EnvironmentSSILQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Lowest quality of screen-space indirect lighting.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSIL_QUALITY_VERY_LOW
+             */
+            val VERY_LOW: EnvironmentSSILQuality get() = EnvironmentSSILQuality(0L)
+            /**
+             * Low quality screen-space indirect lighting.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSIL_QUALITY_LOW
+             */
+            val LOW: EnvironmentSSILQuality get() = EnvironmentSSILQuality(1L)
+            /**
+             * High quality screen-space indirect lighting.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSIL_QUALITY_MEDIUM
+             */
+            val MEDIUM: EnvironmentSSILQuality get() = EnvironmentSSILQuality(2L)
+            /**
+             * High quality screen-space indirect lighting.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSIL_QUALITY_HIGH
+             */
+            val HIGH: EnvironmentSSILQuality get() = EnvironmentSSILQuality(3L)
+            /**
+             * Highest quality screen-space indirect lighting. Uses the adaptive target setting which can be
+             * dynamically adjusted to smoothly balance performance and visual quality.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SSIL_QUALITY_ULTRA
+             */
+            val ULTRA: EnvironmentSSILQuality get() = EnvironmentSSILQuality(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIYScale` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIYScale.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIYScale
+     */
+    @JvmInline
+    value class EnvironmentSDFGIYScale(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use 50% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be twice as short as they are
+             * wide. This allows providing increased GI detail and reduced light leaking with thin floors and
+             * ceilings. This is usually the best choice for scenes that don't feature much verticality.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_Y_SCALE_50_PERCENT
+             */
+            val SCALE_50_PERCENT: EnvironmentSDFGIYScale get() = EnvironmentSDFGIYScale(0L)
+            /**
+             * Use 75% scale for SDFGI on the Y (vertical) axis. This is a balance between the 50% and 100%
+             * SDFGI Y scales.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_Y_SCALE_75_PERCENT
+             */
+            val SCALE_75_PERCENT: EnvironmentSDFGIYScale get() = EnvironmentSDFGIYScale(1L)
+            /**
+             * Use 100% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be as tall as they are wide.
+             * This is usually the best choice for highly vertical scenes. The downside is that light leaking
+             * may become more noticeable with thin floors and ceilings.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_Y_SCALE_100_PERCENT
+             */
+            val SCALE_100_PERCENT: EnvironmentSDFGIYScale get() = EnvironmentSDFGIYScale(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIRayCount` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIRayCount.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIRayCount
+     */
+    @JvmInline
+    value class EnvironmentSDFGIRayCount(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Throw 4 rays per frame when converging SDFGI. This has the lowest GPU requirements, but creates
+             * the most noisy result.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_4
+             */
+            val COUNT_4: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(0L)
+            /**
+             * Throw 8 rays per frame when converging SDFGI.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_8
+             */
+            val COUNT_8: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(1L)
+            /**
+             * Throw 16 rays per frame when converging SDFGI.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_16
+             */
+            val COUNT_16: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(2L)
+            /**
+             * Throw 32 rays per frame when converging SDFGI.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_32
+             */
+            val COUNT_32: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(3L)
+            /**
+             * Throw 64 rays per frame when converging SDFGI.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_64
+             */
+            val COUNT_64: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(4L)
+            /**
+             * Throw 96 rays per frame when converging SDFGI. This has high GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_96
+             */
+            val COUNT_96: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(5L)
+            /**
+             * Throw 128 rays per frame when converging SDFGI. This has very high GPU requirements, but creates
+             * the least noisy result.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_128
+             */
+            val COUNT_128: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(6L)
+            /**
+             * Represents the size of the `EnvironmentSDFGIRayCount` enum.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_RAY_COUNT_MAX
+             */
+            val MAX: EnvironmentSDFGIRayCount get() = EnvironmentSDFGIRayCount(7L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIFramesToConverge` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIFramesToConverge.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIFramesToConverge
+     */
+    @JvmInline
+    value class EnvironmentSDFGIFramesToConverge(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Converge SDFGI over 5 frames. This is the most responsive, but creates the most noisy result
+             * with a given ray count.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_CONVERGE_IN_5_FRAMES
+             */
+            val IN_5_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(0L)
+            /**
+             * Configure SDFGI to fully converge over 10 frames.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_CONVERGE_IN_10_FRAMES
+             */
+            val IN_10_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(1L)
+            /**
+             * Configure SDFGI to fully converge over 15 frames.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_CONVERGE_IN_15_FRAMES
+             */
+            val IN_15_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(2L)
+            /**
+             * Configure SDFGI to fully converge over 20 frames.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_CONVERGE_IN_20_FRAMES
+             */
+            val IN_20_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(3L)
+            /**
+             * Configure SDFGI to fully converge over 25 frames.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_CONVERGE_IN_25_FRAMES
+             */
+            val IN_25_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(4L)
+            /**
+             * Configure SDFGI to fully converge over 30 frames. This is the least responsive, but creates the
+             * least noisy result with a given ray count.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_CONVERGE_IN_30_FRAMES
+             */
+            val IN_30_FRAMES: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(5L)
+            /**
+             * Represents the size of the `EnvironmentSDFGIFramesToConverge` enum.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_CONVERGE_MAX
+             */
+            val MAX: EnvironmentSDFGIFramesToConverge get() = EnvironmentSDFGIFramesToConverge(6L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.EnvironmentSDFGIFramesToUpdateLight` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.EnvironmentSDFGIFramesToUpdateLight.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.EnvironmentSDFGIFramesToUpdateLight
+     */
+    @JvmInline
+    value class EnvironmentSDFGIFramesToUpdateLight(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Update indirect light from dynamic lights in SDFGI over 1 frame. This is the most responsive,
+             * but has the highest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_UPDATE_LIGHT_IN_1_FRAME
+             */
+            val IN_1_FRAME: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(0L)
+            /**
+             * Update indirect light from dynamic lights in SDFGI over 2 frames.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_UPDATE_LIGHT_IN_2_FRAMES
+             */
+            val IN_2_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(1L)
+            /**
+             * Update indirect light from dynamic lights in SDFGI over 4 frames.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_UPDATE_LIGHT_IN_4_FRAMES
+             */
+            val IN_4_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(2L)
+            /**
+             * Update indirect light from dynamic lights in SDFGI over 8 frames.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_UPDATE_LIGHT_IN_8_FRAMES
+             */
+            val IN_8_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(3L)
+            /**
+             * Update indirect light from dynamic lights in SDFGI over 16 frames. This is the least responsive,
+             * but has the lowest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_UPDATE_LIGHT_IN_16_FRAMES
+             */
+            val IN_16_FRAMES: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(4L)
+            /**
+             * Represents the size of the `EnvironmentSDFGIFramesToUpdateLight` enum.
+             *
+             * Generated from Godot docs: RenderingServer.ENV_SDFGI_UPDATE_LIGHT_MAX
+             */
+            val MAX: EnvironmentSDFGIFramesToUpdateLight get() = EnvironmentSDFGIFramesToUpdateLight(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.SubSurfaceScatteringQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.SubSurfaceScatteringQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.SubSurfaceScatteringQuality
+     */
+    @JvmInline
+    value class SubSurfaceScatteringQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables subsurface scattering entirely, even on materials that have
+             * `BaseMaterial3D.subsurf_scatter_enabled` set to `true`. This has the lowest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.SUB_SURFACE_SCATTERING_QUALITY_DISABLED
+             */
+            val DISABLED: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(0L)
+            /**
+             * Low subsurface scattering quality.
+             *
+             * Generated from Godot docs: RenderingServer.SUB_SURFACE_SCATTERING_QUALITY_LOW
+             */
+            val LOW: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(1L)
+            /**
+             * Medium subsurface scattering quality.
+             *
+             * Generated from Godot docs: RenderingServer.SUB_SURFACE_SCATTERING_QUALITY_MEDIUM
+             */
+            val MEDIUM: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(2L)
+            /**
+             * High subsurface scattering quality. This has the highest GPU requirements.
+             *
+             * Generated from Godot docs: RenderingServer.SUB_SURFACE_SCATTERING_QUALITY_HIGH
+             */
+            val HIGH: SubSurfaceScatteringQuality get() = SubSurfaceScatteringQuality(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.DOFBokehShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DOFBokehShape.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DOFBokehShape
+     */
+    @JvmInline
+    value class DOFBokehShape(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Calculate the DOF blur using a box filter. The fastest option, but results in obvious lines in
+             * blur pattern.
+             *
+             * Generated from Godot docs: RenderingServer.DOF_BOKEH_BOX
+             */
+            val BOX: DOFBokehShape get() = DOFBokehShape(0L)
+            /**
+             * Calculates DOF blur using a hexagon shaped filter.
+             *
+             * Generated from Godot docs: RenderingServer.DOF_BOKEH_HEXAGON
+             */
+            val HEXAGON: DOFBokehShape get() = DOFBokehShape(1L)
+            /**
+             * Calculates DOF blur using a circle shaped filter. Best quality and most realistic, but slowest.
+             * Use only for areas where a lot of performance can be dedicated to post-processing (e.g.
+             * cutscenes).
+             *
+             * Generated from Godot docs: RenderingServer.DOF_BOKEH_CIRCLE
+             */
+            val CIRCLE: DOFBokehShape get() = DOFBokehShape(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.DOFBlurQuality` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.DOFBlurQuality.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.DOFBlurQuality
+     */
+    @JvmInline
+    value class DOFBlurQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Lowest quality DOF blur. This is the fastest setting, but you may be able to see filtering
+             * artifacts.
+             *
+             * Generated from Godot docs: RenderingServer.DOF_BLUR_QUALITY_VERY_LOW
+             */
+            val VERY_LOW: DOFBlurQuality get() = DOFBlurQuality(0L)
+            /**
+             * Low quality DOF blur.
+             *
+             * Generated from Godot docs: RenderingServer.DOF_BLUR_QUALITY_LOW
+             */
+            val LOW: DOFBlurQuality get() = DOFBlurQuality(1L)
+            /**
+             * Medium quality DOF blur.
+             *
+             * Generated from Godot docs: RenderingServer.DOF_BLUR_QUALITY_MEDIUM
+             */
+            val MEDIUM: DOFBlurQuality get() = DOFBlurQuality(2L)
+            /**
+             * Highest quality DOF blur. Results in the smoothest looking blur by taking the most samples, but
+             * is also significantly slower.
+             *
+             * Generated from Godot docs: RenderingServer.DOF_BLUR_QUALITY_HIGH
+             */
+            val HIGH: DOFBlurQuality get() = DOFBlurQuality(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.InstanceType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.InstanceType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.InstanceType
+     */
+    @JvmInline
+    value class InstanceType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The instance does not have a type.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_NONE
+             */
+            val NONE: InstanceType get() = InstanceType(0L)
+            /**
+             * The instance is a mesh.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_MESH
+             */
+            val MESH: InstanceType get() = InstanceType(1L)
+            /**
+             * The instance is a multimesh.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_MULTIMESH
+             */
+            val MULTIMESH: InstanceType get() = InstanceType(2L)
+            /**
+             * The instance is a particle emitter.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_PARTICLES
+             */
+            val PARTICLES: InstanceType get() = InstanceType(3L)
+            /**
+             * The instance is a GPUParticles collision shape.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_PARTICLES_COLLISION
+             */
+            val PARTICLES_COLLISION: InstanceType get() = InstanceType(4L)
+            /**
+             * The instance is a light.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_LIGHT
+             */
+            val LIGHT: InstanceType get() = InstanceType(5L)
+            /**
+             * The instance is a reflection probe.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_REFLECTION_PROBE
+             */
+            val REFLECTION_PROBE: InstanceType get() = InstanceType(6L)
+            /**
+             * The instance is a decal.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_DECAL
+             */
+            val DECAL: InstanceType get() = InstanceType(7L)
+            /**
+             * The instance is a VoxelGI.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_VOXEL_GI
+             */
+            val VOXEL_GI: InstanceType get() = InstanceType(8L)
+            /**
+             * The instance is a lightmap.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_LIGHTMAP
+             */
+            val LIGHTMAP: InstanceType get() = InstanceType(9L)
+            /**
+             * The instance is an occlusion culling occluder.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_OCCLUDER
+             */
+            val OCCLUDER: InstanceType get() = InstanceType(10L)
+            /**
+             * The instance is a visible on-screen notifier.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_VISIBLITY_NOTIFIER
+             */
+            val VISIBLITY_NOTIFIER: InstanceType get() = InstanceType(11L)
+            /**
+             * The instance is a fog volume.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_FOG_VOLUME
+             */
+            val FOG_VOLUME: InstanceType get() = InstanceType(12L)
+            /**
+             * Represents the size of the `InstanceType` enum.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_MAX
+             */
+            val MAX: InstanceType get() = InstanceType(13L)
+            /**
+             * A combination of the flags of geometry instances (mesh, multimesh, immediate and particles).
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_GEOMETRY_MASK
+             */
+            val GEOMETRY_MASK: InstanceType get() = InstanceType(14L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.InstanceFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.InstanceFlags.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.InstanceFlags
+     */
+    @JvmInline
+    value class InstanceFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Allows the instance to be used in baked lighting.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_FLAG_USE_BAKED_LIGHT
+             */
+            val USE_BAKED_LIGHT: InstanceFlags get() = InstanceFlags(0L)
+            /**
+             * Allows the instance to be used with dynamic global illumination.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_FLAG_USE_DYNAMIC_GI
+             */
+            val USE_DYNAMIC_GI: InstanceFlags get() = InstanceFlags(1L)
+            /**
+             * When set, manually requests to draw geometry on next frame.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_FLAG_DRAW_NEXT_FRAME_IF_VISIBLE
+             */
+            val DRAW_NEXT_FRAME_IF_VISIBLE: InstanceFlags get() = InstanceFlags(2L)
+            /**
+             * Always draw, even if the instance would be culled by occlusion culling. Does not affect view
+             * frustum culling.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_FLAG_IGNORE_OCCLUSION_CULLING
+             */
+            val IGNORE_OCCLUSION_CULLING: InstanceFlags get() = InstanceFlags(3L)
+            /**
+             * Represents the size of the `InstanceFlags` enum.
+             *
+             * Generated from Godot docs: RenderingServer.INSTANCE_FLAG_MAX
+             */
+            val MAX: InstanceFlags get() = InstanceFlags(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.ShadowCastingSetting` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.ShadowCastingSetting.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.ShadowCastingSetting
+     */
+    @JvmInline
+    value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disable shadows from this instance.
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_CASTING_SETTING_OFF
+             */
+            val OFF: ShadowCastingSetting get() = ShadowCastingSetting(0L)
+            /**
+             * Cast shadows from this instance.
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_CASTING_SETTING_ON
+             */
+            val ON: ShadowCastingSetting get() = ShadowCastingSetting(1L)
+            /**
+             * Disable backface culling when rendering the shadow of the object. This is slightly slower but
+             * may result in more correct shadows.
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_CASTING_SETTING_DOUBLE_SIDED
+             */
+            val DOUBLE_SIDED: ShadowCastingSetting get() = ShadowCastingSetting(2L)
+            /**
+             * Only render the shadows from the object. The object itself will not be drawn.
+             *
+             * Generated from Godot docs: RenderingServer.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+             */
+            val SHADOWS_ONLY: ShadowCastingSetting get() = ShadowCastingSetting(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.VisibilityRangeFadeMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.VisibilityRangeFadeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.VisibilityRangeFadeMode
+     */
+    @JvmInline
+    value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disable visibility range fading for the given instance.
+             *
+             * Generated from Godot docs: RenderingServer.VISIBILITY_RANGE_FADE_DISABLED
+             */
+            val DISABLED: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(0L)
+            /**
+             * Fade-out the given instance when it approaches its visibility range limits.
+             *
+             * Generated from Godot docs: RenderingServer.VISIBILITY_RANGE_FADE_SELF
+             */
+            val SELF: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(1L)
+            /**
+             * Fade-in the given instance's dependencies when reaching its visibility range limits.
+             *
+             * Generated from Godot docs: RenderingServer.VISIBILITY_RANGE_FADE_DEPENDENCIES
+             */
+            val DEPENDENCIES: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.BakeChannels` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.BakeChannels.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.BakeChannels
+     */
+    @JvmInline
+    value class BakeChannels(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
+             * `Image.Format.RGBA8` and contains albedo color in the `.rgb` channels and alpha in the `.a`
+             * channel.
+             *
+             * Generated from Godot docs: RenderingServer.BAKE_CHANNEL_ALBEDO_ALPHA
+             */
+            val ALBEDO_ALPHA: BakeChannels get() = BakeChannels(0L)
+            /**
+             * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
+             * `Image.Format.RGBA8` and contains the per-pixel normal of the object in the `.rgb` channels and
+             * nothing in the `.a` channel. The per-pixel normal is encoded as `normal * 0.5 + 0.5`.
+             *
+             * Generated from Godot docs: RenderingServer.BAKE_CHANNEL_NORMAL
+             */
+            val NORMAL: BakeChannels get() = BakeChannels(1L)
+            /**
+             * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
+             * `Image.Format.RGBA8` and contains ambient occlusion (from material and decals only) in the `.r`
+             * channel, roughness in the `.g` channel, metallic in the `.b` channel and sub surface scattering
+             * amount in the `.a` channel.
+             *
+             * Generated from Godot docs: RenderingServer.BAKE_CHANNEL_ORM
+             */
+            val ORM: BakeChannels get() = BakeChannels(2L)
+            /**
+             * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
+             * `Image.Format.RGBAH` and contains emission color in the `.rgb` channels and nothing in the `.a`
+             * channel.
+             *
+             * Generated from Godot docs: RenderingServer.BAKE_CHANNEL_EMISSION
+             */
+            val EMISSION: BakeChannels get() = BakeChannels(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasTextureChannel` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasTextureChannel.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasTextureChannel
+     */
+    @JvmInline
+    value class CanvasTextureChannel(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Diffuse canvas texture (`CanvasTexture.diffuse_texture`).
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_TEXTURE_CHANNEL_DIFFUSE
+             */
+            val DIFFUSE: CanvasTextureChannel get() = CanvasTextureChannel(0L)
+            /**
+             * Normal map canvas texture (`CanvasTexture.normal_texture`).
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_TEXTURE_CHANNEL_NORMAL
+             */
+            val NORMAL: CanvasTextureChannel get() = CanvasTextureChannel(1L)
+            /**
+             * Specular map canvas texture (`CanvasTexture.specular_texture`).
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_TEXTURE_CHANNEL_SPECULAR
+             */
+            val SPECULAR: CanvasTextureChannel get() = CanvasTextureChannel(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.NinePatchAxisMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.NinePatchAxisMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.NinePatchAxisMode
+     */
+    @JvmInline
+    value class NinePatchAxisMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The nine patch gets stretched where needed.
+             *
+             * Generated from Godot docs: RenderingServer.NINE_PATCH_STRETCH
+             */
+            val STRETCH: NinePatchAxisMode get() = NinePatchAxisMode(0L)
+            /**
+             * The nine patch gets filled with tiles where needed.
+             *
+             * Generated from Godot docs: RenderingServer.NINE_PATCH_TILE
+             */
+            val TILE: NinePatchAxisMode get() = NinePatchAxisMode(1L)
+            /**
+             * The nine patch gets filled with tiles where needed and stretches them a bit if needed.
+             *
+             * Generated from Godot docs: RenderingServer.NINE_PATCH_TILE_FIT
+             */
+            val TILE_FIT: NinePatchAxisMode get() = NinePatchAxisMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasItemTextureFilter` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasItemTextureFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasItemTextureFilter
+     */
+    @JvmInline
+    value class CanvasItemTextureFilter(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Uses the default filter mode for this `Viewport`.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_DEFAULT
+             */
+            val DEFAULT: CanvasItemTextureFilter get() = CanvasItemTextureFilter(0L)
+            /**
+             * The texture filter reads from the nearest pixel only. This makes the texture look pixelated from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+             */
+            val NEAREST: CanvasItemTextureFilter get() = CanvasItemTextureFilter(1L)
+            /**
+             * The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_LINEAR
+             */
+            val LINEAR: CanvasItemTextureFilter get() = CanvasItemTextureFilter(2L)
+            /**
+             * The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look pixelated from up close, and smooth from a distance. Use this for
+             * non-pixel art textures that may be viewed at a low scale (e.g. due to `Camera2D` zoom or sprite
+             * scaling), as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+             */
+            val NEAREST_WITH_MIPMAPS: CanvasItemTextureFilter get() = CanvasItemTextureFilter(3L)
+            /**
+             * The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look smooth from up close, and smooth from a distance. Use this for non-pixel
+             * art textures that may be viewed at a low scale (e.g. due to `Camera2D` zoom or sprite scaling),
+             * as mipmaps are important to smooth out pixels that are smaller than on-screen pixels.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+             */
+            val LINEAR_WITH_MIPMAPS: CanvasItemTextureFilter get() = CanvasItemTextureFilter(4L)
+            /**
+             * The texture filter reads from the nearest pixel and blends between 2 mipmaps (or uses the
+             * nearest mipmap if `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter`
+             * is `true`) based on the angle between the surface and the camera view. This makes the texture
+             * look pixelated from up close, and smooth from a distance. Anisotropic filtering improves texture
+             * quality on surfaces that are almost in line with the camera, but is slightly slower. The
+             * anisotropic filtering level can be changed by adjusting
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
+             * texture filter is rarely useful in 2D projects. `CanvasItemTextureFilter.NEAREST_WITH_MIPMAPS`
+             * is usually more appropriate in this case.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC
+             */
+            val NEAREST_WITH_MIPMAPS_ANISOTROPIC: CanvasItemTextureFilter get() = CanvasItemTextureFilter(5L)
+            /**
+             * The texture filter blends between the nearest 4 pixels and blends between 2 mipmaps (or uses the
+             * nearest mipmap if `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter`
+             * is `true`) based on the angle between the surface and the camera view. This makes the texture
+             * look smooth from up close, and smooth from a distance. Anisotropic filtering improves texture
+             * quality on surfaces that are almost in line with the camera, but is slightly slower. The
+             * anisotropic filtering level can be changed by adjusting
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`. Note: This
+             * texture filter is rarely useful in 2D projects. `CanvasItemTextureFilter.LINEAR_WITH_MIPMAPS` is
+             * usually more appropriate in this case.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+             */
+            val LINEAR_WITH_MIPMAPS_ANISOTROPIC: CanvasItemTextureFilter get() = CanvasItemTextureFilter(6L)
+            /**
+             * Max value for `CanvasItemTextureFilter` enum.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_MAX
+             */
+            val MAX: CanvasItemTextureFilter get() = CanvasItemTextureFilter(7L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasItemTextureRepeat` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasItemTextureRepeat.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasItemTextureRepeat
+     */
+    @JvmInline
+    value class CanvasItemTextureRepeat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Uses the default repeat mode for this `Viewport`.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_REPEAT_DEFAULT
+             */
+            val DEFAULT: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(0L)
+            /**
+             * Disables textures repeating. Instead, when reading UVs outside the 0-1 range, the value will be
+             * clamped to the edge of the texture, resulting in a stretched out look at the borders of the
+             * texture.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_REPEAT_DISABLED
+             */
+            val DISABLED: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(1L)
+            /**
+             * Enables the texture to repeat when UV coordinates are outside the 0-1 range. If using one of the
+             * linear filtering modes, this can result in artifacts at the edges of a texture when the sampler
+             * filters across the edges of the texture.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_REPEAT_ENABLED
+             */
+            val ENABLED: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(2L)
+            /**
+             * Flip the texture when repeating so that the edge lines up instead of abruptly changing.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_REPEAT_MIRROR
+             */
+            val MIRROR: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(3L)
+            /**
+             * Max value for `CanvasItemTextureRepeat` enum.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_ITEM_TEXTURE_REPEAT_MAX
+             */
+            val MAX: CanvasItemTextureRepeat get() = CanvasItemTextureRepeat(4L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasGroupMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.CanvasGroupMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasGroupMode
+     */
+    @JvmInline
+    value class CanvasGroupMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Child draws over parent and is not clipped.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_GROUP_MODE_DISABLED
+             */
+            val DISABLED: CanvasGroupMode get() = CanvasGroupMode(0L)
+            /**
+             * Parent is used for the purposes of clipping only. Child is clipped to the parent's visible area,
+             * parent is not drawn.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_GROUP_MODE_CLIP_ONLY
+             */
+            val CLIP_ONLY: CanvasGroupMode get() = CanvasGroupMode(1L)
+            /**
+             * Parent is used for clipping child, but parent is also drawn underneath child as normal before
+             * clipping child to its visible area.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_GROUP_MODE_CLIP_AND_DRAW
+             */
+            val CLIP_AND_DRAW: CanvasGroupMode get() = CanvasGroupMode(2L)
+            val TRANSPARENT: CanvasGroupMode get() = CanvasGroupMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasLightMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RenderingServer.CanvasLightMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasLightMode
+     */
+    @JvmInline
+    value class CanvasLightMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * 2D point light (see `PointLight2D`).
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_MODE_POINT
+             */
+            val POINT: CanvasLightMode get() = CanvasLightMode(0L)
+            /**
+             * 2D directional (sun/moon) light (see `DirectionalLight2D`).
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_MODE_DIRECTIONAL
+             */
+            val DIRECTIONAL: CanvasLightMode get() = CanvasLightMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasLightBlendMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasLightBlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasLightBlendMode
+     */
+    @JvmInline
+    value class CanvasLightBlendMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Adds light color additive to the canvas.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_BLEND_MODE_ADD
+             */
+            val ADD: CanvasLightBlendMode get() = CanvasLightBlendMode(0L)
+            /**
+             * Adds light color subtractive to the canvas.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_BLEND_MODE_SUB
+             */
+            val SUB: CanvasLightBlendMode get() = CanvasLightBlendMode(1L)
+            /**
+             * The light adds color depending on transparency.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_BLEND_MODE_MIX
+             */
+            val MIX: CanvasLightBlendMode get() = CanvasLightBlendMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasLightShadowFilter` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasLightShadowFilter.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasLightShadowFilter
+     */
+    @JvmInline
+    value class CanvasLightShadowFilter(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not apply a filter to canvas light shadows.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_FILTER_NONE
+             */
+            val NONE: CanvasLightShadowFilter get() = CanvasLightShadowFilter(0L)
+            /**
+             * Use PCF5 filtering to filter canvas light shadows.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_FILTER_PCF5
+             */
+            val PCF5: CanvasLightShadowFilter get() = CanvasLightShadowFilter(1L)
+            /**
+             * Use PCF13 filtering to filter canvas light shadows.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_FILTER_PCF13
+             */
+            val PCF13: CanvasLightShadowFilter get() = CanvasLightShadowFilter(2L)
+            /**
+             * Max value of the `CanvasLightShadowFilter` enum.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_LIGHT_FILTER_MAX
+             */
+            val MAX: CanvasLightShadowFilter get() = CanvasLightShadowFilter(3L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.CanvasOccluderPolygonCullMode` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`RenderingServer.CanvasOccluderPolygonCullMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.CanvasOccluderPolygonCullMode
+     */
+    @JvmInline
+    value class CanvasOccluderPolygonCullMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Culling of the canvas occluder is disabled.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_OCCLUDER_POLYGON_CULL_DISABLED
+             */
+            val DISABLED: CanvasOccluderPolygonCullMode get() = CanvasOccluderPolygonCullMode(0L)
+            /**
+             * Culling of the canvas occluder is clockwise.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_OCCLUDER_POLYGON_CULL_CLOCKWISE
+             */
+            val CLOCKWISE: CanvasOccluderPolygonCullMode get() = CanvasOccluderPolygonCullMode(1L)
+            /**
+             * Culling of the canvas occluder is counterclockwise.
+             *
+             * Generated from Godot docs: RenderingServer.CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE
+             */
+            val COUNTER_CLOCKWISE: CanvasOccluderPolygonCullMode get() = CanvasOccluderPolygonCullMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.GlobalShaderParameterType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`RenderingServer.GlobalShaderParameterType.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.GlobalShaderParameterType
+     */
+    @JvmInline
+    value class GlobalShaderParameterType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Boolean global shader parameter (`global uniform bool ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_BOOL
+             */
+            val BOOL: GlobalShaderParameterType get() = GlobalShaderParameterType(0L)
+            /**
+             * 2-dimensional boolean vector global shader parameter (`global uniform bvec2 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_BVEC2
+             */
+            val BVEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(1L)
+            /**
+             * 3-dimensional boolean vector global shader parameter (`global uniform bvec3 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_BVEC3
+             */
+            val BVEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(2L)
+            /**
+             * 4-dimensional boolean vector global shader parameter (`global uniform bvec4 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_BVEC4
+             */
+            val BVEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(3L)
+            /**
+             * Integer global shader parameter (`global uniform int ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_INT
+             */
+            val INT: GlobalShaderParameterType get() = GlobalShaderParameterType(4L)
+            /**
+             * 2-dimensional integer vector global shader parameter (`global uniform ivec2 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_IVEC2
+             */
+            val IVEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(5L)
+            /**
+             * 3-dimensional integer vector global shader parameter (`global uniform ivec3 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_IVEC3
+             */
+            val IVEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(6L)
+            /**
+             * 4-dimensional integer vector global shader parameter (`global uniform ivec4 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_IVEC4
+             */
+            val IVEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(7L)
+            /**
+             * 2-dimensional integer rectangle global shader parameter (`global uniform ivec4 ...`). Equivalent
+             * to `GlobalShaderParameterType.IVEC4` in shader code, but exposed as a `Rect2i` in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_RECT2I
+             */
+            val RECT2I: GlobalShaderParameterType get() = GlobalShaderParameterType(8L)
+            /**
+             * Unsigned integer global shader parameter (`global uniform uint ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_UINT
+             */
+            val UINT: GlobalShaderParameterType get() = GlobalShaderParameterType(9L)
+            /**
+             * 2-dimensional unsigned integer vector global shader parameter (`global uniform uvec2 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_UVEC2
+             */
+            val UVEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(10L)
+            /**
+             * 3-dimensional unsigned integer vector global shader parameter (`global uniform uvec3 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_UVEC3
+             */
+            val UVEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(11L)
+            /**
+             * 4-dimensional unsigned integer vector global shader parameter (`global uniform uvec4 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_UVEC4
+             */
+            val UVEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(12L)
+            /**
+             * Single-precision floating-point global shader parameter (`global uniform float ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_FLOAT
+             */
+            val FLOAT: GlobalShaderParameterType get() = GlobalShaderParameterType(13L)
+            /**
+             * 2-dimensional floating-point vector global shader parameter (`global uniform vec2 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_VEC2
+             */
+            val VEC2: GlobalShaderParameterType get() = GlobalShaderParameterType(14L)
+            /**
+             * 3-dimensional floating-point vector global shader parameter (`global uniform vec3 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_VEC3
+             */
+            val VEC3: GlobalShaderParameterType get() = GlobalShaderParameterType(15L)
+            /**
+             * 4-dimensional floating-point vector global shader parameter (`global uniform vec4 ...`).
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_VEC4
+             */
+            val VEC4: GlobalShaderParameterType get() = GlobalShaderParameterType(16L)
+            /**
+             * Color global shader parameter (`global uniform vec4 ...`). Equivalent to
+             * `GlobalShaderParameterType.VEC4` in shader code, but exposed as a `Color` in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_COLOR
+             */
+            val COLOR: GlobalShaderParameterType get() = GlobalShaderParameterType(17L)
+            /**
+             * 2-dimensional floating-point rectangle global shader parameter (`global uniform vec4 ...`).
+             * Equivalent to `GlobalShaderParameterType.VEC4` in shader code, but exposed as a `Rect2` in the
+             * editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_RECT2
+             */
+            val RECT2: GlobalShaderParameterType get() = GlobalShaderParameterType(18L)
+            /**
+             * 2×2 matrix global shader parameter (`global uniform mat2 ...`). Exposed as a `PackedInt32Array`
+             * in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_MAT2
+             */
+            val MAT2: GlobalShaderParameterType get() = GlobalShaderParameterType(19L)
+            /**
+             * 3×3 matrix global shader parameter (`global uniform mat3 ...`). Exposed as a `Basis` in the
+             * editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_MAT3
+             */
+            val MAT3: GlobalShaderParameterType get() = GlobalShaderParameterType(20L)
+            /**
+             * 4×4 matrix global shader parameter (`global uniform mat4 ...`). Exposed as a `Projection` in the
+             * editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_MAT4
+             */
+            val MAT4: GlobalShaderParameterType get() = GlobalShaderParameterType(21L)
+            /**
+             * 2-dimensional transform global shader parameter (`global uniform mat2x3 ...`). Exposed as a
+             * `Transform2D` in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_TRANSFORM_2D
+             */
+            val TRANSFORM_2D: GlobalShaderParameterType get() = GlobalShaderParameterType(22L)
+            /**
+             * 3-dimensional transform global shader parameter (`global uniform mat3x4 ...`). Exposed as a
+             * `Transform3D` in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_TRANSFORM
+             */
+            val TRANSFORM: GlobalShaderParameterType get() = GlobalShaderParameterType(23L)
+            /**
+             * 2D sampler global shader parameter (`global uniform sampler2D ...`). Exposed as a `Texture2D` in
+             * the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_SAMPLER2D
+             */
+            val SAMPLER2D: GlobalShaderParameterType get() = GlobalShaderParameterType(24L)
+            /**
+             * 2D sampler array global shader parameter (`global uniform sampler2DArray ...`). Exposed as a
+             * `Texture2DArray` in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_SAMPLER2DARRAY
+             */
+            val SAMPLER2DARRAY: GlobalShaderParameterType get() = GlobalShaderParameterType(25L)
+            /**
+             * 3D sampler global shader parameter (`global uniform sampler3D ...`). Exposed as a `Texture3D` in
+             * the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_SAMPLER3D
+             */
+            val SAMPLER3D: GlobalShaderParameterType get() = GlobalShaderParameterType(26L)
+            /**
+             * Cubemap sampler global shader parameter (`global uniform samplerCube ...`). Exposed as a
+             * `Cubemap` in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_SAMPLERCUBE
+             */
+            val SAMPLERCUBE: GlobalShaderParameterType get() = GlobalShaderParameterType(27L)
+            /**
+             * External sampler global shader parameter (`global uniform samplerExternalOES ...`). Exposed as
+             * an `ExternalTexture` in the editor UI.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_SAMPLEREXT
+             */
+            val SAMPLEREXT: GlobalShaderParameterType get() = GlobalShaderParameterType(28L)
+            /**
+             * Represents the size of the `GlobalShaderParameterType` enum.
+             *
+             * Generated from Godot docs: RenderingServer.GLOBAL_VAR_TYPE_MAX
+             */
+            val MAX: GlobalShaderParameterType get() = GlobalShaderParameterType(29L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.RenderingInfo` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.RenderingInfo.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.RenderingInfo
+     */
+    @JvmInline
+    value class RenderingInfo(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Number of objects rendered in the current 3D scene. This varies depending on camera position and
+             * rotation.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME
+             */
+            val TOTAL_OBJECTS_IN_FRAME: RenderingInfo get() = RenderingInfo(0L)
+            /**
+             * Number of points, lines, or triangles rendered in the current 3D scene. This varies depending on
+             * camera position and rotation.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME
+             */
+            val TOTAL_PRIMITIVES_IN_FRAME: RenderingInfo get() = RenderingInfo(1L)
+            /**
+             * Number of draw calls performed to render in the current 3D scene. This varies depending on
+             * camera position and rotation.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME
+             */
+            val TOTAL_DRAW_CALLS_IN_FRAME: RenderingInfo get() = RenderingInfo(2L)
+            /**
+             * Texture memory used (in bytes).
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_TEXTURE_MEM_USED
+             */
+            val TEXTURE_MEM_USED: RenderingInfo get() = RenderingInfo(3L)
+            /**
+             * Buffer memory used (in bytes). This includes vertex data, uniform buffers, and many
+             * miscellaneous buffer types used internally.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_BUFFER_MEM_USED
+             */
+            val BUFFER_MEM_USED: RenderingInfo get() = RenderingInfo(4L)
+            /**
+             * Video memory used (in bytes). When using the Forward+ or Mobile renderers, this is always
+             * greater than the sum of `RenderingInfo.TEXTURE_MEM_USED` and `RenderingInfo.BUFFER_MEM_USED`,
+             * since there is miscellaneous data not accounted for by those two metrics. When using the
+             * Compatibility renderer, this is equal to the sum of `RenderingInfo.TEXTURE_MEM_USED` and
+             * `RenderingInfo.BUFFER_MEM_USED`.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_VIDEO_MEM_USED
+             */
+            val VIDEO_MEM_USED: RenderingInfo get() = RenderingInfo(5L)
+            /**
+             * Number of pipeline compilations that were triggered by the 2D canvas renderer.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_CANVAS
+             */
+            val PIPELINE_COMPILATIONS_CANVAS: RenderingInfo get() = RenderingInfo(6L)
+            /**
+             * Number of pipeline compilations that were triggered by loading meshes. These compilations will
+             * show up as longer loading times the first time a user runs the game and the pipeline is
+             * required.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_MESH
+             */
+            val PIPELINE_COMPILATIONS_MESH: RenderingInfo get() = RenderingInfo(7L)
+            /**
+             * Number of pipeline compilations that were triggered by building the surface cache before
+             * rendering the scene. These compilations will show up as a stutter when loading a scene the first
+             * time a user runs the game and the pipeline is required.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_SURFACE
+             */
+            val PIPELINE_COMPILATIONS_SURFACE: RenderingInfo get() = RenderingInfo(8L)
+            /**
+             * Number of pipeline compilations that were triggered while drawing the scene. These compilations
+             * will show up as stutters during gameplay the first time a user runs the game and the pipeline is
+             * required.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_DRAW
+             */
+            val PIPELINE_COMPILATIONS_DRAW: RenderingInfo get() = RenderingInfo(9L)
+            /**
+             * Number of pipeline compilations that were triggered to optimize the current scene. These
+             * compilations are done in the background and should not cause any stutters whatsoever.
+             *
+             * Generated from Godot docs: RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_SPECIALIZATION
+             */
+            val PIPELINE_COMPILATIONS_SPECIALIZATION: RenderingInfo get() = RenderingInfo(10L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.PipelineSource` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RenderingServer.PipelineSource.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.PipelineSource
+     */
+    @JvmInline
+    value class PipelineSource(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Pipeline compilation that was triggered by the 2D canvas renderer.
+             *
+             * Generated from Godot docs: RenderingServer.PIPELINE_SOURCE_CANVAS
+             */
+            val CANVAS: PipelineSource get() = PipelineSource(0L)
+            /**
+             * Pipeline compilation that was triggered by loading a mesh.
+             *
+             * Generated from Godot docs: RenderingServer.PIPELINE_SOURCE_MESH
+             */
+            val MESH: PipelineSource get() = PipelineSource(1L)
+            /**
+             * Pipeline compilation that was triggered by building the surface cache before rendering the
+             * scene.
+             *
+             * Generated from Godot docs: RenderingServer.PIPELINE_SOURCE_SURFACE
+             */
+            val SURFACE: PipelineSource get() = PipelineSource(2L)
+            /**
+             * Pipeline compilation that was triggered while drawing the scene.
+             *
+             * Generated from Godot docs: RenderingServer.PIPELINE_SOURCE_DRAW
+             */
+            val DRAW: PipelineSource get() = PipelineSource(3L)
+            /**
+             * Pipeline compilation that was triggered to optimize the current scene.
+             *
+             * Generated from Godot docs: RenderingServer.PIPELINE_SOURCE_SPECIALIZATION
+             */
+            val SPECIALIZATION: PipelineSource get() = PipelineSource(4L)
+            /**
+             * Represents the size of the `PipelineSource` enum.
+             *
+             * Generated from Godot docs: RenderingServer.PIPELINE_SOURCE_MAX
+             */
+            val MAX: PipelineSource get() = PipelineSource(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.SplashStretchMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RenderingServer.SplashStretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.SplashStretchMode
+     */
+    @JvmInline
+    value class SplashStretchMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No stretching is applied.
+             *
+             * Generated from Godot docs: RenderingServer.SPLASH_STRETCH_MODE_DISABLED
+             */
+            val DISABLED: SplashStretchMode get() = SplashStretchMode(0L)
+            /**
+             * Stretches image to fullscreen while preserving aspect ratio.
+             *
+             * Generated from Godot docs: RenderingServer.SPLASH_STRETCH_MODE_KEEP
+             */
+            val KEEP: SplashStretchMode get() = SplashStretchMode(1L)
+            /**
+             * Stretches the height of the image based on the width of the screen.
+             *
+             * Generated from Godot docs: RenderingServer.SPLASH_STRETCH_MODE_KEEP_WIDTH
+             */
+            val KEEP_WIDTH: SplashStretchMode get() = SplashStretchMode(2L)
+            /**
+             * Stretches the width of the image based on the height of the screen.
+             *
+             * Generated from Godot docs: RenderingServer.SPLASH_STRETCH_MODE_KEEP_HEIGHT
+             */
+            val KEEP_HEIGHT: SplashStretchMode get() = SplashStretchMode(3L)
+            /**
+             * Stretches the image to cover the entire screen while preserving aspect ratio.
+             *
+             * Generated from Godot docs: RenderingServer.SPLASH_STRETCH_MODE_COVER
+             */
+            val COVER: SplashStretchMode get() = SplashStretchMode(4L)
+            /**
+             * Stretches the image to cover the entire screen but doesn't preserve aspect ratio.
+             *
+             * Generated from Godot docs: RenderingServer.SPLASH_STRETCH_MODE_IGNORE
+             */
+            val IGNORE: SplashStretchMode get() = SplashStretchMode(5L)
+        }
+    }
+
+    /**
+     * Godot's `RenderingServer.Features` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RenderingServer.Features.<NAME>`).
+     *
+     * Generated from Godot docs: RenderingServer.Features
+     */
+    @JvmInline
+    value class Features(override val value: Long) : GodotEnumValue {
+        companion object {
+            val SHADERS: Features get() = Features(0L)
+            val MULTITHREADED: Features get() = Features(1L)
+        }
     }
 
     @JvmStatic

@@ -241,6 +241,73 @@ override-registration design rather than the public ptrcall wrapper surface. How
 two trees were merged, and what the KMP `expect/actual` form would still take, is
 recorded in [Shared Wrapper Tree: Design Check](shared-wrapper-tree-design-check.md).
 
+## Typed Godot Enums and Required Returns
+
+Since task 128 every Godot enum and bitfield (764 class enums, 22 global, 7 on builtin value types:
+793 value classes on Godot 4.7.2) is a `@JvmInline value class X(val value: Long)`, and every
+generated parameter, return and property Godot types `enum::X` / `bitfield::X` uses it. The model
+lives in `scripts/godot_enum_model.py`; the generator, the KDoc sync, the migration script and the
+gate all import it.
+
+- **ABI unchanged.** The generator keeps the logical kind `"enum"` / `"bitfield"` for call-shape
+  selection (`SCALAR_KOTLIN_TYPES` still maps both to `Long`: that is the helper's ABI type, not the
+  surface), so the same `ptrcall*Long*` helpers carry them and no `ObjectCalls` helper was added.
+  Only the Kotlin surface changes: `kotlin_type` returns `enum_type_ref(type)`, arguments cross as
+  `name.value`, returns are wrapped `X(raw)`, vararg fixed arguments go into the Variant list as
+  `.value`, and defaults render as the named constant whose value equals Godot's default
+  (`X(<n>L)` when none does). The JVM erases a non-null value class to `long`, so there is no boxing.
+- **Placement.** A class enum nests in its owner's generated file (`Node.ProcessMode`); globals go to
+  the generated `src/commonMain/.../api/GlobalEnums.kt`, renamed only on a collision
+  (`GLOBAL_ENUM_RENAMES`: `Error` -> `GodotError`, `PropertyHint` -> `GodotPropertyHint`,
+  `Variant.Type` / `Variant.Operator` -> `VariantType` / `VariantOperator`). Generated code names a
+  class enum owner-qualified and a global by its plain name, package-qualified only where a class
+  enum of the same simple name could shadow it (`Orientation`).
+- **Hand-written owners** (the `hand`/`collision` cells of `PER_PLATFORM_WRAPPERS`, the shared
+  roots, and the builtin value types under `src/commonMain/.../types`) carry a marked region
+  `// ===== BEGIN GENERATED ENUMS: <Class> ... =====` / `// ===== END GENERATED ENUMS: <Class> =====`
+  inside the class body. `--write-tree` rewrites only that region and refuses missing, duplicate or
+  misplaced markers; the drift gate checks it like any generated file (whitespace-insensitively in the
+  ktfmt-formatted value types). Each target gets its own spelling: Kotlin/Native-only sources carry no
+  `@JvmInline` (an `@OptionalExpectation` only common and JVM code may name).
+- **Enum-only expects.** A per-platform owner whose enum a shared signature names
+  (`PropertyTweener.setTrans(trans: Tween.TransitionType)`, `ZIPPacker.startFile(permissions:
+  FileAccess.UnixPermissionFlags)`) cannot be seen from common code, so the generator finds such
+  owners in the rendered shared tree (`find_expect_enum_owners`; today `Tween` and `FileAccess`) and
+  emits `src/commonMain/.../api/<Class>.expect.kt` declaring only the nested enums; the platform
+  regions become their `actual`s (one `actual` per line, so the Android copy strips them).
+  `scripts/check_actual_public_surface.py` scopes the rest of those hand-written classes
+  (`HAND_SURFACE_SCOPED`) and prints the cross-platform gap task 129 closes.
+- **Value names** come from ONE function, `godot_enum_model.enum_value_name(prefix, godot_name)`:
+  Godot's C# rule (`bindings_generator.cpp` `_determine_enum_prefix` /
+  `_apply_prefix_to_enum_constants`) ported exactly, SCREAMING_CASE kept, except C#'s hard-coded
+  `ERR_` prefix for `Error`: Kanama keeps `GodotError`'s full names (`GodotError.ERR_FILE_NOT_FOUND`).
+  The prefix is frozen per
+  enum in `scripts/enum_prefix_lock.json` (generated, do not edit): the generator uses an existing
+  entry as-is, appends one only for a new enum, and a value that does not carry its enum's frozen
+  prefix keeps Godot's full name, so siblings never change name across Godot versions. The
+  file's "do not edit" header is the only guard against a hand edit of an EXISTING entry, by design:
+  the generator trusts the lock, and `check_typed_enums.py` then holds every emitted name to it.
+- **Raw values** are always constructible (`X(3L)`) and readable (`.value`); `toString()` stays the
+  value-class default. Every value class implements the generated marker `GodotEnumValue`
+  (`GlobalEnums.kt`): the `Any?` -> Variant encoders (desktop `BuiltinTypes.initVariantFromAny`, the
+  iOS `packVariantDesc` / `encodeVariantArgs` / container `taggedValue` / script-return
+  `encodeIosReturn`) map a boxed one to INT, so `set("process_mode", Node.ProcessMode.ALWAYS)` works;
+  dynamic paths (`call`/`get`, Variant returns) still RETURN `Long`.
+- **Companion values are getters** (`val ALWAYS: ProcessMode get() = ProcessMode(3L)`): no backing
+  field and no companion static initialiser, the smallest JVM shape that keeps them typed (measured in
+  task 128: 1.70 MB of class files for the 786 enums vs 1.98 MB with backing fields).
+- **Required object returns.** A Godot object return marked `meta: "required"` renders non-null and
+  goes through `binding.runtime.requireGodotReturn`, which throws
+  `IllegalStateException("Godot returned null from required <Class>.<method>")`; every other object
+  return stays nullable. The hand-written `Tween` fluent path (`wrapOrThis`, iOS
+  `releaseIosFluentSelf`) calls the same helper.
+- **Gates.** `scripts/check_typed_enums.py` (a local_ci stage) reads the committed sources: every
+  enum slot of every method tied to its Godot method through its `getMethodBind` uses its value class,
+  required returns are non-null (others nullable), no generated top-level name equals a Kotlin
+  default import or a public Kanama type, the lock covers every enum and every emitted value name is
+  the naming function under it. `scripts/migrate_enum_constants.py --table
+  docs/reference/generated/enum-migration.md --check` keeps the migration table current.
+
 ## RefCounted Return Ownership
 
 > This section is the **ABI** truth, for contributors. The rule a *game
@@ -268,13 +335,15 @@ The wrapper convention on desktop/Android:
 - **Self-returning fluent methods collapse**: when the returned address equals
   the receiver's handle, the generated method releases the duplicate reference
   and returns `this` instead of minting a second owning wrapper (chained calls
-  such as `tweenAwait(...)?.setTimeout(...)` stay reference-neutral). The
+  such as `tweenAwait(...).setTimeout(...)` stay reference-neutral). The
   generator emits this pattern whenever the receiver class conforms to the
   method's return class; it is the same policy the hand-shaped `Tween` still
-  uses (`wrapOrThis`). The generated form returns the **nullable** self type
-  (`setTrans(...): PropertyTweener?`), like every other generated object return,
-  so chains take `?.`; `wrapOrThis` returned the non-null self and hid a null
-  engine return. The whole `Tweener` family is generated since task 117 P2'.
+  uses (`wrapOrThis`). The `Tweener` fluent setters are `meta: "required"` in
+  Godot, so since task 128 they return the **non-null** self type
+  (`setTrans(...): PropertyTweener`) and a null engine return throws through
+  `requireGodotReturn` (see "Required object returns" below); other generated
+  object returns stay nullable. The whole `Tweener` family is generated since
+  task 117 P2'.
 - Wrappers minted from **Variant-path** returns or `fromHandle` casts borrow;
   a release there underflows. Self-collapse must therefore
   sit on a ptrcall object-return helper, never on `callWithVariantArgs`

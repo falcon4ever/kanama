@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -84,13 +85,50 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
         return ObjectCalls.ptrcallWithIntStringVariantArgsRetDictionary(makeResponseErrorBind, segment, code, message, id)
     }
 
-    companion object {
-        const val PARSE_ERROR: Long = -32700L
-        const val INVALID_REQUEST: Long = -32600L
-        const val METHOD_NOT_FOUND: Long = -32601L
-        const val INVALID_PARAMS: Long = -32602L
-        const val INTERNAL_ERROR: Long = -32603L
+    /**
+     * Godot's `JSONRPC.ErrorCode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`JSONRPC.ErrorCode.<NAME>`).
+     *
+     * Generated from Godot docs: JSONRPC.ErrorCode
+     */
+    @JvmInline
+    value class ErrorCode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The request could not be parsed as it was not valid by JSON standard (`JSON.parse` failed).
+             *
+             * Generated from Godot docs: JSONRPC.PARSE_ERROR
+             */
+            val PARSE_ERROR: ErrorCode get() = ErrorCode(-32700L)
+            /**
+             * A method call was requested but the request's format is not valid.
+             *
+             * Generated from Godot docs: JSONRPC.INVALID_REQUEST
+             */
+            val INVALID_REQUEST: ErrorCode get() = ErrorCode(-32600L)
+            /**
+             * A method call was requested but no function of that name existed in the JSONRPC subclass.
+             *
+             * Generated from Godot docs: JSONRPC.METHOD_NOT_FOUND
+             */
+            val METHOD_NOT_FOUND: ErrorCode get() = ErrorCode(-32601L)
+            /**
+             * A method call was requested but the given method parameters are not valid. Not used by the
+             * built-in JSONRPC.
+             *
+             * Generated from Godot docs: JSONRPC.INVALID_PARAMS
+             */
+            val INVALID_PARAMS: ErrorCode get() = ErrorCode(-32602L)
+            /**
+             * An internal error occurred while processing the request. Not used by the built-in JSONRPC.
+             *
+             * Generated from Godot docs: JSONRPC.INTERNAL_ERROR
+             */
+            val INTERNAL_ERROR: ErrorCode get() = ErrorCode(-32603L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): JSONRPC? =
             wrap(handle.segment)

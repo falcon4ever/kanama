@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -13,12 +14,6 @@ object ClassDB {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("ClassDB")
     }
-
-    const val API_CORE: Long = 0L
-    const val API_EDITOR: Long = 1L
-    const val API_EXTENSION: Long = 2L
-    const val API_EDITOR_EXTENSION: Long = 3L
-    const val API_NONE: Long = 4L
 
     /**
      * Returns the names of all engine classes available. Note: Script-defined classes with
@@ -99,8 +94,8 @@ object ClassDB {
      * Generated from Godot docs: ClassDB.class_get_api_type
      */
     @JvmStatic
-    fun classGetApiType(classValue: String): Long {
-        return ObjectCalls.ptrcallWithStringNameArgRetLong(classGetApiTypeBind, singleton, classValue)
+    fun classGetApiType(classValue: String): ClassDB.APIType {
+        return ClassDB.APIType(ObjectCalls.ptrcallWithStringNameArgRetLong(classGetApiTypeBind, singleton, classValue))
     }
 
     /**
@@ -183,8 +178,8 @@ object ClassDB {
      * Generated from Godot docs: ClassDB.class_set_property
      */
     @JvmStatic
-    fun classSetProperty(objectValue: GodotObject, property: String, value: Any?): Long {
-        return ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(classSetPropertyBind, singleton, objectValue.segment, property, value)
+    fun classSetProperty(objectValue: GodotObject, property: String, value: Any?): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectStringNameAndVariantArgRetLong(classSetPropertyBind, singleton, objectValue.segment, property, value))
     }
 
     /**
@@ -333,6 +328,48 @@ object ClassDB {
     @JvmStatic
     fun isClassEnabled(classValue: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(isClassEnabledBind, singleton, classValue)
+    }
+
+    /**
+     * Godot's `ClassDB.APIType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`ClassDB.APIType.<NAME>`).
+     *
+     * Generated from Godot docs: ClassDB.APIType
+     */
+    @JvmInline
+    value class APIType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Native Core class type.
+             *
+             * Generated from Godot docs: ClassDB.API_CORE
+             */
+            val CORE: APIType get() = APIType(0L)
+            /**
+             * Native Editor class type.
+             *
+             * Generated from Godot docs: ClassDB.API_EDITOR
+             */
+            val EDITOR: APIType get() = APIType(1L)
+            /**
+             * GDExtension class type.
+             *
+             * Generated from Godot docs: ClassDB.API_EXTENSION
+             */
+            val EXTENSION: APIType get() = APIType(2L)
+            /**
+             * GDExtension Editor class type.
+             *
+             * Generated from Godot docs: ClassDB.API_EDITOR_EXTENSION
+             */
+            val EDITOR_EXTENSION: APIType get() = APIType(3L)
+            /**
+             * Unknown class type.
+             *
+             * Generated from Godot docs: ClassDB.API_NONE
+             */
+            val NONE: APIType get() = APIType(4L)
+        }
     }
 
     @JvmStatic

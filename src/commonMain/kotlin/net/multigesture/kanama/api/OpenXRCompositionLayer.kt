@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -53,61 +54,61 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setEnableHolePunchProperty")
         set(value) = setEnableHolePunch(value)
 
-    var eyeVisibility: Long
+    var eyeVisibility: OpenXRCompositionLayer.EyeVisibility
         @JvmName("eyeVisibilityProperty")
         get() = getEyeVisibility()
         @JvmName("setEyeVisibilityProperty")
         set(value) = setEyeVisibility(value)
 
-    var swapchainStateMinFilter: Long
+    var swapchainStateMinFilter: OpenXRCompositionLayer.Filter
         @JvmName("swapchainStateMinFilterProperty")
         get() = getMinFilter()
         @JvmName("setSwapchainStateMinFilterProperty")
         set(value) = setMinFilter(value)
 
-    var swapchainStateMagFilter: Long
+    var swapchainStateMagFilter: OpenXRCompositionLayer.Filter
         @JvmName("swapchainStateMagFilterProperty")
         get() = getMagFilter()
         @JvmName("setSwapchainStateMagFilterProperty")
         set(value) = setMagFilter(value)
 
-    var swapchainStateMipmapMode: Long
+    var swapchainStateMipmapMode: OpenXRCompositionLayer.MipmapMode
         @JvmName("swapchainStateMipmapModeProperty")
         get() = getMipmapMode()
         @JvmName("setSwapchainStateMipmapModeProperty")
         set(value) = setMipmapMode(value)
 
-    var swapchainStateHorizontalWrap: Long
+    var swapchainStateHorizontalWrap: OpenXRCompositionLayer.Wrap
         @JvmName("swapchainStateHorizontalWrapProperty")
         get() = getHorizontalWrap()
         @JvmName("setSwapchainStateHorizontalWrapProperty")
         set(value) = setHorizontalWrap(value)
 
-    var swapchainStateVerticalWrap: Long
+    var swapchainStateVerticalWrap: OpenXRCompositionLayer.Wrap
         @JvmName("swapchainStateVerticalWrapProperty")
         get() = getVerticalWrap()
         @JvmName("setSwapchainStateVerticalWrapProperty")
         set(value) = setVerticalWrap(value)
 
-    var swapchainStateRedSwizzle: Long
+    var swapchainStateRedSwizzle: OpenXRCompositionLayer.Swizzle
         @JvmName("swapchainStateRedSwizzleProperty")
         get() = getRedSwizzle()
         @JvmName("setSwapchainStateRedSwizzleProperty")
         set(value) = setRedSwizzle(value)
 
-    var swapchainStateGreenSwizzle: Long
+    var swapchainStateGreenSwizzle: OpenXRCompositionLayer.Swizzle
         @JvmName("swapchainStateGreenSwizzleProperty")
         get() = getGreenSwizzle()
         @JvmName("setSwapchainStateGreenSwizzleProperty")
         set(value) = setGreenSwizzle(value)
 
-    var swapchainStateBlueSwizzle: Long
+    var swapchainStateBlueSwizzle: OpenXRCompositionLayer.Swizzle
         @JvmName("swapchainStateBlueSwizzleProperty")
         get() = getBlueSwizzle()
         @JvmName("setSwapchainStateBlueSwizzleProperty")
         set(value) = setBlueSwizzle(value)
 
-    var swapchainStateAlphaSwizzle: Long
+    var swapchainStateAlphaSwizzle: OpenXRCompositionLayer.Swizzle
         @JvmName("swapchainStateAlphaSwizzleProperty")
         get() = getAlphaSwizzle()
         @JvmName("setSwapchainStateAlphaSwizzleProperty")
@@ -189,76 +190,76 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
         ObjectCalls.ptrcallWithBoolArg(setProtectedContentBind, segment, protectedContent)
     }
 
-    fun setMinFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, mode)
+    fun setMinFilter(mode: OpenXRCompositionLayer.Filter) {
+        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, mode.value)
     }
 
-    fun getMinFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment)
+    fun getMinFilter(): OpenXRCompositionLayer.Filter {
+        return OpenXRCompositionLayer.Filter(ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment))
     }
 
-    fun setMagFilter(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, mode)
+    fun setMagFilter(mode: OpenXRCompositionLayer.Filter) {
+        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, mode.value)
     }
 
-    fun getMagFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment)
+    fun getMagFilter(): OpenXRCompositionLayer.Filter {
+        return OpenXRCompositionLayer.Filter(ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment))
     }
 
-    fun setMipmapMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMipmapModeBind, segment, mode)
+    fun setMipmapMode(mode: OpenXRCompositionLayer.MipmapMode) {
+        ObjectCalls.ptrcallWithLongArg(setMipmapModeBind, segment, mode.value)
     }
 
-    fun getMipmapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMipmapModeBind, segment)
+    fun getMipmapMode(): OpenXRCompositionLayer.MipmapMode {
+        return OpenXRCompositionLayer.MipmapMode(ObjectCalls.ptrcallNoArgsRetLong(getMipmapModeBind, segment))
     }
 
-    fun setHorizontalWrap(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalWrapBind, segment, mode)
+    fun setHorizontalWrap(mode: OpenXRCompositionLayer.Wrap) {
+        ObjectCalls.ptrcallWithLongArg(setHorizontalWrapBind, segment, mode.value)
     }
 
-    fun getHorizontalWrap(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalWrapBind, segment)
+    fun getHorizontalWrap(): OpenXRCompositionLayer.Wrap {
+        return OpenXRCompositionLayer.Wrap(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalWrapBind, segment))
     }
 
-    fun setVerticalWrap(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalWrapBind, segment, mode)
+    fun setVerticalWrap(mode: OpenXRCompositionLayer.Wrap) {
+        ObjectCalls.ptrcallWithLongArg(setVerticalWrapBind, segment, mode.value)
     }
 
-    fun getVerticalWrap(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalWrapBind, segment)
+    fun getVerticalWrap(): OpenXRCompositionLayer.Wrap {
+        return OpenXRCompositionLayer.Wrap(ObjectCalls.ptrcallNoArgsRetLong(getVerticalWrapBind, segment))
     }
 
-    fun setRedSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRedSwizzleBind, segment, mode)
+    fun setRedSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
+        ObjectCalls.ptrcallWithLongArg(setRedSwizzleBind, segment, mode.value)
     }
 
-    fun getRedSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRedSwizzleBind, segment)
+    fun getRedSwizzle(): OpenXRCompositionLayer.Swizzle {
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getRedSwizzleBind, segment))
     }
 
-    fun setGreenSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGreenSwizzleBind, segment, mode)
+    fun setGreenSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
+        ObjectCalls.ptrcallWithLongArg(setGreenSwizzleBind, segment, mode.value)
     }
 
-    fun getGreenSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGreenSwizzleBind, segment)
+    fun getGreenSwizzle(): OpenXRCompositionLayer.Swizzle {
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getGreenSwizzleBind, segment))
     }
 
-    fun setBlueSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBlueSwizzleBind, segment, mode)
+    fun setBlueSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
+        ObjectCalls.ptrcallWithLongArg(setBlueSwizzleBind, segment, mode.value)
     }
 
-    fun getBlueSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlueSwizzleBind, segment)
+    fun getBlueSwizzle(): OpenXRCompositionLayer.Swizzle {
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getBlueSwizzleBind, segment))
     }
 
-    fun setAlphaSwizzle(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaSwizzleBind, segment, mode)
+    fun setAlphaSwizzle(mode: OpenXRCompositionLayer.Swizzle) {
+        ObjectCalls.ptrcallWithLongArg(setAlphaSwizzleBind, segment, mode.value)
     }
 
-    fun getAlphaSwizzle(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaSwizzleBind, segment)
+    fun getAlphaSwizzle(): OpenXRCompositionLayer.Swizzle {
+        return OpenXRCompositionLayer.Swizzle(ObjectCalls.ptrcallNoArgsRetLong(getAlphaSwizzleBind, segment))
     }
 
     fun setMaxAnisotropy(value: Double) {
@@ -277,40 +278,69 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, segment)
     }
 
-    fun setEyeVisibility(eyeVisibility: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEyeVisibilityBind, segment, eyeVisibility)
+    fun setEyeVisibility(eyeVisibility: OpenXRCompositionLayer.EyeVisibility) {
+        ObjectCalls.ptrcallWithLongArg(setEyeVisibilityBind, segment, eyeVisibility.value)
     }
 
-    fun getEyeVisibility(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEyeVisibilityBind, segment)
+    fun getEyeVisibility(): OpenXRCompositionLayer.EyeVisibility {
+        return OpenXRCompositionLayer.EyeVisibility(ObjectCalls.ptrcallNoArgsRetLong(getEyeVisibilityBind, segment))
     }
 
     fun intersectsRay(origin: Vector3, direction: Vector3): Vector2 {
         return ObjectCalls.ptrcallWithTwoVector3ArgsRetVector2(intersectsRayBind, segment, origin, direction)
     }
 
-    companion object {
-        const val FILTER_NEAREST: Long = 0L
-        const val FILTER_LINEAR: Long = 1L
-        const val FILTER_CUBIC: Long = 2L
-        const val MIPMAP_MODE_DISABLED: Long = 0L
-        const val MIPMAP_MODE_NEAREST: Long = 1L
-        const val MIPMAP_MODE_LINEAR: Long = 2L
-        const val WRAP_CLAMP_TO_BORDER: Long = 0L
-        const val WRAP_CLAMP_TO_EDGE: Long = 1L
-        const val WRAP_REPEAT: Long = 2L
-        const val WRAP_MIRRORED_REPEAT: Long = 3L
-        const val WRAP_MIRROR_CLAMP_TO_EDGE: Long = 4L
-        const val SWIZZLE_RED: Long = 0L
-        const val SWIZZLE_GREEN: Long = 1L
-        const val SWIZZLE_BLUE: Long = 2L
-        const val SWIZZLE_ALPHA: Long = 3L
-        const val SWIZZLE_ZERO: Long = 4L
-        const val SWIZZLE_ONE: Long = 5L
-        const val EYE_VISIBILITY_BOTH: Long = 0L
-        const val EYE_VISIBILITY_LEFT: Long = 1L
-        const val EYE_VISIBILITY_RIGHT: Long = 2L
+    @JvmInline
+    value class Filter(override val value: Long) : GodotEnumValue {
+        companion object {
+            val NEAREST: Filter get() = Filter(0L)
+            val LINEAR: Filter get() = Filter(1L)
+            val CUBIC: Filter get() = Filter(2L)
+        }
+    }
 
+    @JvmInline
+    value class MipmapMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DISABLED: MipmapMode get() = MipmapMode(0L)
+            val NEAREST: MipmapMode get() = MipmapMode(1L)
+            val LINEAR: MipmapMode get() = MipmapMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class Wrap(override val value: Long) : GodotEnumValue {
+        companion object {
+            val CLAMP_TO_BORDER: Wrap get() = Wrap(0L)
+            val CLAMP_TO_EDGE: Wrap get() = Wrap(1L)
+            val REPEAT: Wrap get() = Wrap(2L)
+            val MIRRORED_REPEAT: Wrap get() = Wrap(3L)
+            val MIRROR_CLAMP_TO_EDGE: Wrap get() = Wrap(4L)
+        }
+    }
+
+    @JvmInline
+    value class Swizzle(override val value: Long) : GodotEnumValue {
+        companion object {
+            val RED: Swizzle get() = Swizzle(0L)
+            val GREEN: Swizzle get() = Swizzle(1L)
+            val BLUE: Swizzle get() = Swizzle(2L)
+            val ALPHA: Swizzle get() = Swizzle(3L)
+            val ZERO: Swizzle get() = Swizzle(4L)
+            val ONE: Swizzle get() = Swizzle(5L)
+        }
+    }
+
+    @JvmInline
+    value class EyeVisibility(override val value: Long) : GodotEnumValue {
+        companion object {
+            val BOTH: EyeVisibility get() = EyeVisibility(0L)
+            val LEFT: EyeVisibility get() = EyeVisibility(1L)
+            val RIGHT: EyeVisibility get() = EyeVisibility(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRCompositionLayer? =
             wrap(handle.segment)

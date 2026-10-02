@@ -46,14 +46,14 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         @JvmName("setMaxQueuedPacketsProperty")
         set(value) = setMaxQueuedPackets(value)
 
-    fun createClient(url: String, tlsClientOptions: TLSOptions?): Long {
+    fun createClient(url: String, tlsClientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
-    fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): Long {
+    fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getPeer(peerId: Int): WebSocketPeer? {

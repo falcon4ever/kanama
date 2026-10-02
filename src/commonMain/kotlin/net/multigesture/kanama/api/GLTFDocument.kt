@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -35,19 +36,19 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
         @JvmName("setFallbackImageQualityProperty")
         set(value) = setFallbackImageQuality(value)
 
-    var rootNodeMode: Long
+    var rootNodeMode: GLTFDocument.RootNodeMode
         @JvmName("rootNodeModeProperty")
         get() = getRootNodeMode()
         @JvmName("setRootNodeModeProperty")
         set(value) = setRootNodeMode(value)
 
-    var textureMapMode: Long
+    var textureMapMode: GLTFDocument.TextureMapMode
         @JvmName("textureMapModeProperty")
         get() = getTextureMapMode()
         @JvmName("setTextureMapModeProperty")
         set(value) = setTextureMapMode(value)
 
-    var visibilityMode: Long
+    var visibilityMode: GLTFDocument.VisibilityMode
         @JvmName("visibilityModeProperty")
         get() = getVisibilityMode()
         @JvmName("setVisibilityModeProperty")
@@ -93,49 +94,49 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getFallbackImageQualityBind, segment)
     }
 
-    fun setRootNodeMode(rootNodeMode: Long) {
+    fun setRootNodeMode(rootNodeMode: GLTFDocument.RootNodeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRootNodeModeBind, segment, rootNodeMode)
+        ObjectCalls.ptrcallWithLongArg(setRootNodeModeBind, segment, rootNodeMode.value)
     }
 
-    fun getRootNodeMode(): Long {
+    fun getRootNodeMode(): GLTFDocument.RootNodeMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRootNodeModeBind, segment)
+        return GLTFDocument.RootNodeMode(ObjectCalls.ptrcallNoArgsRetLong(getRootNodeModeBind, segment))
     }
 
-    fun setTextureMapMode(textureMapMode: Long) {
+    fun setTextureMapMode(textureMapMode: GLTFDocument.TextureMapMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureMapModeBind, segment, textureMapMode)
+        ObjectCalls.ptrcallWithLongArg(setTextureMapModeBind, segment, textureMapMode.value)
     }
 
-    fun getTextureMapMode(): Long {
+    fun getTextureMapMode(): GLTFDocument.TextureMapMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureMapModeBind, segment)
+        return GLTFDocument.TextureMapMode(ObjectCalls.ptrcallNoArgsRetLong(getTextureMapModeBind, segment))
     }
 
-    fun setVisibilityMode(visibilityMode: Long) {
+    fun setVisibilityMode(visibilityMode: GLTFDocument.VisibilityMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, visibilityMode)
+        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, visibilityMode.value)
     }
 
-    fun getVisibilityMode(): Long {
+    fun getVisibilityMode(): GLTFDocument.VisibilityMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment)
+        return GLTFDocument.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment))
     }
 
-    fun appendFromFile(path: String, state: GLTFState?, flags: Long = 0L, basePath: String = ""): Long {
+    fun appendFromFile(path: String, state: GLTFState?, flags: Long = 0L, basePath: String = ""): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, segment, path, state?.requireOpenHandle() ?: NULL_SEGMENT, flags, basePath)
+        return GodotError(ObjectCalls.ptrcallWithStringObjectUInt32StringArgsRetLong(appendFromFileBind, segment, path, state?.requireOpenHandle() ?: NULL_SEGMENT, flags, basePath))
     }
 
-    fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): Long {
+    fun appendFromBuffer(bytes: ByteArray, basePath: String, state: GLTFState?, flags: Long = 0L): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: NULL_SEGMENT, flags)
+        return GodotError(ObjectCalls.ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong(appendFromBufferBind, segment, bytes, basePath, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
     }
 
-    fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): Long {
+    fun appendFromScene(node: Node, state: GLTFState?, flags: Long = 0L): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: NULL_SEGMENT, flags)
+        return GodotError(ObjectCalls.ptrcallWithTwoObjectUInt32ArgsRetLong(appendFromSceneBind, segment, node.segment, state?.requireOpenHandle() ?: NULL_SEGMENT, flags))
     }
 
     fun generateScene(state: GLTFState?, bakeFps: Double = 30.0, trimming: Boolean = false, removeImmutableTracks: Boolean = true): Node? {
@@ -148,9 +149,55 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallWithObjectArgRetByteArray(generateBufferBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
-    fun writeToFilesystem(state: GLTFState?, path: String): Long {
+    fun writeToFilesystem(state: GLTFState?, path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, path)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndStringArgRetLong(writeToFilesystemBind, segment, state?.requireOpenHandle() ?: NULL_SEGMENT, path))
+    }
+
+    @JvmInline
+    value class RootNodeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val SINGLE_ROOT: RootNodeMode get() = RootNodeMode(0L)
+            val KEEP_ROOT: RootNodeMode get() = RootNodeMode(1L)
+            val MULTI_ROOT: RootNodeMode get() = RootNodeMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class TextureMapMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DO_NOT_REMAP: TextureMapMode get() = TextureMapMode(0L)
+            val REMAP_TO_STANDARD_MATERIAL: TextureMapMode get() = TextureMapMode(1L)
+        }
+    }
+
+    @JvmInline
+    value class VisibilityMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val INCLUDE_REQUIRED: VisibilityMode get() = VisibilityMode(0L)
+            val INCLUDE_OPTIONAL: VisibilityMode get() = VisibilityMode(1L)
+            val EXCLUDE: VisibilityMode get() = VisibilityMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class ImportFlags(override val value: Long) : GodotEnumValue {
+        infix fun or(other: ImportFlags): ImportFlags = ImportFlags(value or other.value)
+
+        infix fun and(other: ImportFlags): ImportFlags = ImportFlags(value and other.value)
+
+        infix fun xor(other: ImportFlags): ImportFlags = ImportFlags(value xor other.value)
+
+        fun inv(): ImportFlags = ImportFlags(value.inv())
+
+        operator fun contains(other: ImportFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            val GENERATE_TANGENT_ARRAYS: ImportFlags get() = ImportFlags(8L)
+            val USE_NAMED_SKIN_BINDS: ImportFlags get() = ImportFlags(16L)
+            val DISCARD_MESHES_AND_MATERIALS: ImportFlags get() = ImportFlags(32L)
+            val FORCE_DISABLE_MESH_COMPRESSION: ImportFlags get() = ImportFlags(64L)
+        }
     }
 
     companion object {
@@ -173,19 +220,6 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
         fun getSupportedGltfExtensions(): List<String> {
             return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedGltfExtensionsBind, NULL_SEGMENT)
         }
-
-        const val ROOT_NODE_MODE_SINGLE_ROOT: Long = 0L
-        const val ROOT_NODE_MODE_KEEP_ROOT: Long = 1L
-        const val ROOT_NODE_MODE_MULTI_ROOT: Long = 2L
-        const val TEXTURE_MAP_MODE_DO_NOT_REMAP: Long = 0L
-        const val TEXTURE_MAP_MODE_REMAP_TO_STANDARD_MATERIAL: Long = 1L
-        const val VISIBILITY_MODE_INCLUDE_REQUIRED: Long = 0L
-        const val VISIBILITY_MODE_INCLUDE_OPTIONAL: Long = 1L
-        const val VISIBILITY_MODE_EXCLUDE: Long = 2L
-        const val IMPORT_FLAG_GENERATE_TANGENT_ARRAYS: Long = 8L
-        const val IMPORT_FLAG_USE_NAMED_SKIN_BINDS: Long = 16L
-        const val IMPORT_FLAG_DISCARD_MESHES_AND_MATERIALS: Long = 32L
-        const val IMPORT_FLAG_FORCE_DISABLE_MESH_COMPRESSION: Long = 64L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFDocument? =

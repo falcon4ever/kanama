@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -109,12 +110,47 @@ class ProgressBar(handle: GodotHandle) : Range(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditorPreviewIndeterminateEnabledBind, segment)
     }
 
-    companion object {
-        const val FILL_BEGIN_TO_END: Long = 0L
-        const val FILL_END_TO_BEGIN: Long = 1L
-        const val FILL_TOP_TO_BOTTOM: Long = 2L
-        const val FILL_BOTTOM_TO_TOP: Long = 3L
+    /**
+     * Godot's `ProgressBar.FillMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`ProgressBar.FillMode.<NAME>`).
+     *
+     * Generated from Godot docs: ProgressBar.FillMode
+     */
+    @JvmInline
+    value class FillMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The progress bar fills from begin to end horizontally, according to the language direction. If
+             * `Control.is_layout_rtl` returns `false`, it fills from left to right, and if it returns `true`,
+             * it fills from right to left.
+             *
+             * Generated from Godot docs: ProgressBar.FILL_BEGIN_TO_END
+             */
+            val BEGIN_TO_END: FillMode get() = FillMode(0L)
+            /**
+             * The progress bar fills from end to begin horizontally, according to the language direction. If
+             * `Control.is_layout_rtl` returns `false`, it fills from right to left, and if it returns `true`,
+             * it fills from left to right.
+             *
+             * Generated from Godot docs: ProgressBar.FILL_END_TO_BEGIN
+             */
+            val END_TO_BEGIN: FillMode get() = FillMode(1L)
+            /**
+             * The progress fills from top to bottom.
+             *
+             * Generated from Godot docs: ProgressBar.FILL_TOP_TO_BOTTOM
+             */
+            val TOP_TO_BOTTOM: FillMode get() = FillMode(2L)
+            /**
+             * The progress fills from bottom to top.
+             *
+             * Generated from Godot docs: ProgressBar.FILL_BOTTOM_TO_TOP
+             */
+            val BOTTOM_TO_TOP: FillMode get() = FillMode(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ProgressBar? =
             wrap(handle.segment)

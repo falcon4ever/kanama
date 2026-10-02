@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -99,9 +100,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: MultiplayerAPI.poll
      */
-    fun poll(): Long {
+    fun poll(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
     }
 
     /**
@@ -114,9 +115,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: MultiplayerAPI.rpc
      */
-    fun rpc(peer: Int, objectValue: GodotObject, method: String, arguments: List<Any?> = emptyList()): Long {
+    fun rpc(peer: Int, objectValue: GodotObject, method: String, arguments: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(rpcBind, segment, peer, objectValue.segment, method, arguments)
+        return GodotError(ObjectCalls.ptrcallWithIntObjectStringNameArrayArgsRetLong(rpcBind, segment, peer, objectValue.segment, method, arguments))
     }
 
     /**
@@ -129,9 +130,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: MultiplayerAPI.object_configuration_add
      */
-    fun objectConfigurationAdd(objectValue: GodotObject, configuration: Any?): Long {
+    fun objectConfigurationAdd(objectValue: GodotObject, configuration: Any?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationAddBind, segment, objectValue.segment, configuration)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationAddBind, segment, objectValue.segment, configuration))
     }
 
     /**
@@ -144,9 +145,9 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: MultiplayerAPI.object_configuration_remove
      */
-    fun objectConfigurationRemove(objectValue: GodotObject, configuration: Any?): Long {
+    fun objectConfigurationRemove(objectValue: GodotObject, configuration: Any?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationRemoveBind, segment, objectValue.segment, configuration)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndVariantArgRetLong(objectConfigurationRemoveBind, segment, objectValue.segment, configuration))
     }
 
     /**
@@ -165,6 +166,41 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
         const val connectedToServer: String = "connected_to_server"
         const val connectionFailed: String = "connection_failed"
         const val serverDisconnected: String = "server_disconnected"
+    }
+
+    /**
+     * Godot's `MultiplayerAPI.RPCMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`MultiplayerAPI.RPCMode.<NAME>`).
+     *
+     * Generated from Godot docs: MultiplayerAPI.RPCMode
+     */
+    @JvmInline
+    value class RPCMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Used with `Node.rpc_config` to disable a method or property for all RPC calls, making it
+             * unavailable. Default for all methods.
+             *
+             * Generated from Godot docs: MultiplayerAPI.RPC_MODE_DISABLED
+             */
+            val DISABLED: RPCMode get() = RPCMode(0L)
+            /**
+             * Used with `Node.rpc_config` to set a method to be callable remotely by any peer. Analogous to
+             * the `@rpc("any_peer")` annotation. Calls are accepted from all remote peers, no matter if they
+             * are node's authority or not.
+             *
+             * Generated from Godot docs: MultiplayerAPI.RPC_MODE_ANY_PEER
+             */
+            val ANY_PEER: RPCMode get() = RPCMode(1L)
+            /**
+             * Used with `Node.rpc_config` to set a method to be callable remotely only by the current
+             * multiplayer authority (which is the server by default). Analogous to the `@rpc("authority")`
+             * annotation. See `Node.set_multiplayer_authority`.
+             *
+             * Generated from Godot docs: MultiplayerAPI.RPC_MODE_AUTHORITY
+             */
+            val AUTHORITY: RPCMode get() = RPCMode(2L)
+        }
     }
 
     companion object {
@@ -196,10 +232,6 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
         fun createDefaultInterface(): MultiplayerAPI? {
             return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(createDefaultInterfaceBind, NULL_SEGMENT))
         }
-
-        const val RPC_MODE_DISABLED: Long = 0L
-        const val RPC_MODE_ANY_PEER: Long = 1L
-        const val RPC_MODE_AUTHORITY: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiplayerAPI? =

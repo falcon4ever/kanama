@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,9 +10,9 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: WebRTCPeerConnection
  */
 open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
-    fun initialize(configuration: Map<String, Any?> = emptyMap()): Long {
+    fun initialize(configuration: Map<String, Any?> = emptyMap()): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithDictionaryArgRetLong(initializeBind, segment, configuration)
+        return GodotError(ObjectCalls.ptrcallWithDictionaryArgRetLong(initializeBind, segment, configuration))
     }
 
     fun createDataChannel(label: String, options: Map<String, Any?> = emptyMap()): WebRTCDataChannel? {
@@ -19,29 +20,29 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
         return WebRTCDataChannel.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(createDataChannelBind, segment, label, options))
     }
 
-    fun createOffer(): Long {
+    fun createOffer(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(createOfferBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(createOfferBind, segment))
     }
 
-    fun setLocalDescription(type: String, sdp: String): Long {
+    fun setLocalDescription(type: String, sdp: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(setLocalDescriptionBind, segment, type, sdp)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(setLocalDescriptionBind, segment, type, sdp))
     }
 
-    fun setRemoteDescription(type: String, sdp: String): Long {
+    fun setRemoteDescription(type: String, sdp: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(setRemoteDescriptionBind, segment, type, sdp)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(setRemoteDescriptionBind, segment, type, sdp))
     }
 
-    fun addIceCandidate(media: String, index: Int, name: String): Long {
+    fun addIceCandidate(media: String, index: Int, name: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringIntStringArgsRetLong(addIceCandidateBind, segment, media, index, name)
+        return GodotError(ObjectCalls.ptrcallWithStringIntStringArgsRetLong(addIceCandidateBind, segment, media, index, name))
     }
 
-    fun poll(): Long {
+    fun poll(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
     }
 
     fun closeConnection() {
@@ -49,19 +50,19 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
     }
 
-    fun getConnectionState(): Long {
+    fun getConnectionState(): WebRTCPeerConnection.ConnectionState {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStateBind, segment)
+        return WebRTCPeerConnection.ConnectionState(ObjectCalls.ptrcallNoArgsRetLong(getConnectionStateBind, segment))
     }
 
-    fun getGatheringState(): Long {
+    fun getGatheringState(): WebRTCPeerConnection.GatheringState {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getGatheringStateBind, segment)
+        return WebRTCPeerConnection.GatheringState(ObjectCalls.ptrcallNoArgsRetLong(getGatheringStateBind, segment))
     }
 
-    fun getSignalingState(): Long {
+    fun getSignalingState(): WebRTCPeerConnection.SignalingState {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSignalingStateBind, segment)
+        return WebRTCPeerConnection.SignalingState(ObjectCalls.ptrcallNoArgsRetLong(getSignalingStateBind, segment))
     }
 
     object Signals {
@@ -70,26 +71,43 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
         const val dataChannelReceived: String = "data_channel_received"
     }
 
+    @JvmInline
+    value class ConnectionState(override val value: Long) : GodotEnumValue {
+        companion object {
+            val NEW: ConnectionState get() = ConnectionState(0L)
+            val CONNECTING: ConnectionState get() = ConnectionState(1L)
+            val CONNECTED: ConnectionState get() = ConnectionState(2L)
+            val DISCONNECTED: ConnectionState get() = ConnectionState(3L)
+            val FAILED: ConnectionState get() = ConnectionState(4L)
+            val CLOSED: ConnectionState get() = ConnectionState(5L)
+        }
+    }
+
+    @JvmInline
+    value class GatheringState(override val value: Long) : GodotEnumValue {
+        companion object {
+            val NEW: GatheringState get() = GatheringState(0L)
+            val GATHERING: GatheringState get() = GatheringState(1L)
+            val COMPLETE: GatheringState get() = GatheringState(2L)
+        }
+    }
+
+    @JvmInline
+    value class SignalingState(override val value: Long) : GodotEnumValue {
+        companion object {
+            val STABLE: SignalingState get() = SignalingState(0L)
+            val HAVE_LOCAL_OFFER: SignalingState get() = SignalingState(1L)
+            val HAVE_REMOTE_OFFER: SignalingState get() = SignalingState(2L)
+            val HAVE_LOCAL_PRANSWER: SignalingState get() = SignalingState(3L)
+            val HAVE_REMOTE_PRANSWER: SignalingState get() = SignalingState(4L)
+            val CLOSED: SignalingState get() = SignalingState(5L)
+        }
+    }
+
     companion object {
         fun setDefaultExtension(extensionClass: String) {
             ObjectCalls.ptrcallWithStringNameArg(setDefaultExtensionBind, NULL_SEGMENT, extensionClass)
         }
-
-        const val STATE_NEW: Long = 0L
-        const val STATE_CONNECTING: Long = 1L
-        const val STATE_CONNECTED: Long = 2L
-        const val STATE_DISCONNECTED: Long = 3L
-        const val STATE_FAILED: Long = 4L
-        const val STATE_CLOSED: Long = 5L
-        const val GATHERING_STATE_NEW: Long = 0L
-        const val GATHERING_STATE_GATHERING: Long = 1L
-        const val GATHERING_STATE_COMPLETE: Long = 2L
-        const val SIGNALING_STATE_STABLE: Long = 0L
-        const val SIGNALING_STATE_HAVE_LOCAL_OFFER: Long = 1L
-        const val SIGNALING_STATE_HAVE_REMOTE_OFFER: Long = 2L
-        const val SIGNALING_STATE_HAVE_LOCAL_PRANSWER: Long = 3L
-        const val SIGNALING_STATE_HAVE_REMOTE_PRANSWER: Long = 4L
-        const val SIGNALING_STATE_CLOSED: Long = 5L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebRTCPeerConnection? =

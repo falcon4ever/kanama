@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -23,7 +24,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         @JvmName("setLengthProperty")
         set(value) = setLength(value)
 
-    var loopMode: Long
+    var loopMode: Animation.LoopMode
         @JvmName("loopModeProperty")
         get() = getLoopMode()
         @JvmName("setLoopModeProperty")
@@ -44,9 +45,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.add_track
      */
-    fun addTrack(type: Long, atPosition: Int = -1): Int {
+    fun addTrack(type: Animation.TrackType, atPosition: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(addTrackBind, segment, type, atPosition)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(addTrackBind, segment, type.value, atPosition)
     }
 
     /**
@@ -74,9 +75,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.track_get_type
      */
-    fun trackGetType(trackIdx: Int): Long {
+    fun trackGetType(trackIdx: Int): Animation.TrackType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(trackGetTypeBind, segment, trackIdx)
+        return Animation.TrackType(ObjectCalls.ptrcallWithIntArgRetLong(trackGetTypeBind, segment, trackIdx))
     }
 
     /**
@@ -107,9 +108,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.find_track
      */
-    fun findTrack(path: NodePath, type: Long): Int {
+    fun findTrack(path: NodePath, type: Animation.TrackType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(findTrackBind, segment, path, type)
+        return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(findTrackBind, segment, path, type.value)
     }
 
     /**
@@ -382,15 +383,15 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      * Finds the key index by time in a given track. Optionally, only find it if the approx/exact time
      * is given. If `limit` is `true`, it does not return keys outside the animation range. If
      * `backward` is `true`, the direction is reversed in methods that rely on one directional
-     * processing. For example, in case `find_mode` is `FIND_MODE_NEAREST`, if there is no key in the
+     * processing. For example, in case `find_mode` is `FindMode.NEAREST`, if there is no key in the
      * current position just after seeked, the first key found is retrieved by searching before the
      * position, but if `backward` is `true`, the first key found is retrieved after the position.
      *
      * Generated from Godot docs: Animation.track_find_key
      */
-    fun trackFindKey(trackIdx: Int, time: Double, findMode: Long = 0L, limit: Boolean = false, backward: Boolean = false): Int {
+    fun trackFindKey(trackIdx: Int, time: Double, findMode: Animation.FindMode = Animation.FindMode.NEAREST, limit: Boolean = false, backward: Boolean = false): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(trackFindKeyBind, segment, trackIdx, time, findMode, limit, backward)
+        return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(trackFindKeyBind, segment, trackIdx, time, findMode.value, limit, backward)
     }
 
     /**
@@ -398,9 +399,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.track_set_interpolation_type
      */
-    fun trackSetInterpolationType(trackIdx: Int, interpolation: Long) {
+    fun trackSetInterpolationType(trackIdx: Int, interpolation: Animation.InterpolationType) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(trackSetInterpolationTypeBind, segment, trackIdx, interpolation)
+        ObjectCalls.ptrcallWithIntAndLongArgs(trackSetInterpolationTypeBind, segment, trackIdx, interpolation.value)
     }
 
     /**
@@ -408,9 +409,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.track_get_interpolation_type
      */
-    fun trackGetInterpolationType(trackIdx: Int): Long {
+    fun trackGetInterpolationType(trackIdx: Int): Animation.InterpolationType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(trackGetInterpolationTypeBind, segment, trackIdx)
+        return Animation.InterpolationType(ObjectCalls.ptrcallWithIntArgRetLong(trackGetInterpolationTypeBind, segment, trackIdx))
     }
 
     /**
@@ -449,9 +450,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.value_track_set_update_mode
      */
-    fun valueTrackSetUpdateMode(trackIdx: Int, mode: Long) {
+    fun valueTrackSetUpdateMode(trackIdx: Int, mode: Animation.UpdateMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(valueTrackSetUpdateModeBind, segment, trackIdx, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(valueTrackSetUpdateModeBind, segment, trackIdx, mode.value)
     }
 
     /**
@@ -459,16 +460,16 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.value_track_get_update_mode
      */
-    fun valueTrackGetUpdateMode(trackIdx: Int): Long {
+    fun valueTrackGetUpdateMode(trackIdx: Int): Animation.UpdateMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, segment, trackIdx)
+        return Animation.UpdateMode(ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, segment, trackIdx))
     }
 
     /**
      * Returns the interpolated value at the given time (in seconds). The `track_idx` must be the index
      * of a value track. A `backward` mainly affects the direction of key retrieval of the track with
-     * `UPDATE_DISCRETE` converted by
-     * `AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to match the result with
+     * `UpdateMode.DISCRETE` converted by
+     * `AnimationMixer.AnimationCallbackModeDiscrete.FORCE_CONTINUOUS` to match the result with
      * `track_find_key`.
      *
      * Generated from Godot docs: Animation.value_track_interpolate
@@ -856,9 +857,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.set_loop_mode
      */
-    fun setLoopMode(loopMode: Long) {
+    fun setLoopMode(loopMode: Animation.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode)
+        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode.value)
     }
 
     /**
@@ -868,9 +869,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.get_loop_mode
      */
-    fun getLoopMode(): Long {
+    fun getLoopMode(): Animation.LoopMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment)
+        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment))
     }
 
     /**
@@ -950,34 +951,249 @@ class Animation(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isCaptureIncludedBind, segment)
     }
 
-    companion object {
-        const val TYPE_VALUE: Long = 0L
-        const val TYPE_POSITION_3D: Long = 1L
-        const val TYPE_ROTATION_3D: Long = 2L
-        const val TYPE_SCALE_3D: Long = 3L
-        const val TYPE_BLEND_SHAPE: Long = 4L
-        const val TYPE_METHOD: Long = 5L
-        const val TYPE_BEZIER: Long = 6L
-        const val TYPE_AUDIO: Long = 7L
-        const val TYPE_ANIMATION: Long = 8L
-        const val INTERPOLATION_NEAREST: Long = 0L
-        const val INTERPOLATION_LINEAR: Long = 1L
-        const val INTERPOLATION_CUBIC: Long = 2L
-        const val INTERPOLATION_LINEAR_ANGLE: Long = 3L
-        const val INTERPOLATION_CUBIC_ANGLE: Long = 4L
-        const val UPDATE_CONTINUOUS: Long = 0L
-        const val UPDATE_DISCRETE: Long = 1L
-        const val UPDATE_CAPTURE: Long = 2L
-        const val LOOP_NONE: Long = 0L
-        const val LOOP_LINEAR: Long = 1L
-        const val LOOP_PINGPONG: Long = 2L
-        const val LOOPED_FLAG_NONE: Long = 0L
-        const val LOOPED_FLAG_END: Long = 1L
-        const val LOOPED_FLAG_START: Long = 2L
-        const val FIND_MODE_NEAREST: Long = 0L
-        const val FIND_MODE_APPROX: Long = 1L
-        const val FIND_MODE_EXACT: Long = 2L
+    /**
+     * Godot's `Animation.TrackType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.TrackType.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.TrackType
+     */
+    @JvmInline
+    value class TrackType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Value tracks set values in node properties, but only those which can be interpolated. For 3D
+             * position/rotation/scale, using the dedicated `TrackType.POSITION_3D`, `TrackType.ROTATION_3D`
+             * and `TrackType.SCALE_3D` track types instead of `TrackType.VALUE` is recommended for performance
+             * reasons.
+             *
+             * Generated from Godot docs: Animation.TYPE_VALUE
+             */
+            val VALUE: TrackType get() = TrackType(0L)
+            /**
+             * 3D position track (values are stored in `Vector3`s).
+             *
+             * Generated from Godot docs: Animation.TYPE_POSITION_3D
+             */
+            val POSITION_3D: TrackType get() = TrackType(1L)
+            /**
+             * 3D rotation track (values are stored in `Quaternion`s).
+             *
+             * Generated from Godot docs: Animation.TYPE_ROTATION_3D
+             */
+            val ROTATION_3D: TrackType get() = TrackType(2L)
+            /**
+             * 3D scale track (values are stored in `Vector3`s).
+             *
+             * Generated from Godot docs: Animation.TYPE_SCALE_3D
+             */
+            val SCALE_3D: TrackType get() = TrackType(3L)
+            /**
+             * Blend shape track.
+             *
+             * Generated from Godot docs: Animation.TYPE_BLEND_SHAPE
+             */
+            val BLEND_SHAPE: TrackType get() = TrackType(4L)
+            /**
+             * Method tracks call functions with given arguments per key.
+             *
+             * Generated from Godot docs: Animation.TYPE_METHOD
+             */
+            val METHOD: TrackType get() = TrackType(5L)
+            /**
+             * Bezier tracks are used to interpolate a value using custom curves. They can also be used to
+             * animate sub-properties of vectors and colors (e.g. alpha value of a `Color`).
+             *
+             * Generated from Godot docs: Animation.TYPE_BEZIER
+             */
+            val BEZIER: TrackType get() = TrackType(6L)
+            /**
+             * Audio tracks are used to play an audio stream with either type of `AudioStreamPlayer`. The
+             * stream can be trimmed and previewed in the animation.
+             *
+             * Generated from Godot docs: Animation.TYPE_AUDIO
+             */
+            val AUDIO: TrackType get() = TrackType(7L)
+            /**
+             * Animation tracks play animations in other `AnimationPlayer` nodes.
+             *
+             * Generated from Godot docs: Animation.TYPE_ANIMATION
+             */
+            val ANIMATION: TrackType get() = TrackType(8L)
+        }
+    }
 
+    /**
+     * Godot's `Animation.InterpolationType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Animation.InterpolationType.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.InterpolationType
+     */
+    @JvmInline
+    value class InterpolationType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No interpolation (nearest value).
+             *
+             * Generated from Godot docs: Animation.INTERPOLATION_NEAREST
+             */
+            val NEAREST: InterpolationType get() = InterpolationType(0L)
+            /**
+             * Linear interpolation.
+             *
+             * Generated from Godot docs: Animation.INTERPOLATION_LINEAR
+             */
+            val LINEAR: InterpolationType get() = InterpolationType(1L)
+            /**
+             * Cubic interpolation. This looks smoother than linear interpolation, but is more expensive to
+             * interpolate. Stick to `InterpolationType.LINEAR` for complex 3D animations imported from
+             * external software, even if it requires using a higher animation framerate in return.
+             *
+             * Generated from Godot docs: Animation.INTERPOLATION_CUBIC
+             */
+            val CUBIC: InterpolationType get() = InterpolationType(2L)
+            /**
+             * Linear interpolation with shortest path rotation. Note: The result value is always normalized
+             * and may not match the key value.
+             *
+             * Generated from Godot docs: Animation.INTERPOLATION_LINEAR_ANGLE
+             */
+            val LINEAR_ANGLE: InterpolationType get() = InterpolationType(3L)
+            /**
+             * Cubic interpolation with shortest path rotation. Note: The result value is always normalized and
+             * may not match the key value.
+             *
+             * Generated from Godot docs: Animation.INTERPOLATION_CUBIC_ANGLE
+             */
+            val CUBIC_ANGLE: InterpolationType get() = InterpolationType(4L)
+        }
+    }
+
+    /**
+     * Godot's `Animation.UpdateMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.UpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.UpdateMode
+     */
+    @JvmInline
+    value class UpdateMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Update between keyframes and hold the value.
+             *
+             * Generated from Godot docs: Animation.UPDATE_CONTINUOUS
+             */
+            val CONTINUOUS: UpdateMode get() = UpdateMode(0L)
+            /**
+             * Update at the keyframes.
+             *
+             * Generated from Godot docs: Animation.UPDATE_DISCRETE
+             */
+            val DISCRETE: UpdateMode get() = UpdateMode(1L)
+            /**
+             * Same as `UpdateMode.CONTINUOUS` but works as a flag to capture the value of the current object
+             * and perform interpolation in some methods. See also `AnimationMixer.capture`,
+             * `AnimationPlayer.playback_auto_capture`, and `AnimationPlayer.play_with_capture`.
+             *
+             * Generated from Godot docs: Animation.UPDATE_CAPTURE
+             */
+            val CAPTURE: UpdateMode get() = UpdateMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `Animation.LoopMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.LoopMode.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.LoopMode
+     */
+    @JvmInline
+    value class LoopMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * At both ends of the animation, the animation will stop playing.
+             *
+             * Generated from Godot docs: Animation.LOOP_NONE
+             */
+            val NONE: LoopMode get() = LoopMode(0L)
+            /**
+             * At both ends of the animation, the animation will be repeated without changing the playback
+             * direction.
+             *
+             * Generated from Godot docs: Animation.LOOP_LINEAR
+             */
+            val LINEAR: LoopMode get() = LoopMode(1L)
+            /**
+             * Repeats playback and reverse playback at both ends of the animation.
+             *
+             * Generated from Godot docs: Animation.LOOP_PINGPONG
+             */
+            val PINGPONG: LoopMode get() = LoopMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `Animation.LoopedFlag` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.LoopedFlag.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.LoopedFlag
+     */
+    @JvmInline
+    value class LoopedFlag(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * This flag indicates that the animation proceeds without any looping.
+             *
+             * Generated from Godot docs: Animation.LOOPED_FLAG_NONE
+             */
+            val NONE: LoopedFlag get() = LoopedFlag(0L)
+            /**
+             * This flag indicates that the animation has reached the end of the animation and just after loop
+             * processed.
+             *
+             * Generated from Godot docs: Animation.LOOPED_FLAG_END
+             */
+            val END: LoopedFlag get() = LoopedFlag(1L)
+            /**
+             * This flag indicates that the animation has reached the start of the animation and just after
+             * loop processed.
+             *
+             * Generated from Godot docs: Animation.LOOPED_FLAG_START
+             */
+            val START: LoopedFlag get() = LoopedFlag(2L)
+        }
+    }
+
+    /**
+     * Godot's `Animation.FindMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Animation.FindMode.<NAME>`).
+     *
+     * Generated from Godot docs: Animation.FindMode
+     */
+    @JvmInline
+    value class FindMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Finds the nearest time key.
+             *
+             * Generated from Godot docs: Animation.FIND_MODE_NEAREST
+             */
+            val NEAREST: FindMode get() = FindMode(0L)
+            /**
+             * Finds only the key with approximating the time.
+             *
+             * Generated from Godot docs: Animation.FIND_MODE_APPROX
+             */
+            val APPROX: FindMode get() = FindMode(1L)
+            /**
+             * Finds only the key with matching the time.
+             *
+             * Generated from Godot docs: Animation.FIND_MODE_EXACT
+             */
+            val EXACT: FindMode get() = FindMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Animation? =
             wrap(handle.segment)

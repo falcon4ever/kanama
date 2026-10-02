@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -8,16 +9,21 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: OpenXRAndroidThreadSettingsExtension
  */
 class OpenXRAndroidThreadSettingsExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
-    fun setApplicationThreadType(threadType: Long, threadId: Long = 0L): Boolean {
-        return ObjectCalls.ptrcallWithLongAndUInt32ArgRetBool(setApplicationThreadTypeBind, segment, threadType, threadId)
+    fun setApplicationThreadType(threadType: OpenXRAndroidThreadSettingsExtension.ThreadType, threadId: Long = 0L): Boolean {
+        return ObjectCalls.ptrcallWithLongAndUInt32ArgRetBool(setApplicationThreadTypeBind, segment, threadType.value, threadId)
+    }
+
+    @JvmInline
+    value class ThreadType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val APPLICATION_MAIN: ThreadType get() = ThreadType(0L)
+            val APPLICATION_WORKER: ThreadType get() = ThreadType(1L)
+            val RENDERER_MAIN: ThreadType get() = ThreadType(2L)
+            val RENDERER_WORKER: ThreadType get() = ThreadType(3L)
+        }
     }
 
     companion object {
-        const val THREAD_TYPE_APPLICATION_MAIN: Long = 0L
-        const val THREAD_TYPE_APPLICATION_WORKER: Long = 1L
-        const val THREAD_TYPE_RENDERER_MAIN: Long = 2L
-        const val THREAD_TYPE_RENDERER_WORKER: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRAndroidThreadSettingsExtension? =
             wrap(handle.segment)

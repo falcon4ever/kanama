@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -16,8 +17,8 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: PinJoint3D.set_param
      */
-    fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
+    fun setParam(param: PinJoint3D.Param, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
     }
 
     /**
@@ -25,15 +26,43 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: PinJoint3D.get_param
      */
-    fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
+    fun getParam(param: PinJoint3D.Param): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
+    }
+
+    /**
+     * Godot's `PinJoint3D.Param` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`PinJoint3D.Param.<NAME>`).
+     *
+     * Generated from Godot docs: PinJoint3D.Param
+     */
+    @JvmInline
+    value class Param(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The force with which the pinned objects stay in positional relation to each other. The higher,
+             * the stronger.
+             *
+             * Generated from Godot docs: PinJoint3D.PARAM_BIAS
+             */
+            val BIAS: Param get() = Param(0L)
+            /**
+             * The force with which the pinned objects stay in velocity relation to each other. The higher, the
+             * stronger.
+             *
+             * Generated from Godot docs: PinJoint3D.PARAM_DAMPING
+             */
+            val DAMPING: Param get() = Param(1L)
+            /**
+             * If above 0, this value is the maximum value for an impulse that this Joint3D produces.
+             *
+             * Generated from Godot docs: PinJoint3D.PARAM_IMPULSE_CLAMP
+             */
+            val IMPULSE_CLAMP: Param get() = Param(2L)
+        }
     }
 
     companion object {
-        const val PARAM_BIAS: Long = 0L
-        const val PARAM_DAMPING: Long = 1L
-        const val PARAM_IMPULSE_CLAMP: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PinJoint3D? =
             wrap(handle.segment)

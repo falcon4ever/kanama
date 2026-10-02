@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,35 +10,40 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeFloatOp
  */
 class VisualShaderNodeFloatOp(handle: GodotHandle) : VisualShaderNode(handle) {
-    var operator: Long
+    var operator: VisualShaderNodeFloatOp.Operator
         @JvmName("operatorProperty")
         get() = getOperator()
         @JvmName("setOperatorProperty")
         set(value) = setOperator(value)
 
-    fun setOperator(op: Long) {
+    fun setOperator(op: VisualShaderNodeFloatOp.Operator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op)
+        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op.value)
     }
 
-    fun getOperator(): Long {
+    fun getOperator(): VisualShaderNodeFloatOp.Operator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment)
+        return VisualShaderNodeFloatOp.Operator(ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment))
+    }
+
+    @JvmInline
+    value class Operator(override val value: Long) : GodotEnumValue {
+        companion object {
+            val ADD: Operator get() = Operator(0L)
+            val SUB: Operator get() = Operator(1L)
+            val MUL: Operator get() = Operator(2L)
+            val DIV: Operator get() = Operator(3L)
+            val MOD: Operator get() = Operator(4L)
+            val POW: Operator get() = Operator(5L)
+            val MAX: Operator get() = Operator(6L)
+            val MIN: Operator get() = Operator(7L)
+            val ATAN2: Operator get() = Operator(8L)
+            val STEP: Operator get() = Operator(9L)
+            val ENUM_SIZE: Operator get() = Operator(10L)
+        }
     }
 
     companion object {
-        const val OP_ADD: Long = 0L
-        const val OP_SUB: Long = 1L
-        const val OP_MUL: Long = 2L
-        const val OP_DIV: Long = 3L
-        const val OP_MOD: Long = 4L
-        const val OP_POW: Long = 5L
-        const val OP_MAX: Long = 6L
-        const val OP_MIN: Long = 7L
-        const val OP_ATAN2: Long = 8L
-        const val OP_STEP: Long = 9L
-        const val OP_ENUM_SIZE: Long = 10L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeFloatOp? =
             wrap(handle.segment)

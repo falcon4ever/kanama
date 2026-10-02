@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -43,7 +44,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setAngularVelocityProperty")
         set(value) = setAngularVelocity(value)
 
-    var trackingConfidence: Long
+    var trackingConfidence: XRPose.TrackingConfidence
         @JvmName("trackingConfidenceProperty")
         get() = getTrackingConfidence()
         @JvmName("setTrackingConfidenceProperty")
@@ -180,9 +181,9 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRPose.set_tracking_confidence
      */
-    fun setTrackingConfidence(trackingConfidence: Long) {
+    fun setTrackingConfidence(trackingConfidence: XRPose.TrackingConfidence) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, segment, trackingConfidence)
+        ObjectCalls.ptrcallWithLongArg(setTrackingConfidenceBind, segment, trackingConfidence.value)
     }
 
     /**
@@ -191,16 +192,43 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: XRPose.get_tracking_confidence
      */
-    fun getTrackingConfidence(): Long {
+    fun getTrackingConfidence(): XRPose.TrackingConfidence {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, segment)
+        return XRPose.TrackingConfidence(ObjectCalls.ptrcallNoArgsRetLong(getTrackingConfidenceBind, segment))
+    }
+
+    /**
+     * Godot's `XRPose.TrackingConfidence` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`XRPose.TrackingConfidence.<NAME>`).
+     *
+     * Generated from Godot docs: XRPose.TrackingConfidence
+     */
+    @JvmInline
+    value class TrackingConfidence(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No tracking information is available for this pose.
+             *
+             * Generated from Godot docs: XRPose.XR_TRACKING_CONFIDENCE_NONE
+             */
+            val NONE: TrackingConfidence get() = TrackingConfidence(0L)
+            /**
+             * Tracking information may be inaccurate or estimated. For example, with inside out tracking this
+             * would indicate a controller may be (partially) obscured.
+             *
+             * Generated from Godot docs: XRPose.XR_TRACKING_CONFIDENCE_LOW
+             */
+            val LOW: TrackingConfidence get() = TrackingConfidence(1L)
+            /**
+             * Tracking information is considered accurate and up to date.
+             *
+             * Generated from Godot docs: XRPose.XR_TRACKING_CONFIDENCE_HIGH
+             */
+            val HIGH: TrackingConfidence get() = TrackingConfidence(2L)
+        }
     }
 
     companion object {
-        const val XR_TRACKING_CONFIDENCE_NONE: Long = 0L
-        const val XR_TRACKING_CONFIDENCE_LOW: Long = 1L
-        const val XR_TRACKING_CONFIDENCE_HIGH: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRPose? =
             wrap(handle.segment)

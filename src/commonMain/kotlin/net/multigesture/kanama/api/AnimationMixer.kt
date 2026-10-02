@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -57,19 +58,19 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
         @JvmName("setAudioMaxPolyphonyProperty")
         set(value) = setAudioMaxPolyphony(value)
 
-    var callbackModeProcess: Long
+    var callbackModeProcess: AnimationMixer.AnimationCallbackModeProcess
         @JvmName("callbackModeProcessProperty")
         get() = getCallbackModeProcess()
         @JvmName("setCallbackModeProcessProperty")
         set(value) = setCallbackModeProcess(value)
 
-    var callbackModeMethod: Long
+    var callbackModeMethod: AnimationMixer.AnimationCallbackModeMethod
         @JvmName("callbackModeMethodProperty")
         get() = getCallbackModeMethod()
         @JvmName("setCallbackModeMethodProperty")
         set(value) = setCallbackModeMethod(value)
 
-    var callbackModeDiscrete: Long
+    var callbackModeDiscrete: AnimationMixer.AnimationCallbackModeDiscrete
         @JvmName("callbackModeDiscreteProperty")
         get() = getCallbackModeDiscrete()
         @JvmName("setCallbackModeDiscreteProperty")
@@ -81,8 +82,8 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AnimationMixer.add_animation_library
      */
-    fun addAnimationLibrary(name: String, library: AnimationLibrary?): Long {
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: NULL_SEGMENT)
+    fun addAnimationLibrary(name: String, library: AnimationLibrary?): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -240,8 +241,8 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AnimationMixer.set_callback_mode_process
      */
-    fun setCallbackModeProcess(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeProcessBind, segment, mode)
+    fun setCallbackModeProcess(mode: AnimationMixer.AnimationCallbackModeProcess) {
+        ObjectCalls.ptrcallWithLongArg(setCallbackModeProcessBind, segment, mode.value)
     }
 
     /**
@@ -249,8 +250,8 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AnimationMixer.get_callback_mode_process
      */
-    fun getCallbackModeProcess(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeProcessBind, segment)
+    fun getCallbackModeProcess(): AnimationMixer.AnimationCallbackModeProcess {
+        return AnimationMixer.AnimationCallbackModeProcess(ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeProcessBind, segment))
     }
 
     /**
@@ -258,8 +259,8 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AnimationMixer.set_callback_mode_method
      */
-    fun setCallbackModeMethod(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeMethodBind, segment, mode)
+    fun setCallbackModeMethod(mode: AnimationMixer.AnimationCallbackModeMethod) {
+        ObjectCalls.ptrcallWithLongArg(setCallbackModeMethodBind, segment, mode.value)
     }
 
     /**
@@ -267,38 +268,38 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: AnimationMixer.get_callback_mode_method
      */
-    fun getCallbackModeMethod(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeMethodBind, segment)
+    fun getCallbackModeMethod(): AnimationMixer.AnimationCallbackModeMethod {
+        return AnimationMixer.AnimationCallbackModeMethod(ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeMethodBind, segment))
     }
 
     /**
-     * Ordinarily, tracks can be set to `Animation.UPDATE_DISCRETE` to update infrequently, usually
-     * when using nearest interpolation. However, when blending with `Animation.UPDATE_CONTINUOUS`
+     * Ordinarily, tracks can be set to `Animation.UpdateMode.DISCRETE` to update infrequently, usually
+     * when using nearest interpolation. However, when blending with `Animation.UpdateMode.CONTINUOUS`
      * several results are considered. The `callback_mode_discrete` specify it explicitly. See also
      * `AnimationCallbackModeDiscrete`. To make the blended results look good, it is recommended to set
-     * this to `ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to update every frame during
-     * blending. Other values exist for compatibility and they are fine if there is no blending, but
-     * not so, may produce artifacts.
+     * this to `AnimationCallbackModeDiscrete.FORCE_CONTINUOUS` to update every frame during blending.
+     * Other values exist for compatibility and they are fine if there is no blending, but not so, may
+     * produce artifacts.
      *
      * Generated from Godot docs: AnimationMixer.set_callback_mode_discrete
      */
-    fun setCallbackModeDiscrete(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeDiscreteBind, segment, mode)
+    fun setCallbackModeDiscrete(mode: AnimationMixer.AnimationCallbackModeDiscrete) {
+        ObjectCalls.ptrcallWithLongArg(setCallbackModeDiscreteBind, segment, mode.value)
     }
 
     /**
-     * Ordinarily, tracks can be set to `Animation.UPDATE_DISCRETE` to update infrequently, usually
-     * when using nearest interpolation. However, when blending with `Animation.UPDATE_CONTINUOUS`
+     * Ordinarily, tracks can be set to `Animation.UpdateMode.DISCRETE` to update infrequently, usually
+     * when using nearest interpolation. However, when blending with `Animation.UpdateMode.CONTINUOUS`
      * several results are considered. The `callback_mode_discrete` specify it explicitly. See also
      * `AnimationCallbackModeDiscrete`. To make the blended results look good, it is recommended to set
-     * this to `ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS` to update every frame during
-     * blending. Other values exist for compatibility and they are fine if there is no blending, but
-     * not so, may produce artifacts.
+     * this to `AnimationCallbackModeDiscrete.FORCE_CONTINUOUS` to update every frame during blending.
+     * Other values exist for compatibility and they are fine if there is no blending, but not so, may
+     * produce artifacts.
      *
      * Generated from Godot docs: AnimationMixer.get_callback_mode_discrete
      */
-    fun getCallbackModeDiscrete(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeDiscreteBind, segment)
+    fun getCallbackModeDiscrete(): AnimationMixer.AnimationCallbackModeDiscrete {
+        return AnimationMixer.AnimationCallbackModeDiscrete(ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeDiscreteBind, segment))
     }
 
     /**
@@ -327,10 +328,11 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a
      * node, and must be specified starting from the parent node of the node that will reproduce the
      * animation. The `root_motion_track` uses the same format as `Animation.track_set_path`, but note
-     * that a bone must be specified. If the track has type `Animation.TYPE_POSITION_3D`,
-     * `Animation.TYPE_ROTATION_3D`, or `Animation.TYPE_SCALE_3D` the transformation will be canceled
-     * visually, and the animation will appear to stay in place. See also `get_root_motion_position`,
-     * `get_root_motion_rotation`, `get_root_motion_scale`, and `RootMotionView`.
+     * that a bone must be specified. If the track has type `Animation.TrackType.POSITION_3D`,
+     * `Animation.TrackType.ROTATION_3D`, or `Animation.TrackType.SCALE_3D` the transformation will be
+     * canceled visually, and the animation will appear to stay in place. See also
+     * `get_root_motion_position`, `get_root_motion_rotation`, `get_root_motion_scale`, and
+     * `RootMotionView`.
      *
      * Generated from Godot docs: AnimationMixer.set_root_motion_track
      */
@@ -342,10 +344,11 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a
      * node, and must be specified starting from the parent node of the node that will reproduce the
      * animation. The `root_motion_track` uses the same format as `Animation.track_set_path`, but note
-     * that a bone must be specified. If the track has type `Animation.TYPE_POSITION_3D`,
-     * `Animation.TYPE_ROTATION_3D`, or `Animation.TYPE_SCALE_3D` the transformation will be canceled
-     * visually, and the animation will appear to stay in place. See also `get_root_motion_position`,
-     * `get_root_motion_rotation`, `get_root_motion_scale`, and `RootMotionView`.
+     * that a bone must be specified. If the track has type `Animation.TrackType.POSITION_3D`,
+     * `Animation.TrackType.ROTATION_3D`, or `Animation.TrackType.SCALE_3D` the transformation will be
+     * canceled visually, and the animation will appear to stay in place. See also
+     * `get_root_motion_position`, `get_root_motion_rotation`, `get_root_motion_scale`, and
+     * `RootMotionView`.
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_track
      */
@@ -376,7 +379,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     /**
      * Retrieve the motion delta of position with the `root_motion_track` as a `Vector3` that can be
      * used elsewhere. If `root_motion_track` is not a path to a track of type
-     * `Animation.TYPE_POSITION_3D`, returns `Vector3(0, 0, 0)`. See also `root_motion_track` and
+     * `Animation.TrackType.POSITION_3D`, returns `Vector3(0, 0, 0)`. See also `root_motion_track` and
      * `RootMotionView`. The most basic example is applying position to `CharacterBody3D`:
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_position
@@ -388,8 +391,9 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     /**
      * Retrieve the motion delta of rotation with the `root_motion_track` as a `Quaternion` that can be
      * used elsewhere. If `root_motion_track` is not a path to a track of type
-     * `Animation.TYPE_ROTATION_3D`, returns `Quaternion(0, 0, 0, 1)`. See also `root_motion_track` and
-     * `RootMotionView`. The most basic example is applying rotation to `CharacterBody3D`:
+     * `Animation.TrackType.ROTATION_3D`, returns `Quaternion(0, 0, 0, 1)`. See also
+     * `root_motion_track` and `RootMotionView`. The most basic example is applying rotation to
+     * `CharacterBody3D`:
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_rotation
      */
@@ -399,9 +403,9 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
 
     /**
      * Retrieve the motion delta of scale with the `root_motion_track` as a `Vector3` that can be used
-     * elsewhere. If `root_motion_track` is not a path to a track of type `Animation.TYPE_SCALE_3D`,
-     * returns `Vector3(0, 0, 0)`. See also `root_motion_track` and `RootMotionView`. The most basic
-     * example is applying scale to `CharacterBody3D`:
+     * elsewhere. If `root_motion_track` is not a path to a track of type
+     * `Animation.TrackType.SCALE_3D`, returns `Vector3(0, 0, 0)`. See also `root_motion_track` and
+     * `RootMotionView`. The most basic example is applying scale to `CharacterBody3D`:
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_scale
      */
@@ -469,19 +473,19 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * If the animation track specified by `name` has an option `Animation.UPDATE_CAPTURE`, stores
+     * If the animation track specified by `name` has an option `Animation.UpdateMode.CAPTURE`, stores
      * current values of the objects indicated by the track path as a cache. If there is already a
      * captured cache, the old cache is discarded. After this it will interpolate with current
      * animation blending result during the playback process for the time specified by `duration`,
      * working like a crossfade. You can specify `trans_type` as the curve for the interpolation. For
-     * better results, it may be appropriate to specify `Tween.TRANS_LINEAR` for cases where the first
-     * key of the track begins with a non-zero value or where the key value does not change, and
-     * `Tween.TRANS_QUAD` for cases where the key value changes linearly.
+     * better results, it may be appropriate to specify `Tween.TransitionType.LINEAR` for cases where
+     * the first key of the track begins with a non-zero value or where the key value does not change,
+     * and `Tween.TransitionType.QUAD` for cases where the key value changes linearly.
      *
      * Generated from Godot docs: AnimationMixer.capture
      */
-    fun capture(name: String, duration: Double, transType: Long = 0L, easeType: Long = 0L) {
-        ObjectCalls.ptrcallWithStringNameDoubleTwoLongArgs(captureBind, segment, name, duration, transType, easeType)
+    fun capture(name: String, duration: Double, transType: Tween.TransitionType = Tween.TransitionType.LINEAR, easeType: Tween.EaseType = Tween.EaseType.IN) {
+        ObjectCalls.ptrcallWithStringNameDoubleTwoLongArgs(captureBind, segment, name, duration, transType.value, easeType.value)
     }
 
     /**
@@ -539,16 +543,114 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
         const val mixerUpdated: String = "mixer_updated"
     }
 
-    companion object {
-        const val ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS: Long = 0L
-        const val ANIMATION_CALLBACK_MODE_PROCESS_IDLE: Long = 1L
-        const val ANIMATION_CALLBACK_MODE_PROCESS_MANUAL: Long = 2L
-        const val ANIMATION_CALLBACK_MODE_METHOD_DEFERRED: Long = 0L
-        const val ANIMATION_CALLBACK_MODE_METHOD_IMMEDIATE: Long = 1L
-        const val ANIMATION_CALLBACK_MODE_DISCRETE_DOMINANT: Long = 0L
-        const val ANIMATION_CALLBACK_MODE_DISCRETE_RECESSIVE: Long = 1L
-        const val ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS: Long = 2L
+    /**
+     * Godot's `AnimationMixer.AnimationCallbackModeProcess` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationMixer.AnimationCallbackModeProcess.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationMixer.AnimationCallbackModeProcess
+     */
+    @JvmInline
+    value class AnimationCallbackModeProcess(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Process animation during physics frames (see `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`). This
+             * is especially useful when animating physics bodies.
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS
+             */
+            val PHYSICS: AnimationCallbackModeProcess get() = AnimationCallbackModeProcess(0L)
+            /**
+             * Process animation during process frames (see `Node.NOTIFICATION_INTERNAL_PROCESS`).
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_IDLE
+             */
+            val IDLE: AnimationCallbackModeProcess get() = AnimationCallbackModeProcess(1L)
+            /**
+             * Do not process animation. Use `advance` to process the animation manually.
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+             */
+            val MANUAL: AnimationCallbackModeProcess get() = AnimationCallbackModeProcess(2L)
+        }
+    }
 
+    /**
+     * Godot's `AnimationMixer.AnimationCallbackModeMethod` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationMixer.AnimationCallbackModeMethod.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationMixer.AnimationCallbackModeMethod
+     */
+    @JvmInline
+    value class AnimationCallbackModeMethod(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Batch method calls during the animation process, then do the calls after events are processed.
+             * This avoids bugs involving deleting nodes or modifying the AnimationPlayer while playing.
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_METHOD_DEFERRED
+             */
+            val DEFERRED: AnimationCallbackModeMethod get() = AnimationCallbackModeMethod(0L)
+            /**
+             * Make method calls immediately when reached in the animation.
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_METHOD_IMMEDIATE
+             */
+            val IMMEDIATE: AnimationCallbackModeMethod get() = AnimationCallbackModeMethod(1L)
+        }
+    }
+
+    /**
+     * Godot's `AnimationMixer.AnimationCallbackModeDiscrete` enum as a typed value: `.value` is the
+     * raw number Godot uses, and the companion holds the named values
+     * (`AnimationMixer.AnimationCallbackModeDiscrete.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationMixer.AnimationCallbackModeDiscrete
+     */
+    @JvmInline
+    value class AnimationCallbackModeDiscrete(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * An `Animation.UpdateMode.DISCRETE` track value takes precedence when blending
+             * `Animation.UpdateMode.CONTINUOUS` or `Animation.UpdateMode.CAPTURE` track values and
+             * `Animation.UpdateMode.DISCRETE` track values.
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_DOMINANT
+             */
+            val DOMINANT: AnimationCallbackModeDiscrete get() = AnimationCallbackModeDiscrete(0L)
+            /**
+             * An `Animation.UpdateMode.CONTINUOUS` or `Animation.UpdateMode.CAPTURE` track value takes
+             * precedence when blending the `Animation.UpdateMode.CONTINUOUS` or `Animation.UpdateMode.CAPTURE`
+             * track values and the `Animation.UpdateMode.DISCRETE` track values. This is the default behavior
+             * for `AnimationPlayer`.
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_RECESSIVE
+             */
+            val RECESSIVE: AnimationCallbackModeDiscrete get() = AnimationCallbackModeDiscrete(1L)
+            /**
+             * Always treat the `Animation.UpdateMode.DISCRETE` track value as
+             * `Animation.UpdateMode.CONTINUOUS` with `Animation.InterpolationType.NEAREST`. This is the
+             * default behavior for `AnimationTree`. If a value track has un-interpolatable type key values, it
+             * is internally converted to use `AnimationCallbackModeDiscrete.RECESSIVE` with
+             * `Animation.UpdateMode.DISCRETE`. Un-interpolatable type list: - `VariantType.NIL` -
+             * `VariantType.NODE_PATH` - `VariantType.RID` - `VariantType.OBJECT` - `VariantType.CALLABLE` -
+             * `VariantType.SIGNAL` - `VariantType.DICTIONARY` - `VariantType.PACKED_BYTE_ARRAY`
+             * `VariantType.BOOL` and `VariantType.INT` are treated as `VariantType.FLOAT` during blending and
+             * rounded when the result is retrieved. It is same for arrays and vectors with them such as
+             * `VariantType.PACKED_INT32_ARRAY` or `VariantType.VECTOR2I`, they are treated as
+             * `VariantType.PACKED_FLOAT32_ARRAY` or `VariantType.VECTOR2`. Also note that for arrays, the size
+             * is also interpolated. `VariantType.STRING` and `VariantType.STRING_NAME` are interpolated
+             * between character codes and lengths, but note that there is a difference in algorithm between
+             * interpolation between keys and interpolation by blending.
+             *
+             * Generated from Godot docs: AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS
+             */
+            val FORCE_CONTINUOUS: AnimationCallbackModeDiscrete get() = AnimationCallbackModeDiscrete(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationMixer? =
             wrap(handle.segment)

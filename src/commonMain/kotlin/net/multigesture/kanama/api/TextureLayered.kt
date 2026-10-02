@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -16,9 +17,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      *
      * Generated from Godot docs: TextureLayered.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): Image.Format {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**
@@ -27,9 +28,9 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      *
      * Generated from Godot docs: TextureLayered.get_layered_type
      */
-    fun getLayeredType(): Long {
+    fun getLayeredType(): TextureLayered.LayeredType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, segment)
+        return TextureLayered.LayeredType(ObjectCalls.ptrcallNoArgsRetLong(getLayeredTypeBind, segment))
     }
 
     /**
@@ -82,11 +83,37 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
         return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, segment, layer))
     }
 
-    companion object {
-        const val LAYERED_TYPE_2D_ARRAY: Long = 0L
-        const val LAYERED_TYPE_CUBEMAP: Long = 1L
-        const val LAYERED_TYPE_CUBEMAP_ARRAY: Long = 2L
+    /**
+     * Godot's `TextureLayered.LayeredType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextureLayered.LayeredType.<NAME>`).
+     *
+     * Generated from Godot docs: TextureLayered.LayeredType
+     */
+    @JvmInline
+    value class LayeredType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Texture is a generic `Texture2DArray`.
+             *
+             * Generated from Godot docs: TextureLayered.LAYERED_TYPE_2D_ARRAY
+             */
+            val TYPE_2D_ARRAY: LayeredType get() = LayeredType(0L)
+            /**
+             * Texture is a `Cubemap`, with each side in its own layer (6 in total).
+             *
+             * Generated from Godot docs: TextureLayered.LAYERED_TYPE_CUBEMAP
+             */
+            val CUBEMAP: LayeredType get() = LayeredType(1L)
+            /**
+             * Texture is a `CubemapArray`, with each cubemap being made of 6 layers.
+             *
+             * Generated from Godot docs: TextureLayered.LAYERED_TYPE_CUBEMAP_ARRAY
+             */
+            val CUBEMAP_ARRAY: LayeredType get() = LayeredType(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureLayered? =
             wrap(handle.segment)

@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
  * Interpolates an `Object`'s property over time.
@@ -15,14 +16,14 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: PropertyTweener.from
      */
-    fun from(value: Any?): PropertyTweener? {
+    fun from(value: Any?): PropertyTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithVariantArgRetObject(fromBind, segment, value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return PropertyTweener.wrap(ret)
+        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.from")
     }
 
     /**
@@ -32,14 +33,14 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: PropertyTweener.from_current
      */
-    fun fromCurrent(): PropertyTweener? {
+    fun fromCurrent(): PropertyTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(fromCurrentBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return PropertyTweener.wrap(ret)
+        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.from_current")
     }
 
     /**
@@ -47,14 +48,14 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: PropertyTweener.as_relative
      */
-    fun asRelative(): PropertyTweener? {
+    fun asRelative(): PropertyTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetObject(asRelativeBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return PropertyTweener.wrap(ret)
+        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.as_relative")
     }
 
     /**
@@ -63,14 +64,14 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: PropertyTweener.set_trans
      */
-    fun setTrans(trans: Long): PropertyTweener? {
+    fun setTrans(trans: Tween.TransitionType): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setTransBind, segment, trans.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return PropertyTweener.wrap(ret)
+        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_trans")
     }
 
     /**
@@ -79,14 +80,14 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: PropertyTweener.set_ease
      */
-    fun setEase(ease: Long): PropertyTweener? {
+    fun setEase(ease: Tween.EaseType): PropertyTweener {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return PropertyTweener.wrap(ret)
+        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_ease")
     }
 
     /**
@@ -98,14 +99,14 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: PropertyTweener.set_custom_interpolator
      */
-    fun setCustomInterpolator(interpolatorMethod: GodotCallable): PropertyTweener? {
+    fun setCustomInterpolator(interpolatorMethod: GodotCallable): PropertyTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithCallableArgRetObject(setCustomInterpolatorBind, segment, interpolatorMethod.target.segment, interpolatorMethod.method)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return PropertyTweener.wrap(ret)
+        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_custom_interpolator")
     }
 
     /**
@@ -114,14 +115,14 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: PropertyTweener.set_delay
      */
-    fun setDelay(delay: Double): PropertyTweener? {
+    fun setDelay(delay: Double): PropertyTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return PropertyTweener.wrap(ret)
+        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_delay")
     }
 
     companion object {

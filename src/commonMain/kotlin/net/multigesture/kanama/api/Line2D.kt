@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -56,25 +57,25 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
-    var textureMode: Long
+    var textureMode: Line2D.LineTextureMode
         @JvmName("textureModeProperty")
         get() = getTextureMode()
         @JvmName("setTextureModeProperty")
         set(value) = setTextureMode(value)
 
-    var jointMode: Long
+    var jointMode: Line2D.LineJointMode
         @JvmName("jointModeProperty")
         get() = getJointMode()
         @JvmName("setJointModeProperty")
         set(value) = setJointMode(value)
 
-    var beginCapMode: Long
+    var beginCapMode: Line2D.LineCapMode
         @JvmName("beginCapModeProperty")
         get() = getBeginCapMode()
         @JvmName("setBeginCapModeProperty")
         set(value) = setBeginCapMode(value)
 
-    var endCapMode: Long
+    var endCapMode: Line2D.LineCapMode
         @JvmName("endCapModeProperty")
         get() = getEndCapMode()
         @JvmName("setEndCapModeProperty")
@@ -301,8 +302,8 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.set_texture_mode
      */
-    fun setTextureMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, mode)
+    fun setTextureMode(mode: Line2D.LineTextureMode) {
+        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, mode.value)
     }
 
     /**
@@ -310,8 +311,8 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.get_texture_mode
      */
-    fun getTextureMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment)
+    fun getTextureMode(): Line2D.LineTextureMode {
+        return Line2D.LineTextureMode(ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment))
     }
 
     /**
@@ -319,8 +320,8 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.set_joint_mode
      */
-    fun setJointMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJointModeBind, segment, mode)
+    fun setJointMode(mode: Line2D.LineJointMode) {
+        ObjectCalls.ptrcallWithLongArg(setJointModeBind, segment, mode.value)
     }
 
     /**
@@ -328,8 +329,8 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.get_joint_mode
      */
-    fun getJointMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJointModeBind, segment)
+    fun getJointMode(): Line2D.LineJointMode {
+        return Line2D.LineJointMode(ObjectCalls.ptrcallNoArgsRetLong(getJointModeBind, segment))
     }
 
     /**
@@ -337,8 +338,8 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.set_begin_cap_mode
      */
-    fun setBeginCapMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBeginCapModeBind, segment, mode)
+    fun setBeginCapMode(mode: Line2D.LineCapMode) {
+        ObjectCalls.ptrcallWithLongArg(setBeginCapModeBind, segment, mode.value)
     }
 
     /**
@@ -346,8 +347,8 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.get_begin_cap_mode
      */
-    fun getBeginCapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBeginCapModeBind, segment)
+    fun getBeginCapMode(): Line2D.LineCapMode {
+        return Line2D.LineCapMode(ObjectCalls.ptrcallNoArgsRetLong(getBeginCapModeBind, segment))
     }
 
     /**
@@ -355,8 +356,8 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.set_end_cap_mode
      */
-    fun setEndCapMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEndCapModeBind, segment, mode)
+    fun setEndCapMode(mode: Line2D.LineCapMode) {
+        ObjectCalls.ptrcallWithLongArg(setEndCapModeBind, segment, mode.value)
     }
 
     /**
@@ -364,15 +365,15 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Line2D.get_end_cap_mode
      */
-    fun getEndCapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEndCapModeBind, segment)
+    fun getEndCapMode(): Line2D.LineCapMode {
+        return Line2D.LineCapMode(ObjectCalls.ptrcallNoArgsRetLong(getEndCapModeBind, segment))
     }
 
     /**
      * Determines the miter limit of the polyline. Normally, when `joint_mode` is set to
-     * `LINE_JOINT_SHARP`, sharp angles fall back to using the logic of `LINE_JOINT_BEVEL` joints to
-     * prevent very long miters. Higher values of this property mean that the fallback to a bevel joint
-     * will happen at sharper angles.
+     * `LineJointMode.SHARP`, sharp angles fall back to using the logic of `LineJointMode.BEVEL` joints
+     * to prevent very long miters. Higher values of this property mean that the fallback to a bevel
+     * joint will happen at sharper angles.
      *
      * Generated from Godot docs: Line2D.set_sharp_limit
      */
@@ -382,9 +383,9 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
 
     /**
      * Determines the miter limit of the polyline. Normally, when `joint_mode` is set to
-     * `LINE_JOINT_SHARP`, sharp angles fall back to using the logic of `LINE_JOINT_BEVEL` joints to
-     * prevent very long miters. Higher values of this property mean that the fallback to a bevel joint
-     * will happen at sharper angles.
+     * `LineJointMode.SHARP`, sharp angles fall back to using the logic of `LineJointMode.BEVEL` joints
+     * to prevent very long miters. Higher values of this property mean that the fallback to a bevel
+     * joint will happen at sharper angles.
      *
      * Generated from Godot docs: Line2D.get_sharp_limit
      */
@@ -432,17 +433,103 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getAntialiasedBind, segment)
     }
 
-    companion object {
-        const val LINE_JOINT_SHARP: Long = 0L
-        const val LINE_JOINT_BEVEL: Long = 1L
-        const val LINE_JOINT_ROUND: Long = 2L
-        const val LINE_CAP_NONE: Long = 0L
-        const val LINE_CAP_BOX: Long = 1L
-        const val LINE_CAP_ROUND: Long = 2L
-        const val LINE_TEXTURE_NONE: Long = 0L
-        const val LINE_TEXTURE_TILE: Long = 1L
-        const val LINE_TEXTURE_STRETCH: Long = 2L
+    /**
+     * Godot's `Line2D.LineJointMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Line2D.LineJointMode.<NAME>`).
+     *
+     * Generated from Godot docs: Line2D.LineJointMode
+     */
+    @JvmInline
+    value class LineJointMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Makes the polyline's joints pointy, connecting the sides of the two segments by extending them
+             * until they intersect. If the rotation of a joint is too big (based on `sharp_limit`), the joint
+             * falls back to `LineJointMode.BEVEL` to prevent very long miters.
+             *
+             * Generated from Godot docs: Line2D.LINE_JOINT_SHARP
+             */
+            val SHARP: LineJointMode get() = LineJointMode(0L)
+            /**
+             * Makes the polyline's joints bevelled/chamfered, connecting the sides of the two segments with a
+             * simple line.
+             *
+             * Generated from Godot docs: Line2D.LINE_JOINT_BEVEL
+             */
+            val BEVEL: LineJointMode get() = LineJointMode(1L)
+            /**
+             * Makes the polyline's joints rounded, connecting the sides of the two segments with an arc. The
+             * detail of this arc depends on `round_precision`.
+             *
+             * Generated from Godot docs: Line2D.LINE_JOINT_ROUND
+             */
+            val ROUND: LineJointMode get() = LineJointMode(2L)
+        }
+    }
 
+    /**
+     * Godot's `Line2D.LineCapMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Line2D.LineCapMode.<NAME>`).
+     *
+     * Generated from Godot docs: Line2D.LineCapMode
+     */
+    @JvmInline
+    value class LineCapMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Draws no line cap.
+             *
+             * Generated from Godot docs: Line2D.LINE_CAP_NONE
+             */
+            val NONE: LineCapMode get() = LineCapMode(0L)
+            /**
+             * Draws the line cap as a box, slightly extending the first/last segment.
+             *
+             * Generated from Godot docs: Line2D.LINE_CAP_BOX
+             */
+            val BOX: LineCapMode get() = LineCapMode(1L)
+            /**
+             * Draws the line cap as a semicircle attached to the first/last segment.
+             *
+             * Generated from Godot docs: Line2D.LINE_CAP_ROUND
+             */
+            val ROUND: LineCapMode get() = LineCapMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `Line2D.LineTextureMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Line2D.LineTextureMode.<NAME>`).
+     *
+     * Generated from Godot docs: Line2D.LineTextureMode
+     */
+    @JvmInline
+    value class LineTextureMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Takes the left pixels of the texture and renders them over the whole polyline.
+             *
+             * Generated from Godot docs: Line2D.LINE_TEXTURE_NONE
+             */
+            val NONE: LineTextureMode get() = LineTextureMode(0L)
+            /**
+             * Tiles the texture over the polyline. `CanvasItem.texture_repeat` of the `Line2D` node must be
+             * `CanvasItem.TextureRepeat.ENABLED` or `CanvasItem.TextureRepeat.MIRROR` for it to work properly.
+             *
+             * Generated from Godot docs: Line2D.LINE_TEXTURE_TILE
+             */
+            val TILE: LineTextureMode get() = LineTextureMode(1L)
+            /**
+             * Stretches the texture across the polyline. `CanvasItem.texture_repeat` of the `Line2D` node must
+             * be `CanvasItem.TextureRepeat.DISABLED` for best results.
+             *
+             * Generated from Godot docs: Line2D.LINE_TEXTURE_STRETCH
+             */
+            val STRETCH: LineTextureMode get() = LineTextureMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Line2D? =
             wrap(handle.segment)

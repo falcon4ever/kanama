@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -69,15 +70,15 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Adds a point to the curve. For each side, if the `*_mode` is `TANGENT_LINEAR`, the `*_tangent`
-     * angle (in degrees) uses the slope of the curve halfway to the adjacent point. Allows custom
-     * assignments to the `*_tangent` angle if `*_mode` is set to `TANGENT_FREE`.
+     * Adds a point to the curve. For each side, if the `*_mode` is `TangentMode.LINEAR`, the
+     * `*_tangent` angle (in degrees) uses the slope of the curve halfway to the adjacent point. Allows
+     * custom assignments to the `*_tangent` angle if `*_mode` is set to `TangentMode.FREE`.
      *
      * Generated from Godot docs: Curve.add_point
      */
-    fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Long = 0L, rightMode: Long = 0L): Int {
+    fun addPoint(position: Vector2, leftTangent: Double = 0.0, rightTangent: Double = 0.0, leftMode: Curve.TangentMode = Curve.TangentMode.FREE, rightMode: Curve.TangentMode = Curve.TangentMode.FREE): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, segment, position, leftTangent, rightTangent, leftMode, rightMode)
+        return ObjectCalls.ptrcallWithVector2TwoDoubleTwoLongArgsRetInt(addPointBind, segment, position, leftTangent, rightTangent, leftMode.value, rightMode.value)
     }
 
     /**
@@ -176,9 +177,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Curve.get_point_left_mode
      */
-    fun getPointLeftMode(index: Int): Long {
+    fun getPointLeftMode(index: Int): Curve.TangentMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, segment, index)
+        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(getPointLeftModeBind, segment, index))
     }
 
     /**
@@ -186,9 +187,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Curve.get_point_right_mode
      */
-    fun getPointRightMode(index: Int): Long {
+    fun getPointRightMode(index: Int): Curve.TangentMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, segment, index)
+        return Curve.TangentMode(ObjectCalls.ptrcallWithIntArgRetLong(getPointRightModeBind, segment, index))
     }
 
     /**
@@ -216,9 +217,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Curve.set_point_left_mode
      */
-    fun setPointLeftMode(index: Int, mode: Long) {
+    fun setPointLeftMode(index: Int, mode: Curve.TangentMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, segment, index, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPointLeftModeBind, segment, index, mode.value)
     }
 
     /**
@@ -226,9 +227,9 @@ class Curve(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Curve.set_point_right_mode
      */
-    fun setPointRightMode(index: Int, mode: Long) {
+    fun setPointRightMode(index: Int, mode: Curve.TangentMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, segment, index, mode)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPointRightModeBind, segment, index, mode.value)
     }
 
     /**
@@ -381,11 +382,38 @@ class Curve(handle: GodotHandle) : Resource(handle) {
         const val domainChanged: String = "domain_changed"
     }
 
-    companion object {
-        const val TANGENT_FREE: Long = 0L
-        const val TANGENT_LINEAR: Long = 1L
-        const val TANGENT_MODE_COUNT: Long = 2L
+    /**
+     * Godot's `Curve.TangentMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Curve.TangentMode.<NAME>`).
+     *
+     * Generated from Godot docs: Curve.TangentMode
+     */
+    @JvmInline
+    value class TangentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The tangent on this side of the point is user-defined.
+             *
+             * Generated from Godot docs: Curve.TANGENT_FREE
+             */
+            val FREE: TangentMode get() = TangentMode(0L)
+            /**
+             * The curve calculates the tangent on this side of the point as the slope halfway towards the
+             * adjacent point.
+             *
+             * Generated from Godot docs: Curve.TANGENT_LINEAR
+             */
+            val LINEAR: TangentMode get() = TangentMode(1L)
+            /**
+             * The total number of available tangent modes.
+             *
+             * Generated from Godot docs: Curve.TANGENT_MODE_COUNT
+             */
+            val MODE_COUNT: TangentMode get() = TangentMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Curve? =
             wrap(handle.segment)

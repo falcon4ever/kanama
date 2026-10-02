@@ -24,8 +24,8 @@ class OpenXRInteractionProfileMetadata(handle: GodotHandle) : GodotObject(handle
         ObjectCalls.ptrcallWithThreeStringArgs(registerInteractionProfileBind, segment, displayName, openxrPath, openxrExtensionNames)
     }
 
-    fun registerIoPath(interactionProfile: String, displayName: String, toplevelPath: String, openxrPath: String, openxrExtensionNames: String, actionType: Long) {
-        ObjectCalls.ptrcallWithStringStringStringStringStringLongArgs(registerIoPathBind, segment, interactionProfile, displayName, toplevelPath, openxrPath, openxrExtensionNames, actionType)
+    fun registerIoPath(interactionProfile: String, displayName: String, toplevelPath: String, openxrPath: String, openxrExtensionNames: String, actionType: OpenXRAction.ActionType) {
+        ObjectCalls.ptrcallWithStringStringStringStringStringLongArgs(registerIoPathBind, segment, interactionProfile, displayName, toplevelPath, openxrPath, openxrExtensionNames, actionType.value)
     }
 
     companion object {

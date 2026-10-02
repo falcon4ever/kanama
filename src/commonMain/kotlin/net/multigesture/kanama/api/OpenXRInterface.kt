@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -53,9 +54,9 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         @JvmName("setVrsStrengthProperty")
         set(value) = setVrsStrength(value)
 
-    fun getSessionState(): Long {
+    fun getSessionState(): OpenXRInterface.SessionState {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSessionStateBind, segment)
+        return OpenXRInterface.SessionState(ObjectCalls.ptrcallNoArgsRetLong(getSessionStateBind, segment))
     }
 
     fun isUserPresenceSupported(): Boolean {
@@ -143,49 +144,49 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, segment)
     }
 
-    fun setMotionRange(hand: Long, motionRange: Long) {
+    fun setMotionRange(hand: OpenXRInterface.Hand, motionRange: OpenXRInterface.HandMotionRange) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setMotionRangeBind, segment, hand, motionRange)
+        ObjectCalls.ptrcallWithTwoLongArgs(setMotionRangeBind, segment, hand.value, motionRange.value)
     }
 
-    fun getMotionRange(hand: Long): Long {
+    fun getMotionRange(hand: OpenXRInterface.Hand): OpenXRInterface.HandMotionRange {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getMotionRangeBind, segment, hand)
+        return OpenXRInterface.HandMotionRange(ObjectCalls.ptrcallWithLongArgRetLong(getMotionRangeBind, segment, hand.value))
     }
 
-    fun getHandTrackingSource(hand: Long): Long {
+    fun getHandTrackingSource(hand: OpenXRInterface.Hand): OpenXRInterface.HandTrackedSource {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getHandTrackingSourceBind, segment, hand)
+        return OpenXRInterface.HandTrackedSource(ObjectCalls.ptrcallWithLongArgRetLong(getHandTrackingSourceBind, segment, hand.value))
     }
 
-    fun getHandJointFlags(hand: Long, joint: Long): Long {
+    fun getHandJointFlags(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): OpenXRInterface.HandJointFlags {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetLong(getHandJointFlagsBind, segment, hand, joint)
+        return OpenXRInterface.HandJointFlags(ObjectCalls.ptrcallWithTwoLongArgsRetLong(getHandJointFlagsBind, segment, hand.value, joint.value))
     }
 
-    fun getHandJointRotation(hand: Long, joint: Long): Quaternion {
+    fun getHandJointRotation(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(getHandJointRotationBind, segment, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetQuaternion(getHandJointRotationBind, segment, hand.value, joint.value)
     }
 
-    fun getHandJointPosition(hand: Long, joint: Long): Vector3 {
+    fun getHandJointPosition(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointPositionBind, segment, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointPositionBind, segment, hand.value, joint.value)
     }
 
-    fun getHandJointRadius(hand: Long, joint: Long): Double {
+    fun getHandJointRadius(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetDouble(getHandJointRadiusBind, segment, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetDouble(getHandJointRadiusBind, segment, hand.value, joint.value)
     }
 
-    fun getHandJointLinearVelocity(hand: Long, joint: Long): Vector3 {
+    fun getHandJointLinearVelocity(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointLinearVelocityBind, segment, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointLinearVelocityBind, segment, hand.value, joint.value)
     }
 
-    fun getHandJointAngularVelocity(hand: Long, joint: Long): Vector3 {
+    fun getHandJointAngularVelocity(hand: OpenXRInterface.Hand, joint: OpenXRInterface.HandJoints): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointAngularVelocityBind, segment, hand, joint)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetVector3(getHandJointAngularVelocityBind, segment, hand.value, joint.value)
     }
 
     fun isHandTrackingSupported(): Boolean {
@@ -223,14 +224,14 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         ObjectCalls.ptrcallWithDoubleArg(setVrsStrengthBind, segment, strength)
     }
 
-    fun setCpuLevel(level: Long) {
+    fun setCpuLevel(level: OpenXRInterface.PerfSettingsLevel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCpuLevelBind, segment, level)
+        ObjectCalls.ptrcallWithLongArg(setCpuLevelBind, segment, level.value)
     }
 
-    fun setGpuLevel(level: Long) {
+    fun setGpuLevel(level: OpenXRInterface.PerfSettingsLevel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setGpuLevelBind, segment, level)
+        ObjectCalls.ptrcallWithLongArg(setGpuLevelBind, segment, level.value)
     }
 
     object Signals {
@@ -248,71 +249,134 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         const val userPresenceChanged: String = "user_presence_changed"
     }
 
-    companion object {
-        const val SESSION_STATE_UNKNOWN: Long = 0L
-        const val SESSION_STATE_IDLE: Long = 1L
-        const val SESSION_STATE_READY: Long = 2L
-        const val SESSION_STATE_SYNCHRONIZED: Long = 3L
-        const val SESSION_STATE_VISIBLE: Long = 4L
-        const val SESSION_STATE_FOCUSED: Long = 5L
-        const val SESSION_STATE_STOPPING: Long = 6L
-        const val SESSION_STATE_LOSS_PENDING: Long = 7L
-        const val SESSION_STATE_EXITING: Long = 8L
-        const val HAND_LEFT: Long = 0L
-        const val HAND_RIGHT: Long = 1L
-        const val HAND_MAX: Long = 2L
-        const val HAND_MOTION_RANGE_UNOBSTRUCTED: Long = 0L
-        const val HAND_MOTION_RANGE_CONFORM_TO_CONTROLLER: Long = 1L
-        const val HAND_MOTION_RANGE_MAX: Long = 2L
-        const val HAND_TRACKED_SOURCE_UNKNOWN: Long = 0L
-        const val HAND_TRACKED_SOURCE_UNOBSTRUCTED: Long = 1L
-        const val HAND_TRACKED_SOURCE_CONTROLLER: Long = 2L
-        const val HAND_TRACKED_SOURCE_MAX: Long = 3L
-        const val HAND_JOINT_PALM: Long = 0L
-        const val HAND_JOINT_WRIST: Long = 1L
-        const val HAND_JOINT_THUMB_METACARPAL: Long = 2L
-        const val HAND_JOINT_THUMB_PROXIMAL: Long = 3L
-        const val HAND_JOINT_THUMB_DISTAL: Long = 4L
-        const val HAND_JOINT_THUMB_TIP: Long = 5L
-        const val HAND_JOINT_INDEX_METACARPAL: Long = 6L
-        const val HAND_JOINT_INDEX_PROXIMAL: Long = 7L
-        const val HAND_JOINT_INDEX_INTERMEDIATE: Long = 8L
-        const val HAND_JOINT_INDEX_DISTAL: Long = 9L
-        const val HAND_JOINT_INDEX_TIP: Long = 10L
-        const val HAND_JOINT_MIDDLE_METACARPAL: Long = 11L
-        const val HAND_JOINT_MIDDLE_PROXIMAL: Long = 12L
-        const val HAND_JOINT_MIDDLE_INTERMEDIATE: Long = 13L
-        const val HAND_JOINT_MIDDLE_DISTAL: Long = 14L
-        const val HAND_JOINT_MIDDLE_TIP: Long = 15L
-        const val HAND_JOINT_RING_METACARPAL: Long = 16L
-        const val HAND_JOINT_RING_PROXIMAL: Long = 17L
-        const val HAND_JOINT_RING_INTERMEDIATE: Long = 18L
-        const val HAND_JOINT_RING_DISTAL: Long = 19L
-        const val HAND_JOINT_RING_TIP: Long = 20L
-        const val HAND_JOINT_LITTLE_METACARPAL: Long = 21L
-        const val HAND_JOINT_LITTLE_PROXIMAL: Long = 22L
-        const val HAND_JOINT_LITTLE_INTERMEDIATE: Long = 23L
-        const val HAND_JOINT_LITTLE_DISTAL: Long = 24L
-        const val HAND_JOINT_LITTLE_TIP: Long = 25L
-        const val HAND_JOINT_MAX: Long = 26L
-        const val PERF_SETTINGS_LEVEL_POWER_SAVINGS: Long = 0L
-        const val PERF_SETTINGS_LEVEL_SUSTAINED_LOW: Long = 1L
-        const val PERF_SETTINGS_LEVEL_SUSTAINED_HIGH: Long = 2L
-        const val PERF_SETTINGS_LEVEL_BOOST: Long = 3L
-        const val PERF_SETTINGS_SUB_DOMAIN_COMPOSITING: Long = 0L
-        const val PERF_SETTINGS_SUB_DOMAIN_RENDERING: Long = 1L
-        const val PERF_SETTINGS_SUB_DOMAIN_THERMAL: Long = 2L
-        const val PERF_SETTINGS_NOTIF_LEVEL_NORMAL: Long = 0L
-        const val PERF_SETTINGS_NOTIF_LEVEL_WARNING: Long = 1L
-        const val PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED: Long = 2L
-        const val HAND_JOINT_NONE: Long = 0L
-        const val HAND_JOINT_ORIENTATION_VALID: Long = 1L
-        const val HAND_JOINT_ORIENTATION_TRACKED: Long = 2L
-        const val HAND_JOINT_POSITION_VALID: Long = 4L
-        const val HAND_JOINT_POSITION_TRACKED: Long = 8L
-        const val HAND_JOINT_LINEAR_VELOCITY_VALID: Long = 16L
-        const val HAND_JOINT_ANGULAR_VELOCITY_VALID: Long = 32L
+    @JvmInline
+    value class SessionState(override val value: Long) : GodotEnumValue {
+        companion object {
+            val UNKNOWN: SessionState get() = SessionState(0L)
+            val IDLE: SessionState get() = SessionState(1L)
+            val READY: SessionState get() = SessionState(2L)
+            val SYNCHRONIZED: SessionState get() = SessionState(3L)
+            val VISIBLE: SessionState get() = SessionState(4L)
+            val FOCUSED: SessionState get() = SessionState(5L)
+            val STOPPING: SessionState get() = SessionState(6L)
+            val LOSS_PENDING: SessionState get() = SessionState(7L)
+            val EXITING: SessionState get() = SessionState(8L)
+        }
+    }
 
+    @JvmInline
+    value class Hand(override val value: Long) : GodotEnumValue {
+        companion object {
+            val LEFT: Hand get() = Hand(0L)
+            val RIGHT: Hand get() = Hand(1L)
+            val MAX: Hand get() = Hand(2L)
+        }
+    }
+
+    @JvmInline
+    value class HandMotionRange(override val value: Long) : GodotEnumValue {
+        companion object {
+            val UNOBSTRUCTED: HandMotionRange get() = HandMotionRange(0L)
+            val CONFORM_TO_CONTROLLER: HandMotionRange get() = HandMotionRange(1L)
+            val MAX: HandMotionRange get() = HandMotionRange(2L)
+        }
+    }
+
+    @JvmInline
+    value class HandTrackedSource(override val value: Long) : GodotEnumValue {
+        companion object {
+            val UNKNOWN: HandTrackedSource get() = HandTrackedSource(0L)
+            val UNOBSTRUCTED: HandTrackedSource get() = HandTrackedSource(1L)
+            val CONTROLLER: HandTrackedSource get() = HandTrackedSource(2L)
+            val MAX: HandTrackedSource get() = HandTrackedSource(3L)
+        }
+    }
+
+    @JvmInline
+    value class HandJoints(override val value: Long) : GodotEnumValue {
+        companion object {
+            val PALM: HandJoints get() = HandJoints(0L)
+            val WRIST: HandJoints get() = HandJoints(1L)
+            val THUMB_METACARPAL: HandJoints get() = HandJoints(2L)
+            val THUMB_PROXIMAL: HandJoints get() = HandJoints(3L)
+            val THUMB_DISTAL: HandJoints get() = HandJoints(4L)
+            val THUMB_TIP: HandJoints get() = HandJoints(5L)
+            val INDEX_METACARPAL: HandJoints get() = HandJoints(6L)
+            val INDEX_PROXIMAL: HandJoints get() = HandJoints(7L)
+            val INDEX_INTERMEDIATE: HandJoints get() = HandJoints(8L)
+            val INDEX_DISTAL: HandJoints get() = HandJoints(9L)
+            val INDEX_TIP: HandJoints get() = HandJoints(10L)
+            val MIDDLE_METACARPAL: HandJoints get() = HandJoints(11L)
+            val MIDDLE_PROXIMAL: HandJoints get() = HandJoints(12L)
+            val MIDDLE_INTERMEDIATE: HandJoints get() = HandJoints(13L)
+            val MIDDLE_DISTAL: HandJoints get() = HandJoints(14L)
+            val MIDDLE_TIP: HandJoints get() = HandJoints(15L)
+            val RING_METACARPAL: HandJoints get() = HandJoints(16L)
+            val RING_PROXIMAL: HandJoints get() = HandJoints(17L)
+            val RING_INTERMEDIATE: HandJoints get() = HandJoints(18L)
+            val RING_DISTAL: HandJoints get() = HandJoints(19L)
+            val RING_TIP: HandJoints get() = HandJoints(20L)
+            val LITTLE_METACARPAL: HandJoints get() = HandJoints(21L)
+            val LITTLE_PROXIMAL: HandJoints get() = HandJoints(22L)
+            val LITTLE_INTERMEDIATE: HandJoints get() = HandJoints(23L)
+            val LITTLE_DISTAL: HandJoints get() = HandJoints(24L)
+            val LITTLE_TIP: HandJoints get() = HandJoints(25L)
+            val MAX: HandJoints get() = HandJoints(26L)
+        }
+    }
+
+    @JvmInline
+    value class PerfSettingsLevel(override val value: Long) : GodotEnumValue {
+        companion object {
+            val POWER_SAVINGS: PerfSettingsLevel get() = PerfSettingsLevel(0L)
+            val SUSTAINED_LOW: PerfSettingsLevel get() = PerfSettingsLevel(1L)
+            val SUSTAINED_HIGH: PerfSettingsLevel get() = PerfSettingsLevel(2L)
+            val BOOST: PerfSettingsLevel get() = PerfSettingsLevel(3L)
+        }
+    }
+
+    @JvmInline
+    value class PerfSettingsSubDomain(override val value: Long) : GodotEnumValue {
+        companion object {
+            val COMPOSITING: PerfSettingsSubDomain get() = PerfSettingsSubDomain(0L)
+            val RENDERING: PerfSettingsSubDomain get() = PerfSettingsSubDomain(1L)
+            val THERMAL: PerfSettingsSubDomain get() = PerfSettingsSubDomain(2L)
+        }
+    }
+
+    @JvmInline
+    value class PerfSettingsNotificationLevel(override val value: Long) : GodotEnumValue {
+        companion object {
+            val NORMAL: PerfSettingsNotificationLevel get() = PerfSettingsNotificationLevel(0L)
+            val WARNING: PerfSettingsNotificationLevel get() = PerfSettingsNotificationLevel(1L)
+            val IMPAIRED: PerfSettingsNotificationLevel get() = PerfSettingsNotificationLevel(2L)
+        }
+    }
+
+    @JvmInline
+    value class HandJointFlags(override val value: Long) : GodotEnumValue {
+        infix fun or(other: HandJointFlags): HandJointFlags = HandJointFlags(value or other.value)
+
+        infix fun and(other: HandJointFlags): HandJointFlags = HandJointFlags(value and other.value)
+
+        infix fun xor(other: HandJointFlags): HandJointFlags = HandJointFlags(value xor other.value)
+
+        fun inv(): HandJointFlags = HandJointFlags(value.inv())
+
+        operator fun contains(other: HandJointFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            val NONE: HandJointFlags get() = HandJointFlags(0L)
+            val ORIENTATION_VALID: HandJointFlags get() = HandJointFlags(1L)
+            val ORIENTATION_TRACKED: HandJointFlags get() = HandJointFlags(2L)
+            val POSITION_VALID: HandJointFlags get() = HandJointFlags(4L)
+            val POSITION_TRACKED: HandJointFlags get() = HandJointFlags(8L)
+            val LINEAR_VELOCITY_VALID: HandJointFlags get() = HandJointFlags(16L)
+            val ANGULAR_VELOCITY_VALID: HandJointFlags get() = HandJointFlags(32L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRInterface? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -16,7 +17,7 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: ItemList
  */
 class ItemList(handle: GodotHandle) : Control(handle) {
-    var selectMode: Long
+    var selectMode: ItemList.SelectMode
         @JvmName("selectModeProperty")
         get() = getSelectMode()
         @JvmName("setSelectModeProperty")
@@ -58,7 +59,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         @JvmName("setAutoHeightProperty")
         set(value) = setAutoHeight(value)
 
-    var textOverrunBehavior: Long
+    var textOverrunBehavior: TextServer.OverrunBehavior
         @JvmName("textOverrunBehaviorProperty")
         get() = getTextOverrunBehavior()
         @JvmName("setTextOverrunBehaviorProperty")
@@ -70,7 +71,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         @JvmName("setWraparoundItemsProperty")
         set(value) = setWraparoundItems(value)
 
-    var scrollHintMode: Long
+    var scrollHintMode: ItemList.ScrollHintMode
         @JvmName("scrollHintModeProperty")
         get() = getScrollHintMode()
         @JvmName("setScrollHintModeProperty")
@@ -106,7 +107,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         @JvmName("setFixedColumnWidthProperty")
         set(value) = setFixedColumnWidth(value)
 
-    var iconMode: Long
+    var iconMode: ItemList.IconMode
         @JvmName("iconModeProperty")
         get() = getIconMode()
         @JvmName("setIconModeProperty")
@@ -185,8 +186,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.set_item_text_direction
      */
-    fun setItemTextDirection(idx: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, idx, direction)
+    fun setItemTextDirection(idx: Int, direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, idx, direction.value)
     }
 
     /**
@@ -194,8 +195,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.get_item_text_direction
      */
-    fun getItemTextDirection(idx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, idx)
+    fun getItemTextDirection(idx: Int): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, idx))
     }
 
     /**
@@ -220,13 +221,13 @@ class ItemList(handle: GodotHandle) : Control(handle) {
 
     /**
      * Sets the auto translate mode of the item associated with the specified index. Items use
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `Node.AutoTranslateMode.INHERIT` by default, which uses the same auto translate mode as the
      * `ItemList` itself.
      *
      * Generated from Godot docs: ItemList.set_item_auto_translate_mode
      */
-    fun setItemAutoTranslateMode(idx: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode)
+    fun setItemAutoTranslateMode(idx: Int, mode: Node.AutoTranslateMode) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode.value)
     }
 
     /**
@@ -234,8 +235,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.get_item_auto_translate_mode
      */
-    fun getItemAutoTranslateMode(idx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx)
+    fun getItemAutoTranslateMode(idx: Int): Node.AutoTranslateMode {
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx))
     }
 
     /**
@@ -574,7 +575,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
     /**
      * Maximum lines of text allowed in each item. Space will be reserved even when there is not enough
      * lines of text to display. Note: This property takes effect only when `icon_mode` is
-     * `ICON_MODE_TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
+     * `IconMode.TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
      *
      * Generated from Godot docs: ItemList.set_max_text_lines
      */
@@ -585,7 +586,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
     /**
      * Maximum lines of text allowed in each item. Space will be reserved even when there is not enough
      * lines of text to display. Note: This property takes effect only when `icon_mode` is
-     * `ICON_MODE_TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
+     * `IconMode.TOP`. To make the text wrap, `fixed_column_width` should be greater than zero.
      *
      * Generated from Godot docs: ItemList.get_max_text_lines
      */
@@ -620,8 +621,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.set_select_mode
      */
-    fun setSelectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode)
+    fun setSelectMode(mode: ItemList.SelectMode) {
+        ObjectCalls.ptrcallWithLongArg(setSelectModeBind, segment, mode.value)
     }
 
     /**
@@ -629,8 +630,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.get_select_mode
      */
-    fun getSelectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment)
+    fun getSelectMode(): ItemList.SelectMode {
+        return ItemList.SelectMode(ObjectCalls.ptrcallNoArgsRetLong(getSelectModeBind, segment))
     }
 
     /**
@@ -638,8 +639,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.set_icon_mode
      */
-    fun setIconMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setIconModeBind, segment, mode)
+    fun setIconMode(mode: ItemList.IconMode) {
+        ObjectCalls.ptrcallWithLongArg(setIconModeBind, segment, mode.value)
     }
 
     /**
@@ -647,8 +648,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.get_icon_mode
      */
-    fun getIconMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getIconModeBind, segment)
+    fun getIconMode(): ItemList.IconMode {
+        return ItemList.IconMode(ObjectCalls.ptrcallNoArgsRetLong(getIconModeBind, segment))
     }
 
     /**
@@ -850,8 +851,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.set_scroll_hint_mode
      */
-    fun setScrollHintMode(scrollHintMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode)
+    fun setScrollHintMode(scrollHintMode: ItemList.ScrollHintMode) {
+        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode.value)
     }
 
     /**
@@ -860,8 +861,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.get_scroll_hint_mode
      */
-    fun getScrollHintMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment)
+    fun getScrollHintMode(): ItemList.ScrollHintMode {
+        return ItemList.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment))
     }
 
     /**
@@ -887,8 +888,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.set_text_overrun_behavior
      */
-    fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
+    fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -896,8 +897,8 @@ class ItemList(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: ItemList.get_text_overrun_behavior
      */
-    fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
+    fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -941,17 +942,97 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         const val itemActivated: String = "item_activated"
     }
 
-    companion object {
-        const val ICON_MODE_TOP: Long = 0L
-        const val ICON_MODE_LEFT: Long = 1L
-        const val SELECT_SINGLE: Long = 0L
-        const val SELECT_MULTI: Long = 1L
-        const val SELECT_TOGGLE: Long = 2L
-        const val SCROLL_HINT_MODE_DISABLED: Long = 0L
-        const val SCROLL_HINT_MODE_BOTH: Long = 1L
-        const val SCROLL_HINT_MODE_TOP: Long = 2L
-        const val SCROLL_HINT_MODE_BOTTOM: Long = 3L
+    /**
+     * Godot's `ItemList.IconMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`ItemList.IconMode.<NAME>`).
+     *
+     * Generated from Godot docs: ItemList.IconMode
+     */
+    @JvmInline
+    value class IconMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Icon is drawn above the text.
+             *
+             * Generated from Godot docs: ItemList.ICON_MODE_TOP
+             */
+            val TOP: IconMode get() = IconMode(0L)
+            /**
+             * Icon is drawn to the left of the text.
+             *
+             * Generated from Godot docs: ItemList.ICON_MODE_LEFT
+             */
+            val LEFT: IconMode get() = IconMode(1L)
+        }
+    }
 
+    /**
+     * Godot's `ItemList.SelectMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`ItemList.SelectMode.<NAME>`).
+     *
+     * Generated from Godot docs: ItemList.SelectMode
+     */
+    @JvmInline
+    value class SelectMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Only allow selecting a single item.
+             *
+             * Generated from Godot docs: ItemList.SELECT_SINGLE
+             */
+            val SINGLE: SelectMode get() = SelectMode(0L)
+            /**
+             * Allows selecting multiple items by holding Ctrl or Shift.
+             *
+             * Generated from Godot docs: ItemList.SELECT_MULTI
+             */
+            val MULTI: SelectMode get() = SelectMode(1L)
+            /**
+             * Allows selecting multiple items by toggling them on and off.
+             *
+             * Generated from Godot docs: ItemList.SELECT_TOGGLE
+             */
+            val TOGGLE: SelectMode get() = SelectMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `ItemList.ScrollHintMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`ItemList.ScrollHintMode.<NAME>`).
+     *
+     * Generated from Godot docs: ItemList.ScrollHintMode
+     */
+    @JvmInline
+    value class ScrollHintMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Scroll hints will never be shown.
+             *
+             * Generated from Godot docs: ItemList.SCROLL_HINT_MODE_DISABLED
+             */
+            val DISABLED: ScrollHintMode get() = ScrollHintMode(0L)
+            /**
+             * Scroll hints will be shown at the top and bottom.
+             *
+             * Generated from Godot docs: ItemList.SCROLL_HINT_MODE_BOTH
+             */
+            val BOTH: ScrollHintMode get() = ScrollHintMode(1L)
+            /**
+             * Only the top scroll hint will be shown.
+             *
+             * Generated from Godot docs: ItemList.SCROLL_HINT_MODE_TOP
+             */
+            val TOP: ScrollHintMode get() = ScrollHintMode(2L)
+            /**
+             * Only the bottom scroll hint will be shown.
+             *
+             * Generated from Godot docs: ItemList.SCROLL_HINT_MODE_BOTTOM
+             */
+            val BOTTOM: ScrollHintMode get() = ScrollHintMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ItemList? =
             wrap(handle.segment)

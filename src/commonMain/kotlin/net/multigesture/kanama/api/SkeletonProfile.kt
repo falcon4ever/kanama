@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -233,9 +234,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: SkeletonProfile.get_tail_direction
      */
-    fun getTailDirection(boneIdx: Int): Long {
+    fun getTailDirection(boneIdx: Int): SkeletonProfile.TailDirection {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, segment, boneIdx)
+        return SkeletonProfile.TailDirection(ObjectCalls.ptrcallWithIntArgRetLong(getTailDirectionBind, segment, boneIdx))
     }
 
     /**
@@ -245,9 +246,9 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: SkeletonProfile.set_tail_direction
      */
-    fun setTailDirection(boneIdx: Int, tailDirection: Long) {
+    fun setTailDirection(boneIdx: Int, tailDirection: SkeletonProfile.TailDirection) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, segment, boneIdx, tailDirection)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setTailDirectionBind, segment, boneIdx, tailDirection.value)
     }
 
     /**
@@ -358,11 +359,37 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
         const val profileUpdated: String = "profile_updated"
     }
 
-    companion object {
-        const val TAIL_DIRECTION_AVERAGE_CHILDREN: Long = 0L
-        const val TAIL_DIRECTION_SPECIFIC_CHILD: Long = 1L
-        const val TAIL_DIRECTION_END: Long = 2L
+    /**
+     * Godot's `SkeletonProfile.TailDirection` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`SkeletonProfile.TailDirection.<NAME>`).
+     *
+     * Generated from Godot docs: SkeletonProfile.TailDirection
+     */
+    @JvmInline
+    value class TailDirection(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Direction to the average coordinates of bone children.
+             *
+             * Generated from Godot docs: SkeletonProfile.TAIL_DIRECTION_AVERAGE_CHILDREN
+             */
+            val AVERAGE_CHILDREN: TailDirection get() = TailDirection(0L)
+            /**
+             * Direction to the coordinates of specified bone child.
+             *
+             * Generated from Godot docs: SkeletonProfile.TAIL_DIRECTION_SPECIFIC_CHILD
+             */
+            val SPECIFIC_CHILD: TailDirection get() = TailDirection(1L)
+            /**
+             * Direction is not calculated.
+             *
+             * Generated from Godot docs: SkeletonProfile.TAIL_DIRECTION_END
+             */
+            val END: TailDirection get() = TailDirection(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonProfile? =
             wrap(handle.segment)

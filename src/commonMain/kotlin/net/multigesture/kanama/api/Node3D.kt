@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -65,13 +66,13 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
         @JvmName("setScaleProperty")
         set(value) = setScale(value)
 
-    var rotationEditMode: Long
+    var rotationEditMode: Node3D.RotationEditMode
         @JvmName("rotationEditModeProperty")
         get() = getRotationEditMode()
         @JvmName("setRotationEditModeProperty")
         set(value) = setRotationEditMode(value)
 
-    var rotationOrder: Long
+    var rotationOrder: EulerOrder
         @JvmName("rotationOrderProperty")
         get() = getRotationOrder()
         @JvmName("setRotationOrderProperty")
@@ -166,8 +167,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * the angle around the local Y axis (yaw); - The `Vector3.z` is the angle around the local Z axis
      * (roll). The order of each consecutive rotation can be changed with `rotation_order` (see
      * `EulerOrder` constants). In Godot, Euler angles always use intrinsic order. By default, the
-     * intrinsic YXZ convention is used (`EULER_ORDER_YXZ`). Note: This property is edited in degrees
-     * in the inspector. If you want to use degrees in a script, use `rotation_degrees`.
+     * intrinsic YXZ convention is used (`EulerOrder.YXZ`). Note: This property is edited in degrees in
+     * the inspector. If you want to use degrees in a script, use `rotation_degrees`.
      *
      * Generated from Godot docs: Node3D.set_rotation
      */
@@ -182,8 +183,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * the angle around the local Y axis (yaw); - The `Vector3.z` is the angle around the local Z axis
      * (roll). The order of each consecutive rotation can be changed with `rotation_order` (see
      * `EulerOrder` constants). In Godot, Euler angles always use intrinsic order. By default, the
-     * intrinsic YXZ convention is used (`EULER_ORDER_YXZ`). Note: This property is edited in degrees
-     * in the inspector. If you want to use degrees in a script, use `rotation_degrees`.
+     * intrinsic YXZ convention is used (`EulerOrder.YXZ`). Note: This property is edited in degrees in
+     * the inspector. If you want to use degrees in a script, use `rotation_degrees`.
      *
      * Generated from Godot docs: Node3D.get_rotation
      */
@@ -218,8 +219,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.set_rotation_order
      */
-    fun setRotationOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, segment, order)
+    fun setRotationOrder(order: EulerOrder) {
+        ObjectCalls.ptrcallWithLongArg(setRotationOrderBind, segment, order.value)
     }
 
     /**
@@ -229,8 +230,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.get_rotation_order
      */
-    fun getRotationOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, segment)
+    fun getRotationOrder(): EulerOrder {
+        return EulerOrder(ObjectCalls.ptrcallNoArgsRetLong(getRotationOrderBind, segment))
     }
 
     /**
@@ -238,8 +239,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.set_rotation_edit_mode
      */
-    fun setRotationEditMode(editMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, segment, editMode)
+    fun setRotationEditMode(editMode: Node3D.RotationEditMode) {
+        ObjectCalls.ptrcallWithLongArg(setRotationEditModeBind, segment, editMode.value)
     }
 
     /**
@@ -247,8 +248,8 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: Node3D.get_rotation_edit_mode
      */
-    fun getRotationEditMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, segment)
+    fun getRotationEditMode(): Node3D.RotationEditMode {
+        return Node3D.RotationEditMode(ObjectCalls.ptrcallNoArgsRetLong(getRotationEditModeBind, segment))
     }
 
     /**
@@ -413,7 +414,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * `global_basis`'s rotation. - The `Vector3.x` is the angle around the global X axis (pitch); -
      * The `Vector3.y` is the angle around the global Y axis (yaw); - The `Vector3.z` is the angle
      * around the global Z axis (roll). Note: Unlike `rotation`, this property always follows the YXZ
-     * convention (`EULER_ORDER_YXZ`). Note: If the node is not inside the tree, getting this property
+     * convention (`EulerOrder.YXZ`). Note: If the node is not inside the tree, getting this property
      * fails and returns `Vector3.ZERO`.
      *
      * Generated from Godot docs: Node3D.set_global_rotation
@@ -428,7 +429,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * `global_basis`'s rotation. - The `Vector3.x` is the angle around the global X axis (pitch); -
      * The `Vector3.y` is the angle around the global Y axis (yaw); - The `Vector3.z` is the angle
      * around the global Z axis (roll). Note: Unlike `rotation`, this property always follows the YXZ
-     * convention (`EULER_ORDER_YXZ`). Note: If the node is not inside the tree, getting this property
+     * convention (`EulerOrder.YXZ`). Note: If the node is not inside the tree, getting this property
      * fails and returns `Vector3.ZERO`.
      *
      * Generated from Godot docs: Node3D.get_global_rotation
@@ -922,15 +923,48 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
         const val visibilityChanged: String = "visibility_changed"
     }
 
+    /**
+     * Godot's `Node3D.RotationEditMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Node3D.RotationEditMode.<NAME>`).
+     *
+     * Generated from Godot docs: Node3D.RotationEditMode
+     */
+    @JvmInline
+    value class RotationEditMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The rotation is edited using a `Vector3` in Euler angles
+             * (https://en.wikipedia.org/wiki/Euler_angles). In Godot, Euler angles always use intrinsic order,
+             * meaning that rotation happens around the local axes of the object.
+             *
+             * Generated from Godot docs: Node3D.ROTATION_EDIT_MODE_EULER
+             */
+            val EULER: RotationEditMode get() = RotationEditMode(0L)
+            /**
+             * The rotation is edited using a `Quaternion`. Quaternions avoid gimbal lock
+             * ($DOCS_URL/tutorials/3d/using_transforms.html) and having to choose an order of rotation, but
+             * are less intuitive. Quaternion rotation is mostly the same as rotors in 3D geometric algebra,
+             * except that the numbers are labeled differently.
+             *
+             * Generated from Godot docs: Node3D.ROTATION_EDIT_MODE_QUATERNION
+             */
+            val QUATERNION: RotationEditMode get() = RotationEditMode(1L)
+            /**
+             * The rotation is edited using a `Basis`. In this mode, the raw `basis`'s axes can be freely
+             * modified, but the `scale` property is not available.
+             *
+             * Generated from Godot docs: Node3D.ROTATION_EDIT_MODE_BASIS
+             */
+            val BASIS: RotationEditMode get() = RotationEditMode(2L)
+        }
+    }
+
     companion object {
         const val NOTIFICATION_TRANSFORM_CHANGED: Long = 2000L
         const val NOTIFICATION_ENTER_WORLD: Long = 41L
         const val NOTIFICATION_EXIT_WORLD: Long = 42L
         const val NOTIFICATION_VISIBILITY_CHANGED: Long = 43L
         const val NOTIFICATION_LOCAL_TRANSFORM_CHANGED: Long = 44L
-        const val ROTATION_EDIT_MODE_EULER: Long = 0L
-        const val ROTATION_EDIT_MODE_QUATERNION: Long = 1L
-        const val ROTATION_EDIT_MODE_BASIS: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Node3D? =

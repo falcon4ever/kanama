@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -22,27 +23,27 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
 
     var textureAlbedo: Texture2D?
         @JvmName("textureAlbedoProperty")
-        get() = getTexture(0L)
+        get() = getTexture(Decal.DecalTexture.ALBEDO)
         @JvmName("setTextureAlbedoProperty")
-        set(value) = setTexture(0L, value)
+        set(value) = setTexture(Decal.DecalTexture.ALBEDO, value)
 
     var textureNormal: Texture2D?
         @JvmName("textureNormalProperty")
-        get() = getTexture(1L)
+        get() = getTexture(Decal.DecalTexture.NORMAL)
         @JvmName("setTextureNormalProperty")
-        set(value) = setTexture(1L, value)
+        set(value) = setTexture(Decal.DecalTexture.NORMAL, value)
 
     var textureOrm: Texture2D?
         @JvmName("textureOrmProperty")
-        get() = getTexture(2L)
+        get() = getTexture(Decal.DecalTexture.ORM)
         @JvmName("setTextureOrmProperty")
-        set(value) = setTexture(2L, value)
+        set(value) = setTexture(Decal.DecalTexture.ORM, value)
 
     var textureEmission: Texture2D?
         @JvmName("textureEmissionProperty")
-        get() = getTexture(3L)
+        get() = getTexture(Decal.DecalTexture.EMISSION)
         @JvmName("setTextureEmissionProperty")
-        set(value) = setTexture(3L, value)
+        set(value) = setTexture(Decal.DecalTexture.EMISSION, value)
 
     var emissionEnergy: Double
         @JvmName("emissionEnergyProperty")
@@ -145,8 +146,8 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: Decal.set_texture
      */
-    fun setTexture(type: Long, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, type, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+    fun setTexture(type: Decal.DecalTexture, texture: Texture2D?) {
+        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, type.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -164,8 +165,8 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: Decal.get_texture
      */
-    fun getTexture(type: Long): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, type))
+    fun getTexture(type: Decal.DecalTexture): Texture2D? {
+        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, type.value))
     }
 
     /**
@@ -392,13 +393,49 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
     }
 
-    companion object {
-        const val TEXTURE_ALBEDO: Long = 0L
-        const val TEXTURE_NORMAL: Long = 1L
-        const val TEXTURE_ORM: Long = 2L
-        const val TEXTURE_EMISSION: Long = 3L
-        const val TEXTURE_MAX: Long = 4L
+    /**
+     * Godot's `Decal.DecalTexture` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Decal.DecalTexture.<NAME>`).
+     *
+     * Generated from Godot docs: Decal.DecalTexture
+     */
+    @JvmInline
+    value class DecalTexture(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * `Texture2D` corresponding to `texture_albedo`.
+             *
+             * Generated from Godot docs: Decal.TEXTURE_ALBEDO
+             */
+            val ALBEDO: DecalTexture get() = DecalTexture(0L)
+            /**
+             * `Texture2D` corresponding to `texture_normal`.
+             *
+             * Generated from Godot docs: Decal.TEXTURE_NORMAL
+             */
+            val NORMAL: DecalTexture get() = DecalTexture(1L)
+            /**
+             * `Texture2D` corresponding to `texture_orm`.
+             *
+             * Generated from Godot docs: Decal.TEXTURE_ORM
+             */
+            val ORM: DecalTexture get() = DecalTexture(2L)
+            /**
+             * `Texture2D` corresponding to `texture_emission`.
+             *
+             * Generated from Godot docs: Decal.TEXTURE_EMISSION
+             */
+            val EMISSION: DecalTexture get() = DecalTexture(3L)
+            /**
+             * Max size of `DecalTexture` enum.
+             *
+             * Generated from Godot docs: Decal.TEXTURE_MAX
+             */
+            val MAX: DecalTexture get() = DecalTexture(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Decal? =
             wrap(handle.segment)

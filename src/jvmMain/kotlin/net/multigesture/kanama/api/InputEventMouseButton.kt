@@ -16,7 +16,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         @JvmName("setFactorProperty")
         set(value) = setFactor(value)
 
-    var buttonIndex: Long
+    var buttonIndex: MouseButton
         @JvmName("buttonIndexProperty")
         get() = getButtonIndex()
         @JvmName("setButtonIndexProperty")
@@ -57,9 +57,9 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      *
      * Generated from Godot docs: InputEventMouseButton.set_button_index
      */
-    fun setButtonIndex(buttonIndex: Long) {
+    fun setButtonIndex(buttonIndex: MouseButton) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex)
+        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex.value)
     }
 
     /**
@@ -67,9 +67,9 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
      *
      * Generated from Godot docs: InputEventMouseButton.get_button_index
      */
-    fun getButtonIndex(): Long {
+    fun getButtonIndex(): MouseButton {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, segment)
+        return MouseButton(ObjectCalls.ptrcallNoArgsRetLong(getButtonIndexBind, segment))
     }
 
     /**
@@ -125,10 +125,6 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         internal fun wrap(handle: MemorySegment): InputEventMouseButton? =
             if (handle.address() == 0L) null else InputEventMouseButton(GodotHandle(handle))
 
-        const val MOUSE_BUTTON_LEFT = 1L
-        const val MOUSE_BUTTON_RIGHT = 2L
-        const val MOUSE_BUTTON_WHEEL_UP = 4L
-        const val MOUSE_BUTTON_WHEEL_DOWN = 5L
 
         private const val SET_FACTOR_HASH = 373806689L
         private val setFactorBind by lazy {

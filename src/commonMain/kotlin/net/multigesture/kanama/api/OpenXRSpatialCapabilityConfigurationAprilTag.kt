@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAprilTag
  */
 class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
-    var aprilDict: Long
+    var aprilDict: OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict
         @JvmName("aprilDictProperty")
         get() = getAprilDict()
         @JvmName("setAprilDictProperty")
@@ -20,22 +21,27 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
     }
 
-    fun setAprilDict(aprilDict: Long) {
+    fun setAprilDict(aprilDict: OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAprilDictBind, segment, aprilDict)
+        ObjectCalls.ptrcallWithLongArg(setAprilDictBind, segment, aprilDict.value)
     }
 
-    fun getAprilDict(): Long {
+    fun getAprilDict(): OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAprilDictBind, segment)
+        return OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict(ObjectCalls.ptrcallNoArgsRetLong(getAprilDictBind, segment))
+    }
+
+    @JvmInline
+    value class AprilTagDict(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DICT_16H5: AprilTagDict get() = AprilTagDict(1L)
+            val DICT_25H9: AprilTagDict get() = AprilTagDict(2L)
+            val DICT_36H10: AprilTagDict get() = AprilTagDict(3L)
+            val DICT_36H11: AprilTagDict get() = AprilTagDict(4L)
+        }
     }
 
     companion object {
-        const val APRIL_TAG_DICT_16H5: Long = 1L
-        const val APRIL_TAG_DICT_25H9: Long = 2L
-        const val APRIL_TAG_DICT_36H10: Long = 3L
-        const val APRIL_TAG_DICT_36H11: Long = 4L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAprilTag? =
             wrap(handle.segment)

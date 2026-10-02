@@ -63,6 +63,7 @@ nav:
           - Gates Index: reference/generated/gates.md
           - iOS Backend Hand-written Registry: reference/generated/ios-backend-handwritten.md
           - iOS Shape Gap: reference/generated/ios-shape-gap.md
+          - Enum Constant Migration: reference/generated/enum-migration.md
   - Contributing:
       - Contributor Guide: contributing/index.md
       - Architecture: contributing/architecture.md

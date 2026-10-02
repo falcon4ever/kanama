@@ -2,6 +2,7 @@
 
 package net.multigesture.kanama.types
 
+import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.sqrt
 import net.multigesture.kanama.binding.runtime.BArg
@@ -45,6 +46,44 @@ data class Vector3(
    */
   val z: real_t,
 ) {
+  // ===== BEGIN GENERATED ENUMS: Vector3 (scripts/generate_api_wrapper.py — do not edit) =====
+  /**
+   * Godot's `Vector3.Axis` enum as a typed value: `.value` is the raw number Godot uses, and the
+   * companion holds the named values (`Vector3.Axis.<NAME>`).
+   *
+   * Generated from Godot docs: Vector3.Axis
+   */
+  @JvmInline
+  value class Axis(override val value: Long) : net.multigesture.kanama.api.GodotEnumValue {
+    companion object {
+      /**
+       * Enumerated value for the X axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector3.AXIS_X
+       */
+      val X: Axis
+        get() = Axis(0L)
+
+      /**
+       * Enumerated value for the Y axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector3.AXIS_Y
+       */
+      val Y: Axis
+        get() = Axis(1L)
+
+      /**
+       * Enumerated value for the Z axis. Returned by `max_axis_index` and `min_axis_index`.
+       *
+       * Generated from Godot docs: Vector3.AXIS_Z
+       */
+      val Z: Axis
+        get() = Axis(2L)
+    }
+  }
+
+  // ===== END GENERATED ENUMS: Vector3 =====
+
   constructor(
     x: Number,
     y: Number,
@@ -180,7 +219,7 @@ data class Vector3(
 
   /**
    * Returns the axis of the vector's highest value. See `AXIS_*` constants. If all components are
-   * equal, this method returns `AXIS_X`.
+   * equal, this method returns `Axis.X`.
    *
    * Generated from Godot docs: Vector3.max_axis_index
    */

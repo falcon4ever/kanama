@@ -4,6 +4,7 @@ import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.BoxMesh
 import net.multigesture.kanama.api.FileAccess
+import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MeshInstance3D
@@ -41,7 +42,7 @@ class MaterialHandoffSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotO
     return PackedScene.create().use { packed ->
       packed.pack(mi)
       val err = ResourceSaver.save(packed, path)
-      err == 0L && FileAccess.getFileAsString(path).contains("StandardMaterial3D")
+      err == GodotError.OK && FileAccess.getFileAsString(path).contains("StandardMaterial3D")
     }
   }
 

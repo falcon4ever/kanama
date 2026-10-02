@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setTextProperty")
         set(value) = setText(value)
 
-    var underline: Long
+    var underline: LinkButton.UnderlineMode
         @JvmName("underlineProperty")
         get() = getUnderlineMode()
         @JvmName("setUnderlineProperty")
@@ -29,7 +30,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setUriProperty")
         set(value) = setUri(value)
 
-    var textOverrunBehavior: Long
+    var textOverrunBehavior: TextServer.OverrunBehavior
         @JvmName("textOverrunBehaviorProperty")
         get() = getTextOverrunBehavior()
         @JvmName("setTextOverrunBehaviorProperty")
@@ -41,7 +42,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setEllipsisCharProperty")
         set(value) = setEllipsisChar(value)
 
-    var textDirection: Long
+    var textDirection: Control.TextDirection
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -53,7 +54,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    var structuredTextBidiOverride: Long
+    var structuredTextBidiOverride: TextServer.StructuredTextParser
         @JvmName("structuredTextBidiOverrideProperty")
         get() = getStructuredTextBidiOverride()
         @JvmName("setStructuredTextBidiOverrideProperty")
@@ -88,8 +89,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.set_text_overrun_behavior
      */
-    fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
+    fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -97,8 +98,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.get_text_overrun_behavior
      */
-    fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
+    fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -124,8 +125,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -133,8 +134,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -186,8 +187,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.set_underline_mode
      */
-    fun setUnderlineMode(underlineMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setUnderlineModeBind, segment, underlineMode)
+    fun setUnderlineMode(underlineMode: LinkButton.UnderlineMode) {
+        ObjectCalls.ptrcallWithLongArg(setUnderlineModeBind, segment, underlineMode.value)
     }
 
     /**
@@ -195,8 +196,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.get_underline_mode
      */
-    fun getUnderlineMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getUnderlineModeBind, segment)
+    fun getUnderlineMode(): LinkButton.UnderlineMode {
+        return LinkButton.UnderlineMode(ObjectCalls.ptrcallNoArgsRetLong(getUnderlineModeBind, segment))
     }
 
     /**
@@ -204,8 +205,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.set_structured_text_bidi_override
      */
-    fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
+    fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -213,8 +214,8 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      *
      * Generated from Godot docs: LinkButton.get_structured_text_bidi_override
      */
-    fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
+    fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -235,11 +236,38 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
         return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
-    companion object {
-        const val UNDERLINE_MODE_ALWAYS: Long = 0L
-        const val UNDERLINE_MODE_ON_HOVER: Long = 1L
-        const val UNDERLINE_MODE_NEVER: Long = 2L
+    /**
+     * Godot's `LinkButton.UnderlineMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`LinkButton.UnderlineMode.<NAME>`).
+     *
+     * Generated from Godot docs: LinkButton.UnderlineMode
+     */
+    @JvmInline
+    value class UnderlineMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The LinkButton will always show an underline at the bottom of its text.
+             *
+             * Generated from Godot docs: LinkButton.UNDERLINE_MODE_ALWAYS
+             */
+            val ALWAYS: UnderlineMode get() = UnderlineMode(0L)
+            /**
+             * The LinkButton will show an underline at the bottom of its text when the mouse cursor is over
+             * it.
+             *
+             * Generated from Godot docs: LinkButton.UNDERLINE_MODE_ON_HOVER
+             */
+            val ON_HOVER: UnderlineMode get() = UnderlineMode(1L)
+            /**
+             * The LinkButton will never show an underline at the bottom of its text.
+             *
+             * Generated from Godot docs: LinkButton.UNDERLINE_MODE_NEVER
+             */
+            val NEVER: UnderlineMode get() = UnderlineMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LinkButton? =
             wrap(handle.segment)

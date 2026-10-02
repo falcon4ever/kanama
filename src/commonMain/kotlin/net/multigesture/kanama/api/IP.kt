@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -16,14 +17,6 @@ object IP {
 
     const val RESOLVER_MAX_QUERIES: Long = 256L
     const val RESOLVER_INVALID_ID: Long = -1L
-    const val RESOLVER_STATUS_NONE: Long = 0L
-    const val RESOLVER_STATUS_WAITING: Long = 1L
-    const val RESOLVER_STATUS_DONE: Long = 2L
-    const val RESOLVER_STATUS_ERROR: Long = 3L
-    const val TYPE_NONE: Long = 0L
-    const val TYPE_IPV4: Long = 1L
-    const val TYPE_IPV6: Long = 2L
-    const val TYPE_ANY: Long = 3L
 
     /**
      * Returns a given hostname's IPv4 or IPv6 address when resolved (blocking-type method). The
@@ -32,8 +25,8 @@ object IP {
      * Generated from Godot docs: IP.resolve_hostname
      */
     @JvmStatic
-    fun resolveHostname(host: String, ipType: Long = 3L): String {
-        return ObjectCalls.ptrcallWithStringAndLongArgRetString(resolveHostnameBind, singleton, host, ipType)
+    fun resolveHostname(host: String, ipType: IP.Type = IP.Type.ANY): String {
+        return ObjectCalls.ptrcallWithStringAndLongArgRetString(resolveHostnameBind, singleton, host, ipType.value)
     }
 
     /**
@@ -43,8 +36,8 @@ object IP {
      * Generated from Godot docs: IP.resolve_hostname_addresses
      */
     @JvmStatic
-    fun resolveHostnameAddresses(host: String, ipType: Long = 3L): List<String> {
-        return ObjectCalls.ptrcallWithStringAndLongArgRetPackedStringList(resolveHostnameAddressesBind, singleton, host, ipType)
+    fun resolveHostnameAddresses(host: String, ipType: IP.Type = IP.Type.ANY): List<String> {
+        return ObjectCalls.ptrcallWithStringAndLongArgRetPackedStringList(resolveHostnameAddressesBind, singleton, host, ipType.value)
     }
 
     /**
@@ -55,8 +48,8 @@ object IP {
      * Generated from Godot docs: IP.resolve_hostname_queue_item
      */
     @JvmStatic
-    fun resolveHostnameQueueItem(host: String, ipType: Long = 3L): Int {
-        return ObjectCalls.ptrcallWithStringAndLongArgRetInt(resolveHostnameQueueItemBind, singleton, host, ipType)
+    fun resolveHostnameQueueItem(host: String, ipType: IP.Type = IP.Type.ANY): Int {
+        return ObjectCalls.ptrcallWithStringAndLongArgRetInt(resolveHostnameQueueItemBind, singleton, host, ipType.value)
     }
 
     /**
@@ -65,8 +58,8 @@ object IP {
      * Generated from Godot docs: IP.get_resolve_item_status
      */
     @JvmStatic
-    fun getResolveItemStatus(id: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getResolveItemStatusBind, singleton, id)
+    fun getResolveItemStatus(id: Int): IP.ResolverStatus {
+        return IP.ResolverStatus(ObjectCalls.ptrcallWithIntArgRetLong(getResolveItemStatusBind, singleton, id))
     }
 
     /**
@@ -131,6 +124,78 @@ object IP {
     @JvmStatic
     fun clearCache(hostname: String = "") {
         ObjectCalls.ptrcallWithStringArg(clearCacheBind, singleton, hostname)
+    }
+
+    /**
+     * Godot's `IP.ResolverStatus` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`IP.ResolverStatus.<NAME>`).
+     *
+     * Generated from Godot docs: IP.ResolverStatus
+     */
+    @JvmInline
+    value class ResolverStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * DNS hostname resolver status: No status.
+             *
+             * Generated from Godot docs: IP.RESOLVER_STATUS_NONE
+             */
+            val NONE: ResolverStatus get() = ResolverStatus(0L)
+            /**
+             * DNS hostname resolver status: Waiting.
+             *
+             * Generated from Godot docs: IP.RESOLVER_STATUS_WAITING
+             */
+            val WAITING: ResolverStatus get() = ResolverStatus(1L)
+            /**
+             * DNS hostname resolver status: Done.
+             *
+             * Generated from Godot docs: IP.RESOLVER_STATUS_DONE
+             */
+            val DONE: ResolverStatus get() = ResolverStatus(2L)
+            /**
+             * DNS hostname resolver status: Error.
+             *
+             * Generated from Godot docs: IP.RESOLVER_STATUS_ERROR
+             */
+            val ERROR: ResolverStatus get() = ResolverStatus(3L)
+        }
+    }
+
+    /**
+     * Godot's `IP.Type` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`IP.Type.<NAME>`).
+     *
+     * Generated from Godot docs: IP.Type
+     */
+    @JvmInline
+    value class Type(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Address type: None.
+             *
+             * Generated from Godot docs: IP.TYPE_NONE
+             */
+            val NONE: Type get() = Type(0L)
+            /**
+             * Address type: Internet protocol version 4 (IPv4).
+             *
+             * Generated from Godot docs: IP.TYPE_IPV4
+             */
+            val IPV4: Type get() = Type(1L)
+            /**
+             * Address type: Internet protocol version 6 (IPv6).
+             *
+             * Generated from Godot docs: IP.TYPE_IPV6
+             */
+            val IPV6: Type get() = Type(2L)
+            /**
+             * Address type: Any.
+             *
+             * Generated from Godot docs: IP.TYPE_ANY
+             */
+            val ANY: Type get() = Type(3L)
+        }
     }
 
     @JvmStatic

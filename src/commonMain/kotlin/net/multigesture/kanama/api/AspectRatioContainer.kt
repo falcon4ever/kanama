@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,19 +18,19 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setRatioProperty")
         set(value) = setRatio(value)
 
-    var stretchMode: Long
+    var stretchMode: AspectRatioContainer.StretchMode
         @JvmName("stretchModeProperty")
         get() = getStretchMode()
         @JvmName("setStretchModeProperty")
         set(value) = setStretchMode(value)
 
-    var alignmentHorizontal: Long
+    var alignmentHorizontal: AspectRatioContainer.AlignmentMode
         @JvmName("alignmentHorizontalProperty")
         get() = getAlignmentHorizontal()
         @JvmName("setAlignmentHorizontalProperty")
         set(value) = setAlignmentHorizontal(value)
 
-    var alignmentVertical: Long
+    var alignmentVertical: AspectRatioContainer.AlignmentMode
         @JvmName("alignmentVerticalProperty")
         get() = getAlignmentVertical()
         @JvmName("setAlignmentVerticalProperty")
@@ -60,8 +61,8 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: AspectRatioContainer.set_stretch_mode
      */
-    fun setStretchMode(stretchMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode)
+    fun setStretchMode(stretchMode: AspectRatioContainer.StretchMode) {
+        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode.value)
     }
 
     /**
@@ -69,8 +70,8 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: AspectRatioContainer.get_stretch_mode
      */
-    fun getStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment)
+    fun getStretchMode(): AspectRatioContainer.StretchMode {
+        return AspectRatioContainer.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
     }
 
     /**
@@ -78,8 +79,8 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: AspectRatioContainer.set_alignment_horizontal
      */
-    fun setAlignmentHorizontal(alignmentHorizontal: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentHorizontalBind, segment, alignmentHorizontal)
+    fun setAlignmentHorizontal(alignmentHorizontal: AspectRatioContainer.AlignmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setAlignmentHorizontalBind, segment, alignmentHorizontal.value)
     }
 
     /**
@@ -87,8 +88,8 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: AspectRatioContainer.get_alignment_horizontal
      */
-    fun getAlignmentHorizontal(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentHorizontalBind, segment)
+    fun getAlignmentHorizontal(): AspectRatioContainer.AlignmentMode {
+        return AspectRatioContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentHorizontalBind, segment))
     }
 
     /**
@@ -96,8 +97,8 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: AspectRatioContainer.set_alignment_vertical
      */
-    fun setAlignmentVertical(alignmentVertical: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentVerticalBind, segment, alignmentVertical)
+    fun setAlignmentVertical(alignmentVertical: AspectRatioContainer.AlignmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setAlignmentVerticalBind, segment, alignmentVertical.value)
     }
 
     /**
@@ -105,19 +106,83 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
      *
      * Generated from Godot docs: AspectRatioContainer.get_alignment_vertical
      */
-    fun getAlignmentVertical(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentVerticalBind, segment)
+    fun getAlignmentVertical(): AspectRatioContainer.AlignmentMode {
+        return AspectRatioContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentVerticalBind, segment))
+    }
+
+    /**
+     * Godot's `AspectRatioContainer.StretchMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AspectRatioContainer.StretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: AspectRatioContainer.StretchMode
+     */
+    @JvmInline
+    value class StretchMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The height of child controls is automatically adjusted based on the width of the container.
+             *
+             * Generated from Godot docs: AspectRatioContainer.STRETCH_WIDTH_CONTROLS_HEIGHT
+             */
+            val WIDTH_CONTROLS_HEIGHT: StretchMode get() = StretchMode(0L)
+            /**
+             * The width of child controls is automatically adjusted based on the height of the container.
+             *
+             * Generated from Godot docs: AspectRatioContainer.STRETCH_HEIGHT_CONTROLS_WIDTH
+             */
+            val HEIGHT_CONTROLS_WIDTH: StretchMode get() = StretchMode(1L)
+            /**
+             * The bounding rectangle of child controls is automatically adjusted to fit inside the container
+             * while keeping the aspect ratio.
+             *
+             * Generated from Godot docs: AspectRatioContainer.STRETCH_FIT
+             */
+            val FIT: StretchMode get() = StretchMode(2L)
+            /**
+             * The width and height of child controls is automatically adjusted to make their bounding
+             * rectangle cover the entire area of the container while keeping the aspect ratio. When the
+             * bounding rectangle of child controls exceed the container's size and `Control.clip_contents` is
+             * enabled, this allows to show only the container's area restricted by its own bounding rectangle.
+             *
+             * Generated from Godot docs: AspectRatioContainer.STRETCH_COVER
+             */
+            val COVER: StretchMode get() = StretchMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `AspectRatioContainer.AlignmentMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AspectRatioContainer.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: AspectRatioContainer.AlignmentMode
+     */
+    @JvmInline
+    value class AlignmentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Aligns child controls with the beginning (left or top) of the container.
+             *
+             * Generated from Godot docs: AspectRatioContainer.ALIGNMENT_BEGIN
+             */
+            val BEGIN: AlignmentMode get() = AlignmentMode(0L)
+            /**
+             * Aligns child controls with the center of the container.
+             *
+             * Generated from Godot docs: AspectRatioContainer.ALIGNMENT_CENTER
+             */
+            val CENTER: AlignmentMode get() = AlignmentMode(1L)
+            /**
+             * Aligns child controls with the end (right or bottom) of the container.
+             *
+             * Generated from Godot docs: AspectRatioContainer.ALIGNMENT_END
+             */
+            val END: AlignmentMode get() = AlignmentMode(2L)
+        }
     }
 
     companion object {
-        const val STRETCH_WIDTH_CONTROLS_HEIGHT: Long = 0L
-        const val STRETCH_HEIGHT_CONTROLS_WIDTH: Long = 1L
-        const val STRETCH_FIT: Long = 2L
-        const val STRETCH_COVER: Long = 3L
-        const val ALIGNMENT_BEGIN: Long = 0L
-        const val ALIGNMENT_CENTER: Long = 1L
-        const val ALIGNMENT_END: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AspectRatioContainer? =
             wrap(handle.segment)

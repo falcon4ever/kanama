@@ -25,13 +25,13 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Uses specified surface of given `Mesh` to populate data for MeshDataTool. Requires `Mesh` with
-     * primitive type `Mesh.PRIMITIVE_TRIANGLES`.
+     * primitive type `Mesh.PrimitiveType.TRIANGLES`.
      *
      * Generated from Godot docs: MeshDataTool.create_from_surface
      */
-    fun createFromSurface(mesh: ArrayMesh?, surface: Int): Long {
+    fun createFromSurface(mesh: ArrayMesh?, surface: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndIntArgRetLong(createFromSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, surface))
     }
 
     /**
@@ -39,15 +39,15 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: MeshDataTool.commit_to_surface
      */
-    fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): Long {
+    fun commitToSurface(mesh: ArrayMesh?, compressionFlags: Long = 0L): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags)
+        return GodotError(ObjectCalls.ptrcallWithObjectAndLongArgRetLong(commitToSurfaceBind, segment, mesh?.requireOpenHandle() ?: MemorySegment.NULL, compressionFlags))
     }
 
     /**
      * Returns the `Mesh`'s format as a combination of the `Mesh.ArrayFormat` flags. For example, a
      * mesh containing both vertices and normals would return a format of `3` because
-     * `Mesh.ARRAY_FORMAT_VERTEX` is `1` and `Mesh.ARRAY_FORMAT_NORMAL` is `2`.
+     * `Mesh.ArrayFormat.FORMAT_VERTEX` is `1` and `Mesh.ArrayFormat.FORMAT_NORMAL` is `2`.
      *
      * Generated from Godot docs: MeshDataTool.get_format
      */
@@ -129,7 +129,7 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Sets the tangent of the given vertex. Note: Even though `tangent` is a `Plane`, it does not
      * directly represent the tangent plane. Its `Plane.x`, `Plane.y`, and `Plane.z` represent the
-     * tangent vector and `Plane.d` should be either `-1` or `1`. See also `Mesh.ARRAY_TANGENT`.
+     * tangent vector and `Plane.d` should be either `-1` or `1`. See also `Mesh.ArrayType.TANGENT`.
      *
      * Generated from Godot docs: MeshDataTool.set_vertex_tangent
      */

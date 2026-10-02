@@ -17,19 +17,19 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
      *
      * Generated from Godot docs: StreamPeerUDS.bind
      */
-    fun bind(path: String): Long {
+    fun bind(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(bindBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(bindBind, segment, path))
     }
 
     /**
-     * Connects to the specified UNIX Domain Socket path. Returns `OK` on success.
+     * Connects to the specified UNIX Domain Socket path. Returns `GodotError.OK` on success.
      *
      * Generated from Godot docs: StreamPeerUDS.connect_to_host
      */
-    fun connectToHost(path: String): Long {
+    fun connectToHost(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(connectToHostBind, segment, path))
     }
 
     /**

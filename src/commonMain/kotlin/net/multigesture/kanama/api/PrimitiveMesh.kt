@@ -97,7 +97,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
 
     /**
      * If `true`, the order of the vertices in each triangle is reversed, resulting in the backside of
-     * the mesh being drawn. This gives the same result as using `BaseMaterial3D.CULL_FRONT` in
+     * the mesh being drawn. This gives the same result as using `BaseMaterial3D.CullMode.FRONT` in
      * `BaseMaterial3D.cull_mode`.
      *
      * Generated from Godot docs: PrimitiveMesh.set_flip_faces
@@ -109,7 +109,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
 
     /**
      * If `true`, the order of the vertices in each triangle is reversed, resulting in the backside of
-     * the mesh being drawn. This gives the same result as using `BaseMaterial3D.CULL_FRONT` in
+     * the mesh being drawn. This gives the same result as using `BaseMaterial3D.CullMode.FRONT` in
      * `BaseMaterial3D.cull_mode`.
      *
      * Generated from Godot docs: PrimitiveMesh.get_flip_faces

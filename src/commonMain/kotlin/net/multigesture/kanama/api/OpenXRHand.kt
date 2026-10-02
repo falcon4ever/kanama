@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -10,13 +11,13 @@ import net.multigesture.kanama.types.NodePath
  * Generated from Godot docs: OpenXRHand
  */
 class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
-    var hand: Long
+    var hand: OpenXRHand.Hands
         @JvmName("handProperty")
         get() = getHand()
         @JvmName("setHandProperty")
         set(value) = setHand(value)
 
-    var motionRange: Long
+    var motionRange: OpenXRHand.MotionRange
         @JvmName("motionRangeProperty")
         get() = getMotionRange()
         @JvmName("setMotionRangeProperty")
@@ -28,24 +29,24 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setHandSkeletonProperty")
         set(value) = setHandSkeleton(value)
 
-    var skeletonRig: Long
+    var skeletonRig: OpenXRHand.SkeletonRig
         @JvmName("skeletonRigProperty")
         get() = getSkeletonRig()
         @JvmName("setSkeletonRigProperty")
         set(value) = setSkeletonRig(value)
 
-    var boneUpdate: Long
+    var boneUpdate: OpenXRHand.BoneUpdate
         @JvmName("boneUpdateProperty")
         get() = getBoneUpdate()
         @JvmName("setBoneUpdateProperty")
         set(value) = setBoneUpdate(value)
 
-    fun setHand(hand: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHandBind, segment, hand)
+    fun setHand(hand: OpenXRHand.Hands) {
+        ObjectCalls.ptrcallWithLongArg(setHandBind, segment, hand.value)
     }
 
-    fun getHand(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHandBind, segment)
+    fun getHand(): OpenXRHand.Hands {
+        return OpenXRHand.Hands(ObjectCalls.ptrcallNoArgsRetLong(getHandBind, segment))
     }
 
     fun setHandSkeleton(handSkeleton: NodePath) {
@@ -56,44 +57,67 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getHandSkeletonBind, segment)
     }
 
-    fun setMotionRange(motionRange: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMotionRangeBind, segment, motionRange)
+    fun setMotionRange(motionRange: OpenXRHand.MotionRange) {
+        ObjectCalls.ptrcallWithLongArg(setMotionRangeBind, segment, motionRange.value)
     }
 
-    fun getMotionRange(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMotionRangeBind, segment)
+    fun getMotionRange(): OpenXRHand.MotionRange {
+        return OpenXRHand.MotionRange(ObjectCalls.ptrcallNoArgsRetLong(getMotionRangeBind, segment))
     }
 
-    fun setSkeletonRig(skeletonRig: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSkeletonRigBind, segment, skeletonRig)
+    fun setSkeletonRig(skeletonRig: OpenXRHand.SkeletonRig) {
+        ObjectCalls.ptrcallWithLongArg(setSkeletonRigBind, segment, skeletonRig.value)
     }
 
-    fun getSkeletonRig(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkeletonRigBind, segment)
+    fun getSkeletonRig(): OpenXRHand.SkeletonRig {
+        return OpenXRHand.SkeletonRig(ObjectCalls.ptrcallNoArgsRetLong(getSkeletonRigBind, segment))
     }
 
-    fun setBoneUpdate(boneUpdate: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate)
+    fun setBoneUpdate(boneUpdate: OpenXRHand.BoneUpdate) {
+        ObjectCalls.ptrcallWithLongArg(setBoneUpdateBind, segment, boneUpdate.value)
     }
 
-    fun getBoneUpdate(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment)
+    fun getBoneUpdate(): OpenXRHand.BoneUpdate {
+        return OpenXRHand.BoneUpdate(ObjectCalls.ptrcallNoArgsRetLong(getBoneUpdateBind, segment))
+    }
+
+    @JvmInline
+    value class Hands(override val value: Long) : GodotEnumValue {
+        companion object {
+            val LEFT: Hands get() = Hands(0L)
+            val RIGHT: Hands get() = Hands(1L)
+            val MAX: Hands get() = Hands(2L)
+        }
+    }
+
+    @JvmInline
+    value class MotionRange(override val value: Long) : GodotEnumValue {
+        companion object {
+            val UNOBSTRUCTED: MotionRange get() = MotionRange(0L)
+            val CONFORM_TO_CONTROLLER: MotionRange get() = MotionRange(1L)
+            val MAX: MotionRange get() = MotionRange(2L)
+        }
+    }
+
+    @JvmInline
+    value class SkeletonRig(override val value: Long) : GodotEnumValue {
+        companion object {
+            val OPENXR: SkeletonRig get() = SkeletonRig(0L)
+            val HUMANOID: SkeletonRig get() = SkeletonRig(1L)
+            val MAX: SkeletonRig get() = SkeletonRig(2L)
+        }
+    }
+
+    @JvmInline
+    value class BoneUpdate(override val value: Long) : GodotEnumValue {
+        companion object {
+            val FULL: BoneUpdate get() = BoneUpdate(0L)
+            val ROTATION_ONLY: BoneUpdate get() = BoneUpdate(1L)
+            val MAX: BoneUpdate get() = BoneUpdate(2L)
+        }
     }
 
     companion object {
-        const val HAND_LEFT: Long = 0L
-        const val HAND_RIGHT: Long = 1L
-        const val HAND_MAX: Long = 2L
-        const val MOTION_RANGE_UNOBSTRUCTED: Long = 0L
-        const val MOTION_RANGE_CONFORM_TO_CONTROLLER: Long = 1L
-        const val MOTION_RANGE_MAX: Long = 2L
-        const val SKELETON_RIG_OPENXR: Long = 0L
-        const val SKELETON_RIG_HUMANOID: Long = 1L
-        const val SKELETON_RIG_MAX: Long = 2L
-        const val BONE_UPDATE_FULL: Long = 0L
-        const val BONE_UPDATE_ROTATION_ONLY: Long = 1L
-        const val BONE_UPDATE_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRHand? =
             wrap(handle.segment)

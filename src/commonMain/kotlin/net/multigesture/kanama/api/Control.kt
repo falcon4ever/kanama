@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -42,59 +43,59 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     var anchorLeft: Double
         @JvmName("anchorLeftProperty")
-        get() = getAnchor(0L)
+        get() = getAnchor(Side.LEFT)
         @JvmName("setAnchorLeftProperty")
-        set(value) = setAnchor(0L, value)
+        set(value) = setAnchor(Side.LEFT, value)
 
     var anchorTop: Double
         @JvmName("anchorTopProperty")
-        get() = getAnchor(1L)
+        get() = getAnchor(Side.TOP)
         @JvmName("setAnchorTopProperty")
-        set(value) = setAnchor(1L, value)
+        set(value) = setAnchor(Side.TOP, value)
 
     var anchorRight: Double
         @JvmName("anchorRightProperty")
-        get() = getAnchor(2L)
+        get() = getAnchor(Side.RIGHT)
         @JvmName("setAnchorRightProperty")
-        set(value) = setAnchor(2L, value)
+        set(value) = setAnchor(Side.RIGHT, value)
 
     var anchorBottom: Double
         @JvmName("anchorBottomProperty")
-        get() = getAnchor(3L)
+        get() = getAnchor(Side.BOTTOM)
         @JvmName("setAnchorBottomProperty")
-        set(value) = setAnchor(3L, value)
+        set(value) = setAnchor(Side.BOTTOM, value)
 
     var offsetLeft: Double
         @JvmName("offsetLeftProperty")
-        get() = getOffset(0L)
+        get() = getOffset(Side.LEFT)
         @JvmName("setOffsetLeftProperty")
-        set(value) = setOffset(0L, value)
+        set(value) = setOffset(Side.LEFT, value)
 
     var offsetTop: Double
         @JvmName("offsetTopProperty")
-        get() = getOffset(1L)
+        get() = getOffset(Side.TOP)
         @JvmName("setOffsetTopProperty")
-        set(value) = setOffset(1L, value)
+        set(value) = setOffset(Side.TOP, value)
 
     var offsetRight: Double
         @JvmName("offsetRightProperty")
-        get() = getOffset(2L)
+        get() = getOffset(Side.RIGHT)
         @JvmName("setOffsetRightProperty")
-        set(value) = setOffset(2L, value)
+        set(value) = setOffset(Side.RIGHT, value)
 
     var offsetBottom: Double
         @JvmName("offsetBottomProperty")
-        get() = getOffset(3L)
+        get() = getOffset(Side.BOTTOM)
         @JvmName("setOffsetBottomProperty")
-        set(value) = setOffset(3L, value)
+        set(value) = setOffset(Side.BOTTOM, value)
 
-    var growHorizontal: Long
+    var growHorizontal: Control.GrowDirection
         @JvmName("growHorizontalProperty")
         get() = getHGrowDirection()
         @JvmName("setGrowHorizontalProperty")
         set(value) = setHGrowDirection(value)
 
-    var growVertical: Long
+    var growVertical: Control.GrowDirection
         @JvmName("growVerticalProperty")
         get() = getVGrowDirection()
         @JvmName("setGrowVerticalProperty")
@@ -148,13 +149,13 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmName("setPivotOffsetRatioProperty")
         set(value) = setPivotOffsetRatio(value)
 
-    var sizeFlagsHorizontal: Long
+    var sizeFlagsHorizontal: Control.SizeFlags
         @JvmName("sizeFlagsHorizontalProperty")
         get() = getHSizeFlags()
         @JvmName("setSizeFlagsHorizontalProperty")
         set(value) = setHSizeFlags(value)
 
-    var sizeFlagsVertical: Long
+    var sizeFlagsVertical: Control.SizeFlags
         @JvmName("sizeFlagsVerticalProperty")
         get() = getVSizeFlags()
         @JvmName("setSizeFlagsVerticalProperty")
@@ -220,7 +221,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmName("setLocalizeNumeralSystemProperty")
         set(value) = setLocalizeNumeralSystem(value)
 
-    var layoutDirection: Long
+    var layoutDirection: Control.LayoutDirection
         @JvmName("layoutDirectionProperty")
         get() = getLayoutDirection()
         @JvmName("setLayoutDirectionProperty")
@@ -244,7 +245,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmName("setTooltipTextProperty")
         set(value) = setTooltipText(value)
 
-    var tooltipAutoTranslateMode: Long
+    var tooltipAutoTranslateMode: Node.AutoTranslateMode
         @JvmName("tooltipAutoTranslateModeProperty")
         get() = getTooltipAutoTranslateMode()
         @JvmName("setTooltipAutoTranslateModeProperty")
@@ -252,27 +253,27 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     var focusNeighborLeft: NodePath
         @JvmName("focusNeighborLeftProperty")
-        get() = getFocusNeighbor(0L)
+        get() = getFocusNeighbor(Side.LEFT)
         @JvmName("setFocusNeighborLeftProperty")
-        set(value) = setFocusNeighbor(0L, value)
+        set(value) = setFocusNeighbor(Side.LEFT, value)
 
     var focusNeighborTop: NodePath
         @JvmName("focusNeighborTopProperty")
-        get() = getFocusNeighbor(1L)
+        get() = getFocusNeighbor(Side.TOP)
         @JvmName("setFocusNeighborTopProperty")
-        set(value) = setFocusNeighbor(1L, value)
+        set(value) = setFocusNeighbor(Side.TOP, value)
 
     var focusNeighborRight: NodePath
         @JvmName("focusNeighborRightProperty")
-        get() = getFocusNeighbor(2L)
+        get() = getFocusNeighbor(Side.RIGHT)
         @JvmName("setFocusNeighborRightProperty")
-        set(value) = setFocusNeighbor(2L, value)
+        set(value) = setFocusNeighbor(Side.RIGHT, value)
 
     var focusNeighborBottom: NodePath
         @JvmName("focusNeighborBottomProperty")
-        get() = getFocusNeighbor(3L)
+        get() = getFocusNeighbor(Side.BOTTOM)
         @JvmName("setFocusNeighborBottomProperty")
-        set(value) = setFocusNeighbor(3L, value)
+        set(value) = setFocusNeighbor(Side.BOTTOM, value)
 
     var focusNext: NodePath
         @JvmName("focusNextProperty")
@@ -286,25 +287,25 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmName("setFocusPreviousProperty")
         set(value) = setFocusPrevious(value)
 
-    var focusMode: Long
+    var focusMode: Control.FocusMode
         @JvmName("focusModeProperty")
         get() = getFocusMode()
         @JvmName("setFocusModeProperty")
         set(value) = setFocusMode(value)
 
-    var focusBehaviorRecursive: Long
+    var focusBehaviorRecursive: Control.FocusBehaviorRecursive
         @JvmName("focusBehaviorRecursiveProperty")
         get() = getFocusBehaviorRecursive()
         @JvmName("setFocusBehaviorRecursiveProperty")
         set(value) = setFocusBehaviorRecursive(value)
 
-    var mouseFilter: Long
+    var mouseFilter: Control.MouseFilter
         @JvmName("mouseFilterProperty")
         get() = getMouseFilter()
         @JvmName("setMouseFilterProperty")
         set(value) = setMouseFilter(value)
 
-    var mouseBehaviorRecursive: Long
+    var mouseBehaviorRecursive: Control.MouseBehaviorRecursive
         @JvmName("mouseBehaviorRecursiveProperty")
         get() = getMouseBehaviorRecursive()
         @JvmName("setMouseBehaviorRecursiveProperty")
@@ -316,7 +317,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmName("setMouseForcePassScrollEventsProperty")
         set(value) = setForcePassScrollEvents(value)
 
-    var mouseDefaultCursorShape: Long
+    var mouseDefaultCursorShape: Control.CursorShape
         @JvmName("mouseDefaultCursorShapeProperty")
         get() = getDefaultCursorShape()
         @JvmName("setMouseDefaultCursorShapeProperty")
@@ -338,7 +339,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmName("setAccessibilityDescriptionProperty")
         set(value) = setAccessibilityDescription(value)
 
-    var accessibilityLive: Long
+    var accessibilityLive: AccessibilityServer.AccessibilityLiveMode
         @JvmName("accessibilityLiveProperty")
         get() = getAccessibilityLive()
         @JvmName("setAccessibilityLiveProperty")
@@ -468,21 +469,21 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_anchors_preset
      */
-    fun setAnchorsPreset(preset: Long, keepOffsets: Boolean = false) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setAnchorsPresetBind, segment, preset, keepOffsets)
+    fun setAnchorsPreset(preset: Control.LayoutPreset, keepOffsets: Boolean = false) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setAnchorsPresetBind, segment, preset.value, keepOffsets)
     }
 
     /**
      * Sets the offsets to a `preset` from `Control.LayoutPreset` enum. This is the code equivalent to
      * using the Layout menu in the 2D editor. Use parameter `resize_mode` with constants from
      * `Control.LayoutPresetMode` to better determine the resulting size of the `Control`. Constant
-     * size will be ignored if used with presets that change size, e.g. `PRESET_LEFT_WIDE`. Use
+     * size will be ignored if used with presets that change size, e.g. `LayoutPreset.LEFT_WIDE`. Use
      * parameter `margin` to determine the gap between the `Control` and the edges.
      *
      * Generated from Godot docs: Control.set_offsets_preset
      */
-    fun setOffsetsPreset(preset: Long, resizeMode: Long = 0L, margin: Int = 0) {
-        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setOffsetsPresetBind, segment, preset, resizeMode, margin)
+    fun setOffsetsPreset(preset: Control.LayoutPreset, resizeMode: Control.LayoutPresetMode = Control.LayoutPresetMode.MINSIZE, margin: Int = 0) {
+        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setOffsetsPresetBind, segment, preset.value, resizeMode.value, margin)
     }
 
     /**
@@ -490,8 +491,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_anchors_and_offsets_preset
      */
-    fun setAnchorsAndOffsetsPreset(preset: Long, resizeMode: Long = 0L, margin: Int = 0) {
-        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setAnchorsAndOffsetsPresetBind, segment, preset, resizeMode, margin)
+    fun setAnchorsAndOffsetsPreset(preset: Control.LayoutPreset, resizeMode: Control.LayoutPresetMode = Control.LayoutPresetMode.MINSIZE, margin: Int = 0) {
+        ObjectCalls.ptrcallWithTwoLongAndIntArgs(setAnchorsAndOffsetsPresetBind, segment, preset.value, resizeMode.value, margin)
     }
 
     /**
@@ -504,8 +505,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_anchor
      */
-    fun setAnchor(side: Long, anchor: Double, keepOffset: Boolean = false, pushOppositeAnchor: Boolean = true) {
-        ObjectCalls.ptrcallWithLongDoubleTwoBoolArgs(setAnchorBind, segment, side, anchor, keepOffset, pushOppositeAnchor)
+    fun setAnchor(side: Side, anchor: Double, keepOffset: Boolean = false, pushOppositeAnchor: Boolean = true) {
+        ObjectCalls.ptrcallWithLongDoubleTwoBoolArgs(setAnchorBind, segment, side.value, anchor, keepOffset, pushOppositeAnchor)
     }
 
     /**
@@ -515,8 +516,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_anchor
      */
-    fun getAnchor(side: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getAnchorBind, segment, side)
+    fun getAnchor(side: Side): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getAnchorBind, segment, side.value)
     }
 
     /**
@@ -527,8 +528,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_offset
      */
-    fun setOffset(side: Long, offset: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setOffsetBind, segment, side, offset)
+    fun setOffset(side: Side, offset: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setOffsetBind, segment, side.value, offset)
     }
 
     /**
@@ -539,8 +540,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_offset
      */
-    fun getOffset(offset: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getOffsetBind, segment, offset)
+    fun getOffset(offset: Side): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getOffsetBind, segment, offset.value)
     }
 
     /**
@@ -549,8 +550,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_anchor_and_offset
      */
-    fun setAnchorAndOffset(side: Long, anchor: Double, offset: Double, pushOppositeAnchor: Boolean = false) {
-        ObjectCalls.ptrcallWithLongTwoDoubleAndBoolArgs(setAnchorAndOffsetBind, segment, side, anchor, offset, pushOppositeAnchor)
+    fun setAnchorAndOffset(side: Side, anchor: Double, offset: Double, pushOppositeAnchor: Boolean = false) {
+        ObjectCalls.ptrcallWithLongTwoDoubleAndBoolArgs(setAnchorAndOffsetBind, segment, side.value, anchor, offset, pushOppositeAnchor)
     }
 
     /**
@@ -925,8 +926,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_focus_mode
      */
-    fun setFocusMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFocusModeBind, segment, mode)
+    fun setFocusMode(mode: Control.FocusMode) {
+        ObjectCalls.ptrcallWithLongArg(setFocusModeBind, segment, mode.value)
     }
 
     /**
@@ -937,42 +938,44 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_focus_mode
      */
-    fun getFocusMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFocusModeBind, segment)
+    fun getFocusMode(): Control.FocusMode {
+        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(getFocusModeBind, segment))
     }
 
     /**
      * Returns the `focus_mode`, but takes the `focus_behavior_recursive` into account. If
-     * `focus_behavior_recursive` is set to `FOCUS_BEHAVIOR_DISABLED`, or it is set to
-     * `FOCUS_BEHAVIOR_INHERITED` and its ancestor is set to `FOCUS_BEHAVIOR_DISABLED`, then this
-     * returns `FOCUS_NONE`.
+     * `focus_behavior_recursive` is set to `FocusBehaviorRecursive.DISABLED`, or it is set to
+     * `FocusBehaviorRecursive.INHERITED` and its ancestor is set to `FocusBehaviorRecursive.DISABLED`,
+     * then this returns `FocusMode.NONE`.
      *
      * Generated from Godot docs: Control.get_focus_mode_with_override
      */
-    fun getFocusModeWithOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFocusModeWithOverrideBind, segment)
+    fun getFocusModeWithOverride(): Control.FocusMode {
+        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(getFocusModeWithOverrideBind, segment))
     }
 
     /**
      * Determines which controls can be focused together with `focus_mode`. See
-     * `get_focus_mode_with_override`. Since the default behavior is `FOCUS_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from getting focused.
+     * `get_focus_mode_with_override`. Since the default behavior is
+     * `FocusBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * getting focused.
      *
      * Generated from Godot docs: Control.set_focus_behavior_recursive
      */
-    fun setFocusBehaviorRecursive(focusBehaviorRecursive: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFocusBehaviorRecursiveBind, segment, focusBehaviorRecursive)
+    fun setFocusBehaviorRecursive(focusBehaviorRecursive: Control.FocusBehaviorRecursive) {
+        ObjectCalls.ptrcallWithLongArg(setFocusBehaviorRecursiveBind, segment, focusBehaviorRecursive.value)
     }
 
     /**
      * Determines which controls can be focused together with `focus_mode`. See
-     * `get_focus_mode_with_override`. Since the default behavior is `FOCUS_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from getting focused.
+     * `get_focus_mode_with_override`. Since the default behavior is
+     * `FocusBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * getting focused.
      *
      * Generated from Godot docs: Control.get_focus_behavior_recursive
      */
-    fun getFocusBehaviorRecursive(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFocusBehaviorRecursiveBind, segment)
+    fun getFocusBehaviorRecursive(): Control.FocusBehaviorRecursive {
+        return Control.FocusBehaviorRecursive(ObjectCalls.ptrcallNoArgsRetLong(getFocusBehaviorRecursiveBind, segment))
     }
 
     /**
@@ -1034,8 +1037,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.find_valid_focus_neighbor
      */
-    fun findValidFocusNeighbor(side: Long): Control? {
-        return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(findValidFocusNeighborBind, segment, side))
+    fun findValidFocusNeighbor(side: Side): Control? {
+        return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(findValidFocusNeighborBind, segment, side.value))
     }
 
     /**
@@ -1045,8 +1048,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_h_size_flags
      */
-    fun setHSizeFlags(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHSizeFlagsBind, segment, flags)
+    fun setHSizeFlags(flags: Control.SizeFlags) {
+        ObjectCalls.ptrcallWithLongArg(setHSizeFlagsBind, segment, flags.value)
     }
 
     /**
@@ -1056,12 +1059,12 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_h_size_flags
      */
-    fun getHSizeFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHSizeFlagsBind, segment)
+    fun getHSizeFlags(): Control.SizeFlags {
+        return Control.SizeFlags(ObjectCalls.ptrcallNoArgsRetLong(getHSizeFlagsBind, segment))
     }
 
     /**
-     * If the node and at least one of its neighbors uses the `SIZE_EXPAND` size flag, the parent
+     * If the node and at least one of its neighbors uses the `SizeFlags.EXPAND` size flag, the parent
      * `Container` will let it take more or less space depending on this property. If this node has a
      * stretch ratio of 2 and its neighbor a ratio of 1, this node will take two thirds of the
      * available space.
@@ -1073,7 +1076,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * If the node and at least one of its neighbors uses the `SIZE_EXPAND` size flag, the parent
+     * If the node and at least one of its neighbors uses the `SizeFlags.EXPAND` size flag, the parent
      * `Container` will let it take more or less space depending on this property. If this node has a
      * stretch ratio of 2 and its neighbor a ratio of 1, this node will take two thirds of the
      * available space.
@@ -1091,8 +1094,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_v_size_flags
      */
-    fun setVSizeFlags(flags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVSizeFlagsBind, segment, flags)
+    fun setVSizeFlags(flags: Control.SizeFlags) {
+        ObjectCalls.ptrcallWithLongArg(setVSizeFlagsBind, segment, flags.value)
     }
 
     /**
@@ -1102,8 +1105,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_v_size_flags
      */
-    fun getVSizeFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVSizeFlagsBind, segment)
+    fun getVSizeFlags(): Control.SizeFlags {
+        return Control.SizeFlags(ObjectCalls.ptrcallNoArgsRetLong(getVSizeFlagsBind, segment))
     }
 
     /**
@@ -1719,8 +1722,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_h_grow_direction
      */
-    fun setHGrowDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHGrowDirectionBind, segment, direction)
+    fun setHGrowDirection(direction: Control.GrowDirection) {
+        ObjectCalls.ptrcallWithLongArg(setHGrowDirectionBind, segment, direction.value)
     }
 
     /**
@@ -1730,8 +1733,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_h_grow_direction
      */
-    fun getHGrowDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHGrowDirectionBind, segment)
+    fun getHGrowDirection(): Control.GrowDirection {
+        return Control.GrowDirection(ObjectCalls.ptrcallNoArgsRetLong(getHGrowDirectionBind, segment))
     }
 
     /**
@@ -1741,8 +1744,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_v_grow_direction
      */
-    fun setVGrowDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVGrowDirectionBind, segment, direction)
+    fun setVGrowDirection(direction: Control.GrowDirection) {
+        ObjectCalls.ptrcallWithLongArg(setVGrowDirectionBind, segment, direction.value)
     }
 
     /**
@@ -1752,38 +1755,38 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_v_grow_direction
      */
-    fun getVGrowDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVGrowDirectionBind, segment)
+    fun getVGrowDirection(): Control.GrowDirection {
+        return Control.GrowDirection(ObjectCalls.ptrcallNoArgsRetLong(getVGrowDirectionBind, segment))
     }
 
     /**
      * Defines if tooltip text should automatically change to its translated version depending on the
      * current locale. Uses the same auto translate mode as this control when set to
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do
-     * not use this auto translate mode automatically.
+     * `Node.AutoTranslateMode.INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do not
+     * use this auto translate mode automatically.
      *
      * Generated from Godot docs: Control.set_tooltip_auto_translate_mode
      */
-    fun setTooltipAutoTranslateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTooltipAutoTranslateModeBind, segment, mode)
+    fun setTooltipAutoTranslateMode(mode: Node.AutoTranslateMode) {
+        ObjectCalls.ptrcallWithLongArg(setTooltipAutoTranslateModeBind, segment, mode.value)
     }
 
     /**
      * Defines if tooltip text should automatically change to its translated version depending on the
      * current locale. Uses the same auto translate mode as this control when set to
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do
-     * not use this auto translate mode automatically.
+     * `Node.AutoTranslateMode.INHERIT`. Note: Tooltips customized using `_make_custom_tooltip` do not
+     * use this auto translate mode automatically.
      *
      * Generated from Godot docs: Control.get_tooltip_auto_translate_mode
      */
-    fun getTooltipAutoTranslateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTooltipAutoTranslateModeBind, segment)
+    fun getTooltipAutoTranslateMode(): Node.AutoTranslateMode {
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallNoArgsRetLong(getTooltipAutoTranslateModeBind, segment))
     }
 
     /**
      * The default tooltip text. The tooltip appears when the user's mouse cursor stays idle over this
      * control for a few moments, provided that the `mouse_filter` property is not
-     * `MOUSE_FILTER_IGNORE`. The time required for the tooltip to appear can be changed with the
+     * `MouseFilter.IGNORE`. The time required for the tooltip to appear can be changed with the
      * `ProjectSettings.gui/timers/tooltip_delay_sec` setting. This string is the default return value
      * of `get_tooltip`. Override `_get_tooltip` to generate tooltip text dynamically. Override
      * `_make_custom_tooltip` to customize the tooltip interface and behavior. The tooltip popup will
@@ -1801,7 +1804,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     /**
      * The default tooltip text. The tooltip appears when the user's mouse cursor stays idle over this
      * control for a few moments, provided that the `mouse_filter` property is not
-     * `MOUSE_FILTER_IGNORE`. The time required for the tooltip to appear can be changed with the
+     * `MouseFilter.IGNORE`. The time required for the tooltip to appear can be changed with the
      * `ProjectSettings.gui/timers/tooltip_delay_sec` setting. This string is the default return value
      * of `get_tooltip`. Override `_get_tooltip` to generate tooltip text dynamically. Override
      * `_make_custom_tooltip` to customize the tooltip interface and behavior. The tooltip popup will
@@ -1856,8 +1859,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_default_cursor_shape
      */
-    fun setDefaultCursorShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, segment, shape)
+    fun setDefaultCursorShape(shape: Control.CursorShape) {
+        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, segment, shape.value)
     }
 
     /**
@@ -1867,8 +1870,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_default_cursor_shape
      */
-    fun getDefaultCursorShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDefaultCursorShapeBind, segment)
+    fun getDefaultCursorShape(): Control.CursorShape {
+        return Control.CursorShape(ObjectCalls.ptrcallNoArgsRetLong(getDefaultCursorShapeBind, segment))
     }
 
     /**
@@ -1879,8 +1882,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_cursor_shape
      */
-    fun getCursorShape(atPosition: Vector2 = Vector2(0f, 0f)): Long {
-        return ObjectCalls.ptrcallWithVector2ArgRetLong(getCursorShapeBind, segment, atPosition)
+    fun getCursorShape(atPosition: Vector2 = Vector2(0f, 0f)): Control.CursorShape {
+        return Control.CursorShape(ObjectCalls.ptrcallWithVector2ArgRetLong(getCursorShapeBind, segment, atPosition))
     }
 
     /**
@@ -1891,8 +1894,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_focus_neighbor
      */
-    fun setFocusNeighbor(side: Long, neighbor: NodePath) {
-        ObjectCalls.ptrcallWithLongAndNodePathArg(setFocusNeighborBind, segment, side, neighbor)
+    fun setFocusNeighbor(side: Side, neighbor: NodePath) {
+        ObjectCalls.ptrcallWithLongAndNodePathArg(setFocusNeighborBind, segment, side.value, neighbor)
     }
 
     /**
@@ -1903,8 +1906,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_focus_neighbor
      */
-    fun getFocusNeighbor(side: Long): NodePath {
-        return ObjectCalls.ptrcallWithLongArgRetNodePath(getFocusNeighborBind, segment, side)
+    fun getFocusNeighbor(side: Side): NodePath {
+        return ObjectCalls.ptrcallWithLongArgRetNodePath(getFocusNeighborBind, segment, side.value)
     }
 
     /**
@@ -2027,8 +2030,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_accessibility_live
      */
-    fun setAccessibilityLive(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAccessibilityLiveBind, segment, mode)
+    fun setAccessibilityLive(mode: AccessibilityServer.AccessibilityLiveMode) {
+        ObjectCalls.ptrcallWithLongArg(setAccessibilityLiveBind, segment, mode.value)
     }
 
     /**
@@ -2037,8 +2040,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_accessibility_live
      */
-    fun getAccessibilityLive(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessibilityLiveBind, segment)
+    fun getAccessibilityLive(): AccessibilityServer.AccessibilityLiveMode {
+        return AccessibilityServer.AccessibilityLiveMode(ObjectCalls.ptrcallNoArgsRetLong(getAccessibilityLiveBind, segment))
     }
 
     /**
@@ -2122,8 +2125,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_mouse_filter
      */
-    fun setMouseFilter(filter: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMouseFilterBind, segment, filter)
+    fun setMouseFilter(filter: Control.MouseFilter) {
+        ObjectCalls.ptrcallWithLongArg(setMouseFilterBind, segment, filter.value)
     }
 
     /**
@@ -2135,47 +2138,49 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_mouse_filter
      */
-    fun getMouseFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterBind, segment)
+    fun getMouseFilter(): Control.MouseFilter {
+        return Control.MouseFilter(ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterBind, segment))
     }
 
     /**
      * Returns the `mouse_filter`, but takes the `mouse_behavior_recursive` into account. If
-     * `mouse_behavior_recursive` is set to `MOUSE_BEHAVIOR_DISABLED`, or it is set to
-     * `MOUSE_BEHAVIOR_INHERITED` and its ancestor is set to `MOUSE_BEHAVIOR_DISABLED`, then this
-     * returns `MOUSE_FILTER_IGNORE`.
+     * `mouse_behavior_recursive` is set to `MouseBehaviorRecursive.DISABLED`, or it is set to
+     * `MouseBehaviorRecursive.INHERITED` and its ancestor is set to `MouseBehaviorRecursive.DISABLED`,
+     * then this returns `MouseFilter.IGNORE`.
      *
      * Generated from Godot docs: Control.get_mouse_filter_with_override
      */
-    fun getMouseFilterWithOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterWithOverrideBind, segment)
+    fun getMouseFilterWithOverride(): Control.MouseFilter {
+        return Control.MouseFilter(ObjectCalls.ptrcallNoArgsRetLong(getMouseFilterWithOverrideBind, segment))
     }
 
     /**
      * Determines which controls can receive mouse input together with `mouse_filter`. See
-     * `get_mouse_filter_with_override`. Since the default behavior is `MOUSE_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from receiving mouse input.
+     * `get_mouse_filter_with_override`. Since the default behavior is
+     * `MouseBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * receiving mouse input.
      *
      * Generated from Godot docs: Control.set_mouse_behavior_recursive
      */
-    fun setMouseBehaviorRecursive(mouseBehaviorRecursive: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMouseBehaviorRecursiveBind, segment, mouseBehaviorRecursive)
+    fun setMouseBehaviorRecursive(mouseBehaviorRecursive: Control.MouseBehaviorRecursive) {
+        ObjectCalls.ptrcallWithLongArg(setMouseBehaviorRecursiveBind, segment, mouseBehaviorRecursive.value)
     }
 
     /**
      * Determines which controls can receive mouse input together with `mouse_filter`. See
-     * `get_mouse_filter_with_override`. Since the default behavior is `MOUSE_BEHAVIOR_INHERITED`, this
-     * can be used to prevent all children controls from receiving mouse input.
+     * `get_mouse_filter_with_override`. Since the default behavior is
+     * `MouseBehaviorRecursive.INHERITED`, this can be used to prevent all children controls from
+     * receiving mouse input.
      *
      * Generated from Godot docs: Control.get_mouse_behavior_recursive
      */
-    fun getMouseBehaviorRecursive(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseBehaviorRecursiveBind, segment)
+    fun getMouseBehaviorRecursive(): Control.MouseBehaviorRecursive {
+        return Control.MouseBehaviorRecursive(ObjectCalls.ptrcallNoArgsRetLong(getMouseBehaviorRecursiveBind, segment))
     }
 
     /**
      * When enabled, scroll wheel events processed by `_gui_input` will be passed to the parent control
-     * even if `mouse_filter` is set to `MOUSE_FILTER_STOP`. You should disable it on the root of your
+     * even if `mouse_filter` is set to `MouseFilter.STOP`. You should disable it on the root of your
      * UI if you do not want scroll events to go to the `Node._unhandled_input` processing. Note:
      * Because this property defaults to `true`, this allows nested scrollable containers to work out
      * of the box.
@@ -2188,7 +2193,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
 
     /**
      * When enabled, scroll wheel events processed by `_gui_input` will be passed to the parent control
-     * even if `mouse_filter` is set to `MOUSE_FILTER_STOP`. You should disable it on the root of your
+     * even if `mouse_filter` is set to `MouseFilter.STOP`. You should disable it on the root of your
      * UI if you do not want scroll events to go to the `Node._unhandled_input` processing. Note:
      * Because this property defaults to `true`, this allows nested scrollable containers to work out
      * of the box.
@@ -2330,8 +2335,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.set_layout_direction
      */
-    fun setLayoutDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction)
+    fun setLayoutDirection(direction: Control.LayoutDirection) {
+        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction.value)
     }
 
     /**
@@ -2340,8 +2345,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_layout_direction
      */
-    fun getLayoutDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment)
+    fun getLayoutDirection(): Control.LayoutDirection {
+        return Control.LayoutDirection(ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment))
     }
 
     /**
@@ -2410,6 +2415,681 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         const val themeChanged: String = "theme_changed"
     }
 
+    /**
+     * Godot's `Control.FocusMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.FocusMode.<NAME>`).
+     *
+     * Generated from Godot docs: Control.FocusMode
+     */
+    @JvmInline
+    value class FocusMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The node cannot grab focus. Use with `focus_mode`.
+             *
+             * Generated from Godot docs: Control.FOCUS_NONE
+             */
+            val NONE: FocusMode get() = FocusMode(0L)
+            /**
+             * The node can only grab focus on mouse clicks. Use with `focus_mode`.
+             *
+             * Generated from Godot docs: Control.FOCUS_CLICK
+             */
+            val CLICK: FocusMode get() = FocusMode(1L)
+            /**
+             * The node can grab focus on mouse click, using the arrows and the Tab keys on the keyboard, or
+             * using the D-pad buttons on a gamepad. Use with `focus_mode`.
+             *
+             * Generated from Godot docs: Control.FOCUS_ALL
+             */
+            val ALL: FocusMode get() = FocusMode(2L)
+            /**
+             * The node can grab focus only when screen reader is active. Use with `focus_mode`.
+             *
+             * Generated from Godot docs: Control.FOCUS_ACCESSIBILITY
+             */
+            val ACCESSIBILITY: FocusMode get() = FocusMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `Control.FocusBehaviorRecursive` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Control.FocusBehaviorRecursive.<NAME>`).
+     *
+     * Generated from Godot docs: Control.FocusBehaviorRecursive
+     */
+    @JvmInline
+    value class FocusBehaviorRecursive(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Inherits the `focus_behavior_recursive` from the parent control. If there is no parent control,
+             * this is the same as `FocusBehaviorRecursive.ENABLED`.
+             *
+             * Generated from Godot docs: Control.FOCUS_BEHAVIOR_INHERITED
+             */
+            val INHERITED: FocusBehaviorRecursive get() = FocusBehaviorRecursive(0L)
+            /**
+             * Prevents the control from getting focused. `get_focus_mode_with_override` will return
+             * `FocusMode.NONE`.
+             *
+             * Generated from Godot docs: Control.FOCUS_BEHAVIOR_DISABLED
+             */
+            val DISABLED: FocusBehaviorRecursive get() = FocusBehaviorRecursive(1L)
+            /**
+             * Allows the control to be focused, depending on the `focus_mode`. This can be used to ignore the
+             * parent's `focus_behavior_recursive`. `get_focus_mode_with_override` will return the
+             * `focus_mode`.
+             *
+             * Generated from Godot docs: Control.FOCUS_BEHAVIOR_ENABLED
+             */
+            val ENABLED: FocusBehaviorRecursive get() = FocusBehaviorRecursive(2L)
+        }
+    }
+
+    /**
+     * Godot's `Control.MouseBehaviorRecursive` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Control.MouseBehaviorRecursive.<NAME>`).
+     *
+     * Generated from Godot docs: Control.MouseBehaviorRecursive
+     */
+    @JvmInline
+    value class MouseBehaviorRecursive(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Inherits the `mouse_behavior_recursive` from the parent control. If there is no parent control,
+             * this is the same as `MouseBehaviorRecursive.ENABLED`.
+             *
+             * Generated from Godot docs: Control.MOUSE_BEHAVIOR_INHERITED
+             */
+            val INHERITED: MouseBehaviorRecursive get() = MouseBehaviorRecursive(0L)
+            /**
+             * Prevents the control from receiving mouse input. `get_mouse_filter_with_override` will return
+             * `MouseFilter.IGNORE`.
+             *
+             * Generated from Godot docs: Control.MOUSE_BEHAVIOR_DISABLED
+             */
+            val DISABLED: MouseBehaviorRecursive get() = MouseBehaviorRecursive(1L)
+            /**
+             * Allows the control to receive mouse input, depending on the `mouse_filter`. This can be used to
+             * ignore the parent's `mouse_behavior_recursive`. `get_mouse_filter_with_override` will return the
+             * `mouse_filter`.
+             *
+             * Generated from Godot docs: Control.MOUSE_BEHAVIOR_ENABLED
+             */
+            val ENABLED: MouseBehaviorRecursive get() = MouseBehaviorRecursive(2L)
+        }
+    }
+
+    /**
+     * Godot's `Control.CursorShape` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.CursorShape.<NAME>`).
+     *
+     * Generated from Godot docs: Control.CursorShape
+     */
+    @JvmInline
+    value class CursorShape(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Show the system's arrow mouse cursor when the user hovers the node. Use with
+             * `mouse_default_cursor_shape`.
+             *
+             * Generated from Godot docs: Control.CURSOR_ARROW
+             */
+            val ARROW: CursorShape get() = CursorShape(0L)
+            /**
+             * Show the system's I-beam mouse cursor when the user hovers the node. The I-beam pointer has a
+             * shape similar to "I". It tells the user they can highlight or insert text.
+             *
+             * Generated from Godot docs: Control.CURSOR_IBEAM
+             */
+            val IBEAM: CursorShape get() = CursorShape(1L)
+            /**
+             * Show the system's pointing hand mouse cursor when the user hovers the node.
+             *
+             * Generated from Godot docs: Control.CURSOR_POINTING_HAND
+             */
+            val POINTING_HAND: CursorShape get() = CursorShape(2L)
+            /**
+             * Show the system's cross mouse cursor when the user hovers the node.
+             *
+             * Generated from Godot docs: Control.CURSOR_CROSS
+             */
+            val CROSS: CursorShape get() = CursorShape(3L)
+            /**
+             * Show the system's wait mouse cursor when the user hovers the node. Often an hourglass.
+             *
+             * Generated from Godot docs: Control.CURSOR_WAIT
+             */
+            val WAIT: CursorShape get() = CursorShape(4L)
+            /**
+             * Show the system's busy mouse cursor when the user hovers the node. Often an arrow with a small
+             * hourglass.
+             *
+             * Generated from Godot docs: Control.CURSOR_BUSY
+             */
+            val BUSY: CursorShape get() = CursorShape(5L)
+            /**
+             * Show the system's drag mouse cursor, often a closed fist or a cross symbol, when the user hovers
+             * the node. It tells the user they're currently dragging an item, like a node in the Scene dock.
+             *
+             * Generated from Godot docs: Control.CURSOR_DRAG
+             */
+            val DRAG: CursorShape get() = CursorShape(6L)
+            /**
+             * Show the system's drop mouse cursor when the user hovers the node. It can be an open hand. It
+             * tells the user they can drop an item they're currently grabbing, like a node in the Scene dock.
+             *
+             * Generated from Godot docs: Control.CURSOR_CAN_DROP
+             */
+            val CAN_DROP: CursorShape get() = CursorShape(7L)
+            /**
+             * Show the system's forbidden mouse cursor when the user hovers the node. Often a crossed circle.
+             *
+             * Generated from Godot docs: Control.CURSOR_FORBIDDEN
+             */
+            val FORBIDDEN: CursorShape get() = CursorShape(8L)
+            /**
+             * Show the system's vertical resize mouse cursor when the user hovers the node. A double-headed
+             * vertical arrow. It tells the user they can resize the window or the panel vertically.
+             *
+             * Generated from Godot docs: Control.CURSOR_VSIZE
+             */
+            val VSIZE: CursorShape get() = CursorShape(9L)
+            /**
+             * Show the system's horizontal resize mouse cursor when the user hovers the node. A double-headed
+             * horizontal arrow. It tells the user they can resize the window or the panel horizontally.
+             *
+             * Generated from Godot docs: Control.CURSOR_HSIZE
+             */
+            val HSIZE: CursorShape get() = CursorShape(10L)
+            /**
+             * Show the system's window resize mouse cursor when the user hovers the node. The cursor is a
+             * double-headed arrow that goes from the bottom left to the top right. It tells the user they can
+             * resize the window or the panel both horizontally and vertically.
+             *
+             * Generated from Godot docs: Control.CURSOR_BDIAGSIZE
+             */
+            val BDIAGSIZE: CursorShape get() = CursorShape(11L)
+            /**
+             * Show the system's window resize mouse cursor when the user hovers the node. The cursor is a
+             * double-headed arrow that goes from the top left to the bottom right, the opposite of
+             * `CursorShape.BDIAGSIZE`. It tells the user they can resize the window or the panel both
+             * horizontally and vertically.
+             *
+             * Generated from Godot docs: Control.CURSOR_FDIAGSIZE
+             */
+            val FDIAGSIZE: CursorShape get() = CursorShape(12L)
+            /**
+             * Show the system's move mouse cursor when the user hovers the node. It shows 2 double-headed
+             * arrows at a 90 degree angle. It tells the user they can move a UI element freely.
+             *
+             * Generated from Godot docs: Control.CURSOR_MOVE
+             */
+            val MOVE: CursorShape get() = CursorShape(13L)
+            /**
+             * Show the system's vertical split mouse cursor when the user hovers the node. On Windows, it's
+             * the same as `CursorShape.VSIZE`.
+             *
+             * Generated from Godot docs: Control.CURSOR_VSPLIT
+             */
+            val VSPLIT: CursorShape get() = CursorShape(14L)
+            /**
+             * Show the system's horizontal split mouse cursor when the user hovers the node. On Windows, it's
+             * the same as `CursorShape.HSIZE`.
+             *
+             * Generated from Godot docs: Control.CURSOR_HSPLIT
+             */
+            val HSPLIT: CursorShape get() = CursorShape(15L)
+            /**
+             * Show the system's help mouse cursor when the user hovers the node, a question mark.
+             *
+             * Generated from Godot docs: Control.CURSOR_HELP
+             */
+            val HELP: CursorShape get() = CursorShape(16L)
+        }
+    }
+
+    /**
+     * Godot's `Control.LayoutPreset` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.LayoutPreset.<NAME>`).
+     *
+     * Generated from Godot docs: Control.LayoutPreset
+     */
+    @JvmInline
+    value class LayoutPreset(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Snap all 4 anchors to the top-left of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_TOP_LEFT
+             */
+            val TOP_LEFT: LayoutPreset get() = LayoutPreset(0L)
+            /**
+             * Snap all 4 anchors to the top-right of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_TOP_RIGHT
+             */
+            val TOP_RIGHT: LayoutPreset get() = LayoutPreset(1L)
+            /**
+             * Snap all 4 anchors to the bottom-left of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_BOTTOM_LEFT
+             */
+            val BOTTOM_LEFT: LayoutPreset get() = LayoutPreset(2L)
+            /**
+             * Snap all 4 anchors to the bottom-right of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_BOTTOM_RIGHT
+             */
+            val BOTTOM_RIGHT: LayoutPreset get() = LayoutPreset(3L)
+            /**
+             * Snap all 4 anchors to the center of the left edge of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_CENTER_LEFT
+             */
+            val CENTER_LEFT: LayoutPreset get() = LayoutPreset(4L)
+            /**
+             * Snap all 4 anchors to the center of the top edge of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_CENTER_TOP
+             */
+            val CENTER_TOP: LayoutPreset get() = LayoutPreset(5L)
+            /**
+             * Snap all 4 anchors to the center of the right edge of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_CENTER_RIGHT
+             */
+            val CENTER_RIGHT: LayoutPreset get() = LayoutPreset(6L)
+            /**
+             * Snap all 4 anchors to the center of the bottom edge of the parent control's bounds. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_CENTER_BOTTOM
+             */
+            val CENTER_BOTTOM: LayoutPreset get() = LayoutPreset(7L)
+            /**
+             * Snap all 4 anchors to the center of the parent control's bounds. Use with `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_CENTER
+             */
+            val CENTER: LayoutPreset get() = LayoutPreset(8L)
+            /**
+             * Snap all 4 anchors to the left edge of the parent control. The left offset becomes relative to
+             * the left edge and the top offset relative to the top left corner of the node's parent. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_LEFT_WIDE
+             */
+            val LEFT_WIDE: LayoutPreset get() = LayoutPreset(9L)
+            /**
+             * Snap all 4 anchors to the top edge of the parent control. The left offset becomes relative to
+             * the top left corner, the top offset relative to the top edge, and the right offset relative to
+             * the top right corner of the node's parent. Use with `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_TOP_WIDE
+             */
+            val TOP_WIDE: LayoutPreset get() = LayoutPreset(10L)
+            /**
+             * Snap all 4 anchors to the right edge of the parent control. The right offset becomes relative to
+             * the right edge and the top offset relative to the top right corner of the node's parent. Use
+             * with `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_RIGHT_WIDE
+             */
+            val RIGHT_WIDE: LayoutPreset get() = LayoutPreset(11L)
+            /**
+             * Snap all 4 anchors to the bottom edge of the parent control. The left offset becomes relative to
+             * the bottom left corner, the bottom offset relative to the bottom edge, and the right offset
+             * relative to the bottom right corner of the node's parent. Use with `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_BOTTOM_WIDE
+             */
+            val BOTTOM_WIDE: LayoutPreset get() = LayoutPreset(12L)
+            /**
+             * Snap all 4 anchors to a vertical line that cuts the parent control in half. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_VCENTER_WIDE
+             */
+            val VCENTER_WIDE: LayoutPreset get() = LayoutPreset(13L)
+            /**
+             * Snap all 4 anchors to a horizontal line that cuts the parent control in half. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_HCENTER_WIDE
+             */
+            val HCENTER_WIDE: LayoutPreset get() = LayoutPreset(14L)
+            /**
+             * Snap all 4 anchors to the respective corners of the parent control. Set all 4 offsets to 0 after
+             * you applied this preset and the `Control` will fit its parent control. Use with
+             * `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.PRESET_FULL_RECT
+             */
+            val FULL_RECT: LayoutPreset get() = LayoutPreset(15L)
+        }
+    }
+
+    /**
+     * Godot's `Control.LayoutPresetMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.LayoutPresetMode.<NAME>`).
+     *
+     * Generated from Godot docs: Control.LayoutPresetMode
+     */
+    @JvmInline
+    value class LayoutPresetMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The control will be resized to its minimum size.
+             *
+             * Generated from Godot docs: Control.PRESET_MODE_MINSIZE
+             */
+            val MINSIZE: LayoutPresetMode get() = LayoutPresetMode(0L)
+            /**
+             * The control's width will not change.
+             *
+             * Generated from Godot docs: Control.PRESET_MODE_KEEP_WIDTH
+             */
+            val KEEP_WIDTH: LayoutPresetMode get() = LayoutPresetMode(1L)
+            /**
+             * The control's height will not change.
+             *
+             * Generated from Godot docs: Control.PRESET_MODE_KEEP_HEIGHT
+             */
+            val KEEP_HEIGHT: LayoutPresetMode get() = LayoutPresetMode(2L)
+            /**
+             * The control's size will not change.
+             *
+             * Generated from Godot docs: Control.PRESET_MODE_KEEP_SIZE
+             */
+            val KEEP_SIZE: LayoutPresetMode get() = LayoutPresetMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `Control.SizeFlags` bitfield as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.SizeFlags.<NAME>`).
+     *
+     * Generated from Godot docs: Control.SizeFlags
+     */
+    @JvmInline
+    value class SizeFlags(override val value: Long) : GodotEnumValue {
+        infix fun or(other: SizeFlags): SizeFlags = SizeFlags(value or other.value)
+
+        infix fun and(other: SizeFlags): SizeFlags = SizeFlags(value and other.value)
+
+        infix fun xor(other: SizeFlags): SizeFlags = SizeFlags(value xor other.value)
+
+        fun inv(): SizeFlags = SizeFlags(value.inv())
+
+        operator fun contains(other: SizeFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Tells the parent `Container` to align the node with its start, either the top or the left edge.
+             * It is mutually exclusive with `SizeFlags.FILL` and other shrink size flags, but can be used with
+             * `SizeFlags.EXPAND` in some containers. Use with `size_flags_horizontal` and
+             * `size_flags_vertical`. Note: Setting this flag is equal to not having any size flags.
+             *
+             * Generated from Godot docs: Control.SIZE_SHRINK_BEGIN
+             */
+            val SHRINK_BEGIN: SizeFlags get() = SizeFlags(0L)
+            /**
+             * Tells the parent `Container` to expand the bounds of this node to fill all the available space
+             * without pushing any other node. It is mutually exclusive with shrink size flags. Use with
+             * `size_flags_horizontal` and `size_flags_vertical`.
+             *
+             * Generated from Godot docs: Control.SIZE_FILL
+             */
+            val FILL: SizeFlags get() = SizeFlags(1L)
+            /**
+             * Tells the parent `Container` to let this node take all the available space on the axis you flag.
+             * If multiple neighboring nodes are set to expand, they'll share the space based on their stretch
+             * ratio. See `size_flags_stretch_ratio`. Use with `size_flags_horizontal` and
+             * `size_flags_vertical`.
+             *
+             * Generated from Godot docs: Control.SIZE_EXPAND
+             */
+            val EXPAND: SizeFlags get() = SizeFlags(2L)
+            /**
+             * Sets the node's size flags to both fill and expand. See `SizeFlags.FILL` and `SizeFlags.EXPAND`
+             * for more information.
+             *
+             * Generated from Godot docs: Control.SIZE_EXPAND_FILL
+             */
+            val EXPAND_FILL: SizeFlags get() = SizeFlags(3L)
+            /**
+             * Tells the parent `Container` to center the node in the available space. It is mutually exclusive
+             * with `SizeFlags.FILL` and other shrink size flags, but can be used with `SizeFlags.EXPAND` in
+             * some containers. Use with `size_flags_horizontal` and `size_flags_vertical`.
+             *
+             * Generated from Godot docs: Control.SIZE_SHRINK_CENTER
+             */
+            val SHRINK_CENTER: SizeFlags get() = SizeFlags(4L)
+            /**
+             * Tells the parent `Container` to align the node with its end, either the bottom or the right
+             * edge. It is mutually exclusive with `SizeFlags.FILL` and other shrink size flags, but can be
+             * used with `SizeFlags.EXPAND` in some containers. Use with `size_flags_horizontal` and
+             * `size_flags_vertical`.
+             *
+             * Generated from Godot docs: Control.SIZE_SHRINK_END
+             */
+            val SHRINK_END: SizeFlags get() = SizeFlags(8L)
+        }
+    }
+
+    /**
+     * Godot's `Control.MouseFilter` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Control.MouseFilter.<NAME>`).
+     *
+     * Generated from Godot docs: Control.MouseFilter
+     */
+    @JvmInline
+    value class MouseFilter(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The control will receive mouse movement input events and mouse button input events if clicked on
+             * through `_gui_input`. The control will also receive the `mouse_entered` and `mouse_exited`
+             * signals. These events are automatically marked as handled, and they will not propagate further
+             * to other controls. This also results in blocking signals in other controls.
+             *
+             * Generated from Godot docs: Control.MOUSE_FILTER_STOP
+             */
+            val STOP: MouseFilter get() = MouseFilter(0L)
+            /**
+             * The control will receive mouse movement input events and mouse button input events if clicked on
+             * through `_gui_input`. The control will also receive the `mouse_entered` and `mouse_exited`
+             * signals. If this control does not handle the event, the event will propagate up to its parent
+             * control if it has one. The event is bubbled up the node hierarchy until it reaches a
+             * non-`CanvasItem`, a control with `MouseFilter.STOP`, or a `CanvasItem` with
+             * `CanvasItem.top_level` enabled. This will allow signals to fire in all controls it reaches. If
+             * no control handled it, the event will be passed to `Node._shortcut_input` for further
+             * processing.
+             *
+             * Generated from Godot docs: Control.MOUSE_FILTER_PASS
+             */
+            val PASS: MouseFilter get() = MouseFilter(1L)
+            /**
+             * The control will not receive any mouse movement input events nor mouse button input events
+             * through `_gui_input`. The control will also not receive the `mouse_entered` nor `mouse_exited`
+             * signals. This will not block other controls from receiving these events or firing the signals.
+             * Ignored events will not be handled automatically. If a child has `MouseFilter.PASS` and an event
+             * was passed to this control, the event will further propagate up to the control's parent. Note:
+             * If the control has received `mouse_entered` but not `mouse_exited`, changing the `mouse_filter`
+             * to `MouseFilter.IGNORE` will cause `mouse_exited` to be emitted.
+             *
+             * Generated from Godot docs: Control.MOUSE_FILTER_IGNORE
+             */
+            val IGNORE: MouseFilter get() = MouseFilter(2L)
+        }
+    }
+
+    /**
+     * Godot's `Control.GrowDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.GrowDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Control.GrowDirection
+     */
+    @JvmInline
+    value class GrowDirection(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The control will grow to the left or top to make up if its minimum size is changed to be greater
+             * than its current size on the respective axis.
+             *
+             * Generated from Godot docs: Control.GROW_DIRECTION_BEGIN
+             */
+            val BEGIN: GrowDirection get() = GrowDirection(0L)
+            /**
+             * The control will grow to the right or bottom to make up if its minimum size is changed to be
+             * greater than its current size on the respective axis.
+             *
+             * Generated from Godot docs: Control.GROW_DIRECTION_END
+             */
+            val END: GrowDirection get() = GrowDirection(1L)
+            /**
+             * The control will grow in both directions equally to make up if its minimum size is changed to be
+             * greater than its current size.
+             *
+             * Generated from Godot docs: Control.GROW_DIRECTION_BOTH
+             */
+            val BOTH: GrowDirection get() = GrowDirection(2L)
+        }
+    }
+
+    /**
+     * Godot's `Control.Anchor` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Control.Anchor.<NAME>`).
+     *
+     * Generated from Godot docs: Control.Anchor
+     */
+    @JvmInline
+    value class Anchor(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Snaps one of the 4 anchor's sides to the origin of the node's `Rect`, in the top left. Use it
+             * with one of the `anchor_*` member variables, like `anchor_left`. To change all 4 anchors at
+             * once, use `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.ANCHOR_BEGIN
+             */
+            val BEGIN: Anchor get() = Anchor(0L)
+            /**
+             * Snaps one of the 4 anchor's sides to the end of the node's `Rect`, in the bottom right. Use it
+             * with one of the `anchor_*` member variables, like `anchor_left`. To change all 4 anchors at
+             * once, use `set_anchors_preset`.
+             *
+             * Generated from Godot docs: Control.ANCHOR_END
+             */
+            val END: Anchor get() = Anchor(1L)
+        }
+    }
+
+    /**
+     * Godot's `Control.LayoutDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.LayoutDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Control.LayoutDirection
+     */
+    @JvmInline
+    value class LayoutDirection(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Automatic layout direction, determined from the parent control layout direction.
+             *
+             * Generated from Godot docs: Control.LAYOUT_DIRECTION_INHERITED
+             */
+            val INHERITED: LayoutDirection get() = LayoutDirection(0L)
+            /**
+             * Automatic layout direction, determined from the current locale. Right-to-left layout direction
+             * is automatically used for languages that require it such as Arabic and Hebrew, but only if a
+             * valid translation file is loaded for the given language (unless said language is configured as a
+             * fallback in `ProjectSettings.internationalization/locale/fallback`). For all other languages (or
+             * if no valid translation file is found by Godot), left-to-right layout direction is used. If
+             * using `TextServerFallback` (`ProjectSettings.internationalization/rendering/text_driver`),
+             * left-to-right layout direction is always used regardless of the language. Right-to-left layout
+             * direction can also be forced using
+             * `ProjectSettings.internationalization/rendering/force_right_to_left_layout_direction`.
+             *
+             * Generated from Godot docs: Control.LAYOUT_DIRECTION_APPLICATION_LOCALE
+             */
+            val APPLICATION_LOCALE: LayoutDirection get() = LayoutDirection(1L)
+            /**
+             * Left-to-right layout direction.
+             *
+             * Generated from Godot docs: Control.LAYOUT_DIRECTION_LTR
+             */
+            val LTR: LayoutDirection get() = LayoutDirection(2L)
+            /**
+             * Right-to-left layout direction.
+             *
+             * Generated from Godot docs: Control.LAYOUT_DIRECTION_RTL
+             */
+            val RTL: LayoutDirection get() = LayoutDirection(3L)
+            /**
+             * Automatic layout direction, determined from the system locale. Right-to-left layout direction is
+             * automatically used for languages that require it such as Arabic and Hebrew, but only if a valid
+             * translation file is loaded for the given language. For all other languages (or if no valid
+             * translation file is found by Godot), left-to-right layout direction is used. If using
+             * `TextServerFallback` (`ProjectSettings.internationalization/rendering/text_driver`),
+             * left-to-right layout direction is always used regardless of the language.
+             *
+             * Generated from Godot docs: Control.LAYOUT_DIRECTION_SYSTEM_LOCALE
+             */
+            val SYSTEM_LOCALE: LayoutDirection get() = LayoutDirection(4L)
+            /**
+             * Represents the size of the `LayoutDirection` enum.
+             *
+             * Generated from Godot docs: Control.LAYOUT_DIRECTION_MAX
+             */
+            val MAX: LayoutDirection get() = LayoutDirection(5L)
+            val LOCALE: LayoutDirection get() = LayoutDirection(1L)
+        }
+    }
+
+    /**
+     * Godot's `Control.TextDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Control.TextDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Control.TextDirection
+     */
+    @JvmInline
+    value class TextDirection(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Text writing direction is the same as layout direction.
+             *
+             * Generated from Godot docs: Control.TEXT_DIRECTION_INHERITED
+             */
+            val INHERITED: TextDirection get() = TextDirection(3L)
+            /**
+             * Automatic text writing direction, determined from the current locale and text content.
+             *
+             * Generated from Godot docs: Control.TEXT_DIRECTION_AUTO
+             */
+            val AUTO: TextDirection get() = TextDirection(0L)
+            /**
+             * Left-to-right text writing direction.
+             *
+             * Generated from Godot docs: Control.TEXT_DIRECTION_LTR
+             */
+            val LTR: TextDirection get() = TextDirection(1L)
+            /**
+             * Right-to-left text writing direction.
+             *
+             * Generated from Godot docs: Control.TEXT_DIRECTION_RTL
+             */
+            val RTL: TextDirection get() = TextDirection(2L)
+        }
+    }
+
     companion object {
         const val NOTIFICATION_RESIZED: Long = 40L
         const val NOTIFICATION_MOUSE_ENTER: Long = 41L
@@ -2422,78 +3102,6 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         const val NOTIFICATION_SCROLL_BEGIN: Long = 47L
         const val NOTIFICATION_SCROLL_END: Long = 48L
         const val NOTIFICATION_LAYOUT_DIRECTION_CHANGED: Long = 49L
-        const val FOCUS_NONE: Long = 0L
-        const val FOCUS_CLICK: Long = 1L
-        const val FOCUS_ALL: Long = 2L
-        const val FOCUS_ACCESSIBILITY: Long = 3L
-        const val FOCUS_BEHAVIOR_INHERITED: Long = 0L
-        const val FOCUS_BEHAVIOR_DISABLED: Long = 1L
-        const val FOCUS_BEHAVIOR_ENABLED: Long = 2L
-        const val MOUSE_BEHAVIOR_INHERITED: Long = 0L
-        const val MOUSE_BEHAVIOR_DISABLED: Long = 1L
-        const val MOUSE_BEHAVIOR_ENABLED: Long = 2L
-        const val CURSOR_ARROW: Long = 0L
-        const val CURSOR_IBEAM: Long = 1L
-        const val CURSOR_POINTING_HAND: Long = 2L
-        const val CURSOR_CROSS: Long = 3L
-        const val CURSOR_WAIT: Long = 4L
-        const val CURSOR_BUSY: Long = 5L
-        const val CURSOR_DRAG: Long = 6L
-        const val CURSOR_CAN_DROP: Long = 7L
-        const val CURSOR_FORBIDDEN: Long = 8L
-        const val CURSOR_VSIZE: Long = 9L
-        const val CURSOR_HSIZE: Long = 10L
-        const val CURSOR_BDIAGSIZE: Long = 11L
-        const val CURSOR_FDIAGSIZE: Long = 12L
-        const val CURSOR_MOVE: Long = 13L
-        const val CURSOR_VSPLIT: Long = 14L
-        const val CURSOR_HSPLIT: Long = 15L
-        const val CURSOR_HELP: Long = 16L
-        const val PRESET_TOP_LEFT: Long = 0L
-        const val PRESET_TOP_RIGHT: Long = 1L
-        const val PRESET_BOTTOM_LEFT: Long = 2L
-        const val PRESET_BOTTOM_RIGHT: Long = 3L
-        const val PRESET_CENTER_LEFT: Long = 4L
-        const val PRESET_CENTER_TOP: Long = 5L
-        const val PRESET_CENTER_RIGHT: Long = 6L
-        const val PRESET_CENTER_BOTTOM: Long = 7L
-        const val PRESET_CENTER: Long = 8L
-        const val PRESET_LEFT_WIDE: Long = 9L
-        const val PRESET_TOP_WIDE: Long = 10L
-        const val PRESET_RIGHT_WIDE: Long = 11L
-        const val PRESET_BOTTOM_WIDE: Long = 12L
-        const val PRESET_VCENTER_WIDE: Long = 13L
-        const val PRESET_HCENTER_WIDE: Long = 14L
-        const val PRESET_FULL_RECT: Long = 15L
-        const val PRESET_MODE_MINSIZE: Long = 0L
-        const val PRESET_MODE_KEEP_WIDTH: Long = 1L
-        const val PRESET_MODE_KEEP_HEIGHT: Long = 2L
-        const val PRESET_MODE_KEEP_SIZE: Long = 3L
-        const val SIZE_SHRINK_BEGIN: Long = 0L
-        const val SIZE_FILL: Long = 1L
-        const val SIZE_EXPAND: Long = 2L
-        const val SIZE_EXPAND_FILL: Long = 3L
-        const val SIZE_SHRINK_CENTER: Long = 4L
-        const val SIZE_SHRINK_END: Long = 8L
-        const val MOUSE_FILTER_STOP: Long = 0L
-        const val MOUSE_FILTER_PASS: Long = 1L
-        const val MOUSE_FILTER_IGNORE: Long = 2L
-        const val GROW_DIRECTION_BEGIN: Long = 0L
-        const val GROW_DIRECTION_END: Long = 1L
-        const val GROW_DIRECTION_BOTH: Long = 2L
-        const val ANCHOR_BEGIN: Long = 0L
-        const val ANCHOR_END: Long = 1L
-        const val LAYOUT_DIRECTION_INHERITED: Long = 0L
-        const val LAYOUT_DIRECTION_APPLICATION_LOCALE: Long = 1L
-        const val LAYOUT_DIRECTION_LTR: Long = 2L
-        const val LAYOUT_DIRECTION_RTL: Long = 3L
-        const val LAYOUT_DIRECTION_SYSTEM_LOCALE: Long = 4L
-        const val LAYOUT_DIRECTION_MAX: Long = 5L
-        const val LAYOUT_DIRECTION_LOCALE: Long = 1L
-        const val TEXT_DIRECTION_INHERITED: Long = 3L
-        const val TEXT_DIRECTION_AUTO: Long = 0L
-        const val TEXT_DIRECTION_LTR: Long = 1L
-        const val TEXT_DIRECTION_RTL: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Control? =

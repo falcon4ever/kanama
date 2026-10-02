@@ -11,37 +11,37 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: RDSamplerState
  */
 class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
-    var magFilter: Long
+    var magFilter: RenderingDevice.SamplerFilter
         @JvmName("magFilterProperty")
         get() = getMagFilter()
         @JvmName("setMagFilterProperty")
         set(value) = setMagFilter(value)
 
-    var minFilter: Long
+    var minFilter: RenderingDevice.SamplerFilter
         @JvmName("minFilterProperty")
         get() = getMinFilter()
         @JvmName("setMinFilterProperty")
         set(value) = setMinFilter(value)
 
-    var mipFilter: Long
+    var mipFilter: RenderingDevice.SamplerFilter
         @JvmName("mipFilterProperty")
         get() = getMipFilter()
         @JvmName("setMipFilterProperty")
         set(value) = setMipFilter(value)
 
-    var repeatU: Long
+    var repeatU: RenderingDevice.SamplerRepeatMode
         @JvmName("repeatUProperty")
         get() = getRepeatU()
         @JvmName("setRepeatUProperty")
         set(value) = setRepeatU(value)
 
-    var repeatV: Long
+    var repeatV: RenderingDevice.SamplerRepeatMode
         @JvmName("repeatVProperty")
         get() = getRepeatV()
         @JvmName("setRepeatVProperty")
         set(value) = setRepeatV(value)
 
-    var repeatW: Long
+    var repeatW: RenderingDevice.SamplerRepeatMode
         @JvmName("repeatWProperty")
         get() = getRepeatW()
         @JvmName("setRepeatWProperty")
@@ -71,7 +71,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setEnableCompareProperty")
         set(value) = setEnableCompare(value)
 
-    var compareOp: Long
+    var compareOp: RenderingDevice.CompareOperator
         @JvmName("compareOpProperty")
         get() = getCompareOp()
         @JvmName("setCompareOpProperty")
@@ -89,7 +89,7 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setMaxLodProperty")
         set(value) = setMaxLod(value)
 
-    var borderColor: Long
+    var borderColor: RenderingDevice.SamplerBorderColor
         @JvmName("borderColorProperty")
         get() = getBorderColor()
         @JvmName("setBorderColorProperty")
@@ -107,9 +107,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_mag_filter
      */
-    fun setMagFilter(pMember: Long) {
+    fun setMagFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setMagFilterBind, segment, pMember.value)
     }
 
     /**
@@ -118,9 +118,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_mag_filter
      */
-    fun getMagFilter(): Long {
+    fun getMagFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment)
+        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(getMagFilterBind, segment))
     }
 
     /**
@@ -129,9 +129,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_min_filter
      */
-    fun setMinFilter(pMember: Long) {
+    fun setMinFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setMinFilterBind, segment, pMember.value)
     }
 
     /**
@@ -140,9 +140,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_min_filter
      */
-    fun getMinFilter(): Long {
+    fun getMinFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment)
+        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(getMinFilterBind, segment))
     }
 
     /**
@@ -150,9 +150,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_mip_filter
      */
-    fun setMipFilter(pMember: Long) {
+    fun setMipFilter(pMember: RenderingDevice.SamplerFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMipFilterBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setMipFilterBind, segment, pMember.value)
     }
 
     /**
@@ -160,9 +160,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_mip_filter
      */
-    fun getMipFilter(): Long {
+    fun getMipFilter(): RenderingDevice.SamplerFilter {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, segment)
+        return RenderingDevice.SamplerFilter(ObjectCalls.ptrcallNoArgsRetLong(getMipFilterBind, segment))
     }
 
     /**
@@ -171,9 +171,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_repeat_u
      */
-    fun setRepeatU(pMember: Long) {
+    fun setRepeatU(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatUBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setRepeatUBind, segment, pMember.value)
     }
 
     /**
@@ -182,9 +182,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_repeat_u
      */
-    fun getRepeatU(): Long {
+    fun getRepeatU(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, segment)
+        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(getRepeatUBind, segment))
     }
 
     /**
@@ -193,9 +193,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_repeat_v
      */
-    fun setRepeatV(pMember: Long) {
+    fun setRepeatV(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatVBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setRepeatVBind, segment, pMember.value)
     }
 
     /**
@@ -204,9 +204,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_repeat_v
      */
-    fun getRepeatV(): Long {
+    fun getRepeatV(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, segment)
+        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(getRepeatVBind, segment))
     }
 
     /**
@@ -215,9 +215,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_repeat_w
      */
-    fun setRepeatW(pMember: Long) {
+    fun setRepeatW(pMember: RenderingDevice.SamplerRepeatMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatWBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setRepeatWBind, segment, pMember.value)
     }
 
     /**
@@ -226,9 +226,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_repeat_w
      */
-    fun getRepeatW(): Long {
+    fun getRepeatW(): RenderingDevice.SamplerRepeatMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, segment)
+        return RenderingDevice.SamplerRepeatMode(ObjectCalls.ptrcallNoArgsRetLong(getRepeatWBind, segment))
     }
 
     /**
@@ -336,9 +336,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_compare_op
      */
-    fun setCompareOp(pMember: Long) {
+    fun setCompareOp(pMember: RenderingDevice.CompareOperator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCompareOpBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setCompareOpBind, segment, pMember.value)
     }
 
     /**
@@ -346,9 +346,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_compare_op
      */
-    fun getCompareOp(): Long {
+    fun getCompareOp(): RenderingDevice.CompareOperator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, segment)
+        return RenderingDevice.CompareOperator(ObjectCalls.ptrcallNoArgsRetLong(getCompareOpBind, segment))
     }
 
     /**
@@ -401,9 +401,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.set_border_color
      */
-    fun setBorderColor(pMember: Long) {
+    fun setBorderColor(pMember: RenderingDevice.SamplerBorderColor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBorderColorBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setBorderColorBind, segment, pMember.value)
     }
 
     /**
@@ -412,9 +412,9 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDSamplerState.get_border_color
      */
-    fun getBorderColor(): Long {
+    fun getBorderColor(): RenderingDevice.SamplerBorderColor {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, segment)
+        return RenderingDevice.SamplerBorderColor(ObjectCalls.ptrcallNoArgsRetLong(getBorderColorBind, segment))
     }
 
     /**

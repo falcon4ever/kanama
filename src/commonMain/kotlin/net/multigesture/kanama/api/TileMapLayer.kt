@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -70,7 +71,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setUseKinematicBodiesProperty")
         set(value) = setUseKinematicBodies(value)
 
-    var collisionVisibilityMode: Long
+    var collisionVisibilityMode: TileMapLayer.DebugVisibilityMode
         @JvmName("collisionVisibilityModeProperty")
         get() = getCollisionVisibilityMode()
         @JvmName("setCollisionVisibilityModeProperty")
@@ -88,7 +89,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setNavigationEnabledProperty")
         set(value) = setNavigationEnabled(value)
 
-    var navigationVisibilityMode: Long
+    var navigationVisibilityMode: TileMapLayer.DebugVisibilityMode
         @JvmName("navigationVisibilityModeProperty")
         get() = getNavigationVisibilityMode()
         @JvmName("setNavigationVisibilityModeProperty")
@@ -372,8 +373,8 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TileMapLayer.get_neighbor_cell
      */
-    fun getNeighborCell(coords: Vector2i, neighbor: Long): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, segment, coords, neighbor)
+    fun getNeighborCell(coords: Vector2i, neighbor: TileSet.CellNeighbor): Vector2i {
+        return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, segment, coords, neighbor.value)
     }
 
     /**
@@ -566,23 +567,23 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show collision debug settings.
      *
      * Generated from Godot docs: TileMapLayer.set_collision_visibility_mode
      */
-    fun setCollisionVisibilityMode(visibilityMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode)
+    fun setCollisionVisibilityMode(visibilityMode: TileMapLayer.DebugVisibilityMode) {
+        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode.value)
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s collision shapes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show collision debug settings.
      *
      * Generated from Godot docs: TileMapLayer.get_collision_visibility_mode
      */
-    fun getCollisionVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment)
+    fun getCollisionVisibilityMode(): TileMapLayer.DebugVisibilityMode {
+        return TileMapLayer.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment))
     }
 
     /**
@@ -677,34 +678,63 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show navigation debug settings.
      *
      * Generated from Godot docs: TileMapLayer.set_navigation_visibility_mode
      */
-    fun setNavigationVisibilityMode(showNavigation: Long) {
-        ObjectCalls.ptrcallWithLongArg(setNavigationVisibilityModeBind, segment, showNavigation)
+    fun setNavigationVisibilityMode(showNavigation: TileMapLayer.DebugVisibilityMode) {
+        ObjectCalls.ptrcallWithLongArg(setNavigationVisibilityModeBind, segment, showNavigation.value)
     }
 
     /**
-     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DEBUG_VISIBILITY_MODE_DEFAULT`,
+     * Show or hide the `TileMapLayer`'s navigation meshes. If set to `DebugVisibilityMode.DEFAULT`,
      * this depends on the show navigation debug settings.
      *
      * Generated from Godot docs: TileMapLayer.get_navigation_visibility_mode
      */
-    fun getNavigationVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, segment)
+    fun getNavigationVisibilityMode(): TileMapLayer.DebugVisibilityMode {
+        return TileMapLayer.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, segment))
     }
 
     object Signals {
         const val changed: String = "changed"
     }
 
-    companion object {
-        const val DEBUG_VISIBILITY_MODE_DEFAULT: Long = 0L
-        const val DEBUG_VISIBILITY_MODE_FORCE_HIDE: Long = 2L
-        const val DEBUG_VISIBILITY_MODE_FORCE_SHOW: Long = 1L
+    /**
+     * Godot's `TileMapLayer.DebugVisibilityMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TileMapLayer.DebugVisibilityMode.<NAME>`).
+     *
+     * Generated from Godot docs: TileMapLayer.DebugVisibilityMode
+     */
+    @JvmInline
+    value class DebugVisibilityMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Hide the collisions or navigation debug shapes in the editor, and use the debug settings to
+             * determine their visibility in game (i.e. `SceneTree.debug_collisions_hint` or
+             * `SceneTree.debug_navigation_hint`).
+             *
+             * Generated from Godot docs: TileMapLayer.DEBUG_VISIBILITY_MODE_DEFAULT
+             */
+            val DEFAULT: DebugVisibilityMode get() = DebugVisibilityMode(0L)
+            /**
+             * Always hide the collisions or navigation debug shapes.
+             *
+             * Generated from Godot docs: TileMapLayer.DEBUG_VISIBILITY_MODE_FORCE_HIDE
+             */
+            val FORCE_HIDE: DebugVisibilityMode get() = DebugVisibilityMode(2L)
+            /**
+             * Always show the collisions or navigation debug shapes.
+             *
+             * Generated from Godot docs: TileMapLayer.DEBUG_VISIBILITY_MODE_FORCE_SHOW
+             */
+            val FORCE_SHOW: DebugVisibilityMode get() = DebugVisibilityMode(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileMapLayer? =
             wrap(handle.segment)

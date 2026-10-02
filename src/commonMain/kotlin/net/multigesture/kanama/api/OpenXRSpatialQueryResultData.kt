@@ -18,9 +18,9 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
         return ObjectCalls.ptrcallWithLongArgRetLong(getEntityIdBind, segment, index)
     }
 
-    fun getEntityState(index: Long): Long {
+    fun getEntityState(index: Long): OpenXRSpatialEntityTracker.EntityTrackingState {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getEntityStateBind, segment, index)
+        return OpenXRSpatialEntityTracker.EntityTrackingState(ObjectCalls.ptrcallWithLongArgRetLong(getEntityStateBind, segment, index))
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -19,31 +20,7 @@ object Input {
         ObjectCalls.getSingleton("Input")
     }
 
-    const val MOUSE_MODE_VISIBLE: Long = 0L
-    const val MOUSE_MODE_HIDDEN: Long = 1L
-    const val MOUSE_MODE_CAPTURED: Long = 2L
-    const val MOUSE_MODE_CONFINED: Long = 3L
-    const val MOUSE_MODE_CONFINED_HIDDEN: Long = 4L
-    const val MOUSE_MODE_MAX: Long = 5L
-    const val CURSOR_ARROW: Long = 0L
-    const val CURSOR_IBEAM: Long = 1L
-    const val CURSOR_POINTING_HAND: Long = 2L
-    const val CURSOR_CROSS: Long = 3L
-    const val CURSOR_WAIT: Long = 4L
-    const val CURSOR_BUSY: Long = 5L
-    const val CURSOR_DRAG: Long = 6L
-    const val CURSOR_CAN_DROP: Long = 7L
-    const val CURSOR_FORBIDDEN: Long = 8L
-    const val CURSOR_VSIZE: Long = 9L
-    const val CURSOR_HSIZE: Long = 10L
-    const val CURSOR_BDIAGSIZE: Long = 11L
-    const val CURSOR_FDIAGSIZE: Long = 12L
-    const val CURSOR_MOVE: Long = 13L
-    const val CURSOR_VSPLIT: Long = 14L
-    const val CURSOR_HSPLIT: Long = 15L
-    const val CURSOR_HELP: Long = 16L
-
-    var mouseMode: Long
+    var mouseMode: Input.MouseMode
         @JvmName("mouseModeProperty")
         get() = getMouseMode()
         @JvmName("setMouseModeProperty")
@@ -99,8 +76,8 @@ object Input {
      * Generated from Godot docs: Input.is_key_pressed
      */
     @JvmStatic
-    fun isKeyPressed(keycode: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isKeyPressedBind, singleton, keycode)
+    fun isKeyPressed(keycode: Key): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isKeyPressedBind, singleton, keycode.value)
     }
 
     /**
@@ -118,8 +95,8 @@ object Input {
      * Generated from Godot docs: Input.is_physical_key_pressed
      */
     @JvmStatic
-    fun isPhysicalKeyPressed(keycode: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isPhysicalKeyPressedBind, singleton, keycode)
+    fun isPhysicalKeyPressed(keycode: Key): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isPhysicalKeyPressedBind, singleton, keycode.value)
     }
 
     /**
@@ -131,8 +108,8 @@ object Input {
      * Generated from Godot docs: Input.is_key_label_pressed
      */
     @JvmStatic
-    fun isKeyLabelPressed(keycode: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isKeyLabelPressedBind, singleton, keycode)
+    fun isKeyLabelPressed(keycode: Key): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isKeyLabelPressedBind, singleton, keycode.value)
     }
 
     /**
@@ -143,8 +120,8 @@ object Input {
      * Generated from Godot docs: Input.is_mouse_button_pressed
      */
     @JvmStatic
-    fun isMouseButtonPressed(button: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isMouseButtonPressedBind, singleton, button)
+    fun isMouseButtonPressed(button: MouseButton): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isMouseButtonPressedBind, singleton, button.value)
     }
 
     /**
@@ -155,8 +132,8 @@ object Input {
      * Generated from Godot docs: Input.is_joy_button_pressed
      */
     @JvmStatic
-    fun isJoyButtonPressed(device: Int, button: Long): Boolean {
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetBool(isJoyButtonPressedBind, singleton, device, button)
+    fun isJoyButtonPressed(device: Int, button: JoyButton): Boolean {
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetBool(isJoyButtonPressedBind, singleton, device, button.value)
     }
 
     /**
@@ -347,8 +324,8 @@ object Input {
      * Generated from Godot docs: Input.get_joy_axis
      */
     @JvmStatic
-    fun getJoyAxis(device: Int, axis: Long): Double {
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetDouble(getJoyAxisBind, singleton, device, axis)
+    fun getJoyAxis(device: Int, axis: JoyAxis): Double {
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetDouble(getJoyAxisBind, singleton, device, axis.value)
     }
 
     /**
@@ -909,8 +886,8 @@ object Input {
      * Generated from Godot docs: Input.get_mouse_button_mask
      */
     @JvmStatic
-    fun getMouseButtonMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseButtonMaskBind, singleton)
+    fun getMouseButtonMask(): MouseButtonMask {
+        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(getMouseButtonMaskBind, singleton))
     }
 
     /**
@@ -919,8 +896,8 @@ object Input {
      * Generated from Godot docs: Input.set_mouse_mode
      */
     @JvmStatic
-    fun setMouseMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMouseModeBind, singleton, mode)
+    fun setMouseMode(mode: Input.MouseMode) {
+        ObjectCalls.ptrcallWithLongArg(setMouseModeBind, singleton, mode.value)
     }
 
     /**
@@ -929,16 +906,16 @@ object Input {
      * Generated from Godot docs: Input.get_mouse_mode
      */
     @JvmStatic
-    fun getMouseMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMouseModeBind, singleton)
+    fun getMouseMode(): Input.MouseMode {
+        return Input.MouseMode(ObjectCalls.ptrcallNoArgsRetLong(getMouseModeBind, singleton))
     }
 
     /**
      * Sets the mouse position to the specified vector, provided in pixels and relative to an origin at
      * the upper left corner of the currently focused Window Manager game window. Mouse position is
      * clipped to the limits of the screen resolution, or to the limits of the game window if
-     * `MouseMode` is set to `MOUSE_MODE_CONFINED` or `MOUSE_MODE_CONFINED_HIDDEN`. Note: `warp_mouse`
-     * is only supported on Windows, macOS and Linux. It has no effect on Android, iOS and Web.
+     * `MouseMode` is set to `MouseMode.CONFINED` or `MouseMode.CONFINED_HIDDEN`. Note: `warp_mouse` is
+     * only supported on Windows, macOS and Linux. It has no effect on Android, iOS and Web.
      *
      * Generated from Godot docs: Input.warp_mouse
      */
@@ -972,16 +949,16 @@ object Input {
     }
 
     /**
-     * Sets the default cursor shape to be used in the viewport instead of `CURSOR_ARROW`. Note: If you
-     * want to change the default cursor shape for `Control`'s nodes, use
+     * Sets the default cursor shape to be used in the viewport instead of `CursorShape.ARROW`. Note:
+     * If you want to change the default cursor shape for `Control`'s nodes, use
      * `Control.mouse_default_cursor_shape` instead. Note: This method generates an
      * `InputEventMouseMotion` to update cursor immediately.
      *
      * Generated from Godot docs: Input.set_default_cursor_shape
      */
     @JvmStatic
-    fun setDefaultCursorShape(shape: Long = 0L) {
-        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, singleton, shape)
+    fun setDefaultCursorShape(shape: Input.CursorShape = Input.CursorShape.ARROW) {
+        ObjectCalls.ptrcallWithLongArg(setDefaultCursorShapeBind, singleton, shape.value)
     }
 
     /**
@@ -990,8 +967,8 @@ object Input {
      * Generated from Godot docs: Input.get_current_cursor_shape
      */
     @JvmStatic
-    fun getCurrentCursorShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCurrentCursorShapeBind, singleton)
+    fun getCurrentCursorShape(): Input.CursorShape {
+        return Input.CursorShape(ObjectCalls.ptrcallNoArgsRetLong(getCurrentCursorShapeBind, singleton))
     }
 
     /**
@@ -1011,8 +988,8 @@ object Input {
      * Generated from Godot docs: Input.set_custom_mouse_cursor
      */
     @JvmStatic
-    fun setCustomMouseCursor(image: Resource?, shape: Long = 0L, hotspot: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, shape, hotspot)
+    fun setCustomMouseCursor(image: Resource?, shape: Input.CursorShape = Input.CursorShape.ARROW, hotspot: Vector2 = Vector2(0f, 0f)) {
+        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
     }
 
     /**
@@ -1120,6 +1097,183 @@ object Input {
 
     object Signals {
         const val joyConnectionChanged: String = "joy_connection_changed"
+    }
+
+    /**
+     * Godot's `Input.MouseMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Input.MouseMode.<NAME>`).
+     *
+     * Generated from Godot docs: Input.MouseMode
+     */
+    @JvmInline
+    value class MouseMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Makes the mouse cursor visible if it is hidden.
+             *
+             * Generated from Godot docs: Input.MOUSE_MODE_VISIBLE
+             */
+            val VISIBLE: MouseMode get() = MouseMode(0L)
+            /**
+             * Makes the mouse cursor hidden if it is visible.
+             *
+             * Generated from Godot docs: Input.MOUSE_MODE_HIDDEN
+             */
+            val HIDDEN: MouseMode get() = MouseMode(1L)
+            /**
+             * Captures the mouse. The mouse will be hidden and its position locked at the center of the window
+             * manager's window. Note: If you want to process the mouse's movement in this mode, you need to
+             * use `InputEventMouseMotion.relative`.
+             *
+             * Generated from Godot docs: Input.MOUSE_MODE_CAPTURED
+             */
+            val CAPTURED: MouseMode get() = MouseMode(2L)
+            /**
+             * Confines the mouse cursor to the game window, and make it visible.
+             *
+             * Generated from Godot docs: Input.MOUSE_MODE_CONFINED
+             */
+            val CONFINED: MouseMode get() = MouseMode(3L)
+            /**
+             * Confines the mouse cursor to the game window, and make it hidden.
+             *
+             * Generated from Godot docs: Input.MOUSE_MODE_CONFINED_HIDDEN
+             */
+            val CONFINED_HIDDEN: MouseMode get() = MouseMode(4L)
+            /**
+             * Max value of the `MouseMode`.
+             *
+             * Generated from Godot docs: Input.MOUSE_MODE_MAX
+             */
+            val MAX: MouseMode get() = MouseMode(5L)
+        }
+    }
+
+    /**
+     * Godot's `Input.CursorShape` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Input.CursorShape.<NAME>`).
+     *
+     * Generated from Godot docs: Input.CursorShape
+     */
+    @JvmInline
+    value class CursorShape(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Arrow cursor. Standard, default pointing cursor.
+             *
+             * Generated from Godot docs: Input.CURSOR_ARROW
+             */
+            val ARROW: CursorShape get() = CursorShape(0L)
+            /**
+             * I-beam cursor. Usually used to show where the text cursor will appear when the mouse is clicked.
+             *
+             * Generated from Godot docs: Input.CURSOR_IBEAM
+             */
+            val IBEAM: CursorShape get() = CursorShape(1L)
+            /**
+             * Pointing hand cursor. Usually used to indicate the pointer is over a link or other interactable
+             * item.
+             *
+             * Generated from Godot docs: Input.CURSOR_POINTING_HAND
+             */
+            val POINTING_HAND: CursorShape get() = CursorShape(2L)
+            /**
+             * Cross cursor. Typically appears over regions in which a drawing operation can be performed or
+             * for selections.
+             *
+             * Generated from Godot docs: Input.CURSOR_CROSS
+             */
+            val CROSS: CursorShape get() = CursorShape(3L)
+            /**
+             * Wait cursor. Indicates that the application is busy performing an operation, and that it cannot
+             * be used during the operation (e.g. something is blocking its main thread).
+             *
+             * Generated from Godot docs: Input.CURSOR_WAIT
+             */
+            val WAIT: CursorShape get() = CursorShape(4L)
+            /**
+             * Busy cursor. Indicates that the application is busy performing an operation, and that it is
+             * still usable during the operation.
+             *
+             * Generated from Godot docs: Input.CURSOR_BUSY
+             */
+            val BUSY: CursorShape get() = CursorShape(5L)
+            /**
+             * Drag cursor. Usually displayed when dragging something. Note: Windows lacks a dragging cursor,
+             * so `CursorShape.DRAG` is the same as `CursorShape.MOVE` for this platform.
+             *
+             * Generated from Godot docs: Input.CURSOR_DRAG
+             */
+            val DRAG: CursorShape get() = CursorShape(6L)
+            /**
+             * Can drop cursor. Usually displayed when dragging something to indicate that it can be dropped at
+             * the current position.
+             *
+             * Generated from Godot docs: Input.CURSOR_CAN_DROP
+             */
+            val CAN_DROP: CursorShape get() = CursorShape(7L)
+            /**
+             * Forbidden cursor. Indicates that the current action is forbidden (for example, when dragging
+             * something) or that the control at a position is disabled.
+             *
+             * Generated from Godot docs: Input.CURSOR_FORBIDDEN
+             */
+            val FORBIDDEN: CursorShape get() = CursorShape(8L)
+            /**
+             * Vertical resize mouse cursor. A double-headed vertical arrow. It tells the user they can resize
+             * the window or the panel vertically.
+             *
+             * Generated from Godot docs: Input.CURSOR_VSIZE
+             */
+            val VSIZE: CursorShape get() = CursorShape(9L)
+            /**
+             * Horizontal resize mouse cursor. A double-headed horizontal arrow. It tells the user they can
+             * resize the window or the panel horizontally.
+             *
+             * Generated from Godot docs: Input.CURSOR_HSIZE
+             */
+            val HSIZE: CursorShape get() = CursorShape(10L)
+            /**
+             * Window resize mouse cursor. The cursor is a double-headed arrow that goes from the bottom left
+             * to the top right. It tells the user they can resize the window or the panel both horizontally
+             * and vertically.
+             *
+             * Generated from Godot docs: Input.CURSOR_BDIAGSIZE
+             */
+            val BDIAGSIZE: CursorShape get() = CursorShape(11L)
+            /**
+             * Window resize mouse cursor. The cursor is a double-headed arrow that goes from the top left to
+             * the bottom right, the opposite of `CursorShape.BDIAGSIZE`. It tells the user they can resize the
+             * window or the panel both horizontally and vertically.
+             *
+             * Generated from Godot docs: Input.CURSOR_FDIAGSIZE
+             */
+            val FDIAGSIZE: CursorShape get() = CursorShape(12L)
+            /**
+             * Move cursor. Indicates that something can be moved.
+             *
+             * Generated from Godot docs: Input.CURSOR_MOVE
+             */
+            val MOVE: CursorShape get() = CursorShape(13L)
+            /**
+             * Vertical split mouse cursor. On Windows, it's the same as `CursorShape.VSIZE`.
+             *
+             * Generated from Godot docs: Input.CURSOR_VSPLIT
+             */
+            val VSPLIT: CursorShape get() = CursorShape(14L)
+            /**
+             * Horizontal split mouse cursor. On Windows, it's the same as `CursorShape.HSIZE`.
+             *
+             * Generated from Godot docs: Input.CURSOR_HSPLIT
+             */
+            val HSPLIT: CursorShape get() = CursorShape(15L)
+            /**
+             * Help cursor. Usually a question mark.
+             *
+             * Generated from Godot docs: Input.CURSOR_HELP
+             */
+            val HELP: CursorShape get() = CursorShape(16L)
+        }
     }
 
     @JvmStatic

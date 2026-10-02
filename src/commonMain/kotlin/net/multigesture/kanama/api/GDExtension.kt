@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -26,17 +27,50 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: GDExtension.get_minimum_library_initialization_level
      */
-    fun getMinimumLibraryInitializationLevel(): Long {
+    fun getMinimumLibraryInitializationLevel(): GDExtension.InitializationLevel {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, segment)
+        return GDExtension.InitializationLevel(ObjectCalls.ptrcallNoArgsRetLong(getMinimumLibraryInitializationLevelBind, segment))
+    }
+
+    /**
+     * Godot's `GDExtension.InitializationLevel` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`GDExtension.InitializationLevel.<NAME>`).
+     *
+     * Generated from Godot docs: GDExtension.InitializationLevel
+     */
+    @JvmInline
+    value class InitializationLevel(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The library is initialized at the same time as the core features of the engine.
+             *
+             * Generated from Godot docs: GDExtension.INITIALIZATION_LEVEL_CORE
+             */
+            val CORE: InitializationLevel get() = InitializationLevel(0L)
+            /**
+             * The library is initialized at the same time as the engine's servers (such as `RenderingServer`
+             * or `PhysicsServer3D`).
+             *
+             * Generated from Godot docs: GDExtension.INITIALIZATION_LEVEL_SERVERS
+             */
+            val SERVERS: InitializationLevel get() = InitializationLevel(1L)
+            /**
+             * The library is initialized at the same time as the engine's scene-related classes.
+             *
+             * Generated from Godot docs: GDExtension.INITIALIZATION_LEVEL_SCENE
+             */
+            val SCENE: InitializationLevel get() = InitializationLevel(2L)
+            /**
+             * The library is initialized at the same time as the engine's editor classes. Only happens when
+             * loading the GDExtension in the editor.
+             *
+             * Generated from Godot docs: GDExtension.INITIALIZATION_LEVEL_EDITOR
+             */
+            val EDITOR: InitializationLevel get() = InitializationLevel(3L)
+        }
     }
 
     companion object {
-        const val INITIALIZATION_LEVEL_CORE: Long = 0L
-        const val INITIALIZATION_LEVEL_SERVERS: Long = 1L
-        const val INITIALIZATION_LEVEL_SCENE: Long = 2L
-        const val INITIALIZATION_LEVEL_EDITOR: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GDExtension? =
             wrap(handle.segment)

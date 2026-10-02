@@ -13,132 +13,132 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
     var bytecodeVertex: ByteArray
         @JvmName("bytecodeVertexProperty")
-        get() = getStageBytecode(0L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.VERTEX)
         @JvmName("setBytecodeVertexProperty")
-        set(value) = setStageBytecode(0L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.VERTEX, value)
 
     var bytecodeFragment: ByteArray
         @JvmName("bytecodeFragmentProperty")
-        get() = getStageBytecode(1L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.FRAGMENT)
         @JvmName("setBytecodeFragmentProperty")
-        set(value) = setStageBytecode(1L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.FRAGMENT, value)
 
     var bytecodeTesselationControl: ByteArray
         @JvmName("bytecodeTesselationControlProperty")
-        get() = getStageBytecode(2L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.TESSELATION_CONTROL)
         @JvmName("setBytecodeTesselationControlProperty")
-        set(value) = setStageBytecode(2L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.TESSELATION_CONTROL, value)
 
     var bytecodeTesselationEvaluation: ByteArray
         @JvmName("bytecodeTesselationEvaluationProperty")
-        get() = getStageBytecode(3L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.TESSELATION_EVALUATION)
         @JvmName("setBytecodeTesselationEvaluationProperty")
-        set(value) = setStageBytecode(3L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.TESSELATION_EVALUATION, value)
 
     var bytecodeCompute: ByteArray
         @JvmName("bytecodeComputeProperty")
-        get() = getStageBytecode(4L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.COMPUTE)
         @JvmName("setBytecodeComputeProperty")
-        set(value) = setStageBytecode(4L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.COMPUTE, value)
 
     var bytecodeRaygen: ByteArray
         @JvmName("bytecodeRaygenProperty")
-        get() = getStageBytecode(5L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.RAYGEN)
         @JvmName("setBytecodeRaygenProperty")
-        set(value) = setStageBytecode(5L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.RAYGEN, value)
 
     var bytecodeAnyHit: ByteArray
         @JvmName("bytecodeAnyHitProperty")
-        get() = getStageBytecode(6L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.ANY_HIT)
         @JvmName("setBytecodeAnyHitProperty")
-        set(value) = setStageBytecode(6L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.ANY_HIT, value)
 
     var bytecodeClosestHit: ByteArray
         @JvmName("bytecodeClosestHitProperty")
-        get() = getStageBytecode(7L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.CLOSEST_HIT)
         @JvmName("setBytecodeClosestHitProperty")
-        set(value) = setStageBytecode(7L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.CLOSEST_HIT, value)
 
     var bytecodeMiss: ByteArray
         @JvmName("bytecodeMissProperty")
-        get() = getStageBytecode(8L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.MISS)
         @JvmName("setBytecodeMissProperty")
-        set(value) = setStageBytecode(8L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.MISS, value)
 
     var bytecodeIntersection: ByteArray
         @JvmName("bytecodeIntersectionProperty")
-        get() = getStageBytecode(9L)
+        get() = getStageBytecode(RenderingDevice.ShaderStage.INTERSECTION)
         @JvmName("setBytecodeIntersectionProperty")
-        set(value) = setStageBytecode(9L, value)
+        set(value) = setStageBytecode(RenderingDevice.ShaderStage.INTERSECTION, value)
 
     var compileErrorVertex: String
         @JvmName("compileErrorVertexProperty")
-        get() = getStageCompileError(0L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.VERTEX)
         @JvmName("setCompileErrorVertexProperty")
-        set(value) = setStageCompileError(0L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.VERTEX, value)
 
     var compileErrorFragment: String
         @JvmName("compileErrorFragmentProperty")
-        get() = getStageCompileError(1L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.FRAGMENT)
         @JvmName("setCompileErrorFragmentProperty")
-        set(value) = setStageCompileError(1L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.FRAGMENT, value)
 
     var compileErrorTesselationControl: String
         @JvmName("compileErrorTesselationControlProperty")
-        get() = getStageCompileError(2L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.TESSELATION_CONTROL)
         @JvmName("setCompileErrorTesselationControlProperty")
-        set(value) = setStageCompileError(2L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.TESSELATION_CONTROL, value)
 
     var compileErrorTesselationEvaluation: String
         @JvmName("compileErrorTesselationEvaluationProperty")
-        get() = getStageCompileError(3L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.TESSELATION_EVALUATION)
         @JvmName("setCompileErrorTesselationEvaluationProperty")
-        set(value) = setStageCompileError(3L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.TESSELATION_EVALUATION, value)
 
     var compileErrorCompute: String
         @JvmName("compileErrorComputeProperty")
-        get() = getStageCompileError(4L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.COMPUTE)
         @JvmName("setCompileErrorComputeProperty")
-        set(value) = setStageCompileError(4L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.COMPUTE, value)
 
     var compileErrorRaygen: String
         @JvmName("compileErrorRaygenProperty")
-        get() = getStageCompileError(5L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.RAYGEN)
         @JvmName("setCompileErrorRaygenProperty")
-        set(value) = setStageCompileError(5L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.RAYGEN, value)
 
     var compileErrorAnyHit: String
         @JvmName("compileErrorAnyHitProperty")
-        get() = getStageCompileError(6L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.ANY_HIT)
         @JvmName("setCompileErrorAnyHitProperty")
-        set(value) = setStageCompileError(6L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.ANY_HIT, value)
 
     var compileErrorClosestHit: String
         @JvmName("compileErrorClosestHitProperty")
-        get() = getStageCompileError(7L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.CLOSEST_HIT)
         @JvmName("setCompileErrorClosestHitProperty")
-        set(value) = setStageCompileError(7L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.CLOSEST_HIT, value)
 
     var compileErrorMiss: String
         @JvmName("compileErrorMissProperty")
-        get() = getStageCompileError(8L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.MISS)
         @JvmName("setCompileErrorMissProperty")
-        set(value) = setStageCompileError(8L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.MISS, value)
 
     var compileErrorIntersection: String
         @JvmName("compileErrorIntersectionProperty")
-        get() = getStageCompileError(9L)
+        get() = getStageCompileError(RenderingDevice.ShaderStage.INTERSECTION)
         @JvmName("setCompileErrorIntersectionProperty")
-        set(value) = setStageCompileError(9L, value)
+        set(value) = setStageCompileError(RenderingDevice.ShaderStage.INTERSECTION, value)
 
     /**
      * The SPIR-V bytecode for the vertex shader stage.
      *
      * Generated from Godot docs: RDShaderSPIRV.set_stage_bytecode
      */
-    fun setStageBytecode(stage: Long, bytecode: ByteArray) {
+    fun setStageBytecode(stage: RenderingDevice.ShaderStage, bytecode: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndByteArrayArg(setStageBytecodeBind, segment, stage, bytecode)
+        ObjectCalls.ptrcallWithLongAndByteArrayArg(setStageBytecodeBind, segment, stage.value, bytecode)
     }
 
     /**
@@ -146,9 +146,9 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: RDShaderSPIRV.get_stage_bytecode
      */
-    fun getStageBytecode(stage: Long): ByteArray {
+    fun getStageBytecode(stage: RenderingDevice.ShaderStage): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, segment, stage)
+        return ObjectCalls.ptrcallWithLongArgRetByteArray(getStageBytecodeBind, segment, stage.value)
     }
 
     /**
@@ -157,9 +157,9 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: RDShaderSPIRV.set_stage_compile_error
      */
-    fun setStageCompileError(stage: Long, compileError: String) {
+    fun setStageCompileError(stage: RenderingDevice.ShaderStage, compileError: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, segment, stage, compileError)
+        ObjectCalls.ptrcallWithLongAndStringArg(setStageCompileErrorBind, segment, stage.value, compileError)
     }
 
     /**
@@ -168,9 +168,9 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: RDShaderSPIRV.get_stage_compile_error
      */
-    fun getStageCompileError(stage: Long): String {
+    fun getStageCompileError(stage: RenderingDevice.ShaderStage): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, segment, stage)
+        return ObjectCalls.ptrcallWithLongArgRetString(getStageCompileErrorBind, segment, stage.value)
     }
 
     companion object {

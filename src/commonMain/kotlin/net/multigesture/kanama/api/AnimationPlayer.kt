@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -50,13 +51,13 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         @JvmName("setPlaybackAutoCaptureDurationProperty")
         set(value) = setAutoCaptureDuration(value)
 
-    var playbackAutoCaptureTransitionType: Long
+    var playbackAutoCaptureTransitionType: Tween.TransitionType
         @JvmName("playbackAutoCaptureTransitionTypeProperty")
         get() = getAutoCaptureTransitionType()
         @JvmName("setPlaybackAutoCaptureTransitionTypeProperty")
         set(value) = setAutoCaptureTransitionType(value)
 
-    var playbackAutoCaptureEaseType: Long
+    var playbackAutoCaptureEaseType: Tween.EaseType
         @JvmName("playbackAutoCaptureEaseTypeProperty")
         get() = getAutoCaptureEaseType()
         @JvmName("setPlaybackAutoCaptureEaseTypeProperty")
@@ -138,7 +139,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * If `true`, performs `AnimationMixer.capture` before playback automatically. This means just
      * `play_with_capture` is executed with default arguments instead of `play`. Note: Capture
      * interpolation is only performed if the animation contains a capture track. See also
-     * `Animation.UPDATE_CAPTURE`.
+     * `Animation.UpdateMode.CAPTURE`.
      *
      * Generated from Godot docs: AnimationPlayer.set_auto_capture
      */
@@ -150,7 +151,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      * If `true`, performs `AnimationMixer.capture` before playback automatically. This means just
      * `play_with_capture` is executed with default arguments instead of `play`. Note: Capture
      * interpolation is only performed if the animation contains a capture track. See also
-     * `Animation.UPDATE_CAPTURE`.
+     * `Animation.UpdateMode.CAPTURE`.
      *
      * Generated from Godot docs: AnimationPlayer.is_auto_capture
      */
@@ -185,8 +186,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_transition_type
      */
-    fun setAutoCaptureTransitionType(autoCaptureTransitionType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureTransitionTypeBind, segment, autoCaptureTransitionType)
+    fun setAutoCaptureTransitionType(autoCaptureTransitionType: Tween.TransitionType) {
+        ObjectCalls.ptrcallWithLongArg(setAutoCaptureTransitionTypeBind, segment, autoCaptureTransitionType.value)
     }
 
     /**
@@ -194,8 +195,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_transition_type
      */
-    fun getAutoCaptureTransitionType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureTransitionTypeBind, segment)
+    fun getAutoCaptureTransitionType(): Tween.TransitionType {
+        return Tween.TransitionType(ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureTransitionTypeBind, segment))
     }
 
     /**
@@ -203,8 +204,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.set_auto_capture_ease_type
      */
-    fun setAutoCaptureEaseType(autoCaptureEaseType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutoCaptureEaseTypeBind, segment, autoCaptureEaseType)
+    fun setAutoCaptureEaseType(autoCaptureEaseType: Tween.EaseType) {
+        ObjectCalls.ptrcallWithLongArg(setAutoCaptureEaseTypeBind, segment, autoCaptureEaseType.value)
     }
 
     /**
@@ -212,8 +213,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.get_auto_capture_ease_type
      */
-    fun getAutoCaptureEaseType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, segment)
+    fun getAutoCaptureEaseType(): Tween.EaseType {
+        return Tween.EaseType(ObjectCalls.ptrcallNoArgsRetLong(getAutoCaptureEaseTypeBind, segment))
     }
 
     /**
@@ -298,8 +299,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.play_with_capture
      */
-    fun playWithCapture(name: String = "", duration: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false, transType: Long = 0L, easeType: Long = 0L) {
-        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, segment, name, duration, customBlend, customSpeed, fromEnd, transType, easeType)
+    fun playWithCapture(name: String = "", duration: Double = -1.0, customBlend: Double = -1.0, customSpeed: Double = 1.0, fromEnd: Boolean = false, transType: Tween.TransitionType = Tween.TransitionType.LINEAR, easeType: Tween.EaseType = Tween.EaseType.IN) {
+        ObjectCalls.ptrcallWithStringNameThreeDoubleBoolTwoLongArgs(playWithCaptureBind, segment, name, duration, customBlend, customSpeed, fromEnd, transType.value, easeType.value)
     }
 
     /**
@@ -599,8 +600,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.set_process_callback
      */
-    fun setProcessCallback(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode)
+    fun setProcessCallback(mode: AnimationPlayer.AnimationProcessCallback) {
+        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode.value)
     }
 
     /**
@@ -608,8 +609,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.get_process_callback
      */
-    fun getProcessCallback(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment)
+    fun getProcessCallback(): AnimationPlayer.AnimationProcessCallback {
+        return AnimationPlayer.AnimationProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment))
     }
 
     /**
@@ -617,8 +618,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.set_method_call_mode
      */
-    fun setMethodCallMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setMethodCallModeBind, segment, mode)
+    fun setMethodCallMode(mode: AnimationPlayer.AnimationMethodCallMode) {
+        ObjectCalls.ptrcallWithLongArg(setMethodCallModeBind, segment, mode.value)
     }
 
     /**
@@ -626,8 +627,8 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      *
      * Generated from Godot docs: AnimationPlayer.get_method_call_mode
      */
-    fun getMethodCallMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, segment)
+    fun getMethodCallMode(): AnimationPlayer.AnimationMethodCallMode {
+        return AnimationPlayer.AnimationMethodCallMode(ObjectCalls.ptrcallNoArgsRetLong(getMethodCallModeBind, segment))
     }
 
     /**
@@ -653,13 +654,38 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         const val animationChanged: String = "animation_changed"
     }
 
-    companion object {
-        const val ANIMATION_PROCESS_PHYSICS: Long = 0L
-        const val ANIMATION_PROCESS_IDLE: Long = 1L
-        const val ANIMATION_PROCESS_MANUAL: Long = 2L
-        const val ANIMATION_METHOD_CALL_DEFERRED: Long = 0L
-        const val ANIMATION_METHOD_CALL_IMMEDIATE: Long = 1L
+    /**
+     * Godot's `AnimationPlayer.AnimationProcessCallback` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationPlayer.AnimationProcessCallback.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationPlayer.AnimationProcessCallback
+     */
+    @JvmInline
+    value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
+        companion object {
+            val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)
+            val IDLE: AnimationProcessCallback get() = AnimationProcessCallback(1L)
+            val MANUAL: AnimationProcessCallback get() = AnimationProcessCallback(2L)
+        }
+    }
 
+    /**
+     * Godot's `AnimationPlayer.AnimationMethodCallMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AnimationPlayer.AnimationMethodCallMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationPlayer.AnimationMethodCallMode
+     */
+    @JvmInline
+    value class AnimationMethodCallMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DEFERRED: AnimationMethodCallMode get() = AnimationMethodCallMode(0L)
+            val IMMEDIATE: AnimationMethodCallMode get() = AnimationMethodCallMode(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationPlayer? =
             wrap(handle.segment)

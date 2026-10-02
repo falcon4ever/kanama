@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -38,8 +39,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: EditorPlugin.add_control_to_container
      */
-    fun addControlToContainer(container: Long, control: Control) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(addControlToContainerBind, segment, container, control.segment)
+    fun addControlToContainer(container: EditorPlugin.CustomControlContainer, control: Control) {
+        ObjectCalls.ptrcallWithLongAndObjectArg(addControlToContainerBind, segment, container.value, control.segment)
     }
 
     /**
@@ -48,8 +49,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: EditorPlugin.remove_control_from_container
      */
-    fun removeControlFromContainer(container: Long, control: Control) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(removeControlFromContainerBind, segment, container, control.segment)
+    fun removeControlFromContainer(container: EditorPlugin.CustomControlContainer, control: Control) {
+        ObjectCalls.ptrcallWithLongAndObjectArg(removeControlFromContainerBind, segment, container.value, control.segment)
     }
 
     /**
@@ -124,8 +125,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: EditorPlugin.add_control_to_dock
      */
-    fun addControlToDock(slot: Long, control: Control, shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithLongAndTwoObjectArgs(addControlToDockBind, segment, slot, control.segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
+    fun addControlToDock(slot: EditorPlugin.DockSlot, control: Control, shortcut: Shortcut?) {
+        ObjectCalls.ptrcallWithLongAndTwoObjectArgs(addControlToDockBind, segment, slot.value, control.segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -467,8 +468,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      *
      * Generated from Godot docs: EditorPlugin.add_context_menu_plugin
      */
-    fun addContextMenuPlugin(slot: Long, plugin: EditorContextMenuPlugin?) {
-        ObjectCalls.ptrcallWithLongAndObjectArg(addContextMenuPluginBind, segment, slot, plugin?.requireOpenHandle() ?: NULL_SEGMENT)
+    fun addContextMenuPlugin(slot: EditorContextMenuPlugin.ContextMenuSlot, plugin: EditorContextMenuPlugin?) {
+        ObjectCalls.ptrcallWithLongAndObjectArg(addContextMenuPluginBind, segment, slot.value, plugin?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -537,34 +538,202 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         const val projectSettingsChanged: String = "project_settings_changed"
     }
 
-    companion object {
-        const val CONTAINER_TOOLBAR: Long = 0L
-        const val CONTAINER_SPATIAL_EDITOR_MENU: Long = 1L
-        const val CONTAINER_SPATIAL_EDITOR_SIDE_LEFT: Long = 2L
-        const val CONTAINER_SPATIAL_EDITOR_SIDE_RIGHT: Long = 3L
-        const val CONTAINER_SPATIAL_EDITOR_BOTTOM: Long = 4L
-        const val CONTAINER_CANVAS_EDITOR_MENU: Long = 5L
-        const val CONTAINER_CANVAS_EDITOR_SIDE_LEFT: Long = 6L
-        const val CONTAINER_CANVAS_EDITOR_SIDE_RIGHT: Long = 7L
-        const val CONTAINER_CANVAS_EDITOR_BOTTOM: Long = 8L
-        const val CONTAINER_INSPECTOR_BOTTOM: Long = 9L
-        const val CONTAINER_PROJECT_SETTING_TAB_LEFT: Long = 10L
-        const val CONTAINER_PROJECT_SETTING_TAB_RIGHT: Long = 11L
-        const val DOCK_SLOT_NONE: Long = -1L
-        const val DOCK_SLOT_LEFT_UL: Long = 0L
-        const val DOCK_SLOT_LEFT_BL: Long = 1L
-        const val DOCK_SLOT_LEFT_UR: Long = 2L
-        const val DOCK_SLOT_LEFT_BR: Long = 3L
-        const val DOCK_SLOT_RIGHT_UL: Long = 4L
-        const val DOCK_SLOT_RIGHT_BL: Long = 5L
-        const val DOCK_SLOT_RIGHT_UR: Long = 6L
-        const val DOCK_SLOT_RIGHT_BR: Long = 7L
-        const val DOCK_SLOT_BOTTOM: Long = 8L
-        const val DOCK_SLOT_MAX: Long = 9L
-        const val AFTER_GUI_INPUT_PASS: Long = 0L
-        const val AFTER_GUI_INPUT_STOP: Long = 1L
-        const val AFTER_GUI_INPUT_CUSTOM: Long = 2L
+    /**
+     * Godot's `EditorPlugin.CustomControlContainer` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`EditorPlugin.CustomControlContainer.<NAME>`).
+     *
+     * Generated from Godot docs: EditorPlugin.CustomControlContainer
+     */
+    @JvmInline
+    value class CustomControlContainer(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Main editor toolbar, next to play buttons.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_TOOLBAR
+             */
+            val TOOLBAR: CustomControlContainer get() = CustomControlContainer(0L)
+            /**
+             * The toolbar that appears when 3D editor is active.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU
+             */
+            val SPATIAL_EDITOR_MENU: CustomControlContainer get() = CustomControlContainer(1L)
+            /**
+             * Left sidebar of the 3D editor.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT
+             */
+            val SPATIAL_EDITOR_SIDE_LEFT: CustomControlContainer get() = CustomControlContainer(2L)
+            /**
+             * Right sidebar of the 3D editor.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_SPATIAL_EDITOR_SIDE_RIGHT
+             */
+            val SPATIAL_EDITOR_SIDE_RIGHT: CustomControlContainer get() = CustomControlContainer(3L)
+            /**
+             * Bottom panel of the 3D editor.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_SPATIAL_EDITOR_BOTTOM
+             */
+            val SPATIAL_EDITOR_BOTTOM: CustomControlContainer get() = CustomControlContainer(4L)
+            /**
+             * The toolbar that appears when 2D editor is active.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU
+             */
+            val CANVAS_EDITOR_MENU: CustomControlContainer get() = CustomControlContainer(5L)
+            /**
+             * Left sidebar of the 2D editor.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_CANVAS_EDITOR_SIDE_LEFT
+             */
+            val CANVAS_EDITOR_SIDE_LEFT: CustomControlContainer get() = CustomControlContainer(6L)
+            /**
+             * Right sidebar of the 2D editor.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_CANVAS_EDITOR_SIDE_RIGHT
+             */
+            val CANVAS_EDITOR_SIDE_RIGHT: CustomControlContainer get() = CustomControlContainer(7L)
+            /**
+             * Bottom panel of the 2D editor.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_CANVAS_EDITOR_BOTTOM
+             */
+            val CANVAS_EDITOR_BOTTOM: CustomControlContainer get() = CustomControlContainer(8L)
+            /**
+             * Bottom section of the inspector.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_INSPECTOR_BOTTOM
+             */
+            val INSPECTOR_BOTTOM: CustomControlContainer get() = CustomControlContainer(9L)
+            /**
+             * Tab of Project Settings dialog, to the left of other tabs.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_PROJECT_SETTING_TAB_LEFT
+             */
+            val PROJECT_SETTING_TAB_LEFT: CustomControlContainer get() = CustomControlContainer(10L)
+            /**
+             * Tab of Project Settings dialog, to the right of other tabs.
+             *
+             * Generated from Godot docs: EditorPlugin.CONTAINER_PROJECT_SETTING_TAB_RIGHT
+             */
+            val PROJECT_SETTING_TAB_RIGHT: CustomControlContainer get() = CustomControlContainer(11L)
+        }
+    }
 
+    /**
+     * Godot's `EditorPlugin.DockSlot` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`EditorPlugin.DockSlot.<NAME>`).
+     *
+     * Generated from Godot docs: EditorPlugin.DockSlot
+     */
+    @JvmInline
+    value class DockSlot(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The dock is closed.
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_NONE
+             */
+            val NONE: DockSlot get() = DockSlot(-1L)
+            /**
+             * Dock slot, left side, upper-left (empty in default layout).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_LEFT_UL
+             */
+            val LEFT_UL: DockSlot get() = DockSlot(0L)
+            /**
+             * Dock slot, left side, bottom-left (empty in default layout).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_LEFT_BL
+             */
+            val LEFT_BL: DockSlot get() = DockSlot(1L)
+            /**
+             * Dock slot, left side, upper-right (in default layout includes Scene and Import docks).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_LEFT_UR
+             */
+            val LEFT_UR: DockSlot get() = DockSlot(2L)
+            /**
+             * Dock slot, left side, bottom-right (in default layout includes FileSystem dock).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_LEFT_BR
+             */
+            val LEFT_BR: DockSlot get() = DockSlot(3L)
+            /**
+             * Dock slot, right side, upper-left (in default layout includes Inspector, Node, and History
+             * docks).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_RIGHT_UL
+             */
+            val RIGHT_UL: DockSlot get() = DockSlot(4L)
+            /**
+             * Dock slot, right side, bottom-left (empty in default layout).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_RIGHT_BL
+             */
+            val RIGHT_BL: DockSlot get() = DockSlot(5L)
+            /**
+             * Dock slot, right side, upper-right (empty in default layout).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_RIGHT_UR
+             */
+            val RIGHT_UR: DockSlot get() = DockSlot(6L)
+            /**
+             * Dock slot, right side, bottom-right (empty in default layout).
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_RIGHT_BR
+             */
+            val RIGHT_BR: DockSlot get() = DockSlot(7L)
+            /**
+             * Bottom panel.
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_BOTTOM
+             */
+            val BOTTOM: DockSlot get() = DockSlot(8L)
+            /**
+             * Represents the size of the `DockSlot` enum.
+             *
+             * Generated from Godot docs: EditorPlugin.DOCK_SLOT_MAX
+             */
+            val MAX: DockSlot get() = DockSlot(9L)
+        }
+    }
+
+    /**
+     * Godot's `EditorPlugin.AfterGUIInput` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorPlugin.AfterGUIInput.<NAME>`).
+     *
+     * Generated from Godot docs: EditorPlugin.AfterGUIInput
+     */
+    @JvmInline
+    value class AfterGUIInput(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Forwards the `InputEvent` to other EditorPlugins.
+             *
+             * Generated from Godot docs: EditorPlugin.AFTER_GUI_INPUT_PASS
+             */
+            val PASS: AfterGUIInput get() = AfterGUIInput(0L)
+            /**
+             * Prevents the `InputEvent` from reaching other Editor classes.
+             *
+             * Generated from Godot docs: EditorPlugin.AFTER_GUI_INPUT_STOP
+             */
+            val STOP: AfterGUIInput get() = AfterGUIInput(1L)
+            /**
+             * Pass the `InputEvent` to other editor plugins except the main `Node3D` one. This can be used to
+             * prevent node selection changes and work with sub-gizmos instead.
+             *
+             * Generated from Godot docs: EditorPlugin.AFTER_GUI_INPUT_CUSTOM
+             */
+            val CUSTOM: AfterGUIInput get() = AfterGUIInput(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorPlugin? =
             wrap(handle.segment)

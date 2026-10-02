@@ -25,31 +25,31 @@ class Label(handle: GodotHandle) : Control(handle) {
         @JvmName("setLabelSettingsProperty")
         set(value) = setLabelSettings(value)
 
-    var horizontalAlignment: Long
+    var horizontalAlignment: HorizontalAlignment
         @JvmName("horizontalAlignmentProperty")
         get() = getHorizontalAlignment()
         @JvmName("setHorizontalAlignmentProperty")
         set(value) = setHorizontalAlignment(value)
 
-    var verticalAlignment: Long
+    var verticalAlignment: VerticalAlignment
         @JvmName("verticalAlignmentProperty")
         get() = getVerticalAlignment()
         @JvmName("setVerticalAlignmentProperty")
         set(value) = setVerticalAlignment(value)
 
-    var autowrapMode: Long
+    var autowrapMode: TextServer.AutowrapMode
         @JvmName("autowrapModeProperty")
         get() = getAutowrapMode()
         @JvmName("setAutowrapModeProperty")
         set(value) = setAutowrapMode(value)
 
-    var autowrapTrimFlags: Long
+    var autowrapTrimFlags: TextServer.LineBreakFlag
         @JvmName("autowrapTrimFlagsProperty")
         get() = getAutowrapTrimFlags()
         @JvmName("setAutowrapTrimFlagsProperty")
         set(value) = setAutowrapTrimFlags(value)
 
-    var justificationFlags: Long
+    var justificationFlags: TextServer.JustificationFlag
         @JvmName("justificationFlagsProperty")
         get() = getJustificationFlags()
         @JvmName("setJustificationFlagsProperty")
@@ -67,7 +67,7 @@ class Label(handle: GodotHandle) : Control(handle) {
         @JvmName("setClipTextProperty")
         set(value) = setClipText(value)
 
-    var textOverrunBehavior: Long
+    var textOverrunBehavior: TextServer.OverrunBehavior
         @JvmName("textOverrunBehaviorProperty")
         get() = getTextOverrunBehavior()
         @JvmName("setTextOverrunBehaviorProperty")
@@ -109,7 +109,7 @@ class Label(handle: GodotHandle) : Control(handle) {
         @JvmName("setVisibleCharactersProperty")
         set(value) = setVisibleCharacters(value)
 
-    var visibleCharactersBehavior: Long
+    var visibleCharactersBehavior: TextServer.VisibleCharactersBehavior
         @JvmName("visibleCharactersBehaviorProperty")
         get() = getVisibleCharactersBehavior()
         @JvmName("setVisibleCharactersBehaviorProperty")
@@ -121,7 +121,7 @@ class Label(handle: GodotHandle) : Control(handle) {
         @JvmName("setVisibleRatioProperty")
         set(value) = setVisibleRatio(value)
 
-    var textDirection: Long
+    var textDirection: Control.TextDirection
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -133,7 +133,7 @@ class Label(handle: GodotHandle) : Control(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    var structuredTextBidiOverride: Long
+    var structuredTextBidiOverride: TextServer.StructuredTextParser
         @JvmName("structuredTextBidiOverrideProperty")
         get() = getStructuredTextBidiOverride()
         @JvmName("setStructuredTextBidiOverrideProperty")
@@ -151,8 +151,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_horizontal_alignment
      */
-    fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
+    fun setHorizontalAlignment(alignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -161,8 +161,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_horizontal_alignment
      */
-    fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
+    fun getHorizontalAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -170,8 +170,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_vertical_alignment
      */
-    fun setVerticalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
+    fun setVerticalAlignment(alignment: VerticalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -179,8 +179,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_vertical_alignment
      */
-    fun getVerticalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
+    fun getVerticalAlignment(): VerticalAlignment {
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment))
     }
 
     /**
@@ -226,8 +226,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -235,8 +235,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -280,7 +280,7 @@ class Label(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text. Note: Labels with autowrapping enabled must have a custom maximum width
      * configured to work correctly, either through the Label's own `Control.custom_maximum_size` or as
@@ -289,12 +289,12 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_autowrap_mode
      */
-    fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
+    fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. If you resize the node, it will change its height automatically to
      * show all the text. Note: Labels with autowrapping enabled must have a custom maximum width
      * configured to work correctly, either through the Label's own `Control.custom_maximum_size` or as
@@ -303,28 +303,28 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_autowrap_mode
      */
-    fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
+    fun getAutowrapMode(): TextServer.AutowrapMode {
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Label.set_autowrap_trim_flags
      */
-    fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
+    fun setAutowrapTrimFlags(autowrapTrimFlags: TextServer.LineBreakFlag) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: Label.get_autowrap_trim_flags
      */
-    fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
+    fun getAutowrapTrimFlags(): TextServer.LineBreakFlag {
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment))
     }
 
     /**
@@ -332,8 +332,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_justification_flags
      */
-    fun setJustificationFlags(justificationFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
+    fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags.value)
     }
 
     /**
@@ -341,8 +341,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_justification_flags
      */
-    fun getJustificationFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
+    fun getJustificationFlags(): TextServer.JustificationFlag {
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
     }
 
     /**
@@ -388,8 +388,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_text_overrun_behavior
      */
-    fun setTextOverrunBehavior(overrunBehavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
+    fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -397,8 +397,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_text_overrun_behavior
      */
-    fun getTextOverrunBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
+    fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -506,8 +506,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_visible_characters_behavior
      */
-    fun getVisibleCharactersBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, segment)
+    fun getVisibleCharactersBehavior(): TextServer.VisibleCharactersBehavior {
+        return TextServer.VisibleCharactersBehavior(ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, segment))
     }
 
     /**
@@ -515,8 +515,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_visible_characters_behavior
      */
-    fun setVisibleCharactersBehavior(behavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, segment, behavior)
+    fun setVisibleCharactersBehavior(behavior: TextServer.VisibleCharactersBehavior) {
+        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, segment, behavior.value)
     }
 
     /**
@@ -584,8 +584,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.set_structured_text_bidi_override
      */
-    fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
+    fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -593,8 +593,8 @@ class Label(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: Label.get_structured_text_bidi_override
      */
-    fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
+    fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
     }
 
     /**

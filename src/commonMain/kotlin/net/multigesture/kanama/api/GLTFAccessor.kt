@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -22,7 +23,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         @JvmName("setByteOffsetProperty")
         set(value) = setByteOffset(value)
 
-    var componentType: Long
+    var componentType: GLTFAccessor.GLTFComponentType
         @JvmName("componentTypeProperty")
         get() = getComponentType()
         @JvmName("setComponentTypeProperty")
@@ -40,7 +41,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         @JvmName("setCountProperty")
         set(value) = setCount(value)
 
-    var accessorType: Long
+    var accessorType: GLTFAccessor.GLTFAccessorType
         @JvmName("accessorTypeProperty")
         get() = getAccessorType()
         @JvmName("setAccessorTypeProperty")
@@ -82,7 +83,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         @JvmName("setSparseIndicesByteOffsetProperty")
         set(value) = setSparseIndicesByteOffset(value)
 
-    var sparseIndicesComponentType: Long
+    var sparseIndicesComponentType: GLTFAccessor.GLTFComponentType
         @JvmName("sparseIndicesComponentTypeProperty")
         get() = getSparseIndicesComponentType()
         @JvmName("setSparseIndicesComponentTypeProperty")
@@ -125,14 +126,14 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithLongArg(setByteOffsetBind, segment, byteOffset)
     }
 
-    fun getComponentType(): Long {
+    fun getComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, segment)
+        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(getComponentTypeBind, segment))
     }
 
-    fun setComponentType(componentType: Long) {
+    fun setComponentType(componentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setComponentTypeBind, segment, componentType)
+        ObjectCalls.ptrcallWithLongArg(setComponentTypeBind, segment, componentType.value)
     }
 
     fun getNormalized(): Boolean {
@@ -155,14 +156,14 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithLongArg(setCountBind, segment, count)
     }
 
-    fun getAccessorType(): Long {
+    fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment)
+        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment))
     }
 
-    fun setAccessorType(accessorType: Long) {
+    fun setAccessorType(accessorType: GLTFAccessor.GLTFAccessorType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAccessorTypeBind, segment, accessorType)
+        ObjectCalls.ptrcallWithLongArg(setAccessorTypeBind, segment, accessorType.value)
     }
 
     fun getType(): Int {
@@ -225,14 +226,14 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithLongArg(setSparseIndicesByteOffsetBind, segment, sparseIndicesByteOffset)
     }
 
-    fun getSparseIndicesComponentType(): Long {
+    fun getSparseIndicesComponentType(): GLTFAccessor.GLTFComponentType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesComponentTypeBind, segment)
+        return GLTFAccessor.GLTFComponentType(ObjectCalls.ptrcallNoArgsRetLong(getSparseIndicesComponentTypeBind, segment))
     }
 
-    fun setSparseIndicesComponentType(sparseIndicesComponentType: Long) {
+    fun setSparseIndicesComponentType(sparseIndicesComponentType: GLTFAccessor.GLTFComponentType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSparseIndicesComponentTypeBind, segment, sparseIndicesComponentType)
+        ObjectCalls.ptrcallWithLongArg(setSparseIndicesComponentTypeBind, segment, sparseIndicesComponentType.value)
     }
 
     fun getSparseValuesBufferView(): Int {
@@ -255,30 +256,41 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithLongArg(setSparseValuesByteOffsetBind, segment, sparseValuesByteOffset)
     }
 
+    @JvmInline
+    value class GLTFAccessorType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val SCALAR: GLTFAccessorType get() = GLTFAccessorType(0L)
+            val VEC2: GLTFAccessorType get() = GLTFAccessorType(1L)
+            val VEC3: GLTFAccessorType get() = GLTFAccessorType(2L)
+            val VEC4: GLTFAccessorType get() = GLTFAccessorType(3L)
+            val MAT2: GLTFAccessorType get() = GLTFAccessorType(4L)
+            val MAT3: GLTFAccessorType get() = GLTFAccessorType(5L)
+            val MAT4: GLTFAccessorType get() = GLTFAccessorType(6L)
+        }
+    }
+
+    @JvmInline
+    value class GLTFComponentType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val NONE: GLTFComponentType get() = GLTFComponentType(0L)
+            val SIGNED_BYTE: GLTFComponentType get() = GLTFComponentType(5120L)
+            val UNSIGNED_BYTE: GLTFComponentType get() = GLTFComponentType(5121L)
+            val SIGNED_SHORT: GLTFComponentType get() = GLTFComponentType(5122L)
+            val UNSIGNED_SHORT: GLTFComponentType get() = GLTFComponentType(5123L)
+            val SIGNED_INT: GLTFComponentType get() = GLTFComponentType(5124L)
+            val UNSIGNED_INT: GLTFComponentType get() = GLTFComponentType(5125L)
+            val SINGLE_FLOAT: GLTFComponentType get() = GLTFComponentType(5126L)
+            val DOUBLE_FLOAT: GLTFComponentType get() = GLTFComponentType(5130L)
+            val HALF_FLOAT: GLTFComponentType get() = GLTFComponentType(5131L)
+            val SIGNED_LONG: GLTFComponentType get() = GLTFComponentType(5134L)
+            val UNSIGNED_LONG: GLTFComponentType get() = GLTFComponentType(5135L)
+        }
+    }
+
     companion object {
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFAccessor? {
             return GLTFAccessor.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
-
-        const val TYPE_SCALAR: Long = 0L
-        const val TYPE_VEC2: Long = 1L
-        const val TYPE_VEC3: Long = 2L
-        const val TYPE_VEC4: Long = 3L
-        const val TYPE_MAT2: Long = 4L
-        const val TYPE_MAT3: Long = 5L
-        const val TYPE_MAT4: Long = 6L
-        const val COMPONENT_TYPE_NONE: Long = 0L
-        const val COMPONENT_TYPE_SIGNED_BYTE: Long = 5120L
-        const val COMPONENT_TYPE_UNSIGNED_BYTE: Long = 5121L
-        const val COMPONENT_TYPE_SIGNED_SHORT: Long = 5122L
-        const val COMPONENT_TYPE_UNSIGNED_SHORT: Long = 5123L
-        const val COMPONENT_TYPE_SIGNED_INT: Long = 5124L
-        const val COMPONENT_TYPE_UNSIGNED_INT: Long = 5125L
-        const val COMPONENT_TYPE_SINGLE_FLOAT: Long = 5126L
-        const val COMPONENT_TYPE_DOUBLE_FLOAT: Long = 5130L
-        const val COMPONENT_TYPE_HALF_FLOAT: Long = 5131L
-        const val COMPONENT_TYPE_SIGNED_LONG: Long = 5134L
-        const val COMPONENT_TYPE_UNSIGNED_LONG: Long = 5135L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFAccessor? =

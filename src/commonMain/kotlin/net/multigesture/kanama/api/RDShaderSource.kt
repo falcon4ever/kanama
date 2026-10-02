@@ -13,65 +13,65 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
     var sourceVertex: String
         @JvmName("sourceVertexProperty")
-        get() = getStageSource(0L)
+        get() = getStageSource(RenderingDevice.ShaderStage.VERTEX)
         @JvmName("setSourceVertexProperty")
-        set(value) = setStageSource(0L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.VERTEX, value)
 
     var sourceFragment: String
         @JvmName("sourceFragmentProperty")
-        get() = getStageSource(1L)
+        get() = getStageSource(RenderingDevice.ShaderStage.FRAGMENT)
         @JvmName("setSourceFragmentProperty")
-        set(value) = setStageSource(1L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.FRAGMENT, value)
 
     var sourceTesselationControl: String
         @JvmName("sourceTesselationControlProperty")
-        get() = getStageSource(2L)
+        get() = getStageSource(RenderingDevice.ShaderStage.TESSELATION_CONTROL)
         @JvmName("setSourceTesselationControlProperty")
-        set(value) = setStageSource(2L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.TESSELATION_CONTROL, value)
 
     var sourceTesselationEvaluation: String
         @JvmName("sourceTesselationEvaluationProperty")
-        get() = getStageSource(3L)
+        get() = getStageSource(RenderingDevice.ShaderStage.TESSELATION_EVALUATION)
         @JvmName("setSourceTesselationEvaluationProperty")
-        set(value) = setStageSource(3L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.TESSELATION_EVALUATION, value)
 
     var sourceCompute: String
         @JvmName("sourceComputeProperty")
-        get() = getStageSource(4L)
+        get() = getStageSource(RenderingDevice.ShaderStage.COMPUTE)
         @JvmName("setSourceComputeProperty")
-        set(value) = setStageSource(4L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.COMPUTE, value)
 
     var sourceRaygen: String
         @JvmName("sourceRaygenProperty")
-        get() = getStageSource(5L)
+        get() = getStageSource(RenderingDevice.ShaderStage.RAYGEN)
         @JvmName("setSourceRaygenProperty")
-        set(value) = setStageSource(5L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.RAYGEN, value)
 
     var sourceAnyHit: String
         @JvmName("sourceAnyHitProperty")
-        get() = getStageSource(6L)
+        get() = getStageSource(RenderingDevice.ShaderStage.ANY_HIT)
         @JvmName("setSourceAnyHitProperty")
-        set(value) = setStageSource(6L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.ANY_HIT, value)
 
     var sourceClosestHit: String
         @JvmName("sourceClosestHitProperty")
-        get() = getStageSource(7L)
+        get() = getStageSource(RenderingDevice.ShaderStage.CLOSEST_HIT)
         @JvmName("setSourceClosestHitProperty")
-        set(value) = setStageSource(7L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.CLOSEST_HIT, value)
 
     var sourceMiss: String
         @JvmName("sourceMissProperty")
-        get() = getStageSource(8L)
+        get() = getStageSource(RenderingDevice.ShaderStage.MISS)
         @JvmName("setSourceMissProperty")
-        set(value) = setStageSource(8L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.MISS, value)
 
     var sourceIntersection: String
         @JvmName("sourceIntersectionProperty")
-        get() = getStageSource(9L)
+        get() = getStageSource(RenderingDevice.ShaderStage.INTERSECTION)
         @JvmName("setSourceIntersectionProperty")
-        set(value) = setStageSource(9L, value)
+        set(value) = setStageSource(RenderingDevice.ShaderStage.INTERSECTION, value)
 
-    var language: Long
+    var language: RenderingDevice.ShaderLanguage
         @JvmName("languageProperty")
         get() = getLanguage()
         @JvmName("setLanguageProperty")
@@ -82,9 +82,9 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDShaderSource.set_stage_source
      */
-    fun setStageSource(stage: Long, source: String) {
+    fun setStageSource(stage: RenderingDevice.ShaderStage, source: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, segment, stage, source)
+        ObjectCalls.ptrcallWithLongAndStringArg(setStageSourceBind, segment, stage.value, source)
     }
 
     /**
@@ -92,9 +92,9 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDShaderSource.get_stage_source
      */
-    fun getStageSource(stage: Long): String {
+    fun getStageSource(stage: RenderingDevice.ShaderStage): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetString(getStageSourceBind, segment, stage)
+        return ObjectCalls.ptrcallWithLongArgRetString(getStageSourceBind, segment, stage.value)
     }
 
     /**
@@ -102,9 +102,9 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDShaderSource.set_language
      */
-    fun setLanguage(language: Long) {
+    fun setLanguage(language: RenderingDevice.ShaderLanguage) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithLongArg(setLanguageBind, segment, language.value)
     }
 
     /**
@@ -112,9 +112,9 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDShaderSource.get_language
      */
-    fun getLanguage(): Long {
+    fun getLanguage(): RenderingDevice.ShaderLanguage {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, segment)
+        return RenderingDevice.ShaderLanguage(ObjectCalls.ptrcallNoArgsRetLong(getLanguageBind, segment))
     }
 
     companion object {

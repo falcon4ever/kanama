@@ -1161,28 +1161,6 @@ int32_t kanama_ios_godot_object_disconnect_bound(
     int32_t arg_count
 );
 
-/* Returns an owned +1 PropertyTweener reference; the caller must release it. */
-int64_t kanama_ios_godot_tween_tween_property_vector2(
-    int64_t tween,
-    int64_t target,
-    const char *property,
-    double x,
-    double y,
-    double duration
-);
-
-/* Returns an owned +1 PropertyTweener reference; the caller must release it. */
-int64_t kanama_ios_godot_tween_tween_property_color(
-    int64_t tween,
-    int64_t target,
-    const char *property,
-    double r,
-    double g,
-    double b,
-    double a,
-    double duration
-);
-
 int64_t kanama_ios_godot_tween_set_parallel(int64_t tween, int32_t parallel);
 
 /* Returns an owned +1 CallbackTweener reference; the caller must release it. */

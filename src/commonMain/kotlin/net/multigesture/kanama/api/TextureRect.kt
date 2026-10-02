@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,13 +19,13 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
-    var expandMode: Long
+    var expandMode: TextureRect.ExpandMode
         @JvmName("expandModeProperty")
         get() = getExpandMode()
         @JvmName("setExpandModeProperty")
         set(value) = setExpandMode(value)
 
-    var stretchMode: Long
+    var stretchMode: TextureRect.StretchMode
         @JvmName("stretchModeProperty")
         get() = getStretchMode()
         @JvmName("setStretchModeProperty")
@@ -65,8 +66,8 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextureRect.set_expand_mode
      */
-    fun setExpandMode(expandMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setExpandModeBind, segment, expandMode)
+    fun setExpandMode(expandMode: TextureRect.ExpandMode) {
+        ObjectCalls.ptrcallWithLongArg(setExpandModeBind, segment, expandMode.value)
     }
 
     /**
@@ -74,8 +75,8 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextureRect.get_expand_mode
      */
-    fun getExpandMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, segment)
+    fun getExpandMode(): TextureRect.ExpandMode {
+        return TextureRect.ExpandMode(ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, segment))
     }
 
     /**
@@ -119,8 +120,8 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextureRect.set_stretch_mode
      */
-    fun setStretchMode(stretchMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode)
+    fun setStretchMode(stretchMode: TextureRect.StretchMode) {
+        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode.value)
     }
 
     /**
@@ -128,25 +129,119 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextureRect.get_stretch_mode
      */
-    fun getStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment)
+    fun getStretchMode(): TextureRect.StretchMode {
+        return TextureRect.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
+    }
+
+    /**
+     * Godot's `TextureRect.ExpandMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextureRect.ExpandMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextureRect.ExpandMode
+     */
+    @JvmInline
+    value class ExpandMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The minimum size will be equal to texture size, i.e. `TextureRect` can't be smaller than the
+             * texture.
+             *
+             * Generated from Godot docs: TextureRect.EXPAND_KEEP_SIZE
+             */
+            val KEEP_SIZE: ExpandMode get() = ExpandMode(0L)
+            /**
+             * The size of the texture won't be considered for minimum size calculation, so the `TextureRect`
+             * can be shrunk down past the texture size.
+             *
+             * Generated from Godot docs: TextureRect.EXPAND_IGNORE_SIZE
+             */
+            val IGNORE_SIZE: ExpandMode get() = ExpandMode(1L)
+            /**
+             * The height of the texture will be ignored. Minimum width will be equal to the current height.
+             * Useful for horizontal layouts, e.g. inside `HBoxContainer`.
+             *
+             * Generated from Godot docs: TextureRect.EXPAND_FIT_WIDTH
+             */
+            val FIT_WIDTH: ExpandMode get() = ExpandMode(2L)
+            /**
+             * Same as `ExpandMode.FIT_WIDTH`, but keeps texture's aspect ratio.
+             *
+             * Generated from Godot docs: TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+             */
+            val FIT_WIDTH_PROPORTIONAL: ExpandMode get() = ExpandMode(3L)
+            /**
+             * The width of the texture will be ignored. Minimum height will be equal to the current width.
+             * Useful for vertical layouts, e.g. inside `VBoxContainer`.
+             *
+             * Generated from Godot docs: TextureRect.EXPAND_FIT_HEIGHT
+             */
+            val FIT_HEIGHT: ExpandMode get() = ExpandMode(4L)
+            /**
+             * Same as `ExpandMode.FIT_HEIGHT`, but keeps texture's aspect ratio.
+             *
+             * Generated from Godot docs: TextureRect.EXPAND_FIT_HEIGHT_PROPORTIONAL
+             */
+            val FIT_HEIGHT_PROPORTIONAL: ExpandMode get() = ExpandMode(5L)
+        }
+    }
+
+    /**
+     * Godot's `TextureRect.StretchMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextureRect.StretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextureRect.StretchMode
+     */
+    @JvmInline
+    value class StretchMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Scale to fit the node's bounding rectangle.
+             *
+             * Generated from Godot docs: TextureRect.STRETCH_SCALE
+             */
+            val SCALE: StretchMode get() = StretchMode(0L)
+            /**
+             * Tile inside the node's bounding rectangle. Note: `StretchMode.TILE` mode is not supported for
+             * `texture` set to an `AtlasTexture` with non-zero `AtlasTexture.margin`.
+             *
+             * Generated from Godot docs: TextureRect.STRETCH_TILE
+             */
+            val TILE: StretchMode get() = StretchMode(1L)
+            /**
+             * The texture keeps its original size and stays in the bounding rectangle's top-left corner.
+             *
+             * Generated from Godot docs: TextureRect.STRETCH_KEEP
+             */
+            val KEEP: StretchMode get() = StretchMode(2L)
+            /**
+             * The texture keeps its original size and stays centered in the node's bounding rectangle.
+             *
+             * Generated from Godot docs: TextureRect.STRETCH_KEEP_CENTERED
+             */
+            val KEEP_CENTERED: StretchMode get() = StretchMode(3L)
+            /**
+             * Scale the texture to fit the node's bounding rectangle, but maintain the texture's aspect ratio.
+             *
+             * Generated from Godot docs: TextureRect.STRETCH_KEEP_ASPECT
+             */
+            val KEEP_ASPECT: StretchMode get() = StretchMode(4L)
+            /**
+             * Scale the texture to fit the node's bounding rectangle, center it and maintain its aspect ratio.
+             *
+             * Generated from Godot docs: TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+             */
+            val KEEP_ASPECT_CENTERED: StretchMode get() = StretchMode(5L)
+            /**
+             * Scale the texture so that the shorter side fits the bounding rectangle. The other side clips to
+             * the node's limits.
+             *
+             * Generated from Godot docs: TextureRect.STRETCH_KEEP_ASPECT_COVERED
+             */
+            val KEEP_ASPECT_COVERED: StretchMode get() = StretchMode(6L)
+        }
     }
 
     companion object {
-        const val EXPAND_KEEP_SIZE: Long = 0L
-        const val EXPAND_IGNORE_SIZE: Long = 1L
-        const val EXPAND_FIT_WIDTH: Long = 2L
-        const val EXPAND_FIT_WIDTH_PROPORTIONAL: Long = 3L
-        const val EXPAND_FIT_HEIGHT: Long = 4L
-        const val EXPAND_FIT_HEIGHT_PROPORTIONAL: Long = 5L
-        const val STRETCH_SCALE: Long = 0L
-        const val STRETCH_TILE: Long = 1L
-        const val STRETCH_KEEP: Long = 2L
-        const val STRETCH_KEEP_CENTERED: Long = 3L
-        const val STRETCH_KEEP_ASPECT: Long = 4L
-        const val STRETCH_KEEP_ASPECT_CENTERED: Long = 5L
-        const val STRETCH_KEEP_ASPECT_COVERED: Long = 6L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureRect? =
             wrap(handle.segment)

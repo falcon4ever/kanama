@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -13,13 +14,13 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Start the AES context in the given `mode`. A `key` of either 16 or 32 bytes must always be
      * provided, while an `iv` (initialization vector) of exactly 16 bytes, is only needed when `mode`
-     * is either `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
+     * is either `Mode.CBC_ENCRYPT` or `Mode.CBC_DECRYPT`.
      *
      * Generated from Godot docs: AESContext.start
      */
-    fun start(mode: Long, key: ByteArray, iv: ByteArray): Long {
+    fun start(mode: AESContext.Mode, key: ByteArray, iv: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, segment, mode, key, iv)
+        return GodotError(ObjectCalls.ptrcallWithLongAndTwoByteArrayArgsRetLong(startBind, segment, mode.value, key, iv))
     }
 
     /**
@@ -37,7 +38,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Get the current IV state for this context (IV gets updated when calling `update`). You normally
      * don't need this function. Note: This function only makes sense when the context is started with
-     * `MODE_CBC_ENCRYPT` or `MODE_CBC_DECRYPT`.
+     * `Mode.CBC_ENCRYPT` or `Mode.CBC_DECRYPT`.
      *
      * Generated from Godot docs: AESContext.get_iv_state
      */
@@ -56,13 +57,49 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(finishBind, segment)
     }
 
-    companion object {
-        const val MODE_ECB_ENCRYPT: Long = 0L
-        const val MODE_ECB_DECRYPT: Long = 1L
-        const val MODE_CBC_ENCRYPT: Long = 2L
-        const val MODE_CBC_DECRYPT: Long = 3L
-        const val MODE_MAX: Long = 4L
+    /**
+     * Godot's `AESContext.Mode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`AESContext.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: AESContext.Mode
+     */
+    @JvmInline
+    value class Mode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * AES electronic codebook encryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_ECB_ENCRYPT
+             */
+            val ECB_ENCRYPT: Mode get() = Mode(0L)
+            /**
+             * AES electronic codebook decryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_ECB_DECRYPT
+             */
+            val ECB_DECRYPT: Mode get() = Mode(1L)
+            /**
+             * AES cipher block chaining encryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_CBC_ENCRYPT
+             */
+            val CBC_ENCRYPT: Mode get() = Mode(2L)
+            /**
+             * AES cipher block chaining decryption mode.
+             *
+             * Generated from Godot docs: AESContext.MODE_CBC_DECRYPT
+             */
+            val CBC_DECRYPT: Mode get() = Mode(3L)
+            /**
+             * Maximum value for the mode enum.
+             *
+             * Generated from Godot docs: AESContext.MODE_MAX
+             */
+            val MAX: Mode get() = Mode(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AESContext? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -28,7 +29,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setShowRestOnlyProperty")
         set(value) = setShowRestOnly(value)
 
-    var modifierCallbackModeProcess: Long
+    var modifierCallbackModeProcess: Skeleton3D.ModifierCallbackModeProcess
         @JvmName("modifierCallbackModeProcessProperty")
         get() = getModifierCallbackModeProcess()
         @JvmName("setModifierCallbackModeProcessProperty")
@@ -456,8 +457,8 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Skeleton3D.set_modifier_callback_mode_process
      */
-    fun setModifierCallbackModeProcess(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setModifierCallbackModeProcessBind, segment, mode)
+    fun setModifierCallbackModeProcess(mode: Skeleton3D.ModifierCallbackModeProcess) {
+        ObjectCalls.ptrcallWithLongArg(setModifierCallbackModeProcessBind, segment, mode.value)
     }
 
     /**
@@ -465,8 +466,8 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Skeleton3D.get_modifier_callback_mode_process
      */
-    fun getModifierCallbackModeProcess(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getModifierCallbackModeProcessBind, segment)
+    fun getModifierCallbackModeProcess(): Skeleton3D.ModifierCallbackModeProcess {
+        return Skeleton3D.ModifierCallbackModeProcess(ObjectCalls.ptrcallNoArgsRetLong(getModifierCallbackModeProcessBind, segment))
     }
 
     /**
@@ -597,11 +598,41 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
         const val showRestOnlyChanged: String = "show_rest_only_changed"
     }
 
+    /**
+     * Godot's `Skeleton3D.ModifierCallbackModeProcess` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`Skeleton3D.ModifierCallbackModeProcess.<NAME>`).
+     *
+     * Generated from Godot docs: Skeleton3D.ModifierCallbackModeProcess
+     */
+    @JvmInline
+    value class ModifierCallbackModeProcess(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Set a flag to process modification during physics frames (see
+             * `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`).
+             *
+             * Generated from Godot docs: Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_PHYSICS
+             */
+            val PHYSICS: ModifierCallbackModeProcess get() = ModifierCallbackModeProcess(0L)
+            /**
+             * Set a flag to process modification during process frames (see
+             * `Node.NOTIFICATION_INTERNAL_PROCESS`).
+             *
+             * Generated from Godot docs: Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_IDLE
+             */
+            val IDLE: ModifierCallbackModeProcess get() = ModifierCallbackModeProcess(1L)
+            /**
+             * Do not process modification. Use `advance` to process the modification manually.
+             *
+             * Generated from Godot docs: Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_MANUAL
+             */
+            val MANUAL: ModifierCallbackModeProcess get() = ModifierCallbackModeProcess(2L)
+        }
+    }
+
     companion object {
         const val NOTIFICATION_UPDATE_SKELETON: Long = 50L
-        const val MODIFIER_CALLBACK_MODE_PROCESS_PHYSICS: Long = 0L
-        const val MODIFIER_CALLBACK_MODE_PROCESS_IDLE: Long = 1L
-        const val MODIFIER_CALLBACK_MODE_PROCESS_MANUAL: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Skeleton3D? =

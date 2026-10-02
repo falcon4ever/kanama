@@ -258,7 +258,7 @@ class HelloScript(godotObject: GodotHandle) :
       ResourceLoader.loadThreadedRequest(
         threadedLoadPath,
         "PackedScene",
-        cacheMode = ResourceLoader.CACHE_MODE_IGNORE,
+        cacheMode = ResourceLoader.CacheMode.IGNORE,
       )
     val threadedStatusBeforeGet = ResourceLoader.loadThreadedGetStatus(threadedLoadPath)
     val threadedResource = ResourceLoader.loadThreadedGet(threadedLoadPath)
@@ -289,12 +289,12 @@ class HelloScript(godotObject: GodotHandle) :
     val savePath = "res://.kanama_resource_saver_smoke.kt"
     val saveAbsolutePath = ProjectSettings.globalizePath(savePath)
     DirAccess.removeAbsolute(saveAbsolutePath)
-    val saveError = loadedScript?.let { ResourceSaver.save(it, savePath) } ?: -1L
+    val saveError = loadedScript?.let { ResourceSaver.save(it, savePath).value } ?: -1L
     val saveExists = FileAccess.fileExists(savePath)
     val saveHasClass =
       saveExists && FileAccess.getFileAsString(savePath).contains("class HelloScript")
-    val saveUidSetError = if (saveExists) ResourceSaver.setUid(savePath, 8675309L) else -1L
-    val saveCleanupError = if (saveExists) DirAccess.removeAbsolute(saveAbsolutePath) else 0L
+    val saveUidSetError = if (saveExists) ResourceSaver.setUid(savePath, 8675309L).value else -1L
+    val saveCleanupError = if (saveExists) DirAccess.removeAbsolute(saveAbsolutePath).value else 0L
     DirAccess.removeAbsolute("$saveAbsolutePath.uid")
     val cachedScript = ResourceLoader.getCachedRef("res://HelloScript.kt")
     val cachedScriptPath = cachedScript?.getPath().orEmpty()
@@ -353,7 +353,7 @@ class HelloScript(godotObject: GodotHandle) :
     val fileOpenLine = FileAccess.getLineFor("res://HelloScript.kt")
     val fileOpenText = FileAccess.getAsText("res://HelloScript.kt")
     val fileOpenError = FileAccess.getErrorFor("res://HelloScript.kt")
-    val directFile = FileAccess.open("res://HelloScript.kt", FileAccess.READ)
+    val directFile = FileAccess.open("res://HelloScript.kt", FileAccess.ModeFlags.READ)
     val directFilePresent = directFile != null
     val directFileOpen = directFile?.isOpen() ?: false
     val directFilePathLen = directFile?.getPath()?.length ?: 0
@@ -361,7 +361,7 @@ class HelloScript(godotObject: GodotHandle) :
     val directFileTextHasClass = directFile?.getAsText()?.contains("class HelloScript") ?: false
     directFile?.close()
     val tempFile =
-      FileAccess.createTemp(FileAccess.WRITE, "kanama_file_handle_", "tmp", keep = false)
+      FileAccess.createTemp(FileAccess.ModeFlags.WRITE, "kanama_file_handle_", "tmp", keep = false)
     val tempFilePresent = tempFile != null
     val tempFileOpen = tempFile?.isOpen() ?: false
     val tempFilePathLen = tempFile?.getPath()?.length ?: 0
@@ -459,7 +459,8 @@ class HelloScript(godotObject: GodotHandle) :
     val fileAttrReadOnlySetError = FileAccess.setReadOnlyAttribute(fileAttrPath, true)
     val fileAttrReadOnly = FileAccess.getReadOnlyAttribute(fileAttrPath)
     val fileAttrReadOnlyResetError = FileAccess.setReadOnlyAttribute(fileAttrPath, false)
-    val fileAttrPermissionsSetError = FileAccess.setUnixPermissions(fileAttrPath, 420)
+    val fileAttrPermissionsSetError =
+      FileAccess.setUnixPermissions(fileAttrPath, FileAccess.UnixPermissionFlags(420L))
     val fileAttrPermissions = FileAccess.getUnixPermissions(fileAttrPath)
     val fileAttrCleanupError = DirAccess.removeAbsolute(fileAttrAbsolutePath)
     val selfNode = self
@@ -487,7 +488,7 @@ class HelloScript(godotObject: GodotHandle) :
     val body3d = selfNode.getAsOrNull(targetPath, ::CharacterBody3D)
     val bodyFound = selfNode.hasNode(targetPath) && body3d != null
     val packedScene = PackedScene.create()
-    val packedScenePackError = body3d?.let { packedScene.pack(it) } ?: -1L
+    val packedScenePackError = body3d?.let { packedScene.pack(it).value } ?: -1L
     val packedSceneCanInstantiate = packedScene.canInstantiate()
     val packedSceneInstance = packedScene.instantiate()
     val packedSceneInstanceIsBody = packedSceneInstance?.isClass("CharacterBody3D") ?: false
@@ -581,13 +582,13 @@ class HelloScript(godotObject: GodotHandle) :
     camera3d?.setFov(70.0)
     camera3d?.setNear(0.1)
     camera3d?.setFar(250.0)
-    camera3d?.setProjection(Camera3D.PROJECTION_PERSPECTIVE)
+    camera3d?.setProjection(Camera3D.ProjectionType.PERSPECTIVE)
     camera3d?.setCullMask(1)
     camera3d?.setCurrent(true)
     val cameraFov = camera3d?.getFov() ?: 0.0
     val cameraNear = camera3d?.getNear() ?: 0.0
     val cameraFar = camera3d?.getFar() ?: 0.0
-    val cameraProjection = camera3d?.getProjection() ?: -1L
+    val cameraProjection = camera3d?.getProjection()?.value ?: -1L
     val cameraCullMask = camera3d?.getCullMask() ?: 0L
     val cameraCurrent = camera3d?.isCurrent() ?: false
     val ray3d = selfNode.getNodeAsOrNull("../RayCast3D", "RayCast3D", ::RayCast3D)
@@ -675,10 +676,10 @@ class HelloScript(godotObject: GodotHandle) :
     val animationFound = selfNode.hasNode("../AnimationPlayer") && animationPlayer != null
     animationPlayer?.setActive(true)
     animationPlayer?.setDeterministic(true)
-    animationPlayer?.setCallbackModeProcess(AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_IDLE)
-    animationPlayer?.setCallbackModeMethod(AnimationMixer.ANIMATION_CALLBACK_MODE_METHOD_IMMEDIATE)
+    animationPlayer?.setCallbackModeProcess(AnimationMixer.AnimationCallbackModeProcess.IDLE)
+    animationPlayer?.setCallbackModeMethod(AnimationMixer.AnimationCallbackModeMethod.IMMEDIATE)
     animationPlayer?.setCallbackModeDiscrete(
-      AnimationMixer.ANIMATION_CALLBACK_MODE_DISCRETE_FORCE_CONTINUOUS
+      AnimationMixer.AnimationCallbackModeDiscrete.FORCE_CONTINUOUS
     )
     animationPlayer?.setAudioMaxPolyphony(3)
     animationPlayer?.setRootMotionLocal(true)
@@ -687,8 +688,8 @@ class HelloScript(godotObject: GodotHandle) :
     animationPlayer?.setAutoCaptureDuration(0.5)
     animationPlayer?.setSpeedScale(1.5)
     animationPlayer?.setMovieQuitOnFinishEnabled(false)
-    animationPlayer?.setProcessCallback(AnimationPlayer.ANIMATION_PROCESS_IDLE)
-    animationPlayer?.setMethodCallMode(AnimationPlayer.ANIMATION_METHOD_CALL_IMMEDIATE)
+    animationPlayer?.setProcessCallback(AnimationPlayer.AnimationProcessCallback.IDLE)
+    animationPlayer?.setMethodCallMode(AnimationPlayer.AnimationMethodCallMode.IMMEDIATE)
     animationPlayer?.setAssignedAnimation("")
     animationPlayer?.setCurrentAnimation("")
     animationPlayer?.seek(0.0, update = true, updateOnly = false)
@@ -702,9 +703,9 @@ class HelloScript(godotObject: GodotHandle) :
     animationPlayer?.advance(0.0)
     val animationActive = animationPlayer?.isActive() ?: false
     val animationDeterministic = animationPlayer?.isDeterministic() ?: false
-    val animationProcessMode = animationPlayer?.getCallbackModeProcess() ?: -1L
-    val animationMethodMode = animationPlayer?.getCallbackModeMethod() ?: -1L
-    val animationDiscreteMode = animationPlayer?.getCallbackModeDiscrete() ?: -1L
+    val animationProcessMode = animationPlayer?.getCallbackModeProcess()?.value ?: -1L
+    val animationMethodMode = animationPlayer?.getCallbackModeMethod()?.value ?: -1L
+    val animationDiscreteMode = animationPlayer?.getCallbackModeDiscrete()?.value ?: -1L
     val animationPolyphony = animationPlayer?.getAudioMaxPolyphony() ?: 0L
     val animationRootLocal = animationPlayer?.isRootMotionLocal() ?: false
     val animationRootMotionPosition = animationPlayer?.getRootMotionPosition() ?: Vector3.ZERO
@@ -728,20 +729,20 @@ class HelloScript(godotObject: GodotHandle) :
     val animationHasSection = animationPlayer?.hasSection() ?: true
     val animationSectionStart = animationPlayer?.getSectionStartTime() ?: 0.0
     val animationSectionEnd = animationPlayer?.getSectionEndTime() ?: 0.0
-    val animationPlayerProcessMode = animationPlayer?.getProcessCallback() ?: -1L
-    val animationPlayerMethodMode = animationPlayer?.getMethodCallMode() ?: -1L
+    val animationPlayerProcessMode = animationPlayer?.getProcessCallback()?.value ?: -1L
+    val animationPlayerMethodMode = animationPlayer?.getMethodCallMode()?.value ?: -1L
     val meshInstance3d =
       selfNode.getNodeAsOrNull("../MeshInstance3D", "MeshInstance3D", ::MeshInstance3D)
     val meshFound = selfNode.hasNode("../MeshInstance3D") && meshInstance3d != null
     meshInstance3d?.setLayerMask(7)
     meshInstance3d?.setSortingOffset(2.0)
     meshInstance3d?.setSortingUseAabbCenter(true)
-    meshInstance3d?.setCastShadowsSetting(GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+    meshInstance3d?.setCastShadowsSetting(GeometryInstance3D.ShadowCastingSetting.OFF)
     meshInstance3d?.setLodBias(1.25)
     meshInstance3d?.setTransparency(0.25)
     meshInstance3d?.setVisibilityRangeBegin(1.0)
     meshInstance3d?.setVisibilityRangeEnd(100.0)
-    meshInstance3d?.setVisibilityRangeFadeMode(GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF)
+    meshInstance3d?.setVisibilityRangeFadeMode(GeometryInstance3D.VisibilityRangeFadeMode.SELF)
     meshInstance3d?.setExtraCullMargin(0.5)
     meshInstance3d?.setLightmapTexelScale(1.5)
     meshInstance3d?.setIgnoreOcclusionCulling(true)
@@ -759,9 +760,9 @@ class HelloScript(godotObject: GodotHandle) :
     assignedMaterial.setAlbedo(Color(0.1f, 0.2f, 0.3f, 0.75f))
     assignedMaterial.setMetallic(0.4)
     assignedMaterial.setRoughness(0.6)
-    assignedMaterial.setShadingMode(BaseMaterial3D.SHADING_MODE_UNSHADED)
-    assignedMaterial.setTransparency(BaseMaterial3D.TRANSPARENCY_ALPHA)
-    assignedMaterial.setCullMode(BaseMaterial3D.CULL_DISABLED)
+    assignedMaterial.setShadingMode(BaseMaterial3D.ShadingMode.UNSHADED)
+    assignedMaterial.setTransparency(BaseMaterial3D.Transparency.ALPHA)
+    assignedMaterial.setCullMode(BaseMaterial3D.CullMode.DISABLED)
     assignedMaterial.setRenderPriority(2)
     meshInstance3d?.setMaterialOverride(assignedMaterial)
     meshInstance3d?.setMaterialOverlay(assignedMaterial)
@@ -770,12 +771,12 @@ class HelloScript(godotObject: GodotHandle) :
     val meshLayerMask = meshInstance3d?.getLayerMask() ?: 0L
     val meshSortingOffset = meshInstance3d?.getSortingOffset() ?: 0.0
     val meshSortingAabb = meshInstance3d?.isSortingUseAabbCenter() ?: false
-    val meshCastShadows = meshInstance3d?.getCastShadowsSetting() ?: -1L
+    val meshCastShadows = meshInstance3d?.getCastShadowsSetting()?.value ?: -1L
     val meshLodBias = meshInstance3d?.getLodBias() ?: 0.0
     val meshTransparency = meshInstance3d?.getTransparency() ?: 0.0
     val meshVisibilityBegin = meshInstance3d?.getVisibilityRangeBegin() ?: 0.0
     val meshVisibilityEnd = meshInstance3d?.getVisibilityRangeEnd() ?: 0.0
-    val meshVisibilityFade = meshInstance3d?.getVisibilityRangeFadeMode() ?: -1L
+    val meshVisibilityFade = meshInstance3d?.getVisibilityRangeFadeMode()?.value ?: -1L
     val meshExtraCull = meshInstance3d?.getExtraCullMargin() ?: 0.0
     val meshLightmapTexelScale = meshInstance3d?.getLightmapTexelScale() ?: 0.0
     val meshIgnoreOcclusion = meshInstance3d?.isIgnoringOcclusionCulling() ?: false
@@ -835,7 +836,7 @@ class HelloScript(godotObject: GodotHandle) :
     gpuParticles?.setFixedFps(30)
     gpuParticles?.setFractionalDelta(false)
     gpuParticles?.setSpeedScale(1.5)
-    gpuParticles?.setDrawOrder(GPUParticles3D.DRAW_ORDER_REVERSE_LIFETIME)
+    gpuParticles?.setDrawOrder(GPUParticles3D.DrawOrder.REVERSE_LIFETIME)
     gpuParticles?.setEmitting(true)
     val gpuParticlesAmount = gpuParticles?.getAmount() ?: -1L
     val gpuParticlesLifetime = gpuParticles?.getLifetime() ?: -1.0
@@ -846,7 +847,7 @@ class HelloScript(godotObject: GodotHandle) :
     val gpuParticlesFixedFps = gpuParticles?.getFixedFps() ?: -1L
     val gpuParticlesFractional = gpuParticles?.getFractionalDelta() ?: true
     val gpuParticlesSpeedScale = gpuParticles?.getSpeedScale() ?: -1.0
-    val gpuParticlesDrawOrder = gpuParticles?.getDrawOrder() ?: -1L
+    val gpuParticlesDrawOrder = gpuParticles?.getDrawOrder()?.value ?: -1L
     val gpuParticlesEmitting = gpuParticles?.isEmitting() ?: false
     gpuParticles?.restart(keepSeed = true)
     val cpuParticles =
@@ -860,7 +861,7 @@ class HelloScript(godotObject: GodotHandle) :
     cpuParticles?.setFixedFps(20)
     cpuParticles?.setFractionalDelta(false)
     cpuParticles?.setSpeedScale(0.75)
-    cpuParticles?.setDrawOrder(CPUParticles3D.DRAW_ORDER_VIEW_DEPTH)
+    cpuParticles?.setDrawOrder(CPUParticles3D.DrawOrder.VIEW_DEPTH)
     cpuParticles?.setEmitting(true)
     val cpuParticlesAmount = cpuParticles?.getAmount() ?: -1L
     val cpuParticlesLifetime = cpuParticles?.getLifetime() ?: -1.0
@@ -871,7 +872,7 @@ class HelloScript(godotObject: GodotHandle) :
     val cpuParticlesFixedFps = cpuParticles?.getFixedFps() ?: -1L
     val cpuParticlesFractional = cpuParticles?.getFractionalDelta() ?: true
     val cpuParticlesSpeedScale = cpuParticles?.getSpeedScale() ?: -1.0
-    val cpuParticlesDrawOrder = cpuParticles?.getDrawOrder() ?: -1L
+    val cpuParticlesDrawOrder = cpuParticles?.getDrawOrder()?.value ?: -1L
     val cpuParticlesEmitting = cpuParticles?.isEmitting() ?: false
     cpuParticles?.restart(keepSeed = true)
     val timerNode = selfNode.getNodeAsOrNull("../Timer", "Timer", ::Timer)
@@ -881,14 +882,14 @@ class HelloScript(godotObject: GodotHandle) :
     timerNode?.setAutostart(false)
     timerNode?.setPaused(true)
     timerNode?.setIgnoreTimeScale(true)
-    timerNode?.setTimerProcessCallback(Timer.TIMER_PROCESS_IDLE)
+    timerNode?.setTimerProcessCallback(Timer.TimerProcessCallback.IDLE)
     timerNode?.start(1.25)
     val timerWaitTime = timerNode?.getWaitTime() ?: 0.0
     val timerOneShot = timerNode?.isOneShot() ?: false
     val timerAutostart = timerNode?.hasAutostart() ?: true
     val timerPaused = timerNode?.isPaused() ?: false
     val timerIgnoreTimeScale = timerNode?.isIgnoringTimeScale() ?: false
-    val timerProcessCallback = timerNode?.getTimerProcessCallback() ?: -1L
+    val timerProcessCallback = timerNode?.getTimerProcessCallback()?.value ?: -1L
     val timerTimeLeftBeforeStop = timerNode?.getTimeLeft() ?: 0.0
     val timerStoppedBeforeStop = timerNode?.isStopped() ?: true
     timerNode?.stop()
@@ -910,18 +911,22 @@ class HelloScript(godotObject: GodotHandle) :
     val tweenRefCount = tween?.getReferenceCount() ?: 0
     tween
       ?.bindNode(selfNode)
-      ?.setProcessMode(Tween.TWEEN_PROCESS_IDLE)
-      ?.setPauseMode(Tween.TWEEN_PAUSE_PROCESS)
+      ?.setProcessMode(Tween.TweenProcessMode.IDLE)
+      ?.setPauseMode(Tween.TweenPauseMode.PROCESS)
       ?.setIgnoreTimeScale(true)
       ?.setParallel(false)
       ?.setLoops(1)
       ?.setSpeedScale(1.0)
-      ?.setTrans(Tween.TRANS_SINE)
-      ?.setEase(Tween.EASE_OUT)
+      ?.setTrans(Tween.TransitionType.SINE)
+      ?.setEase(Tween.EaseType.OUT)
       ?.chain()
       ?.parallel()
     val tweenProperty = tween?.tweenProperty(selfNode, "process_priority", 5L, 0.01)
-    tweenProperty?.from(3L)?.setTrans(Tween.TRANS_LINEAR)?.setEase(Tween.EASE_IN_OUT)?.setDelay(0.0)
+    tweenProperty
+      ?.from(3L)
+      ?.setTrans(Tween.TransitionType.LINEAR)
+      ?.setEase(Tween.EaseType.IN_OUT)
+      ?.setDelay(0.0)
     val tweenCallback =
       tween?.tweenCallback(selfNode, "notify_property_list_changed")?.setDelay(0.0)
     val tweenInterval = tween?.tweenInterval(0.0)
@@ -936,7 +941,7 @@ class HelloScript(godotObject: GodotHandle) :
       val probeMethodCreated = probeMethodTweener?.getReferenceCount() ?: -1
       val probeMethodChained = probeMethodTweener?.setDelay(0.0)
       val probeMethodAfterDelay = probeMethodTweener?.getReferenceCount() ?: -1
-      probeMethodTweener?.setTrans(Tween.TRANS_LINEAR)
+      probeMethodTweener?.setTrans(Tween.TransitionType.LINEAR)
       val probeMethodAfterTrans = probeMethodTweener?.getReferenceCount() ?: -1
       val probePropertyTweener = probeTween?.tweenProperty(selfNode, "process_priority", 5L, 0.01)
       val probePropertyCreated = probePropertyTweener?.getReferenceCount() ?: -1
@@ -1113,24 +1118,50 @@ class HelloScript(godotObject: GodotHandle) :
     val selfUniqueNameInOwner = selfNode.isUniqueNameInOwner()
     selfNode.setEditorDescription("kanama node smoke")
     val selfEditorDescription = selfNode.getEditorDescription()
-    selfNode.setProcessMode(Node.PROCESS_MODE_ALWAYS)
+    selfNode.setProcessMode(Node.ProcessMode.ALWAYS)
     val selfProcessMode = selfNode.getProcessMode()
-    selfNode.setProcessThreadGroup(Node.PROCESS_THREAD_GROUP_MAIN_THREAD)
+    selfNode.setProcessThreadGroup(Node.ProcessThreadGroup.MAIN_THREAD)
     val selfProcessThreadGroup = selfNode.getProcessThreadGroup()
-    selfNode.setProcessThreadMessages(Node.FLAG_PROCESS_THREAD_MESSAGES_ALL)
+    selfNode.setProcessThreadMessages(Node.ProcessThreadMessages.MESSAGES_ALL)
     val selfProcessThreadMessages = selfNode.getProcessThreadMessages()
+    // Typed enums (task 128 A): the bitfield round trip through the real ptrcall path keeps its
+    // operators — `in` reads a flag back out of the value Godot returned.
+    val selfThreadMessagesPhysics =
+      Node.ProcessThreadMessages.MESSAGES_PHYSICS in selfProcessThreadMessages
+    val selfProcessModeTyped = selfProcessMode == Node.ProcessMode.ALWAYS
+    // A typed enum handed to the dynamic Variant path (Object.set, ConfigFile.setValue) is encoded
+    // as INT with its `.value` (task 128 A follow-up). PAUSABLE (1) differs from the ALWAYS (3) set
+    // above and from a nil/no-op 0; the ConfigFile row reads FULLSCREEN back as the Long 3.
+    val dynamicEnumSet =
+      runCatching {
+          selfNode.set("process_mode", Node.ProcessMode.PAUSABLE)
+          selfNode.getProcessMode().value.toString()
+        }
+        .getOrElse { "error:${it.message}" }
+    selfNode.setProcessMode(Node.ProcessMode.ALWAYS)
+    val dynamicEnumConfig =
+      runCatching {
+          ConfigFile.create().use { config ->
+            config.setValue("video", "display_mode", Window.Mode.FULLSCREEN)
+            config.getValue("video", "display_mode").toString()
+          }
+        }
+        .getOrElse { "error:${it.message}" }
+    System.err.println(
+      "[kanama:kt] typed enum dynamic set=$dynamicEnumSet config_roundtrip=$dynamicEnumConfig"
+    )
     selfNode.setProcessThreadGroupOrder(2)
     val selfProcessThreadGroupOrder = selfNode.getProcessThreadGroupOrder()
     selfNode.setProcessInternal(true)
     val selfProcessingInternal = selfNode.isProcessingInternal()
     selfNode.setPhysicsProcessInternal(true)
     val selfPhysicsProcessingInternal = selfNode.isPhysicsProcessingInternal()
-    selfNode.setPhysicsInterpolationMode(Node.PHYSICS_INTERPOLATION_MODE_OFF)
+    selfNode.setPhysicsInterpolationMode(Node.PhysicsInterpolationMode.OFF)
     val selfPhysicsInterpolationMode = selfNode.getPhysicsInterpolationMode()
     val selfPhysicsInterpolated = selfNode.isPhysicsInterpolated()
     val selfPhysicsInterpolatedEnabled = selfNode.isPhysicsInterpolatedAndEnabled()
     selfNode.resetPhysicsInterpolation()
-    selfNode.setAutoTranslateMode(Node.AUTO_TRANSLATE_MODE_DISABLED)
+    selfNode.setAutoTranslateMode(Node.AutoTranslateMode.DISABLED)
     val selfAutoTranslateMode = selfNode.getAutoTranslateMode()
     val selfCanAutoTranslate = selfNode.canAutoTranslate()
     selfNode.setTranslationDomainInherited()
@@ -1159,7 +1190,7 @@ class HelloScript(godotObject: GodotHandle) :
     objectSignalLambdaConnection =
       selfNode.signal(Node.Signals.childEnteredTree).connectObject(
         selfNode,
-        GodotObject.CONNECT_ONE_SHOT,
+        GodotObject.ConnectFlags.ONE_SHOT,
       ) { body ->
         objectSignalLambdaClass = body.getClassName()
         objectSignalLambdaConnection.close()
@@ -1257,11 +1288,11 @@ class HelloScript(godotObject: GodotHandle) :
       uiRoot.size = Vector2(260f, 120f)
       uiRoot.customMinimumSize = Vector2(180f, 80f)
     }
-    uiRoot?.setMouseFilter(Control.MOUSE_FILTER_PASS)
+    uiRoot?.setMouseFilter(Control.MouseFilter.PASS)
     val uiPosition = uiRoot?.position ?: Vector2.ZERO
     val uiSize = uiRoot?.size ?: Vector2.ZERO
     val uiMinSize = uiRoot?.customMinimumSize ?: Vector2.ZERO
-    val uiMouseFilter = uiRoot?.getMouseFilter() ?: -1L
+    val uiMouseFilter = uiRoot?.getMouseFilter()?.value ?: -1L
     val uiVisibleBefore = uiRoot?.isVisible() ?: false
     uiRoot?.hide()
     val uiVisibleHidden = uiRoot?.isVisible() ?: false
@@ -1275,13 +1306,13 @@ class HelloScript(godotObject: GodotHandle) :
     smokeButton?.setToggleMode(true)
     smokeButton?.setPressed(true)
     smokeButton?.setDisabled(false)
-    smokeButton?.setFocusMode(Control.FOCUS_ALL)
+    smokeButton?.setFocusMode(Control.FocusMode.ALL)
     smokeButton?.grabFocus()
     val buttonText = smokeButton?.text.orEmpty()
     val buttonToggle = smokeButton?.isToggleMode() ?: false
     val buttonPressed = smokeButton?.isPressed() ?: false
     val buttonDisabled = smokeButton?.isDisabled() ?: true
-    val buttonFocusMode = smokeButton?.getFocusMode() ?: -1L
+    val buttonFocusMode = smokeButton?.getFocusMode()?.value ?: -1L
     val buttonFocused = smokeButton?.hasFocus() ?: false
     smokeButton?.releaseFocus()
     val dynamicLabel =
@@ -1431,7 +1462,8 @@ class HelloScript(godotObject: GodotHandle) :
       dirRenameExists &&
         FileAccess.getFileAsString("res://.kanama_dir_rename_smoke.kt")
           .contains("class HelloScript")
-    val dirRenameCleanupError = if (dirRenameExists) DirAccess.removeAbsolute(dirRenamePath) else 0L
+    val dirRenameCleanupError =
+      if (dirRenameExists) DirAccess.removeAbsolute(dirRenamePath).value else 0L
     DirAccess.removeAbsolute(dirCopyPath)
     DirAccess.removeAbsolute(
       ProjectSettings.globalizePath("res://.kanama_dir_instance_smoke/nested")
@@ -1468,12 +1500,12 @@ class HelloScript(godotObject: GodotHandle) :
     val darkMode = DisplayServer.isDarkMode()
     val touchscreenAvailable = DisplayServer.isTouchscreenAvailable()
     val screenKeptOn = DisplayServer.screenIsKeptOn()
-    val clipboardSupported = DisplayServer.hasFeature(DisplayServer.FEATURE_CLIPBOARD)
+    val clipboardSupported = DisplayServer.hasFeature(DisplayServer.Feature.CLIPBOARD)
     val clipboardHas = if (clipboardSupported) DisplayServer.clipboardHas() else false
     val clipboardHasImage = if (clipboardSupported) DisplayServer.clipboardHasImage() else false
     val clipboardText = if (clipboardSupported) DisplayServer.clipboardGet() else ""
     val clipboardPrimaryText =
-      if (DisplayServer.hasFeature(DisplayServer.FEATURE_CLIPBOARD_PRIMARY)) {
+      if (DisplayServer.hasFeature(DisplayServer.Feature.CLIPBOARD_PRIMARY)) {
         DisplayServer.clipboardGetPrimary()
       } else {
         ""
@@ -1488,13 +1520,13 @@ class HelloScript(godotObject: GodotHandle) :
     val screenDpi = DisplayServer.screenGetDpi()
     val maxScale = DisplayServer.screenGetMaxScale()
     val imeSelection =
-      if (DisplayServer.hasFeature(DisplayServer.FEATURE_IME)) {
+      if (DisplayServer.hasFeature(DisplayServer.Feature.IME)) {
         DisplayServer.imeGetSelection()
       } else {
         Vector2i(0, 0)
       }
     val imeText =
-      if (DisplayServer.hasFeature(DisplayServer.FEATURE_IME)) DisplayServer.imeGetText() else ""
+      if (DisplayServer.hasFeature(DisplayServer.Feature.IME)) DisplayServer.imeGetText() else ""
     val tabletDriverCount = DisplayServer.tabletGetDriverCount()
     val tabletCurrentDriver = DisplayServer.tabletGetCurrentDriver()
     val tabletFirstDriver =
@@ -1507,7 +1539,7 @@ class HelloScript(godotObject: GodotHandle) :
     val ttsPaused = DisplayServer.ttsIsPaused()
     val ttsVoices = DisplayServer.ttsGetVoicesForLanguage("en")
     val virtualKeyboardHeight =
-      if (DisplayServer.hasFeature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD)) {
+      if (DisplayServer.hasFeature(DisplayServer.Feature.VIRTUAL_KEYBOARD)) {
         DisplayServer.virtualKeyboardGetHeight()
       } else {
         0L
@@ -1545,13 +1577,13 @@ class HelloScript(godotObject: GodotHandle) :
         ""
       }
     val mousePosition =
-      if (DisplayServer.hasFeature(DisplayServer.FEATURE_MOUSE)) {
+      if (DisplayServer.hasFeature(DisplayServer.Feature.MOUSE)) {
         DisplayServer.mouseGetPosition()
       } else {
         Vector2i(0, 0)
       }
     val mouseButtons =
-      if (DisplayServer.hasFeature(DisplayServer.FEATURE_MOUSE)) {
+      if (DisplayServer.hasFeature(DisplayServer.Feature.MOUSE)) {
         DisplayServer.mouseGetButtonState()
       } else {
         0L
@@ -1575,8 +1607,8 @@ class HelloScript(godotObject: GodotHandle) :
         "loaded_ref_count=$loadedScriptRefCount loaded_name_len=${loadedScriptName.length} " +
         "loaded_scene_id_len=${loadedScriptSceneId.length} loaded_path_id_len=${loadedScriptPathId.length} " +
         "loaded_built_in=$loadedScriptBuiltIn loaded_local_to_scene=$loadedScriptLocalToScene " +
-        "threaded_request=$threadedRequestError threaded_status_before=$threadedStatusBeforeGet " +
-        "threaded_status_after=$threadedStatusAfterGet threaded_packed=$threadedResourceIsPackedScene " +
+        "threaded_request=${threadedRequestError.value} threaded_status_before=${threadedStatusBeforeGet.value} " +
+        "threaded_status_after=${threadedStatusAfterGet.value} threaded_packed=$threadedResourceIsPackedScene " +
         "threaded_path_len=$threadedResourcePathLen " +
         "generated_scene_id_len=${generatedSceneUniqueId.length} " +
         "packed_scene_pack_error=$packedScenePackError packed_scene_can=$packedSceneCanInstantiate " +
@@ -1592,7 +1624,7 @@ class HelloScript(godotObject: GodotHandle) :
     )
     System.err.println("[kanama:kt] ResourceSaver script_uid=$scriptUid")
     System.err.println(
-      "[kanama:kt] issue81 packed_scene_save pack_error=$issue81PackError save_error=$issue81SaveError " +
+      "[kanama:kt] issue81 packed_scene_save pack_error=${issue81PackError.value} save_error=${issue81SaveError.value} " +
         "ref_after_save=$issue81RefCountAfterSave alive_after_save=$issue81AliveAfterSave " +
         "save_exists=$issue81SaveExists"
     )
@@ -1603,14 +1635,14 @@ class HelloScript(godotObject: GodotHandle) :
     System.err.println(
       "[kanama:kt] FileAccess metadata modified_positive=${fileModified > 0} " +
         "accessed_nonnegative=${fileAccessed >= 0} md5_len=${fileMd5.length} " +
-        "sha256_len=${fileSha256.length} permissions=$filePermissions " +
+        "sha256_len=${fileSha256.length} permissions=${filePermissions.value} " +
         "hidden=$fileHidden read_only=$fileReadOnly xattrs=${fileExtendedAttrs.size}"
     )
     System.err.println(
       "[kanama:kt] FileAccess instance path_len=${fileOpenPath.length} abs_path_len=${fileOpenAbsolutePath.length} " +
         "is_open=$fileOpenIsOpen position=$fileOpenPosition length_matches=${fileOpenLength == fileSize} " +
         "eof=$fileOpenEof first_line_len=${fileOpenLine.length} text_has_class=${fileOpenText.contains("class HelloScript")} " +
-        "error=$fileOpenError"
+        "error=${fileOpenError.value}"
     )
     System.err.println(
       "[kanama:kt] FileAccess handle open_present=$directFilePresent open_is_open=$directFileOpen " +
@@ -1627,14 +1659,14 @@ class HelloScript(godotObject: GodotHandle) :
     System.err.println(
       "[kanama:kt] FileAccess write_fixture string_ok=$fileWriteStringOk " +
         "string_text=$fileWriteStringText line_ok=$fileWriteLineOk " +
-        "line_text=${fileWriteLineText.trim()} resize_error=$fileResizeError " +
-        "resize_text=$fileResizeText cleanup_error=$fileWriteCleanupError"
+        "line_text=${fileWriteLineText.trim()} resize_error=${fileResizeError.value} " +
+        "resize_text=$fileResizeText cleanup_error=${fileWriteCleanupError.value}"
     )
     System.err.println(
       "[kanama:kt] FileAccess byte_fixture source_bytes_positive=${fileSourceBytes.isNotEmpty()} " +
         "buffer_len=${fileBuffer.size} write_bytes_ok=$fileWriteBytesOk " +
         "written_len=${fileWrittenBytes.size} first=${fileWrittenBytes.firstOrNull()?.toInt()} " +
-        "second=${fileWrittenBytes.getOrNull(1)?.toInt()} cleanup_error=$fileBytesCleanupError"
+        "second=${fileWrittenBytes.getOrNull(1)?.toInt()} cleanup_error=${fileBytesCleanupError.value}"
     )
     System.err.println(
       "[kanama:kt] FileAccess numeric_fixture write8=$fileWrite8Ok read8=$fileRead8 " +
@@ -1644,24 +1676,24 @@ class HelloScript(godotObject: GodotHandle) :
         "write_float=$fileWriteFloatOk read_float=$fileReadFloat " +
         "write_half=$fileWriteHalfOk read_half_text_len=${fileReadHalf.toString().length} " +
         "write_real=$fileWriteRealOk read_real_text_len=${fileReadReal.toString().length} " +
-        "cleanup_error=$fileNumericCleanupError"
+        "cleanup_error=${fileNumericCleanupError.value}"
     )
     System.err.println(
       "[kanama:kt] FileAccess string_fixture pascal_write=$filePascalWriteOk pascal_read=$filePascalRead " +
-        "pascal_cleanup=$filePascalCleanupError csv_write=$fileCsvWriteOk " +
+        "pascal_cleanup=${filePascalCleanupError.value} csv_write=$fileCsvWriteOk " +
         "csv_cols=${fileCsvRead.size} csv_first=${fileCsvRead.firstOrNull()} " +
-        "csv_end_matches=${fileCsvEndPosition == fileCsvSize} csv_cleanup=$fileCsvCleanupError " +
-        "var_write=$fileVarWriteOk var_read=$fileVarRead var_cleanup=$fileVarCleanupError"
+        "csv_end_matches=${fileCsvEndPosition == fileCsvSize} csv_cleanup=${fileCsvCleanupError.value} " +
+        "var_write=$fileVarWriteOk var_read=$fileVarRead var_cleanup=${fileVarCleanupError.value}"
     )
     System.err.println(
-      "[kanama:kt] FileAccess attr_fixture xattr_string_set=$fileAttrStringSetError " +
+      "[kanama:kt] FileAccess attr_fixture xattr_string_set=${fileAttrStringSetError.value} " +
         "xattr_string_read=$fileAttrStringRead xattr_list_has=${fileAttrListAfterString.contains(fileAttrStringName)} " +
-        "xattr_bytes_set=$fileAttrBytesSetError xattr_bytes_len=${fileAttrBytesRead.size} " +
-        "xattr_string_remove=$fileAttrStringRemoveError xattr_bytes_remove=$fileAttrBytesRemoveError " +
-        "hidden_set=$fileAttrHiddenSetError hidden=$fileAttrHidden hidden_reset=$fileAttrHiddenResetError " +
-        "readonly_set=$fileAttrReadOnlySetError readonly=$fileAttrReadOnly " +
-        "readonly_reset=$fileAttrReadOnlyResetError permissions_set=$fileAttrPermissionsSetError " +
-        "permissions=$fileAttrPermissions cleanup_error=$fileAttrCleanupError"
+        "xattr_bytes_set=${fileAttrBytesSetError.value} xattr_bytes_len=${fileAttrBytesRead.size} " +
+        "xattr_string_remove=${fileAttrStringRemoveError.value} xattr_bytes_remove=${fileAttrBytesRemoveError.value} " +
+        "hidden_set=${fileAttrHiddenSetError.value} hidden=$fileAttrHidden hidden_reset=${fileAttrHiddenResetError.value} " +
+        "readonly_set=${fileAttrReadOnlySetError.value} readonly=$fileAttrReadOnly " +
+        "readonly_reset=${fileAttrReadOnlyResetError.value} permissions_set=${fileAttrPermissionsSetError.value} " +
+        "permissions=${fileAttrPermissions.value} cleanup_error=${fileAttrCleanupError.value}"
     )
     System.err.println(
       "[kanama:kt] Node self class=$selfClass is_node=$selfIsNode instance_positive=${selfInstanceId > 0} " +
@@ -1772,8 +1804,8 @@ class HelloScript(godotObject: GodotHandle) :
       "[kanama:kt] Material3D override=$materialOverrideIsStandard overlay=$materialOverlayIsStandard " +
         "surface=$surfaceMaterialIsStandard albedo=${assignedMaterialAlbedo.r},${assignedMaterialAlbedo.g}," +
         "${assignedMaterialAlbedo.b},${assignedMaterialAlbedo.a} metallic=$assignedMaterialMetallic " +
-        "roughness=$assignedMaterialRoughness shading=$assignedMaterialShading " +
-        "transparency=$assignedMaterialTransparency cull=$assignedMaterialCull priority=$assignedMaterialPriority"
+        "roughness=$assignedMaterialRoughness shading=${assignedMaterialShading.value} " +
+        "transparency=${assignedMaterialTransparency.value} cull=${assignedMaterialCull.value} priority=$assignedMaterialPriority"
     )
     System.err.println(
       "[kanama:kt] Particles3D gpu_present=${gpuParticles != null} gpu_amount=$gpuParticlesAmount " +
@@ -1839,22 +1871,23 @@ class HelloScript(godotObject: GodotHandle) :
         "v2_withy=${vector2WithY.x},${vector2WithY.y}"
     )
     System.err.println(
-      "[kanama:kt] Node process_modes mode=$selfProcessMode thread_group=$selfProcessThreadGroup " +
-        "thread_messages=$selfProcessThreadMessages thread_order=$selfProcessThreadGroupOrder " +
+      "[kanama:kt] Node process_modes mode=${selfProcessMode.value} thread_group=${selfProcessThreadGroup.value} " +
+        "thread_messages=${selfProcessThreadMessages.value} thread_order=$selfProcessThreadGroupOrder " +
         "internal=$selfProcessingInternal physics_internal=$selfPhysicsProcessingInternal " +
-        "physics_interp_mode=$selfPhysicsInterpolationMode physics_interp=$selfPhysicsInterpolated " +
-        "physics_interp_enabled=$selfPhysicsInterpolatedEnabled auto_translate=$selfAutoTranslateMode " +
+        "physics_interp_mode=${selfPhysicsInterpolationMode.value} physics_interp=$selfPhysicsInterpolated " +
+        "physics_interp_enabled=$selfPhysicsInterpolatedEnabled auto_translate=${selfAutoTranslateMode.value} " +
         "can_auto_translate=$selfCanAutoTranslate scene_load_flag=$selfScenePlaceholder " +
-        "scene_load_flag_reset=$selfScenePlaceholderAfterReset"
+        "scene_load_flag_reset=$selfScenePlaceholderAfterReset typed_mode=$selfProcessModeTyped " +
+        "typed_flags_physics=$selfThreadMessagesPhysics"
     )
     System.err.println(
       "[kanama:kt] Object introspection can_revert_name=$objectCanRevertName " +
         "missing_meta=$objectHasMissingMeta missing_user_signal=$objectHasMissingUserSignal " +
         "has_queue_free=$objectHasQueueFree queue_free_args=$objectQueueFreeArgs " +
         "has_script_changed=$objectHasScriptChanged script_changed_connections=$objectHasScriptChangedConnections " +
-        "signal_connect=$objectSignalConnectError signal_callback=$objectSignalCallbackClass " +
+        "signal_connect=${objectSignalConnectError.value} signal_callback=$objectSignalCallbackClass " +
         "signal_lambda=$objectSignalLambdaClass " +
-        "script_signal_connect=$scriptSignalConnectError script_signal_callback=$scriptSignalCallback " +
+        "script_signal_connect=${scriptSignalConnectError.value} script_signal_callback=$scriptSignalCallback " +
         "coroutine_started=$smokeCoroutineStarted " +
         "blocking=$objectBlockingSignals blocking_after_reset=$objectBlockingSignalsAfterReset " +
         "translate_disabled=$objectCanTranslateDisabled translate_enabled=$objectCanTranslateEnabled"
@@ -1938,22 +1971,22 @@ class HelloScript(godotObject: GodotHandle) :
         "include_nav=$dirIncludeNavigational entries_has_hello=${dirEntries.any { it.name == "HelloScript.kt" && !it.isDirectory }}"
     )
     System.err.println(
-      "[kanama:kt] DirAccess write_fixture make_error=$dirMakeError make_exists=$dirMakeExists " +
-        "make_cleanup_error=$dirMakeCleanupError recursive_error=$dirRecursiveError " +
-        "recursive_exists=$dirRecursiveExists recursive_nested_cleanup_error=$dirRecursiveNestedCleanupError " +
-        "recursive_cleanup_error=$dirRecursiveCleanupError copy_error=$dirCopyError " +
-        "copy_exists=$dirCopyExists copy_has_class=$dirCopyHasClass rename_error=$dirRenameError " +
+      "[kanama:kt] DirAccess write_fixture make_error=${dirMakeError.value} make_exists=$dirMakeExists " +
+        "make_cleanup_error=${dirMakeCleanupError.value} recursive_error=${dirRecursiveError.value} " +
+        "recursive_exists=$dirRecursiveExists recursive_nested_cleanup_error=${dirRecursiveNestedCleanupError.value} " +
+        "recursive_cleanup_error=${dirRecursiveCleanupError.value} copy_error=${dirCopyError.value} " +
+        "copy_exists=$dirCopyExists copy_has_class=$dirCopyHasClass rename_error=${dirRenameError.value} " +
         "rename_exists=$dirRenameExists rename_old_missing=$dirRenameOldMissing " +
         "rename_has_class=$dirRenameHasClass rename_cleanup_error=$dirRenameCleanupError"
     )
     System.err.println(
-      "[kanama:kt] DirAccess instance_write change_error=$dirChangeError make_error=$dirInstanceMakeError " +
-        "make_exists=$dirInstanceMakeExists recursive_error=$dirInstanceRecursiveError " +
-        "recursive_exists=$dirInstanceRecursiveExists nested_cleanup_error=$dirInstanceNestedCleanupError " +
-        "cleanup_error=$dirInstanceCleanupError copy_error=$dirInstanceCopyError " +
-        "copy_exists=$dirInstanceCopyExists rename_error=$dirInstanceRenameError " +
+      "[kanama:kt] DirAccess instance_write change_error=${dirChangeError.value} make_error=${dirInstanceMakeError.value} " +
+        "make_exists=$dirInstanceMakeExists recursive_error=${dirInstanceRecursiveError.value} " +
+        "recursive_exists=$dirInstanceRecursiveExists nested_cleanup_error=${dirInstanceNestedCleanupError.value} " +
+        "cleanup_error=${dirInstanceCleanupError.value} copy_error=${dirInstanceCopyError.value} " +
+        "copy_exists=$dirInstanceCopyExists rename_error=${dirInstanceRenameError.value} " +
         "rename_exists=$dirInstanceRenameExists rename_old_missing=$dirInstanceRenameOldMissing " +
-        "rename_cleanup_error=$dirInstanceRenameCleanupError"
+        "rename_cleanup_error=${dirInstanceRenameCleanupError.value}"
     )
     System.err.println("[kanama:kt] DisplayServer name=$displayName screen_count=$screenCount")
     System.err.println(
@@ -1969,7 +2002,7 @@ class HelloScript(godotObject: GodotHandle) :
     System.err.println(
       "[kanama:kt] DisplayServer passive clipboard=$clipboardHas image=$clipboardHasImage " +
         "clipboard_len=${clipboardText.length} primary_len=${clipboardPrimaryText.length} " +
-        "cursor=$cursorShape mouse_mode=$mouseMode keyboard_focus=$keyboardFocusScreen " +
+        "cursor=${cursorShape.value} mouse_mode=${mouseMode.value} keyboard_focus=$keyboardFocusScreen " +
         "swap_cancel=$swapCancelOk additional_outputs=$additionalOutputs hardware_keyboard=$hardwareKeyboard " +
         "window_transparency=$windowTransparency dpi=$screenDpi max_scale=$maxScale " +
         "ime_selection=${imeSelection.x},${imeSelection.y} ime_text_len=${imeText.length} " +

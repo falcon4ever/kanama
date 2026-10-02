@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,13 +12,13 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: CanvasItemMaterial
  */
 class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
-    var blendMode: Long
+    var blendMode: CanvasItemMaterial.BlendMode
         @JvmName("blendModeProperty")
         get() = getBlendMode()
         @JvmName("setBlendModeProperty")
         set(value) = setBlendMode(value)
 
-    var lightMode: Long
+    var lightMode: CanvasItemMaterial.LightMode
         @JvmName("lightModeProperty")
         get() = getLightMode()
         @JvmName("setLightModeProperty")
@@ -52,9 +53,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: CanvasItemMaterial.set_blend_mode
      */
-    fun setBlendMode(blendMode: Long) {
+    fun setBlendMode(blendMode: CanvasItemMaterial.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode.value)
     }
 
     /**
@@ -62,9 +63,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: CanvasItemMaterial.get_blend_mode
      */
-    fun getBlendMode(): Long {
+    fun getBlendMode(): CanvasItemMaterial.BlendMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
+        return CanvasItemMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
     }
 
     /**
@@ -72,9 +73,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: CanvasItemMaterial.set_light_mode
      */
-    fun setLightMode(lightMode: Long) {
+    fun setLightMode(lightMode: CanvasItemMaterial.LightMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLightModeBind, segment, lightMode)
+        ObjectCalls.ptrcallWithLongArg(setLightModeBind, segment, lightMode.value)
     }
 
     /**
@@ -82,9 +83,9 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: CanvasItemMaterial.get_light_mode
      */
-    fun getLightMode(): Long {
+    fun getLightMode(): CanvasItemMaterial.LightMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLightModeBind, segment)
+        return CanvasItemMaterial.LightMode(ObjectCalls.ptrcallNoArgsRetLong(getLightModeBind, segment))
     }
 
     /**
@@ -185,16 +186,79 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getParticlesAnimLoopBind, segment)
     }
 
-    companion object {
-        const val BLEND_MODE_MIX: Long = 0L
-        const val BLEND_MODE_ADD: Long = 1L
-        const val BLEND_MODE_SUB: Long = 2L
-        const val BLEND_MODE_MUL: Long = 3L
-        const val BLEND_MODE_PREMULT_ALPHA: Long = 4L
-        const val LIGHT_MODE_NORMAL: Long = 0L
-        const val LIGHT_MODE_UNSHADED: Long = 1L
-        const val LIGHT_MODE_LIGHT_ONLY: Long = 2L
+    /**
+     * Godot's `CanvasItemMaterial.BlendMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CanvasItemMaterial.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItemMaterial.BlendMode
+     */
+    @JvmInline
+    value class BlendMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Mix blending mode. Colors are assumed to be independent of the alpha (opacity) value.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.BLEND_MODE_MIX
+             */
+            val MIX: BlendMode get() = BlendMode(0L)
+            /**
+             * Additive blending mode.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.BLEND_MODE_ADD
+             */
+            val ADD: BlendMode get() = BlendMode(1L)
+            /**
+             * Subtractive blending mode.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.BLEND_MODE_SUB
+             */
+            val SUB: BlendMode get() = BlendMode(2L)
+            /**
+             * Multiplicative blending mode.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.BLEND_MODE_MUL
+             */
+            val MUL: BlendMode get() = BlendMode(3L)
+            /**
+             * Mix blending mode. Colors are assumed to be premultiplied by the alpha (opacity) value.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA
+             */
+            val PREMULT_ALPHA: BlendMode get() = BlendMode(4L)
+        }
+    }
 
+    /**
+     * Godot's `CanvasItemMaterial.LightMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CanvasItemMaterial.LightMode.<NAME>`).
+     *
+     * Generated from Godot docs: CanvasItemMaterial.LightMode
+     */
+    @JvmInline
+    value class LightMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Render the material using both light and non-light sensitive material properties.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.LIGHT_MODE_NORMAL
+             */
+            val NORMAL: LightMode get() = LightMode(0L)
+            /**
+             * Render the material as if there were no light.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.LIGHT_MODE_UNSHADED
+             */
+            val UNSHADED: LightMode get() = LightMode(1L)
+            /**
+             * Render the material as if there were only light.
+             *
+             * Generated from Godot docs: CanvasItemMaterial.LIGHT_MODE_LIGHT_ONLY
+             */
+            val LIGHT_ONLY: LightMode get() = LightMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CanvasItemMaterial? =
             wrap(handle.segment)

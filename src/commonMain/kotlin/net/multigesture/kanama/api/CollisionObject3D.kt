@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Transform3D
  * Generated from Godot docs: CollisionObject3D
  */
 open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
-    var disableMode: Long
+    var disableMode: CollisionObject3D.DisableMode
         @JvmName("disableModeProperty")
         get() = getDisableMode()
         @JvmName("setDisableModeProperty")
@@ -164,21 +165,21 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
+     * Defines the behavior in physics when `Node.process_mode` is set to `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: CollisionObject3D.set_disable_mode
      */
-    fun setDisableMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode)
+    fun setDisableMode(mode: CollisionObject3D.DisableMode) {
+        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode.value)
     }
 
     /**
-     * Defines the behavior in physics when `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`.
+     * Defines the behavior in physics when `Node.process_mode` is set to `Node.ProcessMode.DISABLED`.
      *
      * Generated from Godot docs: CollisionObject3D.get_disable_mode
      */
-    fun getDisableMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment)
+    fun getDisableMode(): CollisionObject3D.DisableMode {
+        return CollisionObject3D.DisableMode(ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment))
     }
 
     /**
@@ -375,11 +376,42 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
         const val mouseExited: String = "mouse_exited"
     }
 
-    companion object {
-        const val DISABLE_MODE_REMOVE: Long = 0L
-        const val DISABLE_MODE_MAKE_STATIC: Long = 1L
-        const val DISABLE_MODE_KEEP_ACTIVE: Long = 2L
+    /**
+     * Godot's `CollisionObject3D.DisableMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CollisionObject3D.DisableMode.<NAME>`).
+     *
+     * Generated from Godot docs: CollisionObject3D.DisableMode
+     */
+    @JvmInline
+    value class DisableMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, remove from the physics
+             * simulation to stop all physics interactions with this `CollisionObject3D`. Automatically
+             * re-added to the physics simulation when the `Node` is processed again.
+             *
+             * Generated from Godot docs: CollisionObject3D.DISABLE_MODE_REMOVE
+             */
+            val REMOVE: DisableMode get() = DisableMode(0L)
+            /**
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, make the body static. Doesn't
+             * affect `Area3D`. `PhysicsBody3D` can't be affected by forces or other bodies while static.
+             * Automatically set `PhysicsBody3D` back to its original mode when the `Node` is processed again.
+             *
+             * Generated from Godot docs: CollisionObject3D.DISABLE_MODE_MAKE_STATIC
+             */
+            val MAKE_STATIC: DisableMode get() = DisableMode(1L)
+            /**
+             * When `Node.process_mode` is set to `Node.ProcessMode.DISABLED`, do not affect the physics
+             * simulation.
+             *
+             * Generated from Godot docs: CollisionObject3D.DISABLE_MODE_KEEP_ACTIVE
+             */
+            val KEEP_ACTIVE: DisableMode get() = DisableMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CollisionObject3D? =
             wrap(handle.segment)

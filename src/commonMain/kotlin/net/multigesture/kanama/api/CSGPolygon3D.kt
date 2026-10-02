@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,7 +19,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setPolygonProperty")
         set(value) = setPolygon(value)
 
-    var mode: Long
+    var mode: CSGPolygon3D.Mode
         @JvmName("modeProperty")
         get() = getMode()
         @JvmName("setModeProperty")
@@ -48,7 +49,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setPathNodeProperty")
         set(value) = setPathNode(value)
 
-    var pathIntervalType: Long
+    var pathIntervalType: CSGPolygon3D.PathIntervalType
         @JvmName("pathIntervalTypeProperty")
         get() = getPathIntervalType()
         @JvmName("setPathIntervalTypeProperty")
@@ -66,7 +67,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         @JvmName("setPathSimplifyAngleProperty")
         set(value) = setPathSimplifyAngle(value)
 
-    var pathRotation: Long
+    var pathRotation: CSGPolygon3D.PathRotation
         @JvmName("pathRotationProperty")
         get() = getPathRotation()
         @JvmName("setPathRotationProperty")
@@ -122,12 +123,12 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedVector2List(getPolygonBind, segment)
     }
 
-    fun setMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
+    fun setMode(mode: CSGPolygon3D.Mode) {
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
     }
 
-    fun getMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
+    fun getMode(): CSGPolygon3D.Mode {
+        return CSGPolygon3D.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
     }
 
     fun setDepth(depth: Double) {
@@ -162,12 +163,12 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getPathNodeBind, segment)
     }
 
-    fun setPathIntervalType(intervalType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathIntervalTypeBind, segment, intervalType)
+    fun setPathIntervalType(intervalType: CSGPolygon3D.PathIntervalType) {
+        ObjectCalls.ptrcallWithLongArg(setPathIntervalTypeBind, segment, intervalType.value)
     }
 
-    fun getPathIntervalType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathIntervalTypeBind, segment)
+    fun getPathIntervalType(): CSGPolygon3D.PathIntervalType {
+        return CSGPolygon3D.PathIntervalType(ObjectCalls.ptrcallNoArgsRetLong(getPathIntervalTypeBind, segment))
     }
 
     fun setPathInterval(interval: Double) {
@@ -186,12 +187,12 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPathSimplifyAngleBind, segment)
     }
 
-    fun setPathRotation(pathRotation: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPathRotationBind, segment, pathRotation)
+    fun setPathRotation(pathRotation: CSGPolygon3D.PathRotation) {
+        ObjectCalls.ptrcallWithLongArg(setPathRotationBind, segment, pathRotation.value)
     }
 
-    fun getPathRotation(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPathRotationBind, segment)
+    fun getPathRotation(): CSGPolygon3D.PathRotation {
+        return CSGPolygon3D.PathRotation(ObjectCalls.ptrcallNoArgsRetLong(getPathRotationBind, segment))
     }
 
     fun setPathRotationAccurate(enable: Boolean) {
@@ -250,16 +251,33 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
     }
 
-    companion object {
-        const val MODE_DEPTH: Long = 0L
-        const val MODE_SPIN: Long = 1L
-        const val MODE_PATH: Long = 2L
-        const val PATH_ROTATION_POLYGON: Long = 0L
-        const val PATH_ROTATION_PATH: Long = 1L
-        const val PATH_ROTATION_PATH_FOLLOW: Long = 2L
-        const val PATH_INTERVAL_DISTANCE: Long = 0L
-        const val PATH_INTERVAL_SUBDIVIDE: Long = 1L
+    @JvmInline
+    value class Mode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DEPTH: Mode get() = Mode(0L)
+            val SPIN: Mode get() = Mode(1L)
+            val PATH: Mode get() = Mode(2L)
+        }
+    }
 
+    @JvmInline
+    value class PathRotation(override val value: Long) : GodotEnumValue {
+        companion object {
+            val POLYGON: PathRotation get() = PathRotation(0L)
+            val PATH: PathRotation get() = PathRotation(1L)
+            val PATH_FOLLOW: PathRotation get() = PathRotation(2L)
+        }
+    }
+
+    @JvmInline
+    value class PathIntervalType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DISTANCE: PathIntervalType get() = PathIntervalType(0L)
+            val SUBDIVIDE: PathIntervalType get() = PathIntervalType(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CSGPolygon3D? =
             wrap(handle.segment)

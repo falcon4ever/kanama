@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -20,13 +21,13 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
         @JvmName("setVerticesProperty")
         set(value) = setVertices(value)
 
-    var samplePartitionType: Long
+    var samplePartitionType: NavigationMesh.SamplePartitionType
         @JvmName("samplePartitionTypeProperty")
         get() = getSamplePartitionType()
         @JvmName("setSamplePartitionTypeProperty")
         set(value) = setSamplePartitionType(value)
 
-    var geometryParsedGeometryType: Long
+    var geometryParsedGeometryType: NavigationMesh.ParsedGeometryType
         @JvmName("geometryParsedGeometryTypeProperty")
         get() = getParsedGeometryType()
         @JvmName("setGeometryParsedGeometryTypeProperty")
@@ -38,7 +39,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
         @JvmName("setGeometryCollisionMaskProperty")
         set(value) = setCollisionMask(value)
 
-    var geometrySourceGeometryMode: Long
+    var geometrySourceGeometryMode: NavigationMesh.SourceGeometryMode
         @JvmName("geometrySourceGeometryModeProperty")
         get() = getSourceGeometryMode()
         @JvmName("setGeometrySourceGeometryModeProperty")
@@ -169,9 +170,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationMesh.set_sample_partition_type
      */
-    fun setSamplePartitionType(samplePartitionType: Long) {
+    fun setSamplePartitionType(samplePartitionType: NavigationMesh.SamplePartitionType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType)
+        ObjectCalls.ptrcallWithLongArg(setSamplePartitionTypeBind, segment, samplePartitionType.value)
     }
 
     /**
@@ -179,9 +180,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationMesh.get_sample_partition_type
      */
-    fun getSamplePartitionType(): Long {
+    fun getSamplePartitionType(): NavigationMesh.SamplePartitionType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment)
+        return NavigationMesh.SamplePartitionType(ObjectCalls.ptrcallNoArgsRetLong(getSamplePartitionTypeBind, segment))
     }
 
     /**
@@ -189,9 +190,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationMesh.set_parsed_geometry_type
      */
-    fun setParsedGeometryType(geometryType: Long) {
+    fun setParsedGeometryType(geometryType: NavigationMesh.ParsedGeometryType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType)
+        ObjectCalls.ptrcallWithLongArg(setParsedGeometryTypeBind, segment, geometryType.value)
     }
 
     /**
@@ -199,14 +200,14 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationMesh.get_parsed_geometry_type
      */
-    fun getParsedGeometryType(): Long {
+    fun getParsedGeometryType(): NavigationMesh.ParsedGeometryType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment)
+        return NavigationMesh.ParsedGeometryType(ObjectCalls.ptrcallNoArgsRetLong(getParsedGeometryTypeBind, segment))
     }
 
     /**
      * The physics layers to scan for static colliders. Only used when `geometry_parsed_geometry_type`
-     * is `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
+     * is `ParsedGeometryType.STATIC_COLLIDERS` or `ParsedGeometryType.BOTH`.
      *
      * Generated from Godot docs: NavigationMesh.set_collision_mask
      */
@@ -217,7 +218,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The physics layers to scan for static colliders. Only used when `geometry_parsed_geometry_type`
-     * is `PARSED_GEOMETRY_STATIC_COLLIDERS` or `PARSED_GEOMETRY_BOTH`.
+     * is `ParsedGeometryType.STATIC_COLLIDERS` or `ParsedGeometryType.BOTH`.
      *
      * Generated from Godot docs: NavigationMesh.get_collision_mask
      */
@@ -253,9 +254,9 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationMesh.set_source_geometry_mode
      */
-    fun setSourceGeometryMode(mask: Long) {
+    fun setSourceGeometryMode(mask: NavigationMesh.SourceGeometryMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, mask)
+        ObjectCalls.ptrcallWithLongArg(setSourceGeometryModeBind, segment, mask.value)
     }
 
     /**
@@ -263,14 +264,14 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: NavigationMesh.get_source_geometry_mode
      */
-    fun getSourceGeometryMode(): Long {
+    fun getSourceGeometryMode(): NavigationMesh.SourceGeometryMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment)
+        return NavigationMesh.SourceGeometryMode(ObjectCalls.ptrcallNoArgsRetLong(getSourceGeometryModeBind, segment))
     }
 
     /**
      * The name of the group to scan for geometry. Only used when `geometry_source_geometry_mode` is
-     * `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
+     * `SourceGeometryMode.GROUPS_WITH_CHILDREN` or `SourceGeometryMode.GROUPS_EXPLICIT`.
      *
      * Generated from Godot docs: NavigationMesh.set_source_group_name
      */
@@ -281,7 +282,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * The name of the group to scan for geometry. Only used when `geometry_source_geometry_mode` is
-     * `SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN` or `SOURCE_GEOMETRY_GROUPS_EXPLICIT`.
+     * `SourceGeometryMode.GROUPS_WITH_CHILDREN` or `SourceGeometryMode.GROUPS_EXPLICIT`.
      *
      * Generated from Godot docs: NavigationMesh.get_source_group_name
      */
@@ -782,7 +783,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Initializes the navigation mesh by setting the vertices and indices according to a `Mesh`. Note:
-     * The given `mesh` must be of type `Mesh.PRIMITIVE_TRIANGLES` and have an index array.
+     * The given `mesh` must be of type `Mesh.PrimitiveType.TRIANGLES` and have an index array.
      *
      * Generated from Godot docs: NavigationMesh.create_from_mesh
      */
@@ -801,20 +802,123 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearBind, segment)
     }
 
-    companion object {
-        const val SAMPLE_PARTITION_WATERSHED: Long = 0L
-        const val SAMPLE_PARTITION_MONOTONE: Long = 1L
-        const val SAMPLE_PARTITION_LAYERS: Long = 2L
-        const val SAMPLE_PARTITION_MAX: Long = 3L
-        const val PARSED_GEOMETRY_MESH_INSTANCES: Long = 0L
-        const val PARSED_GEOMETRY_STATIC_COLLIDERS: Long = 1L
-        const val PARSED_GEOMETRY_BOTH: Long = 2L
-        const val PARSED_GEOMETRY_MAX: Long = 3L
-        const val SOURCE_GEOMETRY_ROOT_NODE_CHILDREN: Long = 0L
-        const val SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN: Long = 1L
-        const val SOURCE_GEOMETRY_GROUPS_EXPLICIT: Long = 2L
-        const val SOURCE_GEOMETRY_MAX: Long = 3L
+    /**
+     * Godot's `NavigationMesh.SamplePartitionType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationMesh.SamplePartitionType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationMesh.SamplePartitionType
+     */
+    @JvmInline
+    value class SamplePartitionType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Watershed partitioning. Generally the best choice if you precompute the navigation mesh, use
+             * this if you have large open areas.
+             *
+             * Generated from Godot docs: NavigationMesh.SAMPLE_PARTITION_WATERSHED
+             */
+            val WATERSHED: SamplePartitionType get() = SamplePartitionType(0L)
+            /**
+             * Monotone partitioning. Use this if you want fast navigation mesh generation.
+             *
+             * Generated from Godot docs: NavigationMesh.SAMPLE_PARTITION_MONOTONE
+             */
+            val MONOTONE: SamplePartitionType get() = SamplePartitionType(1L)
+            /**
+             * Layer partitioning. Good choice to use for tiled navigation mesh with medium and small sized
+             * tiles.
+             *
+             * Generated from Godot docs: NavigationMesh.SAMPLE_PARTITION_LAYERS
+             */
+            val LAYERS: SamplePartitionType get() = SamplePartitionType(2L)
+            /**
+             * Represents the size of the `SamplePartitionType` enum.
+             *
+             * Generated from Godot docs: NavigationMesh.SAMPLE_PARTITION_MAX
+             */
+            val MAX: SamplePartitionType get() = SamplePartitionType(3L)
+        }
+    }
 
+    /**
+     * Godot's `NavigationMesh.ParsedGeometryType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationMesh.ParsedGeometryType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationMesh.ParsedGeometryType
+     */
+    @JvmInline
+    value class ParsedGeometryType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Parses mesh instances as geometry. This includes `MeshInstance3D`, `CSGShape3D`, and `GridMap`
+             * nodes.
+             *
+             * Generated from Godot docs: NavigationMesh.PARSED_GEOMETRY_MESH_INSTANCES
+             */
+            val MESH_INSTANCES: ParsedGeometryType get() = ParsedGeometryType(0L)
+            /**
+             * Parses `StaticBody3D` colliders as geometry. The collider should be in any of the layers
+             * specified by `geometry_collision_mask`.
+             *
+             * Generated from Godot docs: NavigationMesh.PARSED_GEOMETRY_STATIC_COLLIDERS
+             */
+            val STATIC_COLLIDERS: ParsedGeometryType get() = ParsedGeometryType(1L)
+            /**
+             * Both `ParsedGeometryType.MESH_INSTANCES` and `ParsedGeometryType.STATIC_COLLIDERS`.
+             *
+             * Generated from Godot docs: NavigationMesh.PARSED_GEOMETRY_BOTH
+             */
+            val BOTH: ParsedGeometryType get() = ParsedGeometryType(2L)
+            /**
+             * Represents the size of the `ParsedGeometryType` enum.
+             *
+             * Generated from Godot docs: NavigationMesh.PARSED_GEOMETRY_MAX
+             */
+            val MAX: ParsedGeometryType get() = ParsedGeometryType(3L)
+        }
+    }
+
+    /**
+     * Godot's `NavigationMesh.SourceGeometryMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`NavigationMesh.SourceGeometryMode.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationMesh.SourceGeometryMode
+     */
+    @JvmInline
+    value class SourceGeometryMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Scans the child nodes of the root node recursively for geometry.
+             *
+             * Generated from Godot docs: NavigationMesh.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN
+             */
+            val ROOT_NODE_CHILDREN: SourceGeometryMode get() = SourceGeometryMode(0L)
+            /**
+             * Scans nodes in a group and their child nodes recursively for geometry. The group is specified by
+             * `geometry_source_group_name`.
+             *
+             * Generated from Godot docs: NavigationMesh.SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN
+             */
+            val GROUPS_WITH_CHILDREN: SourceGeometryMode get() = SourceGeometryMode(1L)
+            /**
+             * Uses nodes in a group for geometry. The group is specified by `geometry_source_group_name`.
+             *
+             * Generated from Godot docs: NavigationMesh.SOURCE_GEOMETRY_GROUPS_EXPLICIT
+             */
+            val GROUPS_EXPLICIT: SourceGeometryMode get() = SourceGeometryMode(2L)
+            /**
+             * Represents the size of the `SourceGeometryMode` enum.
+             *
+             * Generated from Godot docs: NavigationMesh.SOURCE_GEOMETRY_MAX
+             */
+            val MAX: SourceGeometryMode get() = SourceGeometryMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationMesh? =
             wrap(handle.segment)

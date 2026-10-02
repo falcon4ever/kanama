@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -114,9 +115,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.gen_export_flags
      */
-    fun genExportFlags(flags: Long): List<String> {
+    fun genExportFlags(flags: EditorExportPlatform.DebugFlags): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(genExportFlagsBind, segment, flags)
+        return ObjectCalls.ptrcallWithLongArgRetPackedStringList(genExportFlagsBind, segment, flags.value)
     }
 
     /**
@@ -132,9 +133,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.export_project_files
      */
-    fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): Long {
+    fun exportProjectFiles(preset: EditorExportPreset?, debug: Boolean, saveCb: GodotCallable, sharedCb: GodotCallable): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method)
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolTwoCallableArgsRetLong(exportProjectFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, saveCb.target.segment, saveCb.method, sharedCb.target.segment, sharedCb.method))
     }
 
     /**
@@ -143,9 +144,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.export_project
      */
-    fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L, notify: Boolean = true): Long {
+    fun exportProject(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L), notify: Boolean = true): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags, notify)
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongBoolArgsRetLong(exportProjectBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value, notify))
     }
 
     /**
@@ -153,9 +154,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.export_pack
      */
-    fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
+    fun exportPack(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags)
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportPackBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
     }
 
     /**
@@ -163,9 +164,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.export_zip
      */
-    fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: Long = 0L): Long {
+    fun exportZip(preset: EditorExportPreset?, debug: Boolean, path: String, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags)
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringLongArgsRetLong(exportZipBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, flags.value))
     }
 
     /**
@@ -176,9 +177,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.export_pack_patch
      */
-    fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+    fun exportPackPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags)
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportPackPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
     }
 
     /**
@@ -189,9 +190,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.export_zip_patch
      */
-    fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: Long = 0L): Long {
+    fun exportZipPatch(preset: EditorExportPreset?, debug: Boolean, path: String, patches: List<String>, flags: EditorExportPlatform.DebugFlags = EditorExportPlatform.DebugFlags(0L)): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags)
+        return GodotError(ObjectCalls.ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong(exportZipPatchBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug, path, patches, flags.value))
     }
 
     /**
@@ -209,9 +210,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.add_message
      */
-    fun addMessage(type: Long, category: String, message: String) {
+    fun addMessage(type: EditorExportPlatform.ExportMessageType, category: String, message: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoStringArgs(addMessageBind, segment, type, category, message)
+        ObjectCalls.ptrcallWithLongAndTwoStringArgs(addMessageBind, segment, type.value, category, message)
     }
 
     /**
@@ -229,9 +230,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.get_message_type
      */
-    fun getMessageType(index: Int): Long {
+    fun getMessageType(index: Int): EditorExportPlatform.ExportMessageType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, segment, index)
+        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallWithIntArgRetLong(getMessageTypeBind, segment, index))
     }
 
     /**
@@ -259,9 +260,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.get_worst_message_type
      */
-    fun getWorstMessageType(): Long {
+    fun getWorstMessageType(): EditorExportPlatform.ExportMessageType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, segment)
+        return EditorExportPlatform.ExportMessageType(ObjectCalls.ptrcallNoArgsRetLong(getWorstMessageTypeBind, segment))
     }
 
     /**
@@ -270,9 +271,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.ssh_run_on_remote
      */
-    fun sshRunOnRemote(host: String, port: String, sshArg: List<String>, cmdArgs: String, output: List<Any?> = emptyList(), portFwd: Int = -1): Long {
+    fun sshRunOnRemote(host: String, port: String, sshArg: List<String>, cmdArgs: String, output: List<Any?> = emptyList(), portFwd: Int = -1): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(sshRunOnRemoteBind, segment, host, port, sshArg, cmdArgs, output, portFwd)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListStringArrayIntArgsRetLong(sshRunOnRemoteBind, segment, host, port, sshArg, cmdArgs, output, portFwd))
     }
 
     /**
@@ -291,9 +292,9 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: EditorExportPlatform.ssh_push_to_remote
      */
-    fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): Long {
+    fun sshPushToRemote(host: String, port: String, scpArgs: List<String>, srcFile: String, dstFile: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, segment, host, port, scpArgs, srcFile, dstFile)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(sshPushToRemoteBind, segment, host, port, scpArgs, srcFile, dstFile))
     }
 
     /**
@@ -308,6 +309,107 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithObjectAndBoolArgRetDictionary(getInternalExportFilesBind, segment, preset?.requireOpenHandle() ?: NULL_SEGMENT, debug)
     }
 
+    /**
+     * Godot's `EditorExportPlatform.ExportMessageType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`EditorExportPlatform.ExportMessageType.<NAME>`).
+     *
+     * Generated from Godot docs: EditorExportPlatform.ExportMessageType
+     */
+    @JvmInline
+    value class ExportMessageType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Invalid message type used as the default value when no type is specified.
+             *
+             * Generated from Godot docs: EditorExportPlatform.EXPORT_MESSAGE_NONE
+             */
+            val NONE: ExportMessageType get() = ExportMessageType(0L)
+            /**
+             * Message type for informational messages that have no effect on the export.
+             *
+             * Generated from Godot docs: EditorExportPlatform.EXPORT_MESSAGE_INFO
+             */
+            val INFO: ExportMessageType get() = ExportMessageType(1L)
+            /**
+             * Message type for warning messages that should be addressed but still allow to complete the
+             * export.
+             *
+             * Generated from Godot docs: EditorExportPlatform.EXPORT_MESSAGE_WARNING
+             */
+            val WARNING: ExportMessageType get() = ExportMessageType(2L)
+            /**
+             * Message type for error messages that must be addressed and fail the export.
+             *
+             * Generated from Godot docs: EditorExportPlatform.EXPORT_MESSAGE_ERROR
+             */
+            val ERROR: ExportMessageType get() = ExportMessageType(3L)
+        }
+    }
+
+    /**
+     * Godot's `EditorExportPlatform.DebugFlags` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`EditorExportPlatform.DebugFlags.<NAME>`).
+     *
+     * Generated from Godot docs: EditorExportPlatform.DebugFlags
+     */
+    @JvmInline
+    value class DebugFlags(override val value: Long) : GodotEnumValue {
+        infix fun or(other: DebugFlags): DebugFlags = DebugFlags(value or other.value)
+
+        infix fun and(other: DebugFlags): DebugFlags = DebugFlags(value and other.value)
+
+        infix fun xor(other: DebugFlags): DebugFlags = DebugFlags(value xor other.value)
+
+        fun inv(): DebugFlags = DebugFlags(value.inv())
+
+        operator fun contains(other: DebugFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Flag is set if the remotely debugged project is expected to use the remote file system. If set,
+             * `gen_export_flags` will append `--remote-fs` and `--remote-fs-password` (if
+             * `EditorSettings.filesystem/file_server/password` is defined) command line arguments to the
+             * returned list.
+             *
+             * Generated from Godot docs: EditorExportPlatform.DEBUG_FLAG_DUMB_CLIENT
+             */
+            val DUMB_CLIENT: DebugFlags get() = DebugFlags(1L)
+            /**
+             * Flag is set if remote debug is enabled. If set, `gen_export_flags` will append `--remote-debug`
+             * and `--breakpoints` (if breakpoints are selected in the script editor or added by the plugin)
+             * command line arguments to the returned list.
+             *
+             * Generated from Godot docs: EditorExportPlatform.DEBUG_FLAG_REMOTE_DEBUG
+             */
+            val REMOTE_DEBUG: DebugFlags get() = DebugFlags(2L)
+            /**
+             * Flag is set if remotely debugged project is running on the localhost. If set, `gen_export_flags`
+             * will use `localhost` instead of `EditorSettings.network/debug/remote_host` as remote debugger
+             * host.
+             *
+             * Generated from Godot docs: EditorExportPlatform.DEBUG_FLAG_REMOTE_DEBUG_LOCALHOST
+             */
+            val REMOTE_DEBUG_LOCALHOST: DebugFlags get() = DebugFlags(4L)
+            /**
+             * Flag is set if the "Visible Collision Shapes" remote debug option is enabled. If set,
+             * `gen_export_flags` will append the `--debug-collisions` command line argument to the returned
+             * list.
+             *
+             * Generated from Godot docs: EditorExportPlatform.DEBUG_FLAG_VIEW_COLLISIONS
+             */
+            val VIEW_COLLISIONS: DebugFlags get() = DebugFlags(8L)
+            /**
+             * Flag is set if the "Visible Navigation" remote debug option is enabled. If set,
+             * `gen_export_flags` will append the `--debug-navigation` command line argument to the returned
+             * list.
+             *
+             * Generated from Godot docs: EditorExportPlatform.DEBUG_FLAG_VIEW_NAVIGATION
+             */
+            val VIEW_NAVIGATION: DebugFlags get() = DebugFlags(16L)
+        }
+    }
+
     companion object {
         /**
          * Returns array of core file names that always should be exported regardless of preset config.
@@ -317,16 +419,6 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
         fun getForcedExportFiles(preset: EditorExportPreset?): List<String> {
             return ObjectCalls.ptrcallWithObjectArgRetPackedStringList(getForcedExportFilesBind, NULL_SEGMENT, preset?.requireOpenHandle() ?: NULL_SEGMENT)
         }
-
-        const val EXPORT_MESSAGE_NONE: Long = 0L
-        const val EXPORT_MESSAGE_INFO: Long = 1L
-        const val EXPORT_MESSAGE_WARNING: Long = 2L
-        const val EXPORT_MESSAGE_ERROR: Long = 3L
-        const val DEBUG_FLAG_DUMB_CLIENT: Long = 1L
-        const val DEBUG_FLAG_REMOTE_DEBUG: Long = 2L
-        const val DEBUG_FLAG_REMOTE_DEBUG_LOCALHOST: Long = 4L
-        const val DEBUG_FLAG_VIEW_COLLISIONS: Long = 8L
-        const val DEBUG_FLAG_VIEW_NAVIGATION: Long = 16L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatform? =

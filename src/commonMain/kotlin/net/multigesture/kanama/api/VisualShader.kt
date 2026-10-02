@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -17,94 +18,94 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
         @JvmName("setGraphOffsetProperty")
         set(value) = setGraphOffset(value)
 
-    fun setMode(mode: Long) {
+    fun setMode(mode: Shader.Mode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
     }
 
-    fun addNode(type: Long, node: VisualShaderNode?, position: Vector2, id: Int) {
+    fun addNode(type: VisualShader.Type, node: VisualShaderNode?, position: Vector2, id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongObjectVector2IntArgs(addNodeBind, segment, type, node?.requireOpenHandle() ?: NULL_SEGMENT, position, id)
+        ObjectCalls.ptrcallWithLongObjectVector2IntArgs(addNodeBind, segment, type.value, node?.requireOpenHandle() ?: NULL_SEGMENT, position, id)
     }
 
-    fun getNode(type: Long, id: Int): VisualShaderNode? {
+    fun getNode(type: VisualShader.Type, id: Int): VisualShaderNode? {
         checkOpen()
-        return VisualShaderNode.wrap(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(getNodeBind, segment, type, id))
+        return VisualShaderNode.wrap(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(getNodeBind, segment, type.value, id))
     }
 
-    fun setNodePosition(type: Long, id: Int, position: Vector2) {
+    fun setNodePosition(type: VisualShader.Type, id: Int, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongIntVector2Args(setNodePositionBind, segment, type, id, position)
+        ObjectCalls.ptrcallWithLongIntVector2Args(setNodePositionBind, segment, type.value, id, position)
     }
 
-    fun getNodePosition(type: Long, id: Int): Vector2 {
+    fun getNodePosition(type: VisualShader.Type, id: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(getNodePositionBind, segment, type, id)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetVector2(getNodePositionBind, segment, type.value, id)
     }
 
-    fun getNodeList(type: Long): List<Int> {
+    fun getNodeList(type: VisualShader.Type): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedInt32List(getNodeListBind, segment, type)
+        return ObjectCalls.ptrcallWithLongArgRetPackedInt32List(getNodeListBind, segment, type.value)
     }
 
-    fun getValidNodeId(type: Long): Int {
+    fun getValidNodeId(type: VisualShader.Type): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getValidNodeIdBind, segment, type)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getValidNodeIdBind, segment, type.value)
     }
 
-    fun removeNode(type: Long, id: Int) {
+    fun removeNode(type: VisualShader.Type, id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(removeNodeBind, segment, type, id)
+        ObjectCalls.ptrcallWithLongAndIntArgs(removeNodeBind, segment, type.value, id)
     }
 
-    fun replaceNode(type: Long, id: Int, newClass: String) {
+    fun replaceNode(type: VisualShader.Type, id: Int, newClass: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongIntStringNameArgs(replaceNodeBind, segment, type, id, newClass)
+        ObjectCalls.ptrcallWithLongIntStringNameArgs(replaceNodeBind, segment, type.value, id, newClass)
     }
 
-    fun isNodeConnection(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
+    fun isNodeConnection(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(isNodeConnectionBind, segment, type, fromNode, fromPort, toNode, toPort)
+        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(isNodeConnectionBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
-    fun canConnectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
+    fun canConnectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(canConnectNodesBind, segment, type, fromNode, fromPort, toNode, toPort)
+        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetBool(canConnectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
-    fun connectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): Long {
+    fun connectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(connectNodesBind, segment, type, fromNode, fromPort, toNode, toPort)
+        return GodotError(ObjectCalls.ptrcallWithLongAndFourIntArgsRetLong(connectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort))
     }
 
-    fun disconnectNodes(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
+    fun disconnectNodes(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndFourIntArgs(disconnectNodesBind, segment, type, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.ptrcallWithLongAndFourIntArgs(disconnectNodesBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
-    fun connectNodesForced(type: Long, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
+    fun connectNodesForced(type: VisualShader.Type, fromNode: Int, fromPort: Int, toNode: Int, toPort: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndFourIntArgs(connectNodesForcedBind, segment, type, fromNode, fromPort, toNode, toPort)
+        ObjectCalls.ptrcallWithLongAndFourIntArgs(connectNodesForcedBind, segment, type.value, fromNode, fromPort, toNode, toPort)
     }
 
-    fun getNodeConnections(type: Long): List<Map<String, Any?>> {
+    fun getNodeConnections(type: VisualShader.Type): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDictionaryList(getNodeConnectionsBind, segment, type)
+        return ObjectCalls.ptrcallWithLongArgRetDictionaryList(getNodeConnectionsBind, segment, type.value)
     }
 
-    fun attachNodeToFrame(type: Long, id: Int, frame: Int) {
+    fun attachNodeToFrame(type: VisualShader.Type, id: Int, frame: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndTwoIntArgs(attachNodeToFrameBind, segment, type, id, frame)
+        ObjectCalls.ptrcallWithLongAndTwoIntArgs(attachNodeToFrameBind, segment, type.value, id, frame)
     }
 
-    fun detachNodeFromFrame(type: Long, id: Int) {
+    fun detachNodeFromFrame(type: VisualShader.Type, id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(detachNodeFromFrameBind, segment, type, id)
+        ObjectCalls.ptrcallWithLongAndIntArgs(detachNodeFromFrameBind, segment, type.value, id)
     }
 
-    fun addVarying(name: String, mode: Long, type: Long) {
+    fun addVarying(name: String, mode: VisualShader.VaryingMode, type: VisualShader.VaryingType) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringTwoLongArgs(addVaryingBind, segment, name, mode, type)
+        ObjectCalls.ptrcallWithStringTwoLongArgs(addVaryingBind, segment, name, mode.value, type.value)
     }
 
     fun removeVarying(name: String) {
@@ -127,33 +128,51 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
         return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, segment)
     }
 
+    @JvmInline
+    value class Type(override val value: Long) : GodotEnumValue {
+        companion object {
+            val VERTEX: Type get() = Type(0L)
+            val FRAGMENT: Type get() = Type(1L)
+            val LIGHT: Type get() = Type(2L)
+            val START: Type get() = Type(3L)
+            val PROCESS: Type get() = Type(4L)
+            val COLLIDE: Type get() = Type(5L)
+            val START_CUSTOM: Type get() = Type(6L)
+            val PROCESS_CUSTOM: Type get() = Type(7L)
+            val SKY: Type get() = Type(8L)
+            val FOG: Type get() = Type(9L)
+            val TEXTURE_BLIT: Type get() = Type(10L)
+            val MAX: Type get() = Type(11L)
+        }
+    }
+
+    @JvmInline
+    value class VaryingMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val VERTEX_TO_FRAG_LIGHT: VaryingMode get() = VaryingMode(0L)
+            val FRAG_TO_LIGHT: VaryingMode get() = VaryingMode(1L)
+            val MAX: VaryingMode get() = VaryingMode(2L)
+        }
+    }
+
+    @JvmInline
+    value class VaryingType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val FLOAT: VaryingType get() = VaryingType(0L)
+            val INT: VaryingType get() = VaryingType(1L)
+            val UINT: VaryingType get() = VaryingType(2L)
+            val VECTOR_2D: VaryingType get() = VaryingType(3L)
+            val VECTOR_3D: VaryingType get() = VaryingType(4L)
+            val VECTOR_4D: VaryingType get() = VaryingType(5L)
+            val BOOLEAN: VaryingType get() = VaryingType(6L)
+            val TRANSFORM: VaryingType get() = VaryingType(7L)
+            val MAX: VaryingType get() = VaryingType(8L)
+        }
+    }
+
     companion object {
         const val NODE_ID_INVALID: Long = -1L
         const val NODE_ID_OUTPUT: Long = 0L
-        const val TYPE_VERTEX: Long = 0L
-        const val TYPE_FRAGMENT: Long = 1L
-        const val TYPE_LIGHT: Long = 2L
-        const val TYPE_START: Long = 3L
-        const val TYPE_PROCESS: Long = 4L
-        const val TYPE_COLLIDE: Long = 5L
-        const val TYPE_START_CUSTOM: Long = 6L
-        const val TYPE_PROCESS_CUSTOM: Long = 7L
-        const val TYPE_SKY: Long = 8L
-        const val TYPE_FOG: Long = 9L
-        const val TYPE_TEXTURE_BLIT: Long = 10L
-        const val TYPE_MAX: Long = 11L
-        const val VARYING_MODE_VERTEX_TO_FRAG_LIGHT: Long = 0L
-        const val VARYING_MODE_FRAG_TO_LIGHT: Long = 1L
-        const val VARYING_MODE_MAX: Long = 2L
-        const val VARYING_TYPE_FLOAT: Long = 0L
-        const val VARYING_TYPE_INT: Long = 1L
-        const val VARYING_TYPE_UINT: Long = 2L
-        const val VARYING_TYPE_VECTOR_2D: Long = 3L
-        const val VARYING_TYPE_VECTOR_3D: Long = 4L
-        const val VARYING_TYPE_VECTOR_4D: Long = 5L
-        const val VARYING_TYPE_BOOLEAN: Long = 6L
-        const val VARYING_TYPE_TRANSFORM: Long = 7L
-        const val VARYING_TYPE_MAX: Long = 8L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShader? =

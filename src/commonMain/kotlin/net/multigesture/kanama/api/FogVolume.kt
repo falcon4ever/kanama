@@ -19,7 +19,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setSizeProperty")
         set(value) = setSize(value)
 
-    var shape: Long
+    var shape: RenderingServer.FogVolumeShape
         @JvmName("shapeProperty")
         get() = getShape()
         @JvmName("setShapeProperty")
@@ -32,17 +32,17 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
         set(value) = setMaterial(value)
 
     /**
-     * The size of the `FogVolume` when `shape` is `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CONE`, `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_BOX`. Note: Thin fog volumes may appear to flicker when the
+     * The size of the `FogVolume` when `shape` is `RenderingServer.FogVolumeShape.ELLIPSOID`,
+     * `RenderingServer.FogVolumeShape.CONE`, `RenderingServer.FogVolumeShape.CYLINDER` or
+     * `RenderingServer.FogVolumeShape.BOX`. Note: Thin fog volumes may appear to flicker when the
      * camera moves or rotates. This can be alleviated by increasing
      * `ProjectSettings.rendering/environment/volumetric_fog/volume_depth` (at a performance cost) or
      * by decreasing `Environment.volumetric_fog_length` (at no performance cost, but at the cost of
      * lower fog range). Alternatively, the `FogVolume` can be made thicker and use a lower density in
-     * the `material`. Note: If `shape` is `RenderingServer.FOG_VOLUME_SHAPE_CONE` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER`, the cone/cylinder will be adjusted to fit within
-     * the size. Non-uniform scaling of cone/cylinder shapes via the `size` property is not supported,
-     * but you can scale the `FogVolume` node instead.
+     * the `material`. Note: If `shape` is `RenderingServer.FogVolumeShape.CONE` or
+     * `RenderingServer.FogVolumeShape.CYLINDER`, the cone/cylinder will be adjusted to fit within the
+     * size. Non-uniform scaling of cone/cylinder shapes via the `size` property is not supported, but
+     * you can scale the `FogVolume` node instead.
      *
      * Generated from Godot docs: FogVolume.set_size
      */
@@ -51,17 +51,17 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     /**
-     * The size of the `FogVolume` when `shape` is `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CONE`, `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_BOX`. Note: Thin fog volumes may appear to flicker when the
+     * The size of the `FogVolume` when `shape` is `RenderingServer.FogVolumeShape.ELLIPSOID`,
+     * `RenderingServer.FogVolumeShape.CONE`, `RenderingServer.FogVolumeShape.CYLINDER` or
+     * `RenderingServer.FogVolumeShape.BOX`. Note: Thin fog volumes may appear to flicker when the
      * camera moves or rotates. This can be alleviated by increasing
      * `ProjectSettings.rendering/environment/volumetric_fog/volume_depth` (at a performance cost) or
      * by decreasing `Environment.volumetric_fog_length` (at no performance cost, but at the cost of
      * lower fog range). Alternatively, the `FogVolume` can be made thicker and use a lower density in
-     * the `material`. Note: If `shape` is `RenderingServer.FOG_VOLUME_SHAPE_CONE` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER`, the cone/cylinder will be adjusted to fit within
-     * the size. Non-uniform scaling of cone/cylinder shapes via the `size` property is not supported,
-     * but you can scale the `FogVolume` node instead.
+     * the `material`. Note: If `shape` is `RenderingServer.FogVolumeShape.CONE` or
+     * `RenderingServer.FogVolumeShape.CYLINDER`, the cone/cylinder will be adjusted to fit within the
+     * size. Non-uniform scaling of cone/cylinder shapes via the `size` property is not supported, but
+     * you can scale the `FogVolume` node instead.
      *
      * Generated from Godot docs: FogVolume.get_size
      */
@@ -71,26 +71,26 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The shape of the `FogVolume`. This can be set to either
-     * `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`, `RenderingServer.FOG_VOLUME_SHAPE_CONE`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER`, `RenderingServer.FOG_VOLUME_SHAPE_BOX` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_WORLD`.
+     * `RenderingServer.FogVolumeShape.ELLIPSOID`, `RenderingServer.FogVolumeShape.CONE`,
+     * `RenderingServer.FogVolumeShape.CYLINDER`, `RenderingServer.FogVolumeShape.BOX` or
+     * `RenderingServer.FogVolumeShape.WORLD`.
      *
      * Generated from Godot docs: FogVolume.set_shape
      */
-    fun setShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape)
+    fun setShape(shape: RenderingServer.FogVolumeShape) {
+        ObjectCalls.ptrcallWithLongArg(setShapeBind, segment, shape.value)
     }
 
     /**
      * The shape of the `FogVolume`. This can be set to either
-     * `RenderingServer.FOG_VOLUME_SHAPE_ELLIPSOID`, `RenderingServer.FOG_VOLUME_SHAPE_CONE`,
-     * `RenderingServer.FOG_VOLUME_SHAPE_CYLINDER`, `RenderingServer.FOG_VOLUME_SHAPE_BOX` or
-     * `RenderingServer.FOG_VOLUME_SHAPE_WORLD`.
+     * `RenderingServer.FogVolumeShape.ELLIPSOID`, `RenderingServer.FogVolumeShape.CONE`,
+     * `RenderingServer.FogVolumeShape.CYLINDER`, `RenderingServer.FogVolumeShape.BOX` or
+     * `RenderingServer.FogVolumeShape.WORLD`.
      *
      * Generated from Godot docs: FogVolume.get_shape
      */
-    fun getShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment)
+    fun getShape(): RenderingServer.FogVolumeShape {
+        return RenderingServer.FogVolumeShape(ObjectCalls.ptrcallNoArgsRetLong(getShapeBind, segment))
     }
 
     /**

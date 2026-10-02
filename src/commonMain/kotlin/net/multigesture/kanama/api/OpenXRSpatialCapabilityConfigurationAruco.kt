@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco
  */
 class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpatialCapabilityConfigurationBaseHeader(handle) {
-    var arucoDict: Long
+    var arucoDict: OpenXRSpatialCapabilityConfigurationAruco.ArucoDict
         @JvmName("arucoDictProperty")
         get() = getArucoDict()
         @JvmName("setArucoDictProperty")
@@ -20,34 +21,39 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
         return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
     }
 
-    fun setArucoDict(arucoDict: Long) {
+    fun setArucoDict(arucoDict: OpenXRSpatialCapabilityConfigurationAruco.ArucoDict) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setArucoDictBind, segment, arucoDict)
+        ObjectCalls.ptrcallWithLongArg(setArucoDictBind, segment, arucoDict.value)
     }
 
-    fun getArucoDict(): Long {
+    fun getArucoDict(): OpenXRSpatialCapabilityConfigurationAruco.ArucoDict {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getArucoDictBind, segment)
+        return OpenXRSpatialCapabilityConfigurationAruco.ArucoDict(ObjectCalls.ptrcallNoArgsRetLong(getArucoDictBind, segment))
+    }
+
+    @JvmInline
+    value class ArucoDict(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DICT_4X4_50: ArucoDict get() = ArucoDict(1L)
+            val DICT_4X4_100: ArucoDict get() = ArucoDict(2L)
+            val DICT_4X4_250: ArucoDict get() = ArucoDict(3L)
+            val DICT_4X4_1000: ArucoDict get() = ArucoDict(4L)
+            val DICT_5X5_50: ArucoDict get() = ArucoDict(5L)
+            val DICT_5X5_100: ArucoDict get() = ArucoDict(6L)
+            val DICT_5X5_250: ArucoDict get() = ArucoDict(7L)
+            val DICT_5X5_1000: ArucoDict get() = ArucoDict(8L)
+            val DICT_6X6_50: ArucoDict get() = ArucoDict(9L)
+            val DICT_6X6_100: ArucoDict get() = ArucoDict(10L)
+            val DICT_6X6_250: ArucoDict get() = ArucoDict(11L)
+            val DICT_6X6_1000: ArucoDict get() = ArucoDict(12L)
+            val DICT_7X7_50: ArucoDict get() = ArucoDict(13L)
+            val DICT_7X7_100: ArucoDict get() = ArucoDict(14L)
+            val DICT_7X7_250: ArucoDict get() = ArucoDict(15L)
+            val DICT_7X7_1000: ArucoDict get() = ArucoDict(16L)
+        }
     }
 
     companion object {
-        const val ARUCO_DICT_4X4_50: Long = 1L
-        const val ARUCO_DICT_4X4_100: Long = 2L
-        const val ARUCO_DICT_4X4_250: Long = 3L
-        const val ARUCO_DICT_4X4_1000: Long = 4L
-        const val ARUCO_DICT_5X5_50: Long = 5L
-        const val ARUCO_DICT_5X5_100: Long = 6L
-        const val ARUCO_DICT_5X5_250: Long = 7L
-        const val ARUCO_DICT_5X5_1000: Long = 8L
-        const val ARUCO_DICT_6X6_50: Long = 9L
-        const val ARUCO_DICT_6X6_100: Long = 10L
-        const val ARUCO_DICT_6X6_250: Long = 11L
-        const val ARUCO_DICT_6X6_1000: Long = 12L
-        const val ARUCO_DICT_7X7_50: Long = 13L
-        const val ARUCO_DICT_7X7_100: Long = 14L
-        const val ARUCO_DICT_7X7_250: Long = 15L
-        const val ARUCO_DICT_7X7_1000: Long = 16L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAruco? =
             wrap(handle.segment)

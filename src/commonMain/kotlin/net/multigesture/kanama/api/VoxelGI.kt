@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: VoxelGI
  */
 class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
-    var subdiv: Long
+    var subdiv: VoxelGI.Subdiv
         @JvmName("subdivProperty")
         get() = getSubdiv()
         @JvmName("setSubdivProperty")
@@ -61,8 +62,8 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: VoxelGI.set_subdiv
      */
-    fun setSubdiv(subdiv: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSubdivBind, segment, subdiv)
+    fun setSubdiv(subdiv: VoxelGI.Subdiv) {
+        ObjectCalls.ptrcallWithLongArg(setSubdivBind, segment, subdiv.value)
     }
 
     /**
@@ -71,8 +72,8 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: VoxelGI.get_subdiv
      */
-    fun getSubdiv(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubdivBind, segment)
+    fun getSubdiv(): VoxelGI.Subdiv {
+        return VoxelGI.Subdiv(ObjectCalls.ptrcallNoArgsRetLong(getSubdivBind, segment))
     }
 
     /**
@@ -122,8 +123,8 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     /**
-     * Bakes the effect from all `GeometryInstance3D`s marked with `GeometryInstance3D.GI_MODE_STATIC`
-     * and `Light3D`s marked with either `Light3D.BAKE_STATIC` or `Light3D.BAKE_DYNAMIC`. If
+     * Bakes the effect from all `GeometryInstance3D`s marked with `GeometryInstance3D.GIMode.STATIC`
+     * and `Light3D`s marked with either `Light3D.BakeMode.STATIC` or `Light3D.BakeMode.DYNAMIC`. If
      * `create_visual_debug` is `true`, after baking the light, this will generate a `MultiMesh` that
      * has a cube representing each solid cell with each cube colored to the cell's albedo color. This
      * can be used to visualize the `VoxelGI`'s data and debug any issues that may be occurring. Note:
@@ -149,13 +150,51 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
         ObjectCalls.ptrcallNoArgs(debugBakeBind, segment)
     }
 
-    companion object {
-        const val SUBDIV_64: Long = 0L
-        const val SUBDIV_128: Long = 1L
-        const val SUBDIV_256: Long = 2L
-        const val SUBDIV_512: Long = 3L
-        const val SUBDIV_MAX: Long = 4L
+    /**
+     * Godot's `VoxelGI.Subdiv` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`VoxelGI.Subdiv.<NAME>`).
+     *
+     * Generated from Godot docs: VoxelGI.Subdiv
+     */
+    @JvmInline
+    value class Subdiv(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use 64 subdivisions. This is the lowest quality setting, but the fastest. Use it if you can, but
+             * especially use it on lower-end hardware.
+             *
+             * Generated from Godot docs: VoxelGI.SUBDIV_64
+             */
+            val SUBDIV_64: Subdiv get() = Subdiv(0L)
+            /**
+             * Use 128 subdivisions. This is the default quality setting.
+             *
+             * Generated from Godot docs: VoxelGI.SUBDIV_128
+             */
+            val SUBDIV_128: Subdiv get() = Subdiv(1L)
+            /**
+             * Use 256 subdivisions.
+             *
+             * Generated from Godot docs: VoxelGI.SUBDIV_256
+             */
+            val SUBDIV_256: Subdiv get() = Subdiv(2L)
+            /**
+             * Use 512 subdivisions. This is the highest quality setting, but the slowest. On lower-end
+             * hardware, this could cause the GPU to stall.
+             *
+             * Generated from Godot docs: VoxelGI.SUBDIV_512
+             */
+            val SUBDIV_512: Subdiv get() = Subdiv(3L)
+            /**
+             * Represents the size of the `Subdiv` enum.
+             *
+             * Generated from Godot docs: VoxelGI.SUBDIV_MAX
+             */
+            val MAX: Subdiv get() = Subdiv(4L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VoxelGI? =
             wrap(handle.segment)

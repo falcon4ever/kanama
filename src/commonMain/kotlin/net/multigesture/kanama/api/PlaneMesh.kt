@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -37,7 +38,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         @JvmName("setCenterOffsetProperty")
         set(value) = setCenterOffset(value)
 
-    var orientation: Long
+    var orientation: PlaneMesh.Orientation
         @JvmName("orientationProperty")
         get() = getOrientation()
         @JvmName("setOrientationProperty")
@@ -128,9 +129,9 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: PlaneMesh.set_orientation
      */
-    fun setOrientation(orientation: Long) {
+    fun setOrientation(orientation: PlaneMesh.Orientation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation)
+        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation.value)
     }
 
     /**
@@ -138,16 +139,44 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      *
      * Generated from Godot docs: PlaneMesh.get_orientation
      */
-    fun getOrientation(): Long {
+    fun getOrientation(): PlaneMesh.Orientation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment)
+        return PlaneMesh.Orientation(ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment))
+    }
+
+    /**
+     * Godot's `PlaneMesh.Orientation` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PlaneMesh.Orientation.<NAME>`).
+     *
+     * Generated from Godot docs: PlaneMesh.Orientation
+     */
+    @JvmInline
+    value class Orientation(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * `PlaneMesh` will face the positive X-axis.
+             *
+             * Generated from Godot docs: PlaneMesh.FACE_X
+             */
+            val X: Orientation get() = Orientation(0L)
+            /**
+             * `PlaneMesh` will face the positive Y-axis. This matches the behavior of the `PlaneMesh` in Godot
+             * 3.x.
+             *
+             * Generated from Godot docs: PlaneMesh.FACE_Y
+             */
+            val Y: Orientation get() = Orientation(1L)
+            /**
+             * `PlaneMesh` will face the positive Z-axis. This matches the behavior of the QuadMesh in Godot
+             * 3.x.
+             *
+             * Generated from Godot docs: PlaneMesh.FACE_Z
+             */
+            val Z: Orientation get() = Orientation(2L)
+        }
     }
 
     companion object {
-        const val FACE_X: Long = 0L
-        const val FACE_Y: Long = 1L
-        const val FACE_Z: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaneMesh? =
             wrap(handle.segment)

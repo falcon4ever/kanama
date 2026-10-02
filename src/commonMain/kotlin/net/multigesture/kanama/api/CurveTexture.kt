@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: CurveTexture
  */
 class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
-    var textureMode: Long
+    var textureMode: CurveTexture.TextureMode
         @JvmName("textureModeProperty")
         get() = getTextureMode()
         @JvmName("setTextureModeProperty")
@@ -62,9 +63,9 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CurveTexture.set_texture_mode
      */
-    fun setTextureMode(textureMode: Long) {
+    fun setTextureMode(textureMode: CurveTexture.TextureMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, textureMode)
+        ObjectCalls.ptrcallWithLongArg(setTextureModeBind, segment, textureMode.value)
     }
 
     /**
@@ -73,15 +74,38 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CurveTexture.get_texture_mode
      */
-    fun getTextureMode(): Long {
+    fun getTextureMode(): CurveTexture.TextureMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment)
+        return CurveTexture.TextureMode(ObjectCalls.ptrcallNoArgsRetLong(getTextureModeBind, segment))
+    }
+
+    /**
+     * Godot's `CurveTexture.TextureMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CurveTexture.TextureMode.<NAME>`).
+     *
+     * Generated from Godot docs: CurveTexture.TextureMode
+     */
+    @JvmInline
+    value class TextureMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Store the curve equally across the red, green and blue channels. This uses more video memory,
+             * but is more compatible with shaders that only read the green and blue values.
+             *
+             * Generated from Godot docs: CurveTexture.TEXTURE_MODE_RGB
+             */
+            val RGB: TextureMode get() = TextureMode(0L)
+            /**
+             * Store the curve only in the red channel. This saves video memory, but some custom shaders may
+             * not be able to work with this.
+             *
+             * Generated from Godot docs: CurveTexture.TEXTURE_MODE_RED
+             */
+            val RED: TextureMode get() = TextureMode(1L)
+        }
     }
 
     companion object {
-        const val TEXTURE_MODE_RGB: Long = 0L
-        const val TEXTURE_MODE_RED: Long = 1L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CurveTexture? =
             wrap(handle.segment)

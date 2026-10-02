@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -15,7 +16,7 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
         @JvmName("setLocalizedNameProperty")
         set(value) = setLocalizedName(value)
 
-    var actionType: Long
+    var actionType: OpenXRAction.ActionType
         @JvmName("actionTypeProperty")
         get() = getActionType()
         @JvmName("setActionTypeProperty")
@@ -37,14 +38,14 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(getLocalizedNameBind, segment)
     }
 
-    fun setActionType(actionType: Long) {
+    fun setActionType(actionType: OpenXRAction.ActionType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setActionTypeBind, segment, actionType)
+        ObjectCalls.ptrcallWithLongArg(setActionTypeBind, segment, actionType.value)
     }
 
-    fun getActionType(): Long {
+    fun getActionType(): OpenXRAction.ActionType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getActionTypeBind, segment)
+        return OpenXRAction.ActionType(ObjectCalls.ptrcallNoArgsRetLong(getActionTypeBind, segment))
     }
 
     fun setToplevelPaths(toplevelPaths: List<String>) {
@@ -57,12 +58,17 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedStringList(getToplevelPathsBind, segment)
     }
 
-    companion object {
-        const val OPENXR_ACTION_BOOL: Long = 0L
-        const val OPENXR_ACTION_FLOAT: Long = 1L
-        const val OPENXR_ACTION_VECTOR2: Long = 2L
-        const val OPENXR_ACTION_POSE: Long = 3L
+    @JvmInline
+    value class ActionType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val BOOL: ActionType get() = ActionType(0L)
+            val FLOAT: ActionType get() = ActionType(1L)
+            val VECTOR2: ActionType get() = ActionType(2L)
+            val POSE: ActionType get() = ActionType(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRAction? =
             wrap(handle.segment)

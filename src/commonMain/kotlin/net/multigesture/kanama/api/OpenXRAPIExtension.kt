@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -242,9 +243,9 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithBoolArg(setEmulateEnvironmentBlendModeAlphaBlendBind, segment, enabled)
     }
 
-    fun isEnvironmentBlendModeAlphaSupported(): Long {
+    fun isEnvironmentBlendModeAlphaSupported(): OpenXRAPIExtension.OpenXRAlphaBlendModeSupport {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(isEnvironmentBlendModeAlphaSupportedBind, segment)
+        return OpenXRAPIExtension.OpenXRAlphaBlendModeSupport(ObjectCalls.ptrcallNoArgsRetLong(isEnvironmentBlendModeAlphaSupportedBind, segment))
     }
 
     fun updateMainSwapchainSize() {
@@ -252,14 +253,19 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(updateMainSwapchainSizeBind, segment)
     }
 
+    @JvmInline
+    value class OpenXRAlphaBlendModeSupport(override val value: Long) : GodotEnumValue {
+        companion object {
+            val NONE: OpenXRAlphaBlendModeSupport get() = OpenXRAlphaBlendModeSupport(0L)
+            val REAL: OpenXRAlphaBlendModeSupport get() = OpenXRAlphaBlendModeSupport(1L)
+            val EMULATING: OpenXRAlphaBlendModeSupport get() = OpenXRAlphaBlendModeSupport(2L)
+        }
+    }
+
     companion object {
         fun openxrIsEnabled(checkRunInEditor: Boolean): Boolean {
             return ObjectCalls.ptrcallWithBoolArgRetBool(openxrIsEnabledBind, NULL_SEGMENT, checkRunInEditor)
         }
-
-        const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_NONE: Long = 0L
-        const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_REAL: Long = 1L
-        const val OPENXR_ALPHA_BLEND_MODE_SUPPORT_EMULATING: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRAPIExtension? =

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -15,11 +16,6 @@ object CameraServer {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("CameraServer")
     }
-
-    const val FEED_RGBA_IMAGE: Long = 0L
-    const val FEED_YCBCR_IMAGE: Long = 0L
-    const val FEED_Y_IMAGE: Long = 0L
-    const val FEED_CBCR_IMAGE: Long = 1L
 
     var monitoringFeeds: Boolean
         @JvmName("monitoringFeedsProperty")
@@ -105,6 +101,42 @@ object CameraServer {
         const val cameraFeedAdded: String = "camera_feed_added"
         const val cameraFeedRemoved: String = "camera_feed_removed"
         const val cameraFeedsUpdated: String = "camera_feeds_updated"
+    }
+
+    /**
+     * Godot's `CameraServer.FeedImage` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CameraServer.FeedImage.<NAME>`).
+     *
+     * Generated from Godot docs: CameraServer.FeedImage
+     */
+    @JvmInline
+    value class FeedImage(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The RGBA camera image.
+             *
+             * Generated from Godot docs: CameraServer.FEED_RGBA_IMAGE
+             */
+            val RGBA_IMAGE: FeedImage get() = FeedImage(0L)
+            /**
+             * The YCbCr (https://en.wikipedia.org/wiki/YCbCr) camera image.
+             *
+             * Generated from Godot docs: CameraServer.FEED_YCBCR_IMAGE
+             */
+            val YCBCR_IMAGE: FeedImage get() = FeedImage(0L)
+            /**
+             * The Y component camera image.
+             *
+             * Generated from Godot docs: CameraServer.FEED_Y_IMAGE
+             */
+            val Y_IMAGE: FeedImage get() = FeedImage(0L)
+            /**
+             * The CbCr component camera image.
+             *
+             * Generated from Godot docs: CameraServer.FEED_CBCR_IMAGE
+             */
+            val CBCR_IMAGE: FeedImage get() = FeedImage(1L)
+        }
     }
 
     @JvmStatic

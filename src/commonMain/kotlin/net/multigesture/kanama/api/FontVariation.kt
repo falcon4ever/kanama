@@ -46,27 +46,27 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
 
     var spacingGlyph: Int
         @JvmName("spacingGlyphProperty")
-        get() = getSpacing(0L)
+        get() = getSpacing(TextServer.SpacingType.GLYPH)
         @JvmName("setSpacingGlyphProperty")
-        set(value) = setSpacing(0L, value)
+        set(value) = setSpacing(TextServer.SpacingType.GLYPH, value)
 
     var spacingSpace: Int
         @JvmName("spacingSpaceProperty")
-        get() = getSpacing(1L)
+        get() = getSpacing(TextServer.SpacingType.SPACE)
         @JvmName("setSpacingSpaceProperty")
-        set(value) = setSpacing(1L, value)
+        set(value) = setSpacing(TextServer.SpacingType.SPACE, value)
 
     var spacingTop: Int
         @JvmName("spacingTopProperty")
-        get() = getSpacing(2L)
+        get() = getSpacing(TextServer.SpacingType.TOP)
         @JvmName("setSpacingTopProperty")
-        set(value) = setSpacing(2L, value)
+        set(value) = setSpacing(TextServer.SpacingType.TOP, value)
 
     var spacingBottom: Int
         @JvmName("spacingBottomProperty")
-        get() = getSpacing(3L)
+        get() = getSpacing(TextServer.SpacingType.BOTTOM)
         @JvmName("setSpacingBottomProperty")
-        set(value) = setSpacing(3L, value)
+        set(value) = setSpacing(TextServer.SpacingType.BOTTOM, value)
 
     var baselineOffset: Double
         @JvmName("baselineOffsetProperty")
@@ -229,9 +229,9 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: FontVariation.set_spacing
      */
-    fun setSpacing(spacing: Long, value: Int) {
+    fun setSpacing(spacing: TextServer.SpacingType, value: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndIntArgs(setSpacingBind, segment, spacing, value)
+        ObjectCalls.ptrcallWithLongAndIntArgs(setSpacingBind, segment, spacing.value, value)
     }
 
     /**

@@ -35,7 +35,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setLayerMaskProperty")
         set(value) = setLayerMask(value)
 
-    var castShadow: Long
+    var castShadow: GeometryInstance3D.ShadowCastingSetting
         @JvmName("castShadowProperty")
         get() = getCastShadowsSetting()
         @JvmName("setCastShadowProperty")
@@ -65,7 +65,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setVisibilityRangeEndMarginProperty")
         set(value) = setVisibilityRangeEndMargin(value)
 
-    var visibilityRangeFadeMode: Long
+    var visibilityRangeFadeMode: GeometryInstance3D.VisibilityRangeFadeMode
         @JvmName("visibilityRangeFadeModeProperty")
         get() = getVisibilityRangeFadeMode()
         @JvmName("setVisibilityRangeFadeModeProperty")
@@ -103,12 +103,12 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getLayerMaskBind, segment)
     }
 
-    fun setCastShadowsSetting(shadowCastingSetting: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting)
+    fun setCastShadowsSetting(shadowCastingSetting: GeometryInstance3D.ShadowCastingSetting) {
+        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting.value)
     }
 
-    fun getCastShadowsSetting(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment)
+    fun getCastShadowsSetting(): GeometryInstance3D.ShadowCastingSetting {
+        return GeometryInstance3D.ShadowCastingSetting(ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment))
     }
 
     fun setVisibilityRangeEndMargin(distance: Double) {
@@ -143,12 +143,12 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginBind, segment)
     }
 
-    fun setVisibilityRangeFadeMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode)
+    fun setVisibilityRangeFadeMode(mode: GeometryInstance3D.VisibilityRangeFadeMode) {
+        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode.value)
     }
 
-    fun getVisibilityRangeFadeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment)
+    fun getVisibilityRangeFadeMode(): GeometryInstance3D.VisibilityRangeFadeMode {
+        return GeometryInstance3D.VisibilityRangeFadeMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment))
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -131,25 +132,25 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         @JvmName("setLocalCoordsProperty")
         set(value) = setUseLocalCoordinates(value)
 
-    var drawOrder: Long
+    var drawOrder: GPUParticles3D.DrawOrder
         @JvmName("drawOrderProperty")
         get() = getDrawOrder()
         @JvmName("setDrawOrderProperty")
         set(value) = setDrawOrder(value)
 
-    var transformAlign: Long
+    var transformAlign: GPUParticles3D.TransformAlign
         @JvmName("transformAlignProperty")
         get() = getTransformAlign()
         @JvmName("setTransformAlignProperty")
         set(value) = setTransformAlign(value)
 
-    var transformAlignAxis: Long
+    var transformAlignAxis: RenderingServer.ParticlesTransformAlignAxis
         @JvmName("transformAlignAxisProperty")
         get() = getTransformAlignAxis()
         @JvmName("setTransformAlignAxisProperty")
         set(value) = setTransformAlignAxis(value)
 
-    var transformAlignChannelFilter: Long
+    var transformAlignChannelFilter: RenderingServer.ParticlesTransformAlignCustomSrc
         @JvmName("transformAlignChannelFilterProperty")
         get() = getTransformAlignChannelFilter()
         @JvmName("setTransformAlignChannelFilterProperty")
@@ -368,8 +369,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * The base diameter for particle collision in meters. If particles appear to sink into the ground
      * when colliding, increase this value. If particles appear to float when colliding, decrease this
      * value. Only effective if `ParticleProcessMaterial.collision_mode` is
-     * `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
+     * `ParticleProcessMaterial.CollisionMode.RIGID` or
+     * `ParticleProcessMaterial.CollisionMode.HIDE_ON_CONTACT`. Note: Particles always have a spherical
      * collision shape.
      *
      * Generated from Godot docs: GPUParticles3D.set_collision_base_size
@@ -548,8 +549,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * The base diameter for particle collision in meters. If particles appear to sink into the ground
      * when colliding, increase this value. If particles appear to float when colliding, decrease this
      * value. Only effective if `ParticleProcessMaterial.collision_mode` is
-     * `ParticleProcessMaterial.COLLISION_RIGID` or
-     * `ParticleProcessMaterial.COLLISION_HIDE_ON_CONTACT`. Note: Particles always have a spherical
+     * `ParticleProcessMaterial.CollisionMode.RIGID` or
+     * `ParticleProcessMaterial.CollisionMode.HIDE_ON_CONTACT`. Note: Particles always have a spherical
      * collision shape.
      *
      * Generated from Godot docs: GPUParticles3D.get_collision_base_size
@@ -610,25 +611,25 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     /**
-     * Particle draw order. Note: `DRAW_ORDER_INDEX` is the only option that supports motion vectors
-     * for effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
+     * Particle draw order. Note: `DrawOrder.INDEX` is the only option that supports motion vectors for
+     * effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
      * ghosting artifacts.
      *
      * Generated from Godot docs: GPUParticles3D.set_draw_order
      */
-    fun setDrawOrder(order: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order)
+    fun setDrawOrder(order: GPUParticles3D.DrawOrder) {
+        ObjectCalls.ptrcallWithLongArg(setDrawOrderBind, segment, order.value)
     }
 
     /**
-     * Particle draw order. Note: `DRAW_ORDER_INDEX` is the only option that supports motion vectors
-     * for effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
+     * Particle draw order. Note: `DrawOrder.INDEX` is the only option that supports motion vectors for
+     * effects like TAA. It is suggested to use this draw order if the particles are opaque to fix
      * ghosting artifacts.
      *
      * Generated from Godot docs: GPUParticles3D.get_draw_order
      */
-    fun getDrawOrder(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment)
+    fun getDrawOrder(): GPUParticles3D.DrawOrder {
+        return GPUParticles3D.DrawOrder(ObjectCalls.ptrcallNoArgsRetLong(getDrawOrderBind, segment))
     }
 
     /**
@@ -785,8 +786,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: GPUParticles3D.set_transform_align
      */
-    fun setTransformAlign(align: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTransformAlignBind, segment, align)
+    fun setTransformAlign(align: GPUParticles3D.TransformAlign) {
+        ObjectCalls.ptrcallWithLongArg(setTransformAlignBind, segment, align.value)
     }
 
     /**
@@ -794,8 +795,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: GPUParticles3D.get_transform_align
      */
-    fun getTransformAlign(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignBind, segment)
+    fun getTransformAlign(): GPUParticles3D.TransformAlign {
+        return GPUParticles3D.TransformAlign(ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignBind, segment))
     }
 
     /**
@@ -804,8 +805,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: GPUParticles3D.set_transform_align_channel_filter
      */
-    fun setTransformAlignChannelFilter(channelFilter: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTransformAlignChannelFilterBind, segment, channelFilter)
+    fun setTransformAlignChannelFilter(channelFilter: RenderingServer.ParticlesTransformAlignCustomSrc) {
+        ObjectCalls.ptrcallWithLongArg(setTransformAlignChannelFilterBind, segment, channelFilter.value)
     }
 
     /**
@@ -814,8 +815,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: GPUParticles3D.get_transform_align_channel_filter
      */
-    fun getTransformAlignChannelFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignChannelFilterBind, segment)
+    fun getTransformAlignChannelFilter(): RenderingServer.ParticlesTransformAlignCustomSrc {
+        return RenderingServer.ParticlesTransformAlignCustomSrc(ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignChannelFilterBind, segment))
     }
 
     /**
@@ -824,8 +825,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: GPUParticles3D.set_transform_align_axis
      */
-    fun setTransformAlignAxis(align: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTransformAlignAxisBind, segment, align)
+    fun setTransformAlignAxis(align: RenderingServer.ParticlesTransformAlignAxis) {
+        ObjectCalls.ptrcallWithLongArg(setTransformAlignAxisBind, segment, align.value)
     }
 
     /**
@@ -834,8 +835,8 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      *
      * Generated from Godot docs: GPUParticles3D.get_transform_align_axis
      */
-    fun getTransformAlignAxis(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignAxisBind, segment)
+    fun getTransformAlignAxis(): RenderingServer.ParticlesTransformAlignAxis {
+        return RenderingServer.ParticlesTransformAlignAxis(ObjectCalls.ptrcallNoArgsRetLong(getTransformAlignAxisBind, segment))
     }
 
     /**
@@ -898,22 +899,131 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         const val finished: String = "finished"
     }
 
+    /**
+     * Godot's `GPUParticles3D.DrawOrder` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GPUParticles3D.DrawOrder.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles3D.DrawOrder
+     */
+    @JvmInline
+    value class DrawOrder(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Particles are drawn in the order emitted.
+             *
+             * Generated from Godot docs: GPUParticles3D.DRAW_ORDER_INDEX
+             */
+            val INDEX: DrawOrder get() = DrawOrder(0L)
+            /**
+             * Particles are drawn in order of remaining lifetime. In other words, the particle with the
+             * highest lifetime is drawn at the front.
+             *
+             * Generated from Godot docs: GPUParticles3D.DRAW_ORDER_LIFETIME
+             */
+            val LIFETIME: DrawOrder get() = DrawOrder(1L)
+            /**
+             * Particles are drawn in reverse order of remaining lifetime. In other words, the particle with
+             * the lowest lifetime is drawn at the front.
+             *
+             * Generated from Godot docs: GPUParticles3D.DRAW_ORDER_REVERSE_LIFETIME
+             */
+            val REVERSE_LIFETIME: DrawOrder get() = DrawOrder(2L)
+            /**
+             * Particles are drawn in order of depth.
+             *
+             * Generated from Godot docs: GPUParticles3D.DRAW_ORDER_VIEW_DEPTH
+             */
+            val VIEW_DEPTH: DrawOrder get() = DrawOrder(3L)
+        }
+    }
+
+    /**
+     * Godot's `GPUParticles3D.EmitFlags` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GPUParticles3D.EmitFlags.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles3D.EmitFlags
+     */
+    @JvmInline
+    value class EmitFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Particle starts at the specified position.
+             *
+             * Generated from Godot docs: GPUParticles3D.EMIT_FLAG_POSITION
+             */
+            val POSITION: EmitFlags get() = EmitFlags(1L)
+            /**
+             * Particle starts with specified rotation and scale.
+             *
+             * Generated from Godot docs: GPUParticles3D.EMIT_FLAG_ROTATION_SCALE
+             */
+            val ROTATION_SCALE: EmitFlags get() = EmitFlags(2L)
+            /**
+             * Particle starts with the specified velocity vector, which defines the emission direction and
+             * speed.
+             *
+             * Generated from Godot docs: GPUParticles3D.EMIT_FLAG_VELOCITY
+             */
+            val VELOCITY: EmitFlags get() = EmitFlags(4L)
+            /**
+             * Particle starts with specified color.
+             *
+             * Generated from Godot docs: GPUParticles3D.EMIT_FLAG_COLOR
+             */
+            val COLOR: EmitFlags get() = EmitFlags(8L)
+            /**
+             * Particle starts with specified `CUSTOM` data.
+             *
+             * Generated from Godot docs: GPUParticles3D.EMIT_FLAG_CUSTOM
+             */
+            val CUSTOM: EmitFlags get() = EmitFlags(16L)
+        }
+    }
+
+    /**
+     * Godot's `GPUParticles3D.TransformAlign` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GPUParticles3D.TransformAlign.<NAME>`).
+     *
+     * Generated from Godot docs: GPUParticles3D.TransformAlign
+     */
+    @JvmInline
+    value class TransformAlign(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not align particle transforms relative to the camera or velocity.
+             *
+             * Generated from Godot docs: GPUParticles3D.TRANSFORM_ALIGN_DISABLED
+             */
+            val DISABLED: TransformAlign get() = TransformAlign(0L)
+            /**
+             * Align each particle's Z axis to face the camera.
+             *
+             * Generated from Godot docs: GPUParticles3D.TRANSFORM_ALIGN_Z_BILLBOARD
+             */
+            val Z_BILLBOARD: TransformAlign get() = TransformAlign(1L)
+            /**
+             * Align each particle's Y axis to the velocity vector.
+             *
+             * Generated from Godot docs: GPUParticles3D.TRANSFORM_ALIGN_Y_TO_VELOCITY
+             */
+            val Y_TO_VELOCITY: TransformAlign get() = TransformAlign(2L)
+            /**
+             * Align each particle's Z axis to face the camera and Y axis to the velocity vector.
+             *
+             * Generated from Godot docs: GPUParticles3D.TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY
+             */
+            val Z_BILLBOARD_Y_TO_VELOCITY: TransformAlign get() = TransformAlign(3L)
+            /**
+             * Align each particle's Z axis to face the camera, while preserving a given axis (X or Y).
+             *
+             * Generated from Godot docs: GPUParticles3D.TRANSFORM_ALIGN_LOCAL_BILLBOARD
+             */
+            val LOCAL_BILLBOARD: TransformAlign get() = TransformAlign(4L)
+        }
+    }
+
     companion object {
         const val MAX_DRAW_PASSES: Long = 4L
-        const val DRAW_ORDER_INDEX: Long = 0L
-        const val DRAW_ORDER_LIFETIME: Long = 1L
-        const val DRAW_ORDER_REVERSE_LIFETIME: Long = 2L
-        const val DRAW_ORDER_VIEW_DEPTH: Long = 3L
-        const val EMIT_FLAG_POSITION: Long = 1L
-        const val EMIT_FLAG_ROTATION_SCALE: Long = 2L
-        const val EMIT_FLAG_VELOCITY: Long = 4L
-        const val EMIT_FLAG_COLOR: Long = 8L
-        const val EMIT_FLAG_CUSTOM: Long = 16L
-        const val TRANSFORM_ALIGN_DISABLED: Long = 0L
-        const val TRANSFORM_ALIGN_Z_BILLBOARD: Long = 1L
-        const val TRANSFORM_ALIGN_Y_TO_VELOCITY: Long = 2L
-        const val TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY: Long = 3L
-        const val TRANSFORM_ALIGN_LOCAL_BILLBOARD: Long = 4L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GPUParticles3D? =

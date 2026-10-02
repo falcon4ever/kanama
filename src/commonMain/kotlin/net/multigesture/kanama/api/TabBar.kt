@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -20,7 +21,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         @JvmName("setCurrentTabProperty")
         set(value) = setCurrentTab(value)
 
-    var tabAlignment: Long
+    var tabAlignment: TabBar.AlignmentMode
         @JvmName("tabAlignmentProperty")
         get() = getTabAlignment()
         @JvmName("setTabAlignmentProperty")
@@ -38,7 +39,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         @JvmName("setCloseWithMiddleMouseProperty")
         set(value) = setCloseWithMiddleMouse(value)
 
-    var tabCloseDisplayPolicy: Long
+    var tabCloseDisplayPolicy: TabBar.CloseButtonDisplayPolicy
         @JvmName("tabCloseDisplayPolicyProperty")
         get() = getTabCloseDisplayPolicy()
         @JvmName("setTabCloseDisplayPolicyProperty")
@@ -208,8 +209,8 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.set_tab_text_direction
      */
-    fun setTabTextDirection(tabIdx: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTabTextDirectionBind, segment, tabIdx, direction)
+    fun setTabTextDirection(tabIdx: Int, direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setTabTextDirectionBind, segment, tabIdx, direction.value)
     }
 
     /**
@@ -217,8 +218,8 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.get_tab_text_direction
      */
-    fun getTabTextDirection(tabIdx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getTabTextDirectionBind, segment, tabIdx)
+    fun getTabTextDirection(tabIdx: Int): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getTabTextDirectionBind, segment, tabIdx))
     }
 
     /**
@@ -389,8 +390,8 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.set_tab_alignment
      */
-    fun setTabAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment)
+    fun setTabAlignment(alignment: TabBar.AlignmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setTabAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -398,8 +399,8 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.get_tab_alignment
      */
-    fun getTabAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment)
+    fun getTabAlignment(): TabBar.AlignmentMode {
+        return TabBar.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getTabAlignmentBind, segment))
     }
 
     /**
@@ -491,8 +492,8 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.set_tab_close_display_policy
      */
-    fun setTabCloseDisplayPolicy(policy: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTabCloseDisplayPolicyBind, segment, policy)
+    fun setTabCloseDisplayPolicy(policy: TabBar.CloseButtonDisplayPolicy) {
+        ObjectCalls.ptrcallWithLongArg(setTabCloseDisplayPolicyBind, segment, policy.value)
     }
 
     /**
@@ -500,8 +501,8 @@ class TabBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TabBar.get_tab_close_display_policy
      */
-    fun getTabCloseDisplayPolicy(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTabCloseDisplayPolicyBind, segment)
+    fun getTabCloseDisplayPolicy(): TabBar.CloseButtonDisplayPolicy {
+        return TabBar.CloseButtonDisplayPolicy(ObjectCalls.ptrcallNoArgsRetLong(getTabCloseDisplayPolicyBind, segment))
     }
 
     /**
@@ -678,16 +679,79 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         const val activeTabRearranged: String = "active_tab_rearranged"
     }
 
-    companion object {
-        const val ALIGNMENT_LEFT: Long = 0L
-        const val ALIGNMENT_CENTER: Long = 1L
-        const val ALIGNMENT_RIGHT: Long = 2L
-        const val ALIGNMENT_MAX: Long = 3L
-        const val CLOSE_BUTTON_SHOW_NEVER: Long = 0L
-        const val CLOSE_BUTTON_SHOW_ACTIVE_ONLY: Long = 1L
-        const val CLOSE_BUTTON_SHOW_ALWAYS: Long = 2L
-        const val CLOSE_BUTTON_MAX: Long = 3L
+    /**
+     * Godot's `TabBar.AlignmentMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TabBar.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: TabBar.AlignmentMode
+     */
+    @JvmInline
+    value class AlignmentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Aligns tabs to the left.
+             *
+             * Generated from Godot docs: TabBar.ALIGNMENT_LEFT
+             */
+            val LEFT: AlignmentMode get() = AlignmentMode(0L)
+            /**
+             * Aligns tabs in the middle.
+             *
+             * Generated from Godot docs: TabBar.ALIGNMENT_CENTER
+             */
+            val CENTER: AlignmentMode get() = AlignmentMode(1L)
+            /**
+             * Aligns tabs to the right.
+             *
+             * Generated from Godot docs: TabBar.ALIGNMENT_RIGHT
+             */
+            val RIGHT: AlignmentMode get() = AlignmentMode(2L)
+            /**
+             * Represents the size of the `AlignmentMode` enum.
+             *
+             * Generated from Godot docs: TabBar.ALIGNMENT_MAX
+             */
+            val MAX: AlignmentMode get() = AlignmentMode(3L)
+        }
+    }
 
+    /**
+     * Godot's `TabBar.CloseButtonDisplayPolicy` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`TabBar.CloseButtonDisplayPolicy.<NAME>`).
+     *
+     * Generated from Godot docs: TabBar.CloseButtonDisplayPolicy
+     */
+    @JvmInline
+    value class CloseButtonDisplayPolicy(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Never show the close buttons.
+             *
+             * Generated from Godot docs: TabBar.CLOSE_BUTTON_SHOW_NEVER
+             */
+            val SHOW_NEVER: CloseButtonDisplayPolicy get() = CloseButtonDisplayPolicy(0L)
+            /**
+             * Only show the close button on the currently active tab.
+             *
+             * Generated from Godot docs: TabBar.CLOSE_BUTTON_SHOW_ACTIVE_ONLY
+             */
+            val SHOW_ACTIVE_ONLY: CloseButtonDisplayPolicy get() = CloseButtonDisplayPolicy(1L)
+            /**
+             * Show the close button on all tabs.
+             *
+             * Generated from Godot docs: TabBar.CLOSE_BUTTON_SHOW_ALWAYS
+             */
+            val SHOW_ALWAYS: CloseButtonDisplayPolicy get() = CloseButtonDisplayPolicy(2L)
+            /**
+             * Represents the size of the `CloseButtonDisplayPolicy` enum.
+             *
+             * Generated from Godot docs: TabBar.CLOSE_BUTTON_MAX
+             */
+            val MAX: CloseButtonDisplayPolicy get() = CloseButtonDisplayPolicy(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TabBar? =
             wrap(handle.segment)

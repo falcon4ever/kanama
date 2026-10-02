@@ -48,7 +48,7 @@ class LifetimeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, 
       StandardMaterial3D.create().use { live ->
         runCatching { live.setNextPass(closedMaterial) }.exceptionOrNull()
       }
-    val closedImage = Image.create(2, 2, false, Image.FORMAT_RGBA8)!!
+    val closedImage = Image.create(2, 2, false, Image.Format.RGBA8)!!
     closedImage.close()
     val closedGenerated = runCatching { closedImage.getWidth() }.exceptionOrNull()
 

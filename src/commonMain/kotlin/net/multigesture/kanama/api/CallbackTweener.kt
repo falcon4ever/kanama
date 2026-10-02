@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
  * Calls the specified method after optional delay.
@@ -15,14 +16,14 @@ class CallbackTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: CallbackTweener.set_delay
      */
-    fun setDelay(delay: Double): CallbackTweener? {
+    fun setDelay(delay: Double): CallbackTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return CallbackTweener.wrap(ret)
+        return requireGodotReturn(CallbackTweener.wrap(ret), "CallbackTweener.set_delay")
     }
 
     companion object {

@@ -18,10 +18,10 @@ internal actual constructor(
     internal val owner: GodotObject,
     actual val name: String,
 ) {
-    actual fun connect(target: GodotObject, method: String): Long =
-        connect(target, method, GodotObject.CONNECT_DEFAULT)
+    actual fun connect(target: GodotObject, method: String): GodotError =
+        connect(target, method, GodotObject.ConnectFlags(0L))
 
-    actual fun connect(target: GodotObject, method: String, flags: Long): Long =
+    actual fun connect(target: GodotObject, method: String, flags: GodotObject.ConnectFlags): GodotError =
         owner.connect(name, target, method, flags)
 
     // Object.disconnect(signal, Callable(target, method)) — symmetric to connect(target, method).
@@ -38,33 +38,33 @@ internal actual constructor(
         target: GodotObject,
         argumentCount: Int,
         callback: (List<Any?>) -> Unit,
-    ): SignalConnection = connect(target, argumentCount, GodotObject.CONNECT_DEFAULT, callback)
+    ): SignalConnection = connect(target, argumentCount, GodotObject.ConnectFlags(0L), callback)
 
     actual fun connect(
         target: GodotObject,
         argumentCount: Int,
-        flags: Long,
+        flags: GodotObject.ConnectFlags,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
         val callbackId = IosCallableRegistry.register(callback)
         // Pass the receiver (target) so the Callable is bound to its ObjectID and Godot auto-disconnects
         // it when the receiver is freed. Previously target was ignored, leaving an object-less Callable
         // that survived the receiver's free and fired into freed memory on later emissions.
-        val result = IosGodot.objectConnectCallable(owner.segment.address(), name, target.segment.address(), callbackId, flags)
+        val result = IosGodot.objectConnectCallable(owner.segment.address(), name, target.segment.address(), callbackId, flags.value)
         if (result != 0L) {
             // connect failed; Godot freed the callable (which released the entry),
             // but release defensively in case it never reached the trampoline path.
             IosCallableRegistry.release(callbackId)
         }
-        return SignalConnection(result, owner, name, callbackId, target)
+        return SignalConnection(GodotError(result), owner, name, callbackId, target)
     }
 
     actual fun connectObject(target: GodotObject, callback: (GodotObject) -> Unit): SignalConnection =
-        connectObject(target, GodotObject.CONNECT_DEFAULT, callback)
+        connectObject(target, GodotObject.ConnectFlags(0L), callback)
 
     actual fun connectObject(
         target: GodotObject,
-        flags: Long,
+        flags: GodotObject.ConnectFlags,
         callback: (GodotObject) -> Unit,
     ): SignalConnection =
         connect(target, argumentCount = 1, flags = flags) { args ->
@@ -78,7 +78,7 @@ internal actual constructor(
         // fires, then suspend until then. CONNECT_ONE_SHOT makes Godot drop the
         // connection after it fires, which releases the registry entry via free_func.
         val deferred = CompletableDeferred<List<Any?>>()
-        connect(target, argumentCount, GodotObject.CONNECT_ONE_SHOT) { args ->
+        connect(target, argumentCount, GodotObject.ConnectFlags.ONE_SHOT) { args ->
             deferred.complete(args)
         }
         return deferred.await()
@@ -91,7 +91,7 @@ internal actual constructor(
 
 actual class SignalConnection internal constructor(
     // Real Object.connect return Error (0 == OK) from the lambda-connect path.
-    actual val error: Long = 0L,
+    actual val error: GodotError = GodotError.OK,
     private val owner: GodotObject? = null,
     private val signalName: String = "",
     private val callbackId: Long = 0L,
@@ -107,7 +107,7 @@ actual class SignalConnection internal constructor(
     // close() was already called. (A CONNECT_ONE_SHOT connection auto-disconnects when it fires;
     // calling close() afterwards is a benign redundant disconnect.) Phase 4.1b.
     actual override fun close() {
-        if (closed || error != 0L || owner == null || callbackId == 0L) {
+        if (closed || error != GodotError.OK || owner == null || callbackId == 0L) {
             return
         }
         closed = true

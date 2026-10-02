@@ -4,6 +4,7 @@ import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
@@ -541,8 +542,8 @@ open class PhysicsDirectBodyState2D(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: PhysicsDirectBodyState2D.get_space_state
      */
-    fun getSpaceState(): PhysicsDirectSpaceState2D? {
-        return PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpaceStateBind, segment))
+    fun getSpaceState(): PhysicsDirectSpaceState2D {
+        return requireGodotReturn(PhysicsDirectSpaceState2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpaceStateBind, segment)), "PhysicsDirectBodyState2D.get_space_state")
     }
 
     companion object {

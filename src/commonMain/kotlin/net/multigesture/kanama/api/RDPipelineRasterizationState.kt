@@ -29,13 +29,13 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setWireframeProperty")
         set(value) = setWireframe(value)
 
-    var cullMode: Long
+    var cullMode: RenderingDevice.PolygonCullMode
         @JvmName("cullModeProperty")
         get() = getCullMode()
         @JvmName("setCullModeProperty")
         set(value) = setCullMode(value)
 
-    var frontFace: Long
+    var frontFace: RenderingDevice.PolygonFrontFace
         @JvmName("frontFaceProperty")
         get() = getFrontFace()
         @JvmName("setFrontFaceProperty")
@@ -145,9 +145,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineRasterizationState.set_cull_mode
      */
-    fun setCullMode(pMember: Long) {
+    fun setCullMode(pMember: RenderingDevice.PolygonCullMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, pMember.value)
     }
 
     /**
@@ -156,9 +156,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineRasterizationState.get_cull_mode
      */
-    fun getCullMode(): Long {
+    fun getCullMode(): RenderingDevice.PolygonCullMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment)
+        return RenderingDevice.PolygonCullMode(ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment))
     }
 
     /**
@@ -166,9 +166,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineRasterizationState.set_front_face
      */
-    fun setFrontFace(pMember: Long) {
+    fun setFrontFace(pMember: RenderingDevice.PolygonFrontFace) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFrontFaceBind, segment, pMember.value)
     }
 
     /**
@@ -176,9 +176,9 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineRasterizationState.get_front_face
      */
-    fun getFrontFace(): Long {
+    fun getFrontFace(): RenderingDevice.PolygonFrontFace {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, segment)
+        return RenderingDevice.PolygonFrontFace(ObjectCalls.ptrcallNoArgsRetLong(getFrontFaceBind, segment))
     }
 
     /**

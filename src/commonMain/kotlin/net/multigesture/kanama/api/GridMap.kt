@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -81,7 +82,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setCollisionPriorityProperty")
         set(value) = setCollisionPriority(value)
 
-    var collisionVisibilityMode: Long
+    var collisionVisibilityMode: GridMap.DebugVisibilityMode
         @JvmName("collisionVisibilityModeProperty")
         get() = getCollisionVisibilityMode()
         @JvmName("setCollisionVisibilityModeProperty")
@@ -133,12 +134,12 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
     }
 
-    fun setCollisionVisibilityMode(visibilityMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode)
+    fun setCollisionVisibilityMode(visibilityMode: GridMap.DebugVisibilityMode) {
+        ObjectCalls.ptrcallWithLongArg(setCollisionVisibilityModeBind, segment, visibilityMode.value)
     }
 
-    fun getCollisionVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment)
+    fun getCollisionVisibilityMode(): GridMap.DebugVisibilityMode {
+        return GridMap.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getCollisionVisibilityModeBind, segment))
     }
 
     fun setPhysicsMaterial(material: PhysicsMaterial?) {
@@ -322,11 +323,17 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         const val changed: String = "changed"
     }
 
+    @JvmInline
+    value class DebugVisibilityMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DEFAULT: DebugVisibilityMode get() = DebugVisibilityMode(0L)
+            val FORCE_SHOW: DebugVisibilityMode get() = DebugVisibilityMode(1L)
+            val FORCE_HIDE: DebugVisibilityMode get() = DebugVisibilityMode(2L)
+        }
+    }
+
     companion object {
         const val INVALID_CELL_ITEM: Long = -1L
-        const val DEBUG_VISIBILITY_MODE_DEFAULT: Long = 0L
-        const val DEBUG_VISIBILITY_MODE_FORCE_SHOW: Long = 1L
-        const val DEBUG_VISIBILITY_MODE_FORCE_HIDE: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GridMap? =

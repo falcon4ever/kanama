@@ -24,7 +24,7 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
         @JvmName("setFontItalicProperty")
         set(value) = setFontItalic(value)
 
-    var antialiasing: Long
+    var antialiasing: TextServer.FontAntialiasing
         @JvmName("antialiasingProperty")
         get() = getAntialiasing()
         @JvmName("setAntialiasingProperty")
@@ -60,13 +60,13 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
         @JvmName("setModulateColorGlyphsProperty")
         set(value) = setModulateColorGlyphs(value)
 
-    var hinting: Long
+    var hinting: TextServer.Hinting
         @JvmName("hintingProperty")
         get() = getHinting()
         @JvmName("setHintingProperty")
         set(value) = setHinting(value)
 
-    var subpixelPositioning: Long
+    var subpixelPositioning: TextServer.SubpixelPositioning
         @JvmName("subpixelPositioningProperty")
         get() = getSubpixelPositioning()
         @JvmName("setSubpixelPositioningProperty")
@@ -107,9 +107,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: SystemFont.set_antialiasing
      */
-    fun setAntialiasing(antialiasing: Long) {
+    fun setAntialiasing(antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing)
+        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing.value)
     }
 
     /**
@@ -117,9 +117,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: SystemFont.get_antialiasing
      */
-    fun getAntialiasing(): Long {
+    fun getAntialiasing(): TextServer.FontAntialiasing {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment)
+        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment))
     }
 
     /**
@@ -231,9 +231,9 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: SystemFont.set_hinting
      */
-    fun setHinting(hinting: Long) {
+    fun setHinting(hinting: TextServer.Hinting) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting)
+        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting.value)
     }
 
     /**
@@ -241,33 +241,33 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
      *
      * Generated from Godot docs: SystemFont.get_hinting
      */
-    fun getHinting(): Long {
+    fun getHinting(): TextServer.Hinting {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment)
+        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment))
     }
 
     /**
      * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
      * kerning for smaller font sizes, at the cost of memory usage and font rasterization speed. Use
-     * `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font size.
+     * `TextServer.SubpixelPositioning.AUTO` to automatically enable it based on the font size.
      *
      * Generated from Godot docs: SystemFont.set_subpixel_positioning
      */
-    fun setSubpixelPositioning(subpixelPositioning: Long) {
+    fun setSubpixelPositioning(subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning)
+        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning.value)
     }
 
     /**
      * Font glyph subpixel positioning mode. Subpixel positioning provides shaper text and better
      * kerning for smaller font sizes, at the cost of memory usage and font rasterization speed. Use
-     * `TextServer.SUBPIXEL_POSITIONING_AUTO` to automatically enable it based on the font size.
+     * `TextServer.SubpixelPositioning.AUTO` to automatically enable it based on the font size.
      *
      * Generated from Godot docs: SystemFont.get_subpixel_positioning
      */
-    fun getSubpixelPositioning(): Long {
+    fun getSubpixelPositioning(): TextServer.SubpixelPositioning {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment)
+        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment))
     }
 
     /**

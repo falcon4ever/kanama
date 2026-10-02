@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: BoxContainer
  */
 open class BoxContainer(handle: GodotHandle) : Container(handle) {
-    var alignment: Long
+    var alignment: BoxContainer.AlignmentMode
         @JvmName("alignmentProperty")
         get() = getAlignment()
         @JvmName("setAlignmentProperty")
@@ -34,23 +35,23 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: BoxContainer.set_alignment
      */
-    fun setAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment)
+    fun setAlignment(alignment: BoxContainer.AlignmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment.value)
     }
 
     /**
-     * The alignment of the container's children (must be one of `ALIGNMENT_BEGIN`, `ALIGNMENT_CENTER`,
-     * or `ALIGNMENT_END`).
+     * The alignment of the container's children (must be one of `AlignmentMode.BEGIN`,
+     * `AlignmentMode.CENTER`, or `AlignmentMode.END`).
      *
      * Generated from Godot docs: BoxContainer.get_alignment
      */
-    fun getAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment)
+    fun getAlignment(): BoxContainer.AlignmentMode {
+        return BoxContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment))
     }
 
     /**
@@ -73,11 +74,39 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
     }
 
-    companion object {
-        const val ALIGNMENT_BEGIN: Long = 0L
-        const val ALIGNMENT_CENTER: Long = 1L
-        const val ALIGNMENT_END: Long = 2L
+    /**
+     * Godot's `BoxContainer.AlignmentMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BoxContainer.AlignmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: BoxContainer.AlignmentMode
+     */
+    @JvmInline
+    value class AlignmentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The child controls will be arranged at the beginning of the container, i.e. top if orientation
+             * is vertical, left if orientation is horizontal (right for RTL layout).
+             *
+             * Generated from Godot docs: BoxContainer.ALIGNMENT_BEGIN
+             */
+            val BEGIN: AlignmentMode get() = AlignmentMode(0L)
+            /**
+             * The child controls will be centered in the container.
+             *
+             * Generated from Godot docs: BoxContainer.ALIGNMENT_CENTER
+             */
+            val CENTER: AlignmentMode get() = AlignmentMode(1L)
+            /**
+             * The child controls will be arranged at the end of the container, i.e. bottom if orientation is
+             * vertical, right if orientation is horizontal (left for RTL layout).
+             *
+             * Generated from Godot docs: BoxContainer.ALIGNMENT_END
+             */
+            val END: AlignmentMode get() = AlignmentMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BoxContainer? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,103 +18,6 @@ object AccessibilityServer {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("AccessibilityServer")
     }
-
-    const val ROLE_UNKNOWN: Long = 0L
-    const val ROLE_DEFAULT_BUTTON: Long = 1L
-    const val ROLE_AUDIO: Long = 2L
-    const val ROLE_VIDEO: Long = 3L
-    const val ROLE_STATIC_TEXT: Long = 4L
-    const val ROLE_CONTAINER: Long = 5L
-    const val ROLE_PANEL: Long = 6L
-    const val ROLE_BUTTON: Long = 7L
-    const val ROLE_LINK: Long = 8L
-    const val ROLE_CHECK_BOX: Long = 9L
-    const val ROLE_RADIO_BUTTON: Long = 10L
-    const val ROLE_CHECK_BUTTON: Long = 11L
-    const val ROLE_SCROLL_BAR: Long = 12L
-    const val ROLE_SCROLL_VIEW: Long = 13L
-    const val ROLE_SPLITTER: Long = 14L
-    const val ROLE_SLIDER: Long = 15L
-    const val ROLE_SPIN_BUTTON: Long = 16L
-    const val ROLE_PROGRESS_INDICATOR: Long = 17L
-    const val ROLE_TEXT_FIELD: Long = 18L
-    const val ROLE_MULTILINE_TEXT_FIELD: Long = 19L
-    const val ROLE_COLOR_PICKER: Long = 20L
-    const val ROLE_TABLE: Long = 21L
-    const val ROLE_CELL: Long = 22L
-    const val ROLE_ROW: Long = 23L
-    const val ROLE_ROW_GROUP: Long = 24L
-    const val ROLE_ROW_HEADER: Long = 25L
-    const val ROLE_COLUMN_HEADER: Long = 26L
-    const val ROLE_TREE: Long = 27L
-    const val ROLE_TREE_ITEM: Long = 28L
-    const val ROLE_LIST: Long = 29L
-    const val ROLE_LIST_ITEM: Long = 30L
-    const val ROLE_LIST_BOX: Long = 31L
-    const val ROLE_LIST_BOX_OPTION: Long = 32L
-    const val ROLE_TAB_BAR: Long = 33L
-    const val ROLE_TAB: Long = 34L
-    const val ROLE_TAB_PANEL: Long = 35L
-    const val ROLE_MENU_BAR: Long = 36L
-    const val ROLE_MENU: Long = 37L
-    const val ROLE_MENU_ITEM: Long = 38L
-    const val ROLE_MENU_ITEM_CHECK_BOX: Long = 39L
-    const val ROLE_MENU_ITEM_RADIO: Long = 40L
-    const val ROLE_IMAGE: Long = 41L
-    const val ROLE_WINDOW: Long = 42L
-    const val ROLE_TITLE_BAR: Long = 43L
-    const val ROLE_DIALOG: Long = 44L
-    const val ROLE_TOOLTIP: Long = 45L
-    const val ROLE_REGION: Long = 46L
-    const val ROLE_TEXT_RUN: Long = 47L
-    const val POPUP_MENU: Long = 0L
-    const val POPUP_LIST: Long = 1L
-    const val POPUP_TREE: Long = 2L
-    const val POPUP_DIALOG: Long = 3L
-    const val FLAG_HIDDEN: Long = 0L
-    const val FLAG_MULTISELECTABLE: Long = 1L
-    const val FLAG_REQUIRED: Long = 2L
-    const val FLAG_VISITED: Long = 3L
-    const val FLAG_BUSY: Long = 4L
-    const val FLAG_MODAL: Long = 5L
-    const val FLAG_TOUCH_PASSTHROUGH: Long = 6L
-    const val FLAG_READONLY: Long = 7L
-    const val FLAG_DISABLED: Long = 8L
-    const val FLAG_CLIPS_CHILDREN: Long = 9L
-    const val ACTION_CLICK: Long = 0L
-    const val ACTION_FOCUS: Long = 1L
-    const val ACTION_BLUR: Long = 2L
-    const val ACTION_COLLAPSE: Long = 3L
-    const val ACTION_EXPAND: Long = 4L
-    const val ACTION_DECREMENT: Long = 5L
-    const val ACTION_INCREMENT: Long = 6L
-    const val ACTION_HIDE_TOOLTIP: Long = 7L
-    const val ACTION_SHOW_TOOLTIP: Long = 8L
-    const val ACTION_SET_TEXT_SELECTION: Long = 9L
-    const val ACTION_REPLACE_SELECTED_TEXT: Long = 10L
-    const val ACTION_SCROLL_BACKWARD: Long = 11L
-    const val ACTION_SCROLL_DOWN: Long = 12L
-    const val ACTION_SCROLL_FORWARD: Long = 13L
-    const val ACTION_SCROLL_LEFT: Long = 14L
-    const val ACTION_SCROLL_RIGHT: Long = 15L
-    const val ACTION_SCROLL_UP: Long = 16L
-    const val ACTION_SCROLL_INTO_VIEW: Long = 17L
-    const val ACTION_SCROLL_TO_POINT: Long = 18L
-    const val ACTION_SET_SCROLL_OFFSET: Long = 19L
-    const val ACTION_SET_VALUE: Long = 20L
-    const val ACTION_SHOW_CONTEXT_MENU: Long = 21L
-    const val ACTION_CUSTOM: Long = 22L
-    const val LIVE_OFF: Long = 0L
-    const val LIVE_POLITE: Long = 1L
-    const val LIVE_ASSERTIVE: Long = 2L
-    const val SCROLL_UNIT_ITEM: Long = 0L
-    const val SCROLL_UNIT_PAGE: Long = 1L
-    const val SCROLL_HINT_TOP_LEFT: Long = 0L
-    const val SCROLL_HINT_BOTTOM_RIGHT: Long = 1L
-    const val SCROLL_HINT_TOP_EDGE: Long = 2L
-    const val SCROLL_HINT_BOTTOM_EDGE: Long = 3L
-    const val SCROLL_HINT_LEFT_EDGE: Long = 4L
-    const val SCROLL_HINT_RIGHT_EDGE: Long = 5L
 
     /**
      * Returns `true` if screen reader is support by this implementation.
@@ -133,8 +37,8 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.create_element
      */
     @JvmStatic
-    fun createElement(windowId: Int, role: Long): RID {
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetRID(createElementBind, singleton, windowId, role)
+    fun createElement(windowId: Int, role: AccessibilityServer.AccessibilityRole): RID {
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetRID(createElementBind, singleton, windowId, role.value)
     }
 
     /**
@@ -146,8 +50,8 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.create_sub_element
      */
     @JvmStatic
-    fun createSubElement(parentRid: RID, role: Long, insertPos: Int = -1): RID {
-        return ObjectCalls.ptrcallWithRIDLongIntArgsRetRID(createSubElementBind, singleton, parentRid, role, insertPos)
+    fun createSubElement(parentRid: RID, role: AccessibilityServer.AccessibilityRole, insertPos: Int = -1): RID {
+        return ObjectCalls.ptrcallWithRIDLongIntArgsRetRID(createSubElementBind, singleton, parentRid, role.value, insertPos)
     }
 
     /**
@@ -254,8 +158,8 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.update_set_role
      */
     @JvmStatic
-    fun updateSetRole(id: RID, role: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetRoleBind, singleton, id, role)
+    fun updateSetRole(id: RID, role: AccessibilityServer.AccessibilityRole) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetRoleBind, singleton, id, role.value)
     }
 
     /**
@@ -486,8 +390,8 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.update_set_live
      */
     @JvmStatic
-    fun updateSetLive(id: RID, live: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetLiveBind, singleton, id, live)
+    fun updateSetLive(id: RID, live: AccessibilityServer.AccessibilityLiveMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetLiveBind, singleton, id, live.value)
     }
 
     /**
@@ -498,13 +402,13 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.update_add_action
      */
     @JvmStatic
-    fun updateAddAction(id: RID, action: Long, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(updateAddActionBind, singleton, id, action, callable.target.segment, callable.method)
+    fun updateAddAction(id: RID, action: AccessibilityServer.AccessibilityAction, callable: GodotCallable) {
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(updateAddActionBind, singleton, id, action.value, callable.target.segment, callable.method)
     }
 
     /**
      * Adds support for a custom accessibility action. `action_id` is passed as an argument to the
-     * callback of `ACTION_CUSTOM` action.
+     * callback of `AccessibilityAction.CUSTOM` action.
      *
      * Generated from Godot docs: AccessibilityServer.update_add_custom_action
      */
@@ -629,8 +533,8 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.update_set_popup_type
      */
     @JvmStatic
-    fun updateSetPopupType(id: RID, popup: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetPopupTypeBind, singleton, id, popup)
+    fun updateSetPopupType(id: RID, popup: AccessibilityServer.AccessibilityPopupType) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetPopupTypeBind, singleton, id, popup.value)
     }
 
     /**
@@ -739,8 +643,8 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.update_set_text_align
      */
     @JvmStatic
-    fun updateSetTextAlign(id: RID, align: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetTextAlignBind, singleton, id, align)
+    fun updateSetTextAlign(id: RID, align: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetTextAlignBind, singleton, id, align.value)
     }
 
     /**
@@ -761,8 +665,8 @@ object AccessibilityServer {
      * Generated from Godot docs: AccessibilityServer.update_set_flag
      */
     @JvmStatic
-    fun updateSetFlag(id: RID, flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(updateSetFlagBind, singleton, id, flag, value)
+    fun updateSetFlag(id: RID, flag: AccessibilityServer.AccessibilityFlags, value: Boolean) {
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(updateSetFlagBind, singleton, id, flag.value, value)
     }
 
     /**
@@ -883,6 +787,682 @@ object AccessibilityServer {
     @JvmStatic
     fun updateSetForegroundColor(id: RID, color: Color) {
         ObjectCalls.ptrcallWithRIDAndColorArg(updateSetForegroundColorBind, singleton, id, color)
+    }
+
+    /**
+     * Godot's `AccessibilityServer.AccessibilityRole` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityRole.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityRole
+     */
+    @JvmInline
+    value class AccessibilityRole(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Unknown or custom role.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_UNKNOWN
+             */
+            val UNKNOWN: AccessibilityRole get() = AccessibilityRole(0L)
+            /**
+             * Default dialog button element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_DEFAULT_BUTTON
+             */
+            val DEFAULT_BUTTON: AccessibilityRole get() = AccessibilityRole(1L)
+            /**
+             * Audio player element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_AUDIO
+             */
+            val AUDIO: AccessibilityRole get() = AccessibilityRole(2L)
+            /**
+             * Video player element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_VIDEO
+             */
+            val VIDEO: AccessibilityRole get() = AccessibilityRole(3L)
+            /**
+             * Non-editable text label.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_STATIC_TEXT
+             */
+            val STATIC_TEXT: AccessibilityRole get() = AccessibilityRole(4L)
+            /**
+             * Container element. Elements with this role are used for internal structure and ignored by screen
+             * readers.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_CONTAINER
+             */
+            val CONTAINER: AccessibilityRole get() = AccessibilityRole(5L)
+            /**
+             * Panel container element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_PANEL
+             */
+            val PANEL: AccessibilityRole get() = AccessibilityRole(6L)
+            /**
+             * Button element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_BUTTON
+             */
+            val BUTTON: AccessibilityRole get() = AccessibilityRole(7L)
+            /**
+             * Link element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_LINK
+             */
+            val LINK: AccessibilityRole get() = AccessibilityRole(8L)
+            /**
+             * Check box element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_CHECK_BOX
+             */
+            val CHECK_BOX: AccessibilityRole get() = AccessibilityRole(9L)
+            /**
+             * Radio button element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_RADIO_BUTTON
+             */
+            val RADIO_BUTTON: AccessibilityRole get() = AccessibilityRole(10L)
+            /**
+             * Check button element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_CHECK_BUTTON
+             */
+            val CHECK_BUTTON: AccessibilityRole get() = AccessibilityRole(11L)
+            /**
+             * Scroll bar element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_SCROLL_BAR
+             */
+            val SCROLL_BAR: AccessibilityRole get() = AccessibilityRole(12L)
+            /**
+             * Scroll container element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_SCROLL_VIEW
+             */
+            val SCROLL_VIEW: AccessibilityRole get() = AccessibilityRole(13L)
+            /**
+             * Container splitter handle element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_SPLITTER
+             */
+            val SPLITTER: AccessibilityRole get() = AccessibilityRole(14L)
+            /**
+             * Slider element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_SLIDER
+             */
+            val SLIDER: AccessibilityRole get() = AccessibilityRole(15L)
+            /**
+             * Spin box element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_SPIN_BUTTON
+             */
+            val SPIN_BUTTON: AccessibilityRole get() = AccessibilityRole(16L)
+            /**
+             * Progress indicator element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_PROGRESS_INDICATOR
+             */
+            val PROGRESS_INDICATOR: AccessibilityRole get() = AccessibilityRole(17L)
+            /**
+             * Editable text field element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TEXT_FIELD
+             */
+            val TEXT_FIELD: AccessibilityRole get() = AccessibilityRole(18L)
+            /**
+             * Multiline editable text field element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_MULTILINE_TEXT_FIELD
+             */
+            val MULTILINE_TEXT_FIELD: AccessibilityRole get() = AccessibilityRole(19L)
+            /**
+             * Color picker element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_COLOR_PICKER
+             */
+            val COLOR_PICKER: AccessibilityRole get() = AccessibilityRole(20L)
+            /**
+             * Table element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TABLE
+             */
+            val TABLE: AccessibilityRole get() = AccessibilityRole(21L)
+            /**
+             * Table/tree cell element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_CELL
+             */
+            val CELL: AccessibilityRole get() = AccessibilityRole(22L)
+            /**
+             * Table/tree row element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_ROW
+             */
+            val ROW: AccessibilityRole get() = AccessibilityRole(23L)
+            /**
+             * Table/tree row group element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_ROW_GROUP
+             */
+            val ROW_GROUP: AccessibilityRole get() = AccessibilityRole(24L)
+            /**
+             * Table/tree row header element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_ROW_HEADER
+             */
+            val ROW_HEADER: AccessibilityRole get() = AccessibilityRole(25L)
+            /**
+             * Table/tree column header element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_COLUMN_HEADER
+             */
+            val COLUMN_HEADER: AccessibilityRole get() = AccessibilityRole(26L)
+            /**
+             * Tree view element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TREE
+             */
+            val TREE: AccessibilityRole get() = AccessibilityRole(27L)
+            /**
+             * Tree view item element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TREE_ITEM
+             */
+            val TREE_ITEM: AccessibilityRole get() = AccessibilityRole(28L)
+            /**
+             * List element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_LIST
+             */
+            val LIST: AccessibilityRole get() = AccessibilityRole(29L)
+            /**
+             * List item element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_LIST_ITEM
+             */
+            val LIST_ITEM: AccessibilityRole get() = AccessibilityRole(30L)
+            /**
+             * List view element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_LIST_BOX
+             */
+            val LIST_BOX: AccessibilityRole get() = AccessibilityRole(31L)
+            /**
+             * List view item element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_LIST_BOX_OPTION
+             */
+            val LIST_BOX_OPTION: AccessibilityRole get() = AccessibilityRole(32L)
+            /**
+             * Tab bar element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TAB_BAR
+             */
+            val TAB_BAR: AccessibilityRole get() = AccessibilityRole(33L)
+            /**
+             * Tab bar item element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TAB
+             */
+            val TAB: AccessibilityRole get() = AccessibilityRole(34L)
+            /**
+             * Tab panel element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TAB_PANEL
+             */
+            val TAB_PANEL: AccessibilityRole get() = AccessibilityRole(35L)
+            /**
+             * Menu bar element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_MENU_BAR
+             */
+            val MENU_BAR: AccessibilityRole get() = AccessibilityRole(36L)
+            /**
+             * Popup menu element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_MENU
+             */
+            val MENU: AccessibilityRole get() = AccessibilityRole(37L)
+            /**
+             * Popup menu item element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_MENU_ITEM
+             */
+            val MENU_ITEM: AccessibilityRole get() = AccessibilityRole(38L)
+            /**
+             * Popup menu check button item element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_MENU_ITEM_CHECK_BOX
+             */
+            val MENU_ITEM_CHECK_BOX: AccessibilityRole get() = AccessibilityRole(39L)
+            /**
+             * Popup menu radio button item element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_MENU_ITEM_RADIO
+             */
+            val MENU_ITEM_RADIO: AccessibilityRole get() = AccessibilityRole(40L)
+            /**
+             * Image element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_IMAGE
+             */
+            val IMAGE: AccessibilityRole get() = AccessibilityRole(41L)
+            /**
+             * Window element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_WINDOW
+             */
+            val WINDOW: AccessibilityRole get() = AccessibilityRole(42L)
+            /**
+             * Embedded window title bar element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TITLE_BAR
+             */
+            val TITLE_BAR: AccessibilityRole get() = AccessibilityRole(43L)
+            /**
+             * Dialog window element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_DIALOG
+             */
+            val DIALOG: AccessibilityRole get() = AccessibilityRole(44L)
+            /**
+             * Tooltip element.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TOOLTIP
+             */
+            val TOOLTIP: AccessibilityRole get() = AccessibilityRole(45L)
+            /**
+             * Region/landmark element. Screen readers can navigate between regions using landmark navigation.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_REGION
+             */
+            val REGION: AccessibilityRole get() = AccessibilityRole(46L)
+            /**
+             * Unifor text run. Note: This role is used for internal text elements, and should not be assigned
+             * to nodes.
+             *
+             * Generated from Godot docs: AccessibilityServer.ROLE_TEXT_RUN
+             */
+            val TEXT_RUN: AccessibilityRole get() = AccessibilityRole(47L)
+        }
+    }
+
+    /**
+     * Godot's `AccessibilityServer.AccessibilityPopupType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityPopupType.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityPopupType
+     */
+    @JvmInline
+    value class AccessibilityPopupType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Popup menu.
+             *
+             * Generated from Godot docs: AccessibilityServer.POPUP_MENU
+             */
+            val MENU: AccessibilityPopupType get() = AccessibilityPopupType(0L)
+            /**
+             * Popup list.
+             *
+             * Generated from Godot docs: AccessibilityServer.POPUP_LIST
+             */
+            val LIST: AccessibilityPopupType get() = AccessibilityPopupType(1L)
+            /**
+             * Popup tree view.
+             *
+             * Generated from Godot docs: AccessibilityServer.POPUP_TREE
+             */
+            val TREE: AccessibilityPopupType get() = AccessibilityPopupType(2L)
+            /**
+             * Popup dialog.
+             *
+             * Generated from Godot docs: AccessibilityServer.POPUP_DIALOG
+             */
+            val DIALOG: AccessibilityPopupType get() = AccessibilityPopupType(3L)
+        }
+    }
+
+    /**
+     * Godot's `AccessibilityServer.AccessibilityFlags` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityFlags.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityFlags
+     */
+    @JvmInline
+    value class AccessibilityFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Element is hidden for accessibility tools.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_HIDDEN
+             */
+            val HIDDEN: AccessibilityFlags get() = AccessibilityFlags(0L)
+            /**
+             * Element supports multiple item selection.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_MULTISELECTABLE
+             */
+            val MULTISELECTABLE: AccessibilityFlags get() = AccessibilityFlags(1L)
+            /**
+             * Element require user input.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_REQUIRED
+             */
+            val REQUIRED: AccessibilityFlags get() = AccessibilityFlags(2L)
+            /**
+             * Element is a visited link.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_VISITED
+             */
+            val VISITED: AccessibilityFlags get() = AccessibilityFlags(3L)
+            /**
+             * Element content is not ready (e.g. loading).
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_BUSY
+             */
+            val BUSY: AccessibilityFlags get() = AccessibilityFlags(4L)
+            /**
+             * Element is modal window.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_MODAL
+             */
+            val MODAL: AccessibilityFlags get() = AccessibilityFlags(5L)
+            /**
+             * Element allows touches to be passed through when a screen reader is in touch exploration mode.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_TOUCH_PASSTHROUGH
+             */
+            val TOUCH_PASSTHROUGH: AccessibilityFlags get() = AccessibilityFlags(6L)
+            /**
+             * Element is text field with selectable but read-only text.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_READONLY
+             */
+            val READONLY: AccessibilityFlags get() = AccessibilityFlags(7L)
+            /**
+             * Element is disabled.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_DISABLED
+             */
+            val DISABLED: AccessibilityFlags get() = AccessibilityFlags(8L)
+            /**
+             * Element clips children.
+             *
+             * Generated from Godot docs: AccessibilityServer.FLAG_CLIPS_CHILDREN
+             */
+            val CLIPS_CHILDREN: AccessibilityFlags get() = AccessibilityFlags(9L)
+        }
+    }
+
+    /**
+     * Godot's `AccessibilityServer.AccessibilityAction` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityAction.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityAction
+     */
+    @JvmInline
+    value class AccessibilityAction(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Single click action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_CLICK
+             */
+            val CLICK: AccessibilityAction get() = AccessibilityAction(0L)
+            /**
+             * Focus action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_FOCUS
+             */
+            val FOCUS: AccessibilityAction get() = AccessibilityAction(1L)
+            /**
+             * Blur action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_BLUR
+             */
+            val BLUR: AccessibilityAction get() = AccessibilityAction(2L)
+            /**
+             * Collapse action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_COLLAPSE
+             */
+            val COLLAPSE: AccessibilityAction get() = AccessibilityAction(3L)
+            /**
+             * Expand action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_EXPAND
+             */
+            val EXPAND: AccessibilityAction get() = AccessibilityAction(4L)
+            /**
+             * Decrement action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_DECREMENT
+             */
+            val DECREMENT: AccessibilityAction get() = AccessibilityAction(5L)
+            /**
+             * Increment action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_INCREMENT
+             */
+            val INCREMENT: AccessibilityAction get() = AccessibilityAction(6L)
+            /**
+             * Hide tooltip action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_HIDE_TOOLTIP
+             */
+            val HIDE_TOOLTIP: AccessibilityAction get() = AccessibilityAction(7L)
+            /**
+             * Show tooltip action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SHOW_TOOLTIP
+             */
+            val SHOW_TOOLTIP: AccessibilityAction get() = AccessibilityAction(8L)
+            /**
+             * Set text selection action, callback argument is set to `Dictionary` with the following keys: -
+             * `"start_element"` accessibility element of the selection start. - `"start_char"` character
+             * offset relative to the accessibility element of the selection start. - `"end_element"`
+             * accessibility element of the selection end. - `"end_char"` character offset relative to the
+             * accessibility element of the selection end.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SET_TEXT_SELECTION
+             */
+            val SET_TEXT_SELECTION: AccessibilityAction get() = AccessibilityAction(9L)
+            /**
+             * Replace text action, callback argument is set to `String` with the replacement text.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_REPLACE_SELECTED_TEXT
+             */
+            val REPLACE_SELECTED_TEXT: AccessibilityAction get() = AccessibilityAction(10L)
+            /**
+             * Scroll backward action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_BACKWARD
+             */
+            val SCROLL_BACKWARD: AccessibilityAction get() = AccessibilityAction(11L)
+            /**
+             * Scroll down action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_DOWN
+             */
+            val SCROLL_DOWN: AccessibilityAction get() = AccessibilityAction(12L)
+            /**
+             * Scroll forward action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_FORWARD
+             */
+            val SCROLL_FORWARD: AccessibilityAction get() = AccessibilityAction(13L)
+            /**
+             * Scroll left action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_LEFT
+             */
+            val SCROLL_LEFT: AccessibilityAction get() = AccessibilityAction(14L)
+            /**
+             * Scroll right action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_RIGHT
+             */
+            val SCROLL_RIGHT: AccessibilityAction get() = AccessibilityAction(15L)
+            /**
+             * Scroll up action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_UP
+             */
+            val SCROLL_UP: AccessibilityAction get() = AccessibilityAction(16L)
+            /**
+             * Scroll into view action, callback argument is set to `AccessibilityScrollHint`.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_INTO_VIEW
+             */
+            val SCROLL_INTO_VIEW: AccessibilityAction get() = AccessibilityAction(17L)
+            /**
+             * Scroll to point action, callback argument is set to `Vector2` with the relative point
+             * coordinates.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SCROLL_TO_POINT
+             */
+            val SCROLL_TO_POINT: AccessibilityAction get() = AccessibilityAction(18L)
+            /**
+             * Set scroll offset action, callback argument is set to `Vector2` with the scroll offset.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SET_SCROLL_OFFSET
+             */
+            val SET_SCROLL_OFFSET: AccessibilityAction get() = AccessibilityAction(19L)
+            /**
+             * Set value action, callback argument is set to `String` or number with the new value.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SET_VALUE
+             */
+            val SET_VALUE: AccessibilityAction get() = AccessibilityAction(20L)
+            /**
+             * Show context menu action, callback argument is not set.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_SHOW_CONTEXT_MENU
+             */
+            val SHOW_CONTEXT_MENU: AccessibilityAction get() = AccessibilityAction(21L)
+            /**
+             * Custom action, callback argument is set to the integer action ID.
+             *
+             * Generated from Godot docs: AccessibilityServer.ACTION_CUSTOM
+             */
+            val CUSTOM: AccessibilityAction get() = AccessibilityAction(22L)
+        }
+    }
+
+    /**
+     * Godot's `AccessibilityServer.AccessibilityLiveMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityLiveMode.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityLiveMode
+     */
+    @JvmInline
+    value class AccessibilityLiveMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Indicates that updates to the live region should not be presented.
+             *
+             * Generated from Godot docs: AccessibilityServer.LIVE_OFF
+             */
+            val OFF: AccessibilityLiveMode get() = AccessibilityLiveMode(0L)
+            /**
+             * Indicates that updates to the live region should be presented at the next opportunity (for
+             * example at the end of speaking the current sentence).
+             *
+             * Generated from Godot docs: AccessibilityServer.LIVE_POLITE
+             */
+            val POLITE: AccessibilityLiveMode get() = AccessibilityLiveMode(1L)
+            /**
+             * Indicates that updates to the live region have the highest priority and should be presented
+             * immediately.
+             *
+             * Generated from Godot docs: AccessibilityServer.LIVE_ASSERTIVE
+             */
+            val ASSERTIVE: AccessibilityLiveMode get() = AccessibilityLiveMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `AccessibilityServer.AccessibilityScrollUnit` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityScrollUnit.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityScrollUnit
+     */
+    @JvmInline
+    value class AccessibilityScrollUnit(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The amount by which to scroll. A single item of a list, line of text.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_UNIT_ITEM
+             */
+            val ITEM: AccessibilityScrollUnit get() = AccessibilityScrollUnit(0L)
+            /**
+             * The amount by which to scroll. A single page.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_UNIT_PAGE
+             */
+            val PAGE: AccessibilityScrollUnit get() = AccessibilityScrollUnit(1L)
+        }
+    }
+
+    /**
+     * Godot's `AccessibilityServer.AccessibilityScrollHint` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`AccessibilityServer.AccessibilityScrollHint.<NAME>`).
+     *
+     * Generated from Godot docs: AccessibilityServer.AccessibilityScrollHint
+     */
+    @JvmInline
+    value class AccessibilityScrollHint(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * A preferred position for the node scrolled into view. Top-left edge of the scroll container.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_HINT_TOP_LEFT
+             */
+            val TOP_LEFT: AccessibilityScrollHint get() = AccessibilityScrollHint(0L)
+            /**
+             * A preferred position for the node scrolled into view. Bottom-right edge of the scroll container.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_HINT_BOTTOM_RIGHT
+             */
+            val BOTTOM_RIGHT: AccessibilityScrollHint get() = AccessibilityScrollHint(1L)
+            /**
+             * A preferred position for the node scrolled into view. Top edge of the scroll container.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_HINT_TOP_EDGE
+             */
+            val TOP_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(2L)
+            /**
+             * A preferred position for the node scrolled into view. Bottom edge of the scroll container.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_HINT_BOTTOM_EDGE
+             */
+            val BOTTOM_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(3L)
+            /**
+             * A preferred position for the node scrolled into view. Left edge of the scroll container.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_HINT_LEFT_EDGE
+             */
+            val LEFT_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(4L)
+            /**
+             * A preferred position for the node scrolled into view. Right edge of the scroll container.
+             *
+             * Generated from Godot docs: AccessibilityServer.SCROLL_HINT_RIGHT_EDGE
+             */
+            val RIGHT_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(5L)
+        }
     }
 
     @JvmStatic

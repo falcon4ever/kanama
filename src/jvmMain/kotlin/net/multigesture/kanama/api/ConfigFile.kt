@@ -98,38 +98,38 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Loads the config file specified as a parameter. The file's contents are parsed and loaded in the
-     * `ConfigFile` object which the method was called on. Returns `OK` on success, or one of the other
-     * `Error` values if the operation failed.
+     * `ConfigFile` object which the method was called on. Returns `GodotError.OK` on success, or one
+     * of the other `Error` values if the operation failed.
      *
      * Generated from Godot docs: ConfigFile.load
      */
-    fun load(path: String): Long {
+    fun load(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
     }
 
     /**
      * Parses the passed string as the contents of a config file. The string is parsed and loaded in
-     * the ConfigFile object which the method was called on. Returns `OK` on success, or one of the
-     * other `Error` values if the operation failed.
+     * the ConfigFile object which the method was called on. Returns `GodotError.OK` on success, or one
+     * of the other `Error` values if the operation failed.
      *
      * Generated from Godot docs: ConfigFile.parse
      */
-    fun parse(data: String): Long {
+    fun parse(data: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data))
     }
 
     /**
      * Saves the contents of the `ConfigFile` object to the file specified as a parameter. The output
-     * file uses an INI-style structure. Returns `OK` on success, or one of the other `Error` values if
-     * the operation failed.
+     * file uses an INI-style structure. Returns `GodotError.OK` on success, or one of the other
+     * `Error` values if the operation failed.
      *
      * Generated from Godot docs: ConfigFile.save
      */
-    fun save(path: String): Long {
+    fun save(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path))
     }
 
     /**
@@ -145,50 +145,52 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Loads the encrypted config file specified as a parameter, using the provided `key` to decrypt
      * it. The file's contents are parsed and loaded in the `ConfigFile` object which the method was
-     * called on. Returns `OK` on success, or one of the other `Error` values if the operation failed.
+     * called on. Returns `GodotError.OK` on success, or one of the other `Error` values if the
+     * operation failed.
      *
      * Generated from Godot docs: ConfigFile.load_encrypted
      */
-    fun loadEncrypted(path: String, key: ByteArray): Long {
+    fun loadEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key)
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key))
     }
 
     /**
      * Loads the encrypted config file specified as a parameter, using the provided `password` to
      * decrypt it. The file's contents are parsed and loaded in the `ConfigFile` object which the
-     * method was called on. Returns `OK` on success, or one of the other `Error` values if the
-     * operation failed.
+     * method was called on. Returns `GodotError.OK` on success, or one of the other `Error` values if
+     * the operation failed.
      *
      * Generated from Godot docs: ConfigFile.load_encrypted_pass
      */
-    fun loadEncryptedPass(path: String, password: String): Long {
+    fun loadEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password))
     }
 
     /**
      * Saves the contents of the `ConfigFile` object to the AES-256 encrypted file specified as a
      * parameter, using the provided `key` to encrypt it. The output file uses an INI-style structure.
-     * Returns `OK` on success, or one of the other `Error` values if the operation failed.
+     * Returns `GodotError.OK` on success, or one of the other `Error` values if the operation failed.
      *
      * Generated from Godot docs: ConfigFile.save_encrypted
      */
-    fun saveEncrypted(path: String, key: ByteArray): Long {
+    fun saveEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key)
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key))
     }
 
     /**
      * Saves the contents of the `ConfigFile` object to the AES-256 encrypted file specified as a
      * parameter, using the provided `password` to encrypt it. The output file uses an INI-style
-     * structure. Returns `OK` on success, or one of the other `Error` values if the operation failed.
+     * structure. Returns `GodotError.OK` on success, or one of the other `Error` values if the
+     * operation failed.
      *
      * Generated from Godot docs: ConfigFile.save_encrypted_pass
      */
-    fun saveEncryptedPass(path: String, password: String): Long {
+    fun saveEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password))
     }
 
     /**

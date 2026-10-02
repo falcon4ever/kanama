@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,7 +13,7 @@ import net.multigesture.kanama.types.Transform3D
  * Generated from Godot docs: AudioListener3D
  */
 class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
-    var dopplerTracking: Long
+    var dopplerTracking: AudioListener3D.DopplerTracking
         @JvmName("dopplerTrackingProperty")
         get() = getDopplerTracking()
         @JvmName("setDopplerTrackingProperty")
@@ -57,36 +58,68 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * If not `DOPPLER_TRACKING_DISABLED`, this listener will simulate the Doppler effect
+     * If not `DopplerTracking.DISABLED`, this listener will simulate the Doppler effect
      * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
      * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
      * `AudioStreamPlayer3D.doppler_tracking` is not set to
-     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     * `AudioStreamPlayer3D.DopplerTracking.DISABLED`.
      *
      * Generated from Godot docs: AudioListener3D.set_doppler_tracking
      */
-    fun setDopplerTracking(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode)
+    fun setDopplerTracking(mode: AudioListener3D.DopplerTracking) {
+        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode.value)
     }
 
     /**
-     * If not `DOPPLER_TRACKING_DISABLED`, this listener will simulate the Doppler effect
+     * If not `DopplerTracking.DISABLED`, this listener will simulate the Doppler effect
      * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
      * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
      * `AudioStreamPlayer3D.doppler_tracking` is not set to
-     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     * `AudioStreamPlayer3D.DopplerTracking.DISABLED`.
      *
      * Generated from Godot docs: AudioListener3D.get_doppler_tracking
      */
-    fun getDopplerTracking(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment)
+    fun getDopplerTracking(): AudioListener3D.DopplerTracking {
+        return AudioListener3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment))
+    }
+
+    /**
+     * Godot's `AudioListener3D.DopplerTracking` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`AudioListener3D.DopplerTracking.<NAME>`).
+     *
+     * Generated from Godot docs: AudioListener3D.DopplerTracking
+     */
+    @JvmInline
+    value class DopplerTracking(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) simulation (default).
+             *
+             * Generated from Godot docs: AudioListener3D.DOPPLER_TRACKING_DISABLED
+             */
+            val DISABLED: DopplerTracking get() = DopplerTracking(0L)
+            /**
+             * Simulate Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) by tracking positions of
+             * objects that are changed in `_process`. Changes in the relative velocity of this listener
+             * compared to those objects affect how audio is perceived (changing the audio's
+             * `AudioStreamPlayer3D.pitch_scale`).
+             *
+             * Generated from Godot docs: AudioListener3D.DOPPLER_TRACKING_IDLE_STEP
+             */
+            val IDLE_STEP: DopplerTracking get() = DopplerTracking(1L)
+            /**
+             * Simulate Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) by tracking positions of
+             * objects that are changed in `_physics_process`. Changes in the relative velocity of this
+             * listener compared to those objects affect how audio is perceived (changing the audio's
+             * `AudioStreamPlayer3D.pitch_scale`).
+             *
+             * Generated from Godot docs: AudioListener3D.DOPPLER_TRACKING_PHYSICS_STEP
+             */
+            val PHYSICS_STEP: DopplerTracking get() = DopplerTracking(2L)
+        }
     }
 
     companion object {
-        const val DOPPLER_TRACKING_DISABLED: Long = 0L
-        const val DOPPLER_TRACKING_IDLE_STEP: Long = 1L
-        const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioListener3D? =
             wrap(handle.segment)

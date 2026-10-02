@@ -5,6 +5,7 @@ import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.Tool
 import net.multigesture.kanama.api.Engine
 import net.multigesture.kanama.api.FileAccess
+import net.multigesture.kanama.api.GodotError
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
@@ -44,7 +45,7 @@ class ResourceForgeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObj
       val saveError = ResourceSaver.save(handle.resource, path)
 
       // Text-level proof the script reference and payload serialized.
-      val text = if (saveError == 0L) FileAccess.getFileAsString(path) else ""
+      val text = if (saveError == GodotError.OK) FileAccess.getFileAsString(path) else ""
       val scriptRef = text.contains("SmokeResource.kt")
       val payloadSaved = text.contains("forged")
 
@@ -54,8 +55,8 @@ class ResourceForgeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObj
       // resolves directly off the reloaded wrapper, which `use { }` then releases.
       var reloadPayload = ""
       var reloadInt = -1L
-      if (saveError == 0L) {
-        ResourceLoader.load(path, cacheMode = ResourceLoader.CACHE_MODE_IGNORE)?.use { reloaded ->
+      if (saveError == GodotError.OK) {
+        ResourceLoader.load(path, cacheMode = ResourceLoader.CacheMode.IGNORE)?.use { reloaded ->
           reloaded.kotlinScriptInstance<SmokeResource>()?.let { r ->
             reloadPayload = r.payload
             reloadInt = r.customIntValue
@@ -65,7 +66,7 @@ class ResourceForgeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObj
       val reloadOk = reloadPayload == "forged" && reloadInt == 7L
 
       System.err.println(
-        "[kanama:kt] ResourceForgeSmoke live=$live save_error=$saveError " +
+        "[kanama:kt] ResourceForgeSmoke live=$live save_error=${saveError.value} " +
           "script_ref=$scriptRef payload_saved=$payloadSaved reload_ok=$reloadOk"
       )
     }

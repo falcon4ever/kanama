@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,7 +13,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: VirtualJoystick
  */
 class VirtualJoystick(handle: GodotHandle) : Control(handle) {
-    var joystickMode: Long
+    var joystickMode: VirtualJoystick.JoystickMode
         @JvmName("joystickModeProperty")
         get() = getJoystickMode()
         @JvmName("setJoystickModeProperty")
@@ -72,7 +73,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
         @JvmName("setActionDownProperty")
         set(value) = setActionDown(value)
 
-    var visibilityMode: Long
+    var visibilityMode: VirtualJoystick.VisibilityMode
         @JvmName("visibilityModeProperty")
         get() = getVisibilityMode()
         @JvmName("setVisibilityModeProperty")
@@ -83,8 +84,8 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: VirtualJoystick.set_joystick_mode
      */
-    fun setJoystickMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJoystickModeBind, segment, mode)
+    fun setJoystickMode(mode: VirtualJoystick.JoystickMode) {
+        ObjectCalls.ptrcallWithLongArg(setJoystickModeBind, segment, mode.value)
     }
 
     /**
@@ -92,8 +93,8 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: VirtualJoystick.get_joystick_mode
      */
-    fun getJoystickMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJoystickModeBind, segment)
+    fun getJoystickMode(): VirtualJoystick.JoystickMode {
+        return VirtualJoystick.JoystickMode(ObjectCalls.ptrcallNoArgsRetLong(getJoystickModeBind, segment))
     }
 
     /**
@@ -165,7 +166,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
     /**
      * The multiplier applied to the joystick's radius that defines the clamp zone. This zone limits
      * how far the joystick tip can move from its center before being clamped. A value of `1.0` means
-     * the tip can move up to the edge of the joystick's visual size. In `JOYSTICK_FOLLOWING` mode,
+     * the tip can move up to the edge of the joystick's visual size. In `JoystickMode.FOLLOWING` mode,
      * this radius also determines how far the finger can move before the joystick base starts
      * following the touch input.
      *
@@ -178,7 +179,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
     /**
      * The multiplier applied to the joystick's radius that defines the clamp zone. This zone limits
      * how far the joystick tip can move from its center before being clamped. A value of `1.0` means
-     * the tip can move up to the edge of the joystick's visual size. In `JOYSTICK_FOLLOWING` mode,
+     * the tip can move up to the edge of the joystick's visual size. In `JoystickMode.FOLLOWING` mode,
      * this radius also determines how far the finger can move before the joystick base starts
      * following the touch input.
      *
@@ -285,8 +286,8 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: VirtualJoystick.set_visibility_mode
      */
-    fun setVisibilityMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode)
+    fun setVisibilityMode(mode: VirtualJoystick.VisibilityMode) {
+        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode.value)
     }
 
     /**
@@ -294,8 +295,8 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: VirtualJoystick.get_visibility_mode
      */
-    fun getVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment)
+    fun getVisibilityMode(): VirtualJoystick.VisibilityMode {
+        return VirtualJoystick.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment))
     }
 
     object Signals {
@@ -306,13 +307,64 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
         const val flickCanceled: String = "flick_canceled"
     }
 
-    companion object {
-        const val JOYSTICK_FIXED: Long = 0L
-        const val JOYSTICK_DYNAMIC: Long = 1L
-        const val JOYSTICK_FOLLOWING: Long = 2L
-        const val VISIBILITY_ALWAYS: Long = 0L
-        const val VISIBILITY_WHEN_TOUCHED: Long = 1L
+    /**
+     * Godot's `VirtualJoystick.JoystickMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`VirtualJoystick.JoystickMode.<NAME>`).
+     *
+     * Generated from Godot docs: VirtualJoystick.JoystickMode
+     */
+    @JvmInline
+    value class JoystickMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The joystick doesn't move.
+             *
+             * Generated from Godot docs: VirtualJoystick.JOYSTICK_FIXED
+             */
+            val FIXED: JoystickMode get() = JoystickMode(0L)
+            /**
+             * The joystick is moved to the initial touch position as long as it's within the joystick's
+             * bounds. It moves back to its original position when released.
+             *
+             * Generated from Godot docs: VirtualJoystick.JOYSTICK_DYNAMIC
+             */
+            val DYNAMIC: JoystickMode get() = JoystickMode(1L)
+            /**
+             * The joystick is moved to the initial touch position as long as it's within the joystick's
+             * bounds. It will follow the touch input if it goes outside the joystick's range. It moves back to
+             * its original position when released.
+             *
+             * Generated from Godot docs: VirtualJoystick.JOYSTICK_FOLLOWING
+             */
+            val FOLLOWING: JoystickMode get() = JoystickMode(2L)
+        }
+    }
 
+    /**
+     * Godot's `VirtualJoystick.VisibilityMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`VirtualJoystick.VisibilityMode.<NAME>`).
+     *
+     * Generated from Godot docs: VirtualJoystick.VisibilityMode
+     */
+    @JvmInline
+    value class VisibilityMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The joystick is always visible.
+             *
+             * Generated from Godot docs: VirtualJoystick.VISIBILITY_ALWAYS
+             */
+            val ALWAYS: VisibilityMode get() = VisibilityMode(0L)
+            /**
+             * The joystick is only visible when being touched.
+             *
+             * Generated from Godot docs: VirtualJoystick.VISIBILITY_WHEN_TOUCHED
+             */
+            val WHEN_TOUCHED: VisibilityMode get() = VisibilityMode(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VirtualJoystick? =
             wrap(handle.segment)

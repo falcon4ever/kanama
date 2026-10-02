@@ -37,7 +37,7 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
         @JvmName("setHitSbtRangeProperty")
         set(value) = setHitSbtRange(value)
 
-    var flags: Long
+    var flags: RenderingDevice.AccelerationStructureInstanceFlagBits
         @JvmName("flagsProperty")
         get() = getFlags()
         @JvmName("setFlagsProperty")
@@ -136,9 +136,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RDAccelerationStructureInstance.set_flags
      */
-    fun setFlags(pMember: Long) {
+    fun setFlags(pMember: RenderingDevice.AccelerationStructureInstanceFlagBits) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember.value)
     }
 
     /**
@@ -146,9 +146,9 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RDAccelerationStructureInstance.get_flags
      */
-    fun getFlags(): Long {
+    fun getFlags(): RenderingDevice.AccelerationStructureInstanceFlagBits {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
+        return RenderingDevice.AccelerationStructureInstanceFlagBits(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
     }
 
     /**

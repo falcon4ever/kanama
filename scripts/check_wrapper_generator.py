@@ -24,11 +24,13 @@ from generate_api_wrapper import (
     IOS_UNSUPPORTED_CLASSES,
     PER_PLATFORM_WRAPPERS,
     SHARED_HAND_ROOT_FILES,
+    TYPES_DIR,
     TreeResult,
     generated_companion_paths,
     ios_generated_member_names,
     regenerate_tree,
     strip_comments,
+    whitespace_insensitive,
 )
 from wrapper_model import DESKTOP_API_DIR, IOS_API_DIR, ROOT, SHARED_API_DIR
 
@@ -394,7 +396,7 @@ def check_ios_policies(output_dir: Path) -> int:
         return 1
     from generate_api_wrapper import IOS_EXTENSION_SECTIONS  # the section table, not a regex over its source
 
-    if "fun Node.createTween(): Tween?" not in IOS_EXTENSION_SECTIONS.get("Node", ((), ""))[1]:
+    if "fun Node.createTween(): Tween =" not in IOS_EXTENSION_SECTIONS.get("Node", ((), ""))[1]:
         print("[wrapper_generator] FAIL IOS_EXTENSION_SECTIONS['Node'] no longer carries "
               "createTween() — iOS scripts lose Node.create_tween (task 117 P1'(b2))", file=sys.stderr)
         return 1
@@ -531,6 +533,12 @@ def check_single_tree(tree: TreeResult) -> int:
             same = ios_generated_member_names(committed) == ios_generated_member_names(content)
         elif rel.endswith(".md"):
             same = committed == content
+        elif (ROOT / rel).parent == TYPES_DIR:
+            # A ktfmt-formatted value type carrying a GENERATED ENUMS region (task 128 A): ktfmt
+            # re-wraps the region, so compare everything but whitespace (and the KDoc sync owns).
+            same = whitespace_insensitive(comparable_source(committed)) == whitespace_insensitive(
+                comparable_source(content)
+            )
         else:
             same = comparable_source(committed) == comparable_source(content)
         if not same:

@@ -16,9 +16,9 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: HMACContext.start
      */
-    fun start(hashType: Long, key: ByteArray): Long {
+    fun start(hashType: HashingContext.HashType, key: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(startBind, segment, hashType, key)
+        return GodotError(ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(startBind, segment, hashType.value, key))
     }
 
     /**
@@ -27,9 +27,9 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: HMACContext.update
      */
-    fun update(data: ByteArray): Long {
+    fun update(data: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, data)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, data))
     }
 
     /**

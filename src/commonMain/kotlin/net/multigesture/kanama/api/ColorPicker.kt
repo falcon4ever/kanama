@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,7 +31,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
         @JvmName("setEditIntensityProperty")
         set(value) = setEditIntensity(value)
 
-    var colorMode: Long
+    var colorMode: ColorPicker.ColorModeType
         @JvmName("colorModeProperty")
         get() = getColorMode()
         @JvmName("setColorModeProperty")
@@ -42,7 +43,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
         @JvmName("setDeferredModeProperty")
         set(value) = setDeferredMode(value)
 
-    var pickerShape: Long
+    var pickerShape: ColorPicker.PickerShapeType
         @JvmName("pickerShapeProperty")
         get() = getPickerShape()
         @JvmName("setPickerShapeProperty")
@@ -127,8 +128,8 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      *
      * Generated from Godot docs: ColorPicker.set_color_mode
      */
-    fun setColorMode(colorMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setColorModeBind, segment, colorMode)
+    fun setColorMode(colorMode: ColorPicker.ColorModeType) {
+        ObjectCalls.ptrcallWithLongArg(setColorModeBind, segment, colorMode.value)
     }
 
     /**
@@ -136,8 +137,8 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      *
      * Generated from Godot docs: ColorPicker.get_color_mode
      */
-    fun getColorMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getColorModeBind, segment)
+    fun getColorMode(): ColorPicker.ColorModeType {
+        return ColorPicker.ColorModeType(ObjectCalls.ptrcallNoArgsRetLong(getColorModeBind, segment))
     }
 
     /**
@@ -353,8 +354,8 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      *
      * Generated from Godot docs: ColorPicker.set_picker_shape
      */
-    fun setPickerShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPickerShapeBind, segment, shape)
+    fun setPickerShape(shape: ColorPicker.PickerShapeType) {
+        ObjectCalls.ptrcallWithLongArg(setPickerShapeBind, segment, shape.value)
     }
 
     /**
@@ -362,8 +363,8 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
      *
      * Generated from Godot docs: ColorPicker.get_picker_shape
      */
-    fun getPickerShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPickerShapeBind, segment)
+    fun getPickerShape(): ColorPicker.PickerShapeType {
+        return ColorPicker.PickerShapeType(ObjectCalls.ptrcallNoArgsRetLong(getPickerShapeBind, segment))
     }
 
     object Signals {
@@ -372,20 +373,102 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
         const val presetRemoved: String = "preset_removed"
     }
 
-    companion object {
-        const val MODE_RGB: Long = 0L
-        const val MODE_HSV: Long = 1L
-        const val MODE_RAW: Long = 2L
-        const val MODE_LINEAR: Long = 2L
-        const val MODE_OKHSL: Long = 3L
-        const val SHAPE_HSV_RECTANGLE: Long = 0L
-        const val SHAPE_HSV_WHEEL: Long = 1L
-        const val SHAPE_VHS_CIRCLE: Long = 2L
-        const val SHAPE_OKHSL_CIRCLE: Long = 3L
-        const val SHAPE_NONE: Long = 4L
-        const val SHAPE_OK_HS_RECTANGLE: Long = 5L
-        const val SHAPE_OK_HL_RECTANGLE: Long = 6L
+    /**
+     * Godot's `ColorPicker.ColorModeType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ColorPicker.ColorModeType.<NAME>`).
+     *
+     * Generated from Godot docs: ColorPicker.ColorModeType
+     */
+    @JvmInline
+    value class ColorModeType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Allows editing the color with Red/Green/Blue sliders in sRGB color space.
+             *
+             * Generated from Godot docs: ColorPicker.MODE_RGB
+             */
+            val RGB: ColorModeType get() = ColorModeType(0L)
+            /**
+             * Allows editing the color with Hue/Saturation/Value sliders.
+             *
+             * Generated from Godot docs: ColorPicker.MODE_HSV
+             */
+            val HSV: ColorModeType get() = ColorModeType(1L)
+            val RAW: ColorModeType get() = ColorModeType(2L)
+            /**
+             * Allows editing the color with Red/Green/Blue sliders in linear color space.
+             *
+             * Generated from Godot docs: ColorPicker.MODE_LINEAR
+             */
+            val LINEAR: ColorModeType get() = ColorModeType(2L)
+            /**
+             * Allows editing the color with Hue/Saturation/Lightness sliders. OKHSL is a new color space
+             * similar to HSL but that better match perception by leveraging the Oklab color space which is
+             * designed to be simple to use, while doing a good job at predicting perceived lightness, chroma
+             * and hue. Okhsv and Okhsl color spaces (https://bottosson.github.io/posts/colorpicker/)
+             *
+             * Generated from Godot docs: ColorPicker.MODE_OKHSL
+             */
+            val OKHSL: ColorModeType get() = ColorModeType(3L)
+        }
+    }
 
+    /**
+     * Godot's `ColorPicker.PickerShapeType` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ColorPicker.PickerShapeType.<NAME>`).
+     *
+     * Generated from Godot docs: ColorPicker.PickerShapeType
+     */
+    @JvmInline
+    value class PickerShapeType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * HSV Color Model rectangle color space.
+             *
+             * Generated from Godot docs: ColorPicker.SHAPE_HSV_RECTANGLE
+             */
+            val HSV_RECTANGLE: PickerShapeType get() = PickerShapeType(0L)
+            /**
+             * HSV Color Model rectangle color space with a wheel.
+             *
+             * Generated from Godot docs: ColorPicker.SHAPE_HSV_WHEEL
+             */
+            val HSV_WHEEL: PickerShapeType get() = PickerShapeType(1L)
+            /**
+             * HSV Color Model circle color space. Use Saturation as a radius.
+             *
+             * Generated from Godot docs: ColorPicker.SHAPE_VHS_CIRCLE
+             */
+            val VHS_CIRCLE: PickerShapeType get() = PickerShapeType(2L)
+            /**
+             * HSL OK Color Model circle color space.
+             *
+             * Generated from Godot docs: ColorPicker.SHAPE_OKHSL_CIRCLE
+             */
+            val OKHSL_CIRCLE: PickerShapeType get() = PickerShapeType(3L)
+            /**
+             * The color space shape and the shape select button are hidden. Can't be selected from the shapes
+             * popup.
+             *
+             * Generated from Godot docs: ColorPicker.SHAPE_NONE
+             */
+            val NONE: PickerShapeType get() = PickerShapeType(4L)
+            /**
+             * OKHSL Color Model rectangle with constant lightness.
+             *
+             * Generated from Godot docs: ColorPicker.SHAPE_OK_HS_RECTANGLE
+             */
+            val OK_HS_RECTANGLE: PickerShapeType get() = PickerShapeType(5L)
+            /**
+             * OKHSL Color Model rectangle with constant saturation.
+             *
+             * Generated from Godot docs: ColorPicker.SHAPE_OK_HL_RECTANGLE
+             */
+            val OK_HL_RECTANGLE: PickerShapeType get() = PickerShapeType(6L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ColorPicker? =
             wrap(handle.segment)

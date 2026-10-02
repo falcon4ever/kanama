@@ -16,9 +16,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PCKPacker.pck_start
      */
-    fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): Long {
+    fun pckStart(pckPath: String, alignment: Int = 32, key: String = "0000000000000000000000000000000000000000000000000000000000000000", encryptDirectory: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, segment, pckPath, alignment, key, encryptDirectory)
+        return GodotError(ObjectCalls.ptrcallWithStringIntStringBoolArgsRetLong(pckStartBind, segment, pckPath, alignment, key, encryptDirectory))
     }
 
     /**
@@ -28,9 +28,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PCKPacker.add_file
      */
-    fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): Long {
+    fun addFile(targetPath: String, sourcePath: String, encrypt: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, segment, targetPath, sourcePath, encrypt)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringBoolArgsRetLong(addFileBind, segment, targetPath, sourcePath, encrypt))
     }
 
     /**
@@ -40,9 +40,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PCKPacker.add_file_from_buffer
      */
-    fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): Long {
+    fun addFileFromBuffer(targetPath: String, data: ByteArray, encrypt: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, segment, targetPath, data, encrypt)
+        return GodotError(ObjectCalls.ptrcallWithStringByteArrayAndBoolArgRetLong(addFileFromBufferBind, segment, targetPath, data, encrypt))
     }
 
     /**
@@ -52,9 +52,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PCKPacker.add_file_removal
      */
-    fun addFileRemoval(targetPath: String): Long {
+    fun addFileRemoval(targetPath: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, segment, targetPath)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(addFileRemovalBind, segment, targetPath))
     }
 
     /**
@@ -66,9 +66,9 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: PCKPacker.flush
      */
-    fun flush(verbose: Boolean = false): Long {
+    fun flush(verbose: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, segment, verbose)
+        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(flushBind, segment, verbose))
     }
 
     companion object {

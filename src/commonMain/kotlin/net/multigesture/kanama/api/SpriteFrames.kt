@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -119,9 +120,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: SpriteFrames.set_animation_loop_mode
      */
-    fun setAnimationLoopMode(anim: String, loopMode: Long) {
+    fun setAnimationLoopMode(anim: String, loopMode: SpriteFrames.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndLongArg(setAnimationLoopModeBind, segment, anim, loopMode)
+        ObjectCalls.ptrcallWithStringNameAndLongArg(setAnimationLoopModeBind, segment, anim, loopMode.value)
     }
 
     /**
@@ -129,9 +130,9 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: SpriteFrames.get_animation_loop_mode
      */
-    fun getAnimationLoopMode(anim: String): Long {
+    fun getAnimationLoopMode(anim: String): SpriteFrames.LoopMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetLong(getAnimationLoopModeBind, segment, anim)
+        return SpriteFrames.LoopMode(ObjectCalls.ptrcallWithStringNameArgRetLong(getAnimationLoopModeBind, segment, anim))
     }
 
     /**
@@ -220,11 +221,41 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallNoArgs(clearAllBind, segment)
     }
 
-    companion object {
-        const val LOOP_NONE: Long = 0L
-        const val LOOP_LINEAR: Long = 1L
-        const val LOOP_PINGPONG: Long = 2L
+    /**
+     * Godot's `SpriteFrames.LoopMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SpriteFrames.LoopMode.<NAME>`).
+     *
+     * Generated from Godot docs: SpriteFrames.LoopMode
+     */
+    @JvmInline
+    value class LoopMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The animation plays once and stops when it reaches the end, or the start if played in reverse.
+             *
+             * Generated from Godot docs: SpriteFrames.LOOP_NONE
+             */
+            val NONE: LoopMode get() = LoopMode(0L)
+            /**
+             * The animation restarts from the beginning when it reaches the end, or from the end if played in
+             * reverse, repeating continuously.
+             *
+             * Generated from Godot docs: SpriteFrames.LOOP_LINEAR
+             */
+            val LINEAR: LoopMode get() = LoopMode(1L)
+            /**
+             * The animation alternates direction each time it reaches the end or start, playing forward and
+             * then in reverse repeatedly. Note: Both `AnimatedSprite2D` and `AnimatedSprite3D` play the
+             * first/last frame for its duration only once at each end of the animation loop (instead of twice,
+             * once per forward/backward animation direction).
+             *
+             * Generated from Godot docs: SpriteFrames.LOOP_PINGPONG
+             */
+            val PINGPONG: LoopMode get() = LoopMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SpriteFrames? =
             wrap(handle.segment)

@@ -11,13 +11,13 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: RDAttachmentFormat
  */
 class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
-    var format: Long
+    var format: RenderingDevice.DataFormat
         @JvmName("formatProperty")
         get() = getFormat()
         @JvmName("setFormatProperty")
         set(value) = setFormat(value)
 
-    var samples: Long
+    var samples: RenderingDevice.TextureSamples
         @JvmName("samplesProperty")
         get() = getSamples()
         @JvmName("setSamplesProperty")
@@ -34,9 +34,9 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDAttachmentFormat.set_format
      */
-    fun setFormat(pMember: Long) {
+    fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember.value)
     }
 
     /**
@@ -44,9 +44,9 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDAttachmentFormat.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**
@@ -54,9 +54,9 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDAttachmentFormat.set_samples
      */
-    fun setSamples(pMember: Long) {
+    fun setSamples(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember.value)
     }
 
     /**
@@ -64,9 +64,9 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDAttachmentFormat.get_samples
      */
-    fun getSamples(): Long {
+    fun getSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment)
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment))
     }
 
     /**

@@ -92,10 +92,10 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      * An alternative to fixing darkened borders with `fix_alpha_border` is to use premultiplied alpha.
      * By enabling this option, the texture will be converted to this format. A premultiplied alpha
      * texture requires specific materials to be displayed correctly: - In 2D, a `CanvasItemMaterial`
-     * will need to be created and configured to use the `CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA`
+     * will need to be created and configured to use the `CanvasItemMaterial.BlendMode.PREMULT_ALPHA`
      * blend mode on `CanvasItem`s that use this texture. In custom `canvas_item` shaders, `render_mode
      * blend_premul_alpha;` should be used. - In 3D, a `BaseMaterial3D` will need to be created and
-     * configured to use the `BaseMaterial3D.BLEND_MODE_PREMULT_ALPHA` blend mode on materials that use
+     * configured to use the `BaseMaterial3D.BlendMode.PREMULT_ALPHA` blend mode on materials that use
      * this texture. In custom `spatial` shaders, `render_mode blend_premul_alpha;` should be used.
      *
      * Generated from Godot docs: DPITexture.set_premult_alpha
@@ -109,10 +109,10 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
      * An alternative to fixing darkened borders with `fix_alpha_border` is to use premultiplied alpha.
      * By enabling this option, the texture will be converted to this format. A premultiplied alpha
      * texture requires specific materials to be displayed correctly: - In 2D, a `CanvasItemMaterial`
-     * will need to be created and configured to use the `CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA`
+     * will need to be created and configured to use the `CanvasItemMaterial.BlendMode.PREMULT_ALPHA`
      * blend mode on `CanvasItem`s that use this texture. In custom `canvas_item` shaders, `render_mode
      * blend_premul_alpha;` should be used. - In 3D, a `BaseMaterial3D` will need to be created and
-     * configured to use the `BaseMaterial3D.BLEND_MODE_PREMULT_ALPHA` blend mode on materials that use
+     * configured to use the `BaseMaterial3D.BlendMode.PREMULT_ALPHA` blend mode on materials that use
      * this texture. In custom `spatial` shaders, `render_mode blend_premul_alpha;` should be used.
      *
      * Generated from Godot docs: DPITexture.get_premult_alpha

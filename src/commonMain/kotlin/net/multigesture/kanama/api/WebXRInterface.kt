@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -110,9 +111,9 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
         return XRControllerTracker.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInputSourceTrackerBind, segment, inputSourceId))
     }
 
-    fun getInputSourceTargetRayMode(inputSourceId: Int): Long {
+    fun getInputSourceTargetRayMode(inputSourceId: Int): WebXRInterface.TargetRayMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getInputSourceTargetRayModeBind, segment, inputSourceId)
+        return WebXRInterface.TargetRayMode(ObjectCalls.ptrcallWithIntArgRetLong(getInputSourceTargetRayModeBind, segment, inputSourceId))
     }
 
     fun getVisibilityState(): String {
@@ -151,12 +152,17 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
         const val displayRefreshRateChanged: String = "display_refresh_rate_changed"
     }
 
-    companion object {
-        const val TARGET_RAY_MODE_UNKNOWN: Long = 0L
-        const val TARGET_RAY_MODE_GAZE: Long = 1L
-        const val TARGET_RAY_MODE_TRACKED_POINTER: Long = 2L
-        const val TARGET_RAY_MODE_SCREEN: Long = 3L
+    @JvmInline
+    value class TargetRayMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val UNKNOWN: TargetRayMode get() = TargetRayMode(0L)
+            val GAZE: TargetRayMode get() = TargetRayMode(1L)
+            val TRACKED_POINTER: TargetRayMode get() = TargetRayMode(2L)
+            val SCREEN: TargetRayMode get() = TargetRayMode(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebXRInterface? =
             wrap(handle.segment)

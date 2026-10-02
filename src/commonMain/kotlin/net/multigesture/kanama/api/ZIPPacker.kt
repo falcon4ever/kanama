@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -15,9 +16,9 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setCompressionLevelProperty")
         set(value) = setCompressionLevel(value)
 
-    fun open(path: String, append: Long = 0L): Long {
+    fun open(path: String, append: ZIPPacker.ZipAppend = ZIPPacker.ZipAppend.CREATE): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndLongArgRetLong(openBind, segment, path, append)
+        return GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(openBind, segment, path, append.value))
     }
 
     fun setCompressionLevel(compressionLevel: Int) {
@@ -30,40 +31,51 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getCompressionLevelBind, segment)
     }
 
-    fun addDirectory(path: String, permissions: Long = 493L, modifiedTime: Long = 0L): Long {
+    fun addDirectory(path: String, permissions: FileAccess.UnixPermissionFlags = FileAccess.UnixPermissionFlags(493L), modifiedTime: Long = 0L): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(addDirectoryBind, segment, path, permissions, modifiedTime)
+        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(addDirectoryBind, segment, path, permissions.value, modifiedTime))
     }
 
-    fun startFile(path: String, permissions: Long = 420L, modifiedTime: Long = 0L): Long {
+    fun startFile(path: String, permissions: FileAccess.UnixPermissionFlags = FileAccess.UnixPermissionFlags(420L), modifiedTime: Long = 0L): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, segment, path, permissions, modifiedTime)
+        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, segment, path, permissions.value, modifiedTime))
     }
 
-    fun writeFile(data: ByteArray): Long {
+    fun writeFile(data: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(writeFileBind, segment, data)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(writeFileBind, segment, data))
     }
 
-    fun closeFile(): Long {
+    fun closeFile(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(closeFileBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(closeFileBind, segment))
     }
 
-    fun closeArchive(): Long {
+    fun closeArchive(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, segment))
+    }
+
+    @JvmInline
+    value class ZipAppend(override val value: Long) : GodotEnumValue {
+        companion object {
+            val CREATE: ZipAppend get() = ZipAppend(0L)
+            val CREATEAFTER: ZipAppend get() = ZipAppend(1L)
+            val ADDINZIP: ZipAppend get() = ZipAppend(2L)
+        }
+    }
+
+    @JvmInline
+    value class CompressionLevel(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DEFAULT: CompressionLevel get() = CompressionLevel(-1L)
+            val NONE: CompressionLevel get() = CompressionLevel(0L)
+            val FAST: CompressionLevel get() = CompressionLevel(1L)
+            val BEST: CompressionLevel get() = CompressionLevel(9L)
+        }
     }
 
     companion object {
-        const val APPEND_CREATE: Long = 0L
-        const val APPEND_CREATEAFTER: Long = 1L
-        const val APPEND_ADDINZIP: Long = 2L
-        const val COMPRESSION_DEFAULT: Long = -1L
-        const val COMPRESSION_NONE: Long = 0L
-        const val COMPRESSION_FAST: Long = 1L
-        const val COMPRESSION_BEST: Long = 9L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ZIPPacker? =
             wrap(handle.segment)

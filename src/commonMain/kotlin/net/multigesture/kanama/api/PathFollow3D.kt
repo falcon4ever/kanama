@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setVOffsetProperty")
         set(value) = setVOffset(value)
 
-    var rotationMode: Long
+    var rotationMode: PathFollow3D.RotationMode
         @JvmName("rotationModeProperty")
         get() = getRotationMode()
         @JvmName("setRotationModeProperty")
@@ -157,8 +158,8 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: PathFollow3D.set_rotation_mode
      */
-    fun setRotationMode(rotationMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setRotationModeBind, segment, rotationMode)
+    fun setRotationMode(rotationMode: PathFollow3D.RotationMode) {
+        ObjectCalls.ptrcallWithLongArg(setRotationModeBind, segment, rotationMode.value)
     }
 
     /**
@@ -167,8 +168,8 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: PathFollow3D.get_rotation_mode
      */
-    fun getRotationMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getRotationModeBind, segment)
+    fun getRotationMode(): PathFollow3D.RotationMode {
+        return PathFollow3D.RotationMode(ObjectCalls.ptrcallNoArgsRetLong(getRotationModeBind, segment))
     }
 
     /**
@@ -259,6 +260,49 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isTiltEnabledBind, segment)
     }
 
+    /**
+     * Godot's `PathFollow3D.RotationMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`PathFollow3D.RotationMode.<NAME>`).
+     *
+     * Generated from Godot docs: PathFollow3D.RotationMode
+     */
+    @JvmInline
+    value class RotationMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Forbids the PathFollow3D to rotate.
+             *
+             * Generated from Godot docs: PathFollow3D.ROTATION_NONE
+             */
+            val NONE: RotationMode get() = RotationMode(0L)
+            /**
+             * Allows the PathFollow3D to rotate in the Y axis only.
+             *
+             * Generated from Godot docs: PathFollow3D.ROTATION_Y
+             */
+            val Y: RotationMode get() = RotationMode(1L)
+            /**
+             * Allows the PathFollow3D to rotate in both the X, and Y axes.
+             *
+             * Generated from Godot docs: PathFollow3D.ROTATION_XY
+             */
+            val XY: RotationMode get() = RotationMode(2L)
+            /**
+             * Allows the PathFollow3D to rotate in any axis.
+             *
+             * Generated from Godot docs: PathFollow3D.ROTATION_XYZ
+             */
+            val XYZ: RotationMode get() = RotationMode(3L)
+            /**
+             * Uses the up vector information in a `Curve3D` to enforce orientation. This rotation mode
+             * requires the `Path3D`'s `Curve3D.up_vector_enabled` property to be set to `true`.
+             *
+             * Generated from Godot docs: PathFollow3D.ROTATION_ORIENTED
+             */
+            val ORIENTED: RotationMode get() = RotationMode(4L)
+        }
+    }
+
     companion object {
         /**
          * Correct the `transform`. `rotation_mode` implicitly specifies how posture (forward, up and
@@ -266,15 +310,9 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
          *
          * Generated from Godot docs: PathFollow3D.correct_posture
          */
-        fun correctPosture(transform: Transform3D, rotationMode: Long): Transform3D {
-            return ObjectCalls.ptrcallWithTransform3DAndLongArgsRetTransform3D(correctPostureBind, NULL_SEGMENT, transform, rotationMode)
+        fun correctPosture(transform: Transform3D, rotationMode: PathFollow3D.RotationMode): Transform3D {
+            return ObjectCalls.ptrcallWithTransform3DAndLongArgsRetTransform3D(correctPostureBind, NULL_SEGMENT, transform, rotationMode.value)
         }
-
-        const val ROTATION_NONE: Long = 0L
-        const val ROTATION_Y: Long = 1L
-        const val ROTATION_XY: Long = 2L
-        const val ROTATION_XYZ: Long = 3L
-        const val ROTATION_ORIENTED: Long = 4L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PathFollow3D? =

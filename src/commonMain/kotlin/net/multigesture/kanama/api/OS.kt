@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -14,24 +15,6 @@ object OS {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("OS")
     }
-
-    const val RENDERING_DRIVER_VULKAN: Long = 0L
-    const val RENDERING_DRIVER_OPENGL3: Long = 1L
-    const val RENDERING_DRIVER_D3D12: Long = 2L
-    const val RENDERING_DRIVER_METAL: Long = 3L
-    const val SYSTEM_DIR_DESKTOP: Long = 0L
-    const val SYSTEM_DIR_DCIM: Long = 1L
-    const val SYSTEM_DIR_DOCUMENTS: Long = 2L
-    const val SYSTEM_DIR_DOWNLOADS: Long = 3L
-    const val SYSTEM_DIR_MOVIES: Long = 4L
-    const val SYSTEM_DIR_MUSIC: Long = 5L
-    const val SYSTEM_DIR_PICTURES: Long = 6L
-    const val SYSTEM_DIR_RINGTONES: Long = 7L
-    const val STD_HANDLE_INVALID: Long = 0L
-    const val STD_HANDLE_CONSOLE: Long = 1L
-    const val STD_HANDLE_FILE: Long = 2L
-    const val STD_HANDLE_PIPE: Long = 3L
-    const val STD_HANDLE_UNKNOWN: Long = 4L
 
     var lowProcessorUsageMode: Boolean
         @JvmName("lowProcessorUsageModeProperty")
@@ -350,8 +333,8 @@ object OS {
      * Generated from Godot docs: OS.get_stdin_type
      */
     @JvmStatic
-    fun getStdinType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStdinTypeBind, singleton)
+    fun getStdinType(): OS.StdHandleType {
+        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(getStdinTypeBind, singleton))
     }
 
     /**
@@ -361,8 +344,8 @@ object OS {
      * Generated from Godot docs: OS.get_stdout_type
      */
     @JvmStatic
-    fun getStdoutType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStdoutTypeBind, singleton)
+    fun getStdoutType(): OS.StdHandleType {
+        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(getStdoutTypeBind, singleton))
     }
 
     /**
@@ -372,8 +355,8 @@ object OS {
      * Generated from Godot docs: OS.get_stderr_type
      */
     @JvmStatic
-    fun getStderrType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStderrTypeBind, singleton)
+    fun getStderrType(): OS.StdHandleType {
+        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(getStderrTypeBind, singleton))
     }
 
     /**
@@ -465,8 +448,8 @@ object OS {
      * Generated from Godot docs: OS.open_with_program
      */
     @JvmStatic
-    fun openWithProgram(programPath: String, paths: List<String>): Long {
-        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(openWithProgramBind, singleton, programPath, paths)
+    fun openWithProgram(programPath: String, paths: List<String>): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(openWithProgramBind, singleton, programPath, paths))
     }
 
     /**
@@ -478,8 +461,8 @@ object OS {
      * Generated from Godot docs: OS.kill
      */
     @JvmStatic
-    fun kill(pid: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(killBind, singleton, pid)
+    fun kill(pid: Int): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(killBind, singleton, pid))
     }
 
     /**
@@ -500,8 +483,8 @@ object OS {
      * Generated from Godot docs: OS.shell_open
      */
     @JvmStatic
-    fun shellOpen(uri: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(shellOpenBind, singleton, uri)
+    fun shellOpen(uri: String): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(shellOpenBind, singleton, uri))
     }
 
     /**
@@ -516,8 +499,8 @@ object OS {
      * Generated from Godot docs: OS.shell_show_in_file_manager
      */
     @JvmStatic
-    fun shellShowInFileManager(fileOrDirPath: String, openFolder: Boolean = true): Long {
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(shellShowInFileManagerBind, singleton, fileOrDirPath, openFolder)
+    fun shellShowInFileManager(fileOrDirPath: String, openFolder: Boolean = true): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(shellShowInFileManagerBind, singleton, fileOrDirPath, openFolder))
     }
 
     /**
@@ -924,14 +907,14 @@ object OS {
      * Moves the file or directory at the given `path` to the system's recycle bin. See also
      * `DirAccess.remove`. The method takes only global paths, so you may need to use
      * `ProjectSettings.globalize_path`. Do not use it for files in `res://` as it will not work in
-     * exported projects. Returns `FAILED` if the file or directory cannot be found, or the system does
-     * not support this method.
+     * exported projects. Returns `GodotError.FAILED` if the file or directory cannot be found, or the
+     * system does not support this method.
      *
      * Generated from Godot docs: OS.move_to_trash
      */
     @JvmStatic
-    fun moveToTrash(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(moveToTrashBind, singleton, path)
+    fun moveToTrash(path: String): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(moveToTrashBind, singleton, path))
     }
 
     /**
@@ -966,8 +949,8 @@ object OS {
      * Generated from Godot docs: OS.get_system_dir
      */
     @JvmStatic
-    fun getSystemDir(dir: Long, sharedStorage: Boolean = true): String {
-        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getSystemDirBind, singleton, dir, sharedStorage)
+    fun getSystemDir(dir: OS.SystemDir, sharedStorage: Boolean = true): String {
+        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getSystemDirBind, singleton, dir.value, sharedStorage)
     }
 
     /**
@@ -1047,8 +1030,8 @@ object OS {
      * Generated from Godot docs: OS.get_keycode_string
      */
     @JvmStatic
-    fun getKeycodeString(code: Long): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getKeycodeStringBind, singleton, code)
+    fun getKeycodeString(code: Key): String {
+        return ObjectCalls.ptrcallWithLongArgRetString(getKeycodeStringBind, singleton, code.value)
     }
 
     /**
@@ -1069,8 +1052,8 @@ object OS {
      * Generated from Godot docs: OS.find_keycode_from_string
      */
     @JvmStatic
-    fun findKeycodeFromString(string: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(findKeycodeFromStringBind, singleton, string)
+    fun findKeycodeFromString(string: String): Key {
+        return Key(ObjectCalls.ptrcallWithStringArgRetLong(findKeycodeFromStringBind, singleton, string))
     }
 
     /**
@@ -1087,14 +1070,14 @@ object OS {
     }
 
     /**
-     * Assigns the given name to the current thread. Returns `ERR_UNAVAILABLE` if unavailable on the
-     * current platform.
+     * Assigns the given name to the current thread. Returns `GodotError.ERR_UNAVAILABLE` if
+     * unavailable on the current platform.
      *
      * Generated from Godot docs: OS.set_thread_name
      */
     @JvmStatic
-    fun setThreadName(name: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(setThreadNameBind, singleton, name)
+    fun setThreadName(name: String): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(setThreadNameBind, singleton, name))
     }
 
     /**
@@ -1220,6 +1203,152 @@ object OS {
     @JvmStatic
     fun removeLogger(logger: Logger) {
         ObjectCalls.ptrcallWithObjectArgs(removeLoggerBind, singleton, listOf(logger.requireOpenHandle()))
+    }
+
+    /**
+     * Godot's `OS.RenderingDriver` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`OS.RenderingDriver.<NAME>`).
+     *
+     * Generated from Godot docs: OS.RenderingDriver
+     */
+    @JvmInline
+    value class RenderingDriver(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The Vulkan rendering driver. It requires Vulkan 1.0 support and automatically uses features from
+             * Vulkan 1.1, 1.2, and 1.3 if available.
+             *
+             * Generated from Godot docs: OS.RENDERING_DRIVER_VULKAN
+             */
+            val VULKAN: RenderingDriver get() = RenderingDriver(0L)
+            /**
+             * The OpenGL 3 rendering driver. It uses OpenGL 3.3 Core Profile on desktop platforms, OpenGL ES
+             * 3.0 on mobile devices, and WebGL 2.0 on Web.
+             *
+             * Generated from Godot docs: OS.RENDERING_DRIVER_OPENGL3
+             */
+            val OPENGL3: RenderingDriver get() = RenderingDriver(1L)
+            /**
+             * The Direct3D 12 rendering driver. It requires the 12_0 feature level and Shader Model 6.0
+             * support.
+             *
+             * Generated from Godot docs: OS.RENDERING_DRIVER_D3D12
+             */
+            val D3D12: RenderingDriver get() = RenderingDriver(2L)
+            /**
+             * The Metal rendering driver.
+             *
+             * Generated from Godot docs: OS.RENDERING_DRIVER_METAL
+             */
+            val METAL: RenderingDriver get() = RenderingDriver(3L)
+        }
+    }
+
+    /**
+     * Godot's `OS.SystemDir` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`OS.SystemDir.<NAME>`).
+     *
+     * Generated from Godot docs: OS.SystemDir
+     */
+    @JvmInline
+    value class SystemDir(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Refers to the Desktop directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_DESKTOP
+             */
+            val DESKTOP: SystemDir get() = SystemDir(0L)
+            /**
+             * Refers to the DCIM (Digital Camera Images) directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_DCIM
+             */
+            val DCIM: SystemDir get() = SystemDir(1L)
+            /**
+             * Refers to the Documents directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_DOCUMENTS
+             */
+            val DOCUMENTS: SystemDir get() = SystemDir(2L)
+            /**
+             * Refers to the Downloads directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_DOWNLOADS
+             */
+            val DOWNLOADS: SystemDir get() = SystemDir(3L)
+            /**
+             * Refers to the Movies (or Videos) directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_MOVIES
+             */
+            val MOVIES: SystemDir get() = SystemDir(4L)
+            /**
+             * Refers to the Music directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_MUSIC
+             */
+            val MUSIC: SystemDir get() = SystemDir(5L)
+            /**
+             * Refers to the Pictures directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_PICTURES
+             */
+            val PICTURES: SystemDir get() = SystemDir(6L)
+            /**
+             * Refers to the Ringtones directory path.
+             *
+             * Generated from Godot docs: OS.SYSTEM_DIR_RINGTONES
+             */
+            val RINGTONES: SystemDir get() = SystemDir(7L)
+        }
+    }
+
+    /**
+     * Godot's `OS.StdHandleType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`OS.StdHandleType.<NAME>`).
+     *
+     * Generated from Godot docs: OS.StdHandleType
+     */
+    @JvmInline
+    value class StdHandleType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Standard I/O device is invalid. No data can be received from or sent to these standard I/O
+             * devices.
+             *
+             * Generated from Godot docs: OS.STD_HANDLE_INVALID
+             */
+            val INVALID: StdHandleType get() = StdHandleType(0L)
+            /**
+             * Standard I/O device is a console. This typically occurs when Godot is run from a terminal with
+             * no redirection. This is also used for all standard I/O devices when running Godot from the
+             * editor, at least on desktop platforms.
+             *
+             * Generated from Godot docs: OS.STD_HANDLE_CONSOLE
+             */
+            val CONSOLE: StdHandleType get() = StdHandleType(1L)
+            /**
+             * Standard I/O device is a regular file. This typically occurs with redirection from a terminal,
+             * e.g. `godot > stdout.txt`, `godot < stdin.txt` or `godot > stdout_stderr.txt 2>&1`.
+             *
+             * Generated from Godot docs: OS.STD_HANDLE_FILE
+             */
+            val FILE: StdHandleType get() = StdHandleType(2L)
+            /**
+             * Standard I/O device is a FIFO/pipe. This typically occurs with pipe usage from a terminal, e.g.
+             * `echo "Hello" | godot`.
+             *
+             * Generated from Godot docs: OS.STD_HANDLE_PIPE
+             */
+            val PIPE: StdHandleType get() = StdHandleType(3L)
+            /**
+             * Standard I/O device type is unknown.
+             *
+             * Generated from Godot docs: OS.STD_HANDLE_UNKNOWN
+             */
+            val UNKNOWN: StdHandleType get() = StdHandleType(4L)
+        }
     }
 
     @JvmStatic

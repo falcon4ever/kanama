@@ -9,24 +9,24 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: WebRTCMultiplayerPeer
  */
 class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
-    fun createServer(channelsConfig: List<Any?> = emptyList()): Long {
+    fun createServer(channelsConfig: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithArrayArgRetLong(createServerBind, segment, channelsConfig)
+        return GodotError(ObjectCalls.ptrcallWithArrayArgRetLong(createServerBind, segment, channelsConfig))
     }
 
-    fun createClient(peerId: Int, channelsConfig: List<Any?> = emptyList()): Long {
+    fun createClient(peerId: Int, channelsConfig: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createClientBind, segment, peerId, channelsConfig)
+        return GodotError(ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createClientBind, segment, peerId, channelsConfig))
     }
 
-    fun createMesh(peerId: Int, channelsConfig: List<Any?> = emptyList()): Long {
+    fun createMesh(peerId: Int, channelsConfig: List<Any?> = emptyList()): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createMeshBind, segment, peerId, channelsConfig)
+        return GodotError(ObjectCalls.ptrcallWithIntAndArrayArgRetLong(createMeshBind, segment, peerId, channelsConfig))
     }
 
-    fun addPeer(peer: WebRTCPeerConnection?, peerId: Int, unreliableLifetime: Int = 1): Long {
+    fun addPeer(peer: WebRTCPeerConnection?, peerId: Int, unreliableLifetime: Int = 1): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, segment, peer?.requireOpenHandle() ?: NULL_SEGMENT, peerId, unreliableLifetime)
+        return GodotError(ObjectCalls.ptrcallWithObjectTwoIntArgsRetLong(addPeerBind, segment, peer?.requireOpenHandle() ?: NULL_SEGMENT, peerId, unreliableLifetime))
     }
 
     fun removePeer(peerId: Int) {

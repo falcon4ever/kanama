@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -23,9 +24,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.has_feature
      */
-    fun hasFeature(feature: Long): Boolean {
+    fun hasFeature(feature: TextServer.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, segment, feature)
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, segment, feature.value)
     }
 
     /**
@@ -232,9 +233,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_set_style
      */
-    fun fontSetStyle(fontRid: RID, style: Long) {
+    fun fontSetStyle(fontRid: RID, style: TextServer.FontStyle) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStyleBind, segment, fontRid, style)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetStyleBind, segment, fontRid, style.value)
     }
 
     /**
@@ -242,9 +243,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_get_style
      */
-    fun fontGetStyle(fontRid: RID): Long {
+    fun fontGetStyle(fontRid: RID): TextServer.FontStyle {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStyleBind, segment, fontRid)
+        return TextServer.FontStyle(ObjectCalls.ptrcallWithRIDArgRetLong(fontGetStyleBind, segment, fontRid))
     }
 
     /**
@@ -350,9 +351,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_set_antialiasing
      */
-    fun fontSetAntialiasing(fontRid: RID, antialiasing: Long) {
+    fun fontSetAntialiasing(fontRid: RID, antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetAntialiasingBind, segment, fontRid, antialiasing)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetAntialiasingBind, segment, fontRid, antialiasing.value)
     }
 
     /**
@@ -360,9 +361,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_get_antialiasing
      */
-    fun fontGetAntialiasing(fontRid: RID): Long {
+    fun fontGetAntialiasing(fontRid: RID): TextServer.FontAntialiasing {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetAntialiasingBind, segment, fontRid)
+        return TextServer.FontAntialiasing(ObjectCalls.ptrcallWithRIDArgRetLong(fontGetAntialiasingBind, segment, fontRid))
     }
 
     /**
@@ -504,9 +505,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_set_fixed_size_scale_mode
      */
-    fun fontSetFixedSizeScaleMode(fontRid: RID, fixedSizeScaleMode: Long) {
+    fun fontSetFixedSizeScaleMode(fontRid: RID, fixedSizeScaleMode: TextServer.FixedSizeScaleMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeScaleModeBind, segment, fontRid, fixedSizeScaleMode)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetFixedSizeScaleModeBind, segment, fontRid, fixedSizeScaleMode.value)
     }
 
     /**
@@ -514,9 +515,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_get_fixed_size_scale_mode
      */
-    fun fontGetFixedSizeScaleMode(fontRid: RID): Long {
+    fun fontGetFixedSizeScaleMode(fontRid: RID): TextServer.FixedSizeScaleMode {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeScaleModeBind, segment, fontRid)
+        return TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallWithRIDArgRetLong(fontGetFixedSizeScaleModeBind, segment, fontRid))
     }
 
     /**
@@ -671,9 +672,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_set_hinting
      */
-    fun fontSetHinting(fontRid: RID, hinting: Long) {
+    fun fontSetHinting(fontRid: RID, hinting: TextServer.Hinting) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetHintingBind, segment, fontRid, hinting)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetHintingBind, segment, fontRid, hinting.value)
     }
 
     /**
@@ -681,9 +682,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_get_hinting
      */
-    fun fontGetHinting(fontRid: RID): Long {
+    fun fontGetHinting(fontRid: RID): TextServer.Hinting {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetHintingBind, segment, fontRid)
+        return TextServer.Hinting(ObjectCalls.ptrcallWithRIDArgRetLong(fontGetHintingBind, segment, fontRid))
     }
 
     /**
@@ -691,9 +692,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_set_subpixel_positioning
      */
-    fun fontSetSubpixelPositioning(fontRid: RID, subpixelPositioning: Long) {
+    fun fontSetSubpixelPositioning(fontRid: RID, subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetSubpixelPositioningBind, segment, fontRid, subpixelPositioning)
+        ObjectCalls.ptrcallWithRIDAndLongArg(fontSetSubpixelPositioningBind, segment, fontRid, subpixelPositioning.value)
     }
 
     /**
@@ -701,9 +702,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_get_subpixel_positioning
      */
-    fun fontGetSubpixelPositioning(fontRid: RID): Long {
+    fun fontGetSubpixelPositioning(fontRid: RID): TextServer.SubpixelPositioning {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(fontGetSubpixelPositioningBind, segment, fontRid)
+        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallWithRIDArgRetLong(fontGetSubpixelPositioningBind, segment, fontRid))
     }
 
     /**
@@ -756,9 +757,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_set_spacing
      */
-    fun fontSetSpacing(fontRid: RID, spacing: Long, value: Long) {
+    fun fontSetSpacing(fontRid: RID, spacing: TextServer.SpacingType, value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(fontSetSpacingBind, segment, fontRid, spacing, value)
+        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(fontSetSpacingBind, segment, fontRid, spacing.value, value)
     }
 
     /**
@@ -766,9 +767,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.font_get_spacing
      */
-    fun fontGetSpacing(fontRid: RID, spacing: Long): Long {
+    fun fontGetSpacing(fontRid: RID, spacing: TextServer.SpacingType): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(fontGetSpacingBind, segment, fontRid, spacing)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(fontGetSpacingBind, segment, fontRid, spacing.value)
     }
 
     /**
@@ -1236,14 +1237,14 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      * `PackedVector3Array`, containing outline points. `x` and `y` are point coordinates. `z` is the
      * type of the point, using the `ContourPointTag` values. `contours` - `PackedInt32Array`,
      * containing indices the end points of each contour. `orientation` - `bool`, contour orientation.
-     * If `true`, clockwise contours must be filled. - Two successive `CONTOUR_CURVE_TAG_ON` points
-     * indicate a line segment. - One `CONTOUR_CURVE_TAG_OFF_CONIC` point between two
-     * `CONTOUR_CURVE_TAG_ON` points indicates a single conic (quadratic) Bézier arc. - Two
-     * `CONTOUR_CURVE_TAG_OFF_CUBIC` points between two `CONTOUR_CURVE_TAG_ON` points indicate a single
-     * cubic Bézier arc. - Two successive `CONTOUR_CURVE_TAG_OFF_CONIC` points indicate two successive
-     * conic (quadratic) Bézier arcs with a virtual `CONTOUR_CURVE_TAG_ON` point at their middle. -
-     * Each contour is closed. The last point of a contour uses the first point of a contour as its
-     * next point, and vice versa. The first point can be `CONTOUR_CURVE_TAG_OFF_CONIC` point.
+     * If `true`, clockwise contours must be filled. - Two successive `ContourPointTag.ON` points
+     * indicate a line segment. - One `ContourPointTag.OFF_CONIC` point between two
+     * `ContourPointTag.ON` points indicates a single conic (quadratic) Bézier arc. - Two
+     * `ContourPointTag.OFF_CUBIC` points between two `ContourPointTag.ON` points indicate a single
+     * cubic Bézier arc. - Two successive `ContourPointTag.OFF_CONIC` points indicate two successive
+     * conic (quadratic) Bézier arcs with a virtual `ContourPointTag.ON` point at their middle. - Each
+     * contour is closed. The last point of a contour uses the first point of a contour as its next
+     * point, and vice versa. The first point can be `ContourPointTag.OFF_CONIC` point.
      *
      * Generated from Godot docs: TextServer.font_get_glyph_contours
      */
@@ -1589,15 +1590,15 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Creates a new buffer for complex text layout, with the given `direction` and `orientation`. To
      * free the resulting buffer, use `free_rid` method. Note: Direction is ignored if server does not
-     * support `FEATURE_BIDI_LAYOUT` feature (supported by `TextServerAdvanced`). Note: Orientation is
-     * ignored if server does not support `FEATURE_VERTICAL_LAYOUT` feature (supported by
+     * support `Feature.BIDI_LAYOUT` feature (supported by `TextServerAdvanced`). Note: Orientation is
+     * ignored if server does not support `Feature.VERTICAL_LAYOUT` feature (supported by
      * `TextServerAdvanced`).
      *
      * Generated from Godot docs: TextServer.create_shaped_text
      */
-    fun createShapedText(direction: Long = 0L, orientation: Long = 0L): RID {
+    fun createShapedText(direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongArgsRetRID(createShapedTextBind, segment, direction, orientation)
+        return ObjectCalls.ptrcallWithTwoLongArgsRetRID(createShapedTextBind, segment, direction.value, orientation.value)
     }
 
     /**
@@ -1621,15 +1622,15 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * Sets desired text direction. If set to `DIRECTION_AUTO`, direction will be detected based on the
+     * Sets desired text direction. If set to `Direction.AUTO`, direction will be detected based on the
      * buffer contents and current locale. Note: Direction is ignored if server does not support
-     * `FEATURE_BIDI_LAYOUT` feature (supported by `TextServerAdvanced`).
+     * `Feature.BIDI_LAYOUT` feature (supported by `TextServerAdvanced`).
      *
      * Generated from Godot docs: TextServer.shaped_text_set_direction
      */
-    fun shapedTextSetDirection(shaped: RID, direction: Long = 0L) {
+    fun shapedTextSetDirection(shaped: RID, direction: TextServer.Direction = TextServer.Direction.AUTO) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetDirectionBind, segment, shaped, direction)
+        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetDirectionBind, segment, shaped, direction.value)
     }
 
     /**
@@ -1637,9 +1638,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_direction
      */
-    fun shapedTextGetDirection(shaped: RID): Long {
+    fun shapedTextGetDirection(shaped: RID): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetDirectionBind, segment, shaped)
+        return TextServer.Direction(ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetDirectionBind, segment, shaped))
     }
 
     /**
@@ -1647,9 +1648,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_inferred_direction
      */
-    fun shapedTextGetInferredDirection(shaped: RID): Long {
+    fun shapedTextGetInferredDirection(shaped: RID): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetInferredDirectionBind, segment, shaped)
+        return TextServer.Direction(ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetInferredDirectionBind, segment, shaped))
     }
 
     /**
@@ -1707,13 +1708,13 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Sets desired text orientation. Note: Orientation is ignored if server does not support
-     * `FEATURE_VERTICAL_LAYOUT` feature (supported by `TextServerAdvanced`).
+     * `Feature.VERTICAL_LAYOUT` feature (supported by `TextServerAdvanced`).
      *
      * Generated from Godot docs: TextServer.shaped_text_set_orientation
      */
-    fun shapedTextSetOrientation(shaped: RID, orientation: Long = 0L) {
+    fun shapedTextSetOrientation(shaped: RID, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetOrientationBind, segment, shaped, orientation)
+        ObjectCalls.ptrcallWithRIDAndLongArg(shapedTextSetOrientationBind, segment, shaped, orientation.value)
     }
 
     /**
@@ -1721,9 +1722,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_orientation
      */
-    fun shapedTextGetOrientation(shaped: RID): Long {
+    fun shapedTextGetOrientation(shaped: RID): TextServer.Orientation {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetOrientationBind, segment, shaped)
+        return TextServer.Orientation(ObjectCalls.ptrcallWithRIDArgRetLong(shapedTextGetOrientationBind, segment, shaped))
     }
 
     /**
@@ -1773,9 +1774,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_set_spacing
      */
-    fun shapedTextSetSpacing(shaped: RID, spacing: Long, value: Long) {
+    fun shapedTextSetSpacing(shaped: RID, spacing: TextServer.SpacingType, value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(shapedTextSetSpacingBind, segment, shaped, spacing, value)
+        ObjectCalls.ptrcallWithRIDAndTwoLongArgs(shapedTextSetSpacingBind, segment, shaped, spacing.value, value)
     }
 
     /**
@@ -1783,9 +1784,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_spacing
      */
-    fun shapedTextGetSpacing(shaped: RID, spacing: Long): Long {
+    fun shapedTextGetSpacing(shaped: RID, spacing: TextServer.SpacingType): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextGetSpacingBind, segment, shaped, spacing)
+        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedTextGetSpacingBind, segment, shaped, spacing.value)
     }
 
     /**
@@ -1804,9 +1805,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_add_object
      */
-    fun shapedTextAddObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Long = 1L, baseline: Double = 0.0): Boolean {
+    fun shapedTextAddObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, length: Long = 1L, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(shapedTextAddObjectBind, segment, shaped, key, size, inlineAlign, length, baseline)
+        return ObjectCalls.ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool(shapedTextAddObjectBind, segment, shaped, key, size, inlineAlign.value, length, baseline)
     }
 
     /**
@@ -1814,9 +1815,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_resize_object
      */
-    fun shapedTextResizeObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+    fun shapedTextResizeObject(shaped: RID, key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(shapedTextResizeObjectBind, segment, shaped, key, size, inlineAlign, baseline)
+        return ObjectCalls.ptrcallWithRIDVariantVector2LongDoubleArgsRetBool(shapedTextResizeObjectBind, segment, shaped, key, size, inlineAlign.value, baseline)
     }
 
     /**
@@ -1974,9 +1975,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_get_run_direction
      */
-    fun shapedGetRunDirection(shaped: RID, index: Long): Long {
+    fun shapedGetRunDirection(shaped: RID, index: Long): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedGetRunDirectionBind, segment, shaped, index)
+        return TextServer.Direction(ObjectCalls.ptrcallWithRIDAndLongArgRetLong(shapedGetRunDirectionBind, segment, shaped, index))
     }
 
     /**
@@ -2015,9 +2016,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_fit_to_width
      */
-    fun shapedTextFitToWidth(shaped: RID, width: Double, justificationFlags: Long = 3L): Double {
+    fun shapedTextFitToWidth(shaped: RID, width: Double, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L)): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(shapedTextFitToWidthBind, segment, shaped, width, justificationFlags)
+        return ObjectCalls.ptrcallWithRIDDoubleAndLongArgsRetDouble(shapedTextFitToWidthBind, segment, shaped, width, justificationFlags.value)
     }
 
     /**
@@ -2107,9 +2108,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_line_breaks_adv
      */
-    fun shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start: Long = 0L, once: Boolean = true, breakFlags: Long = 3L): List<Int> {
+    fun shapedTextGetLineBreaksAdv(shaped: RID, width: List<Float>, start: Long = 0L, once: Boolean = true, breakFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L)): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(shapedTextGetLineBreaksAdvBind, segment, shaped, width, start, once, breakFlags)
+        return ObjectCalls.ptrcallWithRIDPackedFloat32ListLongBoolLongArgsRetPackedInt32List(shapedTextGetLineBreaksAdvBind, segment, shaped, width, start, once, breakFlags.value)
     }
 
     /**
@@ -2117,9 +2118,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_line_breaks
      */
-    fun shapedTextGetLineBreaks(shaped: RID, width: Double, start: Long = 0L, breakFlags: Long = 3L): List<Int> {
+    fun shapedTextGetLineBreaks(shaped: RID, width: Double, start: Long = 0L, breakFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L)): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(shapedTextGetLineBreaksBind, segment, shaped, width, start, breakFlags)
+        return ObjectCalls.ptrcallWithRIDDoubleTwoLongArgsRetPackedInt32List(shapedTextGetLineBreaksBind, segment, shaped, width, start, breakFlags.value)
     }
 
     /**
@@ -2128,9 +2129,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_word_breaks
      */
-    fun shapedTextGetWordBreaks(shaped: RID, graphemeFlags: Long = 264L, skipGraphemeFlags: Long = 4L): List<Int> {
+    fun shapedTextGetWordBreaks(shaped: RID, graphemeFlags: TextServer.GraphemeFlag = TextServer.GraphemeFlag(264L), skipGraphemeFlags: TextServer.GraphemeFlag = TextServer.GraphemeFlag.VIRTUAL): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(shapedTextGetWordBreaksBind, segment, shaped, graphemeFlags, skipGraphemeFlags)
+        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetPackedInt32List(shapedTextGetWordBreaksBind, segment, shaped, graphemeFlags.value, skipGraphemeFlags.value)
     }
 
     /**
@@ -2178,9 +2179,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_overrun_trim_to_width
      */
-    fun shapedTextOverrunTrimToWidth(shaped: RID, width: Double = 0.0, overrunTrimFlags: Long = 0L) {
+    fun shapedTextOverrunTrimToWidth(shaped: RID, width: Double = 0.0, overrunTrimFlags: TextServer.TextOverrunFlag = TextServer.TextOverrunFlag.NO_TRIM) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(shapedTextOverrunTrimToWidthBind, segment, shaped, width, overrunTrimFlags)
+        ObjectCalls.ptrcallWithRIDDoubleAndLongArgs(shapedTextOverrunTrimToWidthBind, segment, shaped, width, overrunTrimFlags.value)
     }
 
     /**
@@ -2436,9 +2437,9 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.shaped_text_get_dominant_direction_in_range
      */
-    fun shapedTextGetDominantDirectionInRange(shaped: RID, start: Long, end: Long): Long {
+    fun shapedTextGetDominantDirectionInRange(shaped: RID, start: Long, end: Long): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(shapedTextGetDominantDirectionInRangeBind, segment, shaped, start, end)
+        return TextServer.Direction(ObjectCalls.ptrcallWithRIDAndTwoLongArgsRetLong(shapedTextGetDominantDirectionInRangeBind, segment, shaped, start, end))
     }
 
     /**
@@ -2500,7 +2501,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      * Returns index of the first string in `dict` which is visually confusable with the `string`, or
      * `-1` if none is found. Note: This method doesn't detect invisible characters, for spoof
      * detection use it in combination with `spoof_check`. Note: Always returns `-1` if the server does
-     * not support the `FEATURE_UNICODE_SECURITY` feature.
+     * not support the `Feature.UNICODE_SECURITY` feature.
      *
      * Generated from Godot docs: TextServer.is_confusable
      */
@@ -2511,7 +2512,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns `true` if `string` is likely to be an attempt at confusing the reader. Note: Always
-     * returns `false` if the server does not support the `FEATURE_UNICODE_SECURITY` feature.
+     * returns `false` if the server does not support the `Feature.UNICODE_SECURITY` feature.
      *
      * Generated from Godot docs: TextServer.spoof_check
      */
@@ -2532,10 +2533,10 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns `true` if `string` is a valid identifier. If the text server supports the
-     * `FEATURE_UNICODE_IDENTIFIERS` feature, a valid identifier must: - Conform to normalization form
+     * `Feature.UNICODE_IDENTIFIERS` feature, a valid identifier must: - Conform to normalization form
      * C. - Begin with a Unicode character of class XID_Start or `"_"`. - May contain Unicode
      * characters of class XID_Continue in the other positions. - Use UAX #31 recommended scripts only
-     * (mixed scripts are allowed). If the `FEATURE_UNICODE_IDENTIFIERS` feature is not supported, a
+     * (mixed scripts are allowed). If the `Feature.UNICODE_IDENTIFIERS` feature is not supported, a
      * valid identifier must: - Begin with a Unicode character of class XID_Start or `"_"`. - May
      * contain Unicode characters of class XID_Continue in the other positions.
      *
@@ -2559,7 +2560,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the string converted to `UPPERCASE`. Note: Casing is locale dependent and context
-     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * sensitive if server support `Feature.CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
      * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
      *
      * Generated from Godot docs: TextServer.string_to_upper
@@ -2571,7 +2572,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the string converted to `lowercase`. Note: Casing is locale dependent and context
-     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * sensitive if server support `Feature.CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
      * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
      *
      * Generated from Godot docs: TextServer.string_to_lower
@@ -2583,7 +2584,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Returns the string converted to `Title Case`. Note: Casing is locale dependent and context
-     * sensitive if server support `FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
+     * sensitive if server support `Feature.CONTEXT_SENSITIVE_CASE_CONVERSION` feature (supported by
      * `TextServerAdvanced`). Note: The result may be longer or shorter than the original.
      *
      * Generated from Godot docs: TextServer.string_to_title
@@ -2598,128 +2599,1019 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextServer.parse_structured_text
      */
-    fun parseStructuredText(parserType: Long, args: List<Any?>, text: String): List<Vector3i> {
+    fun parseStructuredText(parserType: TextServer.StructuredTextParser, args: List<Any?>, text: String): List<Vector3i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, segment, parserType, args, text)
+        return ObjectCalls.ptrcallWithLongArrayStringArgsRetVector3iList(parseStructuredTextBind, segment, parserType.value, args, text)
+    }
+
+    /**
+     * Godot's `TextServer.FontAntialiasing` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.FontAntialiasing.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FontAntialiasing
+     */
+    @JvmInline
+    value class FontAntialiasing(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Font glyphs are rasterized as 1-bit bitmaps.
+             *
+             * Generated from Godot docs: TextServer.FONT_ANTIALIASING_NONE
+             */
+            val NONE: FontAntialiasing get() = FontAntialiasing(0L)
+            /**
+             * Font glyphs are rasterized as 8-bit grayscale anti-aliased bitmaps.
+             *
+             * Generated from Godot docs: TextServer.FONT_ANTIALIASING_GRAY
+             */
+            val GRAY: FontAntialiasing get() = FontAntialiasing(1L)
+            /**
+             * Font glyphs are rasterized for LCD screens. LCD subpixel layout is determined by the value of
+             * the `ProjectSettings.gui/theme/lcd_subpixel_layout` setting. LCD subpixel anti-aliasing mode is
+             * suitable only for rendering horizontal, unscaled text in 2D.
+             *
+             * Generated from Godot docs: TextServer.FONT_ANTIALIASING_LCD
+             */
+            val LCD: FontAntialiasing get() = FontAntialiasing(2L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.FontLCDSubpixelLayout` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TextServer.FontLCDSubpixelLayout.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FontLCDSubpixelLayout
+     */
+    @JvmInline
+    value class FontLCDSubpixelLayout(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Unknown or unsupported subpixel layout, LCD subpixel antialiasing is disabled.
+             *
+             * Generated from Godot docs: TextServer.FONT_LCD_SUBPIXEL_LAYOUT_NONE
+             */
+            val NONE: FontLCDSubpixelLayout get() = FontLCDSubpixelLayout(0L)
+            /**
+             * Horizontal RGB subpixel layout.
+             *
+             * Generated from Godot docs: TextServer.FONT_LCD_SUBPIXEL_LAYOUT_HRGB
+             */
+            val HRGB: FontLCDSubpixelLayout get() = FontLCDSubpixelLayout(1L)
+            /**
+             * Horizontal BGR subpixel layout.
+             *
+             * Generated from Godot docs: TextServer.FONT_LCD_SUBPIXEL_LAYOUT_HBGR
+             */
+            val HBGR: FontLCDSubpixelLayout get() = FontLCDSubpixelLayout(2L)
+            /**
+             * Vertical RGB subpixel layout.
+             *
+             * Generated from Godot docs: TextServer.FONT_LCD_SUBPIXEL_LAYOUT_VRGB
+             */
+            val VRGB: FontLCDSubpixelLayout get() = FontLCDSubpixelLayout(3L)
+            /**
+             * Vertical BGR subpixel layout.
+             *
+             * Generated from Godot docs: TextServer.FONT_LCD_SUBPIXEL_LAYOUT_VBGR
+             */
+            val VBGR: FontLCDSubpixelLayout get() = FontLCDSubpixelLayout(4L)
+            /**
+             * Represents the size of the `FontLCDSubpixelLayout` enum.
+             *
+             * Generated from Godot docs: TextServer.FONT_LCD_SUBPIXEL_LAYOUT_MAX
+             */
+            val MAX: FontLCDSubpixelLayout get() = FontLCDSubpixelLayout(5L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.Direction` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextServer.Direction.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Direction
+     */
+    @JvmInline
+    value class Direction(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Text direction is determined based on contents and current locale.
+             *
+             * Generated from Godot docs: TextServer.DIRECTION_AUTO
+             */
+            val AUTO: Direction get() = Direction(0L)
+            /**
+             * Text is written from left to right.
+             *
+             * Generated from Godot docs: TextServer.DIRECTION_LTR
+             */
+            val LTR: Direction get() = Direction(1L)
+            /**
+             * Text is written from right to left.
+             *
+             * Generated from Godot docs: TextServer.DIRECTION_RTL
+             */
+            val RTL: Direction get() = Direction(2L)
+            /**
+             * Text writing direction is the same as base string writing direction. Used for BiDi override
+             * only.
+             *
+             * Generated from Godot docs: TextServer.DIRECTION_INHERITED
+             */
+            val INHERITED: Direction get() = Direction(3L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.Orientation` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.Orientation.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Orientation
+     */
+    @JvmInline
+    value class Orientation(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Text is written horizontally.
+             *
+             * Generated from Godot docs: TextServer.ORIENTATION_HORIZONTAL
+             */
+            val HORIZONTAL: Orientation get() = Orientation(0L)
+            /**
+             * Left to right text is written vertically from top to bottom. Right to left text is written
+             * vertically from bottom to top.
+             *
+             * Generated from Godot docs: TextServer.ORIENTATION_VERTICAL
+             */
+            val VERTICAL: Orientation get() = Orientation(1L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.JustificationFlag` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`TextServer.JustificationFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.JustificationFlag
+     */
+    @JvmInline
+    value class JustificationFlag(override val value: Long) : GodotEnumValue {
+        infix fun or(other: JustificationFlag): JustificationFlag = JustificationFlag(value or other.value)
+
+        infix fun and(other: JustificationFlag): JustificationFlag = JustificationFlag(value and other.value)
+
+        infix fun xor(other: JustificationFlag): JustificationFlag = JustificationFlag(value xor other.value)
+
+        fun inv(): JustificationFlag = JustificationFlag(value.inv())
+
+        operator fun contains(other: JustificationFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Do not justify text.
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_NONE
+             */
+            val NONE: JustificationFlag get() = JustificationFlag(0L)
+            /**
+             * Justify text by adding and removing kashidas.
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_KASHIDA
+             */
+            val KASHIDA: JustificationFlag get() = JustificationFlag(1L)
+            /**
+             * Justify text by changing width of the spaces between the words.
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_WORD_BOUND
+             */
+            val WORD_BOUND: JustificationFlag get() = JustificationFlag(2L)
+            /**
+             * Remove trailing and leading spaces from the justified text.
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_TRIM_EDGE_SPACES
+             */
+            val TRIM_EDGE_SPACES: JustificationFlag get() = JustificationFlag(4L)
+            /**
+             * Only apply justification to the part of the text after the last tab.
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_AFTER_LAST_TAB
+             */
+            val AFTER_LAST_TAB: JustificationFlag get() = JustificationFlag(8L)
+            /**
+             * Apply justification to the trimmed line with ellipsis.
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_CONSTRAIN_ELLIPSIS
+             */
+            val CONSTRAIN_ELLIPSIS: JustificationFlag get() = JustificationFlag(16L)
+            /**
+             * Do not apply justification to the last line of the paragraph.
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_SKIP_LAST_LINE
+             */
+            val SKIP_LAST_LINE: JustificationFlag get() = JustificationFlag(32L)
+            /**
+             * Do not apply justification to the last line of the paragraph with visible characters (takes
+             * precedence over `JustificationFlag.SKIP_LAST_LINE`).
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_SKIP_LAST_LINE_WITH_VISIBLE_CHARS
+             */
+            val SKIP_LAST_LINE_WITH_VISIBLE_CHARS: JustificationFlag get() = JustificationFlag(64L)
+            /**
+             * Always apply justification to the paragraphs with a single line
+             * (`JustificationFlag.SKIP_LAST_LINE` and `JustificationFlag.SKIP_LAST_LINE_WITH_VISIBLE_CHARS`
+             * are ignored).
+             *
+             * Generated from Godot docs: TextServer.JUSTIFICATION_DO_NOT_SKIP_SINGLE_LINE
+             */
+            val DO_NOT_SKIP_SINGLE_LINE: JustificationFlag get() = JustificationFlag(128L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.AutowrapMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.AutowrapMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.AutowrapMode
+     */
+    @JvmInline
+    value class AutowrapMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Autowrap is disabled.
+             *
+             * Generated from Godot docs: TextServer.AUTOWRAP_OFF
+             */
+            val OFF: AutowrapMode get() = AutowrapMode(0L)
+            /**
+             * Wraps the text inside the node's bounding rectangle by allowing to break lines at arbitrary
+             * positions, which is useful when very limited space is available.
+             *
+             * Generated from Godot docs: TextServer.AUTOWRAP_ARBITRARY
+             */
+            val ARBITRARY: AutowrapMode get() = AutowrapMode(1L)
+            /**
+             * Wraps the text inside the node's bounding rectangle by soft-breaking between words.
+             *
+             * Generated from Godot docs: TextServer.AUTOWRAP_WORD
+             */
+            val WORD: AutowrapMode get() = AutowrapMode(2L)
+            /**
+             * Behaves similarly to `AutowrapMode.WORD`, but force-breaks a word if that single word does not
+             * fit in one line.
+             *
+             * Generated from Godot docs: TextServer.AUTOWRAP_WORD_SMART
+             */
+            val WORD_SMART: AutowrapMode get() = AutowrapMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.LineBreakFlag` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.LineBreakFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.LineBreakFlag
+     */
+    @JvmInline
+    value class LineBreakFlag(override val value: Long) : GodotEnumValue {
+        infix fun or(other: LineBreakFlag): LineBreakFlag = LineBreakFlag(value or other.value)
+
+        infix fun and(other: LineBreakFlag): LineBreakFlag = LineBreakFlag(value and other.value)
+
+        infix fun xor(other: LineBreakFlag): LineBreakFlag = LineBreakFlag(value xor other.value)
+
+        fun inv(): LineBreakFlag = LineBreakFlag(value.inv())
+
+        operator fun contains(other: LineBreakFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Do not break the line.
+             *
+             * Generated from Godot docs: TextServer.BREAK_NONE
+             */
+            val NONE: LineBreakFlag get() = LineBreakFlag(0L)
+            /**
+             * Break the line at the line mandatory break characters (e.g. `"\n"`).
+             *
+             * Generated from Godot docs: TextServer.BREAK_MANDATORY
+             */
+            val MANDATORY: LineBreakFlag get() = LineBreakFlag(1L)
+            /**
+             * Break the line between the words.
+             *
+             * Generated from Godot docs: TextServer.BREAK_WORD_BOUND
+             */
+            val WORD_BOUND: LineBreakFlag get() = LineBreakFlag(2L)
+            /**
+             * Break the line between any unconnected graphemes.
+             *
+             * Generated from Godot docs: TextServer.BREAK_GRAPHEME_BOUND
+             */
+            val GRAPHEME_BOUND: LineBreakFlag get() = LineBreakFlag(4L)
+            /**
+             * Should be used only in conjunction with `LineBreakFlag.WORD_BOUND`, break the line between any
+             * unconnected graphemes, if it's impossible to break it between the words.
+             *
+             * Generated from Godot docs: TextServer.BREAK_ADAPTIVE
+             */
+            val ADAPTIVE: LineBreakFlag get() = LineBreakFlag(8L)
+            /**
+             * Remove edge spaces from the broken line segments.
+             *
+             * Generated from Godot docs: TextServer.BREAK_TRIM_EDGE_SPACES
+             */
+            val TRIM_EDGE_SPACES: LineBreakFlag get() = LineBreakFlag(16L)
+            /**
+             * Subtract first line indentation width from all lines after the first one.
+             *
+             * Generated from Godot docs: TextServer.BREAK_TRIM_INDENT
+             */
+            val TRIM_INDENT: LineBreakFlag get() = LineBreakFlag(32L)
+            /**
+             * Remove spaces and line break characters from the start of broken line segments. E.g, after line
+             * breaking, the second segment of the following text `test \n next`, is `next` if the flag is set,
+             * and ` next` if it is not.
+             *
+             * Generated from Godot docs: TextServer.BREAK_TRIM_START_EDGE_SPACES
+             */
+            val TRIM_START_EDGE_SPACES: LineBreakFlag get() = LineBreakFlag(64L)
+            /**
+             * Remove spaces and line break characters from the end of broken line segments. E.g, after line
+             * breaking, the first segment of the following text `test \n next`, is `test` if the flag is set,
+             * and `test \n` if it is not.
+             *
+             * Generated from Godot docs: TextServer.BREAK_TRIM_END_EDGE_SPACES
+             */
+            val TRIM_END_EDGE_SPACES: LineBreakFlag get() = LineBreakFlag(128L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.VisibleCharactersBehavior` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TextServer.VisibleCharactersBehavior.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.VisibleCharactersBehavior
+     */
+    @JvmInline
+    value class VisibleCharactersBehavior(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Trims text before the shaping. e.g, increasing `Label.visible_characters` or
+             * `RichTextLabel.visible_characters` value is visually identical to typing the text. Note: In this
+             * mode, trimmed text is not processed at all. It is not accounted for in line breaking and size
+             * calculations.
+             *
+             * Generated from Godot docs: TextServer.VC_CHARS_BEFORE_SHAPING
+             */
+            val CHARS_BEFORE_SHAPING: VisibleCharactersBehavior get() = VisibleCharactersBehavior(0L)
+            /**
+             * Displays glyphs that are mapped to the first `Label.visible_characters` or
+             * `RichTextLabel.visible_characters` characters from the beginning of the text.
+             *
+             * Generated from Godot docs: TextServer.VC_CHARS_AFTER_SHAPING
+             */
+            val CHARS_AFTER_SHAPING: VisibleCharactersBehavior get() = VisibleCharactersBehavior(1L)
+            /**
+             * Displays `Label.visible_ratio` or `RichTextLabel.visible_ratio` glyphs, starting from the left
+             * or from the right, depending on `Control.layout_direction` value.
+             *
+             * Generated from Godot docs: TextServer.VC_GLYPHS_AUTO
+             */
+            val GLYPHS_AUTO: VisibleCharactersBehavior get() = VisibleCharactersBehavior(2L)
+            /**
+             * Displays `Label.visible_ratio` or `RichTextLabel.visible_ratio` glyphs, starting from the left.
+             *
+             * Generated from Godot docs: TextServer.VC_GLYPHS_LTR
+             */
+            val GLYPHS_LTR: VisibleCharactersBehavior get() = VisibleCharactersBehavior(3L)
+            /**
+             * Displays `Label.visible_ratio` or `RichTextLabel.visible_ratio` glyphs, starting from the right.
+             *
+             * Generated from Godot docs: TextServer.VC_GLYPHS_RTL
+             */
+            val GLYPHS_RTL: VisibleCharactersBehavior get() = VisibleCharactersBehavior(4L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.OverrunBehavior` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.OverrunBehavior.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.OverrunBehavior
+     */
+    @JvmInline
+    value class OverrunBehavior(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No text trimming is performed.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_NO_TRIMMING
+             */
+            val NO_TRIMMING: OverrunBehavior get() = OverrunBehavior(0L)
+            /**
+             * Trims the text per character.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM_CHAR
+             */
+            val TRIM_CHAR: OverrunBehavior get() = OverrunBehavior(1L)
+            /**
+             * Trims the text per word.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM_WORD
+             */
+            val TRIM_WORD: OverrunBehavior get() = OverrunBehavior(2L)
+            /**
+             * Trims the text per character and adds an ellipsis to indicate that parts are hidden if trimmed
+             * text is 6 characters or longer.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM_ELLIPSIS
+             */
+            val TRIM_ELLIPSIS: OverrunBehavior get() = OverrunBehavior(3L)
+            /**
+             * Trims the text per word and adds an ellipsis to indicate that parts are hidden if trimmed text
+             * is 6 characters or longer.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
+             */
+            val TRIM_WORD_ELLIPSIS: OverrunBehavior get() = OverrunBehavior(4L)
+            /**
+             * Trims the text per character and adds an ellipsis to indicate that parts are hidden regardless
+             * of trimmed text length.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM_ELLIPSIS_FORCE
+             */
+            val TRIM_ELLIPSIS_FORCE: OverrunBehavior get() = OverrunBehavior(5L)
+            /**
+             * Trims the text per word and adds an ellipsis to indicate that parts are hidden regardless of
+             * trimmed text length.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM_WORD_ELLIPSIS_FORCE
+             */
+            val TRIM_WORD_ELLIPSIS_FORCE: OverrunBehavior get() = OverrunBehavior(6L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.TextOverrunFlag` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.TextOverrunFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.TextOverrunFlag
+     */
+    @JvmInline
+    value class TextOverrunFlag(override val value: Long) : GodotEnumValue {
+        infix fun or(other: TextOverrunFlag): TextOverrunFlag = TextOverrunFlag(value or other.value)
+
+        infix fun and(other: TextOverrunFlag): TextOverrunFlag = TextOverrunFlag(value and other.value)
+
+        infix fun xor(other: TextOverrunFlag): TextOverrunFlag = TextOverrunFlag(value xor other.value)
+
+        fun inv(): TextOverrunFlag = TextOverrunFlag(value.inv())
+
+        operator fun contains(other: TextOverrunFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * No trimming is performed.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_NO_TRIM
+             */
+            val NO_TRIM: TextOverrunFlag get() = TextOverrunFlag(0L)
+            /**
+             * Trims the text when it exceeds the given width.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM
+             */
+            val TRIM: TextOverrunFlag get() = TextOverrunFlag(1L)
+            /**
+             * Trims the text per word instead of per grapheme.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_TRIM_WORD_ONLY
+             */
+            val TRIM_WORD_ONLY: TextOverrunFlag get() = TextOverrunFlag(2L)
+            /**
+             * Determines whether an ellipsis should be added at the end of the text.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_ADD_ELLIPSIS
+             */
+            val ADD_ELLIPSIS: TextOverrunFlag get() = TextOverrunFlag(4L)
+            /**
+             * Determines whether the ellipsis at the end of the text is enforced and may not be hidden.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_ENFORCE_ELLIPSIS
+             */
+            val ENFORCE_ELLIPSIS: TextOverrunFlag get() = TextOverrunFlag(8L)
+            /**
+             * Accounts for the text being justified before attempting to trim it (see `JustificationFlag`).
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_JUSTIFICATION_AWARE
+             */
+            val JUSTIFICATION_AWARE: TextOverrunFlag get() = TextOverrunFlag(16L)
+            /**
+             * Determines whether the ellipsis should be added regardless of the string length, otherwise it is
+             * added only if the string is 6 characters or longer.
+             *
+             * Generated from Godot docs: TextServer.OVERRUN_SHORT_STRING_ELLIPSIS
+             */
+            val SHORT_STRING_ELLIPSIS: TextOverrunFlag get() = TextOverrunFlag(32L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.GraphemeFlag` bitfield as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.GraphemeFlag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.GraphemeFlag
+     */
+    @JvmInline
+    value class GraphemeFlag(override val value: Long) : GodotEnumValue {
+        infix fun or(other: GraphemeFlag): GraphemeFlag = GraphemeFlag(value or other.value)
+
+        infix fun and(other: GraphemeFlag): GraphemeFlag = GraphemeFlag(value and other.value)
+
+        infix fun xor(other: GraphemeFlag): GraphemeFlag = GraphemeFlag(value xor other.value)
+
+        fun inv(): GraphemeFlag = GraphemeFlag(value.inv())
+
+        operator fun contains(other: GraphemeFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Grapheme is supported by the font, and can be drawn.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_VALID
+             */
+            val VALID: GraphemeFlag get() = GraphemeFlag(1L)
+            /**
+             * Grapheme is part of right-to-left or bottom-to-top run.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_RTL
+             */
+            val RTL: GraphemeFlag get() = GraphemeFlag(2L)
+            /**
+             * Grapheme is not part of source text, it was added by justification process.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_VIRTUAL
+             */
+            val VIRTUAL: GraphemeFlag get() = GraphemeFlag(4L)
+            /**
+             * Grapheme is whitespace.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_SPACE
+             */
+            val SPACE: GraphemeFlag get() = GraphemeFlag(8L)
+            /**
+             * Grapheme is mandatory break point (e.g. `"\n"`).
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_BREAK_HARD
+             */
+            val BREAK_HARD: GraphemeFlag get() = GraphemeFlag(16L)
+            /**
+             * Grapheme is optional break point (e.g. space).
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_BREAK_SOFT
+             */
+            val BREAK_SOFT: GraphemeFlag get() = GraphemeFlag(32L)
+            /**
+             * Grapheme is the tabulation character.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_TAB
+             */
+            val TAB: GraphemeFlag get() = GraphemeFlag(64L)
+            /**
+             * Grapheme is kashida.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_ELONGATION
+             */
+            val ELONGATION: GraphemeFlag get() = GraphemeFlag(128L)
+            /**
+             * Grapheme is punctuation character.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_PUNCTUATION
+             */
+            val PUNCTUATION: GraphemeFlag get() = GraphemeFlag(256L)
+            /**
+             * Grapheme is underscore character.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_UNDERSCORE
+             */
+            val UNDERSCORE: GraphemeFlag get() = GraphemeFlag(512L)
+            /**
+             * Grapheme is connected to the previous grapheme. Breaking line before this grapheme is not safe.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_CONNECTED
+             */
+            val CONNECTED: GraphemeFlag get() = GraphemeFlag(1024L)
+            /**
+             * It is safe to insert a U+0640 before this grapheme for elongation.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_SAFE_TO_INSERT_TATWEEL
+             */
+            val SAFE_TO_INSERT_TATWEEL: GraphemeFlag get() = GraphemeFlag(2048L)
+            /**
+             * Grapheme is an object replacement character for the embedded object.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_EMBEDDED_OBJECT
+             */
+            val EMBEDDED_OBJECT: GraphemeFlag get() = GraphemeFlag(4096L)
+            /**
+             * Grapheme is a soft hyphen.
+             *
+             * Generated from Godot docs: TextServer.GRAPHEME_IS_SOFT_HYPHEN
+             */
+            val SOFT_HYPHEN: GraphemeFlag get() = GraphemeFlag(8192L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.Hinting` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextServer.Hinting.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Hinting
+     */
+    @JvmInline
+    value class Hinting(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables font hinting (smoother but less crisp).
+             *
+             * Generated from Godot docs: TextServer.HINTING_NONE
+             */
+            val NONE: Hinting get() = Hinting(0L)
+            /**
+             * Use the light font hinting mode.
+             *
+             * Generated from Godot docs: TextServer.HINTING_LIGHT
+             */
+            val LIGHT: Hinting get() = Hinting(1L)
+            /**
+             * Use the default font hinting mode (crisper but less smooth). Note: This hinting mode changes
+             * both horizontal and vertical glyph metrics. If applied to monospace font, some glyphs might have
+             * different width.
+             *
+             * Generated from Godot docs: TextServer.HINTING_NORMAL
+             */
+            val NORMAL: Hinting get() = Hinting(2L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.SubpixelPositioning` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.SubpixelPositioning.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.SubpixelPositioning
+     */
+    @JvmInline
+    value class SubpixelPositioning(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Glyph horizontal position is rounded to the whole pixel size, each glyph is rasterized once.
+             *
+             * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_DISABLED
+             */
+            val DISABLED: SubpixelPositioning get() = SubpixelPositioning(0L)
+            /**
+             * Glyph horizontal position is rounded based on font size. - To one quarter of the pixel size if
+             * font size is smaller or equal to `SubpixelPositioning.ONE_QUARTER_MAX_SIZE`. - To one half of
+             * the pixel size if font size is smaller or equal to `SubpixelPositioning.ONE_HALF_MAX_SIZE`. - To
+             * the whole pixel size for larger fonts.
+             *
+             * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_AUTO
+             */
+            val AUTO: SubpixelPositioning get() = SubpixelPositioning(1L)
+            /**
+             * Glyph horizontal position is rounded to one half of the pixel size, each glyph is rasterized up
+             * to two times.
+             *
+             * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_ONE_HALF
+             */
+            val ONE_HALF: SubpixelPositioning get() = SubpixelPositioning(2L)
+            /**
+             * Glyph horizontal position is rounded to one quarter of the pixel size, each glyph is rasterized
+             * up to four times.
+             *
+             * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_ONE_QUARTER
+             */
+            val ONE_QUARTER: SubpixelPositioning get() = SubpixelPositioning(3L)
+            /**
+             * Maximum font size which will use "one half of the pixel" subpixel positioning in
+             * `SubpixelPositioning.AUTO` mode.
+             *
+             * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_ONE_HALF_MAX_SIZE
+             */
+            val ONE_HALF_MAX_SIZE: SubpixelPositioning get() = SubpixelPositioning(20L)
+            /**
+             * Maximum font size which will use "one quarter of the pixel" subpixel positioning in
+             * `SubpixelPositioning.AUTO` mode.
+             *
+             * Generated from Godot docs: TextServer.SUBPIXEL_POSITIONING_ONE_QUARTER_MAX_SIZE
+             */
+            val ONE_QUARTER_MAX_SIZE: SubpixelPositioning get() = SubpixelPositioning(16L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.Feature` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextServer.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.Feature
+     */
+    @JvmInline
+    value class Feature(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * TextServer supports simple text layouts.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_SIMPLE_LAYOUT
+             */
+            val SIMPLE_LAYOUT: Feature get() = Feature(1L)
+            /**
+             * TextServer supports bidirectional text layouts.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_BIDI_LAYOUT
+             */
+            val BIDI_LAYOUT: Feature get() = Feature(2L)
+            /**
+             * TextServer supports vertical layouts.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_VERTICAL_LAYOUT
+             */
+            val VERTICAL_LAYOUT: Feature get() = Feature(4L)
+            /**
+             * TextServer supports complex text shaping.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_SHAPING
+             */
+            val SHAPING: Feature get() = Feature(8L)
+            /**
+             * TextServer supports justification using kashidas.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_KASHIDA_JUSTIFICATION
+             */
+            val KASHIDA_JUSTIFICATION: Feature get() = Feature(16L)
+            /**
+             * TextServer supports complex line/word breaking rules (e.g. dictionary based).
+             *
+             * Generated from Godot docs: TextServer.FEATURE_BREAK_ITERATORS
+             */
+            val BREAK_ITERATORS: Feature get() = Feature(32L)
+            /**
+             * TextServer supports loading bitmap fonts.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_FONT_BITMAP
+             */
+            val FONT_BITMAP: Feature get() = Feature(64L)
+            /**
+             * TextServer supports loading dynamic (TrueType, OpeType, etc.) fonts.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_FONT_DYNAMIC
+             */
+            val FONT_DYNAMIC: Feature get() = Feature(128L)
+            /**
+             * TextServer supports multichannel signed distance field dynamic font rendering.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_FONT_MSDF
+             */
+            val FONT_MSDF: Feature get() = Feature(256L)
+            /**
+             * TextServer supports loading system fonts.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_FONT_SYSTEM
+             */
+            val FONT_SYSTEM: Feature get() = Feature(512L)
+            /**
+             * TextServer supports variable fonts.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_FONT_VARIABLE
+             */
+            val FONT_VARIABLE: Feature get() = Feature(1024L)
+            /**
+             * TextServer supports locale dependent and context sensitive case conversion.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION
+             */
+            val CONTEXT_SENSITIVE_CASE_CONVERSION: Feature get() = Feature(2048L)
+            /**
+             * TextServer require external data file for some features, see `load_support_data`.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_USE_SUPPORT_DATA
+             */
+            val USE_SUPPORT_DATA: Feature get() = Feature(4096L)
+            /**
+             * TextServer supports UAX #31 identifier validation, see `is_valid_identifier`.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_UNICODE_IDENTIFIERS
+             */
+            val UNICODE_IDENTIFIERS: Feature get() = Feature(8192L)
+            /**
+             * TextServer supports Unicode Technical Report #36 (https://unicode.org/reports/tr36/) and Unicode
+             * Technical Standard #39 (https://unicode.org/reports/tr39/) based spoof detection features.
+             *
+             * Generated from Godot docs: TextServer.FEATURE_UNICODE_SECURITY
+             */
+            val UNICODE_SECURITY: Feature get() = Feature(16384L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.ContourPointTag` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.ContourPointTag.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.ContourPointTag
+     */
+    @JvmInline
+    value class ContourPointTag(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Contour point is on the curve.
+             *
+             * Generated from Godot docs: TextServer.CONTOUR_CURVE_TAG_ON
+             */
+            val ON: ContourPointTag get() = ContourPointTag(1L)
+            /**
+             * Contour point isn't on the curve, but serves as a control point for a conic (quadratic) Bézier
+             * arc.
+             *
+             * Generated from Godot docs: TextServer.CONTOUR_CURVE_TAG_OFF_CONIC
+             */
+            val OFF_CONIC: ContourPointTag get() = ContourPointTag(0L)
+            /**
+             * Contour point isn't on the curve, but serves as a control point for a cubic Bézier arc.
+             *
+             * Generated from Godot docs: TextServer.CONTOUR_CURVE_TAG_OFF_CUBIC
+             */
+            val OFF_CUBIC: ContourPointTag get() = ContourPointTag(2L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.SpacingType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.SpacingType.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.SpacingType
+     */
+    @JvmInline
+    value class SpacingType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Spacing for each glyph.
+             *
+             * Generated from Godot docs: TextServer.SPACING_GLYPH
+             */
+            val GLYPH: SpacingType get() = SpacingType(0L)
+            /**
+             * Spacing for the space character.
+             *
+             * Generated from Godot docs: TextServer.SPACING_SPACE
+             */
+            val SPACE: SpacingType get() = SpacingType(1L)
+            /**
+             * Spacing at the top of the line.
+             *
+             * Generated from Godot docs: TextServer.SPACING_TOP
+             */
+            val TOP: SpacingType get() = SpacingType(2L)
+            /**
+             * Spacing at the bottom of the line.
+             *
+             * Generated from Godot docs: TextServer.SPACING_BOTTOM
+             */
+            val BOTTOM: SpacingType get() = SpacingType(3L)
+            /**
+             * Represents the size of the `SpacingType` enum.
+             *
+             * Generated from Godot docs: TextServer.SPACING_MAX
+             */
+            val MAX: SpacingType get() = SpacingType(4L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.FontStyle` bitfield as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextServer.FontStyle.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FontStyle
+     */
+    @JvmInline
+    value class FontStyle(override val value: Long) : GodotEnumValue {
+        infix fun or(other: FontStyle): FontStyle = FontStyle(value or other.value)
+
+        infix fun and(other: FontStyle): FontStyle = FontStyle(value and other.value)
+
+        infix fun xor(other: FontStyle): FontStyle = FontStyle(value xor other.value)
+
+        fun inv(): FontStyle = FontStyle(value.inv())
+
+        operator fun contains(other: FontStyle): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Font is bold.
+             *
+             * Generated from Godot docs: TextServer.FONT_BOLD
+             */
+            val BOLD: FontStyle get() = FontStyle(1L)
+            /**
+             * Font is italic or oblique.
+             *
+             * Generated from Godot docs: TextServer.FONT_ITALIC
+             */
+            val ITALIC: FontStyle get() = FontStyle(2L)
+            /**
+             * Font has fixed-width characters (also known as monospace).
+             *
+             * Generated from Godot docs: TextServer.FONT_FIXED_WIDTH
+             */
+            val FIXED_WIDTH: FontStyle get() = FontStyle(4L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.StructuredTextParser` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`TextServer.StructuredTextParser.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.StructuredTextParser
+     */
+    @JvmInline
+    value class StructuredTextParser(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use default Unicode BiDi algorithm.
+             *
+             * Generated from Godot docs: TextServer.STRUCTURED_TEXT_DEFAULT
+             */
+            val DEFAULT: StructuredTextParser get() = StructuredTextParser(0L)
+            /**
+             * BiDi override for URI.
+             *
+             * Generated from Godot docs: TextServer.STRUCTURED_TEXT_URI
+             */
+            val URI: StructuredTextParser get() = StructuredTextParser(1L)
+            /**
+             * BiDi override for file path.
+             *
+             * Generated from Godot docs: TextServer.STRUCTURED_TEXT_FILE
+             */
+            val FILE: StructuredTextParser get() = StructuredTextParser(2L)
+            /**
+             * BiDi override for email.
+             *
+             * Generated from Godot docs: TextServer.STRUCTURED_TEXT_EMAIL
+             */
+            val EMAIL: StructuredTextParser get() = StructuredTextParser(3L)
+            /**
+             * BiDi override for lists. Structured text options: list separator `String`.
+             *
+             * Generated from Godot docs: TextServer.STRUCTURED_TEXT_LIST
+             */
+            val LIST: StructuredTextParser get() = StructuredTextParser(4L)
+            /**
+             * BiDi override for GDScript.
+             *
+             * Generated from Godot docs: TextServer.STRUCTURED_TEXT_GDSCRIPT
+             */
+            val GDSCRIPT: StructuredTextParser get() = StructuredTextParser(5L)
+            /**
+             * User defined structured text BiDi override function.
+             *
+             * Generated from Godot docs: TextServer.STRUCTURED_TEXT_CUSTOM
+             */
+            val CUSTOM: StructuredTextParser get() = StructuredTextParser(6L)
+        }
+    }
+
+    /**
+     * Godot's `TextServer.FixedSizeScaleMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextServer.FixedSizeScaleMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextServer.FixedSizeScaleMode
+     */
+    @JvmInline
+    value class FixedSizeScaleMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Bitmap font is not scaled.
+             *
+             * Generated from Godot docs: TextServer.FIXED_SIZE_SCALE_DISABLE
+             */
+            val DISABLE: FixedSizeScaleMode get() = FixedSizeScaleMode(0L)
+            /**
+             * Bitmap font is scaled to the closest integer multiple of the font's fixed size. This is the
+             * recommended option for pixel art fonts.
+             *
+             * Generated from Godot docs: TextServer.FIXED_SIZE_SCALE_INTEGER_ONLY
+             */
+            val INTEGER_ONLY: FixedSizeScaleMode get() = FixedSizeScaleMode(1L)
+            /**
+             * Bitmap font is scaled to an arbitrary (fractional) size. This is the recommended option for
+             * non-pixel art fonts.
+             *
+             * Generated from Godot docs: TextServer.FIXED_SIZE_SCALE_ENABLED
+             */
+            val ENABLED: FixedSizeScaleMode get() = FixedSizeScaleMode(2L)
+        }
     }
 
     companion object {
-        const val FONT_ANTIALIASING_NONE: Long = 0L
-        const val FONT_ANTIALIASING_GRAY: Long = 1L
-        const val FONT_ANTIALIASING_LCD: Long = 2L
-        const val FONT_LCD_SUBPIXEL_LAYOUT_NONE: Long = 0L
-        const val FONT_LCD_SUBPIXEL_LAYOUT_HRGB: Long = 1L
-        const val FONT_LCD_SUBPIXEL_LAYOUT_HBGR: Long = 2L
-        const val FONT_LCD_SUBPIXEL_LAYOUT_VRGB: Long = 3L
-        const val FONT_LCD_SUBPIXEL_LAYOUT_VBGR: Long = 4L
-        const val FONT_LCD_SUBPIXEL_LAYOUT_MAX: Long = 5L
-        const val DIRECTION_AUTO: Long = 0L
-        const val DIRECTION_LTR: Long = 1L
-        const val DIRECTION_RTL: Long = 2L
-        const val DIRECTION_INHERITED: Long = 3L
-        const val ORIENTATION_HORIZONTAL: Long = 0L
-        const val ORIENTATION_VERTICAL: Long = 1L
-        const val JUSTIFICATION_NONE: Long = 0L
-        const val JUSTIFICATION_KASHIDA: Long = 1L
-        const val JUSTIFICATION_WORD_BOUND: Long = 2L
-        const val JUSTIFICATION_TRIM_EDGE_SPACES: Long = 4L
-        const val JUSTIFICATION_AFTER_LAST_TAB: Long = 8L
-        const val JUSTIFICATION_CONSTRAIN_ELLIPSIS: Long = 16L
-        const val JUSTIFICATION_SKIP_LAST_LINE: Long = 32L
-        const val JUSTIFICATION_SKIP_LAST_LINE_WITH_VISIBLE_CHARS: Long = 64L
-        const val JUSTIFICATION_DO_NOT_SKIP_SINGLE_LINE: Long = 128L
-        const val AUTOWRAP_OFF: Long = 0L
-        const val AUTOWRAP_ARBITRARY: Long = 1L
-        const val AUTOWRAP_WORD: Long = 2L
-        const val AUTOWRAP_WORD_SMART: Long = 3L
-        const val BREAK_NONE: Long = 0L
-        const val BREAK_MANDATORY: Long = 1L
-        const val BREAK_WORD_BOUND: Long = 2L
-        const val BREAK_GRAPHEME_BOUND: Long = 4L
-        const val BREAK_ADAPTIVE: Long = 8L
-        const val BREAK_TRIM_EDGE_SPACES: Long = 16L
-        const val BREAK_TRIM_INDENT: Long = 32L
-        const val BREAK_TRIM_START_EDGE_SPACES: Long = 64L
-        const val BREAK_TRIM_END_EDGE_SPACES: Long = 128L
-        const val VC_CHARS_BEFORE_SHAPING: Long = 0L
-        const val VC_CHARS_AFTER_SHAPING: Long = 1L
-        const val VC_GLYPHS_AUTO: Long = 2L
-        const val VC_GLYPHS_LTR: Long = 3L
-        const val VC_GLYPHS_RTL: Long = 4L
-        const val OVERRUN_NO_TRIMMING: Long = 0L
-        const val OVERRUN_TRIM_CHAR: Long = 1L
-        const val OVERRUN_TRIM_WORD: Long = 2L
-        const val OVERRUN_TRIM_ELLIPSIS: Long = 3L
-        const val OVERRUN_TRIM_WORD_ELLIPSIS: Long = 4L
-        const val OVERRUN_TRIM_ELLIPSIS_FORCE: Long = 5L
-        const val OVERRUN_TRIM_WORD_ELLIPSIS_FORCE: Long = 6L
-        const val OVERRUN_NO_TRIM: Long = 0L
-        const val OVERRUN_TRIM: Long = 1L
-        const val OVERRUN_TRIM_WORD_ONLY: Long = 2L
-        const val OVERRUN_ADD_ELLIPSIS: Long = 4L
-        const val OVERRUN_ENFORCE_ELLIPSIS: Long = 8L
-        const val OVERRUN_JUSTIFICATION_AWARE: Long = 16L
-        const val OVERRUN_SHORT_STRING_ELLIPSIS: Long = 32L
-        const val GRAPHEME_IS_VALID: Long = 1L
-        const val GRAPHEME_IS_RTL: Long = 2L
-        const val GRAPHEME_IS_VIRTUAL: Long = 4L
-        const val GRAPHEME_IS_SPACE: Long = 8L
-        const val GRAPHEME_IS_BREAK_HARD: Long = 16L
-        const val GRAPHEME_IS_BREAK_SOFT: Long = 32L
-        const val GRAPHEME_IS_TAB: Long = 64L
-        const val GRAPHEME_IS_ELONGATION: Long = 128L
-        const val GRAPHEME_IS_PUNCTUATION: Long = 256L
-        const val GRAPHEME_IS_UNDERSCORE: Long = 512L
-        const val GRAPHEME_IS_CONNECTED: Long = 1024L
-        const val GRAPHEME_IS_SAFE_TO_INSERT_TATWEEL: Long = 2048L
-        const val GRAPHEME_IS_EMBEDDED_OBJECT: Long = 4096L
-        const val GRAPHEME_IS_SOFT_HYPHEN: Long = 8192L
-        const val HINTING_NONE: Long = 0L
-        const val HINTING_LIGHT: Long = 1L
-        const val HINTING_NORMAL: Long = 2L
-        const val SUBPIXEL_POSITIONING_DISABLED: Long = 0L
-        const val SUBPIXEL_POSITIONING_AUTO: Long = 1L
-        const val SUBPIXEL_POSITIONING_ONE_HALF: Long = 2L
-        const val SUBPIXEL_POSITIONING_ONE_QUARTER: Long = 3L
-        const val SUBPIXEL_POSITIONING_ONE_HALF_MAX_SIZE: Long = 20L
-        const val SUBPIXEL_POSITIONING_ONE_QUARTER_MAX_SIZE: Long = 16L
-        const val FEATURE_SIMPLE_LAYOUT: Long = 1L
-        const val FEATURE_BIDI_LAYOUT: Long = 2L
-        const val FEATURE_VERTICAL_LAYOUT: Long = 4L
-        const val FEATURE_SHAPING: Long = 8L
-        const val FEATURE_KASHIDA_JUSTIFICATION: Long = 16L
-        const val FEATURE_BREAK_ITERATORS: Long = 32L
-        const val FEATURE_FONT_BITMAP: Long = 64L
-        const val FEATURE_FONT_DYNAMIC: Long = 128L
-        const val FEATURE_FONT_MSDF: Long = 256L
-        const val FEATURE_FONT_SYSTEM: Long = 512L
-        const val FEATURE_FONT_VARIABLE: Long = 1024L
-        const val FEATURE_CONTEXT_SENSITIVE_CASE_CONVERSION: Long = 2048L
-        const val FEATURE_USE_SUPPORT_DATA: Long = 4096L
-        const val FEATURE_UNICODE_IDENTIFIERS: Long = 8192L
-        const val FEATURE_UNICODE_SECURITY: Long = 16384L
-        const val CONTOUR_CURVE_TAG_ON: Long = 1L
-        const val CONTOUR_CURVE_TAG_OFF_CONIC: Long = 0L
-        const val CONTOUR_CURVE_TAG_OFF_CUBIC: Long = 2L
-        const val SPACING_GLYPH: Long = 0L
-        const val SPACING_SPACE: Long = 1L
-        const val SPACING_TOP: Long = 2L
-        const val SPACING_BOTTOM: Long = 3L
-        const val SPACING_MAX: Long = 4L
-        const val FONT_BOLD: Long = 1L
-        const val FONT_ITALIC: Long = 2L
-        const val FONT_FIXED_WIDTH: Long = 4L
-        const val STRUCTURED_TEXT_DEFAULT: Long = 0L
-        const val STRUCTURED_TEXT_URI: Long = 1L
-        const val STRUCTURED_TEXT_FILE: Long = 2L
-        const val STRUCTURED_TEXT_EMAIL: Long = 3L
-        const val STRUCTURED_TEXT_LIST: Long = 4L
-        const val STRUCTURED_TEXT_GDSCRIPT: Long = 5L
-        const val STRUCTURED_TEXT_CUSTOM: Long = 6L
-        const val FIXED_SIZE_SCALE_DISABLE: Long = 0L
-        const val FIXED_SIZE_SCALE_INTEGER_ONLY: Long = 1L
-        const val FIXED_SIZE_SCALE_ENABLED: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextServer? =
             wrap(handle.segment)

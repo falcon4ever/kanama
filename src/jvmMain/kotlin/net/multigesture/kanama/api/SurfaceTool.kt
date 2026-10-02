@@ -15,61 +15,161 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: SurfaceTool
  */
 class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
+    // ===== BEGIN GENERATED ENUMS: SurfaceTool (scripts/generate_api_wrapper.py — do not edit) =====
     /**
-     * Set to `SKIN_8_WEIGHTS` to indicate that up to 8 bone influences per vertex may be used. By
-     * default, only 4 bone influences are used (`SKIN_4_WEIGHTS`). Note: This function takes an enum,
-     * not the exact number of weights.
+     * Godot's `SurfaceTool.CustomFormat` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`SurfaceTool.CustomFormat.<NAME>`).
+     *
+     * Generated from Godot docs: SurfaceTool.CustomFormat
+     */
+    @JvmInline
+    value class CustomFormat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Limits range of data passed to `set_custom` to unsigned normalized 0 to 1 stored in 8 bits per
+             * channel. See `Mesh.ArrayCustomFormat.RGBA8_UNORM`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA8_UNORM
+             */
+            val RGBA8_UNORM: CustomFormat get() = CustomFormat(0L)
+            /**
+             * Limits range of data passed to `set_custom` to signed normalized -1 to 1 stored in 8 bits per
+             * channel. See `Mesh.ArrayCustomFormat.RGBA8_SNORM`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA8_SNORM
+             */
+            val RGBA8_SNORM: CustomFormat get() = CustomFormat(1L)
+            /**
+             * Stores data passed to `set_custom` as half precision floats, and uses only red and green color
+             * channels. See `Mesh.ArrayCustomFormat.RG_HALF`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RG_HALF
+             */
+            val RG_HALF: CustomFormat get() = CustomFormat(2L)
+            /**
+             * Stores data passed to `set_custom` as half precision floats and uses all color channels. See
+             * `Mesh.ArrayCustomFormat.RGBA_HALF`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA_HALF
+             */
+            val RGBA_HALF: CustomFormat get() = CustomFormat(3L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red color channel.
+             * See `Mesh.ArrayCustomFormat.R_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_R_FLOAT
+             */
+            val R_FLOAT: CustomFormat get() = CustomFormat(4L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red and green color
+             * channels. See `Mesh.ArrayCustomFormat.RG_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RG_FLOAT
+             */
+            val RG_FLOAT: CustomFormat get() = CustomFormat(5L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses only red, green and blue
+             * color channels. See `Mesh.ArrayCustomFormat.RGB_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGB_FLOAT
+             */
+            val RGB_FLOAT: CustomFormat get() = CustomFormat(6L)
+            /**
+             * Stores data passed to `set_custom` as full precision floats, and uses all color channels. See
+             * `Mesh.ArrayCustomFormat.RGBA_FLOAT`.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_RGBA_FLOAT
+             */
+            val RGBA_FLOAT: CustomFormat get() = CustomFormat(7L)
+            /**
+             * Used to indicate a disabled custom channel.
+             *
+             * Generated from Godot docs: SurfaceTool.CUSTOM_MAX
+             */
+            val MAX: CustomFormat get() = CustomFormat(8L)
+        }
+    }
+
+    /**
+     * Godot's `SurfaceTool.SkinWeightCount` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`SurfaceTool.SkinWeightCount.<NAME>`).
+     *
+     * Generated from Godot docs: SurfaceTool.SkinWeightCount
+     */
+    @JvmInline
+    value class SkinWeightCount(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Each individual vertex can be influenced by only 4 bone weights.
+             *
+             * Generated from Godot docs: SurfaceTool.SKIN_4_WEIGHTS
+             */
+            val SKIN_4_WEIGHTS: SkinWeightCount get() = SkinWeightCount(0L)
+            /**
+             * Each individual vertex can be influenced by up to 8 bone weights.
+             *
+             * Generated from Godot docs: SurfaceTool.SKIN_8_WEIGHTS
+             */
+            val SKIN_8_WEIGHTS: SkinWeightCount get() = SkinWeightCount(1L)
+        }
+    }
+    // ===== END GENERATED ENUMS: SurfaceTool =====
+
+    /**
+     * Set to `SkinWeightCount.SKIN_8_WEIGHTS` to indicate that up to 8 bone influences per vertex may
+     * be used. By default, only 4 bone influences are used (`SkinWeightCount.SKIN_4_WEIGHTS`). Note:
+     * This function takes an enum, not the exact number of weights.
      *
      * Generated from Godot docs: SurfaceTool.set_skin_weight_count
      */
-    fun setSkinWeightCount(count: Long) {
+    fun setSkinWeightCount(count: SurfaceTool.SkinWeightCount) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, segment, count)
+        ObjectCalls.ptrcallWithLongArg(setSkinWeightCountBind, segment, count.value)
     }
 
     /**
-     * By default, returns `SKIN_4_WEIGHTS` to indicate only 4 bone influences per vertex are used.
-     * Returns `SKIN_8_WEIGHTS` if up to 8 influences are used. Note: This function returns an enum,
-     * not the exact number of weights.
+     * By default, returns `SkinWeightCount.SKIN_4_WEIGHTS` to indicate only 4 bone influences per
+     * vertex are used. Returns `SkinWeightCount.SKIN_8_WEIGHTS` if up to 8 influences are used. Note:
+     * This function returns an enum, not the exact number of weights.
      *
      * Generated from Godot docs: SurfaceTool.get_skin_weight_count
      */
-    fun getSkinWeightCount(): Long {
+    fun getSkinWeightCount(): SurfaceTool.SkinWeightCount {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, segment)
+        return SurfaceTool.SkinWeightCount(ObjectCalls.ptrcallNoArgsRetLong(getSkinWeightCountBind, segment))
     }
 
     /**
-     * Sets the color format for this custom `channel_index`. Use `CUSTOM_MAX` to disable. Must be
-     * invoked after `begin` and should be set before `commit` or `commit_to_arrays`.
+     * Sets the color format for this custom `channel_index`. Use `CustomFormat.MAX` to disable. Must
+     * be invoked after `begin` and should be set before `commit` or `commit_to_arrays`.
      *
      * Generated from Godot docs: SurfaceTool.set_custom_format
      */
-    fun setCustomFormat(channelIndex: Int, format: Long) {
+    fun setCustomFormat(channelIndex: Int, format: SurfaceTool.CustomFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, segment, channelIndex, format)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomFormatBind, segment, channelIndex, format.value)
     }
 
     /**
-     * Returns the format for custom `channel_index` (currently up to 4). Returns `CUSTOM_MAX` if this
-     * custom channel is unused.
+     * Returns the format for custom `channel_index` (currently up to 4). Returns `CustomFormat.MAX` if
+     * this custom channel is unused.
      *
      * Generated from Godot docs: SurfaceTool.get_custom_format
      */
-    fun getCustomFormat(channelIndex: Int): Long {
+    fun getCustomFormat(channelIndex: Int): SurfaceTool.CustomFormat {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, segment, channelIndex)
+        return SurfaceTool.CustomFormat(ObjectCalls.ptrcallWithIntArgRetLong(getCustomFormatBind, segment, channelIndex))
     }
 
     /**
      * Called before adding any vertices. Takes the primitive type as an argument (e.g.
-     * `Mesh.PRIMITIVE_TRIANGLES`).
+     * `Mesh.PrimitiveType.TRIANGLES`).
      *
      * Generated from Godot docs: SurfaceTool.begin
      */
-    fun begin(primitive: Long) {
+    fun begin(primitive: Mesh.PrimitiveType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(beginBind, segment, primitive)
+        ObjectCalls.ptrcallWithLongArg(beginBind, segment, primitive.value)
     }
 
     /**
@@ -112,7 +212,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      * set and you fail to submit it for the first vertex, this information may not be used at all.
      * Note: Even though `tangent` is a `Plane`, it does not directly represent the tangent plane. Its
      * `Plane.x`, `Plane.y`, and `Plane.z` represent the tangent vector and `Plane.d` should be either
-     * `-1` or `1`. See also `Mesh.ARRAY_TANGENT`.
+     * `-1` or `1`. See also `Mesh.ArrayType.TANGENT`.
      *
      * Generated from Godot docs: SurfaceTool.set_tangent
      */
@@ -194,7 +294,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Inserts a triangle fan made of array data into `Mesh` being constructed. Requires the primitive
-     * type be set to `Mesh.PRIMITIVE_TRIANGLES`.
+     * type be set to `Mesh.PrimitiveType.TRIANGLES`.
      *
      * Generated from Godot docs: SurfaceTool.add_triangle_fan
      */
@@ -241,7 +341,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      * geometry and before committing the mesh using `commit` or `commit_to_arrays`. For correct
      * display of normal-mapped surfaces, you will also have to generate tangents using
      * `generate_tangents`. Note: `generate_normals` only works if the primitive type is set to
-     * `Mesh.PRIMITIVE_TRIANGLES`. Note: `generate_normals` takes smooth groups into account. To
+     * `Mesh.PrimitiveType.TRIANGLES`. Note: `generate_normals` takes smooth groups into account. To
      * generate smooth normals, set the smooth group to a value greater than or equal to `0` using
      * `set_smooth_group` or leave the smooth group at the default of `0`. To generate flat normals,
      * set the smooth group to `-1` using `set_smooth_group` prior to adding vertices.
@@ -266,7 +366,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Optimizes triangle sorting for performance. Requires that `get_primitive_type` is
-     * `Mesh.PRIMITIVE_TRIANGLES`.
+     * `Mesh.PrimitiveType.TRIANGLES`.
      *
      * Generated from Godot docs: SurfaceTool.optimize_indices_for_cache
      */
@@ -307,13 +407,13 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * Returns the type of mesh geometry, such as `Mesh.PRIMITIVE_TRIANGLES`.
+     * Returns the type of mesh geometry, such as `Mesh.PrimitiveType.TRIANGLES`.
      *
      * Generated from Godot docs: SurfaceTool.get_primitive_type
      */
-    fun getPrimitiveType(): Long {
+    fun getPrimitiveType(): Mesh.PrimitiveType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, segment)
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallNoArgsRetLong(getPrimitiveTypeBind, segment))
     }
 
     /**
@@ -340,13 +440,13 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
      * Creates this SurfaceTool from existing vertex arrays such as returned by `commit_to_arrays`,
      * `Mesh.surface_get_arrays`, `Mesh.surface_get_blend_shape_arrays`,
      * `ImporterMesh.get_surface_arrays`, and `ImporterMesh.get_surface_blend_shape_arrays`.
-     * `primitive_type` controls the type of mesh data, defaulting to `Mesh.PRIMITIVE_TRIANGLES`.
+     * `primitive_type` controls the type of mesh data, defaulting to `Mesh.PrimitiveType.TRIANGLES`.
      *
      * Generated from Godot docs: SurfaceTool.create_from_arrays
      */
-    fun createFromArrays(arrays: List<Any?>, primitiveType: Long = 3L) {
+    fun createFromArrays(arrays: List<Any?>, primitiveType: Mesh.PrimitiveType = Mesh.PrimitiveType.TRIANGLES) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, segment, arrays, primitiveType)
+        ObjectCalls.ptrcallWithArrayLongArgs(createFromArraysBind, segment, arrays, primitiveType.value)
     }
 
     /**
@@ -374,8 +474,8 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Returns a constructed `ArrayMesh` from current information passed in. If an existing `ArrayMesh`
      * is passed in as an argument, will add an extra surface to the existing `ArrayMesh`. The `flags`
-     * argument can be the bitwise OR of `Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE`,
-     * `Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS`, or `Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY`.
+     * argument can be the bitwise OR of `Mesh.ArrayFormat.FLAG_USE_DYNAMIC_UPDATE`,
+     * `Mesh.ArrayFormat.FLAG_USE_8_BONE_WEIGHTS`, or `Mesh.ArrayFormat.FLAG_USES_EMPTY_VERTEX_ARRAY`.
      *
      * Generated from Godot docs: SurfaceTool.commit
      */
@@ -397,17 +497,6 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     }
 
     companion object {
-        const val CUSTOM_RGBA8_UNORM: Long = 0L
-        const val CUSTOM_RGBA8_SNORM: Long = 1L
-        const val CUSTOM_RG_HALF: Long = 2L
-        const val CUSTOM_RGBA_HALF: Long = 3L
-        const val CUSTOM_R_FLOAT: Long = 4L
-        const val CUSTOM_RG_FLOAT: Long = 5L
-        const val CUSTOM_RGB_FLOAT: Long = 6L
-        const val CUSTOM_RGBA_FLOAT: Long = 7L
-        const val CUSTOM_MAX: Long = 8L
-        const val SKIN_4_WEIGHTS: Long = 0L
-        const val SKIN_8_WEIGHTS: Long = 1L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SurfaceTool? =

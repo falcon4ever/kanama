@@ -197,15 +197,16 @@ For tweens that means:
 // Correct: Godot owns and runs the active tween; the Tweener it hands back is
 // yours, so close it once configured.
 val tween = self.createTween() ?: return
-tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2)?.close()
+tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2).close()
 
 // Wrong: releasing the live tween itself.
 tween.close()
 ```
 
-Every `Tweener` fluent setter returns the **nullable** self type
-(`setTrans(...): PropertyTweener?`), so chain them with `?.`:
-`tweener.setTrans(Tween.TRANS_BACK)?.setEase(Tween.EASE_OUT)`. The call still
+Every `Tweener` fluent setter returns the **non-null** self type
+(`setTrans(...): PropertyTweener`, Godot marks these returns `meta: "required"`; a null from the
+engine throws `IllegalStateException` instead), so chain them with `.`:
+`tweener.setTrans(Tween.TransitionType.BACK).setEase(Tween.EaseType.OUT)`. The call still
 collapses to the same wrapper when the engine hands back the receiver.
 
 If the script tracks a tween to cancel it later, use `kill()` and drop the
@@ -459,7 +460,7 @@ a scene-owned `AnimationPlayer`: the getter still transferred a reference, so
 release it when you are done instead of leaving it to leak:
 
 ```kotlin
-animationPlayer.getAnimation("walk")?.use { it.setLoopMode(Animation.LOOP_LINEAR) }
+animationPlayer.getAnimation("walk")?.use { it.setLoopMode(Animation.LoopMode.LINEAR) }
 ```
 
 If a shutdown warning still names a scene resource after every owned wrapper
