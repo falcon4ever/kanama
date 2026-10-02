@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 28"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 29"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -514,6 +514,13 @@ class WebScriptCodeEmitterTest {
     assertTrue(
       proxy.contains("(target_object as InputEventKey).keycode = bytes.decode_s32(offset + 8)")
     )
+    // Task 128 C (protocol 29): the portable InputEventMouseButton.create() + buttonIndex.
+    assertTrue(proxy.contains("elif opcode == 333 and target_object is InputEventMouseButton:"))
+    assertTrue(
+      proxy.contains(
+        "(target_object as InputEventMouseButton).button_index = bytes.decode_s32(offset + 8)"
+      )
+    )
     assertTrue(proxy.contains("elif opcode == 297 and target_object is InputEventKey:"))
     assertTrue(
       proxy.contains(
@@ -756,7 +763,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 28"))
+    assertTrue(protocol.contains("\"protocolVersion\": 29"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -767,7 +774,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=28\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=29\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1777,7 +1784,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 28"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 29"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(

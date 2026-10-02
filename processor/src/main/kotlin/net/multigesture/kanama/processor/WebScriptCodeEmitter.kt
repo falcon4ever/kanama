@@ -148,7 +148,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `set_size` (331-332). The LONG_OBJECT_ARG slot also became nullable in 28, so
      * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0).
      */
-    const val PROTOCOL_VERSION = 28
+    const val PROTOCOL_VERSION = 29
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -3356,6 +3356,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     // engine-property spelling matches the sky_mode arm above, which the export accepts.
     appendLine("\t\telif opcode == 295 and target_object is InputEventKey:")
     appendLine("\t\t\t(target_object as InputEventKey).keycode = bytes.decode_s32(offset + 8)")
+    appendLine("\t\t\tapplied += 1")
+    appendLine("\t\t\toffset += 12")
+    // Task 128 C (protocol 29): the button of a constructed InputEventMouseButton, so a shared
+    // script registers a mouse-button input action the same way on every backend.
+    appendLine("\t\telif opcode == 333 and target_object is InputEventMouseButton:")
+    appendLine(
+      "\t\t\t(target_object as InputEventMouseButton).button_index = bytes.decode_s32(offset + 8)"
+    )
     appendLine("\t\t\tapplied += 1")
     appendLine("\t\t\toffset += 12")
     appendLine("\t\telif opcode == 297 and target_object is InputEventKey:")

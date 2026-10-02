@@ -1290,7 +1290,9 @@ fun AnimationMixer.setParameter(path: String, value: Long) = setParameter(path, 
         "release": "constructed",
         "from_class_check": True,
     },
-    "InputEventMouseButton": {"from_class_check": True},
+    # Task 128 C: constructed like InputEventKey, so a shared script registers a mouse-button input
+    # action portably (`InputEventMouseButton.create()` + `buttonIndex`, opcode 333).
+    "InputEventMouseButton": {"instantiable": True, "release": "constructed", "from_class_check": True},
     "InputEventMouseMotion": {"from_class_check": True},
     # Task 64 parcel 8: MeshInstance3D.get_mesh hands back a tracked browser handle; tps-demo's
     # shared Part reads it once and closes it (`mesh.use { }`), so the wrapper owns a close().

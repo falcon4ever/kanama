@@ -140,6 +140,15 @@ versioning once public releases begin.
   `getTree().getRoot().setMode(...)` compiles on Web; `Window.handle` exposes the engine handle.
   Gate: `scripts/check_web_typed_enums.py` (local_ci), which also rejects a Web object return
   surfaced as a raw `GodotHandle`.
+- **`InputEventMouseButton.create()` on every backend (task 128 C; Web protocol 28 → 29).** A shared
+  script registers a mouse-button input action the same way everywhere:
+  `InputEventMouseButton.create().also { it.buttonIndex = MouseButton.LEFT }`, then
+  `InputMap.actionAddEvent(action, event)` and `close()` (owned, `use { }` works). Desktop: a `create()`
+  factory on the hand class. iOS: the hand class is now an `InputEvent` (it was a bare `GodotObject`),
+  so it can be added to an action, and gains `create()` and a `buttonIndex` setter. Web: the class is
+  constructed like `InputEventKey`, and the new queued opcode 333
+  (`InputEventMouseButton.set_button_index`) carries the button; the bridge and the generated proxies
+  move to protocol 29 together.
 
 ### Changed — the API tree is common code (task 117 P4′)
 

@@ -3656,6 +3656,17 @@ object InitialGodotCallDescriptors {
       returnOwnership = GodotReturnOwnership.BORROWED,
     )
 
+  val INPUTEVENTMOUSEBUTTON_SET_BUTTON_INDEX =
+    GodotCallDescriptor(
+      opcode = 333,
+      className = "InputEventMouseButton",
+      methodName = "set_button_index",
+      hash = 3624991109L,
+      shape = GodotCallShape.LONG_ARG,
+      executionMode = GodotExecutionMode.QUEUED_MUTATION,
+      returnOwnership = GodotReturnOwnership.BORROWED,
+    )
+
   /** Highest opcode in the shared contract; sizes the call-site resolution cache. */
-  const val MAX_OPCODE = 332
+  const val MAX_OPCODE = 333
 }

@@ -8,7 +8,7 @@ import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
-class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObject) {
+class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObject), AutoCloseable {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
   fun getButtonIndex(): MouseButton =
     GodotBackendCalls.invokeNoArgsRetLong(
@@ -16,10 +16,27 @@ class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObj
       requireOpenHandle(),
     ).let { MouseButton(it) }
 
-  val buttonIndex: MouseButton
+  fun setButtonIndex(buttonIndex: MouseButton) {
+    GodotBackendCalls.invokeLongArg(
+      D.INPUTEVENTMOUSEBUTTON_SET_BUTTON_INDEX,
+      requireOpenHandle(),
+      buttonIndex.value,
+    )
+  }
+
+  var buttonIndex: MouseButton
     get() = getButtonIndex()
+    set(newValue) = setButtonIndex(newValue)
+
+  /** Releases the owned handle (already-released is an error). */
+  override fun close() {
+    releaseWebConstructedObject(handle.value)
+  }
 
   companion object {
+    /** Constructs a new InputEventMouseButton engine-side; the wrapper owns the handle (close what you create). */
+    fun create(): InputEventMouseButton =
+      InputEventMouseButton(checkNotNull(ClassDB.instantiate("InputEventMouseButton")) { "Godot could not instantiate InputEventMouseButton" }.toWebId())
     /** Engine-side class check: null when [value] is not a InputEventMouseButton. */
     fun from(value: GodotObject): InputEventMouseButton? =
       value.takeIf { it.isClass("InputEventMouseButton") }?.let { InputEventMouseButton(it.handle) }
@@ -30,5 +47,11 @@ class InputEventMouseButton(godotObject: GodotHandle) : InputEventMouse(godotObj
 fun InputEventMouseButton.getButtonIndex(): MouseButton = getButtonIndex()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-val InputEventMouseButton.buttonIndex: MouseButton
+fun InputEventMouseButton.setButtonIndex(buttonIndex: MouseButton) = setButtonIndex(buttonIndex)
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+var InputEventMouseButton.buttonIndex: MouseButton
   get() = buttonIndex
+  set(newValue) {
+    buttonIndex = newValue
+  }

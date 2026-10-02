@@ -5225,6 +5225,22 @@
       "returnOwnership": "BORROWED",
       "semantics": "Queue a Control's size (keep_offsets keeps Godot's default false); the SafeArea shrink that follows set_position.",
       "introducedBy": "64-parcel8-tps-window"
+    },
+    {
+      "opcode": 333,
+      "scope": "class",
+      "className": "InputEventMouseButton",
+      "methodName": "set_button_index",
+      "hash": 3624991109,
+      "arguments": [
+        "enum::MouseButton"
+      ],
+      "returnType": "void",
+      "shape": "LONG_ARG",
+      "executionMode": "QUEUED_MUTATION",
+      "returnOwnership": "BORROWED",
+      "semantics": "Queue the button of a constructed InputEventMouseButton (the MouseButton enum crosses as its integer value): the portable InputEventMouseButton.create() + buttonIndex form a shared script registers a mouse-button input action with. Ordered before the action_add_event that follows because the immediate call flushes the queue first.",
+      "introducedBy": "128C-mouse-button-actions"
     }
   ],
   "compositions": [
@@ -5263,6 +5279,13 @@
         12
       ],
       "semantics": "Compose the existing ClassDB.instantiate call with class name InputEventKey; the returned handle is OWNED (a NODE-kind constructed handle in the Web bookkeeping, released with the constructed-object release, never the resource release). Attach it with InputMap.action_add_event, then close() it -- the InputMap keeps its own reference."
+    },
+    {
+      "name": "ClassDB.instantiate_InputEventMouseButton",
+      "opcodes": [
+        12
+      ],
+      "semantics": "Compose the existing ClassDB.instantiate call with class name InputEventMouseButton; the returned handle is OWNED (a constructed handle in the Web bookkeeping, released with the constructed-object release). Set its button (333), attach it with InputMap.action_add_event, then close() it -- the InputMap keeps its own reference."
     }
   ]
 }

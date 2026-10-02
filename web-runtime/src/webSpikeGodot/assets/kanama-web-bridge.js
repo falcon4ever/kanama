@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 28;
+  const KANAMA_WEB_PROTOCOL_VERSION = 29;
 
   function commandWordCount(opcode) {
     if (
@@ -69,6 +69,8 @@
       opcode === 297 ||
       opcode === 301 ||
       opcode === 302 ||
+      // Task 128 C: InputEventMouseButton.set_button_index (the portable mouse-button action).
+      opcode === 333 ||
       opcode === 66
     ) return 3;
     if (

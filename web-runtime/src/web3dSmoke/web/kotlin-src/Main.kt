@@ -22,6 +22,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Input
 import net.multigesture.kanama.api.InputEventKey
+import net.multigesture.kanama.api.InputEventMouseButton
 import net.multigesture.kanama.api.InputMap
 import net.multigesture.kanama.api.KanamaCoroutineOwner
 import net.multigesture.kanama.api.KanamaScope
@@ -29,6 +30,7 @@ import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Key
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.api.MeshInstance3D
+import net.multigesture.kanama.api.MouseButton
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node3D
 import net.multigesture.kanama.api.OS
@@ -448,8 +450,11 @@ class Main(godotObject: GodotHandle) :
    * - 32: `erase_action` makes `has_action` false again.
    * - 64: `set_process_mode(ALWAYS)` reads back 3 (then restored to INHERIT).
    * - 128: `getTree().getRoot().getMode()` is a legal Window.Mode.
+   * - 256 (task 128 C, protocol 29): a constructed InputEventMouseButton reads its button back as
+   *   RIGHT (the queued set_button_index landed) and `is_action` flips on `action_add_event` -- the
+   *   portable mouse-button action shared scripts register (third-person's Player.kt).
    *
-   * A healthy run returns 255. The event handle is closed in `finally`, after the attach: the
+   * A healthy run returns 511. The event handle is closed in `finally`, after the attach: the
    * InputMap keeps its own reference (the create/close contract on Web, see docs/contributing/backends/web.md).
    *
    * Ordering: the driver calls this AFTER generic_probe. Bit 128 tracks the root Window through
@@ -479,6 +484,18 @@ class Main(godotObject: GodotHandle) :
       if (!boundBefore && key.isAction(action)) mask = mask or 8L
     } finally {
       key.close()
+    }
+
+    val button = InputEventMouseButton.create()
+    try {
+      button.buttonIndex = MouseButton.RIGHT
+      val boundBefore = button.isAction(action)
+      InputMap.actionAddEvent(action, button)
+      if (button.getButtonIndex() == MouseButton.RIGHT && !boundBefore && button.isAction(action)) {
+        mask = mask or 256L
+      }
+    } finally {
+      button.close()
     }
 
     Input.actionPress(action)
