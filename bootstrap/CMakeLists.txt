@@ -45,17 +45,26 @@ target_include_directories(kanama_bootstrap PRIVATE
     ${JNI_INCLUDE_DIRS}
 )
 
-# After build, copy the bootstrap library into example_project/addons/kanama/.
+# Install the bootstrap library into example_project/addons/kanama/.
 # That dir is the source-of-truth installAddonJar reads from, and native libs are
 # gitignored, so without this step a clean clone + cmake build leaves the
 # example project unable to load the extension.
+#
+# This is its own ALL target, not a POST_BUILD hook on kanama_bootstrap: a
+# POST_BUILD step only runs when the library is relinked, so deleting or
+# truncating just the installed copy was never repaired ("Built target", no
+# copy). A custom target runs on every build, and copy_if_different compares
+# content, so a missing or truncated copy is recreated while an intact one is
+# left alone.
 set(KANAMA_EXAMPLE_ADDON_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/../example_project/addons/kanama"
 )
-add_custom_command(TARGET kanama_bootstrap POST_BUILD
+add_custom_target(kanama_bootstrap_install ALL
     COMMAND ${CMAKE_COMMAND} -E make_directory "${KANAMA_EXAMPLE_ADDON_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:kanama_bootstrap>"
         "${KANAMA_EXAMPLE_ADDON_DIR}/$<TARGET_FILE_NAME:kanama_bootstrap>"
+    DEPENDS kanama_bootstrap
     COMMENT "Copying kanama_bootstrap into example_project/addons/kanama"
 )
+add_dependencies(kanama_bootstrap_install kanama_bootstrap)

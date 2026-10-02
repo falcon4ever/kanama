@@ -24,6 +24,10 @@ val configuredScriptDirs =
         .orElse(providers.gradleProperty("kanamaProjectScriptsDir"))
         .orElse(providers.gradleProperty("kanamaIosProjectScriptsDirs"))
         .orElse(providers.gradleProperty("kanamaIosProjectScriptsDir"))
+        // `installAndroidPluginAar -PkanamaAndroidDemoDir=<project>` generates the Android scripts
+        // AAR's KSP registrars here, with this checkout's processor (task 119 item 40), so the
+        // project's kotlin-src is this build's input without any extra property.
+        .orElse(providers.gradleProperty("kanamaAndroidDemoDir").map { "$it/kotlin-src" })
 val activeScriptDirs = configuredScriptDirs.orElse("__kanama_example_project__")
 
 fun shortHash(value: String): String =

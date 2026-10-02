@@ -7,6 +7,33 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — Android smoke builds the demo scripts against this checkout, not mavenLocal (task 119 item 40)
+
+- **The scripts AAR's registrars come from this checkout's KSP processor.** `assembleAndroidScriptsAar`
+  (run by `installAndroidPluginAar -PkanamaAndroidDemoDir=...`) now runs `:project-scripts:kspKotlin`
+  over the project's `kotlin-src/` and the Android build reads that output
+  (`-PkanamaAndroidKspDir`), instead of `<demo>/build/generated/ksp`, which the demo's own Gradle
+  build produced with `kanama`/`processor` resolved from **mavenLocal** (whatever main last
+  published). A processor-only change used to be verified on a device against the OLD processor, and an
+  API-changing branch failed to compile the demo (task 128 A: `Unresolved reference 'CONNECT_DEFAULT'`).
+- **`scripts/android_smoke.sh` and `scripts/android_export_minified.sh`** compile the demo's scripts up
+  front with `:project-scripts:jar -PkanamaProjectScriptsDir=<demo>/kotlin-src` (the path the demos'
+  desktop CI lane uses) instead of `<demo>/gradlew jar`. A project without its own Gradle build now
+  works too. `docs/contributing/backends/android.md` says where demo scripts are compiled from.
+
+### Fixed — the native bootstrap build no longer accepts a truncated library (task 119 item 39)
+
+- **`buildNativeBootstrap` fails on a missing or empty artifact**, and deletes a 0-byte
+  `libkanama_bootstrap.dylib` / `.so` / `kanama_bootstrap.dll` (both the `build/bootstrap` link output and
+  the `example_project/addons/kanama` copy) before `cmake --build`, so a retry relinks. A link
+  interrupted mid-write used to leave an empty library that CMake treated as up to date, Gradle
+  accepted, and `installAddonJar` copied into every demo (the P4' Pixel run: `Can't open dynamic
+  library ... libkanama_bootstrap.dylib ... ()`).
+- **The `example_project` copy no longer rides on a link-time hook.** `bootstrap/CMakeLists.txt` installs
+  it with an `ALL` target (`kanama_bootstrap_install`, `copy_if_different`) instead of a `POST_BUILD`
+  step on the library, so deleting or truncating only the copy is repaired by the next build rather than
+  failing with "was not created".
+
 ### Changed — typed Godot enums and required returns (task 128 A) — BREAKING
 
 - **Every Godot enum and bitfield is a `@JvmInline value class`** wrapping its `Long`: 764 class
