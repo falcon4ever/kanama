@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,7 +10,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeFloatParameter
  */
 class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodeParameter(handle) {
-    var hint: Long
+    var hint: VisualShaderNodeFloatParameter.Hint
         @JvmName("hintProperty")
         get() = getHint()
         @JvmName("setHintProperty")
@@ -45,14 +46,14 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
         @JvmName("setDefaultValueProperty")
         set(value) = setDefaultValue(value)
 
-    fun setHint(hint: Long) {
+    fun setHint(hint: VisualShaderNodeFloatParameter.Hint) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint)
+        ObjectCalls.ptrcallWithLongArg(setHintBind, segment, hint.value)
     }
 
-    fun getHint(): Long {
+    fun getHint(): VisualShaderNodeFloatParameter.Hint {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment)
+        return VisualShaderNodeFloatParameter.Hint(ObjectCalls.ptrcallNoArgsRetLong(getHintBind, segment))
     }
 
     fun setMin(value: Double) {
@@ -105,12 +106,17 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
         return ObjectCalls.ptrcallNoArgsRetDouble(getDefaultValueBind, segment)
     }
 
-    companion object {
-        const val HINT_NONE: Long = 0L
-        const val HINT_RANGE: Long = 1L
-        const val HINT_RANGE_STEP: Long = 2L
-        const val HINT_MAX: Long = 3L
+    @JvmInline
+    value class Hint(override val value: Long) : GodotEnumValue {
+        companion object {
+            val NONE: Hint get() = Hint(0L)
+            val RANGE: Hint get() = Hint(1L)
+            val RANGE_STEP: Hint get() = Hint(2L)
+            val MAX: Hint get() = Hint(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeFloatParameter? =
             wrap(handle.segment)

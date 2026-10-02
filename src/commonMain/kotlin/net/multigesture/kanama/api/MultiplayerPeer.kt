@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
         @JvmName("setRefuseNewConnectionsProperty")
         set(value) = setRefuseNewConnections(value)
 
-    var transferMode: Long
+    var transferMode: MultiplayerPeer.TransferMode
         @JvmName("transferModeProperty")
         get() = getTransferMode()
         @JvmName("setTransferModeProperty")
@@ -36,8 +37,8 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      * only be in respect to the channel the packet is being sent on. Using different channels to send
      * different and independent state updates is a common way to optimize network usage and decrease
      * latency in fast-paced games. Note: The default channel (`0`) actually works as 3 separate
-     * channels (one for each `TransferMode`) so that `TRANSFER_MODE_RELIABLE` and
-     * `TRANSFER_MODE_UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
+     * channels (one for each `TransferMode`) so that `TransferMode.RELIABLE` and
+     * `TransferMode.UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
      * specific network API documentation (e.g. ENet or WebRTC) to learn how to set up channels
      * correctly.
      *
@@ -55,8 +56,8 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      * only be in respect to the channel the packet is being sent on. Using different channels to send
      * different and independent state updates is a common way to optimize network usage and decrease
      * latency in fast-paced games. Note: The default channel (`0`) actually works as 3 separate
-     * channels (one for each `TransferMode`) so that `TRANSFER_MODE_RELIABLE` and
-     * `TRANSFER_MODE_UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
+     * channels (one for each `TransferMode`) so that `TransferMode.RELIABLE` and
+     * `TransferMode.UNRELIABLE_ORDERED` does not interact with each other by default. Refer to the
      * specific network API documentation (e.g. ENet or WebRTC) to learn how to set up channels
      * correctly.
      *
@@ -72,9 +73,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: MultiplayerPeer.set_transfer_mode
      */
-    fun setTransferMode(mode: Long) {
+    fun setTransferMode(mode: MultiplayerPeer.TransferMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransferModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setTransferModeBind, segment, mode.value)
     }
 
     /**
@@ -82,9 +83,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: MultiplayerPeer.get_transfer_mode
      */
-    fun getTransferMode(): Long {
+    fun getTransferMode(): MultiplayerPeer.TransferMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, segment)
+        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(getTransferModeBind, segment))
     }
 
     /**
@@ -128,9 +129,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: MultiplayerPeer.get_packet_mode
      */
-    fun getPacketMode(): Long {
+    fun getPacketMode(): MultiplayerPeer.TransferMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, segment)
+        return MultiplayerPeer.TransferMode(ObjectCalls.ptrcallNoArgsRetLong(getPacketModeBind, segment))
     }
 
     /**
@@ -164,9 +165,9 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: MultiplayerPeer.get_connection_status
      */
-    fun getConnectionStatus(): Long {
+    fun getConnectionStatus(): MultiplayerPeer.ConnectionStatus {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, segment)
+        return MultiplayerPeer.ConnectionStatus(ObjectCalls.ptrcallNoArgsRetLong(getConnectionStatusBind, segment))
     }
 
     /**
@@ -226,15 +227,79 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
         const val peerDisconnected: String = "peer_disconnected"
     }
 
+    /**
+     * Godot's `MultiplayerPeer.ConnectionStatus` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`MultiplayerPeer.ConnectionStatus.<NAME>`).
+     *
+     * Generated from Godot docs: MultiplayerPeer.ConnectionStatus
+     */
+    @JvmInline
+    value class ConnectionStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The MultiplayerPeer is disconnected.
+             *
+             * Generated from Godot docs: MultiplayerPeer.CONNECTION_DISCONNECTED
+             */
+            val DISCONNECTED: ConnectionStatus get() = ConnectionStatus(0L)
+            /**
+             * The MultiplayerPeer is currently connecting to a server.
+             *
+             * Generated from Godot docs: MultiplayerPeer.CONNECTION_CONNECTING
+             */
+            val CONNECTING: ConnectionStatus get() = ConnectionStatus(1L)
+            /**
+             * This MultiplayerPeer is connected.
+             *
+             * Generated from Godot docs: MultiplayerPeer.CONNECTION_CONNECTED
+             */
+            val CONNECTED: ConnectionStatus get() = ConnectionStatus(2L)
+        }
+    }
+
+    /**
+     * Godot's `MultiplayerPeer.TransferMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`MultiplayerPeer.TransferMode.<NAME>`).
+     *
+     * Generated from Godot docs: MultiplayerPeer.TransferMode
+     */
+    @JvmInline
+    value class TransferMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Packets are not acknowledged, no resend attempts are made for lost packets. Packets may arrive
+             * in any order. Potentially faster than `TransferMode.UNRELIABLE_ORDERED`. Use for non-critical
+             * data, and always consider whether the order matters.
+             *
+             * Generated from Godot docs: MultiplayerPeer.TRANSFER_MODE_UNRELIABLE
+             */
+            val UNRELIABLE: TransferMode get() = TransferMode(0L)
+            /**
+             * Packets are not acknowledged, no resend attempts are made for lost packets. Packets are received
+             * in the order they were sent in. Potentially faster than `TransferMode.RELIABLE`. Use for
+             * non-critical data or data that would be outdated if received late due to resend attempt(s)
+             * anyway, for example movement and positional data.
+             *
+             * Generated from Godot docs: MultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED
+             */
+            val UNRELIABLE_ORDERED: TransferMode get() = TransferMode(1L)
+            /**
+             * Packets must be received and resend attempts should be made until the packets are acknowledged.
+             * Packets must be received in the order they were sent in. Most reliable transfer mode, but
+             * potentially the slowest due to the overhead. Use for critical data that must be transmitted and
+             * arrive in order, for example an ability being triggered or a chat message. Consider carefully if
+             * the information really is critical, and use sparingly.
+             *
+             * Generated from Godot docs: MultiplayerPeer.TRANSFER_MODE_RELIABLE
+             */
+            val RELIABLE: TransferMode get() = TransferMode(2L)
+        }
+    }
+
     companion object {
         const val TARGET_PEER_BROADCAST: Long = 0L
         const val TARGET_PEER_SERVER: Long = 1L
-        const val CONNECTION_DISCONNECTED: Long = 0L
-        const val CONNECTION_CONNECTING: Long = 1L
-        const val CONNECTION_CONNECTED: Long = 2L
-        const val TRANSFER_MODE_UNRELIABLE: Long = 0L
-        const val TRANSFER_MODE_UNRELIABLE_ORDERED: Long = 1L
-        const val TRANSFER_MODE_RELIABLE: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiplayerPeer? =

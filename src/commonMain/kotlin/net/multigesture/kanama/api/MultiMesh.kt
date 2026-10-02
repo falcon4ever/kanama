@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -16,7 +17,7 @@ import net.multigesture.kanama.types.Transform3D
  * Generated from Godot docs: MultiMesh
  */
 class MultiMesh(handle: GodotHandle) : Resource(handle) {
-    var transformFormat: Long
+    var transformFormat: MultiMesh.TransformFormat
         @JvmName("transformFormatProperty")
         get() = getTransformFormat()
         @JvmName("setTransformFormatProperty")
@@ -64,7 +65,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
         @JvmName("setBufferProperty")
         set(value) = setBuffer(value)
 
-    var physicsInterpolationQuality: Long
+    var physicsInterpolationQuality: MultiMesh.PhysicsInterpolationQuality
         @JvmName("physicsInterpolationQualityProperty")
         get() = getPhysicsInterpolationQuality()
         @JvmName("setPhysicsInterpolationQualityProperty")
@@ -145,9 +146,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: MultiMesh.set_transform_format
      */
-    fun setTransformFormat(format: Long) {
+    fun setTransformFormat(format: MultiMesh.TransformFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransformFormatBind, segment, format)
+        ObjectCalls.ptrcallWithLongArg(setTransformFormatBind, segment, format.value)
     }
 
     /**
@@ -155,9 +156,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: MultiMesh.get_transform_format
      */
-    fun getTransformFormat(): Long {
+    fun getTransformFormat(): MultiMesh.TransformFormat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransformFormatBind, segment)
+        return MultiMesh.TransformFormat(ObjectCalls.ptrcallNoArgsRetLong(getTransformFormatBind, segment))
     }
 
     /**
@@ -214,9 +215,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: MultiMesh.set_physics_interpolation_quality
      */
-    fun setPhysicsInterpolationQuality(quality: Long) {
+    fun setPhysicsInterpolationQuality(quality: MultiMesh.PhysicsInterpolationQuality) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationQualityBind, segment, quality)
+        ObjectCalls.ptrcallWithLongArg(setPhysicsInterpolationQualityBind, segment, quality.value)
     }
 
     /**
@@ -227,9 +228,9 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: MultiMesh.get_physics_interpolation_quality
      */
-    fun getPhysicsInterpolationQuality(): Long {
+    fun getPhysicsInterpolationQuality(): MultiMesh.PhysicsInterpolationQuality {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationQualityBind, segment)
+        return MultiMesh.PhysicsInterpolationQuality(ObjectCalls.ptrcallNoArgsRetLong(getPhysicsInterpolationQualityBind, segment))
     }
 
     /**
@@ -404,12 +405,57 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithTwoPackedFloat32ListArgs(setBufferInterpolatedBind, segment, bufferCurr, bufferPrev)
     }
 
-    companion object {
-        const val TRANSFORM_2D: Long = 0L
-        const val TRANSFORM_3D: Long = 1L
-        const val INTERP_QUALITY_FAST: Long = 0L
-        const val INTERP_QUALITY_HIGH: Long = 1L
+    /**
+     * Godot's `MultiMesh.TransformFormat` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`MultiMesh.TransformFormat.<NAME>`).
+     *
+     * Generated from Godot docs: MultiMesh.TransformFormat
+     */
+    @JvmInline
+    value class TransformFormat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use this when using 2D transforms.
+             *
+             * Generated from Godot docs: MultiMesh.TRANSFORM_2D
+             */
+            val TRANSFORM_2D: TransformFormat get() = TransformFormat(0L)
+            /**
+             * Use this when using 3D transforms.
+             *
+             * Generated from Godot docs: MultiMesh.TRANSFORM_3D
+             */
+            val TRANSFORM_3D: TransformFormat get() = TransformFormat(1L)
+        }
+    }
 
+    /**
+     * Godot's `MultiMesh.PhysicsInterpolationQuality` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`MultiMesh.PhysicsInterpolationQuality.<NAME>`).
+     *
+     * Generated from Godot docs: MultiMesh.PhysicsInterpolationQuality
+     */
+    @JvmInline
+    value class PhysicsInterpolationQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Always interpolate using Basis lerping, which can produce warping artifacts in some situations.
+             *
+             * Generated from Godot docs: MultiMesh.INTERP_QUALITY_FAST
+             */
+            val FAST: PhysicsInterpolationQuality get() = PhysicsInterpolationQuality(0L)
+            /**
+             * Attempt to interpolate using Basis slerping (spherical linear interpolation) where possible,
+             * otherwise fall back to lerping.
+             *
+             * Generated from Godot docs: MultiMesh.INTERP_QUALITY_HIGH
+             */
+            val HIGH: PhysicsInterpolationQuality get() = PhysicsInterpolationQuality(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiMesh? =
             wrap(handle.segment)

@@ -17,9 +17,9 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: PackedDataContainer.pack
      */
-    fun pack(value: Any?): Long {
+    fun pack(value: Any?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetLong(packBind, segment, value)
+        return GodotError(ObjectCalls.ptrcallWithVariantArgRetLong(packBind, segment, value))
     }
 
     /**

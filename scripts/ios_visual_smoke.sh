@@ -1136,6 +1136,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.InputEventMouseButton
 import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.MouseButton
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.Sprite2D
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -1222,7 +1223,7 @@ class Match3IosSmoke(godotObject: GodotHandle) : KanamaScript<Control>(godotObje
     @OnInput
     fun input(event: GodotObject) {
         val mouseButton = InputEventMouseButton.from(event) ?: return
-        if (mouseButton.getButtonIndex() != InputEventMouseButton.MOUSE_BUTTON_LEFT) {
+        if (mouseButton.getButtonIndex() != MouseButton.LEFT) {
             return
         }
         val position = self.getLocalMousePosition()

@@ -22,9 +22,9 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      *
      * Generated from Godot docs: AudioStreamPlaybackPolyphonic.play_stream
      */
-    fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: Long = 0L, bus: String = "Master"): Long {
+    fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: AudioServer.PlaybackType = AudioServer.PlaybackType.DEFAULT, bus: String = "Master"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, fromOffset, volumeDb, pitchScale, playbackType, bus)
+        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, fromOffset, volumeDb, pitchScale, playbackType.value, bus)
     }
 
     /**

@@ -12,6 +12,7 @@ import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
 import java.util.concurrent.ConcurrentHashMap
 import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.RefCounted
@@ -259,6 +260,9 @@ object BuiltinTypes {
       is Boolean -> variantFromBoolInto(value, variantOut, arena)
       is Int -> variantFromLongInto(value.toLong(), variantOut, arena)
       is Long -> variantFromLongInto(value, variantOut, arena)
+      // A typed Godot enum / bitfield arrives boxed through an `Any?` argument: it is the INT it
+      // stands for (task 128 A).
+      is GodotEnumValue -> variantFromLongInto(value.value, variantOut, arena)
       is Float -> variantFromDoubleInto(value.toDouble(), variantOut, arena)
       is Double -> variantFromDoubleInto(value, variantOut, arena)
       is Color -> variantFromColorInto(value, variantOut, arena)

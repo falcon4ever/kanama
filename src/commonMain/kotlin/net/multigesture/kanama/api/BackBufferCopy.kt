@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,7 +13,7 @@ import net.multigesture.kanama.types.Rect2
  * Generated from Godot docs: BackBufferCopy
  */
 class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
-    var copyMode: Long
+    var copyMode: BackBufferCopy.CopyMode
         @JvmName("copyModeProperty")
         get() = getCopyMode()
         @JvmName("setCopyModeProperty")
@@ -25,7 +26,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
         set(value) = setRect(value)
 
     /**
-     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `COPY_MODE_RECT`.
+     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `CopyMode.RECT`.
      *
      * Generated from Godot docs: BackBufferCopy.set_rect
      */
@@ -34,7 +35,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `COPY_MODE_RECT`.
+     * The area covered by the `BackBufferCopy`. Only used if `copy_mode` is `CopyMode.RECT`.
      *
      * Generated from Godot docs: BackBufferCopy.get_rect
      */
@@ -47,8 +48,8 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: BackBufferCopy.set_copy_mode
      */
-    fun setCopyMode(copyMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCopyModeBind, segment, copyMode)
+    fun setCopyMode(copyMode: BackBufferCopy.CopyMode) {
+        ObjectCalls.ptrcallWithLongArg(setCopyModeBind, segment, copyMode.value)
     }
 
     /**
@@ -56,15 +57,42 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: BackBufferCopy.get_copy_mode
      */
-    fun getCopyMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCopyModeBind, segment)
+    fun getCopyMode(): BackBufferCopy.CopyMode {
+        return BackBufferCopy.CopyMode(ObjectCalls.ptrcallNoArgsRetLong(getCopyModeBind, segment))
+    }
+
+    /**
+     * Godot's `BackBufferCopy.CopyMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BackBufferCopy.CopyMode.<NAME>`).
+     *
+     * Generated from Godot docs: BackBufferCopy.CopyMode
+     */
+    @JvmInline
+    value class CopyMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables the buffering mode. This means the `BackBufferCopy` node will directly use the portion
+             * of screen it covers.
+             *
+             * Generated from Godot docs: BackBufferCopy.COPY_MODE_DISABLED
+             */
+            val DISABLED: CopyMode get() = CopyMode(0L)
+            /**
+             * `BackBufferCopy` buffers a rectangular region.
+             *
+             * Generated from Godot docs: BackBufferCopy.COPY_MODE_RECT
+             */
+            val RECT: CopyMode get() = CopyMode(1L)
+            /**
+             * `BackBufferCopy` buffers the entire screen.
+             *
+             * Generated from Godot docs: BackBufferCopy.COPY_MODE_VIEWPORT
+             */
+            val VIEWPORT: CopyMode get() = CopyMode(2L)
+        }
     }
 
     companion object {
-        const val COPY_MODE_DISABLED: Long = 0L
-        const val COPY_MODE_RECT: Long = 1L
-        const val COPY_MODE_VIEWPORT: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BackBufferCopy? =
             wrap(handle.segment)

@@ -89,6 +89,55 @@ For now, project autoloads should be resolved through the scene tree root
 but project autoloads are not treated as engine singletons in the current smoke
 path.
 
+## Godot Enums and Bitfields
+
+Every Godot enum and bitfield is a typed Kotlin value class (since 0.5, task 128). A class enum is
+nested in its class, a global (`@GlobalScope`) enum is top-level, and the values are named
+constants on the type:
+
+```kotlin
+self.setProcessMode(Node.ProcessMode.ALWAYS)
+Input.setMouseMode(Input.MouseMode.CAPTURED)
+if (key.getKeycode() == Key.ESCAPE) { /* ... */ }
+tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2).setTrans(Tween.TransitionType.SINE)
+val err: GodotError = ResourceSaver.save(scene, path)
+if (err != GodotError.OK) GD.printErr("save failed: ${err.value}")
+```
+
+- **Names.** The type is Godot's enum name (`Node.ProcessMode`, `BaseMaterial3D.Flags`,
+  `Vector3.Axis`). Four globals are renamed where Godot's name would collide: `Error` is
+  `GodotError` (Kotlin imports its own `Error` into every file), `PropertyHint` is
+  `GodotPropertyHint` (Kanama's annotation constants keep `PropertyHint`), and Godot's
+  `Variant.Type` / `Variant.Operator` are `VariantType` / `VariantOperator`. (Kanama's runtime
+  also has `net.multigesture.kanama.binding.runtime.VariantType`, an internal marshalling enum;
+  scripts use the `net.multigesture.kanama.api` one.)
+- **Values** drop the enum's common prefix, as Godot's C# bindings do, and keep Godot's
+  SCREAMING_CASE: `PROCESS_MODE_ALWAYS` is `Node.ProcessMode.ALWAYS`, `KEY_ESCAPE` is
+  `Key.ESCAPE`. A value whose remainder would start with a digit keeps a word (`Key.KEY_0`), and an
+  enum without a common prefix keeps Godot's names (`GodotError.ERR_FILE_NOT_FOUND`). The prefix of
+  each enum is frozen, so a later Godot adding a value never renames the existing ones.
+- **Raw numbers** stay available: `ProcessMode(3L)` builds a value Godot has but this Kanama does
+  not name yet, and `.value` reads the `Long` back (for logs, `call()` interop or arithmetic).
+  `toString()` prints `ProcessMode(value=3)`.
+- **Bitfields** combine with `or`, `and`, `xor`, `inv()` and test with `in`:
+  `val f = Control.SizeFlags.EXPAND or Control.SizeFlags.FILL`, `if (Control.SizeFlags.FILL in f)`.
+  Godot names no zero for most bitfields; `X(0L)` is the empty set (for example
+  `GodotObject.ConnectFlags(0L)`, the default of `connect`).
+- **Dynamic calls** (`call`, `set`, `callDeferred`, `emitSignal`, `ConfigFile.setValue`, Array and
+  Dictionary elements) accept the typed values: every enum implements `GodotEnumValue`, and the
+  Variant encoder passes it as the INT it stands for, so `node.set("process_mode",
+  Node.ProcessMode.ALWAYS)` works. What comes BACK from a dynamic path (`get`, `call`,
+  `ConfigFile.getValue`, Variant returns) is a `Long`; wrap it with `ProcessMode(raw as Long)` when
+  you need the type.
+- **Required returns.** An object return Godot marks `meta: "required"` (`Node.createTween()`,
+  `SceneTree.getRoot()`, the `Tween`/`Tweener` fluent setters, `CanvasItem.makeInputLocal`, ...)
+  is non-null, so chains use `.` rather than `?.`. A null from the engine there is an engine bug
+  and throws `IllegalStateException("Godot returned null from required <Class>.<method>")`.
+
+Upgrading from 0.4: `scripts/migrate_enum_constants.py <kotlin-src>` rewrites the old
+`Node.PROCESS_MODE_ALWAYS`-style constants in a source tree and lists what needs a human; the full
+table is [Enum Constant Migration](../reference/generated/enum-migration.md).
+
 ## Collections
 
 Godot collections only matter when data crosses the engine boundary. For pure

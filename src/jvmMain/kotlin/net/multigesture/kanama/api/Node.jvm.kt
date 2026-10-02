@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 // GENERATED desktop/Android companion for Node (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
@@ -15,8 +16,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  *
  * Generated from Godot docs: Node.create_tween
  */
-fun Node.createTween(): Tween? {
-    return Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment))
+fun Node.createTween(): Tween {
+    return requireGodotReturn(Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "Node.create_tween")
 }
 
 private const val CREATE_TWEEN_HASH = 3426978995L

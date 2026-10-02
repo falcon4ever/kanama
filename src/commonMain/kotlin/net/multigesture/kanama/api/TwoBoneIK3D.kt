@@ -129,8 +129,8 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      *
      * Generated from Godot docs: TwoBoneIK3D.set_pole_direction
      */
-    fun setPoleDirection(index: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPoleDirectionBind, segment, index, direction)
+    fun setPoleDirection(index: Int, direction: SkeletonModifier3D.SecondaryDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPoleDirectionBind, segment, index, direction.value)
     }
 
     /**
@@ -138,13 +138,13 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      *
      * Generated from Godot docs: TwoBoneIK3D.get_pole_direction
      */
-    fun getPoleDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPoleDirectionBind, segment, index)
+    fun getPoleDirection(index: Int): SkeletonModifier3D.SecondaryDirection {
+        return SkeletonModifier3D.SecondaryDirection(ObjectCalls.ptrcallWithIntArgRetLong(getPoleDirectionBind, segment, index))
     }
 
     /**
      * Sets the pole direction vector. This vector is normalized by an internal process. If the vector
-     * length is `0`, it is considered synonymous with `SkeletonModifier3D.SECONDARY_DIRECTION_NONE`.
+     * length is `0`, it is considered synonymous with `SkeletonModifier3D.SecondaryDirection.NONE`.
      *
      * Generated from Godot docs: TwoBoneIK3D.set_pole_direction_vector
      */
@@ -154,7 +154,7 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
 
     /**
      * Returns the pole direction vector. If `get_pole_direction` is
-     * `SkeletonModifier3D.SECONDARY_DIRECTION_NONE`, this method returns `Vector3(0, 0, 0)`.
+     * `SkeletonModifier3D.SecondaryDirection.NONE`, this method returns `Vector3(0, 0, 0)`.
      *
      * Generated from Godot docs: TwoBoneIK3D.get_pole_direction_vector
      */
@@ -239,8 +239,8 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      *
      * Generated from Godot docs: TwoBoneIK3D.set_end_bone_direction
      */
-    fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
+    fun setEndBoneDirection(index: Int, boneDirection: SkeletonModifier3D.BoneDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection.value)
     }
 
     /**
@@ -248,8 +248,8 @@ class TwoBoneIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      *
      * Generated from Godot docs: TwoBoneIK3D.get_end_bone_direction
      */
-    fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
+    fun getEndBoneDirection(index: Int): SkeletonModifier3D.BoneDirection {
+        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index))
     }
 
     /**

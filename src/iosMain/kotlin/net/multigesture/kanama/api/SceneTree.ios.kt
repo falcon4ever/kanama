@@ -13,10 +13,13 @@ import net.multigesture.kanama.binding.runtime.*
 // on a tree handle SIGSEGVs (the task-103 "F2 fix"); SceneTree is a MainLoop now, so nothing is
 // inherited and this is plain sugar. Mirrors the generated desktop SceneTree.createTween extension
 // in SceneTree.jvm.kt — iOS hosts no Tween.wrap, so it cannot be a shared member.
-fun SceneTree.createTween(): Tween? =
-    ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
-        .takeIf { it.address() != 0L }
-        ?.let { Tween(GodotHandle(it)) }
+fun SceneTree.createTween(): Tween =
+    requireGodotReturn(
+        ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
+            .takeIf { it.address() != 0L }
+            ?.let { Tween(GodotHandle(it)) },
+        "SceneTree.create_tween",
+    )
 
 private val sceneTreeCreateTweenBind by lazy {
     ObjectCalls.getMethodBind("SceneTree", "create_tween", 3426978995L)

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  * Generated from Godot docs: RDAccelerationStructureGeometry
  */
 class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) {
-    var flags: Long
+    var flags: RenderingDevice.AccelerationStructureGeometryFlagBits
         @JvmName("flagsProperty")
         get() = getFlags()
         @JvmName("setFlagsProperty")
@@ -42,7 +42,7 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
         @JvmName("setVertexCountProperty")
         set(value) = setVertexCount(value)
 
-    var vertexFormat: Long
+    var vertexFormat: RenderingDevice.DataFormat
         @JvmName("vertexFormatProperty")
         get() = getVertexFormat()
         @JvmName("setVertexFormatProperty")
@@ -71,9 +71,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_flags
      */
-    fun setFlags(pMember: Long) {
+    fun setFlags(pMember: RenderingDevice.AccelerationStructureGeometryFlagBits) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, pMember.value)
     }
 
     /**
@@ -81,9 +81,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_flags
      */
-    fun getFlags(): Long {
+    fun getFlags(): RenderingDevice.AccelerationStructureGeometryFlagBits {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
+        return RenderingDevice.AccelerationStructureGeometryFlagBits(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
     }
 
     /**
@@ -171,9 +171,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RDAccelerationStructureGeometry.set_vertex_format
      */
-    fun setVertexFormat(pMember: Long) {
+    fun setVertexFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setVertexFormatBind, segment, pMember.value)
     }
 
     /**
@@ -181,9 +181,9 @@ class RDAccelerationStructureGeometry(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RDAccelerationStructureGeometry.get_vertex_format
      */
-    fun getVertexFormat(): Long {
+    fun getVertexFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, segment)
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getVertexFormatBind, segment))
     }
 
     /**

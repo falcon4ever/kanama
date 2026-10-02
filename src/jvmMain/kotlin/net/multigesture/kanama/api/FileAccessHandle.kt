@@ -48,9 +48,9 @@ class FileAccessHandle internal constructor(handle: GodotHandle) : RefCounted(ha
         return FileAccess.getAsTextHandle(segment)
     }
 
-    fun getError(): Long {
+    fun getError(): GodotError {
         checkOpen()
-        return FileAccess.getErrorHandle(segment)
+        return GodotError(FileAccess.getErrorHandle(segment))
     }
 
     fun storeString(text: String): Boolean {

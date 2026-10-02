@@ -86,8 +86,8 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          *
          * Generated from Godot docs: EditorInspector.instantiate_property_editor
          */
-        fun instantiatePropertyEditor(objectValue: GodotObject, type: Long, path: String, hint: Long, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
-            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, NULL_SEGMENT, objectValue.segment, type, path, hint, hintText, usage, wide))
+        fun instantiatePropertyEditor(objectValue: GodotObject, type: VariantType, path: String, hint: GodotPropertyHint, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
+            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, NULL_SEGMENT, objectValue.segment, type.value, path, hint.value, hintText, usage, wide))
         }
 
         /**

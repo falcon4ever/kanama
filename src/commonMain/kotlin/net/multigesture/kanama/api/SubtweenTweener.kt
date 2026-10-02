@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 /**
  * Runs a `Tween` nested within another `Tween`.
@@ -16,14 +17,14 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
      *
      * Generated from Godot docs: SubtweenTweener.set_delay
      */
-    fun setDelay(delay: Double): SubtweenTweener? {
+    fun setDelay(delay: Double): SubtweenTweener {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDoubleArgRetObject(setDelayBind, segment, delay)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return SubtweenTweener.wrap(ret)
+        return requireGodotReturn(SubtweenTweener.wrap(ret), "SubtweenTweener.set_delay")
     }
 
     companion object {

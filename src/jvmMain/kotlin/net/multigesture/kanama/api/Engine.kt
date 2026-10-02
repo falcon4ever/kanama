@@ -508,27 +508,27 @@ object Engine {
     }
 
     /**
-     * Registers a `ScriptLanguage` instance to be available with `ScriptServer`. Returns: - `OK` on
-     * success; - `ERR_UNAVAILABLE` if `ScriptServer` has reached the limit and cannot register any new
-     * language; - `ERR_ALREADY_EXISTS` if `ScriptServer` already contains a language with similar
-     * extension/name/type.
+     * Registers a `ScriptLanguage` instance to be available with `ScriptServer`. Returns: -
+     * `GodotError.OK` on success; - `GodotError.ERR_UNAVAILABLE` if `ScriptServer` has reached the
+     * limit and cannot register any new language; - `GodotError.ERR_ALREADY_EXISTS` if `ScriptServer`
+     * already contains a language with similar extension/name/type.
      *
      * Generated from Godot docs: Engine.register_script_language
      */
     @JvmStatic
-    fun registerScriptLanguage(language: ScriptLanguage): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(registerScriptLanguageBind, singleton, language.segment)
+    fun registerScriptLanguage(language: ScriptLanguage): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(registerScriptLanguageBind, singleton, language.segment))
     }
 
     /**
-     * Unregisters the `ScriptLanguage` instance from `ScriptServer`. Returns: - `OK` on success; -
-     * `ERR_DOES_NOT_EXIST` if the language is not registered in `ScriptServer`.
+     * Unregisters the `ScriptLanguage` instance from `ScriptServer`. Returns: - `GodotError.OK` on
+     * success; - `GodotError.ERR_DOES_NOT_EXIST` if the language is not registered in `ScriptServer`.
      *
      * Generated from Godot docs: Engine.unregister_script_language
      */
     @JvmStatic
-    fun unregisterScriptLanguage(language: ScriptLanguage): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetLong(unregisterScriptLanguageBind, singleton, language.segment)
+    fun unregisterScriptLanguage(language: ScriptLanguage): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(unregisterScriptLanguageBind, singleton, language.segment))
     }
 
     /**

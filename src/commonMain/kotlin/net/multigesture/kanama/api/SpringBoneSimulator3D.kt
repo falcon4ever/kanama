@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -131,8 +132,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_end_bone_direction
      */
-    fun setEndBoneDirection(index: Int, boneDirection: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection)
+    fun setEndBoneDirection(index: Int, boneDirection: SkeletonModifier3D.BoneDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection.value)
     }
 
     /**
@@ -141,8 +142,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_end_bone_direction
      */
-    fun getEndBoneDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index)
+    fun getEndBoneDirection(index: Int): SkeletonModifier3D.BoneDirection {
+        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index))
     }
 
     /**
@@ -172,8 +173,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_center_from
      */
-    fun setCenterFrom(index: Int, centerFrom: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCenterFromBind, segment, index, centerFrom)
+    fun setCenterFrom(index: Int, centerFrom: SpringBoneSimulator3D.CenterFrom) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setCenterFromBind, segment, index, centerFrom.value)
     }
 
     /**
@@ -181,8 +182,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_center_from
      */
-    fun getCenterFrom(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getCenterFromBind, segment, index)
+    fun getCenterFrom(index: Int): SpringBoneSimulator3D.CenterFrom {
+        return SpringBoneSimulator3D.CenterFrom(ObjectCalls.ptrcallWithIntArgRetLong(getCenterFromBind, segment, index))
     }
 
     /**
@@ -262,15 +263,15 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Sets the rotation axis of the bone chain. If set to a specific axis, it acts like a hinge joint.
      * The value is cached in each joint setting in the joint list. The axes are based on the reference
-     * pose's space, if `axis` is `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify any axis.
+     * pose's space, if `axis` is `SkeletonModifier3D.RotationAxis.CUSTOM`, you can specify any axis.
      * In here, the reference pose is the bone pose immediately before the simulation. Note: The
      * rotation axis vector and the forward vector shouldn't be colinear to avoid unintended rotation
      * since `SpringBoneSimulator3D` does not factor in twisting forces.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis
      */
-    fun setRotationAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setRotationAxisBind, segment, index, axis)
+    fun setRotationAxis(index: Int, axis: SkeletonModifier3D.RotationAxis) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setRotationAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -278,15 +279,15 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis
      */
-    fun getRotationAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getRotationAxisBind, segment, index)
+    fun getRotationAxis(index: Int): SkeletonModifier3D.RotationAxis {
+        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithIntArgRetLong(getRotationAxisBind, segment, index))
     }
 
     /**
      * Sets the rotation axis vector of the bone chain. The value is cached in each joint setting in
      * the joint list. This vector is normalized by an internal process and represents the axis around
      * which the bone chain can rotate. If the vector length is `0`, it is considered synonymous with
-     * `SkeletonModifier3D.ROTATION_AXIS_ALL`.
+     * `SkeletonModifier3D.RotationAxis.ALL`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_rotation_axis_vector
      */
@@ -297,8 +298,8 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Returns the rotation axis vector of the bone chain. This vector represents the axis around which
      * the bone chain can rotate. It is determined based on the rotation axis set for the bone chain.
-     * If `get_rotation_axis` is `SkeletonModifier3D.ROTATION_AXIS_ALL`, this method returns
-     * `Vector3(0, 0, 0)`.
+     * If `get_rotation_axis` is `SkeletonModifier3D.RotationAxis.ALL`, this method returns `Vector3(0,
+     * 0, 0)`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_rotation_axis_vector
      */
@@ -525,15 +526,15 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Sets the rotation axis at `joint` in the bone chain's joint list when `is_config_individual` is
      * `true`. The axes are based on the reference pose's space, if `axis` is
-     * `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify any axis. In here, the reference pose
+     * `SkeletonModifier3D.RotationAxis.CUSTOM`, you can specify any axis. In here, the reference pose
      * is the bone pose immediately before the simulation. Note: The rotation axis and the forward
      * vector shouldn't be colinear to avoid unintended rotation since `SpringBoneSimulator3D` does not
      * factor in twisting forces.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis
      */
-    fun setJointRotationAxis(index: Int, joint: Int, axis: Long) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis)
+    fun setJointRotationAxis(index: Int, joint: Int, axis: SkeletonModifier3D.RotationAxis) {
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis.value)
     }
 
     /**
@@ -541,15 +542,15 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis
      */
-    fun getJointRotationAxis(index: Int, joint: Int): Long {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint)
+    fun getJointRotationAxis(index: Int, joint: Int): SkeletonModifier3D.RotationAxis {
+        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint))
     }
 
     /**
      * Sets the rotation axis vector for the specified joint in the bone chain. This vector is
      * normalized by an internal process and represents the axis around which the bone chain can
      * rotate. If the vector length is `0`, it is considered synonymous with
-     * `SkeletonModifier3D.ROTATION_AXIS_ALL`.
+     * `SkeletonModifier3D.RotationAxis.ALL`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.set_joint_rotation_axis_vector
      */
@@ -560,7 +561,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * Returns the rotation axis vector for the specified joint in the bone chain. This vector
      * represents the axis around which the joint can rotate. It is determined based on the rotation
-     * axis set for the joint. If `get_joint_rotation_axis` is `SkeletonModifier3D.ROTATION_AXIS_ALL`,
+     * axis set for the joint. If `get_joint_rotation_axis` is `SkeletonModifier3D.RotationAxis.ALL`,
      * this method returns `Vector3(0, 0, 0)`.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.get_joint_rotation_axis_vector
@@ -853,11 +854,40 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
-    companion object {
-        const val CENTER_FROM_WORLD_ORIGIN: Long = 0L
-        const val CENTER_FROM_NODE: Long = 1L
-        const val CENTER_FROM_BONE: Long = 2L
+    /**
+     * Godot's `SpringBoneSimulator3D.CenterFrom` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`SpringBoneSimulator3D.CenterFrom.<NAME>`).
+     *
+     * Generated from Godot docs: SpringBoneSimulator3D.CenterFrom
+     */
+    @JvmInline
+    value class CenterFrom(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The world origin is defined as center.
+             *
+             * Generated from Godot docs: SpringBoneSimulator3D.CENTER_FROM_WORLD_ORIGIN
+             */
+            val WORLD_ORIGIN: CenterFrom get() = CenterFrom(0L)
+            /**
+             * The `Node3D` specified by `set_center_node` is defined as center. If `Node3D` is not found, the
+             * parent `Skeleton3D` is treated as center.
+             *
+             * Generated from Godot docs: SpringBoneSimulator3D.CENTER_FROM_NODE
+             */
+            val NODE: CenterFrom get() = CenterFrom(1L)
+            /**
+             * The bone pose origin of the parent `Skeleton3D` specified by `set_center_bone` is defined as
+             * center. If `Node3D` is not found, the parent `Skeleton3D` is treated as center.
+             *
+             * Generated from Godot docs: SpringBoneSimulator3D.CENTER_FROM_BONE
+             */
+            val BONE: CenterFrom get() = CenterFrom(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SpringBoneSimulator3D? =
             wrap(handle.segment)

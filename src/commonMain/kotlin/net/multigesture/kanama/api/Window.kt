@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -16,7 +17,7 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: Window
  */
 open class Window(handle: GodotHandle) : Viewport(handle) {
-    var mode: Long
+    var mode: Window.Mode
         @JvmName("modeProperty")
         get() = getMode()
         @JvmName("setModeProperty")
@@ -28,7 +29,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         @JvmName("setTitleProperty")
         set(value) = setTitle(value)
 
-    var initialPosition: Long
+    var initialPosition: Window.WindowInitialPosition
         @JvmName("initialPositionProperty")
         get() = getInitialPosition()
         @JvmName("setInitialPositionProperty")
@@ -96,81 +97,81 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     var unresizable: Boolean
         @JvmName("unresizableProperty")
-        get() = getFlag(0L)
+        get() = getFlag(Window.Flags.RESIZE_DISABLED)
         @JvmName("setUnresizableProperty")
-        set(value) = setFlag(0L, value)
+        set(value) = setFlag(Window.Flags.RESIZE_DISABLED, value)
 
     var borderless: Boolean
         @JvmName("borderlessProperty")
-        get() = getFlag(1L)
+        get() = getFlag(Window.Flags.BORDERLESS)
         @JvmName("setBorderlessProperty")
-        set(value) = setFlag(1L, value)
+        set(value) = setFlag(Window.Flags.BORDERLESS, value)
 
     var alwaysOnTop: Boolean
         @JvmName("alwaysOnTopProperty")
-        get() = getFlag(2L)
+        get() = getFlag(Window.Flags.ALWAYS_ON_TOP)
         @JvmName("setAlwaysOnTopProperty")
-        set(value) = setFlag(2L, value)
+        set(value) = setFlag(Window.Flags.ALWAYS_ON_TOP, value)
 
     var transparent: Boolean
         @JvmName("transparentProperty")
-        get() = getFlag(3L)
+        get() = getFlag(Window.Flags.TRANSPARENT)
         @JvmName("setTransparentProperty")
-        set(value) = setFlag(3L, value)
+        set(value) = setFlag(Window.Flags.TRANSPARENT, value)
 
     var unfocusable: Boolean
         @JvmName("unfocusableProperty")
-        get() = getFlag(4L)
+        get() = getFlag(Window.Flags.NO_FOCUS)
         @JvmName("setUnfocusableProperty")
-        set(value) = setFlag(4L, value)
+        set(value) = setFlag(Window.Flags.NO_FOCUS, value)
 
     var popupWindow: Boolean
         @JvmName("popupWindowProperty")
-        get() = getFlag(5L)
+        get() = getFlag(Window.Flags.POPUP)
         @JvmName("setPopupWindowProperty")
-        set(value) = setFlag(5L, value)
+        set(value) = setFlag(Window.Flags.POPUP, value)
 
     var extendToTitle: Boolean
         @JvmName("extendToTitleProperty")
-        get() = getFlag(6L)
+        get() = getFlag(Window.Flags.EXTEND_TO_TITLE)
         @JvmName("setExtendToTitleProperty")
-        set(value) = setFlag(6L, value)
+        set(value) = setFlag(Window.Flags.EXTEND_TO_TITLE, value)
 
     var mousePassthrough: Boolean
         @JvmName("mousePassthroughProperty")
-        get() = getFlag(7L)
+        get() = getFlag(Window.Flags.MOUSE_PASSTHROUGH)
         @JvmName("setMousePassthroughProperty")
-        set(value) = setFlag(7L, value)
+        set(value) = setFlag(Window.Flags.MOUSE_PASSTHROUGH, value)
 
     var sharpCorners: Boolean
         @JvmName("sharpCornersProperty")
-        get() = getFlag(8L)
+        get() = getFlag(Window.Flags.SHARP_CORNERS)
         @JvmName("setSharpCornersProperty")
-        set(value) = setFlag(8L, value)
+        set(value) = setFlag(Window.Flags.SHARP_CORNERS, value)
 
     var excludeFromCapture: Boolean
         @JvmName("excludeFromCaptureProperty")
-        get() = getFlag(9L)
+        get() = getFlag(Window.Flags.EXCLUDE_FROM_CAPTURE)
         @JvmName("setExcludeFromCaptureProperty")
-        set(value) = setFlag(9L, value)
+        set(value) = setFlag(Window.Flags.EXCLUDE_FROM_CAPTURE, value)
 
     var popupWmHint: Boolean
         @JvmName("popupWmHintProperty")
-        get() = getFlag(10L)
+        get() = getFlag(Window.Flags.POPUP_WM_HINT)
         @JvmName("setPopupWmHintProperty")
-        set(value) = setFlag(10L, value)
+        set(value) = setFlag(Window.Flags.POPUP_WM_HINT, value)
 
     var minimizeDisabled: Boolean
         @JvmName("minimizeDisabledProperty")
-        get() = getFlag(11L)
+        get() = getFlag(Window.Flags.MINIMIZE_DISABLED)
         @JvmName("setMinimizeDisabledProperty")
-        set(value) = setFlag(11L, value)
+        set(value) = setFlag(Window.Flags.MINIMIZE_DISABLED, value)
 
     var maximizeDisabled: Boolean
         @JvmName("maximizeDisabledProperty")
-        get() = getFlag(12L)
+        get() = getFlag(Window.Flags.MAXIMIZE_DISABLED)
         @JvmName("setMaximizeDisabledProperty")
-        set(value) = setFlag(12L, value)
+        set(value) = setFlag(Window.Flags.MAXIMIZE_DISABLED, value)
 
     var forceNative: Boolean
         @JvmName("forceNativeProperty")
@@ -202,19 +203,19 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         @JvmName("setContentScaleSizeProperty")
         set(value) = setContentScaleSize(value)
 
-    var contentScaleMode: Long
+    var contentScaleMode: Window.ContentScaleMode
         @JvmName("contentScaleModeProperty")
         get() = getContentScaleMode()
         @JvmName("setContentScaleModeProperty")
         set(value) = setContentScaleMode(value)
 
-    var contentScaleAspect: Long
+    var contentScaleAspect: Window.ContentScaleAspect
         @JvmName("contentScaleAspectProperty")
         get() = getContentScaleAspect()
         @JvmName("setContentScaleAspectProperty")
         set(value) = setContentScaleAspect(value)
 
-    var contentScaleStretch: Long
+    var contentScaleStretch: Window.ContentScaleStretch
         @JvmName("contentScaleStretchProperty")
         get() = getContentScaleStretch()
         @JvmName("setContentScaleStretchProperty")
@@ -285,8 +286,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_initial_position
      */
-    fun setInitialPosition(initialPosition: Long) {
-        ObjectCalls.ptrcallWithLongArg(setInitialPositionBind, segment, initialPosition)
+    fun setInitialPosition(initialPosition: Window.WindowInitialPosition) {
+        ObjectCalls.ptrcallWithLongArg(setInitialPositionBind, segment, initialPosition.value)
     }
 
     /**
@@ -294,8 +295,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.get_initial_position
      */
-    fun getInitialPosition(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getInitialPositionBind, segment)
+    fun getInitialPosition(): Window.WindowInitialPosition {
+        return Window.WindowInitialPosition(ObjectCalls.ptrcallNoArgsRetLong(getInitialPositionBind, segment))
     }
 
     /**
@@ -321,7 +322,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * is `false`, the position is in absolute screen coordinates. This typically applies to editor
      * plugins. If the setting is `true`, the window's position is in the coordinates of its parent
      * `Viewport`. Note: This property only works if `initial_position` is set to
-     * `WINDOW_INITIAL_POSITION_ABSOLUTE`.
+     * `WindowInitialPosition.ABSOLUTE`.
      *
      * Generated from Godot docs: Window.set_position
      */
@@ -334,7 +335,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * is `false`, the position is in absolute screen coordinates. This typically applies to editor
      * plugins. If the setting is `true`, the window's position is in the coordinates of its parent
      * `Viewport`. Note: This property only works if `initial_position` is set to
-     * `WINDOW_INITIAL_POSITION_ABSOLUTE`.
+     * `WindowInitialPosition.ABSOLUTE`.
      *
      * Generated from Godot docs: Window.get_position
      */
@@ -452,8 +453,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_mode
      */
-    fun setMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode)
+    fun setMode(mode: Window.Mode) {
+        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
     }
 
     /**
@@ -463,8 +464,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.get_mode
      */
-    fun getMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment)
+    fun getMode(): Window.Mode {
+        return Window.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
     }
 
     /**
@@ -472,8 +473,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_flag
      */
-    fun setFlag(flag: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag, enabled)
+    fun setFlag(flag: Window.Flags, enabled: Boolean) {
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -481,8 +482,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.get_flag
      */
-    fun getFlag(flag: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag)
+    fun getFlag(flag: Window.Flags): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag.value)
     }
 
     /**
@@ -564,8 +565,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_taskbar_progress_state
      */
-    fun setTaskbarProgressState(state: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTaskbarProgressStateBind, segment, state)
+    fun setTaskbarProgressState(state: DisplayServer.ProgressState) {
+        ObjectCalls.ptrcallWithLongArg(setTaskbarProgressStateBind, segment, state.value)
     }
 
     /**
@@ -742,8 +743,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.start_resize
      */
-    fun startResize(edge: Long) {
-        ObjectCalls.ptrcallWithLongArg(startResizeBind, segment, edge)
+    fun startResize(edge: DisplayServer.WindowResizeEdge) {
+        ObjectCalls.ptrcallWithLongArg(startResizeBind, segment, edge.value)
     }
 
     /**
@@ -805,12 +806,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     /**
      * The content's base size in "virtual" pixels. Not to be confused with `size`, which sets the
      * actual window's physical size in pixels. If set to a value greater than `0` and
-     * `content_scale_mode` is set to a value other than `CONTENT_SCALE_MODE_DISABLED`, the `Window`'s
+     * `content_scale_mode` is set to a value other than `ContentScaleMode.DISABLED`, the `Window`'s
      * content will be scaled when the window is resized to a different size. Higher values will make
      * the content appear smaller, as it will be able to fit more of the project in view. On the root
      * `Window`, this is set to match `ProjectSettings.display/window/size/viewport_width` and
      * `ProjectSettings.display/window/size/viewport_height` by default. For example, when using
-     * `CONTENT_SCALE_MODE_CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
+     * `ContentScaleMode.CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
      * window size of `2560×1440` will make 2D elements appear at double their original size, as the
      * content is scaled by a factor of `2.0` (`2560.0 / 1280.0 = 2.0`, `1440.0 / 720.0 = 2.0`). See
      * the Base size section of the Multiple resolutions documentation
@@ -825,12 +826,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     /**
      * The content's base size in "virtual" pixels. Not to be confused with `size`, which sets the
      * actual window's physical size in pixels. If set to a value greater than `0` and
-     * `content_scale_mode` is set to a value other than `CONTENT_SCALE_MODE_DISABLED`, the `Window`'s
+     * `content_scale_mode` is set to a value other than `ContentScaleMode.DISABLED`, the `Window`'s
      * content will be scaled when the window is resized to a different size. Higher values will make
      * the content appear smaller, as it will be able to fit more of the project in view. On the root
      * `Window`, this is set to match `ProjectSettings.display/window/size/viewport_width` and
      * `ProjectSettings.display/window/size/viewport_height` by default. For example, when using
-     * `CONTENT_SCALE_MODE_CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
+     * `ContentScaleMode.CANVAS_ITEMS` and `content_scale_size` set to `Vector2i(1280, 720)`, using a
      * window size of `2560×1440` will make 2D elements appear at double their original size, as the
      * content is scaled by a factor of `2.0` (`2560.0 / 1280.0 = 2.0`, `1440.0 / 720.0 = 2.0`). See
      * the Base size section of the Multiple resolutions documentation
@@ -847,8 +848,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_content_scale_mode
      */
-    fun setContentScaleMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleModeBind, segment, mode)
+    fun setContentScaleMode(mode: Window.ContentScaleMode) {
+        ObjectCalls.ptrcallWithLongArg(setContentScaleModeBind, segment, mode.value)
     }
 
     /**
@@ -856,8 +857,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.get_content_scale_mode
      */
-    fun getContentScaleMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleModeBind, segment)
+    fun getContentScaleMode(): Window.ContentScaleMode {
+        return Window.ContentScaleMode(ObjectCalls.ptrcallNoArgsRetLong(getContentScaleModeBind, segment))
     }
 
     /**
@@ -866,8 +867,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_content_scale_aspect
      */
-    fun setContentScaleAspect(aspect: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleAspectBind, segment, aspect)
+    fun setContentScaleAspect(aspect: Window.ContentScaleAspect) {
+        ObjectCalls.ptrcallWithLongArg(setContentScaleAspectBind, segment, aspect.value)
     }
 
     /**
@@ -876,8 +877,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.get_content_scale_aspect
      */
-    fun getContentScaleAspect(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleAspectBind, segment)
+    fun getContentScaleAspect(): Window.ContentScaleAspect {
+        return Window.ContentScaleAspect(ObjectCalls.ptrcallNoArgsRetLong(getContentScaleAspectBind, segment))
     }
 
     /**
@@ -887,8 +888,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_content_scale_stretch
      */
-    fun setContentScaleStretch(stretch: Long) {
-        ObjectCalls.ptrcallWithLongArg(setContentScaleStretchBind, segment, stretch)
+    fun setContentScaleStretch(stretch: Window.ContentScaleStretch) {
+        ObjectCalls.ptrcallWithLongArg(setContentScaleStretchBind, segment, stretch.value)
     }
 
     /**
@@ -898,8 +899,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.get_content_scale_stretch
      */
-    fun getContentScaleStretch(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getContentScaleStretchBind, segment)
+    fun getContentScaleStretch(): Window.ContentScaleStretch {
+        return Window.ContentScaleStretch(ObjectCalls.ptrcallNoArgsRetLong(getContentScaleStretchBind, segment))
     }
 
     /**
@@ -1465,8 +1466,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.set_layout_direction
      */
-    fun setLayoutDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction)
+    fun setLayoutDirection(direction: Window.LayoutDirection) {
+        ObjectCalls.ptrcallWithLongArg(setLayoutDirectionBind, segment, direction.value)
     }
 
     /**
@@ -1474,8 +1475,8 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      *
      * Generated from Godot docs: Window.get_layout_direction
      */
-    fun getLayoutDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment)
+    fun getLayoutDirection(): Window.LayoutDirection {
+        return Window.LayoutDirection(ObjectCalls.ptrcallNoArgsRetLong(getLayoutDirectionBind, segment))
     }
 
     /**
@@ -1660,6 +1661,397 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         const val outputMaxLinearValueChanged: String = "output_max_linear_value_changed"
     }
 
+    /**
+     * Godot's `Window.Mode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Window.Mode.<NAME>`).
+     *
+     * Generated from Godot docs: Window.Mode
+     */
+    @JvmInline
+    value class Mode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Windowed mode, i.e. `Window` doesn't occupy the whole screen (unless set to the size of the
+             * screen).
+             *
+             * Generated from Godot docs: Window.MODE_WINDOWED
+             */
+            val WINDOWED: Mode get() = Mode(0L)
+            /**
+             * Minimized window mode, i.e. `Window` is not visible and available on window manager's window
+             * list. Normally happens when the minimize button is pressed.
+             *
+             * Generated from Godot docs: Window.MODE_MINIMIZED
+             */
+            val MINIMIZED: Mode get() = Mode(1L)
+            /**
+             * Maximized window mode, i.e. `Window` will occupy whole screen area except task bar and still
+             * display its borders. Normally happens when the maximize button is pressed.
+             *
+             * Generated from Godot docs: Window.MODE_MAXIMIZED
+             */
+            val MAXIMIZED: Mode get() = Mode(2L)
+            /**
+             * Full screen mode with full multi-window support. Full screen window covers the entire display
+             * area of a screen and has no decorations. The display's video mode is not changed. On Android:
+             * This enables immersive mode. On macOS: A new desktop is used to display the running project.
+             * Note: Regardless of the platform, enabling full screen will change the window size to match the
+             * monitor's size. Therefore, make sure your project supports multiple resolutions
+             * ($DOCS_URL/tutorials/rendering/multiple_resolutions.html) when enabling full screen mode.
+             *
+             * Generated from Godot docs: Window.MODE_FULLSCREEN
+             */
+            val FULLSCREEN: Mode get() = Mode(3L)
+            /**
+             * A single window full screen mode. This mode has less overhead, but only one window can be open
+             * on a given screen at a time (opening a child window or application switching will trigger a full
+             * screen transition). Full screen window covers the entire display area of a screen and has no
+             * border or decorations. The display's video mode is not changed. Note: This mode might not work
+             * with screen recording software. On Android: This enables immersive mode. On Windows: Depending
+             * on video driver, full screen transition might cause screens to go black for a moment. On macOS:
+             * A new desktop is used to display the running project. Exclusive full screen mode prevents Dock
+             * and Menu from showing up when the mouse pointer is hovering the edge of the screen. On Linux
+             * (X11): Exclusive full screen mode bypasses compositor. On Linux (Wayland): Equivalent to
+             * `Mode.FULLSCREEN`. Note: Regardless of the platform, enabling full screen will change the window
+             * size to match the monitor's size. Therefore, make sure your project supports multiple
+             * resolutions ($DOCS_URL/tutorials/rendering/multiple_resolutions.html) when enabling full screen
+             * mode.
+             *
+             * Generated from Godot docs: Window.MODE_EXCLUSIVE_FULLSCREEN
+             */
+            val EXCLUSIVE_FULLSCREEN: Mode get() = Mode(4L)
+        }
+    }
+
+    /**
+     * Godot's `Window.Flags` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Window.Flags.<NAME>`).
+     *
+     * Generated from Godot docs: Window.Flags
+     */
+    @JvmInline
+    value class Flags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The window can't be resized by dragging its resize grip. It's still possible to resize the
+             * window using `size`. This flag is ignored for full screen windows. Set with `unresizable`. Note:
+             * This flag is implemented on Linux (X11), macOS, Windows, and embedded windows.
+             *
+             * Generated from Godot docs: Window.FLAG_RESIZE_DISABLED
+             */
+            val RESIZE_DISABLED: Flags get() = Flags(0L)
+            /**
+             * The window do not have native title bar and other decorations. This flag is ignored for
+             * full-screen windows. Set with `borderless`. Note: This flag is implemented on Linux
+             * (X11/Wayland), macOS, Windows, and embedded windows.
+             *
+             * Generated from Godot docs: Window.FLAG_BORDERLESS
+             */
+            val BORDERLESS: Flags get() = Flags(1L)
+            /**
+             * The window is floating on top of all other windows. This flag is ignored for full-screen
+             * windows. Set with `always_on_top`. Note: This flag is implemented on Linux (X11), macOS,
+             * Windows, and embedded windows.
+             *
+             * Generated from Godot docs: Window.FLAG_ALWAYS_ON_TOP
+             */
+            val ALWAYS_ON_TOP: Flags get() = Flags(2L)
+            /**
+             * The window background can be transparent. Set with `transparent`. Note: This flag has no effect
+             * if either `ProjectSettings.display/window/per_pixel_transparency/allowed`, or the window's
+             * `Viewport.transparent_bg` is set to `false`. Note: Transparency support is implemented on Linux
+             * (X11/Wayland), macOS, Windows, and embedded windows.
+             *
+             * Generated from Godot docs: Window.FLAG_TRANSPARENT
+             */
+            val TRANSPARENT: Flags get() = Flags(3L)
+            /**
+             * The window can't be focused. No-focus window will ignore all input, except mouse clicks. Set
+             * with `unfocusable`. Note: This flag is implemented on Linux (X11), macOS, Windows, and embedded
+             * windows.
+             *
+             * Generated from Godot docs: Window.FLAG_NO_FOCUS
+             */
+            val NO_FOCUS: Flags get() = Flags(4L)
+            /**
+             * Window is part of menu or `OptionButton` dropdown. This flag can't be changed when the window is
+             * visible. An active popup window will exclusively receive all input, without stealing focus from
+             * its parent. Popup windows are automatically closed when uses click outside it, or when an
+             * application is switched. Popup window must have transient parent set (see `transient`). Note:
+             * This flag is implemented on Linux (X11/Wayland), macOS, Windows, and embedded `Popup` windows.
+             *
+             * Generated from Godot docs: Window.FLAG_POPUP
+             */
+            val POPUP: Flags get() = Flags(5L)
+            /**
+             * Window content is expanded to the full size of the window. Unlike borderless window, the frame
+             * is left intact and can be used to resize the window, title bar is transparent, but have
+             * minimize/maximize/close buttons. Set with `extend_to_title`. Note: This flag has no effect in
+             * embedded windows. Note: This flag is implemented only on macOS.
+             *
+             * Generated from Godot docs: Window.FLAG_EXTEND_TO_TITLE
+             */
+            val EXTEND_TO_TITLE: Flags get() = Flags(6L)
+            /**
+             * All mouse events are passed to the underlying window of the same application. Note: This flag
+             * has no effect in embedded windows. Note: This flag is implemented on Linux (X11), macOS,
+             * Windows.
+             *
+             * Generated from Godot docs: Window.FLAG_MOUSE_PASSTHROUGH
+             */
+            val MOUSE_PASSTHROUGH: Flags get() = Flags(7L)
+            /**
+             * Window style is overridden, forcing sharp corners. Note: This flag has no effect in embedded
+             * windows. Note: This flag is implemented only on Windows (11).
+             *
+             * Generated from Godot docs: Window.FLAG_SHARP_CORNERS
+             */
+            val SHARP_CORNERS: Flags get() = Flags(8L)
+            /**
+             * Windows is excluded from screenshots taken by `DisplayServer.screen_get_image`,
+             * `DisplayServer.screen_get_image_rect`, and `DisplayServer.screen_get_pixel`. Note: This flag has
+             * no effect in embedded windows. Note: This flag is implemented on macOS and Windows (10, 20H1).
+             * Note: Setting this flag will prevent standard screenshot methods from capturing a window image,
+             * but does NOT guarantee that other apps won't be able to capture an image. It should not be used
+             * as a DRM or security measure.
+             *
+             * Generated from Godot docs: Window.FLAG_EXCLUDE_FROM_CAPTURE
+             */
+            val EXCLUDE_FROM_CAPTURE: Flags get() = Flags(9L)
+            /**
+             * Signals the window manager that this window is supposed to be an implementation-defined "popup"
+             * (usually a floating, borderless, untileable and immovable child window). Note: This flag has no
+             * effect in embedded windows. Note: This flag is implemented on Linux (Wayland).
+             *
+             * Generated from Godot docs: Window.FLAG_POPUP_WM_HINT
+             */
+            val POPUP_WM_HINT: Flags get() = Flags(10L)
+            /**
+             * Window minimize button is disabled. Note: This flag has no effect in embedded windows. Note:
+             * This flag is implemented on Linux (X11), macOS, and Windows.
+             *
+             * Generated from Godot docs: Window.FLAG_MINIMIZE_DISABLED
+             */
+            val MINIMIZE_DISABLED: Flags get() = Flags(11L)
+            /**
+             * Window maximize button is disabled. Note: This flag has no effect in embedded windows. Note:
+             * This flag is implemented on Linux (X11), macOS, and Windows.
+             *
+             * Generated from Godot docs: Window.FLAG_MAXIMIZE_DISABLED
+             */
+            val MAXIMIZE_DISABLED: Flags get() = Flags(12L)
+            /**
+             * Max value of the `Flags`.
+             *
+             * Generated from Godot docs: Window.FLAG_MAX
+             */
+            val MAX: Flags get() = Flags(13L)
+        }
+    }
+
+    /**
+     * Godot's `Window.ContentScaleMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Window.ContentScaleMode.<NAME>`).
+     *
+     * Generated from Godot docs: Window.ContentScaleMode
+     */
+    @JvmInline
+    value class ContentScaleMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The content will not be scaled to match the `Window`'s size (`content_scale_size` is ignored).
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_MODE_DISABLED
+             */
+            val DISABLED: ContentScaleMode get() = ContentScaleMode(0L)
+            /**
+             * The content will be rendered at the target size. This is more performance-expensive than
+             * `ContentScaleMode.VIEWPORT`, but provides better results.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+             */
+            val CANVAS_ITEMS: ContentScaleMode get() = ContentScaleMode(1L)
+            /**
+             * The content will be rendered at the base size and then scaled to the target size. More
+             * performant than `ContentScaleMode.CANVAS_ITEMS`, but results in pixelated image.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_MODE_VIEWPORT
+             */
+            val VIEWPORT: ContentScaleMode get() = ContentScaleMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `Window.ContentScaleAspect` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Window.ContentScaleAspect.<NAME>`).
+     *
+     * Generated from Godot docs: Window.ContentScaleAspect
+     */
+    @JvmInline
+    value class ContentScaleAspect(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The aspect will be ignored. Scaling will simply stretch the content to fit the target size.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_ASPECT_IGNORE
+             */
+            val IGNORE: ContentScaleAspect get() = ContentScaleAspect(0L)
+            /**
+             * The content's aspect will be preserved. If the target size has different aspect from the base
+             * one, the image will be centered and black bars will appear on left and right sides.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_ASPECT_KEEP
+             */
+            val KEEP: ContentScaleAspect get() = ContentScaleAspect(1L)
+            /**
+             * The content can be expanded vertically. Scaling horizontally will result in keeping the width
+             * ratio and then black bars on left and right sides.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_ASPECT_KEEP_WIDTH
+             */
+            val KEEP_WIDTH: ContentScaleAspect get() = ContentScaleAspect(2L)
+            /**
+             * The content can be expanded horizontally. Scaling vertically will result in keeping the height
+             * ratio and then black bars on top and bottom sides.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_ASPECT_KEEP_HEIGHT
+             */
+            val KEEP_HEIGHT: ContentScaleAspect get() = ContentScaleAspect(3L)
+            /**
+             * The content's aspect will be preserved. If the target size has different aspect from the base
+             * one, the content will stay in the top-left corner and add an extra visible area in the stretched
+             * space.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_ASPECT_EXPAND
+             */
+            val EXPAND: ContentScaleAspect get() = ContentScaleAspect(4L)
+        }
+    }
+
+    /**
+     * Godot's `Window.ContentScaleStretch` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Window.ContentScaleStretch.<NAME>`).
+     *
+     * Generated from Godot docs: Window.ContentScaleStretch
+     */
+    @JvmInline
+    value class ContentScaleStretch(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The content will be stretched according to a fractional factor. This fills all the space
+             * available in the window, but allows "pixel wobble" to occur due to uneven pixel scaling.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_STRETCH_FRACTIONAL
+             */
+            val FRACTIONAL: ContentScaleStretch get() = ContentScaleStretch(0L)
+            /**
+             * The content will be stretched only according to an integer factor, preserving sharp pixels. This
+             * may leave a black background visible on the window's edges depending on the window size.
+             *
+             * Generated from Godot docs: Window.CONTENT_SCALE_STRETCH_INTEGER
+             */
+            val INTEGER: ContentScaleStretch get() = ContentScaleStretch(1L)
+        }
+    }
+
+    /**
+     * Godot's `Window.LayoutDirection` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Window.LayoutDirection.<NAME>`).
+     *
+     * Generated from Godot docs: Window.LayoutDirection
+     */
+    @JvmInline
+    value class LayoutDirection(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Automatic layout direction, determined from the parent window layout direction.
+             *
+             * Generated from Godot docs: Window.LAYOUT_DIRECTION_INHERITED
+             */
+            val INHERITED: LayoutDirection get() = LayoutDirection(0L)
+            /**
+             * Automatic layout direction, determined from the current locale.
+             *
+             * Generated from Godot docs: Window.LAYOUT_DIRECTION_APPLICATION_LOCALE
+             */
+            val APPLICATION_LOCALE: LayoutDirection get() = LayoutDirection(1L)
+            /**
+             * Left-to-right layout direction.
+             *
+             * Generated from Godot docs: Window.LAYOUT_DIRECTION_LTR
+             */
+            val LTR: LayoutDirection get() = LayoutDirection(2L)
+            /**
+             * Right-to-left layout direction.
+             *
+             * Generated from Godot docs: Window.LAYOUT_DIRECTION_RTL
+             */
+            val RTL: LayoutDirection get() = LayoutDirection(3L)
+            /**
+             * Automatic layout direction, determined from the system locale.
+             *
+             * Generated from Godot docs: Window.LAYOUT_DIRECTION_SYSTEM_LOCALE
+             */
+            val SYSTEM_LOCALE: LayoutDirection get() = LayoutDirection(4L)
+            /**
+             * Represents the size of the `LayoutDirection` enum.
+             *
+             * Generated from Godot docs: Window.LAYOUT_DIRECTION_MAX
+             */
+            val MAX: LayoutDirection get() = LayoutDirection(5L)
+            val LOCALE: LayoutDirection get() = LayoutDirection(1L)
+        }
+    }
+
+    /**
+     * Godot's `Window.WindowInitialPosition` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Window.WindowInitialPosition.<NAME>`).
+     *
+     * Generated from Godot docs: Window.WindowInitialPosition
+     */
+    @JvmInline
+    value class WindowInitialPosition(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Initial window position is determined by `position`.
+             *
+             * Generated from Godot docs: Window.WINDOW_INITIAL_POSITION_ABSOLUTE
+             */
+            val ABSOLUTE: WindowInitialPosition get() = WindowInitialPosition(0L)
+            /**
+             * Initial window position is the center of the primary screen.
+             *
+             * Generated from Godot docs: Window.WINDOW_INITIAL_POSITION_CENTER_PRIMARY_SCREEN
+             */
+            val CENTER_PRIMARY_SCREEN: WindowInitialPosition get() = WindowInitialPosition(1L)
+            /**
+             * Initial window position is the center of the main window screen.
+             *
+             * Generated from Godot docs: Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+             */
+            val CENTER_MAIN_WINDOW_SCREEN: WindowInitialPosition get() = WindowInitialPosition(2L)
+            /**
+             * Initial window position is the center of `current_screen` screen.
+             *
+             * Generated from Godot docs: Window.WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN
+             */
+            val CENTER_OTHER_SCREEN: WindowInitialPosition get() = WindowInitialPosition(3L)
+            /**
+             * Initial window position is the center of the screen containing the mouse pointer.
+             *
+             * Generated from Godot docs: Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
+             */
+            val CENTER_SCREEN_WITH_MOUSE_FOCUS: WindowInitialPosition get() = WindowInitialPosition(4L)
+            /**
+             * Initial window position is the center of the screen containing the window with the keyboard
+             * focus.
+             *
+             * Generated from Godot docs: Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS
+             */
+            val CENTER_SCREEN_WITH_KEYBOARD_FOCUS: WindowInitialPosition get() = WindowInitialPosition(5L)
+        }
+    }
+
     companion object {
         /**
          * Returns the focused window.
@@ -1672,48 +2064,6 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
         const val NOTIFICATION_VISIBILITY_CHANGED: Long = 30L
         const val NOTIFICATION_THEME_CHANGED: Long = 32L
-        const val MODE_WINDOWED: Long = 0L
-        const val MODE_MINIMIZED: Long = 1L
-        const val MODE_MAXIMIZED: Long = 2L
-        const val MODE_FULLSCREEN: Long = 3L
-        const val MODE_EXCLUSIVE_FULLSCREEN: Long = 4L
-        const val FLAG_RESIZE_DISABLED: Long = 0L
-        const val FLAG_BORDERLESS: Long = 1L
-        const val FLAG_ALWAYS_ON_TOP: Long = 2L
-        const val FLAG_TRANSPARENT: Long = 3L
-        const val FLAG_NO_FOCUS: Long = 4L
-        const val FLAG_POPUP: Long = 5L
-        const val FLAG_EXTEND_TO_TITLE: Long = 6L
-        const val FLAG_MOUSE_PASSTHROUGH: Long = 7L
-        const val FLAG_SHARP_CORNERS: Long = 8L
-        const val FLAG_EXCLUDE_FROM_CAPTURE: Long = 9L
-        const val FLAG_POPUP_WM_HINT: Long = 10L
-        const val FLAG_MINIMIZE_DISABLED: Long = 11L
-        const val FLAG_MAXIMIZE_DISABLED: Long = 12L
-        const val FLAG_MAX: Long = 13L
-        const val CONTENT_SCALE_MODE_DISABLED: Long = 0L
-        const val CONTENT_SCALE_MODE_CANVAS_ITEMS: Long = 1L
-        const val CONTENT_SCALE_MODE_VIEWPORT: Long = 2L
-        const val CONTENT_SCALE_ASPECT_IGNORE: Long = 0L
-        const val CONTENT_SCALE_ASPECT_KEEP: Long = 1L
-        const val CONTENT_SCALE_ASPECT_KEEP_WIDTH: Long = 2L
-        const val CONTENT_SCALE_ASPECT_KEEP_HEIGHT: Long = 3L
-        const val CONTENT_SCALE_ASPECT_EXPAND: Long = 4L
-        const val CONTENT_SCALE_STRETCH_FRACTIONAL: Long = 0L
-        const val CONTENT_SCALE_STRETCH_INTEGER: Long = 1L
-        const val LAYOUT_DIRECTION_INHERITED: Long = 0L
-        const val LAYOUT_DIRECTION_APPLICATION_LOCALE: Long = 1L
-        const val LAYOUT_DIRECTION_LTR: Long = 2L
-        const val LAYOUT_DIRECTION_RTL: Long = 3L
-        const val LAYOUT_DIRECTION_SYSTEM_LOCALE: Long = 4L
-        const val LAYOUT_DIRECTION_MAX: Long = 5L
-        const val LAYOUT_DIRECTION_LOCALE: Long = 1L
-        const val WINDOW_INITIAL_POSITION_ABSOLUTE: Long = 0L
-        const val WINDOW_INITIAL_POSITION_CENTER_PRIMARY_SCREEN: Long = 1L
-        const val WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN: Long = 2L
-        const val WINDOW_INITIAL_POSITION_CENTER_OTHER_SCREEN: Long = 3L
-        const val WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS: Long = 4L
-        const val WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_KEYBOARD_FOCUS: Long = 5L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Window? =

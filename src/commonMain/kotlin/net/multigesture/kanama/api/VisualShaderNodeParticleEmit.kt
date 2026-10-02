@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,29 +10,34 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeParticleEmit
  */
 class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handle) {
-    var flags: Long
+    var flags: VisualShaderNodeParticleEmit.EmitFlags
         @JvmName("flagsProperty")
         get() = getFlags()
         @JvmName("setFlagsProperty")
         set(value) = setFlags(value)
 
-    fun setFlags(flags: Long) {
+    fun setFlags(flags: VisualShaderNodeParticleEmit.EmitFlags) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags.value)
     }
 
-    fun getFlags(): Long {
+    fun getFlags(): VisualShaderNodeParticleEmit.EmitFlags {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
+        return VisualShaderNodeParticleEmit.EmitFlags(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
+    }
+
+    @JvmInline
+    value class EmitFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            val POSITION: EmitFlags get() = EmitFlags(1L)
+            val ROT_SCALE: EmitFlags get() = EmitFlags(2L)
+            val VELOCITY: EmitFlags get() = EmitFlags(4L)
+            val COLOR: EmitFlags get() = EmitFlags(8L)
+            val CUSTOM: EmitFlags get() = EmitFlags(16L)
+        }
     }
 
     companion object {
-        const val EMIT_FLAG_POSITION: Long = 1L
-        const val EMIT_FLAG_ROT_SCALE: Long = 2L
-        const val EMIT_FLAG_VELOCITY: Long = 4L
-        const val EMIT_FLAG_COLOR: Long = 8L
-        const val EMIT_FLAG_CUSTOM: Long = 16L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleEmit? =
             wrap(handle.segment)

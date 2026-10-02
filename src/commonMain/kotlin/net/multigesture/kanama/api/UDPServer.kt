@@ -24,9 +24,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: UDPServer.listen
      */
-    fun listen(port: Int, bindAddress: String = "*"): Long {
+    fun listen(port: Int, bindAddress: String = "*"): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress)
+        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress))
     }
 
     /**
@@ -38,9 +38,9 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: UDPServer.poll
      */
-    fun poll(): Long {
+    fun poll(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
     }
 
     /**

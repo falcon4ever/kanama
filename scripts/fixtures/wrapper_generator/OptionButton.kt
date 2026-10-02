@@ -87,8 +87,8 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
         ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, idx, tooltip)
     }
 
-    fun setItemAutoTranslateMode(idx: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode)
+    fun setItemAutoTranslateMode(idx: Int, mode: Node.AutoTranslateMode) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode.value)
     }
 
     fun setSearchBarEnabled(enabled: Boolean) {
@@ -143,8 +143,8 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
         return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, idx)
     }
 
-    fun getItemAutoTranslateMode(idx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx)
+    fun getItemAutoTranslateMode(idx: Int): Node.AutoTranslateMode {
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx))
     }
 
     fun isItemDisabled(idx: Int): Boolean {

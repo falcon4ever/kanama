@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -84,9 +85,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: CameraFeed.get_position
      */
-    fun getPosition(): Long {
+    fun getPosition(): CameraFeed.FeedPosition {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, segment)
+        return CameraFeed.FeedPosition(ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, segment))
     }
 
     /**
@@ -94,9 +95,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: CameraFeed.set_position
      */
-    fun setPosition(position: Long) {
+    fun setPosition(position: CameraFeed.FeedPosition) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithLongArg(setPositionBind, segment, position.value)
     }
 
     /**
@@ -165,9 +166,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: CameraFeed.get_texture_tex_id
      */
-    fun getTextureTexId(feedImageType: Long): Long {
+    fun getTextureTexId(feedImageType: CameraServer.FeedImage): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, segment, feedImageType)
+        return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, segment, feedImageType.value)
     }
 
     /**
@@ -175,9 +176,9 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: CameraFeed.get_datatype
      */
-    fun getDatatype(): Long {
+    fun getDatatype(): CameraFeed.FeedDataType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, segment)
+        return CameraFeed.FeedDataType(ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, segment))
     }
 
     /**
@@ -192,10 +193,10 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Sets the feed format parameters for the given `index` in the `formats` array. Returns `true` on
-     * success. By default, the YUYV encoded stream is transformed to `FEED_RGB`. The YUYV encoded
-     * stream output format can be changed by setting `parameters`'s `output` entry to one of the
-     * following: - `"separate"` will result in `FEED_YCBCR_SEP`; - `"grayscale"` will result in
-     * desaturated `FEED_RGB`; - `"copy"` will result in `FEED_YCBCR`.
+     * success. By default, the YUYV encoded stream is transformed to `FeedDataType.RGB`. The YUYV
+     * encoded stream output format can be changed by setting `parameters`'s `output` entry to one of
+     * the following: - `"separate"` will result in `FeedDataType.YCBCR_SEP`; - `"grayscale"` will
+     * result in desaturated `FeedDataType.RGB`; - `"copy"` will result in `FeedDataType.YCBCR`.
      *
      * Generated from Godot docs: CameraFeed.set_format
      */
@@ -209,16 +210,79 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
         const val formatChanged: String = "format_changed"
     }
 
-    companion object {
-        const val FEED_NOIMAGE: Long = 0L
-        const val FEED_RGB: Long = 1L
-        const val FEED_YCBCR: Long = 2L
-        const val FEED_YCBCR_SEP: Long = 3L
-        const val FEED_EXTERNAL: Long = 4L
-        const val FEED_UNSPECIFIED: Long = 0L
-        const val FEED_FRONT: Long = 1L
-        const val FEED_BACK: Long = 2L
+    /**
+     * Godot's `CameraFeed.FeedDataType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CameraFeed.FeedDataType.<NAME>`).
+     *
+     * Generated from Godot docs: CameraFeed.FeedDataType
+     */
+    @JvmInline
+    value class FeedDataType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No image set for the feed.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_NOIMAGE
+             */
+            val NOIMAGE: FeedDataType get() = FeedDataType(0L)
+            /**
+             * Feed supplies RGB images.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_RGB
+             */
+            val RGB: FeedDataType get() = FeedDataType(1L)
+            /**
+             * Feed supplies YCbCr images that need to be converted to RGB.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_YCBCR
+             */
+            val YCBCR: FeedDataType get() = FeedDataType(2L)
+            /**
+             * Feed supplies separate Y and CbCr images that need to be combined and converted to RGB.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_YCBCR_SEP
+             */
+            val YCBCR_SEP: FeedDataType get() = FeedDataType(3L)
+            /**
+             * Feed supplies external image.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_EXTERNAL
+             */
+            val EXTERNAL: FeedDataType get() = FeedDataType(4L)
+        }
+    }
 
+    /**
+     * Godot's `CameraFeed.FeedPosition` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`CameraFeed.FeedPosition.<NAME>`).
+     *
+     * Generated from Godot docs: CameraFeed.FeedPosition
+     */
+    @JvmInline
+    value class FeedPosition(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Unspecified position.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_UNSPECIFIED
+             */
+            val UNSPECIFIED: FeedPosition get() = FeedPosition(0L)
+            /**
+             * Camera is mounted at the front of the device.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_FRONT
+             */
+            val FRONT: FeedPosition get() = FeedPosition(1L)
+            /**
+             * Camera is mounted at the back of the device.
+             *
+             * Generated from Godot docs: CameraFeed.FEED_BACK
+             */
+            val BACK: FeedPosition get() = FeedPosition(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CameraFeed? =
             wrap(handle.segment)

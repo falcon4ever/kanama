@@ -17,7 +17,7 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
         @JvmName("setCameraFeedIdProperty")
         set(value) = setCameraFeedId(value)
 
-    var whichFeed: Long
+    var whichFeed: CameraServer.FeedImage
         @JvmName("whichFeedProperty")
         get() = getWhichFeed()
         @JvmName("setWhichFeedProperty")
@@ -55,9 +55,9 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CameraTexture.set_which_feed
      */
-    fun setWhichFeed(whichFeed: Long) {
+    fun setWhichFeed(whichFeed: CameraServer.FeedImage) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, segment, whichFeed)
+        ObjectCalls.ptrcallWithLongArg(setWhichFeedBind, segment, whichFeed.value)
     }
 
     /**
@@ -66,9 +66,9 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CameraTexture.get_which_feed
      */
-    fun getWhichFeed(): Long {
+    fun getWhichFeed(): CameraServer.FeedImage {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, segment)
+        return CameraServer.FeedImage(ObjectCalls.ptrcallNoArgsRetLong(getWhichFeedBind, segment))
     }
 
     /**

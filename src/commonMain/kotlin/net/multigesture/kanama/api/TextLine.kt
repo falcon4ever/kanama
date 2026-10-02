@@ -16,13 +16,13 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: TextLine
  */
 class TextLine(handle: GodotHandle) : RefCounted(handle) {
-    var direction: Long
+    var direction: TextServer.Direction
         @JvmName("directionProperty")
         get() = getDirection()
         @JvmName("setDirectionProperty")
         set(value) = setDirection(value)
 
-    var orientation: Long
+    var orientation: TextServer.Orientation
         @JvmName("orientationProperty")
         get() = getOrientation()
         @JvmName("setOrientationProperty")
@@ -46,19 +46,19 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setWidthProperty")
         set(value) = setWidth(value)
 
-    var alignment: Long
+    var alignment: HorizontalAlignment
         @JvmName("alignmentProperty")
         get() = getHorizontalAlignment()
         @JvmName("setAlignmentProperty")
         set(value) = setHorizontalAlignment(value)
 
-    var flags: Long
+    var flags: TextServer.JustificationFlag
         @JvmName("flagsProperty")
         get() = getFlags()
         @JvmName("setFlagsProperty")
         set(value) = setFlags(value)
 
-    var textOverrunBehavior: Long
+    var textOverrunBehavior: TextServer.OverrunBehavior
         @JvmName("textOverrunBehaviorProperty")
         get() = getTextOverrunBehavior()
         @JvmName("setTextOverrunBehaviorProperty")
@@ -100,9 +100,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.set_direction
      */
-    fun setDirection(direction: Long) {
+    fun setDirection(direction: TextServer.Direction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDirectionBind, segment, direction)
+        ObjectCalls.ptrcallWithLongArg(setDirectionBind, segment, direction.value)
     }
 
     /**
@@ -110,9 +110,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.get_direction
      */
-    fun getDirection(): Long {
+    fun getDirection(): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, segment)
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, segment))
     }
 
     /**
@@ -120,9 +120,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.get_inferred_direction
      */
-    fun getInferredDirection(): Long {
+    fun getInferredDirection(): TextServer.Direction {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, segment)
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, segment))
     }
 
     /**
@@ -130,9 +130,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.set_orientation
      */
-    fun setOrientation(orientation: Long) {
+    fun setOrientation(orientation: TextServer.Orientation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation)
+        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation.value)
     }
 
     /**
@@ -140,9 +140,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.get_orientation
      */
-    fun getOrientation(): Long {
+    fun getOrientation(): TextServer.Orientation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment)
+        return TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment))
     }
 
     /**
@@ -212,9 +212,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.add_object
      */
-    fun addObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, length: Int = 1, baseline: Double = 0.0): Boolean {
+    fun addObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, length: Int = 1, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, segment, key, size, inlineAlign, length, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
     }
 
     /**
@@ -222,9 +222,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.resize_object
      */
-    fun resizeObject(key: Any?, size: Vector2, inlineAlign: Long = 5L, baseline: Double = 0.0): Boolean {
+    fun resizeObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, segment, key, size, inlineAlign, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
     }
 
     /**
@@ -262,9 +262,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.set_horizontal_alignment
      */
-    fun setHorizontalAlignment(alignment: Long) {
+    fun setHorizontalAlignment(alignment: HorizontalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -272,9 +272,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.get_horizontal_alignment
      */
-    fun getHorizontalAlignment(): Long {
+    fun getHorizontalAlignment(): HorizontalAlignment {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -292,9 +292,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.set_flags
      */
-    fun setFlags(flags: Long) {
+    fun setFlags(flags: TextServer.JustificationFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags.value)
     }
 
     /**
@@ -302,9 +302,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.get_flags
      */
-    fun getFlags(): Long {
+    fun getFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment)
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
     }
 
     /**
@@ -312,9 +312,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.set_text_overrun_behavior
      */
-    fun setTextOverrunBehavior(overrunBehavior: Long) {
+    fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior)
+        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -322,9 +322,9 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: TextLine.get_text_overrun_behavior
      */
-    fun getTextOverrunBehavior(): Long {
+    fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment)
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -15,15 +16,15 @@ import net.multigesture.kanama.types.Color
 open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     var lightIntensityLumens: Double
         @JvmName("lightIntensityLumensProperty")
-        get() = getParam(20L)
+        get() = getParam(Light3D.Param.INTENSITY)
         @JvmName("setLightIntensityLumensProperty")
-        set(value) = setParam(20L, value)
+        set(value) = setParam(Light3D.Param.INTENSITY, value)
 
     var lightIntensityLux: Double
         @JvmName("lightIntensityLuxProperty")
-        get() = getParam(20L)
+        get() = getParam(Light3D.Param.INTENSITY)
         @JvmName("setLightIntensityLuxProperty")
-        set(value) = setParam(20L, value)
+        set(value) = setParam(Light3D.Param.INTENSITY, value)
 
     var lightTemperature: Double
         @JvmName("lightTemperatureProperty")
@@ -39,21 +40,21 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
     var lightEnergy: Double
         @JvmName("lightEnergyProperty")
-        get() = getParam(0L)
+        get() = getParam(Light3D.Param.ENERGY)
         @JvmName("setLightEnergyProperty")
-        set(value) = setParam(0L, value)
+        set(value) = setParam(Light3D.Param.ENERGY, value)
 
     var lightIndirectEnergy: Double
         @JvmName("lightIndirectEnergyProperty")
-        get() = getParam(1L)
+        get() = getParam(Light3D.Param.INDIRECT_ENERGY)
         @JvmName("setLightIndirectEnergyProperty")
-        set(value) = setParam(1L, value)
+        set(value) = setParam(Light3D.Param.INDIRECT_ENERGY, value)
 
     var lightVolumetricFogEnergy: Double
         @JvmName("lightVolumetricFogEnergyProperty")
-        get() = getParam(2L)
+        get() = getParam(Light3D.Param.VOLUMETRIC_FOG_ENERGY)
         @JvmName("setLightVolumetricFogEnergyProperty")
-        set(value) = setParam(2L, value)
+        set(value) = setParam(Light3D.Param.VOLUMETRIC_FOG_ENERGY, value)
 
     var lightProjector: Texture2D?
         @JvmName("lightProjectorProperty")
@@ -63,15 +64,15 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
     var lightSize: Double
         @JvmName("lightSizeProperty")
-        get() = getParam(5L)
+        get() = getParam(Light3D.Param.SIZE)
         @JvmName("setLightSizeProperty")
-        set(value) = setParam(5L, value)
+        set(value) = setParam(Light3D.Param.SIZE, value)
 
     var lightAngularDistance: Double
         @JvmName("lightAngularDistanceProperty")
-        get() = getParam(5L)
+        get() = getParam(Light3D.Param.SIZE)
         @JvmName("setLightAngularDistanceProperty")
-        set(value) = setParam(5L, value)
+        set(value) = setParam(Light3D.Param.SIZE, value)
 
     var lightNegative: Boolean
         @JvmName("lightNegativeProperty")
@@ -81,11 +82,11 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
     var lightSpecular: Double
         @JvmName("lightSpecularProperty")
-        get() = getParam(3L)
+        get() = getParam(Light3D.Param.SPECULAR)
         @JvmName("setLightSpecularProperty")
-        set(value) = setParam(3L, value)
+        set(value) = setParam(Light3D.Param.SPECULAR, value)
 
-    var lightBakeMode: Long
+    var lightBakeMode: Light3D.BakeMode
         @JvmName("lightBakeModeProperty")
         get() = getBakeMode()
         @JvmName("setLightBakeModeProperty")
@@ -105,15 +106,15 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
     var shadowBias: Double
         @JvmName("shadowBiasProperty")
-        get() = getParam(15L)
+        get() = getParam(Light3D.Param.SHADOW_BIAS)
         @JvmName("setShadowBiasProperty")
-        set(value) = setParam(15L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_BIAS, value)
 
     var shadowNormalBias: Double
         @JvmName("shadowNormalBiasProperty")
-        get() = getParam(14L)
+        get() = getParam(Light3D.Param.SHADOW_NORMAL_BIAS)
         @JvmName("setShadowNormalBiasProperty")
-        set(value) = setParam(14L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_NORMAL_BIAS, value)
 
     var shadowReverseCullFace: Boolean
         @JvmName("shadowReverseCullFaceProperty")
@@ -123,21 +124,21 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
 
     var shadowTransmittanceBias: Double
         @JvmName("shadowTransmittanceBiasProperty")
-        get() = getParam(19L)
+        get() = getParam(Light3D.Param.TRANSMITTANCE_BIAS)
         @JvmName("setShadowTransmittanceBiasProperty")
-        set(value) = setParam(19L, value)
+        set(value) = setParam(Light3D.Param.TRANSMITTANCE_BIAS, value)
 
     var shadowOpacity: Double
         @JvmName("shadowOpacityProperty")
-        get() = getParam(17L)
+        get() = getParam(Light3D.Param.SHADOW_OPACITY)
         @JvmName("setShadowOpacityProperty")
-        set(value) = setParam(17L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_OPACITY, value)
 
     var shadowBlur: Double
         @JvmName("shadowBlurProperty")
-        get() = getParam(18L)
+        get() = getParam(Light3D.Param.SHADOW_BLUR)
         @JvmName("setShadowBlurProperty")
-        set(value) = setParam(18L, value)
+        set(value) = setParam(Light3D.Param.SHADOW_BLUR, value)
 
     var shadowCasterMask: Long
         @JvmName("shadowCasterMaskProperty")
@@ -201,8 +202,8 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: Light3D.set_param
      */
-    fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
+    fun setParam(param: Light3D.Param, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
     }
 
     /**
@@ -211,8 +212,8 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: Light3D.get_param
      */
-    fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
+    fun getParam(param: Light3D.Param): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
     }
 
     /**
@@ -392,7 +393,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * If `true`, reverses the backface culling of the mesh. This can be useful when you have a flat
      * mesh that has a light behind it. If you need to cast a shadow on both sides of the mesh, set the
-     * mesh to use double-sided shadows with `GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED`.
+     * mesh to use double-sided shadows with `GeometryInstance3D.ShadowCastingSetting.DOUBLE_SIDED`.
      *
      * Generated from Godot docs: Light3D.set_shadow_reverse_cull_face
      */
@@ -403,7 +404,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * If `true`, reverses the backface culling of the mesh. This can be useful when you have a flat
      * mesh that has a light behind it. If you need to cast a shadow on both sides of the mesh, set the
-     * mesh to use double-sided shadows with `GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED`.
+     * mesh to use double-sided shadows with `GeometryInstance3D.ShadowCastingSetting.DOUBLE_SIDED`.
      *
      * Generated from Godot docs: Light3D.get_shadow_reverse_cull_face
      */
@@ -436,8 +437,8 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: Light3D.set_bake_mode
      */
-    fun setBakeMode(bakeMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBakeModeBind, segment, bakeMode)
+    fun setBakeMode(bakeMode: Light3D.BakeMode) {
+        ObjectCalls.ptrcallWithLongArg(setBakeModeBind, segment, bakeMode.value)
     }
 
     /**
@@ -447,8 +448,8 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: Light3D.get_bake_mode
      */
-    fun getBakeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBakeModeBind, segment)
+    fun getBakeMode(): Light3D.BakeMode {
+        return Light3D.BakeMode(ObjectCalls.ptrcallNoArgsRetLong(getBakeModeBind, segment))
     }
 
     /**
@@ -516,33 +517,203 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetColor(getCorrelatedColorBind, segment)
     }
 
-    companion object {
-        const val PARAM_ENERGY: Long = 0L
-        const val PARAM_INDIRECT_ENERGY: Long = 1L
-        const val PARAM_VOLUMETRIC_FOG_ENERGY: Long = 2L
-        const val PARAM_SPECULAR: Long = 3L
-        const val PARAM_RANGE: Long = 4L
-        const val PARAM_SIZE: Long = 5L
-        const val PARAM_ATTENUATION: Long = 6L
-        const val PARAM_SPOT_ANGLE: Long = 7L
-        const val PARAM_SPOT_ATTENUATION: Long = 8L
-        const val PARAM_SHADOW_MAX_DISTANCE: Long = 9L
-        const val PARAM_SHADOW_SPLIT_1_OFFSET: Long = 10L
-        const val PARAM_SHADOW_SPLIT_2_OFFSET: Long = 11L
-        const val PARAM_SHADOW_SPLIT_3_OFFSET: Long = 12L
-        const val PARAM_SHADOW_FADE_START: Long = 13L
-        const val PARAM_SHADOW_NORMAL_BIAS: Long = 14L
-        const val PARAM_SHADOW_BIAS: Long = 15L
-        const val PARAM_SHADOW_PANCAKE_SIZE: Long = 16L
-        const val PARAM_SHADOW_OPACITY: Long = 17L
-        const val PARAM_SHADOW_BLUR: Long = 18L
-        const val PARAM_TRANSMITTANCE_BIAS: Long = 19L
-        const val PARAM_INTENSITY: Long = 20L
-        const val PARAM_MAX: Long = 21L
-        const val BAKE_DISABLED: Long = 0L
-        const val BAKE_STATIC: Long = 1L
-        const val BAKE_DYNAMIC: Long = 2L
+    /**
+     * Godot's `Light3D.Param` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Light3D.Param.<NAME>`).
+     *
+     * Generated from Godot docs: Light3D.Param
+     */
+    @JvmInline
+    value class Param(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Constant for accessing `light_energy`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_ENERGY
+             */
+            val ENERGY: Param get() = Param(0L)
+            /**
+             * Constant for accessing `light_indirect_energy`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_INDIRECT_ENERGY
+             */
+            val INDIRECT_ENERGY: Param get() = Param(1L)
+            /**
+             * Constant for accessing `light_volumetric_fog_energy`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_VOLUMETRIC_FOG_ENERGY
+             */
+            val VOLUMETRIC_FOG_ENERGY: Param get() = Param(2L)
+            /**
+             * Constant for accessing `light_specular`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SPECULAR
+             */
+            val SPECULAR: Param get() = Param(3L)
+            /**
+             * Constant for accessing `OmniLight3D.omni_range` or `SpotLight3D.spot_range`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_RANGE
+             */
+            val RANGE: Param get() = Param(4L)
+            /**
+             * Constant for accessing `light_size`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SIZE
+             */
+            val SIZE: Param get() = Param(5L)
+            /**
+             * Constant for accessing `OmniLight3D.omni_attenuation` or `SpotLight3D.spot_attenuation`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_ATTENUATION
+             */
+            val ATTENUATION: Param get() = Param(6L)
+            /**
+             * Constant for accessing `SpotLight3D.spot_angle`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SPOT_ANGLE
+             */
+            val SPOT_ANGLE: Param get() = Param(7L)
+            /**
+             * Constant for accessing `SpotLight3D.spot_angle_attenuation`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SPOT_ATTENUATION
+             */
+            val SPOT_ATTENUATION: Param get() = Param(8L)
+            /**
+             * Constant for accessing `DirectionalLight3D.directional_shadow_max_distance`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_MAX_DISTANCE
+             */
+            val SHADOW_MAX_DISTANCE: Param get() = Param(9L)
+            /**
+             * Constant for accessing `DirectionalLight3D.directional_shadow_split_1`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_SPLIT_1_OFFSET
+             */
+            val SHADOW_SPLIT_1_OFFSET: Param get() = Param(10L)
+            /**
+             * Constant for accessing `DirectionalLight3D.directional_shadow_split_2`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_SPLIT_2_OFFSET
+             */
+            val SHADOW_SPLIT_2_OFFSET: Param get() = Param(11L)
+            /**
+             * Constant for accessing `DirectionalLight3D.directional_shadow_split_3`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_SPLIT_3_OFFSET
+             */
+            val SHADOW_SPLIT_3_OFFSET: Param get() = Param(12L)
+            /**
+             * Constant for accessing `DirectionalLight3D.directional_shadow_fade_start`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_FADE_START
+             */
+            val SHADOW_FADE_START: Param get() = Param(13L)
+            /**
+             * Constant for accessing `shadow_normal_bias`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_NORMAL_BIAS
+             */
+            val SHADOW_NORMAL_BIAS: Param get() = Param(14L)
+            /**
+             * Constant for accessing `shadow_bias`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_BIAS
+             */
+            val SHADOW_BIAS: Param get() = Param(15L)
+            /**
+             * Constant for accessing `DirectionalLight3D.directional_shadow_pancake_size`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_PANCAKE_SIZE
+             */
+            val SHADOW_PANCAKE_SIZE: Param get() = Param(16L)
+            /**
+             * Constant for accessing `shadow_opacity`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_OPACITY
+             */
+            val SHADOW_OPACITY: Param get() = Param(17L)
+            /**
+             * Constant for accessing `shadow_blur`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_SHADOW_BLUR
+             */
+            val SHADOW_BLUR: Param get() = Param(18L)
+            /**
+             * Constant for accessing `shadow_transmittance_bias`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_TRANSMITTANCE_BIAS
+             */
+            val TRANSMITTANCE_BIAS: Param get() = Param(19L)
+            /**
+             * Constant for accessing `light_intensity_lumens` and `light_intensity_lux`. Only used when
+             * `ProjectSettings.rendering/lights_and_shadows/use_physical_light_units` is `true`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_INTENSITY
+             */
+            val INTENSITY: Param get() = Param(20L)
+            /**
+             * Represents the size of the `Param` enum.
+             *
+             * Generated from Godot docs: Light3D.PARAM_MAX
+             */
+            val MAX: Param get() = Param(21L)
+        }
+    }
 
+    /**
+     * Godot's `Light3D.BakeMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Light3D.BakeMode.<NAME>`).
+     *
+     * Generated from Godot docs: Light3D.BakeMode
+     */
+    @JvmInline
+    value class BakeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Light is ignored when baking. This is the fastest mode, but the light will not be taken into
+             * account when baking global illumination. This mode should generally be used for dynamic lights
+             * that change quickly, as the effect of global illumination is less noticeable on those lights.
+             * Note: Hiding a light does not affect baking `LightmapGI`. Hiding a light will still affect
+             * baking `VoxelGI` and SDFGI (see `Environment.sdfgi_enabled`).
+             *
+             * Generated from Godot docs: Light3D.BAKE_DISABLED
+             */
+            val DISABLED: BakeMode get() = BakeMode(0L)
+            /**
+             * Light is taken into account in static baking (`VoxelGI`, `LightmapGI`, SDFGI
+             * (`Environment.sdfgi_enabled`)). The light can be moved around or modified, but its global
+             * illumination will not update in real-time. Note: The light is not baked in `LightmapGI` if
+             * `editor_only` is `true`. Note: When using `LightmapGI`, both the direct and indirect light are
+             * baked. Since direct light is baked, the light doesn't display a specular lobe on static
+             * lightmapped meshes. Shadows on static lightmapped meshes will also look less detailed, but the
+             * light still casts shadows that can be displayed on dynamic objects. Since real-time light
+             * computations are skipped on static lightmapped meshes, this bake mode improves runtime
+             * performance compared to `BakeMode.DYNAMIC` and `BakeMode.DISABLED`.
+             *
+             * Generated from Godot docs: Light3D.BAKE_STATIC
+             */
+            val STATIC: BakeMode get() = BakeMode(1L)
+            /**
+             * Light is taken into account in dynamic baking (`VoxelGI` and SDFGI
+             * (`Environment.sdfgi_enabled`)). The light can be moved around or modified with global
+             * illumination updating in real-time. The light's global illumination appearance will be slightly
+             * different compared to `BakeMode.STATIC`. This has a greater performance cost compared to
+             * `BakeMode.STATIC`. When using SDFGI, the update speed of dynamic lights is affected by
+             * `ProjectSettings.rendering/global_illumination/sdfgi/frames_to_update_lights`. Note: When using
+             * `LightmapGI`, the light's indirect light is baked, but direct light and shadows remain
+             * real-time. This mode allows performing subtle changes to a light's color, energy, and position
+             * while still looking fairly correct. For example, you can use this to create flickering static
+             * torches that have their indirect light baked.
+             *
+             * Generated from Godot docs: Light3D.BAKE_DYNAMIC
+             */
+            val DYNAMIC: BakeMode get() = BakeMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Light3D? =
             wrap(handle.segment)

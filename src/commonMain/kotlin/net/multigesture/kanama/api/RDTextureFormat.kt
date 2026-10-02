@@ -11,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: RDTextureFormat
  */
 class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
-    var format: Long
+    var format: RenderingDevice.DataFormat
         @JvmName("formatProperty")
         get() = getFormat()
         @JvmName("setFormatProperty")
@@ -47,19 +47,19 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setMipmapsProperty")
         set(value) = setMipmaps(value)
 
-    var textureType: Long
+    var textureType: RenderingDevice.TextureType
         @JvmName("textureTypeProperty")
         get() = getTextureType()
         @JvmName("setTextureTypeProperty")
         set(value) = setTextureType(value)
 
-    var samples: Long
+    var samples: RenderingDevice.TextureSamples
         @JvmName("samplesProperty")
         get() = getSamples()
         @JvmName("setSamplesProperty")
         set(value) = setSamples(value)
 
-    var usageBits: Long
+    var usageBits: RenderingDevice.TextureUsageBits
         @JvmName("usageBitsProperty")
         get() = getUsageBits()
         @JvmName("setUsageBitsProperty")
@@ -82,9 +82,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.set_format
      */
-    fun setFormat(pMember: Long) {
+    fun setFormat(pMember: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setFormatBind, segment, pMember.value)
     }
 
     /**
@@ -92,9 +92,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): RenderingDevice.DataFormat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return RenderingDevice.DataFormat(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**
@@ -202,9 +202,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.set_texture_type
      */
-    fun setTextureType(pMember: Long) {
+    fun setTextureType(pMember: RenderingDevice.TextureType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, pMember.value)
     }
 
     /**
@@ -212,9 +212,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.get_texture_type
      */
-    fun getTextureType(): Long {
+    fun getTextureType(): RenderingDevice.TextureType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment)
+        return RenderingDevice.TextureType(ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment))
     }
 
     /**
@@ -222,9 +222,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.set_samples
      */
-    fun setSamples(pMember: Long) {
+    fun setSamples(pMember: RenderingDevice.TextureSamples) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setSamplesBind, segment, pMember.value)
     }
 
     /**
@@ -232,9 +232,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.get_samples
      */
-    fun getSamples(): Long {
+    fun getSamples(): RenderingDevice.TextureSamples {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment)
+        return RenderingDevice.TextureSamples(ObjectCalls.ptrcallNoArgsRetLong(getSamplesBind, segment))
     }
 
     /**
@@ -242,9 +242,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.set_usage_bits
      */
-    fun setUsageBits(pMember: Long) {
+    fun setUsageBits(pMember: RenderingDevice.TextureUsageBits) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setUsageBitsBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setUsageBitsBind, segment, pMember.value)
     }
 
     /**
@@ -252,9 +252,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.get_usage_bits
      */
-    fun getUsageBits(): Long {
+    fun getUsageBits(): RenderingDevice.TextureUsageBits {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getUsageBitsBind, segment)
+        return RenderingDevice.TextureUsageBits(ObjectCalls.ptrcallNoArgsRetLong(getUsageBitsBind, segment))
     }
 
     /**
@@ -310,9 +310,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.add_shareable_format
      */
-    fun addShareableFormat(format: Long) {
+    fun addShareableFormat(format: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(addShareableFormatBind, segment, format)
+        ObjectCalls.ptrcallWithLongArg(addShareableFormatBind, segment, format.value)
     }
 
     /**
@@ -321,9 +321,9 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDTextureFormat.remove_shareable_format
      */
-    fun removeShareableFormat(format: Long) {
+    fun removeShareableFormat(format: RenderingDevice.DataFormat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(removeShareableFormatBind, segment, format)
+        ObjectCalls.ptrcallWithLongArg(removeShareableFormatBind, segment, format.value)
     }
 
     companion object {

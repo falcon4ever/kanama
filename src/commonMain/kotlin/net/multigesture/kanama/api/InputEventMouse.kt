@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.Vector2
  * Generated from Godot docs: InputEventMouse
  */
 open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle) {
-    var buttonMask: Long
+    var buttonMask: MouseButtonMask
         @JvmName("buttonMaskProperty")
         get() = getButtonMask()
         @JvmName("setButtonMaskProperty")
@@ -36,9 +36,9 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      *
      * Generated from Godot docs: InputEventMouse.set_button_mask
      */
-    fun setButtonMask(buttonMask: Long) {
+    fun setButtonMask(buttonMask: MouseButtonMask) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, buttonMask)
+        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, buttonMask.value)
     }
 
     /**
@@ -47,9 +47,9 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
      *
      * Generated from Godot docs: InputEventMouse.get_button_mask
      */
-    fun getButtonMask(): Long {
+    fun getButtonMask(): MouseButtonMask {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment)
+        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment))
     }
 
     /**

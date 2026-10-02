@@ -126,7 +126,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      * be necessary. Note: `relative` is automatically scaled according to the content scale factor,
      * which is defined by the project's stretch mode settings. This means mouse sensitivity will
      * appear different depending on resolution when using `relative` in a script that handles mouse
-     * aiming with the `Input.MOUSE_MODE_CAPTURED` mouse mode. To avoid this, use `screen_relative`
+     * aiming with the `Input.MouseMode.CAPTURED` mouse mode. To avoid this, use `screen_relative`
      * instead.
      *
      * Generated from Godot docs: InputEventMouseMotion.set_relative
@@ -143,7 +143,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      * be necessary. Note: `relative` is automatically scaled according to the content scale factor,
      * which is defined by the project's stretch mode settings. This means mouse sensitivity will
      * appear different depending on resolution when using `relative` in a script that handles mouse
-     * aiming with the `Input.MOUSE_MODE_CAPTURED` mouse mode. To avoid this, use `screen_relative`
+     * aiming with the `Input.MouseMode.CAPTURED` mouse mode. To avoid this, use `screen_relative`
      * instead.
      *
      * Generated from Godot docs: InputEventMouseMotion.get_relative
@@ -159,8 +159,8 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      * when the mouse moves, it is not possible to reliably detect when the mouse has stopped moving by
      * checking this property. A separate, short timer may be necessary. Note: This coordinate is not
      * scaled according to the content scale factor or calls to `InputEvent.xformed_by`. This should be
-     * preferred over `relative` for mouse aiming when using the `Input.MOUSE_MODE_CAPTURED` mouse
-     * mode, regardless of the project's stretch mode.
+     * preferred over `relative` for mouse aiming when using the `Input.MouseMode.CAPTURED` mouse mode,
+     * regardless of the project's stretch mode.
      *
      * Generated from Godot docs: InputEventMouseMotion.set_screen_relative
      */
@@ -175,8 +175,8 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      * when the mouse moves, it is not possible to reliably detect when the mouse has stopped moving by
      * checking this property. A separate, short timer may be necessary. Note: This coordinate is not
      * scaled according to the content scale factor or calls to `InputEvent.xformed_by`. This should be
-     * preferred over `relative` for mouse aiming when using the `Input.MOUSE_MODE_CAPTURED` mouse
-     * mode, regardless of the project's stretch mode.
+     * preferred over `relative` for mouse aiming when using the `Input.MouseMode.CAPTURED` mouse mode,
+     * regardless of the project's stretch mode.
      *
      * Generated from Godot docs: InputEventMouseMotion.get_screen_relative
      */
@@ -189,8 +189,8 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      * The mouse velocity in pixels per second. Note: `velocity` is automatically scaled according to
      * the content scale factor, which is defined by the project's stretch mode settings. That means
      * mouse sensitivity may appear different depending on resolution. Note: In
-     * `Input.MOUSE_MODE_CAPTURED` mode, `velocity` returns `(0, 0)` because the mouse cursor is hidden
-     * and locked. Use `screen_relative` for mouse aiming using the `Input.MOUSE_MODE_CAPTURED` mouse
+     * `Input.MouseMode.CAPTURED` mode, `velocity` returns `(0, 0)` because the mouse cursor is hidden
+     * and locked. Use `screen_relative` for mouse aiming using the `Input.MouseMode.CAPTURED` mouse
      * mode.
      *
      * Generated from Godot docs: InputEventMouseMotion.set_velocity
@@ -204,8 +204,8 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
      * The mouse velocity in pixels per second. Note: `velocity` is automatically scaled according to
      * the content scale factor, which is defined by the project's stretch mode settings. That means
      * mouse sensitivity may appear different depending on resolution. Note: In
-     * `Input.MOUSE_MODE_CAPTURED` mode, `velocity` returns `(0, 0)` because the mouse cursor is hidden
-     * and locked. Use `screen_relative` for mouse aiming using the `Input.MOUSE_MODE_CAPTURED` mouse
+     * `Input.MouseMode.CAPTURED` mode, `velocity` returns `(0, 0)` because the mouse cursor is hidden
+     * and locked. Use `screen_relative` for mouse aiming using the `Input.MouseMode.CAPTURED` mouse
      * mode.
      *
      * Generated from Godot docs: InputEventMouseMotion.get_velocity
@@ -218,8 +218,8 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     /**
      * The unscaled mouse velocity in pixels per second in screen coordinates. This velocity is not
      * scaled according to the content scale factor or calls to `InputEvent.xformed_by`. Note: In
-     * `Input.MOUSE_MODE_CAPTURED` mode, `screen_velocity` returns `(0, 0)` because the mouse cursor is
-     * hidden and locked. Use `screen_relative` for mouse aiming using the `Input.MOUSE_MODE_CAPTURED`
+     * `Input.MouseMode.CAPTURED` mode, `screen_velocity` returns `(0, 0)` because the mouse cursor is
+     * hidden and locked. Use `screen_relative` for mouse aiming using the `Input.MouseMode.CAPTURED`
      * mouse mode.
      *
      * Generated from Godot docs: InputEventMouseMotion.set_screen_velocity
@@ -232,8 +232,8 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     /**
      * The unscaled mouse velocity in pixels per second in screen coordinates. This velocity is not
      * scaled according to the content scale factor or calls to `InputEvent.xformed_by`. Note: In
-     * `Input.MOUSE_MODE_CAPTURED` mode, `screen_velocity` returns `(0, 0)` because the mouse cursor is
-     * hidden and locked. Use `screen_relative` for mouse aiming using the `Input.MOUSE_MODE_CAPTURED`
+     * `Input.MouseMode.CAPTURED` mode, `screen_velocity` returns `(0, 0)` because the mouse cursor is
+     * hidden and locked. Use `screen_relative` for mouse aiming using the `Input.MouseMode.CAPTURED`
      * mouse mode.
      *
      * Generated from Godot docs: InputEventMouseMotion.get_screen_velocity

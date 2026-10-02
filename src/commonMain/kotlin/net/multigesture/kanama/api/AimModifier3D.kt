@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.Vector3
 
 /**
  * The `AimModifier3D` rotates a bone to look at a reference bone.
@@ -15,8 +16,8 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: AimModifier3D.set_forward_axis
      */
-    fun setForwardAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setForwardAxisBind, segment, index, axis)
+    fun setForwardAxis(index: Int, axis: SkeletonModifier3D.BoneAxis) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setForwardAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -24,8 +25,8 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: AimModifier3D.get_forward_axis
      */
-    fun getForwardAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getForwardAxisBind, segment, index)
+    fun getForwardAxis(index: Int): SkeletonModifier3D.BoneAxis {
+        return SkeletonModifier3D.BoneAxis(ObjectCalls.ptrcallWithIntArgRetLong(getForwardAxisBind, segment, index))
     }
 
     /**
@@ -53,8 +54,8 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: AimModifier3D.set_primary_rotation_axis
      */
-    fun setPrimaryRotationAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setPrimaryRotationAxisBind, segment, index, axis)
+    fun setPrimaryRotationAxis(index: Int, axis: Vector3.Axis) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setPrimaryRotationAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -62,8 +63,8 @@ class AimModifier3D(handle: GodotHandle) : BoneConstraint3D(handle) {
      *
      * Generated from Godot docs: AimModifier3D.get_primary_rotation_axis
      */
-    fun getPrimaryRotationAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getPrimaryRotationAxisBind, segment, index)
+    fun getPrimaryRotationAxis(index: Int): Vector3.Axis {
+        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(getPrimaryRotationAxisBind, segment, index))
     }
 
     /**

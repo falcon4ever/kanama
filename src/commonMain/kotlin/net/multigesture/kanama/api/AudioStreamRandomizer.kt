@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -12,7 +13,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: AudioStreamRandomizer
  */
 class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
-    var playbackMode: Long
+    var playbackMode: AudioStreamRandomizer.PlaybackMode
         @JvmName("playbackModeProperty")
         get() = getPlaybackMode()
         @JvmName("setPlaybackModeProperty")
@@ -216,9 +217,9 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      *
      * Generated from Godot docs: AudioStreamRandomizer.set_playback_mode
      */
-    fun setPlaybackMode(mode: Long) {
+    fun setPlaybackMode(mode: AudioStreamRandomizer.PlaybackMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlaybackModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setPlaybackModeBind, segment, mode.value)
     }
 
     /**
@@ -226,16 +227,47 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
      *
      * Generated from Godot docs: AudioStreamRandomizer.get_playback_mode
      */
-    fun getPlaybackMode(): Long {
+    fun getPlaybackMode(): AudioStreamRandomizer.PlaybackMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, segment)
+        return AudioStreamRandomizer.PlaybackMode(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackModeBind, segment))
+    }
+
+    /**
+     * Godot's `AudioStreamRandomizer.PlaybackMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AudioStreamRandomizer.PlaybackMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamRandomizer.PlaybackMode
+     */
+    @JvmInline
+    value class PlaybackMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Pick a stream at random according to the probability weights chosen for each stream, but avoid
+             * playing the same stream twice in a row whenever possible. If only 1 sound is present in the
+             * pool, the same sound will always play, effectively allowing repeats to occur.
+             *
+             * Generated from Godot docs: AudioStreamRandomizer.PLAYBACK_RANDOM_NO_REPEATS
+             */
+            val RANDOM_NO_REPEATS: PlaybackMode get() = PlaybackMode(0L)
+            /**
+             * Pick a stream at random according to the probability weights chosen for each stream. If only 1
+             * sound is present in the pool, the same sound will always play.
+             *
+             * Generated from Godot docs: AudioStreamRandomizer.PLAYBACK_RANDOM
+             */
+            val RANDOM: PlaybackMode get() = PlaybackMode(1L)
+            /**
+             * Play streams in the order they appear in the stream pool. If only 1 sound is present in the
+             * pool, the same sound will always play.
+             *
+             * Generated from Godot docs: AudioStreamRandomizer.PLAYBACK_SEQUENTIAL
+             */
+            val SEQUENTIAL: PlaybackMode get() = PlaybackMode(2L)
+        }
     }
 
     companion object {
-        const val PLAYBACK_RANDOM_NO_REPEATS: Long = 0L
-        const val PLAYBACK_RANDOM: Long = 1L
-        const val PLAYBACK_SEQUENTIAL: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamRandomizer? =
             wrap(handle.segment)

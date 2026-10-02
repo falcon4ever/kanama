@@ -15,15 +15,15 @@ import net.multigesture.kanama.types.Vector2
 class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
     var areaRange: Double
         @JvmName("areaRangeProperty")
-        get() = getParam(4L)
+        get() = getParam(Light3D.Param.RANGE)
         @JvmName("setAreaRangeProperty")
-        set(value) = setParam(4L, value)
+        set(value) = setParam(Light3D.Param.RANGE, value)
 
     var areaAttenuation: Double
         @JvmName("areaAttenuationProperty")
-        get() = getParam(6L)
+        get() = getParam(Light3D.Param.ATTENUATION)
         @JvmName("setAreaAttenuationProperty")
-        set(value) = setParam(6L, value)
+        set(value) = setParam(Light3D.Param.ATTENUATION, value)
 
     var areaNormalizeEnergy: Boolean
         @JvmName("areaNormalizeEnergyProperty")

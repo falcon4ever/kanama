@@ -95,7 +95,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
 
     /**
      * Status indicator native popup menu. If this is set, the `pressed` signal is not emitted. Note:
-     * Native popup is only supported if `NativeMenu` supports `NativeMenu.FEATURE_POPUP_MENU` feature.
+     * Native popup is only supported if `NativeMenu` supports `NativeMenu.Feature.POPUP_MENU` feature.
      *
      * Generated from Godot docs: StatusIndicator.set_menu
      */
@@ -105,7 +105,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
 
     /**
      * Status indicator native popup menu. If this is set, the `pressed` signal is not emitted. Note:
-     * Native popup is only supported if `NativeMenu` supports `NativeMenu.FEATURE_POPUP_MENU` feature.
+     * Native popup is only supported if `NativeMenu` supports `NativeMenu.Feature.POPUP_MENU` feature.
      *
      * Generated from Godot docs: StatusIndicator.get_menu
      */

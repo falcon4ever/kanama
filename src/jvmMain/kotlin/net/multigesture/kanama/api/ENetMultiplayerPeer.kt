@@ -12,24 +12,24 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
         @JvmName("hostProperty")
         get() = getHost()
 
-    fun createServer(port: Int, maxClients: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): Long {
+    fun createServer(port: Int, maxClients: Int = 32, maxChannels: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithFiveIntArgsRetLong(createServerBind, segment, port, maxClients, maxChannels, inBandwidth, outBandwidth)
+        return GodotError(ObjectCalls.ptrcallWithFiveIntArgsRetLong(createServerBind, segment, port, maxClients, maxChannels, inBandwidth, outBandwidth))
     }
 
-    fun createClient(address: String, port: Int, channelCount: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0, localPort: Int = 0): Long {
+    fun createClient(address: String, port: Int, channelCount: Int = 0, inBandwidth: Int = 0, outBandwidth: Int = 0, localPort: Int = 0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createClientBind, segment, address, port, channelCount, inBandwidth, outBandwidth, localPort)
+        return GodotError(ObjectCalls.ptrcallWithStringAndFiveIntArgsRetLong(createClientBind, segment, address, port, channelCount, inBandwidth, outBandwidth, localPort))
     }
 
-    fun createMesh(uniqueId: Int): Long {
+    fun createMesh(uniqueId: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(createMeshBind, segment, uniqueId)
+        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(createMeshBind, segment, uniqueId))
     }
 
-    fun addMeshPeer(peerId: Int, host: ENetConnection?): Long {
+    fun addMeshPeer(peerId: Int, host: ENetConnection?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndObjectArgRetLong(addMeshPeerBind, segment, peerId, host?.requireOpenHandle() ?: MemorySegment.NULL)
+        return GodotError(ObjectCalls.ptrcallWithIntAndObjectArgRetLong(addMeshPeerBind, segment, peerId, host?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun setBindIp(ip: String) {

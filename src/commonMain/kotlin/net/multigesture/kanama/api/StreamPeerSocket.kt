@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -15,9 +16,9 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerSocket.poll
      */
-    fun poll(): Long {
+    fun poll(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
     }
 
     /**
@@ -25,9 +26,9 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerSocket.get_status
      */
-    fun getStatus(): Long {
+    fun getStatus(): StreamPeerSocket.Status {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
+        return StreamPeerSocket.Status(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
     }
 
     /**
@@ -40,12 +41,43 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
         ObjectCalls.ptrcallNoArgs(disconnectFromHostBind, segment)
     }
 
-    companion object {
-        const val STATUS_NONE: Long = 0L
-        const val STATUS_CONNECTING: Long = 1L
-        const val STATUS_CONNECTED: Long = 2L
-        const val STATUS_ERROR: Long = 3L
+    /**
+     * Godot's `StreamPeerSocket.Status` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`StreamPeerSocket.Status.<NAME>`).
+     *
+     * Generated from Godot docs: StreamPeerSocket.Status
+     */
+    @JvmInline
+    value class Status(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The initial status of the `StreamPeerSocket`. This is also the status after disconnecting.
+             *
+             * Generated from Godot docs: StreamPeerSocket.STATUS_NONE
+             */
+            val NONE: Status get() = Status(0L)
+            /**
+             * A status representing a `StreamPeerSocket` that is connecting to a host.
+             *
+             * Generated from Godot docs: StreamPeerSocket.STATUS_CONNECTING
+             */
+            val CONNECTING: Status get() = Status(1L)
+            /**
+             * A status representing a `StreamPeerSocket` that is connected to a host.
+             *
+             * Generated from Godot docs: StreamPeerSocket.STATUS_CONNECTED
+             */
+            val CONNECTED: Status get() = Status(2L)
+            /**
+             * A status representing a `StreamPeerSocket` in error state.
+             *
+             * Generated from Godot docs: StreamPeerSocket.STATUS_ERROR
+             */
+            val ERROR: Status get() = Status(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerSocket? =
             wrap(handle.segment)

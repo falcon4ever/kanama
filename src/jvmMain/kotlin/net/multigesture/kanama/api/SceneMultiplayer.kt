@@ -80,14 +80,14 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getAuthenticatingPeersBind, segment)
     }
 
-    fun sendAuth(id: Int, data: ByteArray): Long {
+    fun sendAuth(id: Int, data: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(sendAuthBind, segment, id, data)
+        return GodotError(ObjectCalls.ptrcallWithIntAndByteArrayArgRetLong(sendAuthBind, segment, id, data))
     }
 
-    fun completeAuth(id: Int): Long {
+    fun completeAuth(id: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(completeAuthBind, segment, id)
+        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(completeAuthBind, segment, id))
     }
 
     fun setAuthCallback(callback: GodotCallable) {
@@ -140,9 +140,9 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isServerRelayEnabledBind, segment)
     }
 
-    fun sendBytes(bytes: ByteArray, id: Int = 0, mode: Long = 2L, channel: Int = 0): Long {
+    fun sendBytes(bytes: ByteArray, id: Int = 0, mode: MultiplayerPeer.TransferMode = MultiplayerPeer.TransferMode.RELIABLE, channel: Int = 0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(sendBytesBind, segment, bytes, id, mode, channel)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayIntLongIntArgsRetLong(sendBytesBind, segment, bytes, id, mode.value, channel))
     }
 
     fun getMaxSyncPacketSize(): Int {

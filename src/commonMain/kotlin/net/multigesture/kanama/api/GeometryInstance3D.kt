@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -31,7 +32,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setTransparencyProperty")
         set(value) = setTransparency(value)
 
-    var castShadow: Long
+    var castShadow: GeometryInstance3D.ShadowCastingSetting
         @JvmName("castShadowProperty")
         get() = getCastShadowsSetting()
         @JvmName("setCastShadowProperty")
@@ -61,7 +62,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setIgnoreOcclusionCullingProperty")
         set(value) = setIgnoreOcclusionCulling(value)
 
-    var giMode: Long
+    var giMode: GeometryInstance3D.GIMode
         @JvmName("giModeProperty")
         get() = getGiMode()
         @JvmName("setGiModeProperty")
@@ -73,7 +74,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setGiLightmapTexelScaleProperty")
         set(value) = setLightmapTexelScale(value)
 
-    var giLightmapScale: Long
+    var giLightmapScale: GeometryInstance3D.LightmapScale
         @JvmName("giLightmapScaleProperty")
         get() = getLightmapScale()
         @JvmName("setGiLightmapScaleProperty")
@@ -103,7 +104,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setVisibilityRangeEndMarginProperty")
         set(value) = setVisibilityRangeEndMargin(value)
 
-    var visibilityRangeFadeMode: Long
+    var visibilityRangeFadeMode: GeometryInstance3D.VisibilityRangeFadeMode
         @JvmName("visibilityRangeFadeModeProperty")
         get() = getVisibilityRangeFadeMode()
         @JvmName("setVisibilityRangeFadeModeProperty")
@@ -154,8 +155,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.set_cast_shadows_setting
      */
-    fun setCastShadowsSetting(shadowCastingSetting: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting)
+    fun setCastShadowsSetting(shadowCastingSetting: GeometryInstance3D.ShadowCastingSetting) {
+        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting.value)
     }
 
     /**
@@ -163,8 +164,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.get_cast_shadows_setting
      */
-    fun getCastShadowsSetting(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment)
+    fun getCastShadowsSetting(): GeometryInstance3D.ShadowCastingSetting {
+        return GeometryInstance3D.ShadowCastingSetting(ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment))
     }
 
     /**
@@ -232,10 +233,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_end` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_end` threshold by this amount.
-     * If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a hysteresis
-     * distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a hysteresis
+     * distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_end_margin
      */
@@ -246,10 +247,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_end` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_end` threshold by this amount.
-     * If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a hysteresis
-     * distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a hysteresis
+     * distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_end_margin
      */
@@ -280,10 +281,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_begin` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_begin` threshold by this
-     * amount. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a
-     * hysteresis distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * amount. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a
+     * hysteresis distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_begin_margin
      */
@@ -294,10 +295,10 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * Margin for the `visibility_range_begin` threshold. The GeometryInstance3D will only change its
      * visibility state when it goes over or under the `visibility_range_begin` threshold by this
-     * amount. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_DISABLED`, this acts as a
-     * hysteresis distance. If `visibility_range_fade_mode` is `VISIBILITY_RANGE_FADE_SELF` or
-     * `VISIBILITY_RANGE_FADE_DEPENDENCIES`, this acts as a fade transition distance and must be set to
-     * a value greater than `0.0` for the effect to be noticeable.
+     * amount. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.DISABLED`, this acts as a
+     * hysteresis distance. If `visibility_range_fade_mode` is `VisibilityRangeFadeMode.SELF` or
+     * `VisibilityRangeFadeMode.DEPENDENCIES`, this acts as a fade transition distance and must be set
+     * to a value greater than `0.0` for the effect to be noticeable.
      *
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_begin_margin
      */
@@ -332,8 +333,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.set_visibility_range_fade_mode
      */
-    fun setVisibilityRangeFadeMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode)
+    fun setVisibilityRangeFadeMode(mode: GeometryInstance3D.VisibilityRangeFadeMode) {
+        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode.value)
     }
 
     /**
@@ -341,8 +342,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.get_visibility_range_fade_mode
      */
-    fun getVisibilityRangeFadeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment)
+    fun getVisibilityRangeFadeMode(): GeometryInstance3D.VisibilityRangeFadeMode {
+        return GeometryInstance3D.VisibilityRangeFadeMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment))
     }
 
     /**
@@ -427,8 +428,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.set_lightmap_scale
      */
-    fun setLightmapScale(scale: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLightmapScaleBind, segment, scale)
+    fun setLightmapScale(scale: GeometryInstance3D.LightmapScale) {
+        ObjectCalls.ptrcallWithLongArg(setLightmapScaleBind, segment, scale.value)
     }
 
     /**
@@ -436,8 +437,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.get_lightmap_scale
      */
-    fun getLightmapScale(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLightmapScaleBind, segment)
+    fun getLightmapScale(): GeometryInstance3D.LightmapScale {
+        return GeometryInstance3D.LightmapScale(ObjectCalls.ptrcallNoArgsRetLong(getLightmapScaleBind, segment))
     }
 
     /**
@@ -447,8 +448,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.set_gi_mode
      */
-    fun setGiMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGiModeBind, segment, mode)
+    fun setGiMode(mode: GeometryInstance3D.GIMode) {
+        ObjectCalls.ptrcallWithLongArg(setGiModeBind, segment, mode.value)
     }
 
     /**
@@ -458,8 +459,8 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: GeometryInstance3D.get_gi_mode
      */
-    fun getGiMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGiModeBind, segment)
+    fun getGiMode(): GeometryInstance3D.GIMode {
+        return GeometryInstance3D.GIMode(ObjectCalls.ptrcallNoArgsRetLong(getGiModeBind, segment))
     }
 
     /**
@@ -518,23 +519,176 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
     }
 
-    companion object {
-        const val SHADOW_CASTING_SETTING_OFF: Long = 0L
-        const val SHADOW_CASTING_SETTING_ON: Long = 1L
-        const val SHADOW_CASTING_SETTING_DOUBLE_SIDED: Long = 2L
-        const val SHADOW_CASTING_SETTING_SHADOWS_ONLY: Long = 3L
-        const val GI_MODE_DISABLED: Long = 0L
-        const val GI_MODE_STATIC: Long = 1L
-        const val GI_MODE_DYNAMIC: Long = 2L
-        const val LIGHTMAP_SCALE_1X: Long = 0L
-        const val LIGHTMAP_SCALE_2X: Long = 1L
-        const val LIGHTMAP_SCALE_4X: Long = 2L
-        const val LIGHTMAP_SCALE_8X: Long = 3L
-        const val LIGHTMAP_SCALE_MAX: Long = 4L
-        const val VISIBILITY_RANGE_FADE_DISABLED: Long = 0L
-        const val VISIBILITY_RANGE_FADE_SELF: Long = 1L
-        const val VISIBILITY_RANGE_FADE_DEPENDENCIES: Long = 2L
+    /**
+     * Godot's `GeometryInstance3D.ShadowCastingSetting` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`GeometryInstance3D.ShadowCastingSetting.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.ShadowCastingSetting
+     */
+    @JvmInline
+    value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Will not cast any shadows. Use this to improve performance for small geometry that is unlikely
+             * to cast noticeable shadows (such as debris).
+             *
+             * Generated from Godot docs: GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+             */
+            val OFF: ShadowCastingSetting get() = ShadowCastingSetting(0L)
+            /**
+             * Will cast shadows from all visible faces in the GeometryInstance3D. Will take culling into
+             * account, so faces not being rendered will not be taken into account when shadow casting.
+             *
+             * Generated from Godot docs: GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+             */
+            val ON: ShadowCastingSetting get() = ShadowCastingSetting(1L)
+            /**
+             * Will cast shadows from all visible faces in the GeometryInstance3D. Will not take culling into
+             * account, so all faces will be taken into account when shadow casting.
+             *
+             * Generated from Godot docs: GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED
+             */
+            val DOUBLE_SIDED: ShadowCastingSetting get() = ShadowCastingSetting(2L)
+            /**
+             * Will only show the shadows casted from this object. In other words, the actual mesh will not be
+             * visible, only the shadows casted from the mesh will be.
+             *
+             * Generated from Godot docs: GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+             */
+            val SHADOWS_ONLY: ShadowCastingSetting get() = ShadowCastingSetting(3L)
+        }
+    }
 
+    /**
+     * Godot's `GeometryInstance3D.GIMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GeometryInstance3D.GIMode.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.GIMode
+     */
+    @JvmInline
+    value class GIMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disabled global illumination mode. Use for dynamic objects that do not contribute to global
+             * illumination (such as characters). When using `VoxelGI` and SDFGI, the geometry will receive
+             * indirect lighting and reflections but the geometry will not be considered in GI baking.
+             *
+             * Generated from Godot docs: GeometryInstance3D.GI_MODE_DISABLED
+             */
+            val DISABLED: GIMode get() = GIMode(0L)
+            /**
+             * Baked global illumination mode. Use for static objects that contribute to global illumination
+             * (such as level geometry). This GI mode is effective when using `VoxelGI`, SDFGI and
+             * `LightmapGI`.
+             *
+             * Generated from Godot docs: GeometryInstance3D.GI_MODE_STATIC
+             */
+            val STATIC: GIMode get() = GIMode(1L)
+            /**
+             * Dynamic global illumination mode. Use for dynamic objects that contribute to global
+             * illumination. This GI mode is only effective when using `VoxelGI`, but it has a higher
+             * performance impact than `GIMode.STATIC`. When using other GI methods, this will act the same as
+             * `GIMode.DISABLED`. When using `LightmapGI`, the object will receive indirect lighting using
+             * lightmap probes instead of using the baked lightmap texture.
+             *
+             * Generated from Godot docs: GeometryInstance3D.GI_MODE_DYNAMIC
+             */
+            val DYNAMIC: GIMode get() = GIMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `GeometryInstance3D.LightmapScale` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`GeometryInstance3D.LightmapScale.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.LightmapScale
+     */
+    @JvmInline
+    value class LightmapScale(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The standard texel density for lightmapping with `LightmapGI`.
+             *
+             * Generated from Godot docs: GeometryInstance3D.LIGHTMAP_SCALE_1X
+             */
+            val SCALE_1X: LightmapScale get() = LightmapScale(0L)
+            /**
+             * Multiplies texel density by 2× for lightmapping with `LightmapGI`. To ensure consistency in
+             * texel density, use this when scaling a mesh by a factor between 1.5 and 3.0.
+             *
+             * Generated from Godot docs: GeometryInstance3D.LIGHTMAP_SCALE_2X
+             */
+            val SCALE_2X: LightmapScale get() = LightmapScale(1L)
+            /**
+             * Multiplies texel density by 4× for lightmapping with `LightmapGI`. To ensure consistency in
+             * texel density, use this when scaling a mesh by a factor between 3.0 and 6.0.
+             *
+             * Generated from Godot docs: GeometryInstance3D.LIGHTMAP_SCALE_4X
+             */
+            val SCALE_4X: LightmapScale get() = LightmapScale(2L)
+            /**
+             * Multiplies texel density by 8× for lightmapping with `LightmapGI`. To ensure consistency in
+             * texel density, use this when scaling a mesh by a factor greater than 6.0.
+             *
+             * Generated from Godot docs: GeometryInstance3D.LIGHTMAP_SCALE_8X
+             */
+            val SCALE_8X: LightmapScale get() = LightmapScale(3L)
+            /**
+             * Represents the size of the `LightmapScale` enum.
+             *
+             * Generated from Godot docs: GeometryInstance3D.LIGHTMAP_SCALE_MAX
+             */
+            val MAX: LightmapScale get() = LightmapScale(4L)
+        }
+    }
+
+    /**
+     * Godot's `GeometryInstance3D.VisibilityRangeFadeMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`GeometryInstance3D.VisibilityRangeFadeMode.<NAME>`).
+     *
+     * Generated from Godot docs: GeometryInstance3D.VisibilityRangeFadeMode
+     */
+    @JvmInline
+    value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Will not fade itself nor its visibility dependencies, hysteresis will be used instead. This is
+             * the fastest approach to manual LOD, but it can result in noticeable LOD transitions depending on
+             * how the LOD meshes are authored. See `visibility_range_begin` and `Node3D.visibility_parent` for
+             * more information.
+             *
+             * Generated from Godot docs: GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
+             */
+            val DISABLED: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(0L)
+            /**
+             * Will fade-out itself when reaching the limits of its own visibility range. This is slower than
+             * `VisibilityRangeFadeMode.DISABLED`, but it can provide smoother transitions. The fading range is
+             * determined by `visibility_range_begin_margin` and `visibility_range_end_margin`. Note: Only
+             * supported when using the Forward+ rendering method. When using the Mobile or Compatibility
+             * rendering method, this mode acts like `VisibilityRangeFadeMode.DISABLED` but with hysteresis
+             * disabled.
+             *
+             * Generated from Godot docs: GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+             */
+            val SELF: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(1L)
+            /**
+             * Will fade-in its visibility dependencies (see `Node3D.visibility_parent`) when reaching the
+             * limits of its own visibility range. This is slower than `VisibilityRangeFadeMode.DISABLED`, but
+             * it can provide smoother transitions. The fading range is determined by
+             * `visibility_range_begin_margin` and `visibility_range_end_margin`. Note: Only supported when
+             * using the Forward+ rendering method. When using the Mobile or Compatibility rendering method,
+             * this mode acts like `VisibilityRangeFadeMode.DISABLED` but with hysteresis disabled.
+             *
+             * Generated from Godot docs: GeometryInstance3D.VISIBILITY_RANGE_FADE_DEPENDENCIES
+             */
+            val DEPENDENCIES: VisibilityRangeFadeMode get() = VisibilityRangeFadeMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GeometryInstance3D? =
             wrap(handle.segment)

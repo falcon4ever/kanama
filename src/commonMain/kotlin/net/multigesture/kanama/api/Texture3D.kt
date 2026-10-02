@@ -15,9 +15,9 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      *
      * Generated from Godot docs: Texture3D.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): Image.Format {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**

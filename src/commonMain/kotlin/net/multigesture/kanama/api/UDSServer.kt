@@ -17,9 +17,9 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
      *
      * Generated from Godot docs: UDSServer.listen
      */
-    fun listen(path: String): Long {
+    fun listen(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(listenBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(listenBind, segment, path))
     }
 
     /**

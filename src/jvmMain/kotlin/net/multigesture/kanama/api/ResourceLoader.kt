@@ -9,7 +9,102 @@ import java.lang.foreign.MemorySegment
  * Generated from Godot docs: ResourceLoader
  */
 object ResourceLoader {
-    data class ThreadLoadStatus(val status: Long, val progress: Double?)
+    // ===== BEGIN GENERATED ENUMS: ResourceLoader (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `ResourceLoader.ThreadLoadStatus` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`ResourceLoader.ThreadLoadStatus.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceLoader.ThreadLoadStatus
+     */
+    @JvmInline
+    value class ThreadLoadStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The resource is invalid, or has not been loaded with `load_threaded_request`.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_INVALID_RESOURCE
+             */
+            val INVALID_RESOURCE: ThreadLoadStatus get() = ThreadLoadStatus(0L)
+            /**
+             * The resource is still being loaded.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_IN_PROGRESS
+             */
+            val IN_PROGRESS: ThreadLoadStatus get() = ThreadLoadStatus(1L)
+            /**
+             * Some error occurred during loading and it failed.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_FAILED
+             */
+            val FAILED: ThreadLoadStatus get() = ThreadLoadStatus(2L)
+            /**
+             * The resource was loaded successfully and can be accessed via `load_threaded_get`.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_LOADED
+             */
+            val LOADED: ThreadLoadStatus get() = ThreadLoadStatus(3L)
+        }
+    }
+
+    /**
+     * Godot's `ResourceLoader.CacheMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`ResourceLoader.CacheMode.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceLoader.CacheMode
+     */
+    @JvmInline
+    value class CacheMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Neither the main resource (the one requested to be loaded) nor any of its subresources are
+             * retrieved from cache nor stored into it. Dependencies (external resources) are loaded with
+             * `CacheMode.REUSE`.
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE
+             */
+            val IGNORE: CacheMode get() = CacheMode(0L)
+            /**
+             * The main resource (the one requested to be loaded), its subresources, and its dependencies
+             * (external resources) are retrieved from cache if present, instead of loaded. Those not cached
+             * are loaded and then stored into the cache. The same rules are propagated recursively down the
+             * tree of dependencies (external resources).
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REUSE
+             */
+            val REUSE: CacheMode get() = CacheMode(1L)
+            /**
+             * Like `CacheMode.REUSE`, but the cache is checked for the main resource (the one requested to be
+             * loaded) as well as for each of its subresources. Those already in the cache, as long as the
+             * loaded and cached types match, have their data refreshed from storage into the already existing
+             * instances. Otherwise, they are recreated as completely new objects.
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REPLACE
+             */
+            val REPLACE: CacheMode get() = CacheMode(2L)
+            /**
+             * Like `CacheMode.IGNORE`, but propagated recursively down the tree of dependencies (external
+             * resources).
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE_DEEP
+             */
+            val IGNORE_DEEP: CacheMode get() = CacheMode(3L)
+            /**
+             * Like `CacheMode.REPLACE`, but propagated recursively down the tree of dependencies (external
+             * resources).
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REPLACE_DEEP
+             */
+            val REPLACE_DEEP: CacheMode get() = CacheMode(4L)
+        }
+    }
+    // ===== END GENERATED ENUMS: ResourceLoader =====
+
+    /**
+     * [loadThreadedGetStatusWithProgress]'s result: the status and, when Godot reports it, the
+     * completion ratio. (Named `ThreadLoadStatus` before task 128 A, when that name became Godot's
+     * enum `ResourceLoader.ThreadLoadStatus`.)
+     */
+    data class ThreadLoadProgress(val status: ResourceLoader.ThreadLoadStatus, val progress: Double?)
 
     private const val STRING_PACKED_STRING_ARRAY_HASH = 3538744774L
     private const val STRING_BOOL_HASH = 2323990056L
@@ -23,16 +118,7 @@ object ResourceLoader {
     private const val REMOVE_RESOURCE_FORMAT_LOADER_HASH = 405397102L
     private const val SET_ABORT_ON_MISSING_RESOURCES_HASH = 2586408642L
 
-    const val THREAD_LOAD_INVALID_RESOURCE = 0L
-    const val THREAD_LOAD_IN_PROGRESS = 1L
-    const val THREAD_LOAD_FAILED = 2L
-    const val THREAD_LOAD_LOADED = 3L
 
-    const val CACHE_MODE_IGNORE = 0L
-    const val CACHE_MODE_REUSE = 1L
-    const val CACHE_MODE_REPLACE = 2L
-    const val CACHE_MODE_IGNORE_DEEP = 3L
-    const val CACHE_MODE_REPLACE_DEEP = 4L
 
     private val singleton: MemorySegment by lazy {
         ObjectCalls.getSingleton("ResourceLoader")
@@ -178,15 +264,17 @@ object ResourceLoader {
         path: String,
         typeHint: String = "",
         useSubThreads: Boolean = false,
-        cacheMode: Long = CACHE_MODE_REUSE,
-    ): Long =
-        ObjectCalls.ptrcallWithTwoStringBoolLongArgsRetLong(
-            loadThreadedRequestBind,
-            singleton,
-            path,
-            typeHint,
-            useSubThreads,
-            cacheMode,
+        cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+    ): GodotError =
+        GodotError(
+            ObjectCalls.ptrcallWithTwoStringBoolLongArgsRetLong(
+                loadThreadedRequestBind,
+                singleton,
+                path,
+                typeHint,
+                useSubThreads,
+                cacheMode.value,
+            ),
         )
 
     /**
@@ -199,24 +287,26 @@ object ResourceLoader {
      * Generated from Godot docs: ResourceLoader.load_threaded_get_status
      */
     @JvmStatic
-    fun loadThreadedGetStatus(path: String, progress: List<Any?> = emptyList()): Long =
-        ObjectCalls.ptrcallWithStringAndArrayArgRetLong(loadThreadedGetStatusBind, singleton, path, progress)
+    fun loadThreadedGetStatus(path: String, progress: List<Any?> = emptyList()): ResourceLoader.ThreadLoadStatus =
+        ResourceLoader.ThreadLoadStatus(
+            ObjectCalls.ptrcallWithStringAndArrayArgRetLong(loadThreadedGetStatusBind, singleton, path, progress),
+        )
 
     @JvmStatic
-    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadProgress {
         val (status, progress) = ObjectCalls.ptrcallWithStringAndArrayArgRetLongAndArray(
             loadThreadedGetStatusBind,
             singleton,
             path,
             listOf(0.0),
         )
-        return ThreadLoadStatus(status, (progress.firstOrNull() as? Number)?.toDouble())
+        return ThreadLoadProgress(ResourceLoader.ThreadLoadStatus(status), (progress.firstOrNull() as? Number)?.toDouble())
     }
 
     /**
      * Returns the resource loaded by `load_threaded_request`. If this is called before the loading
-     * thread is done (i.e. `load_threaded_get_status` is not `THREAD_LOAD_LOADED`), the calling thread
-     * will be blocked until the resource has finished loading. However, it's recommended to use
+     * thread is done (i.e. `load_threaded_get_status` is not `ThreadLoadStatus.LOADED`), the calling
+     * thread will be blocked until the resource has finished loading. However, it's recommended to use
      * `load_threaded_get_status` to known when the load has actually completed.
      *
      * Generated from Godot docs: ResourceLoader.load_threaded_get
@@ -250,33 +340,33 @@ object ResourceLoader {
      * Generated from Godot docs: ResourceLoader.load
      */
     @JvmStatic
-    fun load(path: String, typeHint: String = "", cacheMode: Long = CACHE_MODE_REUSE): Resource? =
+    fun load(path: String, typeHint: String = "", cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): Resource? =
         Resource.wrap(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, typeHint, cacheMode),
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, typeHint, cacheMode.value),
         )
 
     @JvmStatic
-    fun loadPackedScene(path: String, cacheMode: Long = CACHE_MODE_REUSE): PackedScene? =
+    fun loadPackedScene(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): PackedScene? =
         PackedScene.wrap(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "PackedScene", cacheMode),
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "PackedScene", cacheMode.value),
         )
 
     @JvmStatic
-    fun loadTexture2D(path: String, cacheMode: Long = CACHE_MODE_REUSE): Texture2D? =
+    fun loadTexture2D(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): Texture2D? =
         Texture2D.wrap(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "Texture2D", cacheMode),
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "Texture2D", cacheMode.value),
         )
 
     @JvmStatic
-    fun loadAudioStream(path: String, cacheMode: Long = CACHE_MODE_REUSE): AudioStream? =
+    fun loadAudioStream(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): AudioStream? =
         AudioStream.wrap(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "AudioStream", cacheMode),
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "AudioStream", cacheMode.value),
         )
 
     @JvmStatic
-    fun loadLightmapGIData(path: String, cacheMode: Long = CACHE_MODE_REUSE): LightmapGIData? =
+    fun loadLightmapGIData(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): LightmapGIData? =
         LightmapGIData.wrap(
-            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "LightmapGIData", cacheMode),
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "LightmapGIData", cacheMode.value),
         )
 
     /**

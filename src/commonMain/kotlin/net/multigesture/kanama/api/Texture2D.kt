@@ -19,9 +19,9 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      *
      * Generated from Godot docs: Texture2D.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): Image.Format {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**

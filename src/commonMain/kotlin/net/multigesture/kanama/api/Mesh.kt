@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -179,7 +180,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Generate a `TriangleMesh` from the mesh. Considers only surfaces using one of these primitive
-     * types: `PRIMITIVE_TRIANGLES`, `PRIMITIVE_TRIANGLE_STRIP`.
+     * types: `PrimitiveType.TRIANGLES`, `PrimitiveType.TRIANGLE_STRIP`.
      *
      * Generated from Godot docs: Mesh.generate_triangle_mesh
      */
@@ -188,65 +189,461 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
-    companion object {
-        const val PRIMITIVE_POINTS: Long = 0L
-        const val PRIMITIVE_LINES: Long = 1L
-        const val PRIMITIVE_LINE_STRIP: Long = 2L
-        const val PRIMITIVE_TRIANGLES: Long = 3L
-        const val PRIMITIVE_TRIANGLE_STRIP: Long = 4L
-        const val ARRAY_VERTEX: Long = 0L
-        const val ARRAY_NORMAL: Long = 1L
-        const val ARRAY_TANGENT: Long = 2L
-        const val ARRAY_COLOR: Long = 3L
-        const val ARRAY_TEX_UV: Long = 4L
-        const val ARRAY_TEX_UV2: Long = 5L
-        const val ARRAY_CUSTOM0: Long = 6L
-        const val ARRAY_CUSTOM1: Long = 7L
-        const val ARRAY_CUSTOM2: Long = 8L
-        const val ARRAY_CUSTOM3: Long = 9L
-        const val ARRAY_BONES: Long = 10L
-        const val ARRAY_WEIGHTS: Long = 11L
-        const val ARRAY_INDEX: Long = 12L
-        const val ARRAY_MAX: Long = 13L
-        const val ARRAY_CUSTOM_RGBA8_UNORM: Long = 0L
-        const val ARRAY_CUSTOM_RGBA8_SNORM: Long = 1L
-        const val ARRAY_CUSTOM_RG_HALF: Long = 2L
-        const val ARRAY_CUSTOM_RGBA_HALF: Long = 3L
-        const val ARRAY_CUSTOM_R_FLOAT: Long = 4L
-        const val ARRAY_CUSTOM_RG_FLOAT: Long = 5L
-        const val ARRAY_CUSTOM_RGB_FLOAT: Long = 6L
-        const val ARRAY_CUSTOM_RGBA_FLOAT: Long = 7L
-        const val ARRAY_CUSTOM_MAX: Long = 8L
-        const val ARRAY_FORMAT_VERTEX: Long = 1L
-        const val ARRAY_FORMAT_NORMAL: Long = 2L
-        const val ARRAY_FORMAT_TANGENT: Long = 4L
-        const val ARRAY_FORMAT_COLOR: Long = 8L
-        const val ARRAY_FORMAT_TEX_UV: Long = 16L
-        const val ARRAY_FORMAT_TEX_UV2: Long = 32L
-        const val ARRAY_FORMAT_CUSTOM0: Long = 64L
-        const val ARRAY_FORMAT_CUSTOM1: Long = 128L
-        const val ARRAY_FORMAT_CUSTOM2: Long = 256L
-        const val ARRAY_FORMAT_CUSTOM3: Long = 512L
-        const val ARRAY_FORMAT_BONES: Long = 1024L
-        const val ARRAY_FORMAT_WEIGHTS: Long = 2048L
-        const val ARRAY_FORMAT_INDEX: Long = 4096L
-        const val ARRAY_FORMAT_BLEND_SHAPE_MASK: Long = 7L
-        const val ARRAY_FORMAT_CUSTOM_BASE: Long = 13L
-        const val ARRAY_FORMAT_CUSTOM_BITS: Long = 3L
-        const val ARRAY_FORMAT_CUSTOM0_SHIFT: Long = 13L
-        const val ARRAY_FORMAT_CUSTOM1_SHIFT: Long = 16L
-        const val ARRAY_FORMAT_CUSTOM2_SHIFT: Long = 19L
-        const val ARRAY_FORMAT_CUSTOM3_SHIFT: Long = 22L
-        const val ARRAY_FORMAT_CUSTOM_MASK: Long = 7L
-        const val ARRAY_COMPRESS_FLAGS_BASE: Long = 25L
-        const val ARRAY_FLAG_USE_2D_VERTICES: Long = 33554432L
-        const val ARRAY_FLAG_USE_DYNAMIC_UPDATE: Long = 67108864L
-        const val ARRAY_FLAG_USE_8_BONE_WEIGHTS: Long = 134217728L
-        const val ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY: Long = 268435456L
-        const val ARRAY_FLAG_COMPRESS_ATTRIBUTES: Long = 536870912L
-        const val BLEND_SHAPE_MODE_NORMALIZED: Long = 0L
-        const val BLEND_SHAPE_MODE_RELATIVE: Long = 1L
+    /**
+     * Godot's `Mesh.PrimitiveType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Mesh.PrimitiveType.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.PrimitiveType
+     */
+    @JvmInline
+    value class PrimitiveType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Render array as points (one vertex equals one point).
+             *
+             * Generated from Godot docs: Mesh.PRIMITIVE_POINTS
+             */
+            val POINTS: PrimitiveType get() = PrimitiveType(0L)
+            /**
+             * Render array as lines (every two vertices a line is created).
+             *
+             * Generated from Godot docs: Mesh.PRIMITIVE_LINES
+             */
+            val LINES: PrimitiveType get() = PrimitiveType(1L)
+            /**
+             * Render array as line strip.
+             *
+             * Generated from Godot docs: Mesh.PRIMITIVE_LINE_STRIP
+             */
+            val LINE_STRIP: PrimitiveType get() = PrimitiveType(2L)
+            /**
+             * Render array as triangles (every three vertices a triangle is created).
+             *
+             * Generated from Godot docs: Mesh.PRIMITIVE_TRIANGLES
+             */
+            val TRIANGLES: PrimitiveType get() = PrimitiveType(3L)
+            /**
+             * Render array as triangle strips.
+             *
+             * Generated from Godot docs: Mesh.PRIMITIVE_TRIANGLE_STRIP
+             */
+            val TRIANGLE_STRIP: PrimitiveType get() = PrimitiveType(4L)
+        }
+    }
 
+    /**
+     * Godot's `Mesh.ArrayType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Mesh.ArrayType.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.ArrayType
+     */
+    @JvmInline
+    value class ArrayType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * `PackedVector3Array`, `PackedVector2Array`, or `Array` of vertex positions.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_VERTEX
+             */
+            val VERTEX: ArrayType get() = ArrayType(0L)
+            /**
+             * `PackedVector3Array` of vertex normals. Note: The array has to consist of normal vectors,
+             * otherwise they will be normalized by the engine, potentially causing visual discrepancies.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_NORMAL
+             */
+            val NORMAL: ArrayType get() = ArrayType(1L)
+            /**
+             * `PackedFloat32Array` of vertex tangents. Each element in groups of 4 floats, first 3 floats
+             * determine the tangent, and the last the binormal direction as -1 or 1.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_TANGENT
+             */
+            val TANGENT: ArrayType get() = ArrayType(2L)
+            /**
+             * `PackedColorArray` of vertex colors.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_COLOR
+             */
+            val COLOR: ArrayType get() = ArrayType(3L)
+            /**
+             * `PackedVector2Array` for UV coordinates.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_TEX_UV
+             */
+            val TEX_UV: ArrayType get() = ArrayType(4L)
+            /**
+             * `PackedVector2Array` for second UV coordinates.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_TEX_UV2
+             */
+            val TEX_UV2: ArrayType get() = ArrayType(5L)
+            /**
+             * Contains custom color channel 0. `PackedByteArray` if `(format >>
+             * Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM0
+             */
+            val CUSTOM0: ArrayType get() = ArrayType(6L)
+            /**
+             * Contains custom color channel 1. `PackedByteArray` if `(format >>
+             * Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM1
+             */
+            val CUSTOM1: ArrayType get() = ArrayType(7L)
+            /**
+             * Contains custom color channel 2. `PackedByteArray` if `(format >>
+             * Mesh.ARRAY_FORMAT_CUSTOM2_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM2
+             */
+            val CUSTOM2: ArrayType get() = ArrayType(8L)
+            /**
+             * Contains custom color channel 3. `PackedByteArray` if `(format >>
+             * Mesh.ARRAY_FORMAT_CUSTOM3_SHIFT) & Mesh.ARRAY_FORMAT_CUSTOM_MASK` is
+             * `ArrayCustomFormat.RGBA8_UNORM`, `ArrayCustomFormat.RGBA8_SNORM`, `ArrayCustomFormat.RG_HALF`,
+             * or `ArrayCustomFormat.RGBA_HALF`. `PackedFloat32Array` otherwise.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM3
+             */
+            val CUSTOM3: ArrayType get() = ArrayType(9L)
+            /**
+             * `PackedFloat32Array` or `PackedInt32Array` of bone indices. Contains either 4 or 8 numbers per
+             * vertex depending on the presence of the `ArrayFormat.FLAG_USE_8_BONE_WEIGHTS` flag.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_BONES
+             */
+            val BONES: ArrayType get() = ArrayType(10L)
+            /**
+             * `PackedFloat32Array` or `PackedFloat64Array` of bone weights in the range `0.0` to `1.0`
+             * (inclusive). Contains either 4 or 8 numbers per vertex depending on the presence of the
+             * `ArrayFormat.FLAG_USE_8_BONE_WEIGHTS` flag.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_WEIGHTS
+             */
+            val WEIGHTS: ArrayType get() = ArrayType(11L)
+            /**
+             * `PackedInt32Array` of integers used as indices referencing vertices, colors, normals, tangents,
+             * and textures. All of those arrays must have the same number of elements as the vertex array. No
+             * index can be beyond the vertex array size. When this index array is present, it puts the
+             * function into "index mode," where the index selects the i'th vertex, normal, tangent, color, UV,
+             * etc. This means if you want to have different normals or colors along an edge, you have to
+             * duplicate the vertices. For triangles, the index array is interpreted as triples, referring to
+             * the vertices of each triangle. For lines, the index array is in pairs indicating the start and
+             * end of each line.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_INDEX
+             */
+            val INDEX: ArrayType get() = ArrayType(12L)
+            /**
+             * Represents the size of the `ArrayType` enum.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_MAX
+             */
+            val MAX: ArrayType get() = ArrayType(13L)
+        }
+    }
+
+    /**
+     * Godot's `Mesh.ArrayCustomFormat` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Mesh.ArrayCustomFormat.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.ArrayCustomFormat
+     */
+    @JvmInline
+    value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Indicates this custom channel contains unsigned normalized byte colors from 0 to 1, encoded as
+             * `PackedByteArray`.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_RGBA8_UNORM
+             */
+            val RGBA8_UNORM: ArrayCustomFormat get() = ArrayCustomFormat(0L)
+            /**
+             * Indicates this custom channel contains signed normalized byte colors from -1 to 1, encoded as
+             * `PackedByteArray`.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_RGBA8_SNORM
+             */
+            val RGBA8_SNORM: ArrayCustomFormat get() = ArrayCustomFormat(1L)
+            /**
+             * Indicates this custom channel contains half precision float colors, encoded as
+             * `PackedByteArray`. Only red and green channels are used.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_RG_HALF
+             */
+            val RG_HALF: ArrayCustomFormat get() = ArrayCustomFormat(2L)
+            /**
+             * Indicates this custom channel contains half precision float colors, encoded as
+             * `PackedByteArray`.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_RGBA_HALF
+             */
+            val RGBA_HALF: ArrayCustomFormat get() = ArrayCustomFormat(3L)
+            /**
+             * Indicates this custom channel contains full float colors, in a `PackedFloat32Array`. Only the
+             * red channel is used.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_R_FLOAT
+             */
+            val R_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(4L)
+            /**
+             * Indicates this custom channel contains full float colors, in a `PackedFloat32Array`. Only red
+             * and green channels are used.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_RG_FLOAT
+             */
+            val RG_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(5L)
+            /**
+             * Indicates this custom channel contains full float colors, in a `PackedFloat32Array`. Only red,
+             * green and blue channels are used.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_RGB_FLOAT
+             */
+            val RGB_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(6L)
+            /**
+             * Indicates this custom channel contains full float colors, in a `PackedFloat32Array`.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_RGBA_FLOAT
+             */
+            val RGBA_FLOAT: ArrayCustomFormat get() = ArrayCustomFormat(7L)
+            /**
+             * Represents the size of the `ArrayCustomFormat` enum.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_CUSTOM_MAX
+             */
+            val MAX: ArrayCustomFormat get() = ArrayCustomFormat(8L)
+        }
+    }
+
+    /**
+     * Godot's `Mesh.ArrayFormat` bitfield as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Mesh.ArrayFormat.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.ArrayFormat
+     */
+    @JvmInline
+    value class ArrayFormat(override val value: Long) : GodotEnumValue {
+        infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
+
+        infix fun and(other: ArrayFormat): ArrayFormat = ArrayFormat(value and other.value)
+
+        infix fun xor(other: ArrayFormat): ArrayFormat = ArrayFormat(value xor other.value)
+
+        fun inv(): ArrayFormat = ArrayFormat(value.inv())
+
+        operator fun contains(other: ArrayFormat): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Mesh array contains vertices. All meshes require a vertex array so this should always be
+             * present.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_VERTEX
+             */
+            val FORMAT_VERTEX: ArrayFormat get() = ArrayFormat(1L)
+            /**
+             * Mesh array contains normals.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_NORMAL
+             */
+            val FORMAT_NORMAL: ArrayFormat get() = ArrayFormat(2L)
+            /**
+             * Mesh array contains tangents.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_TANGENT
+             */
+            val FORMAT_TANGENT: ArrayFormat get() = ArrayFormat(4L)
+            /**
+             * Mesh array contains colors.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_COLOR
+             */
+            val FORMAT_COLOR: ArrayFormat get() = ArrayFormat(8L)
+            /**
+             * Mesh array contains UVs.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_TEX_UV
+             */
+            val FORMAT_TEX_UV: ArrayFormat get() = ArrayFormat(16L)
+            /**
+             * Mesh array contains second UV.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_TEX_UV2
+             */
+            val FORMAT_TEX_UV2: ArrayFormat get() = ArrayFormat(32L)
+            /**
+             * Mesh array contains custom channel index 0.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM0
+             */
+            val FORMAT_CUSTOM0: ArrayFormat get() = ArrayFormat(64L)
+            /**
+             * Mesh array contains custom channel index 1.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM1
+             */
+            val FORMAT_CUSTOM1: ArrayFormat get() = ArrayFormat(128L)
+            /**
+             * Mesh array contains custom channel index 2.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM2
+             */
+            val FORMAT_CUSTOM2: ArrayFormat get() = ArrayFormat(256L)
+            /**
+             * Mesh array contains custom channel index 3.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM3
+             */
+            val FORMAT_CUSTOM3: ArrayFormat get() = ArrayFormat(512L)
+            /**
+             * Mesh array contains bones.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_BONES
+             */
+            val FORMAT_BONES: ArrayFormat get() = ArrayFormat(1024L)
+            /**
+             * Mesh array contains bone weights.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_WEIGHTS
+             */
+            val FORMAT_WEIGHTS: ArrayFormat get() = ArrayFormat(2048L)
+            /**
+             * Mesh array uses indices.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_INDEX
+             */
+            val FORMAT_INDEX: ArrayFormat get() = ArrayFormat(4096L)
+            /**
+             * Mask of mesh channels permitted in blend shapes.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_BLEND_SHAPE_MASK
+             */
+            val FORMAT_BLEND_SHAPE_MASK: ArrayFormat get() = ArrayFormat(7L)
+            /**
+             * Shift of first custom channel.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM_BASE
+             */
+            val FORMAT_CUSTOM_BASE: ArrayFormat get() = ArrayFormat(13L)
+            /**
+             * Number of format bits per custom channel. See `ArrayCustomFormat`.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM_BITS
+             */
+            val FORMAT_CUSTOM_BITS: ArrayFormat get() = ArrayFormat(3L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 0.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT
+             */
+            val FORMAT_CUSTOM0_SHIFT: ArrayFormat get() = ArrayFormat(13L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 1.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM1_SHIFT
+             */
+            val FORMAT_CUSTOM1_SHIFT: ArrayFormat get() = ArrayFormat(16L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 2.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM2_SHIFT
+             */
+            val FORMAT_CUSTOM2_SHIFT: ArrayFormat get() = ArrayFormat(19L)
+            /**
+             * Amount to shift `ArrayCustomFormat` for custom channel index 3.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM3_SHIFT
+             */
+            val FORMAT_CUSTOM3_SHIFT: ArrayFormat get() = ArrayFormat(22L)
+            /**
+             * Mask of custom format bits per custom channel. Must be shifted by one of the SHIFT constants.
+             * See `ArrayCustomFormat`.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FORMAT_CUSTOM_MASK
+             */
+            val FORMAT_CUSTOM_MASK: ArrayFormat get() = ArrayFormat(7L)
+            /**
+             * Shift of first compress flag. Compress flags should be passed to
+             * `ArrayMesh.add_surface_from_arrays` and `SurfaceTool.commit`.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_COMPRESS_FLAGS_BASE
+             */
+            val COMPRESS_FLAGS_BASE: ArrayFormat get() = ArrayFormat(25L)
+            /**
+             * Flag used to mark that the array contains 2D vertices.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FLAG_USE_2D_VERTICES
+             */
+            val FLAG_USE_2D_VERTICES: ArrayFormat get() = ArrayFormat(33554432L)
+            /**
+             * Flag used to mark that the mesh data will use `GL_DYNAMIC_DRAW` on GLES. Unused on Vulkan.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE
+             */
+            val FLAG_USE_DYNAMIC_UPDATE: ArrayFormat get() = ArrayFormat(67108864L)
+            /**
+             * Flag used to mark that the mesh contains up to 8 bone influences per vertex. This flag indicates
+             * that `ArrayType.BONES` and `ArrayType.WEIGHTS` elements will have double length.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+             */
+            val FLAG_USE_8_BONE_WEIGHTS: ArrayFormat get() = ArrayFormat(134217728L)
+            /**
+             * Flag used to mark that the mesh intentionally contains no vertex array.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY
+             */
+            val FLAG_USES_EMPTY_VERTEX_ARRAY: ArrayFormat get() = ArrayFormat(268435456L)
+            /**
+             * Flag used to mark that a mesh is using compressed attributes (vertices, normals, tangents, UVs).
+             * When this form of compression is enabled, vertex positions will be packed into an RGBA16UNORM
+             * attribute and scaled in the vertex shader. The normal and tangent will be packed into an
+             * RG16UNORM representing an axis, and a 16-bit float stored in the A-channel of the vertex. UVs
+             * will use 16-bit normalized floats instead of full 32-bit signed floats. When using this
+             * compression mode you must use either vertices, normals, and tangents or only vertices. You
+             * cannot use normals without tangents. Importers will automatically enable this compression if
+             * they can.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FLAG_COMPRESS_ATTRIBUTES
+             */
+            val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
+        }
+    }
+
+    /**
+     * Godot's `Mesh.BlendShapeMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Mesh.BlendShapeMode.<NAME>`).
+     *
+     * Generated from Godot docs: Mesh.BlendShapeMode
+     */
+    @JvmInline
+    value class BlendShapeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Blend shapes are normalized.
+             *
+             * Generated from Godot docs: Mesh.BLEND_SHAPE_MODE_NORMALIZED
+             */
+            val NORMALIZED: BlendShapeMode get() = BlendShapeMode(0L)
+            /**
+             * Blend shapes are relative to base weight.
+             *
+             * Generated from Godot docs: Mesh.BLEND_SHAPE_MODE_RELATIVE
+             */
+            val RELATIVE: BlendShapeMode get() = BlendShapeMode(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Mesh? =
             wrap(handle.segment)

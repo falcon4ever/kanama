@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 
 // GENERATED desktop/Android companion for SceneTree (scripts/generate_api_wrapper.py --write-tree).
 // DO NOT EDIT BY HAND. These members are not in the shared wrapper tree: iOS has no audited
@@ -19,8 +20,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  *
  * Generated from Godot docs: SceneTree.create_tween
  */
-fun SceneTree.createTween(): Tween? {
-    return Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment))
+fun SceneTree.createTween(): Tween {
+    return requireGodotReturn(Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "SceneTree.create_tween")
 }
 
 /**
@@ -56,7 +57,7 @@ private val getProcessedTweensBind by lazy {
  *
  * Generated from Godot docs: SceneTree.create_tween
  */
-fun SceneTree.Companion.createTween(): Tween? =
+fun SceneTree.Companion.createTween(): Tween =
     SceneTree.active().createTween()
 
 /**

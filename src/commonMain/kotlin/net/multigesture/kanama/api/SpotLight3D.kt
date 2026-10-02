@@ -13,27 +13,27 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class SpotLight3D(handle: GodotHandle) : Light3D(handle) {
     var spotRange: Double
         @JvmName("spotRangeProperty")
-        get() = getParam(4L)
+        get() = getParam(Light3D.Param.RANGE)
         @JvmName("setSpotRangeProperty")
-        set(value) = setParam(4L, value)
+        set(value) = setParam(Light3D.Param.RANGE, value)
 
     var spotAttenuation: Double
         @JvmName("spotAttenuationProperty")
-        get() = getParam(6L)
+        get() = getParam(Light3D.Param.ATTENUATION)
         @JvmName("setSpotAttenuationProperty")
-        set(value) = setParam(6L, value)
+        set(value) = setParam(Light3D.Param.ATTENUATION, value)
 
     var spotAngle: Double
         @JvmName("spotAngleProperty")
-        get() = getParam(7L)
+        get() = getParam(Light3D.Param.SPOT_ANGLE)
         @JvmName("setSpotAngleProperty")
-        set(value) = setParam(7L, value)
+        set(value) = setParam(Light3D.Param.SPOT_ANGLE, value)
 
     var spotAngleAttenuation: Double
         @JvmName("spotAngleAttenuationProperty")
-        get() = getParam(8L)
+        get() = getParam(Light3D.Param.SPOT_ATTENUATION)
         @JvmName("setSpotAngleAttenuationProperty")
-        set(value) = setParam(8L, value)
+        set(value) = setParam(Light3D.Param.SPOT_ATTENUATION, value)
 
     // No conservative instance methods emitted yet.
 

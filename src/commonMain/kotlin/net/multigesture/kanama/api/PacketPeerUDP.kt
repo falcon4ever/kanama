@@ -21,9 +21,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: PacketPeerUDP.bind
      */
-    fun bind(port: Int, bindAddress: String = "*", recvBufSize: Int = 65536): Long {
+    fun bind(port: Int, bindAddress: String = "*", recvBufSize: Int = 65536): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(bindBind, segment, port, bindAddress, recvBufSize)
+        return GodotError(ObjectCalls.ptrcallWithIntStringAndIntArgsRetLong(bindBind, segment, port, bindAddress, recvBufSize))
     }
 
     fun closeConnection() {
@@ -31,9 +31,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
         ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
     }
 
-    fun waitBlocking(): Long {
+    fun waitBlocking(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(waitBlockingBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(waitBlockingBind, segment))
     }
 
     /**
@@ -58,9 +58,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: PacketPeerUDP.connect_to_host
      */
-    fun connectToHost(host: String, port: Int): Long {
+    fun connectToHost(host: String, port: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port)
+        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(connectToHostBind, segment, host, port))
     }
 
     /**
@@ -113,9 +113,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: PacketPeerUDP.set_dest_address
      */
-    fun setDestAddress(host: String, port: Int): Long {
+    fun setDestAddress(host: String, port: Int): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(setDestAddressBind, segment, host, port)
+        return GodotError(ObjectCalls.ptrcallWithStringAndIntArgRetLong(setDestAddressBind, segment, host, port))
     }
 
     /**
@@ -139,9 +139,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: PacketPeerUDP.join_multicast_group
      */
-    fun joinMulticastGroup(multicastAddress: String, interfaceName: String): Long {
+    fun joinMulticastGroup(multicastAddress: String, interfaceName: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(joinMulticastGroupBind, segment, multicastAddress, interfaceName)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(joinMulticastGroupBind, segment, multicastAddress, interfaceName))
     }
 
     /**
@@ -150,9 +150,9 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
      *
      * Generated from Godot docs: PacketPeerUDP.leave_multicast_group
      */
-    fun leaveMulticastGroup(multicastAddress: String, interfaceName: String): Long {
+    fun leaveMulticastGroup(multicastAddress: String, interfaceName: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(leaveMulticastGroupBind, segment, multicastAddress, interfaceName)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(leaveMulticastGroupBind, segment, multicastAddress, interfaceName))
     }
 
     companion object {

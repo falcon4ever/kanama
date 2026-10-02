@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -8,9 +9,9 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: OpenXRFutureResult
  */
 class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
-    fun getStatus(): Long {
+    fun getStatus(): OpenXRFutureResult.ResultStatus {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment)
+        return OpenXRFutureResult.ResultStatus(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
     }
 
     fun getFuture(): Long {
@@ -37,11 +38,16 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
         const val completed: String = "completed"
     }
 
-    companion object {
-        const val RESULT_RUNNING: Long = 0L
-        const val RESULT_FINISHED: Long = 1L
-        const val RESULT_CANCELLED: Long = 2L
+    @JvmInline
+    value class ResultStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            val RUNNING: ResultStatus get() = ResultStatus(0L)
+            val FINISHED: ResultStatus get() = ResultStatus(1L)
+            val CANCELLED: ResultStatus get() = ResultStatus(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRFutureResult? =
             wrap(handle.segment)

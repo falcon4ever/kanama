@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: PhysicalBone3D
  */
 class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
-    var jointType: Long
+    var jointType: PhysicalBone3D.JointType
         @JvmName("jointTypeProperty")
         get() = getJointType()
         @JvmName("setJointTypeProperty")
@@ -67,7 +68,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmName("setCustomIntegratorProperty")
         set(value) = setUseCustomIntegrator(value)
 
-    var linearDampMode: Long
+    var linearDampMode: PhysicalBone3D.DampMode
         @JvmName("linearDampModeProperty")
         get() = getLinearDampMode()
         @JvmName("setLinearDampModeProperty")
@@ -79,7 +80,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmName("setLinearDampProperty")
         set(value) = setLinearDamp(value)
 
-    var angularDampMode: Long
+    var angularDampMode: PhysicalBone3D.DampMode
         @JvmName("angularDampModeProperty")
         get() = getAngularDampMode()
         @JvmName("setAngularDampModeProperty")
@@ -138,8 +139,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: PhysicalBone3D.set_joint_type
      */
-    fun setJointType(jointType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJointTypeBind, segment, jointType)
+    fun setJointType(jointType: PhysicalBone3D.JointType) {
+        ObjectCalls.ptrcallWithLongArg(setJointTypeBind, segment, jointType.value)
     }
 
     /**
@@ -147,8 +148,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: PhysicalBone3D.get_joint_type
      */
-    fun getJointType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJointTypeBind, segment)
+    fun getJointType(): PhysicalBone3D.JointType {
+        return PhysicalBone3D.JointType(ObjectCalls.ptrcallNoArgsRetLong(getJointTypeBind, segment))
     }
 
     /**
@@ -272,8 +273,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * The body's bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Note: Even
      * with `bounce` set to `1.0`, some energy will be lost over time due to linear and angular
      * damping. To have a `PhysicalBone3D` that preserves all its energy over time, set `bounce` to
-     * `1.0`, `linear_damp_mode` to `DAMP_MODE_REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
-     * `DAMP_MODE_REPLACE`, and `angular_damp` to `0.0`.
+     * `1.0`, `linear_damp_mode` to `DampMode.REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
+     * `DampMode.REPLACE`, and `angular_damp` to `0.0`.
      *
      * Generated from Godot docs: PhysicalBone3D.set_bounce
      */
@@ -285,8 +286,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * The body's bounciness. Values range from `0` (no bounce) to `1` (full bounciness). Note: Even
      * with `bounce` set to `1.0`, some energy will be lost over time due to linear and angular
      * damping. To have a `PhysicalBone3D` that preserves all its energy over time, set `bounce` to
-     * `1.0`, `linear_damp_mode` to `DAMP_MODE_REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
-     * `DAMP_MODE_REPLACE`, and `angular_damp` to `0.0`.
+     * `1.0`, `linear_damp_mode` to `DampMode.REPLACE`, `linear_damp` to `0.0`, `angular_damp_mode` to
+     * `DampMode.REPLACE`, and `angular_damp` to `0.0`.
      *
      * Generated from Godot docs: PhysicalBone3D.get_bounce
      */
@@ -321,8 +322,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: PhysicalBone3D.set_linear_damp_mode
      */
-    fun setLinearDampMode(linearDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode)
+    fun setLinearDampMode(linearDampMode: PhysicalBone3D.DampMode) {
+        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode.value)
     }
 
     /**
@@ -330,8 +331,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: PhysicalBone3D.get_linear_damp_mode
      */
-    fun getLinearDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment)
+    fun getLinearDampMode(): PhysicalBone3D.DampMode {
+        return PhysicalBone3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment))
     }
 
     /**
@@ -339,8 +340,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: PhysicalBone3D.set_angular_damp_mode
      */
-    fun setAngularDampMode(angularDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode)
+    fun setAngularDampMode(angularDampMode: PhysicalBone3D.DampMode) {
+        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode.value)
     }
 
     /**
@@ -348,8 +349,8 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: PhysicalBone3D.get_angular_damp_mode
      */
-    fun getAngularDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment)
+    fun getAngularDampMode(): PhysicalBone3D.DampMode {
+        return PhysicalBone3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment))
     }
 
     /**
@@ -488,16 +489,79 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isAbleToSleepBind, segment)
     }
 
-    companion object {
-        const val DAMP_MODE_COMBINE: Long = 0L
-        const val DAMP_MODE_REPLACE: Long = 1L
-        const val JOINT_TYPE_NONE: Long = 0L
-        const val JOINT_TYPE_PIN: Long = 1L
-        const val JOINT_TYPE_CONE: Long = 2L
-        const val JOINT_TYPE_HINGE: Long = 3L
-        const val JOINT_TYPE_SLIDER: Long = 4L
-        const val JOINT_TYPE_6DOF: Long = 5L
+    /**
+     * Godot's `PhysicalBone3D.DampMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicalBone3D.DampMode.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicalBone3D.DampMode
+     */
+    @JvmInline
+    value class DampMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * In this mode, the body's damping value is added to any value set in areas or the default value.
+             *
+             * Generated from Godot docs: PhysicalBone3D.DAMP_MODE_COMBINE
+             */
+            val COMBINE: DampMode get() = DampMode(0L)
+            /**
+             * In this mode, the body's damping value replaces any value set in areas or the default value.
+             *
+             * Generated from Godot docs: PhysicalBone3D.DAMP_MODE_REPLACE
+             */
+            val REPLACE: DampMode get() = DampMode(1L)
+        }
+    }
 
+    /**
+     * Godot's `PhysicalBone3D.JointType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`PhysicalBone3D.JointType.<NAME>`).
+     *
+     * Generated from Godot docs: PhysicalBone3D.JointType
+     */
+    @JvmInline
+    value class JointType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No joint is applied to the PhysicsBone3D.
+             *
+             * Generated from Godot docs: PhysicalBone3D.JOINT_TYPE_NONE
+             */
+            val NONE: JointType get() = JointType(0L)
+            /**
+             * A pin joint is applied to the PhysicsBone3D.
+             *
+             * Generated from Godot docs: PhysicalBone3D.JOINT_TYPE_PIN
+             */
+            val PIN: JointType get() = JointType(1L)
+            /**
+             * A cone joint is applied to the PhysicsBone3D.
+             *
+             * Generated from Godot docs: PhysicalBone3D.JOINT_TYPE_CONE
+             */
+            val CONE: JointType get() = JointType(2L)
+            /**
+             * A hinge joint is applied to the PhysicsBone3D.
+             *
+             * Generated from Godot docs: PhysicalBone3D.JOINT_TYPE_HINGE
+             */
+            val HINGE: JointType get() = JointType(3L)
+            /**
+             * A slider joint is applied to the PhysicsBone3D.
+             *
+             * Generated from Godot docs: PhysicalBone3D.JOINT_TYPE_SLIDER
+             */
+            val SLIDER: JointType get() = JointType(4L)
+            /**
+             * A 6 degrees of freedom joint is applied to the PhysicsBone3D.
+             *
+             * Generated from Godot docs: PhysicalBone3D.JOINT_TYPE_6DOF
+             */
+            val TYPE_6DOF: JointType get() = JointType(5L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicalBone3D? =
             wrap(handle.segment)

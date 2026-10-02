@@ -49,9 +49,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.set_blend_shape_mode
      */
-    fun setBlendShapeMode(mode: Long) {
+    fun setBlendShapeMode(mode: Mesh.BlendShapeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode.value)
     }
 
     /**
@@ -59,42 +59,42 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.get_blend_shape_mode
      */
-    fun getBlendShapeMode(): Long {
+    fun getBlendShapeMode(): Mesh.BlendShapeMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment)
+        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment))
     }
 
     /**
      * Creates a new surface. `Mesh.get_surface_count` will become the `surf_idx` for this new surface.
      * Surfaces are created to be rendered using a `primitive`, which may be any of the values defined
      * in `Mesh.PrimitiveType`. The `arrays` argument is an array of arrays. Each of the
-     * `Mesh.ARRAY_MAX` elements contains an array with some of the mesh data for this surface as
+     * `Mesh.ArrayType.MAX` elements contains an array with some of the mesh data for this surface as
      * described by the corresponding member of `Mesh.ArrayType` or `null` if it is not used by the
      * surface. For example, `arrays[0]` is the array of vertices. That first vertex sub-array is
      * always required; the others are optional. Adding an index array puts this surface into "index
      * mode" where the vertex and other arrays become the sources of data and the index array defines
      * the vertex order. All sub-arrays must have the same length as the vertex array (or be an exact
      * multiple of the vertex array's length, when multiple elements of a sub-array correspond to a
-     * single vertex) or be empty, except for `Mesh.ARRAY_INDEX` if it is used. The `blend_shapes`
+     * single vertex) or be empty, except for `Mesh.ArrayType.INDEX` if it is used. The `blend_shapes`
      * argument is an array of vertex data for each blend shape. Each element is an array of the same
-     * structure as `arrays`, but `Mesh.ARRAY_VERTEX`, `Mesh.ARRAY_NORMAL`, and `Mesh.ARRAY_TANGENT`
-     * are set if and only if they are set in `arrays` and all other entries are `null`. The `lods`
-     * argument is a dictionary with `float` keys and `PackedInt32Array` values. Each entry in the
-     * dictionary represents an LOD level of the surface, where the value is the `Mesh.ARRAY_INDEX`
-     * array to use for the LOD level and the key is roughly proportional to the distance at which the
-     * LOD stats being used. I.e., increasing the key of an LOD also increases the distance that the
-     * objects has to be from the camera before the LOD is used. The `flags` argument is the bitwise OR
-     * of, as required: One value of `Mesh.ArrayCustomFormat` left shifted by
-     * `ARRAY_FORMAT_CUSTOMn_SHIFT` for each custom channel in use,
-     * `Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE`, `Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS`, or
-     * `Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY`. Note: When using indices, it is recommended to only
-     * use points, lines, or triangles.
+     * structure as `arrays`, but `Mesh.ArrayType.VERTEX`, `Mesh.ArrayType.NORMAL`, and
+     * `Mesh.ArrayType.TANGENT` are set if and only if they are set in `arrays` and all other entries
+     * are `null`. The `lods` argument is a dictionary with `float` keys and `PackedInt32Array` values.
+     * Each entry in the dictionary represents an LOD level of the surface, where the value is the
+     * `Mesh.ArrayType.INDEX` array to use for the LOD level and the key is roughly proportional to the
+     * distance at which the LOD stats being used. I.e., increasing the key of an LOD also increases
+     * the distance that the objects has to be from the camera before the LOD is used. The `flags`
+     * argument is the bitwise OR of, as required: One value of `Mesh.ArrayCustomFormat` left shifted
+     * by `ARRAY_FORMAT_CUSTOMn_SHIFT` for each custom channel in use,
+     * `Mesh.ArrayFormat.FLAG_USE_DYNAMIC_UPDATE`, `Mesh.ArrayFormat.FLAG_USE_8_BONE_WEIGHTS`, or
+     * `Mesh.ArrayFormat.FLAG_USES_EMPTY_VERTEX_ARRAY`. Note: When using indices, it is recommended to
+     * only use points, lines, or triangles.
      *
      * Generated from Godot docs: ImporterMesh.add_surface
      */
-    fun addSurface(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
+    fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive.value, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
     }
 
     /**
@@ -112,9 +112,9 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: ImporterMesh.get_surface_primitive_type
      */
-    fun getSurfacePrimitiveType(surfaceIdx: Int): Long {
+    fun getSurfacePrimitiveType(surfaceIdx: Int): Mesh.PrimitiveType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, segment, surfaceIdx)
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, segment, surfaceIdx))
     }
 
     /**

@@ -1,8 +1,10 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.Vector3
 
 /**
  * A `SkeletonModifier3D` that apply transform to the bone which converted from reference.
@@ -15,8 +17,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_transform_mode
      */
-    fun setApplyTransformMode(index: Int, transformMode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyTransformModeBind, segment, index, transformMode)
+    fun setApplyTransformMode(index: Int, transformMode: ConvertTransformModifier3D.TransformMode) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyTransformModeBind, segment, index, transformMode.value)
     }
 
     /**
@@ -24,8 +26,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_transform_mode
      */
-    fun getApplyTransformMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getApplyTransformModeBind, segment, index)
+    fun getApplyTransformMode(index: Int): ConvertTransformModifier3D.TransformMode {
+        return ConvertTransformModifier3D.TransformMode(ObjectCalls.ptrcallWithIntArgRetLong(getApplyTransformModeBind, segment, index))
     }
 
     /**
@@ -33,8 +35,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.set_apply_axis
      */
-    fun setApplyAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyAxisBind, segment, index, axis)
+    fun setApplyAxis(index: Int, axis: Vector3.Axis) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setApplyAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -42,8 +44,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.get_apply_axis
      */
-    fun getApplyAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getApplyAxisBind, segment, index)
+    fun getApplyAxis(index: Int): Vector3.Axis {
+        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(getApplyAxisBind, segment, index))
     }
 
     /**
@@ -87,8 +89,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_transform_mode
      */
-    fun setReferenceTransformMode(index: Int, transformMode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTransformModeBind, segment, index, transformMode)
+    fun setReferenceTransformMode(index: Int, transformMode: ConvertTransformModifier3D.TransformMode) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceTransformModeBind, segment, index, transformMode.value)
     }
 
     /**
@@ -96,8 +98,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_transform_mode
      */
-    fun getReferenceTransformMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTransformModeBind, segment, index)
+    fun getReferenceTransformMode(index: Int): ConvertTransformModifier3D.TransformMode {
+        return ConvertTransformModifier3D.TransformMode(ObjectCalls.ptrcallWithIntArgRetLong(getReferenceTransformModeBind, segment, index))
     }
 
     /**
@@ -105,8 +107,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.set_reference_axis
      */
-    fun setReferenceAxis(index: Int, axis: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceAxisBind, segment, index, axis)
+    fun setReferenceAxis(index: Int, axis: Vector3.Axis) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setReferenceAxisBind, segment, index, axis.value)
     }
 
     /**
@@ -114,8 +116,8 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
      *
      * Generated from Godot docs: ConvertTransformModifier3D.get_reference_axis
      */
-    fun getReferenceAxis(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getReferenceAxisBind, segment, index)
+    fun getReferenceAxis(index: Int): Vector3.Axis {
+        return Vector3.Axis(ObjectCalls.ptrcallWithIntArgRetLong(getReferenceAxisBind, segment, index))
     }
 
     /**
@@ -196,11 +198,38 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
         return ObjectCalls.ptrcallWithIntArgRetBool(isAdditiveBind, segment, index)
     }
 
-    companion object {
-        const val TRANSFORM_MODE_POSITION: Long = 0L
-        const val TRANSFORM_MODE_ROTATION: Long = 1L
-        const val TRANSFORM_MODE_SCALE: Long = 2L
+    /**
+     * Godot's `ConvertTransformModifier3D.TransformMode` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`ConvertTransformModifier3D.TransformMode.<NAME>`).
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.TransformMode
+     */
+    @JvmInline
+    value class TransformMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Convert with position. Transfer the difference.
+             *
+             * Generated from Godot docs: ConvertTransformModifier3D.TRANSFORM_MODE_POSITION
+             */
+            val POSITION: TransformMode get() = TransformMode(0L)
+            /**
+             * Convert with rotation. The angle is the roll for the specified axis.
+             *
+             * Generated from Godot docs: ConvertTransformModifier3D.TRANSFORM_MODE_ROTATION
+             */
+            val ROTATION: TransformMode get() = TransformMode(1L)
+            /**
+             * Convert with scale. Transfers the ratio, not the difference.
+             *
+             * Generated from Godot docs: ConvertTransformModifier3D.TRANSFORM_MODE_SCALE
+             */
+            val SCALE: TransformMode get() = TransformMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ConvertTransformModifier3D? =
             wrap(handle.segment)

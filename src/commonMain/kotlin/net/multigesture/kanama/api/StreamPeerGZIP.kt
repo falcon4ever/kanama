@@ -16,9 +16,9 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerGZIP.start_compression
      */
-    fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
+    fun startCompression(useDeflate: Boolean = false, bufferSize: Int = 65535): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, segment, useDeflate, bufferSize)
+        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startCompressionBind, segment, useDeflate, bufferSize))
     }
 
     /**
@@ -27,9 +27,9 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerGZIP.start_decompression
      */
-    fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): Long {
+    fun startDecompression(useDeflate: Boolean = false, bufferSize: Int = 65535): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, segment, useDeflate, bufferSize)
+        return GodotError(ObjectCalls.ptrcallWithBoolAndIntArgsRetLong(startDecompressionBind, segment, useDeflate, bufferSize))
     }
 
     /**
@@ -38,9 +38,9 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
      *
      * Generated from Godot docs: StreamPeerGZIP.finish
      */
-    fun finish(): Long {
+    fun finish(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(finishBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(finishBind, segment))
     }
 
     /**

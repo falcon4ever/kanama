@@ -20,9 +20,9 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
      *
      * Generated from Godot docs: ImageTextureLayered.create_from_images
      */
-    fun createFromImages(images: List<Image>): Long {
+    fun createFromImages(images: List<Image>): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectListArgRetLong(createFromImagesBind, segment, images)
+        return GodotError(ObjectCalls.ptrcallWithObjectListArgRetLong(createFromImagesBind, segment, images))
     }
 
     /**

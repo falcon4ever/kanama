@@ -10,19 +10,19 @@ import kotlin.jvm.JvmName
  * Generated from Godot docs: InputEventKey
  */
 class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
-    var keycode: Long
+    var keycode: Key
         @JvmName("keycodeProperty")
         get() = getKeycode()
         @JvmName("setKeycodeProperty")
         set(value) = setKeycode(value)
 
-    var physicalKeycode: Long
+    var physicalKeycode: Key
         @JvmName("physicalKeycodeProperty")
         get() = getPhysicalKeycode()
         @JvmName("setPhysicalKeycodeProperty")
         set(value) = setPhysicalKeycode(value)
 
-    var keyLabel: Long
+    var keyLabel: Key
         @JvmName("keyLabelProperty")
         get() = getKeyLabel()
         @JvmName("setKeyLabelProperty")
@@ -34,7 +34,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
         @JvmName("setUnicodeProperty")
         set(value) = setUnicode(value)
 
-    var location: Long
+    var location: KeyLocation
         @JvmName("locationProperty")
         get() = getLocation()
         @JvmName("setLocationProperty")
@@ -59,9 +59,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.set_keycode
      */
-    fun setKeycode(keycode: Long) {
+    fun setKeycode(keycode: Key) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setKeycodeBind, segment, keycode)
+        ObjectCalls.ptrcallWithLongArg(setKeycodeBind, segment, keycode.value)
     }
 
     /**
@@ -73,9 +73,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.get_keycode
      */
-    fun getKeycode(): Long {
+    fun getKeycode(): Key {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeBind, segment)
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeycodeBind, segment))
     }
 
     /**
@@ -88,9 +88,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.set_physical_keycode
      */
-    fun setPhysicalKeycode(physicalKeycode: Long) {
+    fun setPhysicalKeycode(physicalKeycode: Key) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPhysicalKeycodeBind, segment, physicalKeycode)
+        ObjectCalls.ptrcallWithLongArg(setPhysicalKeycodeBind, segment, physicalKeycode.value)
     }
 
     /**
@@ -103,9 +103,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.get_physical_keycode
      */
-    fun getPhysicalKeycode(): Long {
+    fun getPhysicalKeycode(): Key {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeBind, segment)
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeBind, segment))
     }
 
     /**
@@ -117,9 +117,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.set_key_label
      */
-    fun setKeyLabel(keyLabel: Long) {
+    fun setKeyLabel(keyLabel: Key) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setKeyLabelBind, segment, keyLabel)
+        ObjectCalls.ptrcallWithLongArg(setKeyLabelBind, segment, keyLabel.value)
     }
 
     /**
@@ -131,9 +131,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.get_key_label
      */
-    fun getKeyLabel(): Long {
+    fun getKeyLabel(): Key {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelBind, segment)
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelBind, segment))
     }
 
     /**
@@ -169,9 +169,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.set_location
      */
-    fun setLocation(location: Long) {
+    fun setLocation(location: KeyLocation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLocationBind, segment, location)
+        ObjectCalls.ptrcallWithLongArg(setLocationBind, segment, location.value)
     }
 
     /**
@@ -179,9 +179,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.get_location
      */
-    fun getLocation(): Long {
+    fun getLocation(): KeyLocation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLocationBind, segment)
+        return KeyLocation(ObjectCalls.ptrcallNoArgsRetLong(getLocationBind, segment))
     }
 
     /**
@@ -207,9 +207,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.get_keycode_with_modifiers
      */
-    fun getKeycodeWithModifiers(): Long {
+    fun getKeycodeWithModifiers(): Key {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeycodeWithModifiersBind, segment)
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeycodeWithModifiersBind, segment))
     }
 
     /**
@@ -220,9 +220,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.get_physical_keycode_with_modifiers
      */
-    fun getPhysicalKeycodeWithModifiers(): Long {
+    fun getPhysicalKeycodeWithModifiers(): Key {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeWithModifiersBind, segment)
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(getPhysicalKeycodeWithModifiersBind, segment))
     }
 
     /**
@@ -233,9 +233,9 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
      *
      * Generated from Godot docs: InputEventKey.get_key_label_with_modifiers
      */
-    fun getKeyLabelWithModifiers(): Long {
+    fun getKeyLabelWithModifiers(): Key {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelWithModifiersBind, segment)
+        return Key(ObjectCalls.ptrcallNoArgsRetLong(getKeyLabelWithModifiersBind, segment))
     }
 
     /**
@@ -295,20 +295,6 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
         internal fun wrap(handle: MemorySegment): InputEventKey? =
             if (handle.address() == 0L) null else InputEventKey(GodotHandle(handle))
 
-        const val KEY_ESCAPE = 4194305L
-        const val KEY_TAB = 4194306L
-        const val KEY_ENTER = 4194309L
-        const val KEY_F10 = 4194341L
-        const val KEY_F11 = 4194342L
-        const val KEY_SPACE = 32L
-        const val KEY_A = 65L
-        const val KEY_D = 68L
-        const val KEY_E = 69L
-        const val KEY_F = 70L
-        const val KEY_Q = 81L
-        const val KEY_R = 82L
-        const val KEY_S = 83L
-        const val KEY_W = 87L
 
         private const val SET_PRESSED_HASH = 2586408642L
         private val setPressedBind by lazy {

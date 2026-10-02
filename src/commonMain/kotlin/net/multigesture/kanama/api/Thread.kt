@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -14,13 +15,14 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Starts a new `Thread` that calls `callable`. If the method takes some arguments, you can pass
      * them using `Callable.bind`. The `priority` of the `Thread` can be changed by passing a value
-     * from the `Priority` enum. Returns `OK` on success, or `ERR_CANT_CREATE` on failure.
+     * from the `Priority` enum. Returns `GodotError.OK` on success, or `GodotError.ERR_CANT_CREATE` on
+     * failure.
      *
      * Generated from Godot docs: Thread.start
      */
-    fun start(callable: GodotCallable, priority: Long = 1L): Long {
+    fun start(callable: GodotCallable, priority: Thread.Priority = Thread.Priority.NORMAL): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithCallableLongArgsRetLong(startBind, segment, callable.target.segment, callable.method, priority)
+        return GodotError(ObjectCalls.ptrcallWithCallableLongArgsRetLong(startBind, segment, callable.target.segment, callable.method, priority.value))
     }
 
     /**
@@ -71,6 +73,36 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(waitToFinishBind, segment)
     }
 
+    /**
+     * Godot's `Thread.Priority` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Thread.Priority.<NAME>`).
+     *
+     * Generated from Godot docs: Thread.Priority
+     */
+    @JvmInline
+    value class Priority(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * A thread running with lower priority than normally.
+             *
+             * Generated from Godot docs: Thread.PRIORITY_LOW
+             */
+            val LOW: Priority get() = Priority(0L)
+            /**
+             * A thread with a standard priority.
+             *
+             * Generated from Godot docs: Thread.PRIORITY_NORMAL
+             */
+            val NORMAL: Priority get() = Priority(1L)
+            /**
+             * A thread running with higher priority than normally.
+             *
+             * Generated from Godot docs: Thread.PRIORITY_HIGH
+             */
+            val HIGH: Priority get() = Priority(2L)
+        }
+    }
+
     companion object {
         /**
          * Sets whether the thread safety checks the engine normally performs in methods of certain classes
@@ -103,10 +135,6 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
         fun isMainThread(): Boolean {
             return ObjectCalls.ptrcallNoArgsRetBool(isMainThreadBind, NULL_SEGMENT)
         }
-
-        const val PRIORITY_LOW: Long = 0L
-        const val PRIORITY_NORMAL: Long = 1L
-        const val PRIORITY_HIGH: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Thread? =

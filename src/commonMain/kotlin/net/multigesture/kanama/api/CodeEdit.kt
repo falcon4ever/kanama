@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -1008,8 +1009,8 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
      *
      * Generated from Godot docs: CodeEdit.add_code_completion_option
      */
-    fun addCodeCompletionOption(type: Long, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
-        ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, segment, type, displayText, insertText, textColor, icon?.requireOpenHandle() ?: NULL_SEGMENT, value, location)
+    fun addCodeCompletionOption(type: CodeEdit.CodeCompletionKind, displayText: String, insertText: String, textColor: Color, icon: Resource?, value: Any? = null, location: Int = 1024) {
+        ObjectCalls.ptrcallWithLongTwoStringColorObjectVariantIntArgs(addCodeCompletionOptionBind, segment, type.value, displayText, insertText, textColor, icon?.requireOpenHandle() ?: NULL_SEGMENT, value, location)
     }
 
     /**
@@ -1269,23 +1270,128 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
         const val symbolHovered: String = "symbol_hovered"
     }
 
-    companion object {
-        const val KIND_CLASS: Long = 0L
-        const val KIND_FUNCTION: Long = 1L
-        const val KIND_SIGNAL: Long = 2L
-        const val KIND_VARIABLE: Long = 3L
-        const val KIND_MEMBER: Long = 4L
-        const val KIND_ENUM: Long = 5L
-        const val KIND_CONSTANT: Long = 6L
-        const val KIND_NODE_PATH: Long = 7L
-        const val KIND_FILE_PATH: Long = 8L
-        const val KIND_PLAIN_TEXT: Long = 9L
-        const val KIND_KEYWORD: Long = 10L
-        const val LOCATION_LOCAL: Long = 0L
-        const val LOCATION_PARENT_MASK: Long = 256L
-        const val LOCATION_OTHER_USER_CODE: Long = 512L
-        const val LOCATION_OTHER: Long = 1024L
+    /**
+     * Godot's `CodeEdit.CodeCompletionKind` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`CodeEdit.CodeCompletionKind.<NAME>`).
+     *
+     * Generated from Godot docs: CodeEdit.CodeCompletionKind
+     */
+    @JvmInline
+    value class CodeCompletionKind(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Marks the option as a class.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_CLASS
+             */
+            val CLASS: CodeCompletionKind get() = CodeCompletionKind(0L)
+            /**
+             * Marks the option as a function.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_FUNCTION
+             */
+            val FUNCTION: CodeCompletionKind get() = CodeCompletionKind(1L)
+            /**
+             * Marks the option as a Godot signal.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_SIGNAL
+             */
+            val SIGNAL: CodeCompletionKind get() = CodeCompletionKind(2L)
+            /**
+             * Marks the option as a variable.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_VARIABLE
+             */
+            val VARIABLE: CodeCompletionKind get() = CodeCompletionKind(3L)
+            /**
+             * Marks the option as a member.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_MEMBER
+             */
+            val MEMBER: CodeCompletionKind get() = CodeCompletionKind(4L)
+            /**
+             * Marks the option as an enum entry.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_ENUM
+             */
+            val ENUM: CodeCompletionKind get() = CodeCompletionKind(5L)
+            /**
+             * Marks the option as a constant.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_CONSTANT
+             */
+            val CONSTANT: CodeCompletionKind get() = CodeCompletionKind(6L)
+            /**
+             * Marks the option as a Godot node path.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_NODE_PATH
+             */
+            val NODE_PATH: CodeCompletionKind get() = CodeCompletionKind(7L)
+            /**
+             * Marks the option as a file path.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_FILE_PATH
+             */
+            val FILE_PATH: CodeCompletionKind get() = CodeCompletionKind(8L)
+            /**
+             * Marks the option as unclassified or plain text.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_PLAIN_TEXT
+             */
+            val PLAIN_TEXT: CodeCompletionKind get() = CodeCompletionKind(9L)
+            /**
+             * Marks the option as a keyword.
+             *
+             * Generated from Godot docs: CodeEdit.KIND_KEYWORD
+             */
+            val KEYWORD: CodeCompletionKind get() = CodeCompletionKind(10L)
+        }
+    }
 
+    /**
+     * Godot's `CodeEdit.CodeCompletionLocation` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`CodeEdit.CodeCompletionLocation.<NAME>`).
+     *
+     * Generated from Godot docs: CodeEdit.CodeCompletionLocation
+     */
+    @JvmInline
+    value class CodeCompletionLocation(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The option is local to the location of the code completion query - e.g. a local variable.
+             * Subsequent value of location represent options from the outer class, the exact value represent
+             * how far they are (in terms of inner classes).
+             *
+             * Generated from Godot docs: CodeEdit.LOCATION_LOCAL
+             */
+            val LOCAL: CodeCompletionLocation get() = CodeCompletionLocation(0L)
+            /**
+             * The option is from the containing class or a parent class, relative to the location of the code
+             * completion query. Perform a bitwise OR with the class depth (e.g. `0` for the local class, `1`
+             * for the parent, `2` for the grandparent, etc.) to store the depth of an option in the class or a
+             * parent class.
+             *
+             * Generated from Godot docs: CodeEdit.LOCATION_PARENT_MASK
+             */
+            val PARENT_MASK: CodeCompletionLocation get() = CodeCompletionLocation(256L)
+            /**
+             * The option is from user code which is not local and not in a derived class (e.g. Autoload
+             * Singletons).
+             *
+             * Generated from Godot docs: CodeEdit.LOCATION_OTHER_USER_CODE
+             */
+            val OTHER_USER_CODE: CodeCompletionLocation get() = CodeCompletionLocation(512L)
+            /**
+             * The option is from other engine code, not covered by the other enum constants - e.g. built-in
+             * classes.
+             *
+             * Generated from Godot docs: CodeEdit.LOCATION_OTHER
+             */
+            val OTHER: CodeCompletionLocation get() = CodeCompletionLocation(1024L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CodeEdit? =
             wrap(handle.segment)

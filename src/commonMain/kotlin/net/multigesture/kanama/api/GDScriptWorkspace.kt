@@ -33,14 +33,14 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithDictionaryArg(didDeleteFilesBind, segment, params)
     }
 
-    fun parseScript(path: String, content: String): Long {
+    fun parseScript(path: String, content: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, segment, path, content)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(parseScriptBind, segment, path, content))
     }
 
-    fun parseLocalScript(path: String): Long {
+    fun parseLocalScript(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(parseLocalScriptBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(parseLocalScriptBind, segment, path))
     }
 
     fun publishDiagnostics(path: String) {

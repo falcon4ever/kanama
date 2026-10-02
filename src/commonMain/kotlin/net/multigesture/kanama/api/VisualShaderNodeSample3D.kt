@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,27 +10,32 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeSample3D
  */
 open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(handle) {
-    var source: Long
+    var source: VisualShaderNodeSample3D.Source
         @JvmName("sourceProperty")
         get() = getSource()
         @JvmName("setSourceProperty")
         set(value) = setSource(value)
 
-    fun setSource(value: Long) {
+    fun setSource(value: VisualShaderNodeSample3D.Source) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value)
+        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value.value)
     }
 
-    fun getSource(): Long {
+    fun getSource(): VisualShaderNodeSample3D.Source {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment)
+        return VisualShaderNodeSample3D.Source(ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment))
+    }
+
+    @JvmInline
+    value class Source(override val value: Long) : GodotEnumValue {
+        companion object {
+            val TEXTURE: Source get() = Source(0L)
+            val PORT: Source get() = Source(1L)
+            val MAX: Source get() = Source(2L)
+        }
     }
 
     companion object {
-        const val SOURCE_TEXTURE: Long = 0L
-        const val SOURCE_PORT: Long = 1L
-        const val SOURCE_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeSample3D? =
             wrap(handle.segment)

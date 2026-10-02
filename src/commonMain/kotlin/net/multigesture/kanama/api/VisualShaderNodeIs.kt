@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,27 +10,32 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeIs
  */
 class VisualShaderNodeIs(handle: GodotHandle) : VisualShaderNode(handle) {
-    var function: Long
+    var function: VisualShaderNodeIs.Function
         @JvmName("functionProperty")
         get() = getFunction()
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
-    fun setFunction(func: Long) {
+    fun setFunction(func: VisualShaderNodeIs.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
     }
 
-    fun getFunction(): Long {
+    fun getFunction(): VisualShaderNodeIs.Function {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
+        return VisualShaderNodeIs.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
+    }
+
+    @JvmInline
+    value class Function(override val value: Long) : GodotEnumValue {
+        companion object {
+            val IS_INF: Function get() = Function(0L)
+            val IS_NAN: Function get() = Function(1L)
+            val MAX: Function get() = Function(2L)
+        }
     }
 
     companion object {
-        const val FUNC_IS_INF: Long = 0L
-        const val FUNC_IS_NAN: Long = 1L
-        const val FUNC_MAX: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeIs? =
             wrap(handle.segment)

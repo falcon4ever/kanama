@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -16,15 +17,6 @@ object AudioServer {
     private val singleton: RawSegment by lazy {
         ObjectCalls.getSingleton("AudioServer")
     }
-
-    const val SPEAKER_MODE_STEREO: Long = 0L
-    const val SPEAKER_SURROUND_31: Long = 1L
-    const val SPEAKER_SURROUND_51: Long = 2L
-    const val SPEAKER_SURROUND_71: Long = 3L
-    const val PLAYBACK_TYPE_DEFAULT: Long = 0L
-    const val PLAYBACK_TYPE_STREAM: Long = 1L
-    const val PLAYBACK_TYPE_SAMPLE: Long = 2L
-    const val PLAYBACK_TYPE_MAX: Long = 3L
 
     var busCount: Int
         @JvmName("busCountProperty")
@@ -415,8 +407,8 @@ object AudioServer {
      * Generated from Godot docs: AudioServer.get_speaker_mode
      */
     @JvmStatic
-    fun getSpeakerMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSpeakerModeBind, singleton)
+    fun getSpeakerMode(): AudioServer.SpeakerMode {
+        return AudioServer.SpeakerMode(ObjectCalls.ptrcallNoArgsRetLong(getSpeakerModeBind, singleton))
     }
 
     /**
@@ -573,8 +565,8 @@ object AudioServer {
      * Generated from Godot docs: AudioServer.set_input_device_active
      */
     @JvmStatic
-    fun setInputDeviceActive(active: Boolean): Long {
-        return ObjectCalls.ptrcallWithBoolArgRetLong(setInputDeviceActiveBind, singleton, active)
+    fun setInputDeviceActive(active: Boolean): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(setInputDeviceActiveBind, singleton, active))
     }
 
     /**
@@ -672,6 +664,82 @@ object AudioServer {
     object Signals {
         const val busLayoutChanged: String = "bus_layout_changed"
         const val busRenamed: String = "bus_renamed"
+    }
+
+    /**
+     * Godot's `AudioServer.SpeakerMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AudioServer.SpeakerMode.<NAME>`).
+     *
+     * Generated from Godot docs: AudioServer.SpeakerMode
+     */
+    @JvmInline
+    value class SpeakerMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Two or fewer speakers were detected.
+             *
+             * Generated from Godot docs: AudioServer.SPEAKER_MODE_STEREO
+             */
+            val MODE_STEREO: SpeakerMode get() = SpeakerMode(0L)
+            /**
+             * A 3.1 channel surround setup was detected.
+             *
+             * Generated from Godot docs: AudioServer.SPEAKER_SURROUND_31
+             */
+            val SURROUND_31: SpeakerMode get() = SpeakerMode(1L)
+            /**
+             * A 5.1 channel surround setup was detected.
+             *
+             * Generated from Godot docs: AudioServer.SPEAKER_SURROUND_51
+             */
+            val SURROUND_51: SpeakerMode get() = SpeakerMode(2L)
+            /**
+             * A 7.1 channel surround setup was detected.
+             *
+             * Generated from Godot docs: AudioServer.SPEAKER_SURROUND_71
+             */
+            val SURROUND_71: SpeakerMode get() = SpeakerMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `AudioServer.PlaybackType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`AudioServer.PlaybackType.<NAME>`).
+     *
+     * Generated from Godot docs: AudioServer.PlaybackType
+     */
+    @JvmInline
+    value class PlaybackType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The playback will be considered of the type declared at
+             * `ProjectSettings.audio/general/default_playback_type`.
+             *
+             * Generated from Godot docs: AudioServer.PLAYBACK_TYPE_DEFAULT
+             */
+            val DEFAULT: PlaybackType get() = PlaybackType(0L)
+            /**
+             * Force the playback to be considered as a stream.
+             *
+             * Generated from Godot docs: AudioServer.PLAYBACK_TYPE_STREAM
+             */
+            val STREAM: PlaybackType get() = PlaybackType(1L)
+            /**
+             * Force the playback to be considered as a sample. This can provide lower latency and more stable
+             * playback (with less risk of audio crackling), at the cost of having less flexibility. Note: Only
+             * currently supported on the web platform. Note: `AudioEffect`s are not supported when playback is
+             * considered as a sample.
+             *
+             * Generated from Godot docs: AudioServer.PLAYBACK_TYPE_SAMPLE
+             */
+            val SAMPLE: PlaybackType get() = PlaybackType(2L)
+            /**
+             * Represents the size of the `PlaybackType` enum.
+             *
+             * Generated from Godot docs: AudioServer.PLAYBACK_TYPE_MAX
+             */
+            val MAX: PlaybackType get() = PlaybackType(3L)
+        }
     }
 
     @JvmStatic

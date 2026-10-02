@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: AudioStreamGenerator
  */
 class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
-    var mixRateMode: Long
+    var mixRateMode: AudioStreamGenerator.AudioStreamGeneratorMixRate
         @JvmName("mixRateModeProperty")
         get() = getMixRateMode()
         @JvmName("setMixRateModeProperty")
@@ -39,8 +40,9 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      * rates such as `32000` or `22050` may be usable with no loss in quality. Note:
      * `AudioStreamGenerator` is not automatically resampling input data, to produce expected result
      * `mix_rate_mode` should match the sampling rate of input data. Note: If you are using
-     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to `MIX_RATE_INPUT` or
-     * `MIX_RATE_OUTPUT` to automatically match current `AudioServer` mixing rate.
+     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to
+     * `AudioStreamGeneratorMixRate.INPUT` or `AudioStreamGeneratorMixRate.OUTPUT` to automatically
+     * match current `AudioServer` mixing rate.
      *
      * Generated from Godot docs: AudioStreamGenerator.set_mix_rate
      */
@@ -59,8 +61,9 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      * rates such as `32000` or `22050` may be usable with no loss in quality. Note:
      * `AudioStreamGenerator` is not automatically resampling input data, to produce expected result
      * `mix_rate_mode` should match the sampling rate of input data. Note: If you are using
-     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to `MIX_RATE_INPUT` or
-     * `MIX_RATE_OUTPUT` to automatically match current `AudioServer` mixing rate.
+     * `AudioEffectCapture` as the source of your data, set `mix_rate_mode` to
+     * `AudioStreamGeneratorMixRate.INPUT` or `AudioStreamGeneratorMixRate.OUTPUT` to automatically
+     * match current `AudioServer` mixing rate.
      *
      * Generated from Godot docs: AudioStreamGenerator.get_mix_rate
      */
@@ -70,25 +73,25 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     }
 
     /**
-     * Mixing rate mode. If set to `MIX_RATE_CUSTOM`, `mix_rate` is used, otherwise current
-     * `AudioServer` mixing rate is used.
+     * Mixing rate mode. If set to `AudioStreamGeneratorMixRate.CUSTOM`, `mix_rate` is used, otherwise
+     * current `AudioServer` mixing rate is used.
      *
      * Generated from Godot docs: AudioStreamGenerator.set_mix_rate_mode
      */
-    fun setMixRateMode(mode: Long) {
+    fun setMixRateMode(mode: AudioStreamGenerator.AudioStreamGeneratorMixRate) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMixRateModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setMixRateModeBind, segment, mode.value)
     }
 
     /**
-     * Mixing rate mode. If set to `MIX_RATE_CUSTOM`, `mix_rate` is used, otherwise current
-     * `AudioServer` mixing rate is used.
+     * Mixing rate mode. If set to `AudioStreamGeneratorMixRate.CUSTOM`, `mix_rate` is used, otherwise
+     * current `AudioServer` mixing rate is used.
      *
      * Generated from Godot docs: AudioStreamGenerator.get_mix_rate_mode
      */
-    fun getMixRateMode(): Long {
+    fun getMixRateMode(): AudioStreamGenerator.AudioStreamGeneratorMixRate {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMixRateModeBind, segment)
+        return AudioStreamGenerator.AudioStreamGeneratorMixRate(ObjectCalls.ptrcallNoArgsRetLong(getMixRateModeBind, segment))
     }
 
     /**
@@ -115,12 +118,44 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
     }
 
-    companion object {
-        const val MIX_RATE_OUTPUT: Long = 0L
-        const val MIX_RATE_INPUT: Long = 1L
-        const val MIX_RATE_CUSTOM: Long = 2L
-        const val MIX_RATE_MAX: Long = 3L
+    /**
+     * Godot's `AudioStreamGenerator.AudioStreamGeneratorMixRate` enum as a typed value: `.value` is
+     * the raw number Godot uses, and the companion holds the named values
+     * (`AudioStreamGenerator.AudioStreamGeneratorMixRate.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamGenerator.AudioStreamGeneratorMixRate
+     */
+    @JvmInline
+    value class AudioStreamGeneratorMixRate(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Current `AudioServer` output mixing rate.
+             *
+             * Generated from Godot docs: AudioStreamGenerator.MIX_RATE_OUTPUT
+             */
+            val OUTPUT: AudioStreamGeneratorMixRate get() = AudioStreamGeneratorMixRate(0L)
+            /**
+             * Current `AudioServer` input mixing rate.
+             *
+             * Generated from Godot docs: AudioStreamGenerator.MIX_RATE_INPUT
+             */
+            val INPUT: AudioStreamGeneratorMixRate get() = AudioStreamGeneratorMixRate(1L)
+            /**
+             * Custom mixing rate, specified by `mix_rate`.
+             *
+             * Generated from Godot docs: AudioStreamGenerator.MIX_RATE_CUSTOM
+             */
+            val CUSTOM: AudioStreamGeneratorMixRate get() = AudioStreamGeneratorMixRate(2L)
+            /**
+             * Maximum value for the mixing rate mode enum.
+             *
+             * Generated from Godot docs: AudioStreamGenerator.MIX_RATE_MAX
+             */
+            val MAX: AudioStreamGeneratorMixRate get() = AudioStreamGeneratorMixRate(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamGenerator? =
             wrap(handle.segment)

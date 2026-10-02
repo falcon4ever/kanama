@@ -11,7 +11,224 @@ import kotlin.jvm.JvmName
  * Generated from Godot docs: LightmapGI
  */
 class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
-    var quality: Long
+    // ===== BEGIN GENERATED ENUMS: LightmapGI (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `LightmapGI.BakeQuality` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`LightmapGI.BakeQuality.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.BakeQuality
+     */
+    @JvmInline
+    value class BakeQuality(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Low bake quality (fastest bake times). The quality of this preset can be adjusted by changing
+             * `ProjectSettings.rendering/lightmapping/bake_quality/low_quality_ray_count` and
+             * `ProjectSettings.rendering/lightmapping/bake_quality/low_quality_probe_ray_count`.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_QUALITY_LOW
+             */
+            val LOW: BakeQuality get() = BakeQuality(0L)
+            /**
+             * Medium bake quality (fast bake times). The quality of this preset can be adjusted by changing
+             * `ProjectSettings.rendering/lightmapping/bake_quality/medium_quality_ray_count` and
+             * `ProjectSettings.rendering/lightmapping/bake_quality/medium_quality_probe_ray_count`.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_QUALITY_MEDIUM
+             */
+            val MEDIUM: BakeQuality get() = BakeQuality(1L)
+            /**
+             * High bake quality (slow bake times). The quality of this preset can be adjusted by changing
+             * `ProjectSettings.rendering/lightmapping/bake_quality/high_quality_ray_count` and
+             * `ProjectSettings.rendering/lightmapping/bake_quality/high_quality_probe_ray_count`.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_QUALITY_HIGH
+             */
+            val HIGH: BakeQuality get() = BakeQuality(2L)
+            /**
+             * Highest bake quality (slowest bake times). The quality of this preset can be adjusted by
+             * changing `ProjectSettings.rendering/lightmapping/bake_quality/ultra_quality_ray_count` and
+             * `ProjectSettings.rendering/lightmapping/bake_quality/ultra_quality_probe_ray_count`.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_QUALITY_ULTRA
+             */
+            val ULTRA: BakeQuality get() = BakeQuality(3L)
+        }
+    }
+
+    /**
+     * Godot's `LightmapGI.GenerateProbes` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`LightmapGI.GenerateProbes.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.GenerateProbes
+     */
+    @JvmInline
+    value class GenerateProbes(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Don't generate lightmap probes for lighting dynamic objects.
+             *
+             * Generated from Godot docs: LightmapGI.GENERATE_PROBES_DISABLED
+             */
+            val DISABLED: GenerateProbes get() = GenerateProbes(0L)
+            /**
+             * Lowest level of subdivision (fastest bake times, smallest file sizes).
+             *
+             * Generated from Godot docs: LightmapGI.GENERATE_PROBES_SUBDIV_4
+             */
+            val SUBDIV_4: GenerateProbes get() = GenerateProbes(1L)
+            /**
+             * Low level of subdivision (fast bake times, small file sizes).
+             *
+             * Generated from Godot docs: LightmapGI.GENERATE_PROBES_SUBDIV_8
+             */
+            val SUBDIV_8: GenerateProbes get() = GenerateProbes(2L)
+            /**
+             * High level of subdivision (slow bake times, large file sizes).
+             *
+             * Generated from Godot docs: LightmapGI.GENERATE_PROBES_SUBDIV_16
+             */
+            val SUBDIV_16: GenerateProbes get() = GenerateProbes(3L)
+            /**
+             * Highest level of subdivision (slowest bake times, largest file sizes).
+             *
+             * Generated from Godot docs: LightmapGI.GENERATE_PROBES_SUBDIV_32
+             */
+            val SUBDIV_32: GenerateProbes get() = GenerateProbes(4L)
+        }
+    }
+
+    /**
+     * Godot's `LightmapGI.BakeError` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`LightmapGI.BakeError.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.BakeError
+     */
+    @JvmInline
+    value class BakeError(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Lightmap baking was successful.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_OK
+             */
+            val OK: BakeError get() = BakeError(0L)
+            /**
+             * Lightmap baking failed because the root node for the edited scene could not be accessed.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_NO_SCENE_ROOT
+             */
+            val NO_SCENE_ROOT: BakeError get() = BakeError(1L)
+            /**
+             * Lightmap baking failed as the lightmap data resource is embedded in a foreign resource.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_FOREIGN_DATA
+             */
+            val FOREIGN_DATA: BakeError get() = BakeError(2L)
+            /**
+             * Lightmap baking failed as there is no lightmapper available in this Godot build.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_NO_LIGHTMAPPER
+             */
+            val NO_LIGHTMAPPER: BakeError get() = BakeError(3L)
+            /**
+             * Lightmap baking failed as the `LightmapGIData` save path isn't configured in the resource.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_NO_SAVE_PATH
+             */
+            val NO_SAVE_PATH: BakeError get() = BakeError(4L)
+            /**
+             * Lightmap baking failed as there are no meshes whose `GeometryInstance3D.gi_mode` is
+             * `GeometryInstance3D.GIMode.STATIC` and with valid UV2 mapping in the current scene. You may need
+             * to select 3D scenes in the Import dock and change their global illumination mode accordingly.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_NO_MESHES
+             */
+            val NO_MESHES: BakeError get() = BakeError(5L)
+            /**
+             * Lightmap baking failed as the lightmapper failed to analyze some of the meshes marked as static
+             * for baking.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_MESHES_INVALID
+             */
+            val MESHES_INVALID: BakeError get() = BakeError(6L)
+            /**
+             * Lightmap baking failed as the resulting image couldn't be saved or imported by Godot after it
+             * was saved.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_CANT_CREATE_IMAGE
+             */
+            val CANT_CREATE_IMAGE: BakeError get() = BakeError(7L)
+            /**
+             * The user aborted the lightmap baking operation (typically by clicking the Cancel button in the
+             * progress dialog).
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_USER_ABORTED
+             */
+            val USER_ABORTED: BakeError get() = BakeError(8L)
+            /**
+             * Lightmap baking failed as the maximum texture size is too small to fit some of the meshes marked
+             * for baking.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_TEXTURE_SIZE_TOO_SMALL
+             */
+            val TEXTURE_SIZE_TOO_SMALL: BakeError get() = BakeError(9L)
+            /**
+             * Lightmap baking failed as the lightmap is too small.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_LIGHTMAP_TOO_SMALL
+             */
+            val LIGHTMAP_TOO_SMALL: BakeError get() = BakeError(10L)
+            /**
+             * Lightmap baking failed as the lightmap was unable to fit into an atlas.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_ATLAS_TOO_SMALL
+             */
+            val ATLAS_TOO_SMALL: BakeError get() = BakeError(11L)
+        }
+    }
+
+    /**
+     * Godot's `LightmapGI.EnvironmentMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`LightmapGI.EnvironmentMode.<NAME>`).
+     *
+     * Generated from Godot docs: LightmapGI.EnvironmentMode
+     */
+    @JvmInline
+    value class EnvironmentMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Ignore environment lighting when baking lightmaps.
+             *
+             * Generated from Godot docs: LightmapGI.ENVIRONMENT_MODE_DISABLED
+             */
+            val DISABLED: EnvironmentMode get() = EnvironmentMode(0L)
+            /**
+             * Use the scene's environment lighting when baking lightmaps. Note: If baking lightmaps in a scene
+             * with no `WorldEnvironment` node, this will act like `EnvironmentMode.DISABLED`. The editor's
+             * preview sky and sun is not taken into account by `LightmapGI` when baking lightmaps.
+             *
+             * Generated from Godot docs: LightmapGI.ENVIRONMENT_MODE_SCENE
+             */
+            val SCENE: EnvironmentMode get() = EnvironmentMode(1L)
+            /**
+             * Use `environment_custom_sky` as a source of environment lighting when baking lightmaps.
+             *
+             * Generated from Godot docs: LightmapGI.ENVIRONMENT_MODE_CUSTOM_SKY
+             */
+            val CUSTOM_SKY: EnvironmentMode get() = EnvironmentMode(2L)
+            /**
+             * Use `environment_custom_color` multiplied by `environment_custom_energy` as a constant source of
+             * environment lighting when baking lightmaps.
+             *
+             * Generated from Godot docs: LightmapGI.ENVIRONMENT_MODE_CUSTOM_COLOR
+             */
+            val CUSTOM_COLOR: EnvironmentMode get() = EnvironmentMode(3L)
+        }
+    }
+    // ===== END GENERATED ENUMS: LightmapGI =====
+
+    var quality: LightmapGI.BakeQuality
         @JvmName("qualityProperty")
         get() = getBakeQuality()
         @JvmName("setQualityProperty")
@@ -47,7 +264,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setDirectionalProperty")
         set(value) = setDirectional(value)
 
-    var shadowmaskMode: Long
+    var shadowmaskMode: LightmapGIData.ShadowmaskMode
         @JvmName("shadowmaskModeProperty")
         get() = getShadowmaskMode()
         @JvmName("setShadowmaskModeProperty")
@@ -101,7 +318,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setMaxTextureSizeProperty")
         set(value) = setMaxTextureSize(value)
 
-    var environmentMode: Long
+    var environmentMode: LightmapGI.EnvironmentMode
         @JvmName("environmentModeProperty")
         get() = getEnvironmentMode()
         @JvmName("setEnvironmentModeProperty")
@@ -131,7 +348,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setCameraAttributesProperty")
         set(value) = setCameraAttributes(value)
 
-    var generateProbesSubdiv: Long
+    var generateProbesSubdiv: LightmapGI.GenerateProbes
         @JvmName("generateProbesSubdivProperty")
         get() = getGenerateProbes()
         @JvmName("setGenerateProbesSubdivProperty")
@@ -171,8 +388,8 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: LightmapGI.set_bake_quality
      */
-    fun setBakeQuality(bakeQuality: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, segment, bakeQuality)
+    fun setBakeQuality(bakeQuality: LightmapGI.BakeQuality) {
+        ObjectCalls.ptrcallWithLongArg(setBakeQualityBind, segment, bakeQuality.value)
     }
 
     /**
@@ -183,8 +400,8 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: LightmapGI.get_bake_quality
      */
-    fun getBakeQuality(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, segment)
+    fun getBakeQuality(): LightmapGI.BakeQuality {
+        return LightmapGI.BakeQuality(ObjectCalls.ptrcallNoArgsRetLong(getBakeQualityBind, segment))
     }
 
     /**
@@ -247,8 +464,8 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: LightmapGI.set_generate_probes
      */
-    fun setGenerateProbes(subdivision: Long) {
-        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, segment, subdivision)
+    fun setGenerateProbes(subdivision: LightmapGI.GenerateProbes) {
+        ObjectCalls.ptrcallWithLongArg(setGenerateProbesBind, segment, subdivision.value)
     }
 
     /**
@@ -261,8 +478,8 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: LightmapGI.get_generate_probes
      */
-    fun getGenerateProbes(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, segment)
+    fun getGenerateProbes(): LightmapGI.GenerateProbes {
+        return LightmapGI.GenerateProbes(ObjectCalls.ptrcallNoArgsRetLong(getGenerateProbesBind, segment))
     }
 
     /**
@@ -292,8 +509,8 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: LightmapGI.set_environment_mode
      */
-    fun setEnvironmentMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, segment, mode)
+    fun setEnvironmentMode(mode: LightmapGI.EnvironmentMode) {
+        ObjectCalls.ptrcallWithLongArg(setEnvironmentModeBind, segment, mode.value)
     }
 
     /**
@@ -301,13 +518,13 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: LightmapGI.get_environment_mode
      */
-    fun getEnvironmentMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, segment)
+    fun getEnvironmentMode(): LightmapGI.EnvironmentMode {
+        return LightmapGI.EnvironmentMode(ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentModeBind, segment))
     }
 
     /**
      * The sky to use as a source of environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_SKY`.
+     * `EnvironmentMode.CUSTOM_SKY`.
      *
      * Generated from Godot docs: LightmapGI.set_environment_custom_sky
      */
@@ -317,7 +534,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The sky to use as a source of environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_SKY`.
+     * `EnvironmentMode.CUSTOM_SKY`.
      *
      * Generated from Godot docs: LightmapGI.get_environment_custom_sky
      */
@@ -327,7 +544,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.set_environment_custom_color
      */
@@ -337,7 +554,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.get_environment_custom_color
      */
@@ -347,7 +564,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color multiplier to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.set_environment_custom_energy
      */
@@ -357,7 +574,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The color multiplier to use for environment lighting. Only effective if `environment_mode` is
-     * `ENVIRONMENT_MODE_CUSTOM_COLOR`.
+     * `EnvironmentMode.CUSTOM_COLOR`.
      *
      * Generated from Godot docs: LightmapGI.get_environment_custom_energy
      */
@@ -559,7 +776,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * If `true`, bakes lightmaps to contain directional information as spherical harmonics. This
      * results in more realistic lighting appearance, especially with normal mapped materials and for
      * lights that have their direct light baked (`Light3D.light_bake_mode` set to
-     * `Light3D.BAKE_STATIC` and with `Light3D.editor_only` set to `false`). The directional
+     * `Light3D.BakeMode.STATIC` and with `Light3D.editor_only` set to `false`). The directional
      * information is also used to provide rough reflections for static and dynamic objects. This has a
      * small run-time performance cost as the shader has to perform more work to interpret the
      * direction information from the lightmap. Directional lightmaps also take longer to bake and
@@ -576,7 +793,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * If `true`, bakes lightmaps to contain directional information as spherical harmonics. This
      * results in more realistic lighting appearance, especially with normal mapped materials and for
      * lights that have their direct light baked (`Light3D.light_bake_mode` set to
-     * `Light3D.BAKE_STATIC` and with `Light3D.editor_only` set to `false`). The directional
+     * `Light3D.BakeMode.STATIC` and with `Light3D.editor_only` set to `false`). The directional
      * information is also used to provide rough reflections for static and dynamic objects. This has a
      * small run-time performance cost as the shader has to perform more work to interpret the
      * direction information from the lightmap. Directional lightmaps also take longer to bake and
@@ -595,14 +812,14 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * outside the range defined by their `DirectionalLight3D.directional_shadow_max_distance`
      * property. This is done by baking a texture that contains a shadowmap for the directional light,
      * then using this texture according to the current shadowmask mode. Note: The shadowmask texture
-     * is only created if `shadowmask_mode` is not `LightmapGIData.SHADOWMASK_MODE_NONE`. To see a
+     * is only created if `shadowmask_mode` is not `LightmapGIData.ShadowmaskMode.NONE`. To see a
      * difference, you need to bake lightmaps again after switching from
-     * `LightmapGIData.SHADOWMASK_MODE_NONE` to any other mode.
+     * `LightmapGIData.ShadowmaskMode.NONE` to any other mode.
      *
      * Generated from Godot docs: LightmapGI.set_shadowmask_mode
      */
-    fun setShadowmaskMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, segment, mode)
+    fun setShadowmaskMode(mode: LightmapGIData.ShadowmaskMode) {
+        ObjectCalls.ptrcallWithLongArg(setShadowmaskModeBind, segment, mode.value)
     }
 
     /**
@@ -611,14 +828,14 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * outside the range defined by their `DirectionalLight3D.directional_shadow_max_distance`
      * property. This is done by baking a texture that contains a shadowmap for the directional light,
      * then using this texture according to the current shadowmask mode. Note: The shadowmask texture
-     * is only created if `shadowmask_mode` is not `LightmapGIData.SHADOWMASK_MODE_NONE`. To see a
+     * is only created if `shadowmask_mode` is not `LightmapGIData.ShadowmaskMode.NONE`. To see a
      * difference, you need to bake lightmaps again after switching from
-     * `LightmapGIData.SHADOWMASK_MODE_NONE` to any other mode.
+     * `LightmapGIData.ShadowmaskMode.NONE` to any other mode.
      *
      * Generated from Godot docs: LightmapGI.get_shadowmask_mode
      */
-    fun getShadowmaskMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, segment)
+    fun getShadowmaskMode(): LightmapGIData.ShadowmaskMode {
+        return LightmapGIData.ShadowmaskMode(ObjectCalls.ptrcallNoArgsRetLong(getShadowmaskModeBind, segment))
     }
 
     /**

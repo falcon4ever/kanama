@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -54,13 +55,13 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         @JvmName("setScrollFollowingVisibleCharactersProperty")
         set(value) = setScrollFollowVisibleCharacters(value)
 
-    var autowrapMode: Long
+    var autowrapMode: TextServer.AutowrapMode
         @JvmName("autowrapModeProperty")
         get() = getAutowrapMode()
         @JvmName("setAutowrapModeProperty")
         set(value) = setAutowrapMode(value)
 
-    var autowrapTrimFlags: Long
+    var autowrapTrimFlags: TextServer.LineBreakFlag
         @JvmName("autowrapTrimFlagsProperty")
         get() = getAutowrapTrimFlags()
         @JvmName("setAutowrapTrimFlagsProperty")
@@ -84,19 +85,19 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         @JvmName("setShortcutKeysEnabledProperty")
         set(value) = setShortcutKeysEnabled(value)
 
-    var horizontalAlignment: Long
+    var horizontalAlignment: HorizontalAlignment
         @JvmName("horizontalAlignmentProperty")
         get() = getHorizontalAlignment()
         @JvmName("setHorizontalAlignmentProperty")
         set(value) = setHorizontalAlignment(value)
 
-    var verticalAlignment: Long
+    var verticalAlignment: VerticalAlignment
         @JvmName("verticalAlignmentProperty")
         get() = getVerticalAlignment()
         @JvmName("setVerticalAlignmentProperty")
         set(value) = setVerticalAlignment(value)
 
-    var justificationFlags: Long
+    var justificationFlags: TextServer.JustificationFlag
         @JvmName("justificationFlagsProperty")
         get() = getJustificationFlags()
         @JvmName("setJustificationFlagsProperty")
@@ -162,7 +163,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         @JvmName("setVisibleCharactersProperty")
         set(value) = setVisibleCharacters(value)
 
-    var visibleCharactersBehavior: Long
+    var visibleCharactersBehavior: TextServer.VisibleCharactersBehavior
         @JvmName("visibleCharactersBehaviorProperty")
         get() = getVisibleCharactersBehavior()
         @JvmName("setVisibleCharactersBehaviorProperty")
@@ -174,7 +175,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         @JvmName("setVisibleRatioProperty")
         set(value) = setVisibleRatio(value)
 
-    var textDirection: Long
+    var textDirection: Control.TextDirection
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -186,7 +187,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    var structuredTextBidiOverride: Long
+    var structuredTextBidiOverride: TextServer.StructuredTextParser
         @JvmName("structuredTextBidiOverrideProperty")
         get() = getStructuredTextBidiOverride()
         @JvmName("setStructuredTextBidiOverrideProperty")
@@ -237,8 +238,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.add_hr
      */
-    fun addHr(width: Int = 90, height: Int = 2, color: Color, alignment: Long = 1L, widthInPercent: Boolean = true, heightInPercent: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(addHrBind, segment, width, height, color, alignment, widthInPercent, heightInPercent)
+    fun addHr(width: Int = 90, height: Int = 2, color: Color, alignment: HorizontalAlignment = HorizontalAlignment.CENTER, widthInPercent: Boolean = true, heightInPercent: Boolean = false) {
+        ObjectCalls.ptrcallWithTwoIntColorLongTwoBoolArgs(addHrBind, segment, width, height, color, alignment.value, widthInPercent, heightInPercent)
     }
 
     /**
@@ -254,8 +255,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.add_image
      */
-    fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L, altText: String = "") {
-        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign, region, key, pad, tooltip, widthUnit, heightUnit, altText)
+    fun addImage(image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: InlineAlignment = InlineAlignment.CENTER, region: Rect2, key: Any? = null, pad: Boolean = false, tooltip: String = "", widthUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, heightUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, altText: String = "") {
+        ObjectCalls.ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs(addImageBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, key, pad, tooltip, widthUnit.value, heightUnit.value, altText)
     }
 
     /**
@@ -264,8 +265,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.update_image
      */
-    fun updateImage(key: Any?, mask: Long, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: Long = 5L, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: Long = 0L, heightUnit: Long = 0L) {
-        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, segment, key, mask, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign, region, pad, tooltip, widthUnit, heightUnit)
+    fun updateImage(key: Any?, mask: RichTextLabel.ImageUpdateMask, image: Texture2D?, width: Double = 0.0, height: Double = 0.0, color: Color, inlineAlign: InlineAlignment = InlineAlignment.CENTER, region: Rect2, pad: Boolean = false, tooltip: String = "", widthUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL, heightUnit: RichTextLabel.ImageUnit = RichTextLabel.ImageUnit.PIXEL) {
+        ObjectCalls.ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs(updateImageBind, segment, key, mask.value, image?.requireOpenHandle() ?: NULL_SEGMENT, width, height, color, inlineAlign.value, region, pad, tooltip, widthUnit.value, heightUnit.value)
     }
 
     /**
@@ -399,8 +400,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.push_paragraph
      */
-    fun pushParagraph(alignment: Long, baseDirection: Long = 0L, language: String = "", stParser: Long = 0L, justificationFlags: Long = 163L, tabStops: List<Float>) {
-        ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, segment, alignment, baseDirection, language, stParser, justificationFlags, tabStops)
+    fun pushParagraph(alignment: HorizontalAlignment, baseDirection: Control.TextDirection = Control.TextDirection.AUTO, language: String = "", stParser: TextServer.StructuredTextParser = TextServer.StructuredTextParser.DEFAULT, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(163L), tabStops: List<Float>) {
+        ObjectCalls.ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs(pushParagraphBind, segment, alignment.value, baseDirection.value, language, stParser.value, justificationFlags.value, tabStops)
     }
 
     /**
@@ -419,8 +420,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.push_list
      */
-    fun pushList(level: Int, type: Long, capitalize: Boolean, bullet: String = "•") {
-        ObjectCalls.ptrcallWithIntLongBoolStringArgs(pushListBind, segment, level, type, capitalize, bullet)
+    fun pushList(level: Int, type: RichTextLabel.ListType, capitalize: Boolean, bullet: String = "•") {
+        ObjectCalls.ptrcallWithIntLongBoolStringArgs(pushListBind, segment, level, type.value, capitalize, bullet)
     }
 
     /**
@@ -432,8 +433,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.push_meta
      */
-    fun pushMeta(data: Any?, underlineMode: Long = 1L, tooltip: String = "") {
-        ObjectCalls.ptrcallWithVariantLongStringArgs(pushMetaBind, segment, data, underlineMode, tooltip)
+    fun pushMeta(data: Any?, underlineMode: RichTextLabel.MetaUnderline = RichTextLabel.MetaUnderline.ALWAYS, tooltip: String = "") {
+        ObjectCalls.ptrcallWithVariantLongStringArgs(pushMetaBind, segment, data, underlineMode.value, tooltip)
     }
 
     /**
@@ -481,8 +482,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.push_table
      */
-    fun pushTable(columns: Int, inlineAlign: Long = 0L, alignToRow: Int = -1, name: String = "") {
-        ObjectCalls.ptrcallWithIntLongIntStringArgs(pushTableBind, segment, columns, inlineAlign, alignToRow, name)
+    fun pushTable(columns: Int, inlineAlign: InlineAlignment = InlineAlignment.TOP_TO, alignToRow: Int = -1, name: String = "") {
+        ObjectCalls.ptrcallWithIntLongIntStringArgs(pushTableBind, segment, columns, inlineAlign.value, alignToRow, name)
     }
 
     /**
@@ -652,8 +653,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.set_structured_text_bidi_override
      */
-    fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
+    fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -661,8 +662,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.get_structured_text_bidi_override
      */
-    fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
+    fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -688,8 +689,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -697,8 +698,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -727,8 +728,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.set_horizontal_alignment
      */
-    fun setHorizontalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment)
+    fun setHorizontalAlignment(alignment: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -737,8 +738,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.get_horizontal_alignment
      */
-    fun getHorizontalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment)
+    fun getHorizontalAlignment(): HorizontalAlignment {
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -746,8 +747,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.set_vertical_alignment
      */
-    fun setVerticalAlignment(alignment: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment)
+    fun setVerticalAlignment(alignment: VerticalAlignment) {
+        ObjectCalls.ptrcallWithLongArg(setVerticalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -755,8 +756,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.get_vertical_alignment
      */
-    fun getVerticalAlignment(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment)
+    fun getVerticalAlignment(): VerticalAlignment {
+        return VerticalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getVerticalAlignmentBind, segment))
     }
 
     /**
@@ -764,8 +765,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.set_justification_flags
      */
-    fun setJustificationFlags(justificationFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags)
+    fun setJustificationFlags(justificationFlags: TextServer.JustificationFlag) {
+        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, justificationFlags.value)
     }
 
     /**
@@ -773,8 +774,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.get_justification_flags
      */
-    fun getJustificationFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment)
+    fun getJustificationFlags(): TextServer.JustificationFlag {
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
     }
 
     /**
@@ -796,7 +797,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. Note: RichTextLabels with autowrapping and `fit_content` enabled must
      * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
      * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
@@ -804,12 +805,12 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.set_autowrap_mode
      */
-    fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
+    fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
-     * If set to something other than `TextServer.AUTOWRAP_OFF`, the text gets wrapped inside the
+     * If set to something other than `TextServer.AutowrapMode.OFF`, the text gets wrapped inside the
      * node's bounding rectangle. Note: RichTextLabels with autowrapping and `fit_content` enabled must
      * have a custom maximum width configured to work correctly, either through the RichTextLabel's own
      * `Control.custom_maximum_size` or as a result of a propagated maximum size from a parent Control
@@ -817,28 +818,28 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.get_autowrap_mode
      */
-    fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
+    fun getAutowrapMode(): TextServer.AutowrapMode {
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: RichTextLabel.set_autowrap_trim_flags
      */
-    fun setAutowrapTrimFlags(autowrapTrimFlags: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags)
+    fun setAutowrapTrimFlags(autowrapTrimFlags: TextServer.LineBreakFlag) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapTrimFlagsBind, segment, autowrapTrimFlags.value)
     }
 
     /**
-     * Autowrap space trimming flags. See `TextServer.BREAK_TRIM_START_EDGE_SPACES` and
-     * `TextServer.BREAK_TRIM_END_EDGE_SPACES` for more info.
+     * Autowrap space trimming flags. See `TextServer.LineBreakFlag.TRIM_START_EDGE_SPACES` and
+     * `TextServer.LineBreakFlag.TRIM_END_EDGE_SPACES` for more info.
      *
      * Generated from Godot docs: RichTextLabel.get_autowrap_trim_flags
      */
-    fun getAutowrapTrimFlags(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment)
+    fun getAutowrapTrimFlags(): TextServer.LineBreakFlag {
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapTrimFlagsBind, segment))
     }
 
     /**
@@ -1294,8 +1295,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.get_visible_characters_behavior
      */
-    fun getVisibleCharactersBehavior(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, segment)
+    fun getVisibleCharactersBehavior(): TextServer.VisibleCharactersBehavior {
+        return TextServer.VisibleCharactersBehavior(ObjectCalls.ptrcallNoArgsRetLong(getVisibleCharactersBehaviorBind, segment))
     }
 
     /**
@@ -1303,8 +1304,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: RichTextLabel.set_visible_characters_behavior
      */
-    fun setVisibleCharactersBehavior(behavior: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, segment, behavior)
+    fun setVisibleCharactersBehavior(behavior: TextServer.VisibleCharactersBehavior) {
+        ObjectCalls.ptrcallWithLongArg(setVisibleCharactersBehaviorBind, segment, behavior.value)
     }
 
     /**
@@ -1397,9 +1398,9 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the indexes of the first and last visible characters for the given `line`, as a
      * `Vector2i`. Note: If `visible_characters_behavior` is set to
-     * `TextServer.VC_CHARS_BEFORE_SHAPING` only visible wrapped lines are counted. Note: If `threaded`
-     * is enabled, this method returns a value for the loaded part of the document. Use `is_finished`
-     * or `finished` to determine whether document is fully loaded.
+     * `TextServer.VisibleCharactersBehavior.CHARS_BEFORE_SHAPING` only visible wrapped lines are
+     * counted. Note: If `threaded` is enabled, this method returns a value for the loaded part of the
+     * document. Use `is_finished` or `finished` to determine whether document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_line_range
      */
@@ -1606,29 +1607,203 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         const val finished: String = "finished"
     }
 
-    companion object {
-        const val LIST_NUMBERS: Long = 0L
-        const val LIST_LETTERS: Long = 1L
-        const val LIST_ROMAN: Long = 2L
-        const val LIST_DOTS: Long = 3L
-        const val MENU_COPY: Long = 0L
-        const val MENU_SELECT_ALL: Long = 1L
-        const val MENU_MAX: Long = 2L
-        const val META_UNDERLINE_NEVER: Long = 0L
-        const val META_UNDERLINE_ALWAYS: Long = 1L
-        const val META_UNDERLINE_ON_HOVER: Long = 2L
-        const val UPDATE_TEXTURE: Long = 1L
-        const val UPDATE_SIZE: Long = 2L
-        const val UPDATE_COLOR: Long = 4L
-        const val UPDATE_ALIGNMENT: Long = 8L
-        const val UPDATE_REGION: Long = 16L
-        const val UPDATE_PAD: Long = 32L
-        const val UPDATE_TOOLTIP: Long = 64L
-        const val UPDATE_WIDTH_UNIT: Long = 128L
-        const val IMAGE_UNIT_PIXEL: Long = 0L
-        const val IMAGE_UNIT_PERCENT: Long = 1L
-        const val IMAGE_UNIT_EM: Long = 2L
+    /**
+     * Godot's `RichTextLabel.ListType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RichTextLabel.ListType.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.ListType
+     */
+    @JvmInline
+    value class ListType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Each list item has a number marker.
+             *
+             * Generated from Godot docs: RichTextLabel.LIST_NUMBERS
+             */
+            val NUMBERS: ListType get() = ListType(0L)
+            /**
+             * Each list item has a letter marker.
+             *
+             * Generated from Godot docs: RichTextLabel.LIST_LETTERS
+             */
+            val LETTERS: ListType get() = ListType(1L)
+            /**
+             * Each list item has a roman number marker.
+             *
+             * Generated from Godot docs: RichTextLabel.LIST_ROMAN
+             */
+            val ROMAN: ListType get() = ListType(2L)
+            /**
+             * Each list item has a filled circle marker.
+             *
+             * Generated from Godot docs: RichTextLabel.LIST_DOTS
+             */
+            val DOTS: ListType get() = ListType(3L)
+        }
+    }
 
+    /**
+     * Godot's `RichTextLabel.MenuItems` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RichTextLabel.MenuItems.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.MenuItems
+     */
+    @JvmInline
+    value class MenuItems(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Copies the selected text.
+             *
+             * Generated from Godot docs: RichTextLabel.MENU_COPY
+             */
+            val COPY: MenuItems get() = MenuItems(0L)
+            /**
+             * Selects the whole `RichTextLabel` text.
+             *
+             * Generated from Godot docs: RichTextLabel.MENU_SELECT_ALL
+             */
+            val SELECT_ALL: MenuItems get() = MenuItems(1L)
+            /**
+             * Represents the size of the `MenuItems` enum.
+             *
+             * Generated from Godot docs: RichTextLabel.MENU_MAX
+             */
+            val MAX: MenuItems get() = MenuItems(2L)
+        }
+    }
+
+    /**
+     * Godot's `RichTextLabel.MetaUnderline` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RichTextLabel.MetaUnderline.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.MetaUnderline
+     */
+    @JvmInline
+    value class MetaUnderline(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Meta tag does not display an underline, even if `meta_underlined` is `true`.
+             *
+             * Generated from Godot docs: RichTextLabel.META_UNDERLINE_NEVER
+             */
+            val NEVER: MetaUnderline get() = MetaUnderline(0L)
+            /**
+             * If `meta_underlined` is `true`, meta tag always display an underline.
+             *
+             * Generated from Godot docs: RichTextLabel.META_UNDERLINE_ALWAYS
+             */
+            val ALWAYS: MetaUnderline get() = MetaUnderline(1L)
+            /**
+             * If `meta_underlined` is `true`, meta tag display an underline when the mouse cursor is over it.
+             *
+             * Generated from Godot docs: RichTextLabel.META_UNDERLINE_ON_HOVER
+             */
+            val ON_HOVER: MetaUnderline get() = MetaUnderline(2L)
+        }
+    }
+
+    /**
+     * Godot's `RichTextLabel.ImageUpdateMask` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`RichTextLabel.ImageUpdateMask.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.ImageUpdateMask
+     */
+    @JvmInline
+    value class ImageUpdateMask(override val value: Long) : GodotEnumValue {
+        infix fun or(other: ImageUpdateMask): ImageUpdateMask = ImageUpdateMask(value or other.value)
+
+        infix fun and(other: ImageUpdateMask): ImageUpdateMask = ImageUpdateMask(value and other.value)
+
+        infix fun xor(other: ImageUpdateMask): ImageUpdateMask = ImageUpdateMask(value xor other.value)
+
+        fun inv(): ImageUpdateMask = ImageUpdateMask(value.inv())
+
+        operator fun contains(other: ImageUpdateMask): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * If this bit is set, `update_image` changes image texture.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_TEXTURE
+             */
+            val TEXTURE: ImageUpdateMask get() = ImageUpdateMask(1L)
+            /**
+             * If this bit is set, `update_image` changes image size.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_SIZE
+             */
+            val SIZE: ImageUpdateMask get() = ImageUpdateMask(2L)
+            /**
+             * If this bit is set, `update_image` changes image color.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_COLOR
+             */
+            val COLOR: ImageUpdateMask get() = ImageUpdateMask(4L)
+            /**
+             * If this bit is set, `update_image` changes image inline alignment.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_ALIGNMENT
+             */
+            val ALIGNMENT: ImageUpdateMask get() = ImageUpdateMask(8L)
+            /**
+             * If this bit is set, `update_image` changes image texture region.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_REGION
+             */
+            val REGION: ImageUpdateMask get() = ImageUpdateMask(16L)
+            /**
+             * If this bit is set, `update_image` changes image padding.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_PAD
+             */
+            val PAD: ImageUpdateMask get() = ImageUpdateMask(32L)
+            /**
+             * If this bit is set, `update_image` changes image tooltip.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_TOOLTIP
+             */
+            val TOOLTIP: ImageUpdateMask get() = ImageUpdateMask(64L)
+            /**
+             * If this bit is set, `update_image` changes the units used to calculate image size.
+             *
+             * Generated from Godot docs: RichTextLabel.UPDATE_WIDTH_UNIT
+             */
+            val WIDTH_UNIT: ImageUpdateMask get() = ImageUpdateMask(128L)
+        }
+    }
+
+    /**
+     * Godot's `RichTextLabel.ImageUnit` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RichTextLabel.ImageUnit.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.ImageUnit
+     */
+    @JvmInline
+    value class ImageUnit(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Images drawn with this unit will be in pixels.
+             *
+             * Generated from Godot docs: RichTextLabel.IMAGE_UNIT_PIXEL
+             */
+            val PIXEL: ImageUnit get() = ImageUnit(0L)
+            /**
+             * Images drawn with this unit will be in percentages of the control width.
+             *
+             * Generated from Godot docs: RichTextLabel.IMAGE_UNIT_PERCENT
+             */
+            val PERCENT: ImageUnit get() = ImageUnit(1L)
+            /**
+             * Images drawn with this unit will be in percentages of the surrounding font size.
+             *
+             * Generated from Godot docs: RichTextLabel.IMAGE_UNIT_EM
+             */
+            val EM: ImageUnit get() = ImageUnit(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RichTextLabel? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -26,6 +27,29 @@ import net.multigesture.kanama.types.NodePath
  * own `GodotSignal`.
  */
 open class GodotObject(val handle: GodotHandle) {
+    // ===== BEGIN GENERATED ENUMS: GodotObject (scripts/generate_api_wrapper.py — do not edit) =====
+    @JvmInline
+    value class ConnectFlags(override val value: Long) : GodotEnumValue {
+        infix fun or(other: ConnectFlags): ConnectFlags = ConnectFlags(value or other.value)
+
+        infix fun and(other: ConnectFlags): ConnectFlags = ConnectFlags(value and other.value)
+
+        infix fun xor(other: ConnectFlags): ConnectFlags = ConnectFlags(value xor other.value)
+
+        fun inv(): ConnectFlags = ConnectFlags(value.inv())
+
+        operator fun contains(other: ConnectFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            val DEFERRED: ConnectFlags get() = ConnectFlags(1L)
+            val PERSIST: ConnectFlags get() = ConnectFlags(2L)
+            val ONE_SHOT: ConnectFlags get() = ConnectFlags(4L)
+            val REFERENCE_COUNTED: ConnectFlags get() = ConnectFlags(8L)
+            val APPEND_SOURCE_OBJECT: ConnectFlags get() = ConnectFlags(16L)
+        }
+    }
+    // ===== END GENERATED ENUMS: GodotObject =====
+
 
     /**
      * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam. Internal: game code
@@ -158,14 +182,26 @@ open class GodotObject(val handle: GodotHandle) {
     fun signal(name: String): GodotSignal =
         GodotSignal(this, name)
 
-    fun connect(signal: String, target: GodotObject, method: String, flags: Long = CONNECT_DEFAULT): Long =
-        ObjectCalls.ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
-            connectBind,
-            segment,
-            signal,
-            target.segment,
-            method,
-            flags,
+    /**
+     * Connects [signal] to [method] on [target]; returns Godot's `Error`. [flags] combine
+     * [GodotObject.ConnectFlags] values (`ConnectFlags.DEFERRED or ConnectFlags.ONE_SHOT`); Godot has
+     * no named zero, so the default is `ConnectFlags(0L)`.
+     */
+    fun connect(
+        signal: String,
+        target: GodotObject,
+        method: String,
+        flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    ): GodotError =
+        GodotError(
+            ObjectCalls.ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
+                connectBind,
+                segment,
+                signal,
+                target.segment,
+                method,
+                flags.value,
+            ),
         )
 
     internal fun connectBound(
@@ -173,16 +209,18 @@ open class GodotObject(val handle: GodotHandle) {
         target: GodotObject,
         method: String,
         boundArgs: List<Any?>,
-        flags: Long = CONNECT_DEFAULT,
-    ): Long =
-        ObjectCalls.ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
-            connectBind,
-            segment,
-            signal,
-            target.segment,
-            method,
-            boundArgs,
-            flags,
+        flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    ): GodotError =
+        GodotError(
+            ObjectCalls.ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
+                connectBind,
+                segment,
+                signal,
+                target.segment,
+                method,
+                boundArgs,
+                flags.value,
+            ),
         )
 
     fun disconnect(signal: String, target: GodotObject, method: String) {
@@ -314,12 +352,6 @@ open class GodotObject(val handle: GodotHandle) {
         const val NOTIFICATION_POSTINITIALIZE = 0L
         const val NOTIFICATION_PREDELETE = 1L
         const val NOTIFICATION_EXTENSION_RELOADED = 2L
-        const val CONNECT_DEFAULT = 0L
-        const val CONNECT_DEFERRED = 1L
-        const val CONNECT_PERSIST = 2L
-        const val CONNECT_ONE_SHOT = 4L
-        const val CONNECT_REFERENCE_COUNTED = 8L
-        const val CONNECT_APPEND_SOURCE_OBJECT = 16L
 
         /** A non-owning view of the object behind [handle], or null for a NULL handle. */
         fun fromHandle(handle: GodotHandle): GodotObject? = wrap(handle.segment)

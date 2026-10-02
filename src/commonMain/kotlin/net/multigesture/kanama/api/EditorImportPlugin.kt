@@ -23,9 +23,9 @@ class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
      *
      * Generated from Godot docs: EditorImportPlugin.append_import_external_resource
      */
-    fun appendImportExternalResource(path: String, customOptions: Map<String, Any?> = emptyMap(), customImporter: String = "", generatorParameters: Any? = null): Long {
+    fun appendImportExternalResource(path: String, customOptions: Map<String, Any?> = emptyMap(), customImporter: String = "", generatorParameters: Any? = null): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringDictionaryStringVariantArgsRetLong(appendImportExternalResourceBind, segment, path, customOptions, customImporter, generatorParameters)
+        return GodotError(ObjectCalls.ptrcallWithStringDictionaryStringVariantArgsRetLong(appendImportExternalResourceBind, segment, path, customOptions, customImporter, generatorParameters))
     }
 
     companion object {

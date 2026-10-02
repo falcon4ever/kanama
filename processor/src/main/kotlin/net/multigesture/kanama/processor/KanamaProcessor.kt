@@ -2014,12 +2014,16 @@ private fun StringBuilder.appendRpcHelpers(simpleName: String, methods: List<Met
     val rpcArgs = if (args.isNotEmpty()) ", $args" else ""
     val godotName = kotlinStringLiteral(method.godotName)
 
-    appendLine("    fun rpc$helperSuffix(instance: $simpleName$params): Long =")
+    appendLine(
+      "    fun rpc$helperSuffix(instance: $simpleName$params): net.multigesture.kanama.api.GodotError ="
+    )
     appendLine(
       "        net.multigesture.kanama.api.Node(instance.godotObject).rpc(\"$godotName\"$rpcArgs)"
     )
     appendLine()
-    appendLine("    fun rpcId$helperSuffix(instance: $simpleName, peerId: Long$params): Long =")
+    appendLine(
+      "    fun rpcId$helperSuffix(instance: $simpleName, peerId: Long$params): net.multigesture.kanama.api.GodotError ="
+    )
     appendLine(
       "        net.multigesture.kanama.api.Node(instance.godotObject).rpcId(peerId, \"$godotName\"$rpcArgs)"
     )
@@ -2679,7 +2683,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
       sb.appendLine("        instance: ${model.simpleName},")
       sb.appendLine("        target: net.multigesture.kanama.api.GodotObject,")
       sb.appendLine(
-        "        flags: Long = net.multigesture.kanama.api.GodotObject.CONNECT_DEFAULT,"
+        "        flags: net.multigesture.kanama.api.GodotObject.ConnectFlags = net.multigesture.kanama.api.GodotObject.ConnectFlags(0L),"
       )
       sb.appendLine("        callback: ${signalCallbackType(s.args)},")
       sb.appendLine("    ): net.multigesture.kanama.api.SignalConnection =")
@@ -3301,7 +3305,7 @@ internal class ScriptCodeEmitter(
       sb.appendLine("        instance: ${model.simpleName},")
       sb.appendLine("        target: net.multigesture.kanama.api.GodotObject,")
       sb.appendLine(
-        "        flags: Long = net.multigesture.kanama.api.GodotObject.CONNECT_DEFAULT,"
+        "        flags: net.multigesture.kanama.api.GodotObject.ConnectFlags = net.multigesture.kanama.api.GodotObject.ConnectFlags(0L),"
       )
       sb.appendLine("        callback: ${signalCallbackType(s.args)},")
       sb.appendLine("    ): net.multigesture.kanama.api.SignalConnection =")

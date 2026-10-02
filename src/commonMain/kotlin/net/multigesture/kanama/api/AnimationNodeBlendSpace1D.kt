@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
         @JvmName("setValueLabelProperty")
         set(value) = setValueLabel(value)
 
-    var blendMode: Long
+    var blendMode: AnimationNodeBlendSpace1D.BlendMode
         @JvmName("blendModeProperty")
         get() = getBlendMode()
         @JvmName("setBlendModeProperty")
@@ -49,7 +50,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
         @JvmName("setSyncProperty")
         set(value) = setUseSync(value)
 
-    var syncMode: Long
+    var syncMode: AnimationNodeBlendSpace1D.SyncMode
         @JvmName("syncModeProperty")
         get() = getSyncMode()
         @JvmName("setSyncModeProperty")
@@ -268,9 +269,9 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      *
      * Generated from Godot docs: AnimationNodeBlendSpace1D.set_blend_mode
      */
-    fun setBlendMode(mode: Long) {
+    fun setBlendMode(mode: AnimationNodeBlendSpace1D.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -278,13 +279,13 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      *
      * Generated from Godot docs: AnimationNodeBlendSpace1D.get_blend_mode
      */
-    fun getBlendMode(): Long {
+    fun getBlendMode(): AnimationNodeBlendSpace1D.BlendMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
+        return AnimationNodeBlendSpace1D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
     }
 
     /**
-     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
+     * If `true`, sync mode is enabled (equivalent to `SyncMode.INDEPENDENT`). This property is kept
      * for backward compatibility.
      *
      * Generated from Godot docs: AnimationNodeBlendSpace1D.set_use_sync
@@ -295,7 +296,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     /**
-     * If `true`, sync mode is enabled (equivalent to `SYNC_MODE_INDEPENDENT`). This property is kept
+     * If `true`, sync mode is enabled (equivalent to `SyncMode.INDEPENDENT`). This property is kept
      * for backward compatibility.
      *
      * Generated from Godot docs: AnimationNodeBlendSpace1D.is_using_sync
@@ -310,9 +311,9 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      *
      * Generated from Godot docs: AnimationNodeBlendSpace1D.set_sync_mode
      */
-    fun setSyncMode(syncMode: Long) {
+    fun setSyncMode(syncMode: AnimationNodeBlendSpace1D.SyncMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSyncModeBind, segment, syncMode)
+        ObjectCalls.ptrcallWithLongArg(setSyncModeBind, segment, syncMode.value)
     }
 
     /**
@@ -320,13 +321,13 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
      *
      * Generated from Godot docs: AnimationNodeBlendSpace1D.get_sync_mode
      */
-    fun getSyncMode(): Long {
+    fun getSyncMode(): AnimationNodeBlendSpace1D.SyncMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, segment)
+        return AnimationNodeBlendSpace1D.SyncMode(ObjectCalls.ptrcallNoArgsRetLong(getSyncModeBind, segment))
     }
 
     /**
-     * The cycle length in seconds used by `SYNC_MODE_CYCLIC_CONSTANT`. All animations are time-scaled
+     * The cycle length in seconds used by `SyncMode.CYCLIC_CONSTANT`. All animations are time-scaled
      * so they complete one full cycle in this duration. Must be greater than `0` for cyclic sync to
      * take effect.
      *
@@ -338,7 +339,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     /**
-     * The cycle length in seconds used by `SYNC_MODE_CYCLIC_CONSTANT`. All animations are time-scaled
+     * The cycle length in seconds used by `SyncMode.CYCLIC_CONSTANT`. All animations are time-scaled
      * so they complete one full cycle in this duration. Must be greater than `0` for cyclic sync to
      * take effect.
      *
@@ -349,15 +350,86 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
         return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, segment)
     }
 
-    companion object {
-        const val BLEND_MODE_INTERPOLATED: Long = 0L
-        const val BLEND_MODE_DISCRETE: Long = 1L
-        const val BLEND_MODE_DISCRETE_CARRY: Long = 2L
-        const val SYNC_MODE_NONE: Long = 0L
-        const val SYNC_MODE_INDEPENDENT: Long = 1L
-        const val SYNC_MODE_CYCLIC_MUTABLE: Long = 2L
-        const val SYNC_MODE_CYCLIC_CONSTANT: Long = 3L
+    /**
+     * Godot's `AnimationNodeBlendSpace1D.BlendMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AnimationNodeBlendSpace1D.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace1D.BlendMode
+     */
+    @JvmInline
+    value class BlendMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The interpolation between animations is linear.
+             *
+             * Generated from Godot docs: AnimationNodeBlendSpace1D.BLEND_MODE_INTERPOLATED
+             */
+            val INTERPOLATED: BlendMode get() = BlendMode(0L)
+            /**
+             * The blend space plays the animation of the animation node which blending position is closest to.
+             * Useful for frame-by-frame 2D animations.
+             *
+             * Generated from Godot docs: AnimationNodeBlendSpace1D.BLEND_MODE_DISCRETE
+             */
+            val DISCRETE: BlendMode get() = BlendMode(1L)
+            /**
+             * Similar to `BlendMode.DISCRETE`, but starts the new animation at the last animation's playback
+             * position.
+             *
+             * Generated from Godot docs: AnimationNodeBlendSpace1D.BLEND_MODE_DISCRETE_CARRY
+             */
+            val DISCRETE_CARRY: BlendMode get() = BlendMode(2L)
+        }
+    }
 
+    /**
+     * Godot's `AnimationNodeBlendSpace1D.SyncMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`AnimationNodeBlendSpace1D.SyncMode.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNodeBlendSpace1D.SyncMode
+     */
+    @JvmInline
+    value class SyncMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Inactive animations are frozen and do not advance.
+             *
+             * Generated from Godot docs: AnimationNodeBlendSpace1D.SYNC_MODE_NONE
+             */
+            val NONE: SyncMode get() = SyncMode(0L)
+            /**
+             * Inactive animations advance with a weight of `0`. This is equivalent to the previous `sync =
+             * true` behavior.
+             *
+             * Generated from Godot docs: AnimationNodeBlendSpace1D.SYNC_MODE_INDEPENDENT
+             */
+            val INDEPENDENT: SyncMode get() = SyncMode(1L)
+            /**
+             * All animations are time-scaled so they stay in sync, with the cycle length dynamically computed
+             * from active blend weights. This is self-normalizing: a solo animation plays at normal speed.
+             * Note: If you apply `AnimationNodeTimeSeek` to the result when handling animations of different
+             * lengths, synchronization will be broken. In such cases, it is recommended to use
+             * `AnimationNodeAnimation.use_custom_timeline` to align the animation lengths.
+             *
+             * Generated from Godot docs: AnimationNodeBlendSpace1D.SYNC_MODE_CYCLIC_MUTABLE
+             */
+            val CYCLIC_MUTABLE: SyncMode get() = SyncMode(2L)
+            /**
+             * All animations are time-scaled so they complete one cycle in `cyclic_length` seconds, keeping
+             * them in sync regardless of their individual lengths. Note: If you apply `AnimationNodeTimeSeek`
+             * to the result when handling animations of different lengths, synchronization will be broken. In
+             * such cases, it is recommended to use `AnimationNodeAnimation.use_custom_timeline` to align the
+             * animation lengths.
+             *
+             * Generated from Godot docs: AnimationNodeBlendSpace1D.SYNC_MODE_CYCLIC_CONSTANT
+             */
+            val CYCLIC_CONSTANT: SyncMode get() = SyncMode(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeBlendSpace1D? =
             wrap(handle.segment)

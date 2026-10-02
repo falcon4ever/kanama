@@ -42,19 +42,19 @@ object WorkerThreadPool {
 
     /**
      * Pauses the thread that calls this method until the task with the given ID is completed. Returns
-     * `@GlobalScope.OK` if the task could be successfully awaited. Returns
-     * `@GlobalScope.ERR_INVALID_PARAMETER` if a task with the passed ID does not exist (maybe because
-     * it was already awaited and disposed of). Returns `@GlobalScope.ERR_BUSY` if the call is made
-     * from another running task and, due to task scheduling, there's potential for deadlocking (e.g.,
-     * the task to await may be at a lower level in the call stack and therefore can't progress). This
-     * is an advanced situation that should only matter when some tasks depend on others (in the
-     * current implementation, the tricky case is a task trying to wait on an older one).
+     * `GodotError.OK` if the task could be successfully awaited. Returns
+     * `GodotError.ERR_INVALID_PARAMETER` if a task with the passed ID does not exist (maybe because it
+     * was already awaited and disposed of). Returns `GodotError.ERR_BUSY` if the call is made from
+     * another running task and, due to task scheduling, there's potential for deadlocking (e.g., the
+     * task to await may be at a lower level in the call stack and therefore can't progress). This is
+     * an advanced situation that should only matter when some tasks depend on others (in the current
+     * implementation, the tricky case is a task trying to wait on an older one).
      *
      * Generated from Godot docs: WorkerThreadPool.wait_for_task_completion
      */
     @JvmStatic
-    fun waitForTaskCompletion(taskId: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(waitForTaskCompletionBind, singleton, taskId)
+    fun waitForTaskCompletion(taskId: Long): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(waitForTaskCompletionBind, singleton, taskId))
     }
 
     /**

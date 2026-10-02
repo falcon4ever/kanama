@@ -35,7 +35,7 @@ class MenuBar(handle: GodotHandle) : Control(handle) {
         @JvmName("setPreferGlobalMenuProperty")
         set(value) = setPreferGlobalMenu(value)
 
-    var textDirection: Long
+    var textDirection: Control.TextDirection
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -123,8 +123,8 @@ class MenuBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: MenuBar.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -132,8 +132,8 @@ class MenuBar(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: MenuBar.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**

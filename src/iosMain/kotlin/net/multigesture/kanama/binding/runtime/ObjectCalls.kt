@@ -31,12 +31,14 @@ import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
+import net.multigesture.kanama.api.createTween
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
 import net.multigesture.kanama.ios.KanamaIosRpcConfig
@@ -1998,6 +2000,13 @@ actual object ObjectCalls {
         desc.tag = PT_INT64
         desc.ptr = c.ptr
       }
+      // A typed Godot enum / bitfield boxed through an `Any?` argument is its INT (task 128 A).
+      is GodotEnumValue -> {
+        val c = alloc<LongVar>()
+        c.value = value.value
+        desc.tag = PT_INT64
+        desc.ptr = c.ptr
+      }
       is Float -> {
         val c = alloc<DoubleVar>()
         c.value = value.toDouble()
@@ -3585,6 +3594,13 @@ actual object ObjectCalls {
           tags[i] = PT_INT64
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
+        // A typed Godot enum / bitfield boxed through `vararg Any?` is its INT (task 128 A).
+        is GodotEnumValue -> {
+          val c = alloc<LongVar>()
+          c.value = a.value
+          tags[i] = PT_INT64
+          ptrs[i] = c.ptr.reinterpret<CPointed>()
+        }
         is Float -> {
           val c = alloc<DoubleVar>()
           c.value = a.toDouble()
@@ -3999,6 +4015,40 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): NodePath =
     NodePath(callWithVariantArgs(methodBind, instance, listOf(objectArg, boolArg)) as? String ?: "")
+
+  // Tween.tween_property(object, property: NodePath, final_val: Variant, duration) for the
+  // hand-written iOS Tween (task 128 A review): the Variant final value goes through the general
+  // Variant encoder (packVariantDesc), so every Variant-expressible value -- Double, Long, Vector3,
+  // a typed GodotEnumValue -- reaches Godot as itself. The previous Vector2 / Color C-shim pair
+  // tweened every other value to Vector2(0, 0). Same name and parameters as the desktop helper.
+  fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    objectArg: MemorySegment,
+    path: String,
+    variantArg: Any?,
+    doubleArg: Double,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<LongVar>()
+    c0.value = objectArg.address()
+    val c2 = packVariantDesc(variantArg)
+    val c3 = alloc<DoubleVar>()
+    c3.value = doubleArg
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_OBJECT
+    types[1] = PT_NODE_PATH
+    types[2] = PT_VARIANT
+    types[3] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = path.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
 
   // ===== BEGIN GENERATED MEMBERS (scripts/generate_api_wrapper.py — do not edit) =====
   /*
@@ -41926,6 +41976,49 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     check("callable-args-x3 (ptrcallWithThreeCallableArgs)", ctrl.address() != 0L)
   }
 
+  // Typed Godot enums (task 128 A): one enum setter/getter pair and one bitfield round trip through
+  // the generated wrappers' real ptrcall path (`.value` at the argument boundary, `X(raw)` at the
+  // return). A detached Node starts at ProcessMode.INHERIT (0) and no thread-message flags (0), so
+  // a
+  // no-op setter or a getter that returns 0 fails both rows.
+  run {
+    val node = net.multigesture.kanama.api.Node(GodotHandle(ObjectCalls.constructObject("Node")))
+    node.setProcessMode(net.multigesture.kanama.api.Node.ProcessMode.ALWAYS)
+    val mode = node.getProcessMode()
+    check(
+      "typed-enum(Node.setProcessMode/getProcessMode ALWAYS round-trip)",
+      mode == net.multigesture.kanama.api.Node.ProcessMode.ALWAYS && mode.value == 3L,
+    )
+    val flags =
+      net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES or
+        net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_PHYSICS
+    node.setProcessThreadMessages(flags)
+    val back = node.getProcessThreadMessages()
+    check(
+      "typed-bitfield(Node.setProcessThreadMessages/get MESSAGES|MESSAGES_PHYSICS round-trip)",
+      back.value == 3L &&
+        net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_PHYSICS in back &&
+        back == net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_ALL,
+    )
+    // The dynamic Variant path (task 128 A follow-up): a typed enum handed to an `Any?` argument is
+    // encoded as INT with its value. PAUSABLE (1) differs from the ALWAYS (3) set above and from a
+    // nil/no-op 0; before the encoder knew GodotEnumValue this threw "unsupported Variant
+    // argument".
+    node.set("process_mode", net.multigesture.kanama.api.Node.ProcessMode.PAUSABLE)
+    check(
+      "typed-enum-dynamic(Object.set process_mode PAUSABLE -> INT 1)",
+      node.getProcessMode() == net.multigesture.kanama.api.Node.ProcessMode.PAUSABLE,
+    )
+    ObjectCalls.destroyObject(node.segment)
+    net.multigesture.kanama.api.ConfigFile.create().use { config ->
+      config.setValue("video", "display_mode", net.multigesture.kanama.api.Window.Mode.FULLSCREEN)
+      check(
+        "typed-enum-dynamic(ConfigFile.setValue Window.Mode.FULLSCREEN -> Long 3)",
+        (config.getValue("video", "display_mode") as? Number)?.toLong() == 3L,
+      )
+    }
+  }
+
   // RefCounted return-slot ownership (task 31 iOS mirror): every RefCounted-typed ptrcall
   // return transfers a +1 reference the wrapper owns (meta:"required" included — measured on
   // 4.7-stable, task 31). duplicate() hands back a fresh Resource whose only reference is the
@@ -41956,14 +42049,14 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     }
     net.multigesture.kanama.api.InputMap.actionEraseEvents(action)
     val key = net.multigesture.kanama.api.InputEventKey.create()
-    key.setKeycode(65L) // KEY_A
+    key.setKeycode(net.multigesture.kanama.api.Key.A)
     // construct_object3 already claimed the reference: the fresh event's refcount reads exactly 1
     // (a re-added init_ref claim would over-reference to 2 and leak).
     check("t61-create-owns-plus1", key.getReferenceCount() == 1)
     net.multigesture.kanama.api.InputMap.actionAddEvent(action, key) // engine takes its own +1
     key.close() // releases the wrapper's +1; pre-fix this freed the engine's event (rc 1 -> 0)
     val probe = net.multigesture.kanama.api.InputEventKey.create()
-    probe.setKeycode(65L)
+    probe.setKeycode(net.multigesture.kanama.api.Key.A)
     // The event survived the close and is still held by InputMap (an equal event is found).
     check(
       "t61-create-close-survives-handoff",
@@ -42029,7 +42122,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         2,
         2,
         false,
-        net.multigesture.kanama.api.Image.FORMAT_RGBA8,
+        net.multigesture.kanama.api.Image.Format.RGBA8,
         ByteArray(16),
       )
     check("shared-static(Image.createFromData -> non-null)", fromData != null)
@@ -42042,7 +42135,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         4,
         3,
         false,
-        net.multigesture.kanama.api.Image.FORMAT_RGBA8,
+        net.multigesture.kanama.api.Image.Format.RGBA8,
       )
     check("shared-static(Image.create -> non-null)", created != null)
     check("shared-static(Image.create width == 4)", created?.getWidth() == 4)
@@ -42192,7 +42285,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       val connectError = root.connect("kanama_p3_user", target, method)
       check(
         "root(connect user signal -> OK and isConnected)",
-        connectError == 0L && root.isConnected("kanama_p3_user", target, method),
+        connectError == net.multigesture.kanama.api.GodotError.OK &&
+          root.isConnected("kanama_p3_user", target, method),
       )
       root.disconnect("kanama_p3_user", target, method)
       check(
@@ -42256,7 +42350,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       val receivedLong = longArgs
       check(
         "root(emitSignal Long fast path -> lambda received 5)",
-        longConnection.error == 0L &&
+        longConnection.error == net.multigesture.kanama.api.GodotError.OK &&
           receivedLong != null &&
           receivedLong.size == 1 &&
           (receivedLong[0] as? Number)?.toLong() == 5L,
@@ -42297,7 +42391,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       val receivedPair = pairArgs
       check(
         "root(emitSignal two args, Variant path -> lambda received (_, 2))",
-        pairConnection.error == 0L &&
+        pairConnection.error == net.multigesture.kanama.api.GodotError.OK &&
           receivedPair != null &&
           receivedPair.size == 2 &&
           (receivedPair[1] as? Number)?.toLong() == 2L,
@@ -42366,6 +42460,28 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     val segment = ObjectCalls.getSingleton(name)
     check("singleton-present($name)", segment.address() != 0L)
     return segment
+  }
+
+  // Task 128 A review — iOS Tween.tweenProperty with a Variant final value the old Vector2/Color
+  // C-shim pair could not carry: a Double rotation. A valid Tween needs the running SceneTree, so
+  // the
+  // row lives in this frame-1 phase. The tween is stepped past its duration with custom_step, so
+  // the
+  // property must read the target 1.25; the old path tweened a float property to Vector2(0, 0),
+  // which Godot refuses, leaving rotation at 0.
+  run {
+    val node =
+      net.multigesture.kanama.api.Node2D(GodotHandle(ObjectCalls.constructObject("Node2D")))
+    val tween = net.multigesture.kanama.api.SceneTree.active().createTween()
+    tween.tweenProperty(node, "rotation", 1.25, 0.5)
+    tween.call("custom_step", 1.0)
+    check(
+      "tween-property(Double rotation -> 1.25 after custom_step)",
+      kotlin.math.abs(node.getRotation() - 1.25) < 1e-4,
+    )
+    tween.kill()
+    tween.close()
+    ObjectCalls.destroyObject(node.segment)
   }
 
   // task 100 (parcel 10), moved here by task 117 P2' follow-up 4 — Array[Dictionary] ARGUMENT

@@ -482,8 +482,8 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: TileData.set_terrain_peering_bit
      */
-    fun setTerrainPeeringBit(peeringBit: Long, terrain: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setTerrainPeeringBitBind, segment, peeringBit, terrain)
+    fun setTerrainPeeringBit(peeringBit: TileSet.CellNeighbor, terrain: Int) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(setTerrainPeeringBitBind, segment, peeringBit.value, terrain)
     }
 
     /**
@@ -492,8 +492,8 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: TileData.get_terrain_peering_bit
      */
-    fun getTerrainPeeringBit(peeringBit: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getTerrainPeeringBitBind, segment, peeringBit)
+    fun getTerrainPeeringBit(peeringBit: TileSet.CellNeighbor): Int {
+        return ObjectCalls.ptrcallWithLongArgRetInt(getTerrainPeeringBitBind, segment, peeringBit.value)
     }
 
     /**
@@ -501,8 +501,8 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: TileData.is_valid_terrain_peering_bit
      */
-    fun isValidTerrainPeeringBit(peeringBit: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isValidTerrainPeeringBitBind, segment, peeringBit)
+    fun isValidTerrainPeeringBit(peeringBit: TileSet.CellNeighbor): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(isValidTerrainPeeringBitBind, segment, peeringBit.value)
     }
 
     /**

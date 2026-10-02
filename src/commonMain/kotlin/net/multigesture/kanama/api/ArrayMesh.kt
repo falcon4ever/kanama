@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Transform3D
  * Generated from Godot docs: ArrayMesh
  */
 class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
-    var blendShapeMode: Long
+    var blendShapeMode: Mesh.BlendShapeMode
         @JvmName("blendShapeModeProperty")
         get() = getBlendShapeMode()
         @JvmName("setBlendShapeModeProperty")
@@ -88,9 +88,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.set_blend_shape_mode
      */
-    fun setBlendShapeMode(mode: Long) {
+    fun setBlendShapeMode(mode: Mesh.BlendShapeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode.value)
     }
 
     /**
@@ -98,42 +98,42 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.get_blend_shape_mode
      */
-    fun getBlendShapeMode(): Long {
+    fun getBlendShapeMode(): Mesh.BlendShapeMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment)
+        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment))
     }
 
     /**
      * Creates a new surface. `Mesh.get_surface_count` will become the `surf_idx` for this new surface.
      * Surfaces are created to be rendered using a `primitive`, which may be any of the values defined
      * in `Mesh.PrimitiveType`. The `arrays` argument is an array of arrays. Each of the
-     * `Mesh.ARRAY_MAX` elements contains an array with some of the mesh data for this surface as
+     * `Mesh.ArrayType.MAX` elements contains an array with some of the mesh data for this surface as
      * described by the corresponding member of `Mesh.ArrayType` or `null` if it is not used by the
      * surface. For example, `arrays[0]` is the array of vertices. That first vertex sub-array is
      * always required; the others are optional. Adding an index array puts this surface into "index
      * mode" where the vertex and other arrays become the sources of data and the index array defines
      * the vertex order. All sub-arrays must have the same length as the vertex array (or be an exact
      * multiple of the vertex array's length, when multiple elements of a sub-array correspond to a
-     * single vertex) or be empty, except for `Mesh.ARRAY_INDEX` if it is used. The `blend_shapes`
+     * single vertex) or be empty, except for `Mesh.ArrayType.INDEX` if it is used. The `blend_shapes`
      * argument is an array of vertex data for each blend shape. Each element is an array of the same
-     * structure as `arrays`, but `Mesh.ARRAY_VERTEX`, `Mesh.ARRAY_NORMAL`, and `Mesh.ARRAY_TANGENT`
-     * are set if and only if they are set in `arrays` and all other entries are `null`. The `lods`
-     * argument is a dictionary with `float` keys and `PackedInt32Array` values. Each entry in the
-     * dictionary represents an LOD level of the surface, where the value is the `Mesh.ARRAY_INDEX`
-     * array to use for the LOD level and the key is roughly proportional to the distance at which the
-     * LOD stats being used. I.e., increasing the key of an LOD also increases the distance that the
-     * objects has to be from the camera before the LOD is used. The `flags` argument is the bitwise OR
-     * of, as required: One value of `Mesh.ArrayCustomFormat` left shifted by
-     * `ARRAY_FORMAT_CUSTOMn_SHIFT` for each custom channel in use,
-     * `Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE`, `Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS`, or
-     * `Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY`. Note: When using indices, it is recommended to only
-     * use points, lines, or triangles.
+     * structure as `arrays`, but `Mesh.ArrayType.VERTEX`, `Mesh.ArrayType.NORMAL`, and
+     * `Mesh.ArrayType.TANGENT` are set if and only if they are set in `arrays` and all other entries
+     * are `null`. The `lods` argument is a dictionary with `float` keys and `PackedInt32Array` values.
+     * Each entry in the dictionary represents an LOD level of the surface, where the value is the
+     * `Mesh.ArrayType.INDEX` array to use for the LOD level and the key is roughly proportional to the
+     * distance at which the LOD stats being used. I.e., increasing the key of an LOD also increases
+     * the distance that the objects has to be from the camera before the LOD is used. The `flags`
+     * argument is the bitwise OR of, as required: One value of `Mesh.ArrayCustomFormat` left shifted
+     * by `ARRAY_FORMAT_CUSTOMn_SHIFT` for each custom channel in use,
+     * `Mesh.ArrayFormat.FLAG_USE_DYNAMIC_UPDATE`, `Mesh.ArrayFormat.FLAG_USE_8_BONE_WEIGHTS`, or
+     * `Mesh.ArrayFormat.FLAG_USES_EMPTY_VERTEX_ARRAY`. Note: When using indices, it is recommended to
+     * only use points, lines, or triangles.
      *
      * Generated from Godot docs: ArrayMesh.add_surface_from_arrays
      */
-    fun addSurfaceFromArrays(primitive: Long, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Long = 0L) {
+    fun addSurfaceFromArrays(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), flags: Mesh.ArrayFormat = Mesh.ArrayFormat(0L)) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, segment, primitive, arrays, blendShapes, lods, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryLongArgs(addSurfaceFromArraysBind, segment, primitive.value, arrays, blendShapes, lods, flags.value)
     }
 
     /**
@@ -233,9 +233,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.surface_get_format
      */
-    fun surfaceGetFormat(surfIdx: Int): Long {
+    fun surfaceGetFormat(surfIdx: Int): Mesh.ArrayFormat {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, segment, surfIdx)
+        return Mesh.ArrayFormat(ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetFormatBind, segment, surfIdx))
     }
 
     /**
@@ -243,9 +243,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.surface_get_primitive_type
      */
-    fun surfaceGetPrimitiveType(surfIdx: Int): Long {
+    fun surfaceGetPrimitiveType(surfIdx: Int): Mesh.PrimitiveType {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, segment, surfIdx)
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(surfaceGetPrimitiveTypeBind, segment, surfIdx))
     }
 
     /**
@@ -294,9 +294,9 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
      *
      * Generated from Godot docs: ArrayMesh.lightmap_unwrap
      */
-    fun lightmapUnwrap(transform: Transform3D, texelSize: Double): Long {
+    fun lightmapUnwrap(transform: Transform3D, texelSize: Double): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, segment, transform, texelSize)
+        return GodotError(ObjectCalls.ptrcallWithTransform3DAndDoubleArgRetLong(lightmapUnwrapBind, segment, transform, texelSize))
     }
 
     /**

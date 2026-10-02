@@ -12,17 +12,17 @@ package net.multigesture.kanama.api
  * No default arguments (D24): the Android lane skips `*.expect.kt` and strips `actual`, so a default
  * declared only here would not exist there. Every omitted-argument form is its own overload, which
  * keeps positional, named and trailing-lambda call sites compiling: `flags` defaults to
- * [GodotObject.CONNECT_DEFAULT] and `argumentCount` (of [await]) to 0.
+ * `GodotObject.ConnectFlags(0L)` (Godot names no zero flag) and `argumentCount` (of [await]) to 0.
  */
 expect class GodotSignal internal constructor(owner: GodotObject, name: String) {
     /** The signal name. */
     val name: String
 
-    /** `connect(target, method, GodotObject.CONNECT_DEFAULT)`. */
-    fun connect(target: GodotObject, method: String): Long
+    /** `connect(target, method, GodotObject.ConnectFlags(0L))`. */
+    fun connect(target: GodotObject, method: String): GodotError
 
-    /** Connects this signal to [method] on [target]; returns Godot's `Error` (0 == OK). */
-    fun connect(target: GodotObject, method: String, flags: Long): Long
+    /** Connects this signal to [method] on [target]; returns Godot's `Error` ([GodotError.OK] on success). */
+    fun connect(target: GodotObject, method: String, flags: GodotObject.ConnectFlags): GodotError
 
     /** Disconnects the [target]/[method] connection made by [connect]. */
     fun disconnect(target: GodotObject, method: String)
@@ -30,7 +30,7 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
     /** Emits this signal with [args]. */
     fun emit(vararg args: Any?)
 
-    /** `connect(target, argumentCount, GodotObject.CONNECT_DEFAULT, callback)`. */
+    /** `connect(target, argumentCount, GodotObject.ConnectFlags(0L), callback)`. */
     fun connect(
         target: GodotObject,
         argumentCount: Int,
@@ -45,17 +45,17 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
     fun connect(
         target: GodotObject,
         argumentCount: Int,
-        flags: Long,
+        flags: GodotObject.ConnectFlags,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection
 
-    /** `connectObject(target, GodotObject.CONNECT_DEFAULT, callback)`. */
+    /** `connectObject(target, GodotObject.ConnectFlags(0L), callback)`. */
     fun connectObject(target: GodotObject, callback: (GodotObject) -> Unit): SignalConnection
 
     /** Connects a lambda receiving the signal's first argument as a [GodotObject]. */
     fun connectObject(
         target: GodotObject,
-        flags: Long,
+        flags: GodotObject.ConnectFlags,
         callback: (GodotObject) -> Unit,
     ): SignalConnection
 
@@ -75,8 +75,8 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
  * and the receiver it must present again to disconnect), so the `expect` declares none (D25).
  */
 expect class SignalConnection : AutoCloseable {
-    /** Godot's `Error` from the connect call (0 == OK). */
-    val error: Long
+    /** Godot's `Error` from the connect call ([GodotError.OK] on success). */
+    val error: GodotError
 
     override fun close()
 }

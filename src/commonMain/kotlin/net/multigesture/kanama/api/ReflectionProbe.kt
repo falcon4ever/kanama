@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -13,7 +14,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: ReflectionProbe
  */
 class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
-    var updateMode: Long
+    var updateMode: ReflectionProbe.UpdateMode
         @JvmName("updateModeProperty")
         get() = getUpdateMode()
         @JvmName("setUpdateModeProperty")
@@ -85,7 +86,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setMeshLodThresholdProperty")
         set(value) = setMeshLodThreshold(value)
 
-    var ambientMode: Long
+    var ambientMode: ReflectionProbe.AmbientMode
         @JvmName("ambientModeProperty")
         get() = getAmbientMode()
         @JvmName("setAmbientModeProperty")
@@ -146,8 +147,8 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: ReflectionProbe.set_ambient_mode
      */
-    fun setAmbientMode(ambient: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAmbientModeBind, segment, ambient)
+    fun setAmbientMode(ambient: ReflectionProbe.AmbientMode) {
+        ObjectCalls.ptrcallWithLongArg(setAmbientModeBind, segment, ambient.value)
     }
 
     /**
@@ -157,13 +158,13 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      *
      * Generated from Godot docs: ReflectionProbe.get_ambient_mode
      */
-    fun getAmbientMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAmbientModeBind, segment)
+    fun getAmbientMode(): ReflectionProbe.AmbientMode {
+        return ReflectionProbe.AmbientMode(ObjectCalls.ptrcallNoArgsRetLong(getAmbientModeBind, segment))
     }
 
     /**
      * The custom ambient color to use within the `ReflectionProbe`'s box defined by its `size`. Only
-     * effective if `ambient_mode` is `AMBIENT_COLOR`.
+     * effective if `ambient_mode` is `AmbientMode.COLOR`.
      *
      * Generated from Godot docs: ReflectionProbe.set_ambient_color
      */
@@ -173,7 +174,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The custom ambient color to use within the `ReflectionProbe`'s box defined by its `size`. Only
-     * effective if `ambient_mode` is `AMBIENT_COLOR`.
+     * effective if `ambient_mode` is `AmbientMode.COLOR`.
      *
      * Generated from Godot docs: ReflectionProbe.get_ambient_color
      */
@@ -183,7 +184,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The custom ambient color energy to use within the `ReflectionProbe`'s box defined by its `size`.
-     * Only effective if `ambient_mode` is `AMBIENT_COLOR`.
+     * Only effective if `ambient_mode` is `AmbientMode.COLOR`.
      *
      * Generated from Godot docs: ReflectionProbe.set_ambient_color_energy
      */
@@ -193,7 +194,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The custom ambient color energy to use within the `ReflectionProbe`'s box defined by its `size`.
-     * Only effective if `ambient_mode` is `AMBIENT_COLOR`.
+     * Only effective if `ambient_mode` is `AmbientMode.COLOR`.
      *
      * Generated from Godot docs: ReflectionProbe.get_ambient_color_energy
      */
@@ -203,10 +204,10 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The maximum distance away from the `ReflectionProbe` an object can be before it is culled.
-     * Decrease this to improve performance, especially when using the `UPDATE_ALWAYS` `update_mode`.
-     * Note: The maximum reflection distance is always at least equal to the probe's extents. This
-     * means that decreasing `max_distance` will not always cull objects from reflections, especially
-     * if the reflection probe's box defined by its `size` is already large.
+     * Decrease this to improve performance, especially when using the `UpdateMode.ALWAYS`
+     * `update_mode`. Note: The maximum reflection distance is always at least equal to the probe's
+     * extents. This means that decreasing `max_distance` will not always cull objects from
+     * reflections, especially if the reflection probe's box defined by its `size` is already large.
      *
      * Generated from Godot docs: ReflectionProbe.set_max_distance
      */
@@ -216,10 +217,10 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * The maximum distance away from the `ReflectionProbe` an object can be before it is culled.
-     * Decrease this to improve performance, especially when using the `UPDATE_ALWAYS` `update_mode`.
-     * Note: The maximum reflection distance is always at least equal to the probe's extents. This
-     * means that decreasing `max_distance` will not always cull objects from reflections, especially
-     * if the reflection probe's box defined by its `size` is already large.
+     * Decrease this to improve performance, especially when using the `UpdateMode.ALWAYS`
+     * `update_mode`. Note: The maximum reflection distance is always at least equal to the probe's
+     * extents. This means that decreasing `max_distance` will not always cull objects from
+     * reflections, especially if the reflection probe's box defined by its `size` is already large.
      *
      * Generated from Godot docs: ReflectionProbe.get_max_distance
      */
@@ -232,7 +233,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * to `Viewport.mesh_lod_threshold`). Higher values will use less detailed versions of meshes that
      * have LOD variations generated. If set to `0.0`, automatic LOD is disabled. Increase
      * `mesh_lod_threshold` to improve performance at the cost of geometry detail, especially when
-     * using the `UPDATE_ALWAYS` `update_mode`. Note: `mesh_lod_threshold` does not affect
+     * using the `UpdateMode.ALWAYS` `update_mode`. Note: `mesh_lod_threshold` does not affect
      * `GeometryInstance3D` visibility ranges (also known as "manual" LOD or hierarchical LOD).
      *
      * Generated from Godot docs: ReflectionProbe.set_mesh_lod_threshold
@@ -246,7 +247,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
      * to `Viewport.mesh_lod_threshold`). Higher values will use less detailed versions of meshes that
      * have LOD variations generated. If set to `0.0`, automatic LOD is disabled. Increase
      * `mesh_lod_threshold` to improve performance at the cost of geometry detail, especially when
-     * using the `UPDATE_ALWAYS` `update_mode`. Note: `mesh_lod_threshold` does not affect
+     * using the `UpdateMode.ALWAYS` `update_mode`. Note: `mesh_lod_threshold` does not affect
      * `GeometryInstance3D` visibility ranges (also known as "manual" LOD or hierarchical LOD).
      *
      * Generated from Godot docs: ReflectionProbe.get_mesh_lod_threshold
@@ -345,7 +346,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * If `true`, computes shadows in the reflection probe. This makes the reflection probe slower to
-     * render; you may want to disable this if using the `UPDATE_ALWAYS` `update_mode`.
+     * render; you may want to disable this if using the `UpdateMode.ALWAYS` `update_mode`.
      *
      * Generated from Godot docs: ReflectionProbe.set_enable_shadows
      */
@@ -355,7 +356,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
 
     /**
      * If `true`, computes shadows in the reflection probe. This makes the reflection probe slower to
-     * render; you may want to disable this if using the `UPDATE_ALWAYS` `update_mode`.
+     * render; you may want to disable this if using the `UpdateMode.ALWAYS` `update_mode`.
      *
      * Generated from Godot docs: ReflectionProbe.are_shadows_enabled
      */
@@ -414,30 +415,90 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     /**
-     * Sets how frequently the `ReflectionProbe` is updated. Can be `UPDATE_ONCE` or `UPDATE_ALWAYS`.
+     * Sets how frequently the `ReflectionProbe` is updated. Can be `UpdateMode.ONCE` or
+     * `UpdateMode.ALWAYS`.
      *
      * Generated from Godot docs: ReflectionProbe.set_update_mode
      */
-    fun setUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode)
+    fun setUpdateMode(mode: ReflectionProbe.UpdateMode) {
+        ObjectCalls.ptrcallWithLongArg(setUpdateModeBind, segment, mode.value)
     }
 
     /**
-     * Sets how frequently the `ReflectionProbe` is updated. Can be `UPDATE_ONCE` or `UPDATE_ALWAYS`.
+     * Sets how frequently the `ReflectionProbe` is updated. Can be `UpdateMode.ONCE` or
+     * `UpdateMode.ALWAYS`.
      *
      * Generated from Godot docs: ReflectionProbe.get_update_mode
      */
-    fun getUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment)
+    fun getUpdateMode(): ReflectionProbe.UpdateMode {
+        return ReflectionProbe.UpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getUpdateModeBind, segment))
+    }
+
+    /**
+     * Godot's `ReflectionProbe.UpdateMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ReflectionProbe.UpdateMode.<NAME>`).
+     *
+     * Generated from Godot docs: ReflectionProbe.UpdateMode
+     */
+    @JvmInline
+    value class UpdateMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Update the probe once on the next frame (recommended for most objects). The corresponding
+             * radiance map will be generated over the following six frames. This takes more time to update
+             * than `UpdateMode.ALWAYS`, but it has a lower performance cost and can result in higher-quality
+             * reflections. The ReflectionProbe is updated when its transform changes, but not when nearby
+             * geometry changes. You can force a `ReflectionProbe` update by moving the `ReflectionProbe`
+             * slightly in any direction.
+             *
+             * Generated from Godot docs: ReflectionProbe.UPDATE_ONCE
+             */
+            val ONCE: UpdateMode get() = UpdateMode(0L)
+            /**
+             * Update the probe every frame. This provides better results for fast-moving dynamic objects (such
+             * as cars). However, it has a significant performance cost. Due to the cost, it's recommended to
+             * only use one ReflectionProbe with `UpdateMode.ALWAYS` at most per scene. For all other use
+             * cases, use `UpdateMode.ONCE`.
+             *
+             * Generated from Godot docs: ReflectionProbe.UPDATE_ALWAYS
+             */
+            val ALWAYS: UpdateMode get() = UpdateMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `ReflectionProbe.AmbientMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`ReflectionProbe.AmbientMode.<NAME>`).
+     *
+     * Generated from Godot docs: ReflectionProbe.AmbientMode
+     */
+    @JvmInline
+    value class AmbientMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not apply any ambient lighting inside the `ReflectionProbe`'s box defined by its `size`.
+             *
+             * Generated from Godot docs: ReflectionProbe.AMBIENT_DISABLED
+             */
+            val DISABLED: AmbientMode get() = AmbientMode(0L)
+            /**
+             * Apply automatically-sourced environment lighting inside the `ReflectionProbe`'s box defined by
+             * its `size`.
+             *
+             * Generated from Godot docs: ReflectionProbe.AMBIENT_ENVIRONMENT
+             */
+            val ENVIRONMENT: AmbientMode get() = AmbientMode(1L)
+            /**
+             * Apply custom ambient lighting inside the `ReflectionProbe`'s box defined by its `size`. See
+             * `ambient_color` and `ambient_color_energy`.
+             *
+             * Generated from Godot docs: ReflectionProbe.AMBIENT_COLOR
+             */
+            val COLOR: AmbientMode get() = AmbientMode(2L)
+        }
     }
 
     companion object {
-        const val UPDATE_ONCE: Long = 0L
-        const val UPDATE_ALWAYS: Long = 1L
-        const val AMBIENT_DISABLED: Long = 0L
-        const val AMBIENT_ENVIRONMENT: Long = 1L
-        const val AMBIENT_COLOR: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ReflectionProbe? =
             wrap(handle.segment)

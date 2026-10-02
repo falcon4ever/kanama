@@ -18,7 +18,7 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setEnableLogicOpProperty")
         set(value) = setEnableLogicOp(value)
 
-    var logicOp: Long
+    var logicOp: RenderingDevice.LogicOperation
         @JvmName("logicOpProperty")
         get() = getLogicOp()
         @JvmName("setLogicOpProperty")
@@ -61,9 +61,9 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineColorBlendState.set_logic_op
      */
-    fun setLogicOp(pMember: Long) {
+    fun setLogicOp(pMember: RenderingDevice.LogicOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLogicOpBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setLogicOpBind, segment, pMember.value)
     }
 
     /**
@@ -71,9 +71,9 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDPipelineColorBlendState.get_logic_op
      */
-    fun getLogicOp(): Long {
+    fun getLogicOp(): RenderingDevice.LogicOperation {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, segment)
+        return RenderingDevice.LogicOperation(ObjectCalls.ptrcallNoArgsRetLong(getLogicOpBind, segment))
     }
 
     /**

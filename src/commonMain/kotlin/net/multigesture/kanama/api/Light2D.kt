@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setEnergyProperty")
         set(value) = setEnergy(value)
 
-    var blendMode: Long
+    var blendMode: Light2D.BlendMode
         @JvmName("blendModeProperty")
         get() = getBlendMode()
         @JvmName("setBlendModeProperty")
@@ -84,7 +85,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setShadowColorProperty")
         set(value) = setShadowColor(value)
 
-    var shadowFilter: Long
+    var shadowFilter: Light2D.ShadowFilter
         @JvmName("shadowFilterProperty")
         get() = getShadowFilter()
         @JvmName("setShadowFilterProperty")
@@ -313,7 +314,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
     /**
      * Smoothing value for shadows. Higher values will result in softer shadows, at the cost of visible
      * streaks that can appear in shadow rendering. `shadow_filter_smooth` only has an effect if
-     * `shadow_filter` is `SHADOW_FILTER_PCF5` or `SHADOW_FILTER_PCF13`.
+     * `shadow_filter` is `ShadowFilter.PCF5` or `ShadowFilter.PCF13`.
      *
      * Generated from Godot docs: Light2D.set_shadow_smooth
      */
@@ -324,7 +325,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
     /**
      * Smoothing value for shadows. Higher values will result in softer shadows, at the cost of visible
      * streaks that can appear in shadow rendering. `shadow_filter_smooth` only has an effect if
-     * `shadow_filter` is `SHADOW_FILTER_PCF5` or `SHADOW_FILTER_PCF13`.
+     * `shadow_filter` is `ShadowFilter.PCF5` or `ShadowFilter.PCF13`.
      *
      * Generated from Godot docs: Light2D.get_shadow_smooth
      */
@@ -337,8 +338,8 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Light2D.set_shadow_filter
      */
-    fun setShadowFilter(filter: Long) {
-        ObjectCalls.ptrcallWithLongArg(setShadowFilterBind, segment, filter)
+    fun setShadowFilter(filter: Light2D.ShadowFilter) {
+        ObjectCalls.ptrcallWithLongArg(setShadowFilterBind, segment, filter.value)
     }
 
     /**
@@ -346,8 +347,8 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Light2D.get_shadow_filter
      */
-    fun getShadowFilter(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadowFilterBind, segment)
+    fun getShadowFilter(): Light2D.ShadowFilter {
+        return Light2D.ShadowFilter(ObjectCalls.ptrcallNoArgsRetLong(getShadowFilterBind, segment))
     }
 
     /**
@@ -373,8 +374,8 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Light2D.set_blend_mode
      */
-    fun setBlendMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode)
+    fun setBlendMode(mode: Light2D.BlendMode) {
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, mode.value)
     }
 
     /**
@@ -382,8 +383,8 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: Light2D.get_blend_mode
      */
-    fun getBlendMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
+    fun getBlendMode(): Light2D.BlendMode {
+        return Light2D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
     }
 
     /**
@@ -406,14 +407,73 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
     }
 
-    companion object {
-        const val SHADOW_FILTER_NONE: Long = 0L
-        const val SHADOW_FILTER_PCF5: Long = 1L
-        const val SHADOW_FILTER_PCF13: Long = 2L
-        const val BLEND_MODE_ADD: Long = 0L
-        const val BLEND_MODE_SUB: Long = 1L
-        const val BLEND_MODE_MIX: Long = 2L
+    /**
+     * Godot's `Light2D.ShadowFilter` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Light2D.ShadowFilter.<NAME>`).
+     *
+     * Generated from Godot docs: Light2D.ShadowFilter
+     */
+    @JvmInline
+    value class ShadowFilter(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No filter applies to the shadow map. This provides hard shadow edges and is the fastest to
+             * render. See `shadow_filter`.
+             *
+             * Generated from Godot docs: Light2D.SHADOW_FILTER_NONE
+             */
+            val NONE: ShadowFilter get() = ShadowFilter(0L)
+            /**
+             * Percentage closer filtering (5 samples) applies to the shadow map. This is slower compared to
+             * hard shadow rendering. See `shadow_filter`.
+             *
+             * Generated from Godot docs: Light2D.SHADOW_FILTER_PCF5
+             */
+            val PCF5: ShadowFilter get() = ShadowFilter(1L)
+            /**
+             * Percentage closer filtering (13 samples) applies to the shadow map. This is the slowest shadow
+             * filtering mode, and should be used sparingly. See `shadow_filter`.
+             *
+             * Generated from Godot docs: Light2D.SHADOW_FILTER_PCF13
+             */
+            val PCF13: ShadowFilter get() = ShadowFilter(2L)
+        }
+    }
 
+    /**
+     * Godot's `Light2D.BlendMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Light2D.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: Light2D.BlendMode
+     */
+    @JvmInline
+    value class BlendMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Adds the value of pixels corresponding to the Light2D to the values of pixels under it. This is
+             * the common behavior of a light.
+             *
+             * Generated from Godot docs: Light2D.BLEND_MODE_ADD
+             */
+            val ADD: BlendMode get() = BlendMode(0L)
+            /**
+             * Subtracts the value of pixels corresponding to the Light2D to the values of pixels under it,
+             * resulting in inversed light effect.
+             *
+             * Generated from Godot docs: Light2D.BLEND_MODE_SUB
+             */
+            val SUB: BlendMode get() = BlendMode(1L)
+            /**
+             * Mix the value of pixels corresponding to the Light2D to the values of pixels under it by linear
+             * interpolation.
+             *
+             * Generated from Godot docs: Light2D.BLEND_MODE_MIX
+             */
+            val MIX: BlendMode get() = BlendMode(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Light2D? =
             wrap(handle.segment)

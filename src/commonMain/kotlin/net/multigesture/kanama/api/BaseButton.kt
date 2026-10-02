@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -30,13 +31,13 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         @JvmName("setButtonPressedProperty")
         set(value) = setPressed(value)
 
-    var actionMode: Long
+    var actionMode: BaseButton.ActionMode
         @JvmName("actionModeProperty")
         get() = getActionMode()
         @JvmName("setActionModeProperty")
         set(value) = setActionMode(value)
 
-    var buttonMask: Long
+    var buttonMask: MouseButtonMask
         @JvmName("buttonMaskProperty")
         get() = getButtonMask()
         @JvmName("setButtonMaskProperty")
@@ -186,8 +187,8 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: BaseButton.set_action_mode
      */
-    fun setActionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setActionModeBind, segment, mode)
+    fun setActionMode(mode: BaseButton.ActionMode) {
+        ObjectCalls.ptrcallWithLongArg(setActionModeBind, segment, mode.value)
     }
 
     /**
@@ -195,8 +196,8 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: BaseButton.get_action_mode
      */
-    fun getActionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getActionModeBind, segment)
+    fun getActionMode(): BaseButton.ActionMode {
+        return BaseButton.ActionMode(ObjectCalls.ptrcallNoArgsRetLong(getActionModeBind, segment))
     }
 
     /**
@@ -205,8 +206,8 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: BaseButton.set_button_mask
      */
-    fun setButtonMask(mask: Long) {
-        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, mask)
+    fun setButtonMask(mask: MouseButtonMask) {
+        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, mask.value)
     }
 
     /**
@@ -215,8 +216,8 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: BaseButton.get_button_mask
      */
-    fun getButtonMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment)
+    fun getButtonMask(): MouseButtonMask {
+        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment))
     }
 
     /**
@@ -226,8 +227,8 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: BaseButton.get_draw_mode
      */
-    fun getDrawMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDrawModeBind, segment)
+    fun getDrawMode(): BaseButton.DrawMode {
+        return BaseButton.DrawMode(ObjectCalls.ptrcallNoArgsRetLong(getDrawModeBind, segment))
     }
 
     /**
@@ -317,15 +318,73 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         const val toggled: String = "toggled"
     }
 
-    companion object {
-        const val DRAW_NORMAL: Long = 0L
-        const val DRAW_PRESSED: Long = 1L
-        const val DRAW_HOVER: Long = 2L
-        const val DRAW_DISABLED: Long = 3L
-        const val DRAW_HOVER_PRESSED: Long = 4L
-        const val ACTION_MODE_BUTTON_PRESS: Long = 0L
-        const val ACTION_MODE_BUTTON_RELEASE: Long = 1L
+    /**
+     * Godot's `BaseButton.DrawMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`BaseButton.DrawMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseButton.DrawMode
+     */
+    @JvmInline
+    value class DrawMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The normal state (i.e. not pressed, not hovered, not toggled and enabled) of buttons.
+             *
+             * Generated from Godot docs: BaseButton.DRAW_NORMAL
+             */
+            val NORMAL: DrawMode get() = DrawMode(0L)
+            /**
+             * The state of buttons are pressed.
+             *
+             * Generated from Godot docs: BaseButton.DRAW_PRESSED
+             */
+            val PRESSED: DrawMode get() = DrawMode(1L)
+            /**
+             * The state of buttons are hovered.
+             *
+             * Generated from Godot docs: BaseButton.DRAW_HOVER
+             */
+            val HOVER: DrawMode get() = DrawMode(2L)
+            /**
+             * The state of buttons are disabled.
+             *
+             * Generated from Godot docs: BaseButton.DRAW_DISABLED
+             */
+            val DISABLED: DrawMode get() = DrawMode(3L)
+            /**
+             * The state of buttons are both hovered and pressed.
+             *
+             * Generated from Godot docs: BaseButton.DRAW_HOVER_PRESSED
+             */
+            val HOVER_PRESSED: DrawMode get() = DrawMode(4L)
+        }
+    }
 
+    /**
+     * Godot's `BaseButton.ActionMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseButton.ActionMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseButton.ActionMode
+     */
+    @JvmInline
+    value class ActionMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Require just a press to consider the button clicked.
+             *
+             * Generated from Godot docs: BaseButton.ACTION_MODE_BUTTON_PRESS
+             */
+            val PRESS: ActionMode get() = ActionMode(0L)
+            /**
+             * Require a press and a subsequent release before considering the button clicked.
+             *
+             * Generated from Godot docs: BaseButton.ACTION_MODE_BUTTON_RELEASE
+             */
+            val RELEASE: ActionMode get() = ActionMode(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BaseButton? =
             wrap(handle.segment)

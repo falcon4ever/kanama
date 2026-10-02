@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -32,7 +33,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmName("setGravityScaleProperty")
         set(value) = setGravityScale(value)
 
-    var centerOfMassMode: Long
+    var centerOfMassMode: RigidBody3D.CenterOfMassMode
         @JvmName("centerOfMassModeProperty")
         get() = getCenterOfMassMode()
         @JvmName("setCenterOfMassModeProperty")
@@ -74,7 +75,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmName("setFreezeProperty")
         set(value) = setFreezeEnabled(value)
 
-    var freezeMode: Long
+    var freezeMode: RigidBody3D.FreezeMode
         @JvmName("freezeModeProperty")
         get() = getFreezeMode()
         @JvmName("setFreezeModeProperty")
@@ -110,7 +111,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmName("setLinearVelocityProperty")
         set(value) = setLinearVelocity(value)
 
-    var linearDampMode: Long
+    var linearDampMode: RigidBody3D.DampMode
         @JvmName("linearDampModeProperty")
         get() = getLinearDampMode()
         @JvmName("setLinearDampModeProperty")
@@ -128,7 +129,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmName("setAngularVelocityProperty")
         set(value) = setAngularVelocity(value)
 
-    var angularDampMode: Long
+    var angularDampMode: RigidBody3D.DampMode
         @JvmName("angularDampModeProperty")
         get() = getAngularDampMode()
         @JvmName("setAngularDampModeProperty")
@@ -203,8 +204,8 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.set_center_of_mass_mode
      */
-    fun setCenterOfMassMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, segment, mode)
+    fun setCenterOfMassMode(mode: RigidBody3D.CenterOfMassMode) {
+        ObjectCalls.ptrcallWithLongArg(setCenterOfMassModeBind, segment, mode.value)
     }
 
     /**
@@ -212,16 +213,16 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.get_center_of_mass_mode
      */
-    fun getCenterOfMassMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, segment)
+    fun getCenterOfMassMode(): RigidBody3D.CenterOfMassMode {
+        return RigidBody3D.CenterOfMassMode(ObjectCalls.ptrcallNoArgsRetLong(getCenterOfMassModeBind, segment))
     }
 
     /**
      * The body's custom center of mass, relative to the body's origin position, when
-     * `center_of_mass_mode` is set to `CENTER_OF_MASS_MODE_CUSTOM`. This is the balanced point of the
+     * `center_of_mass_mode` is set to `CenterOfMassMode.CUSTOM`. This is the balanced point of the
      * body, where applied forces only cause linear acceleration. Applying forces outside of the center
      * of mass causes angular acceleration. When `center_of_mass_mode` is set to
-     * `CENTER_OF_MASS_MODE_AUTO` (default value), the center of mass is automatically determined, but
+     * `CenterOfMassMode.AUTO` (default value), the center of mass is automatically determined, but
      * this does not update the value of `center_of_mass`.
      *
      * Generated from Godot docs: RigidBody3D.set_center_of_mass
@@ -232,10 +233,10 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
 
     /**
      * The body's custom center of mass, relative to the body's origin position, when
-     * `center_of_mass_mode` is set to `CENTER_OF_MASS_MODE_CUSTOM`. This is the balanced point of the
+     * `center_of_mass_mode` is set to `CenterOfMassMode.CUSTOM`. This is the balanced point of the
      * body, where applied forces only cause linear acceleration. Applying forces outside of the center
      * of mass causes angular acceleration. When `center_of_mass_mode` is set to
-     * `CENTER_OF_MASS_MODE_AUTO` (default value), the center of mass is automatically determined, but
+     * `CenterOfMassMode.AUTO` (default value), the center of mass is automatically determined, but
      * this does not update the value of `center_of_mass`.
      *
      * Generated from Godot docs: RigidBody3D.get_center_of_mass
@@ -341,8 +342,8 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.set_linear_damp_mode
      */
-    fun setLinearDampMode(linearDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode)
+    fun setLinearDampMode(linearDampMode: RigidBody3D.DampMode) {
+        ObjectCalls.ptrcallWithLongArg(setLinearDampModeBind, segment, linearDampMode.value)
     }
 
     /**
@@ -350,8 +351,8 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.get_linear_damp_mode
      */
-    fun getLinearDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment)
+    fun getLinearDampMode(): RigidBody3D.DampMode {
+        return RigidBody3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getLinearDampModeBind, segment))
     }
 
     /**
@@ -359,8 +360,8 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.set_angular_damp_mode
      */
-    fun setAngularDampMode(angularDampMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode)
+    fun setAngularDampMode(angularDampMode: RigidBody3D.DampMode) {
+        ObjectCalls.ptrcallWithLongArg(setAngularDampModeBind, segment, angularDampMode.value)
     }
 
     /**
@@ -368,8 +369,8 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.get_angular_damp_mode
      */
-    fun getAngularDampMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment)
+    fun getAngularDampMode(): RigidBody3D.DampMode {
+        return RigidBody3D.DampMode(ObjectCalls.ptrcallNoArgsRetLong(getAngularDampModeBind, segment))
     }
 
     /**
@@ -770,8 +771,8 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.set_freeze_mode
      */
-    fun setFreezeMode(freezeMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, segment, freezeMode)
+    fun setFreezeMode(freezeMode: RigidBody3D.FreezeMode) {
+        ObjectCalls.ptrcallWithLongArg(setFreezeModeBind, segment, freezeMode.value)
     }
 
     /**
@@ -780,8 +781,8 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      *
      * Generated from Godot docs: RigidBody3D.get_freeze_mode
      */
-    fun getFreezeMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, segment)
+    fun getFreezeMode(): RigidBody3D.FreezeMode {
+        return RigidBody3D.FreezeMode(ObjectCalls.ptrcallNoArgsRetLong(getFreezeModeBind, segment))
     }
 
     /**
@@ -804,14 +805,83 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         const val sleepingStateChanged: String = "sleeping_state_changed"
     }
 
-    companion object {
-        const val FREEZE_MODE_STATIC: Long = 0L
-        const val FREEZE_MODE_KINEMATIC: Long = 1L
-        const val CENTER_OF_MASS_MODE_AUTO: Long = 0L
-        const val CENTER_OF_MASS_MODE_CUSTOM: Long = 1L
-        const val DAMP_MODE_COMBINE: Long = 0L
-        const val DAMP_MODE_REPLACE: Long = 1L
+    /**
+     * Godot's `RigidBody3D.FreezeMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`RigidBody3D.FreezeMode.<NAME>`).
+     *
+     * Generated from Godot docs: RigidBody3D.FreezeMode
+     */
+    @JvmInline
+    value class FreezeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Static body freeze mode (default). The body is not affected by gravity and forces. It can be
+             * only moved by user code and doesn't collide with other bodies along its path.
+             *
+             * Generated from Godot docs: RigidBody3D.FREEZE_MODE_STATIC
+             */
+            val STATIC: FreezeMode get() = FreezeMode(0L)
+            /**
+             * Kinematic body freeze mode. Similar to `FreezeMode.STATIC`, but collides with other bodies along
+             * its path when moved. Useful for a frozen body that needs to be animated.
+             *
+             * Generated from Godot docs: RigidBody3D.FREEZE_MODE_KINEMATIC
+             */
+            val KINEMATIC: FreezeMode get() = FreezeMode(1L)
+        }
+    }
 
+    /**
+     * Godot's `RigidBody3D.CenterOfMassMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`RigidBody3D.CenterOfMassMode.<NAME>`).
+     *
+     * Generated from Godot docs: RigidBody3D.CenterOfMassMode
+     */
+    @JvmInline
+    value class CenterOfMassMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * In this mode, the body's center of mass is calculated automatically based on its shapes. This
+             * assumes that the shapes' origins are also their center of mass.
+             *
+             * Generated from Godot docs: RigidBody3D.CENTER_OF_MASS_MODE_AUTO
+             */
+            val AUTO: CenterOfMassMode get() = CenterOfMassMode(0L)
+            /**
+             * In this mode, the body's center of mass is set through `center_of_mass`. Defaults to the body's
+             * origin position.
+             *
+             * Generated from Godot docs: RigidBody3D.CENTER_OF_MASS_MODE_CUSTOM
+             */
+            val CUSTOM: CenterOfMassMode get() = CenterOfMassMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `RigidBody3D.DampMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`RigidBody3D.DampMode.<NAME>`).
+     *
+     * Generated from Godot docs: RigidBody3D.DampMode
+     */
+    @JvmInline
+    value class DampMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * In this mode, the body's damping value is added to any value set in areas or the default value.
+             *
+             * Generated from Godot docs: RigidBody3D.DAMP_MODE_COMBINE
+             */
+            val COMBINE: DampMode get() = DampMode(0L)
+            /**
+             * In this mode, the body's damping value replaces any value set in areas or the default value.
+             *
+             * Generated from Godot docs: RigidBody3D.DAMP_MODE_REPLACE
+             */
+            val REPLACE: DampMode get() = DampMode(1L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RigidBody3D? =
             wrap(handle.segment)

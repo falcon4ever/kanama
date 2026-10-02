@@ -72,9 +72,9 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * affected by a specific decal. To adjust `layers` more easily using a script, use
      * `get_layer_mask_value` and `set_layer_mask_value`. Note: `VoxelGI`, SDFGI and `LightmapGI` will
      * always take all layers into account to determine what contributes to global illumination. If
-     * this is an issue, set `GeometryInstance3D.gi_mode` to `GeometryInstance3D.GI_MODE_DISABLED` for
-     * meshes and `Light3D.light_bake_mode` to `Light3D.BAKE_DISABLED` for lights to exclude them from
-     * global illumination.
+     * this is an issue, set `GeometryInstance3D.gi_mode` to `GeometryInstance3D.GIMode.DISABLED` for
+     * meshes and `Light3D.light_bake_mode` to `Light3D.BakeMode.DISABLED` for lights to exclude them
+     * from global illumination.
      *
      * Generated from Godot docs: VisualInstance3D.set_layer_mask
      */
@@ -91,9 +91,9 @@ open class VisualInstance3D(handle: GodotHandle) : Node3D(handle) {
      * affected by a specific decal. To adjust `layers` more easily using a script, use
      * `get_layer_mask_value` and `set_layer_mask_value`. Note: `VoxelGI`, SDFGI and `LightmapGI` will
      * always take all layers into account to determine what contributes to global illumination. If
-     * this is an issue, set `GeometryInstance3D.gi_mode` to `GeometryInstance3D.GI_MODE_DISABLED` for
-     * meshes and `Light3D.light_bake_mode` to `Light3D.BAKE_DISABLED` for lights to exclude them from
-     * global illumination.
+     * this is an issue, set `GeometryInstance3D.gi_mode` to `GeometryInstance3D.GIMode.DISABLED` for
+     * meshes and `Light3D.light_bake_mode` to `Light3D.BakeMode.DISABLED` for lights to exclude them
+     * from global illumination.
      *
      * Generated from Godot docs: VisualInstance3D.get_layer_mask
      */

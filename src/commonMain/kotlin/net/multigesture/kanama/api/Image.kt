@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -59,9 +60,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.get_format
      */
-    fun getFormat(): Long {
+    fun getFormat(): Image.Format {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment)
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
     }
 
     /**
@@ -89,9 +90,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.convert
      */
-    fun convert(format: Long) {
+    fun convert(format: Image.Format) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(convertBind, segment, format)
+        ObjectCalls.ptrcallWithLongArg(convertBind, segment, format.value)
     }
 
     /**
@@ -124,22 +125,22 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.resize_to_po2
      */
-    fun resizeToPo2(square: Boolean = false, interpolation: Long = 1L) {
+    fun resizeToPo2(square: Boolean = false, interpolation: Image.Interpolation = Image.Interpolation.BILINEAR) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, segment, square, interpolation)
+        ObjectCalls.ptrcallWithBoolAndLongArgs(resizeToPo2Bind, segment, square, interpolation.value)
     }
 
     /**
      * Resizes the image to the given `width` and `height`. New pixels are calculated using the
      * `interpolation` mode defined via `Interpolation` constants. Note: If the image's format is
-     * `FORMAT_RGBA4444`, `FORMAT_RGB565`, or `FORMAT_RGBE9995`, it will be temporarily converted to
-     * either `FORMAT_RGBA8` or `FORMAT_RGBAH`. This can affect the quality of the resized image.
+     * `Format.RGBA4444`, `Format.RGB565`, or `Format.RGBE9995`, it will be temporarily converted to
+     * either `Format.RGBA8` or `Format.RGBAH`. This can affect the quality of the resized image.
      *
      * Generated from Godot docs: Image.resize
      */
-    fun resize(width: Int, height: Int, interpolation: Long = 1L) {
+    fun resize(width: Int, height: Int, interpolation: Image.Interpolation = Image.Interpolation.BILINEAR) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, segment, width, height, interpolation)
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(resizeBind, segment, width, height, interpolation.value)
     }
 
     /**
@@ -195,9 +196,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.generate_mipmaps
      */
-    fun generateMipmaps(renormalize: Boolean = false): Long {
+    fun generateMipmaps(renormalize: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, segment, renormalize)
+        return GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(generateMipmapsBind, segment, renormalize))
     }
 
     /**
@@ -215,9 +216,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.set_data
      */
-    fun setData(width: Int, height: Int, useMipmaps: Boolean, format: Long, data: ByteArray) {
+    fun setData(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format, data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(setDataBind, segment, width, height, useMipmaps, format, data)
+        ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgs(setDataBind, segment, width, height, useMipmaps, format.value, data)
     }
 
     /**
@@ -240,9 +241,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load
      */
-    fun load(path: String): Long {
+    fun load(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
     }
 
     /**
@@ -250,9 +251,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.save_png
      */
-    fun savePng(path: String): Long {
+    fun savePng(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(savePngBind, segment, path))
     }
 
     /**
@@ -275,9 +276,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.save_jpg
      */
-    fun saveJpg(path: String, quality: Double = 0.75): Long {
+    fun saveJpg(path: String, quality: Double = 0.75): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, segment, path, quality)
+        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(saveJpgBind, segment, path, quality))
     }
 
     /**
@@ -302,15 +303,15 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * included when `color_image` is `false`, which may be useful for saving raw floating point data
      * such as a lightmap that includes negative light information. Color component values in the
      * resulting EXR file will not exceed `max_linear_value` if `max_linear_value` is not negative.
-     * This function will return `ERR_UNAVAILABLE` if Godot was compiled without the TinyEXR module.
-     * When saving screenshots of a project that uses HDR output, use
+     * This function will return `GodotError.ERR_UNAVAILABLE` if Godot was compiled without the TinyEXR
+     * module. When saving screenshots of a project that uses HDR output, use
      * `Window.get_output_max_linear_value` for `max_linear_value`.
      *
      * Generated from Godot docs: Image.save_exr
      */
-    fun saveExr(path: String, grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): Long {
+    fun saveExr(path: String, grayscale: Boolean = false, colorImage: Boolean = false, maxLinearValue: Double = -1.0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, segment, path, grayscale, colorImage, maxLinearValue)
+        return GodotError(ObjectCalls.ptrcallWithStringTwoBoolAndDoubleArgRetLong(saveExrBind, segment, path, grayscale, colorImage, maxLinearValue))
     }
 
     /**
@@ -334,15 +335,15 @@ class Image(handle: GodotHandle) : Resource(handle) {
     /**
      * Saves the image as a DDS (DirectDraw Surface) file to `path`. DDS is a container format that can
      * store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will
-     * return `ERR_UNAVAILABLE` if Godot was compiled without the DDS module. Note: The DDS module may
-     * be disabled in certain builds, which means `save_dds` will return `ERR_UNAVAILABLE` when it is
-     * called from an exported project.
+     * return `GodotError.ERR_UNAVAILABLE` if Godot was compiled without the DDS module. Note: The DDS
+     * module may be disabled in certain builds, which means `save_dds` will return
+     * `GodotError.ERR_UNAVAILABLE` when it is called from an exported project.
      *
      * Generated from Godot docs: Image.save_dds
      */
-    fun saveDds(path: String): Long {
+    fun saveDds(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveDdsBind, segment, path))
     }
 
     /**
@@ -368,9 +369,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.save_webp
      */
-    fun saveWebp(path: String, lossy: Boolean = false, quality: Double = 0.75): Long {
+    fun saveWebp(path: String, lossy: Boolean = false, quality: Double = 0.75): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, segment, path, lossy, quality)
+        return GodotError(ObjectCalls.ptrcallWithStringBoolDoubleArgsRetLong(saveWebpBind, segment, path, lossy, quality))
     }
 
     /**
@@ -387,15 +388,15 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Returns `ALPHA_BLEND` if the image has data for alpha values. Returns `ALPHA_BIT` if all the
-     * alpha values are stored in a single bit. Returns `ALPHA_NONE` if no data for alpha values is
-     * found.
+     * Returns `AlphaMode.BLEND` if the image has data for alpha values. Returns `AlphaMode.BIT` if all
+     * the alpha values are stored in a single bit. Returns `AlphaMode.NONE` if no data for alpha
+     * values is found.
      *
      * Generated from Godot docs: Image.detect_alpha
      */
-    fun detectAlpha(): Long {
+    fun detectAlpha(): Image.AlphaMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, segment)
+        return Image.AlphaMode(ObjectCalls.ptrcallNoArgsRetLong(detectAlphaBind, segment))
     }
 
     /**
@@ -415,9 +416,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.detect_used_channels
      */
-    fun detectUsedChannels(source: Long = 0L): Long {
+    fun detectUsedChannels(source: Image.CompressSource = Image.CompressSource.GENERIC): Image.UsedChannels {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, segment, source)
+        return Image.UsedChannels(ObjectCalls.ptrcallWithLongArgRetLong(detectUsedChannelsBind, segment, source.value))
     }
 
     /**
@@ -427,13 +428,13 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * formats. It is ignored for ASTC compression. The `astc_format` parameter is only taken into
      * account when using ASTC compression; it is ignored for all other formats. Note: `compress` is
      * only supported in editor builds. When run in an exported project, this method always returns
-     * `ERR_UNAVAILABLE`.
+     * `GodotError.ERR_UNAVAILABLE`.
      *
      * Generated from Godot docs: Image.compress
      */
-    fun compress(mode: Long, source: Long = 0L, astcFormat: Long = 0L): Long {
+    fun compress(mode: Image.CompressMode, source: Image.CompressSource = Image.CompressSource.GENERIC, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, segment, mode, source, astcFormat)
+        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressBind, segment, mode.value, source.value, astcFormat.value))
     }
 
     /**
@@ -444,26 +445,27 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * ETC2), this argument is ignored. The `astc_format` parameter is only taken into account when
      * using ASTC compression; it is ignored for all other formats. Note: `compress_from_channels` is
      * only supported in editor builds. When run in an exported project, this method always returns
-     * `ERR_UNAVAILABLE`.
+     * `GodotError.ERR_UNAVAILABLE`.
      *
      * Generated from Godot docs: Image.compress_from_channels
      */
-    fun compressFromChannels(mode: Long, channels: Long, astcFormat: Long = 0L): Long {
+    fun compressFromChannels(mode: Image.CompressMode, channels: Image.UsedChannels, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, segment, mode, channels, astcFormat)
+        return GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(compressFromChannelsBind, segment, mode.value, channels.value, astcFormat.value))
     }
 
     /**
      * Decompresses the image if it is VRAM-compressed in a supported format. This increases memory
-     * utilization, but allows modifying the image. Returns `OK` if the format is supported, otherwise
-     * `ERR_UNAVAILABLE`. All VRAM-compressed formats supported by Godot can be decompressed with this
-     * method, except `FORMAT_ETC2_R11S`, `FORMAT_ETC2_RG11S`, and `FORMAT_ETC2_RGB8A1`.
+     * utilization, but allows modifying the image. Returns `GodotError.OK` if the format is supported,
+     * otherwise `GodotError.ERR_UNAVAILABLE`. All VRAM-compressed formats supported by Godot can be
+     * decompressed with this method, except `Format.ETC2_R11S`, `Format.ETC2_RG11S`, and
+     * `Format.ETC2_RGB8A1`.
      *
      * Generated from Godot docs: Image.decompress
      */
-    fun decompress(): Long {
+    fun decompress(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(decompressBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(decompressBind, segment))
     }
 
     /**
@@ -483,9 +485,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.rotate_90
      */
-    fun rotate90(direction: Long) {
+    fun rotate90(direction: ClockDirection) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(rotate90Bind, segment, direction)
+        ObjectCalls.ptrcallWithLongArg(rotate90Bind, segment, direction.value)
     }
 
     /**
@@ -521,7 +523,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Converts the raw data from nonlinear sRGB encoding to linear encoding using a lookup table. Only
-     * works on images with `FORMAT_RGB8` or `FORMAT_RGBA8` formats. Note: The 8-bit formats required
+     * works on images with `Format.RGB8` or `Format.RGBA8` formats. Note: The 8-bit formats required
      * by this method are not suitable for storing linearly encoded values; a significant amount of
      * color information will be lost in darker values. To maintain image quality, this method should
      * not be used.
@@ -535,7 +537,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Converts the entire image from linear encoding to nonlinear sRGB encoding by using a lookup
-     * table. Only works on images with `FORMAT_RGB8` or `FORMAT_RGBA8` formats.
+     * table. Only works on images with `Format.RGB8` or `Format.RGBA8` formats.
      *
      * Generated from Godot docs: Image.linear_to_srgb
      */
@@ -764,9 +766,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_png_from_buffer
      */
-    fun loadPngFromBuffer(buffer: ByteArray): Long {
+    fun loadPngFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadPngFromBufferBind, segment, buffer))
     }
 
     /**
@@ -774,9 +776,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_jpg_from_buffer
      */
-    fun loadJpgFromBuffer(buffer: ByteArray): Long {
+    fun loadJpgFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadJpgFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadJpgFromBufferBind, segment, buffer))
     }
 
     /**
@@ -784,9 +786,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_webp_from_buffer
      */
-    fun loadWebpFromBuffer(buffer: ByteArray): Long {
+    fun loadWebpFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadWebpFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadWebpFromBufferBind, segment, buffer))
     }
 
     /**
@@ -796,9 +798,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_tga_from_buffer
      */
-    fun loadTgaFromBuffer(buffer: ByteArray): Long {
+    fun loadTgaFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadTgaFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadTgaFromBufferBind, segment, buffer))
     }
 
     /**
@@ -810,9 +812,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_bmp_from_buffer
      */
-    fun loadBmpFromBuffer(buffer: ByteArray): Long {
+    fun loadBmpFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadBmpFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadBmpFromBufferBind, segment, buffer))
     }
 
     /**
@@ -825,9 +827,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_ktx_from_buffer
      */
-    fun loadKtxFromBuffer(buffer: ByteArray): Long {
+    fun loadKtxFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadKtxFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadKtxFromBufferBind, segment, buffer))
     }
 
     /**
@@ -837,9 +839,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_dds_from_buffer
      */
-    fun loadDdsFromBuffer(buffer: ByteArray): Long {
+    fun loadDdsFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadDdsFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadDdsFromBufferBind, segment, buffer))
     }
 
     /**
@@ -847,9 +849,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_exr_from_buffer
      */
-    fun loadExrFromBuffer(buffer: ByteArray): Long {
+    fun loadExrFromBuffer(buffer: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(loadExrFromBufferBind, segment, buffer)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(loadExrFromBufferBind, segment, buffer))
     }
 
     /**
@@ -861,9 +863,9 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_svg_from_buffer
      */
-    fun loadSvgFromBuffer(buffer: ByteArray, scale: Double = 1.0): Long {
+    fun loadSvgFromBuffer(buffer: ByteArray, scale: Double = 1.0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(loadSvgFromBufferBind, segment, buffer, scale)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayAndDoubleArgRetLong(loadSvgFromBufferBind, segment, buffer, scale))
     }
 
     /**
@@ -873,9 +875,601 @@ class Image(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Image.load_svg_from_string
      */
-    fun loadSvgFromString(svgStr: String, scale: Double = 1.0): Long {
+    fun loadSvgFromString(svgStr: String, scale: Double = 1.0): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, segment, svgStr, scale)
+        return GodotError(ObjectCalls.ptrcallWithStringAndDoubleArgRetLong(loadSvgFromStringBind, segment, svgStr, scale))
+    }
+
+    /**
+     * Godot's `Image.Format` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Image.Format.<NAME>`).
+     *
+     * Generated from Godot docs: Image.Format
+     */
+    @JvmInline
+    value class Format(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Texture format with a single 8-bit depth representing luminance.
+             *
+             * Generated from Godot docs: Image.FORMAT_L8
+             */
+            val L8: Format get() = Format(0L)
+            /**
+             * OpenGL texture format with two values, luminance and alpha each stored with 8 bits.
+             *
+             * Generated from Godot docs: Image.FORMAT_LA8
+             */
+            val LA8: Format get() = Format(1L)
+            /**
+             * OpenGL texture format `RED` with a single component and a bitdepth of 8.
+             *
+             * Generated from Godot docs: Image.FORMAT_R8
+             */
+            val R8: Format get() = Format(2L)
+            /**
+             * OpenGL texture format `RG` with two components and a bitdepth of 8 for each.
+             *
+             * Generated from Godot docs: Image.FORMAT_RG8
+             */
+            val RG8: Format get() = Format(3L)
+            /**
+             * OpenGL texture format `RGB` with three components, each with a bitdepth of 8. Note: When
+             * creating an `ImageTexture`, a nonlinear sRGB to linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGB8
+             */
+            val RGB8: Format get() = Format(4L)
+            /**
+             * OpenGL texture format `RGBA` with four components, each with a bitdepth of 8. Note: When
+             * creating an `ImageTexture`, a nonlinear sRGB to linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBA8
+             */
+            val RGBA8: Format get() = Format(5L)
+            /**
+             * OpenGL texture format `RGBA` with four components, each with a bitdepth of 4.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBA4444
+             */
+            val RGBA4444: Format get() = Format(6L)
+            /**
+             * OpenGL texture format `RGB` with three components. Red and blue have a bitdepth of 5, and green
+             * has a bitdepth of 6.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGB565
+             */
+            val RGB565: Format get() = Format(7L)
+            /**
+             * OpenGL texture format `GL_R32F` where there's one component, a 32-bit floating-point value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RF
+             */
+            val RF: Format get() = Format(8L)
+            /**
+             * OpenGL texture format `GL_RG32F` where there are two components, each a 32-bit floating-point
+             * values.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGF
+             */
+            val RGF: Format get() = Format(9L)
+            /**
+             * OpenGL texture format `GL_RGB32F` where there are three components, each a 32-bit floating-point
+             * values.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBF
+             */
+            val RGBF: Format get() = Format(10L)
+            /**
+             * OpenGL texture format `GL_RGBA32F` where there are four components, each a 32-bit floating-point
+             * values.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBAF
+             */
+            val RGBAF: Format get() = Format(11L)
+            /**
+             * OpenGL texture format `GL_R16F` where there's one component, a 16-bit "half-precision"
+             * floating-point value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RH
+             */
+            val RH: Format get() = Format(12L)
+            /**
+             * OpenGL texture format `GL_RG16F` where there are two components, each a 16-bit "half-precision"
+             * floating-point value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGH
+             */
+            val RGH: Format get() = Format(13L)
+            /**
+             * OpenGL texture format `GL_RGB16F` where there are three components, each a 16-bit
+             * "half-precision" floating-point value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBH
+             */
+            val RGBH: Format get() = Format(14L)
+            /**
+             * OpenGL texture format `GL_RGBA16F` where there are four components, each a 16-bit
+             * "half-precision" floating-point value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBAH
+             */
+            val RGBAH: Format get() = Format(15L)
+            /**
+             * A special OpenGL texture format where the three color components have 9 bits of precision and
+             * all three share a single 5-bit exponent.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBE9995
+             */
+            val RGBE9995: Format get() = Format(16L)
+            /**
+             * The S3TC (https://en.wikipedia.org/wiki/S3_Texture_Compression) texture format that uses Block
+             * Compression 1, and is the smallest variation of S3TC, only providing 1 bit of alpha and color
+             * data being premultiplied with alpha. Note: When creating an `ImageTexture`, a nonlinear sRGB to
+             * linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_DXT1
+             */
+            val DXT1: Format get() = Format(17L)
+            /**
+             * The S3TC (https://en.wikipedia.org/wiki/S3_Texture_Compression) texture format that uses Block
+             * Compression 2, and color data is interpreted as not having been premultiplied by alpha. Well
+             * suited for images with sharp alpha transitions between translucent and opaque areas. Note: When
+             * creating an `ImageTexture`, a nonlinear sRGB to linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_DXT3
+             */
+            val DXT3: Format get() = Format(18L)
+            /**
+             * The S3TC (https://en.wikipedia.org/wiki/S3_Texture_Compression) texture format also known as
+             * Block Compression 3 or BC3 that contains 64 bits of alpha channel data followed by 64 bits of
+             * DXT1-encoded color data. Color data is not premultiplied by alpha, same as DXT3. DXT5 generally
+             * produces superior results for transparent gradients compared to DXT3. Note: When creating an
+             * `ImageTexture`, a nonlinear sRGB to linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_DXT5
+             */
+            val DXT5: Format get() = Format(19L)
+            /**
+             * Texture format that uses Red Green Texture Compression
+             * (https://www.khronos.org/opengl/wiki/Red_Green_Texture_Compression), normalizing the red channel
+             * data using the same compression algorithm that DXT5 uses for the alpha channel.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGTC_R
+             */
+            val RGTC_R: Format get() = Format(20L)
+            /**
+             * Texture format that uses Red Green Texture Compression
+             * (https://www.khronos.org/opengl/wiki/Red_Green_Texture_Compression), normalizing the red and
+             * green channel data using the same compression algorithm that DXT5 uses for the alpha channel.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGTC_RG
+             */
+            val RGTC_RG: Format get() = Format(21L)
+            /**
+             * Texture format that uses BPTC (https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression)
+             * compression with unsigned normalized RGBA components. Note: When creating an `ImageTexture`, a
+             * nonlinear sRGB to linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_BPTC_RGBA
+             */
+            val BPTC_RGBA: Format get() = Format(22L)
+            /**
+             * Texture format that uses BPTC (https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression)
+             * compression with signed floating-point RGB components.
+             *
+             * Generated from Godot docs: Image.FORMAT_BPTC_RGBF
+             */
+            val BPTC_RGBF: Format get() = Format(23L)
+            /**
+             * Texture format that uses BPTC (https://www.khronos.org/opengl/wiki/BPTC_Texture_Compression)
+             * compression with unsigned floating-point RGB components.
+             *
+             * Generated from Godot docs: Image.FORMAT_BPTC_RGBFU
+             */
+            val BPTC_RGBFU: Format get() = Format(24L)
+            /**
+             * Ericsson Texture Compression format 1
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC1), also referred to as "ETC1",
+             * and is part of the OpenGL ES graphics standard. This format cannot store an alpha channel.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC
+             */
+            val ETC: Format get() = Format(25L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`R11_EAC` variant),
+             * which provides one channel of unsigned data.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_R11
+             */
+            val ETC2_R11: Format get() = Format(26L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`SIGNED_R11_EAC`
+             * variant), which provides one channel of signed data.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_R11S
+             */
+            val ETC2_R11S: Format get() = Format(27L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`RG11_EAC` variant),
+             * which provides two channels of unsigned data.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_RG11
+             */
+            val ETC2_RG11: Format get() = Format(28L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`SIGNED_RG11_EAC`
+             * variant), which provides two channels of signed data.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_RG11S
+             */
+            val ETC2_RG11S: Format get() = Format(29L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`RGB8` variant),
+             * which is a follow-up of ETC1 and compresses RGB888 data. Note: When creating an `ImageTexture`,
+             * a nonlinear sRGB to linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_RGB8
+             */
+            val ETC2_RGB8: Format get() = Format(30L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`RGBA8`variant),
+             * which compresses RGBA8888 data with full alpha support. Note: When creating an `ImageTexture`, a
+             * nonlinear sRGB to linear encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_RGBA8
+             */
+            val ETC2_RGBA8: Format get() = Format(31L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC)
+             * (`RGB8_PUNCHTHROUGH_ALPHA1` variant), which compresses RGBA data to make alpha either fully
+             * transparent or fully opaque. Note: When creating an `ImageTexture`, a nonlinear sRGB to linear
+             * encoding conversion is performed.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_RGB8A1
+             */
+            val ETC2_RGB8A1: Format get() = Format(32L)
+            /**
+             * Ericsson Texture Compression format 2
+             * (https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC) (`RGBA8` variant),
+             * which compresses RA data and interprets it as two channels (red and green). See also
+             * `Format.ETC2_RGBA8`.
+             *
+             * Generated from Godot docs: Image.FORMAT_ETC2_RA_AS_RG
+             */
+            val ETC2_RA_AS_RG: Format get() = Format(33L)
+            /**
+             * The S3TC (https://en.wikipedia.org/wiki/S3_Texture_Compression) texture format also known as
+             * Block Compression 3 or BC3, which compresses RA data and interprets it as two channels (red and
+             * green). See also `Format.DXT5`.
+             *
+             * Generated from Godot docs: Image.FORMAT_DXT5_RA_AS_RG
+             */
+            val DXT5_RA_AS_RG: Format get() = Format(34L)
+            val ASTC_4x4: Format get() = Format(35L)
+            val ASTC_4x4_HDR: Format get() = Format(36L)
+            val ASTC_8x8: Format get() = Format(37L)
+            val ASTC_8x8_HDR: Format get() = Format(38L)
+            /**
+             * OpenGL texture format `GL_R16` where there's one component, a 16-bit unsigned normalized integer
+             * value. Since the value is normalized, each component is clamped between `0.0` and `1.0`
+             * (inclusive). Note: Due to limited hardware support, it is mainly recommended to be used on
+             * desktop or console devices. It may be unsupported on mobile or web, and will consequently be
+             * converted to `Format.RF`.
+             *
+             * Generated from Godot docs: Image.FORMAT_R16
+             */
+            val R16: Format get() = Format(39L)
+            /**
+             * OpenGL texture format `GL_RG16` where there are two components, each a 16-bit unsigned
+             * normalized integer value. Since the value is normalized, each component is clamped between `0.0`
+             * and `1.0` (inclusive). Note: Due to limited hardware support, it is mainly recommended to be
+             * used on desktop or console devices. It may be unsupported on mobile or web, and will
+             * consequently be converted to `Format.RGF`.
+             *
+             * Generated from Godot docs: Image.FORMAT_RG16
+             */
+            val RG16: Format get() = Format(40L)
+            /**
+             * OpenGL texture format `GL_RGB16` where there are three components, each a 16-bit unsigned
+             * normalized integer value. Since the value is normalized, each component is clamped between `0.0`
+             * and `1.0` (inclusive). Note: Due to limited hardware support, it is mainly recommended to be
+             * used on desktop or console devices. It may be unsupported on mobile or web, and will
+             * consequently be converted to `Format.RGBF`.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGB16
+             */
+            val RGB16: Format get() = Format(41L)
+            /**
+             * OpenGL texture format `GL_RGBA16` where there are four components, each a 16-bit unsigned
+             * normalized integer value. Since the value is normalized, each component is clamped between `0.0`
+             * and `1.0` (inclusive). Note: Due to limited hardware support, it is mainly recommended to be
+             * used on desktop or console devices. It may be unsupported on mobile or web, and will
+             * consequently be converted to `Format.RGBAF`.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBA16
+             */
+            val RGBA16: Format get() = Format(42L)
+            /**
+             * OpenGL texture format `GL_R16UI` where there's one component, a 16-bit unsigned integer value.
+             * Each component is clamped between `0` and `65535` (inclusive). Note: When used in a shader, the
+             * texture requires usage of `usampler` samplers. Additionally, it only supports nearest-neighbor
+             * filtering under the Compatibility renderer. Note: When sampling using `Image.get_pixel`,
+             * returned `Color`s have to be divided by `65535` to get the correct color value.
+             *
+             * Generated from Godot docs: Image.FORMAT_R16I
+             */
+            val R16I: Format get() = Format(43L)
+            /**
+             * OpenGL texture format `GL_RG16UI` where there are two components, each a 16-bit unsigned integer
+             * value. Each component is clamped between `0` and `65535` (inclusive). Note: When used in a
+             * shader, the texture requires usage of `usampler` samplers. Additionally, it only supports
+             * nearest-neighbor filtering under the Compatibility renderer. Note: When sampling using
+             * `Image.get_pixel`, returned `Color`s have to be divided by `65535` to get the correct color
+             * value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RG16I
+             */
+            val RG16I: Format get() = Format(44L)
+            /**
+             * OpenGL texture format `GL_RGB16UI` where there are three components, each a 16-bit unsigned
+             * integer value. Each component is clamped between `0` and `65535` (inclusive). Note: When used in
+             * a shader, the texture requires usage of `usampler` samplers. Additionally, it only supports
+             * nearest-neighbor filtering under the Compatibility renderer. Note: When sampling using
+             * `Image.get_pixel`, returned `Color`s have to be divided by `65535` to get the correct color
+             * value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGB16I
+             */
+            val RGB16I: Format get() = Format(45L)
+            /**
+             * OpenGL texture format `GL_RGBA16UI` where there are four components, each a 16-bit unsigned
+             * integer value. Each component is clamped between `0` and `65535` (inclusive). Note: When used in
+             * a shader, the texture requires usage of `usampler` samplers. Additionally, it only supports
+             * nearest-neighbor filtering under the Compatibility renderer. Note: When sampling using
+             * `Image.get_pixel`, returned `Color`s have to be divided by `65535` to get the correct color
+             * value.
+             *
+             * Generated from Godot docs: Image.FORMAT_RGBA16I
+             */
+            val RGBA16I: Format get() = Format(46L)
+            /**
+             * Represents the size of the `Format` enum.
+             *
+             * Generated from Godot docs: Image.FORMAT_MAX
+             */
+            val MAX: Format get() = Format(47L)
+        }
+    }
+
+    /**
+     * Godot's `Image.Interpolation` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.Interpolation.<NAME>`).
+     *
+     * Generated from Godot docs: Image.Interpolation
+     */
+    @JvmInline
+    value class Interpolation(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Performs nearest-neighbor interpolation. If the image is resized, it will be pixelated.
+             *
+             * Generated from Godot docs: Image.INTERPOLATE_NEAREST
+             */
+            val NEAREST: Interpolation get() = Interpolation(0L)
+            /**
+             * Performs bilinear interpolation. If the image is resized, it will be blurry. This mode is faster
+             * than `Interpolation.CUBIC`, but it results in lower quality.
+             *
+             * Generated from Godot docs: Image.INTERPOLATE_BILINEAR
+             */
+            val BILINEAR: Interpolation get() = Interpolation(1L)
+            /**
+             * Performs cubic interpolation. If the image is resized, it will be blurry. This mode often gives
+             * better results compared to `Interpolation.BILINEAR`, at the cost of being slower.
+             *
+             * Generated from Godot docs: Image.INTERPOLATE_CUBIC
+             */
+            val CUBIC: Interpolation get() = Interpolation(2L)
+            /**
+             * Performs bilinear separately on the two most-suited mipmap levels, then linearly interpolates
+             * between them. It's slower than `Interpolation.BILINEAR`, but produces higher-quality results
+             * with far fewer aliasing artifacts. If the image does not have mipmaps, they will be generated
+             * and used internally, but no mipmaps will be generated on the resulting image. Note: If you
+             * intend to scale multiple copies of the original image, it's better to call `generate_mipmaps`]
+             * on it in advance, to avoid wasting processing power in generating them again and again. On the
+             * other hand, if the image already has mipmaps, they will be used, and a new set will be generated
+             * for the resulting image.
+             *
+             * Generated from Godot docs: Image.INTERPOLATE_TRILINEAR
+             */
+            val TRILINEAR: Interpolation get() = Interpolation(3L)
+            /**
+             * Performs Lanczos interpolation. This is the slowest image resizing mode, but it typically gives
+             * the best results, especially when downscaling images.
+             *
+             * Generated from Godot docs: Image.INTERPOLATE_LANCZOS
+             */
+            val LANCZOS: Interpolation get() = Interpolation(4L)
+        }
+    }
+
+    /**
+     * Godot's `Image.AlphaMode` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Image.AlphaMode.<NAME>`).
+     *
+     * Generated from Godot docs: Image.AlphaMode
+     */
+    @JvmInline
+    value class AlphaMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Image is fully opaque. It does not store alpha data.
+             *
+             * Generated from Godot docs: Image.ALPHA_NONE
+             */
+            val NONE: AlphaMode get() = AlphaMode(0L)
+            /**
+             * Image stores either fully opaque or fully transparent pixels. Also known as punchthrough alpha.
+             *
+             * Generated from Godot docs: Image.ALPHA_BIT
+             */
+            val BIT: AlphaMode get() = AlphaMode(1L)
+            /**
+             * Image stores alpha data with values varying between `0.0` and `1.0`.
+             *
+             * Generated from Godot docs: Image.ALPHA_BLEND
+             */
+            val BLEND: AlphaMode get() = AlphaMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `Image.CompressMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.CompressMode.<NAME>`).
+     *
+     * Generated from Godot docs: Image.CompressMode
+     */
+    @JvmInline
+    value class CompressMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use S3TC compression.
+             *
+             * Generated from Godot docs: Image.COMPRESS_S3TC
+             */
+            val S3TC: CompressMode get() = CompressMode(0L)
+            /**
+             * Use ETC compression.
+             *
+             * Generated from Godot docs: Image.COMPRESS_ETC
+             */
+            val ETC: CompressMode get() = CompressMode(1L)
+            /**
+             * Use ETC2 compression.
+             *
+             * Generated from Godot docs: Image.COMPRESS_ETC2
+             */
+            val ETC2: CompressMode get() = CompressMode(2L)
+            /**
+             * Use BPTC compression.
+             *
+             * Generated from Godot docs: Image.COMPRESS_BPTC
+             */
+            val BPTC: CompressMode get() = CompressMode(3L)
+            /**
+             * Use ASTC compression.
+             *
+             * Generated from Godot docs: Image.COMPRESS_ASTC
+             */
+            val ASTC: CompressMode get() = CompressMode(4L)
+            /**
+             * Represents the size of the `CompressMode` enum.
+             *
+             * Generated from Godot docs: Image.COMPRESS_MAX
+             */
+            val MAX: CompressMode get() = CompressMode(5L)
+        }
+    }
+
+    /**
+     * Godot's `Image.UsedChannels` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.UsedChannels.<NAME>`).
+     *
+     * Generated from Godot docs: Image.UsedChannels
+     */
+    @JvmInline
+    value class UsedChannels(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The image only uses one channel for luminance (grayscale).
+             *
+             * Generated from Godot docs: Image.USED_CHANNELS_L
+             */
+            val L: UsedChannels get() = UsedChannels(0L)
+            /**
+             * The image uses two channels for luminance and alpha, respectively.
+             *
+             * Generated from Godot docs: Image.USED_CHANNELS_LA
+             */
+            val LA: UsedChannels get() = UsedChannels(1L)
+            /**
+             * The image only uses the red channel.
+             *
+             * Generated from Godot docs: Image.USED_CHANNELS_R
+             */
+            val R: UsedChannels get() = UsedChannels(2L)
+            /**
+             * The image uses two channels for red and green.
+             *
+             * Generated from Godot docs: Image.USED_CHANNELS_RG
+             */
+            val RG: UsedChannels get() = UsedChannels(3L)
+            /**
+             * The image uses three channels for red, green, and blue.
+             *
+             * Generated from Godot docs: Image.USED_CHANNELS_RGB
+             */
+            val RGB: UsedChannels get() = UsedChannels(4L)
+            /**
+             * The image uses four channels for red, green, blue, and alpha.
+             *
+             * Generated from Godot docs: Image.USED_CHANNELS_RGBA
+             */
+            val RGBA: UsedChannels get() = UsedChannels(5L)
+        }
+    }
+
+    /**
+     * Godot's `Image.CompressSource` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Image.CompressSource.<NAME>`).
+     *
+     * Generated from Godot docs: Image.CompressSource
+     */
+    @JvmInline
+    value class CompressSource(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Source texture (before compression) is a regular texture. Default for all textures.
+             *
+             * Generated from Godot docs: Image.COMPRESS_SOURCE_GENERIC
+             */
+            val GENERIC: CompressSource get() = CompressSource(0L)
+            /**
+             * Source texture (before compression) uses nonlinear sRGB encoding.
+             *
+             * Generated from Godot docs: Image.COMPRESS_SOURCE_SRGB
+             */
+            val SRGB: CompressSource get() = CompressSource(1L)
+            /**
+             * Source texture (before compression) is a normal texture (e.g. it can be compressed into two
+             * channels).
+             *
+             * Generated from Godot docs: Image.COMPRESS_SOURCE_NORMAL
+             */
+            val NORMAL: CompressSource get() = CompressSource(2L)
+        }
+    }
+
+    /**
+     * Godot's `Image.ASTCFormat` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Image.ASTCFormat.<NAME>`).
+     *
+     * Generated from Godot docs: Image.ASTCFormat
+     */
+    @JvmInline
+    value class ASTCFormat(override val value: Long) : GodotEnumValue {
+        companion object {
+            val FORMAT_4x4: ASTCFormat get() = ASTCFormat(0L)
+            val FORMAT_8x8: ASTCFormat get() = ASTCFormat(1L)
+        }
     }
 
     companion object {
@@ -885,8 +1479,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
          *
          * Generated from Godot docs: Image.create
          */
-        fun create(width: Int, height: Int, useMipmaps: Boolean, format: Long): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, NULL_SEGMENT, width, height, useMipmaps, format))
+        fun create(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format): Image? {
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
         }
 
         /**
@@ -895,8 +1489,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
          *
          * Generated from Godot docs: Image.create_empty
          */
-        fun createEmpty(width: Int, height: Int, useMipmaps: Boolean, format: Long): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format))
+        fun createEmpty(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format): Image? {
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
         }
 
         /**
@@ -905,8 +1499,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
          *
          * Generated from Godot docs: Image.create_from_data
          */
-        fun createFromData(width: Int, height: Int, useMipmaps: Boolean, format: Long, data: ByteArray): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(createFromDataBind, NULL_SEGMENT, width, height, useMipmaps, format, data))
+        fun createFromData(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format, data: ByteArray): Image? {
+            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(createFromDataBind, NULL_SEGMENT, width, height, useMipmaps, format.value, data))
         }
 
         /**
@@ -920,79 +1514,6 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
         const val MAX_WIDTH: Long = 16777216L
         const val MAX_HEIGHT: Long = 16777216L
-        const val FORMAT_L8: Long = 0L
-        const val FORMAT_LA8: Long = 1L
-        const val FORMAT_R8: Long = 2L
-        const val FORMAT_RG8: Long = 3L
-        const val FORMAT_RGB8: Long = 4L
-        const val FORMAT_RGBA8: Long = 5L
-        const val FORMAT_RGBA4444: Long = 6L
-        const val FORMAT_RGB565: Long = 7L
-        const val FORMAT_RF: Long = 8L
-        const val FORMAT_RGF: Long = 9L
-        const val FORMAT_RGBF: Long = 10L
-        const val FORMAT_RGBAF: Long = 11L
-        const val FORMAT_RH: Long = 12L
-        const val FORMAT_RGH: Long = 13L
-        const val FORMAT_RGBH: Long = 14L
-        const val FORMAT_RGBAH: Long = 15L
-        const val FORMAT_RGBE9995: Long = 16L
-        const val FORMAT_DXT1: Long = 17L
-        const val FORMAT_DXT3: Long = 18L
-        const val FORMAT_DXT5: Long = 19L
-        const val FORMAT_RGTC_R: Long = 20L
-        const val FORMAT_RGTC_RG: Long = 21L
-        const val FORMAT_BPTC_RGBA: Long = 22L
-        const val FORMAT_BPTC_RGBF: Long = 23L
-        const val FORMAT_BPTC_RGBFU: Long = 24L
-        const val FORMAT_ETC: Long = 25L
-        const val FORMAT_ETC2_R11: Long = 26L
-        const val FORMAT_ETC2_R11S: Long = 27L
-        const val FORMAT_ETC2_RG11: Long = 28L
-        const val FORMAT_ETC2_RG11S: Long = 29L
-        const val FORMAT_ETC2_RGB8: Long = 30L
-        const val FORMAT_ETC2_RGBA8: Long = 31L
-        const val FORMAT_ETC2_RGB8A1: Long = 32L
-        const val FORMAT_ETC2_RA_AS_RG: Long = 33L
-        const val FORMAT_DXT5_RA_AS_RG: Long = 34L
-        const val FORMAT_ASTC_4x4: Long = 35L
-        const val FORMAT_ASTC_4x4_HDR: Long = 36L
-        const val FORMAT_ASTC_8x8: Long = 37L
-        const val FORMAT_ASTC_8x8_HDR: Long = 38L
-        const val FORMAT_R16: Long = 39L
-        const val FORMAT_RG16: Long = 40L
-        const val FORMAT_RGB16: Long = 41L
-        const val FORMAT_RGBA16: Long = 42L
-        const val FORMAT_R16I: Long = 43L
-        const val FORMAT_RG16I: Long = 44L
-        const val FORMAT_RGB16I: Long = 45L
-        const val FORMAT_RGBA16I: Long = 46L
-        const val FORMAT_MAX: Long = 47L
-        const val INTERPOLATE_NEAREST: Long = 0L
-        const val INTERPOLATE_BILINEAR: Long = 1L
-        const val INTERPOLATE_CUBIC: Long = 2L
-        const val INTERPOLATE_TRILINEAR: Long = 3L
-        const val INTERPOLATE_LANCZOS: Long = 4L
-        const val ALPHA_NONE: Long = 0L
-        const val ALPHA_BIT: Long = 1L
-        const val ALPHA_BLEND: Long = 2L
-        const val COMPRESS_S3TC: Long = 0L
-        const val COMPRESS_ETC: Long = 1L
-        const val COMPRESS_ETC2: Long = 2L
-        const val COMPRESS_BPTC: Long = 3L
-        const val COMPRESS_ASTC: Long = 4L
-        const val COMPRESS_MAX: Long = 5L
-        const val USED_CHANNELS_L: Long = 0L
-        const val USED_CHANNELS_LA: Long = 1L
-        const val USED_CHANNELS_R: Long = 2L
-        const val USED_CHANNELS_RG: Long = 3L
-        const val USED_CHANNELS_RGB: Long = 4L
-        const val USED_CHANNELS_RGBA: Long = 5L
-        const val COMPRESS_SOURCE_GENERIC: Long = 0L
-        const val COMPRESS_SOURCE_SRGB: Long = 1L
-        const val COMPRESS_SOURCE_NORMAL: Long = 2L
-        const val ASTC_FORMAT_4x4: Long = 0L
-        const val ASTC_FORMAT_8x8: Long = 1L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Image? =

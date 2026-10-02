@@ -147,15 +147,15 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
 
     /**
      * Sets the rotation axis at `joint` in the bone chain's joint list. The axes are based on the
-     * reference pose's space, if `axis` is `SkeletonModifier3D.ROTATION_AXIS_CUSTOM`, you can specify
+     * reference pose's space, if `axis` is `SkeletonModifier3D.RotationAxis.CUSTOM`, you can specify
      * any axis. In here, the reference pose is the bone pose immediately before processing IK. Note:
      * The rotation axis and the forward vector shouldn't be colinear to avoid unintended rotation
      * since `ChainIK3D` does not factor in twisting forces.
      *
      * Generated from Godot docs: IterateIK3D.set_joint_rotation_axis
      */
-    fun setJointRotationAxis(index: Int, joint: Int, axis: Long) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis)
+    fun setJointRotationAxis(index: Int, joint: Int, axis: SkeletonModifier3D.RotationAxis) {
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis.value)
     }
 
     /**
@@ -163,15 +163,15 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      *
      * Generated from Godot docs: IterateIK3D.get_joint_rotation_axis
      */
-    fun getJointRotationAxis(index: Int, joint: Int): Long {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint)
+    fun getJointRotationAxis(index: Int, joint: Int): SkeletonModifier3D.RotationAxis {
+        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint))
     }
 
     /**
      * Sets the rotation axis vector for the specified joint in the bone chain. This vector is
      * normalized by an internal process and represents the axis around which the bone chain can
      * rotate. If the vector length is `0`, it is considered synonymous with
-     * `SkeletonModifier3D.ROTATION_AXIS_ALL`.
+     * `SkeletonModifier3D.RotationAxis.ALL`.
      *
      * Generated from Godot docs: IterateIK3D.set_joint_rotation_axis_vector
      */
@@ -182,7 +182,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
     /**
      * Returns the rotation axis vector for the specified joint in the bone chain. This vector
      * represents the axis around which the joint can rotate. It is determined based on the rotation
-     * axis set for the joint. If `get_joint_rotation_axis` is `SkeletonModifier3D.ROTATION_AXIS_ALL`,
+     * axis set for the joint. If `get_joint_rotation_axis` is `SkeletonModifier3D.RotationAxis.ALL`,
      * this method returns `Vector3(0, 0, 0)`.
      *
      * Generated from Godot docs: IterateIK3D.get_joint_rotation_axis_vector
@@ -214,8 +214,8 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      *
      * Generated from Godot docs: IterateIK3D.set_joint_limitation_right_axis
      */
-    fun setJointLimitationRightAxis(index: Int, joint: Int, direction: Long) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointLimitationRightAxisBind, segment, index, joint, direction)
+    fun setJointLimitationRightAxis(index: Int, joint: Int, direction: SkeletonModifier3D.SecondaryDirection) {
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointLimitationRightAxisBind, segment, index, joint, direction.value)
     }
 
     /**
@@ -223,8 +223,8 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      *
      * Generated from Godot docs: IterateIK3D.get_joint_limitation_right_axis
      */
-    fun getJointLimitationRightAxis(index: Int, joint: Int): Long {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointLimitationRightAxisBind, segment, index, joint)
+    fun getJointLimitationRightAxis(index: Int, joint: Int): SkeletonModifier3D.SecondaryDirection {
+        return SkeletonModifier3D.SecondaryDirection(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointLimitationRightAxisBind, segment, index, joint))
     }
 
     /**
@@ -238,7 +238,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
 
     /**
      * Returns the joint limitation right axis vector at `joint` in the bone chain's joint list. If
-     * `get_joint_limitation_right_axis` is `SkeletonModifier3D.SECONDARY_DIRECTION_NONE`, this method
+     * `get_joint_limitation_right_axis` is `SkeletonModifier3D.SecondaryDirection.NONE`, this method
      * returns `Vector3(0, 0, 0)`.
      *
      * Generated from Godot docs: IterateIK3D.get_joint_limitation_right_axis_vector

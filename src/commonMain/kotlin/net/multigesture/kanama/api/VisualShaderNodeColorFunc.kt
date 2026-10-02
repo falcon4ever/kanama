@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,31 +10,36 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeColorFunc
  */
 class VisualShaderNodeColorFunc(handle: GodotHandle) : VisualShaderNode(handle) {
-    var function: Long
+    var function: VisualShaderNodeColorFunc.Function
         @JvmName("functionProperty")
         get() = getFunction()
         @JvmName("setFunctionProperty")
         set(value) = setFunction(value)
 
-    fun setFunction(func: Long) {
+    fun setFunction(func: VisualShaderNodeColorFunc.Function) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func)
+        ObjectCalls.ptrcallWithLongArg(setFunctionBind, segment, func.value)
     }
 
-    fun getFunction(): Long {
+    fun getFunction(): VisualShaderNodeColorFunc.Function {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment)
+        return VisualShaderNodeColorFunc.Function(ObjectCalls.ptrcallNoArgsRetLong(getFunctionBind, segment))
+    }
+
+    @JvmInline
+    value class Function(override val value: Long) : GodotEnumValue {
+        companion object {
+            val GRAYSCALE: Function get() = Function(0L)
+            val HSV2RGB: Function get() = Function(1L)
+            val RGB2HSV: Function get() = Function(2L)
+            val SEPIA: Function get() = Function(3L)
+            val LINEAR_TO_SRGB: Function get() = Function(4L)
+            val SRGB_TO_LINEAR: Function get() = Function(5L)
+            val MAX: Function get() = Function(6L)
+        }
     }
 
     companion object {
-        const val FUNC_GRAYSCALE: Long = 0L
-        const val FUNC_HSV2RGB: Long = 1L
-        const val FUNC_RGB2HSV: Long = 2L
-        const val FUNC_SEPIA: Long = 3L
-        const val FUNC_LINEAR_TO_SRGB: Long = 4L
-        const val FUNC_SRGB_TO_LINEAR: Long = 5L
-        const val FUNC_MAX: Long = 6L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeColorFunc? =
             wrap(handle.segment)

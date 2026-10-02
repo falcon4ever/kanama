@@ -37,19 +37,19 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
         @JvmName("setViewCountProperty")
         set(value) = setViewCount(value)
 
-    var scaling3dMode: Long
+    var scaling3dMode: RenderingServer.ViewportScaling3DMode
         @JvmName("scaling3dModeProperty")
         get() = getScaling3dMode()
         @JvmName("setScaling3dModeProperty")
         set(value) = setScaling3dMode(value)
 
-    var msaa3d: Long
+    var msaa3d: RenderingServer.ViewportMSAA
         @JvmName("msaa3dProperty")
         get() = getMsaa3d()
         @JvmName("setMsaa3dProperty")
         set(value) = setMsaa3d(value)
 
-    var screenSpaceAa: Long
+    var screenSpaceAa: RenderingServer.ViewportScreenSpaceAA
         @JvmName("screenSpaceAaProperty")
         get() = getScreenSpaceAa()
         @JvmName("setScreenSpaceAaProperty")
@@ -67,7 +67,7 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
         @JvmName("setTextureMipmapBiasProperty")
         set(value) = setTextureMipmapBias(value)
 
-    var anisotropicFilteringLevel: Long
+    var anisotropicFilteringLevel: RenderingServer.ViewportAnisotropicFiltering
         @JvmName("anisotropicFilteringLevelProperty")
         get() = getAnisotropicFilteringLevel()
         @JvmName("setAnisotropicFilteringLevelProperty")
@@ -159,9 +159,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_scaling_3d_mode
      */
-    fun getScaling3dMode(): Long {
+    fun getScaling3dMode(): RenderingServer.ViewportScaling3DMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment)
+        return RenderingServer.ViewportScaling3DMode(ObjectCalls.ptrcallNoArgsRetLong(getScaling3dModeBind, segment))
     }
 
     /**
@@ -170,9 +170,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_scaling_3d_mode
      */
-    fun setScaling3dMode(scaling3dMode: Long) {
+    fun setScaling3dMode(scaling3dMode: RenderingServer.ViewportScaling3DMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode)
+        ObjectCalls.ptrcallWithLongArg(setScaling3dModeBind, segment, scaling3dMode.value)
     }
 
     /**
@@ -180,9 +180,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_msaa_3d
      */
-    fun getMsaa3d(): Long {
+    fun getMsaa3d(): RenderingServer.ViewportMSAA {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment)
+        return RenderingServer.ViewportMSAA(ObjectCalls.ptrcallNoArgsRetLong(getMsaa3dBind, segment))
     }
 
     /**
@@ -190,9 +190,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_msaa_3d
      */
-    fun setMsaa3d(msaa3d: Long) {
+    fun setMsaa3d(msaa3d: RenderingServer.ViewportMSAA) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa3d)
+        ObjectCalls.ptrcallWithLongArg(setMsaa3dBind, segment, msaa3d.value)
     }
 
     /**
@@ -200,9 +200,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_screen_space_aa
      */
-    fun getScreenSpaceAa(): Long {
+    fun getScreenSpaceAa(): RenderingServer.ViewportScreenSpaceAA {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment)
+        return RenderingServer.ViewportScreenSpaceAA(ObjectCalls.ptrcallNoArgsRetLong(getScreenSpaceAaBind, segment))
     }
 
     /**
@@ -210,9 +210,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_screen_space_aa
      */
-    fun setScreenSpaceAa(screenSpaceAa: Long) {
+    fun setScreenSpaceAa(screenSpaceAa: RenderingServer.ViewportScreenSpaceAA) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa)
+        ObjectCalls.ptrcallWithLongArg(setScreenSpaceAaBind, segment, screenSpaceAa.value)
     }
 
     /**
@@ -264,9 +264,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.get_anisotropic_filtering_level
      */
-    fun getAnisotropicFilteringLevel(): Long {
+    fun getAnisotropicFilteringLevel(): RenderingServer.ViewportAnisotropicFiltering {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment)
+        return RenderingServer.ViewportAnisotropicFiltering(ObjectCalls.ptrcallNoArgsRetLong(getAnisotropicFilteringLevelBind, segment))
     }
 
     /**
@@ -274,9 +274,9 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
      *
      * Generated from Godot docs: RenderSceneBuffersConfiguration.set_anisotropic_filtering_level
      */
-    fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: Long) {
+    fun setAnisotropicFilteringLevel(anisotropicFilteringLevel: RenderingServer.ViewportAnisotropicFiltering) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel)
+        ObjectCalls.ptrcallWithLongArg(setAnisotropicFilteringLevelBind, segment, anisotropicFilteringLevel.value)
     }
 
     companion object {

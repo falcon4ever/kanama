@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -35,7 +36,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
         @JvmName("setFlatProperty")
         set(value) = setFlat(value)
 
-    var controlState: Long
+    var controlState: EditorSpinSlider.ControlState
         @JvmName("controlStateProperty")
         get() = getControlState()
         @JvmName("setControlStateProperty")
@@ -138,8 +139,8 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: EditorSpinSlider.set_control_state
      */
-    fun setControlState(state: Long) {
-        ObjectCalls.ptrcallWithLongArg(setControlStateBind, segment, state)
+    fun setControlState(state: EditorSpinSlider.ControlState) {
+        ObjectCalls.ptrcallWithLongArg(setControlStateBind, segment, state.value)
     }
 
     /**
@@ -147,8 +148,8 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      *
      * Generated from Godot docs: EditorSpinSlider.get_control_state
      */
-    fun getControlState(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getControlStateBind, segment)
+    fun getControlState(): EditorSpinSlider.ControlState {
+        return EditorSpinSlider.ControlState(ObjectCalls.ptrcallNoArgsRetLong(getControlStateBind, segment))
     }
 
     /**
@@ -174,7 +175,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * `EditorSpinSlider` is considered to be editing a floating-point value. This is used to determine
      * whether a slider should be drawn by default. The slider is only drawn for floats; integers use
      * up-down arrows similar to `SpinBox` instead, unless `control_state` is set to
-     * `CONTROL_STATE_PREFER_SLIDER`. It will also use
+     * `ControlState.PREFER_SLIDER`. It will also use
      * `EditorSettings.interface/inspector/integer_drag_speed` instead of
      * `EditorSettings.interface/inspector/float_drag_speed` if the slider is available.
      *
@@ -189,7 +190,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
      * `EditorSpinSlider` is considered to be editing a floating-point value. This is used to determine
      * whether a slider should be drawn by default. The slider is only drawn for floats; integers use
      * up-down arrows similar to `SpinBox` instead, unless `control_state` is set to
-     * `CONTROL_STATE_PREFER_SLIDER`. It will also use
+     * `ControlState.PREFER_SLIDER`. It will also use
      * `EditorSettings.interface/inspector/integer_drag_speed` instead of
      * `EditorSettings.interface/inspector/float_drag_speed` if the slider is available.
      *
@@ -227,11 +228,38 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
         const val valueFocusExited: String = "value_focus_exited"
     }
 
-    companion object {
-        const val CONTROL_STATE_DEFAULT: Long = 0L
-        const val CONTROL_STATE_PREFER_SLIDER: Long = 1L
-        const val CONTROL_STATE_HIDE: Long = 2L
+    /**
+     * Godot's `EditorSpinSlider.ControlState` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`EditorSpinSlider.ControlState.<NAME>`).
+     *
+     * Generated from Godot docs: EditorSpinSlider.ControlState
+     */
+    @JvmInline
+    value class ControlState(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The type of control used will depend on the value of `editing_integer`. Up-down arrows if
+             * `true`, a slider if `false`.
+             *
+             * Generated from Godot docs: EditorSpinSlider.CONTROL_STATE_DEFAULT
+             */
+            val DEFAULT: ControlState get() = ControlState(0L)
+            /**
+             * A slider will always be used, even if `editing_integer` is enabled.
+             *
+             * Generated from Godot docs: EditorSpinSlider.CONTROL_STATE_PREFER_SLIDER
+             */
+            val PREFER_SLIDER: ControlState get() = ControlState(1L)
+            /**
+             * Neither the up-down arrows nor the slider will be shown.
+             *
+             * Generated from Godot docs: EditorSpinSlider.CONTROL_STATE_HIDE
+             */
+            val HIDE: ControlState get() = ControlState(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorSpinSlider? =
             wrap(handle.segment)

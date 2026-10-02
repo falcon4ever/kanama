@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -160,10 +161,32 @@ class NavigationPathQueryResult2D(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallNoArgs(resetBind, segment)
     }
 
-    companion object {
-        const val PATH_SEGMENT_TYPE_REGION: Long = 0L
-        const val PATH_SEGMENT_TYPE_LINK: Long = 1L
+    /**
+     * Godot's `NavigationPathQueryResult2D.PathSegmentType` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`NavigationPathQueryResult2D.PathSegmentType.<NAME>`).
+     *
+     * Generated from Godot docs: NavigationPathQueryResult2D.PathSegmentType
+     */
+    @JvmInline
+    value class PathSegmentType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * This segment of the path goes through a region.
+             *
+             * Generated from Godot docs: NavigationPathQueryResult2D.PATH_SEGMENT_TYPE_REGION
+             */
+            val REGION: PathSegmentType get() = PathSegmentType(0L)
+            /**
+             * This segment of the path goes through a link.
+             *
+             * Generated from Godot docs: NavigationPathQueryResult2D.PATH_SEGMENT_TYPE_LINK
+             */
+            val LINK: PathSegmentType get() = PathSegmentType(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationPathQueryResult2D? =
             wrap(handle.segment)

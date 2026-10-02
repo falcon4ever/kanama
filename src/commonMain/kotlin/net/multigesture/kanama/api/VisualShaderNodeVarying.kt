@@ -15,7 +15,7 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
         @JvmName("setVaryingNameProperty")
         set(value) = setVaryingName(value)
 
-    var varyingType: Long
+    var varyingType: VisualShader.VaryingType
         @JvmName("varyingTypeProperty")
         get() = getVaryingType()
         @JvmName("setVaryingTypeProperty")
@@ -31,14 +31,14 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
         return ObjectCalls.ptrcallNoArgsRetString(getVaryingNameBind, segment)
     }
 
-    fun setVaryingType(type: Long) {
+    fun setVaryingType(type: VisualShader.VaryingType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVaryingTypeBind, segment, type)
+        ObjectCalls.ptrcallWithLongArg(setVaryingTypeBind, segment, type.value)
     }
 
-    fun getVaryingType(): Long {
+    fun getVaryingType(): VisualShader.VaryingType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getVaryingTypeBind, segment)
+        return VisualShader.VaryingType(ObjectCalls.ptrcallNoArgsRetLong(getVaryingTypeBind, segment))
     }
 
     companion object {

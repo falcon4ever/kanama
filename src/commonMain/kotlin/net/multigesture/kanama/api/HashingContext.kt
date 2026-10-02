@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,14 +12,14 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 class HashingContext(handle: GodotHandle) : RefCounted(handle) {
     /**
-     * Starts a new hash computation of the given `type` (e.g. `HASH_SHA256` to start computation of an
-     * SHA-256).
+     * Starts a new hash computation of the given `type` (e.g. `HashType.SHA256` to start computation
+     * of an SHA-256).
      *
      * Generated from Godot docs: HashingContext.start
      */
-    fun start(type: Long): Long {
+    fun start(type: HashingContext.HashType): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(startBind, segment, type)
+        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(startBind, segment, type.value))
     }
 
     /**
@@ -26,9 +27,9 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: HashingContext.update
      */
-    fun update(chunk: ByteArray): Long {
+    fun update(chunk: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, chunk)
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, chunk))
     }
 
     /**
@@ -41,11 +42,37 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, segment)
     }
 
-    companion object {
-        const val HASH_MD5: Long = 0L
-        const val HASH_SHA1: Long = 1L
-        const val HASH_SHA256: Long = 2L
+    /**
+     * Godot's `HashingContext.HashType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`HashingContext.HashType.<NAME>`).
+     *
+     * Generated from Godot docs: HashingContext.HashType
+     */
+    @JvmInline
+    value class HashType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Hashing algorithm: MD5.
+             *
+             * Generated from Godot docs: HashingContext.HASH_MD5
+             */
+            val MD5: HashType get() = HashType(0L)
+            /**
+             * Hashing algorithm: SHA-1.
+             *
+             * Generated from Godot docs: HashingContext.HASH_SHA1
+             */
+            val SHA1: HashType get() = HashType(1L)
+            /**
+             * Hashing algorithm: SHA-256.
+             *
+             * Generated from Godot docs: HashingContext.HASH_SHA256
+             */
+            val SHA256: HashType get() = HashType(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): HashingContext? =
             wrap(handle.segment)

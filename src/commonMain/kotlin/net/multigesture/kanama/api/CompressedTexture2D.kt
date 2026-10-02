@@ -20,9 +20,9 @@ class CompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CompressedTexture2D.load
      */
-    fun load(path: String): Long {
+    fun load(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
     }
 
     /**

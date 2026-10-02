@@ -49,19 +49,19 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
         ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, segment, section, key)
     }
 
-    fun load(path: String): Long {
+    fun load(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
     }
 
-    fun parse(data: String): Long {
+    fun parse(data: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data))
     }
 
-    fun save(path: String): Long {
+    fun save(path: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path)
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path))
     }
 
     fun encodeToText(): String {
@@ -69,24 +69,24 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, segment)
     }
 
-    fun loadEncrypted(path: String, key: ByteArray): Long {
+    fun loadEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key)
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key))
     }
 
-    fun loadEncryptedPass(path: String, password: String): Long {
+    fun loadEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password))
     }
 
-    fun saveEncrypted(path: String, key: ByteArray): Long {
+    fun saveEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key)
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key))
     }
 
-    fun saveEncryptedPass(path: String, password: String): Long {
+    fun saveEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password)
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password))
     }
 
     fun clear() {

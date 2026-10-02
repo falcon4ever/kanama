@@ -16,9 +16,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: CryptoKey.save
      */
-    fun save(path: String, publicOnly: Boolean = false): Long {
+    fun save(path: String, publicOnly: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(saveBind, segment, path, publicOnly)
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(saveBind, segment, path, publicOnly))
     }
 
     /**
@@ -27,9 +27,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: CryptoKey.load
      */
-    fun load(path: String, publicOnly: Boolean = false): Long {
+    fun load(path: String, publicOnly: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadBind, segment, path, publicOnly)
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadBind, segment, path, publicOnly))
     }
 
     /**
@@ -59,9 +59,9 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: CryptoKey.load_from_string
      */
-    fun loadFromString(stringKey: String, publicOnly: Boolean = false): Long {
+    fun loadFromString(stringKey: String, publicOnly: Boolean = false): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadFromStringBind, segment, stringKey, publicOnly)
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(loadFromStringBind, segment, stringKey, publicOnly))
     }
 
     companion object {

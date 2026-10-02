@@ -59,9 +59,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: MeshLibrary.set_item_mesh_cast_shadow
      */
-    fun setItemMeshCastShadow(id: Int, shadowCastingSetting: Long) {
+    fun setItemMeshCastShadow(id: Int, shadowCastingSetting: RenderingServer.ShadowCastingSetting) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, segment, id, shadowCastingSetting)
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemMeshCastShadowBind, segment, id, shadowCastingSetting.value)
     }
 
     /**
@@ -151,9 +151,9 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: MeshLibrary.get_item_mesh_cast_shadow
      */
-    fun getItemMeshCastShadow(id: Int): Long {
+    fun getItemMeshCastShadow(id: Int): RenderingServer.ShadowCastingSetting {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, segment, id)
+        return RenderingServer.ShadowCastingSetting(ObjectCalls.ptrcallWithIntArgRetLong(getItemMeshCastShadowBind, segment, id))
     }
 
     /**

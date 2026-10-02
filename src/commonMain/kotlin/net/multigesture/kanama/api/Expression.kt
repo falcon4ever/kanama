@@ -17,9 +17,9 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Expression.parse
      */
-    fun parse(expression: String, inputNames: List<String>): Long {
+    fun parse(expression: String, inputNames: List<String>): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, segment, expression, inputNames)
+        return GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(parseBind, segment, expression, inputNames))
     }
 
     /**

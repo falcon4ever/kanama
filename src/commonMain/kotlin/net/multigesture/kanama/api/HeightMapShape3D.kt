@@ -114,7 +114,7 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
     /**
      * Updates `map_data` with data read from an `Image` reference. Automatically resizes heightmap
      * `map_width` and `map_depth` to fit the full image width and height. The image needs to be in
-     * either `Image.FORMAT_RF` (32 bit), `Image.FORMAT_RH` (16 bit), or `Image.FORMAT_R8` (8 bit).
+     * either `Image.Format.RF` (32 bit), `Image.Format.RH` (16 bit), or `Image.Format.R8` (8 bit).
      * Each image pixel is read in as a float on the range from `0.0` (black pixel) to `1.0` (white
      * pixel). This range value gets remapped to `height_min` and `height_max` to form the final height
      * value. Note: Using a heightmap with 16-bit or 32-bit data, stored in EXR or HDR format is

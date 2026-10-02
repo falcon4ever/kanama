@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,7 +19,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: Camera3D
  */
 open class Camera3D(handle: GodotHandle) : Node3D(handle) {
-    var keepAspect: Long
+    var keepAspect: Camera3D.KeepAspect
         @JvmName("keepAspectProperty")
         get() = getKeepAspectMode()
         @JvmName("setKeepAspectProperty")
@@ -60,13 +61,13 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         @JvmName("setVOffsetProperty")
         set(value) = setVOffset(value)
 
-    var dopplerTracking: Long
+    var dopplerTracking: Camera3D.DopplerTracking
         @JvmName("dopplerTrackingProperty")
         get() = getDopplerTracking()
         @JvmName("setDopplerTrackingProperty")
         set(value) = setDopplerTracking(value)
 
-    var projection: Long
+    var projection: Camera3D.ProjectionType
         @JvmName("projectionProperty")
         get() = getProjection()
         @JvmName("setProjectionProperty")
@@ -175,9 +176,9 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * Sets the camera projection to perspective mode (see `PROJECTION_PERSPECTIVE`), by specifying a
-     * `fov` (field of view) angle in degrees, and the `z_near` and `z_far` clip planes in world space
-     * units.
+     * Sets the camera projection to perspective mode (see `ProjectionType.PERSPECTIVE`), by specifying
+     * a `fov` (field of view) angle in degrees, and the `z_near` and `z_far` clip planes in world
+     * space units.
      *
      * Generated from Godot docs: Camera3D.set_perspective
      */
@@ -186,7 +187,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * Sets the camera projection to orthogonal mode (see `PROJECTION_ORTHOGONAL`), by specifying a
+     * Sets the camera projection to orthogonal mode (see `ProjectionType.ORTHOGONAL`), by specifying a
      * `size`, and the `z_near` and `z_far` clip planes in world space units. As a hint, 3D games that
      * look 2D often use this projection, with `size` specified in pixels.
      *
@@ -197,10 +198,10 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * Sets the camera projection to frustum mode (see `PROJECTION_FRUSTUM`), by specifying a `size`,
-     * an `offset`, and the `z_near` and `z_far` clip planes in world space units. The `size` parameter
-     * represents the size of the near plane, either its width or height depending on the value of
-     * `keep_aspect`. See also `frustum_offset`.
+     * Sets the camera projection to frustum mode (see `ProjectionType.FRUSTUM`), by specifying a
+     * `size`, an `offset`, and the `z_near` and `z_far` clip planes in world space units. The `size`
+     * parameter represents the size of the near plane, either its width or height depending on the
+     * value of `keep_aspect`. See also `frustum_offset`.
      *
      * Generated from Godot docs: Camera3D.set_frustum
      */
@@ -289,7 +290,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     /**
      * The camera's frustum offset. This can be changed from the default to create "tilted frustum"
      * effects such as Y-shearing (https://zdoom.org/wiki/Y-shearing). Note: Only effective if
-     * `projection` is `PROJECTION_FRUSTUM`.
+     * `projection` is `ProjectionType.FRUSTUM`.
      *
      * Generated from Godot docs: Camera3D.get_frustum_offset
      */
@@ -346,7 +347,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     /**
      * The camera's frustum offset. This can be changed from the default to create "tilted frustum"
      * effects such as Y-shearing (https://zdoom.org/wiki/Y-shearing). Note: Only effective if
-     * `projection` is `PROJECTION_FRUSTUM`.
+     * `projection` is `ProjectionType.FRUSTUM`.
      *
      * Generated from Godot docs: Camera3D.set_frustum_offset
      */
@@ -388,23 +389,23 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * The camera's projection mode. In `PROJECTION_PERSPECTIVE` mode, objects' Z distance from the
+     * The camera's projection mode. In `ProjectionType.PERSPECTIVE` mode, objects' Z distance from the
      * camera's local space scales their perceived size.
      *
      * Generated from Godot docs: Camera3D.get_projection
      */
-    fun getProjection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, segment)
+    fun getProjection(): Camera3D.ProjectionType {
+        return Camera3D.ProjectionType(ObjectCalls.ptrcallNoArgsRetLong(getProjectionBind, segment))
     }
 
     /**
-     * The camera's projection mode. In `PROJECTION_PERSPECTIVE` mode, objects' Z distance from the
+     * The camera's projection mode. In `ProjectionType.PERSPECTIVE` mode, objects' Z distance from the
      * camera's local space scales their perceived size.
      *
      * Generated from Godot docs: Camera3D.set_projection
      */
-    fun setProjection(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setProjectionBind, segment, mode)
+    fun setProjection(mode: Camera3D.ProjectionType) {
+        ObjectCalls.ptrcallWithLongArg(setProjectionBind, segment, mode.value)
     }
 
     /**
@@ -452,8 +453,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * easily using a script, use `get_cull_mask_value` and `set_cull_mask_value`. Note: `VoxelGI`,
      * SDFGI and `LightmapGI` will always take all layers into account to determine what contributes to
      * global illumination. If this is an issue, set `GeometryInstance3D.gi_mode` to
-     * `GeometryInstance3D.GI_MODE_DISABLED` for meshes and `Light3D.light_bake_mode` to
-     * `Light3D.BAKE_DISABLED` for lights to exclude them from global illumination.
+     * `GeometryInstance3D.GIMode.DISABLED` for meshes and `Light3D.light_bake_mode` to
+     * `Light3D.BakeMode.DISABLED` for lights to exclude them from global illumination.
      *
      * Generated from Godot docs: Camera3D.set_cull_mask
      */
@@ -470,8 +471,8 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * easily using a script, use `get_cull_mask_value` and `set_cull_mask_value`. Note: `VoxelGI`,
      * SDFGI and `LightmapGI` will always take all layers into account to determine what contributes to
      * global illumination. If this is an issue, set `GeometryInstance3D.gi_mode` to
-     * `GeometryInstance3D.GI_MODE_DISABLED` for meshes and `Light3D.light_bake_mode` to
-     * `Light3D.BAKE_DISABLED` for lights to exclude them from global illumination.
+     * `GeometryInstance3D.GIMode.DISABLED` for meshes and `Light3D.light_bake_mode` to
+     * `Light3D.BakeMode.DISABLED` for lights to exclude them from global illumination.
      *
      * Generated from Godot docs: Camera3D.get_cull_mask
      */
@@ -534,47 +535,49 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * The axis to lock during `fov`/`size` adjustments. Can be either `KEEP_WIDTH` or `KEEP_HEIGHT`.
+     * The axis to lock during `fov`/`size` adjustments. Can be either `KeepAspect.WIDTH` or
+     * `KeepAspect.HEIGHT`.
      *
      * Generated from Godot docs: Camera3D.set_keep_aspect_mode
      */
-    fun setKeepAspectMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, segment, mode)
+    fun setKeepAspectMode(mode: Camera3D.KeepAspect) {
+        ObjectCalls.ptrcallWithLongArg(setKeepAspectModeBind, segment, mode.value)
     }
 
     /**
-     * The axis to lock during `fov`/`size` adjustments. Can be either `KEEP_WIDTH` or `KEEP_HEIGHT`.
+     * The axis to lock during `fov`/`size` adjustments. Can be either `KeepAspect.WIDTH` or
+     * `KeepAspect.HEIGHT`.
      *
      * Generated from Godot docs: Camera3D.get_keep_aspect_mode
      */
-    fun getKeepAspectMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, segment)
+    fun getKeepAspectMode(): Camera3D.KeepAspect {
+        return Camera3D.KeepAspect(ObjectCalls.ptrcallNoArgsRetLong(getKeepAspectModeBind, segment))
     }
 
     /**
-     * If not `DOPPLER_TRACKING_DISABLED`, this camera will simulate the Doppler effect
+     * If not `DopplerTracking.DISABLED`, this camera will simulate the Doppler effect
      * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
      * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
      * `AudioStreamPlayer3D.doppler_tracking` is not set to
-     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     * `AudioStreamPlayer3D.DopplerTracking.DISABLED`.
      *
      * Generated from Godot docs: Camera3D.set_doppler_tracking
      */
-    fun setDopplerTracking(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode)
+    fun setDopplerTracking(mode: Camera3D.DopplerTracking) {
+        ObjectCalls.ptrcallWithLongArg(setDopplerTrackingBind, segment, mode.value)
     }
 
     /**
-     * If not `DOPPLER_TRACKING_DISABLED`, this camera will simulate the Doppler effect
+     * If not `DopplerTracking.DISABLED`, this camera will simulate the Doppler effect
      * (https://en.wikipedia.org/wiki/Doppler_effect) for objects changed in particular `_process`
      * methods. Note: The Doppler effect will only be heard on `AudioStreamPlayer3D`s if
      * `AudioStreamPlayer3D.doppler_tracking` is not set to
-     * `AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED`.
+     * `AudioStreamPlayer3D.DopplerTracking.DISABLED`.
      *
      * Generated from Godot docs: Camera3D.get_doppler_tracking
      */
-    fun getDopplerTracking(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment)
+    fun getDopplerTracking(): Camera3D.DopplerTracking {
+        return Camera3D.DopplerTracking(ObjectCalls.ptrcallNoArgsRetLong(getDopplerTrackingBind, segment))
     }
 
     /**
@@ -638,16 +641,103 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetBool(getCullMaskValueBind, segment, layerNumber)
     }
 
-    companion object {
-        const val PROJECTION_PERSPECTIVE: Long = 0L
-        const val PROJECTION_ORTHOGONAL: Long = 1L
-        const val PROJECTION_FRUSTUM: Long = 2L
-        const val KEEP_WIDTH: Long = 0L
-        const val KEEP_HEIGHT: Long = 1L
-        const val DOPPLER_TRACKING_DISABLED: Long = 0L
-        const val DOPPLER_TRACKING_IDLE_STEP: Long = 1L
-        const val DOPPLER_TRACKING_PHYSICS_STEP: Long = 2L
+    /**
+     * Godot's `Camera3D.ProjectionType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Camera3D.ProjectionType.<NAME>`).
+     *
+     * Generated from Godot docs: Camera3D.ProjectionType
+     */
+    @JvmInline
+    value class ProjectionType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Perspective projection. Objects on the screen becomes smaller when they are far away.
+             *
+             * Generated from Godot docs: Camera3D.PROJECTION_PERSPECTIVE
+             */
+            val PERSPECTIVE: ProjectionType get() = ProjectionType(0L)
+            /**
+             * Orthogonal projection, also known as orthographic projection. Objects remain the same size on
+             * the screen no matter how far away they are.
+             *
+             * Generated from Godot docs: Camera3D.PROJECTION_ORTHOGONAL
+             */
+            val ORTHOGONAL: ProjectionType get() = ProjectionType(1L)
+            /**
+             * Frustum projection. This mode allows adjusting `frustum_offset` to create "tilted frustum"
+             * effects.
+             *
+             * Generated from Godot docs: Camera3D.PROJECTION_FRUSTUM
+             */
+            val FRUSTUM: ProjectionType get() = ProjectionType(2L)
+        }
+    }
 
+    /**
+     * Godot's `Camera3D.KeepAspect` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Camera3D.KeepAspect.<NAME>`).
+     *
+     * Generated from Godot docs: Camera3D.KeepAspect
+     */
+    @JvmInline
+    value class KeepAspect(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Preserves the horizontal aspect ratio; also known as Vert- scaling. This is usually the best
+             * option for projects running in portrait mode, as taller aspect ratios will benefit from a wider
+             * vertical FOV.
+             *
+             * Generated from Godot docs: Camera3D.KEEP_WIDTH
+             */
+            val WIDTH: KeepAspect get() = KeepAspect(0L)
+            /**
+             * Preserves the vertical aspect ratio; also known as Hor+ scaling. This is usually the best option
+             * for projects running in landscape mode, as wider aspect ratios will automatically benefit from a
+             * wider horizontal FOV.
+             *
+             * Generated from Godot docs: Camera3D.KEEP_HEIGHT
+             */
+            val HEIGHT: KeepAspect get() = KeepAspect(1L)
+        }
+    }
+
+    /**
+     * Godot's `Camera3D.DopplerTracking` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Camera3D.DopplerTracking.<NAME>`).
+     *
+     * Generated from Godot docs: Camera3D.DopplerTracking
+     */
+    @JvmInline
+    value class DopplerTracking(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) simulation (default).
+             *
+             * Generated from Godot docs: Camera3D.DOPPLER_TRACKING_DISABLED
+             */
+            val DISABLED: DopplerTracking get() = DopplerTracking(0L)
+            /**
+             * Simulate Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) by tracking positions of
+             * objects that are changed in `_process`. Changes in the relative velocity of this camera compared
+             * to those objects affect how audio is perceived (changing the audio's
+             * `AudioStreamPlayer3D.pitch_scale`).
+             *
+             * Generated from Godot docs: Camera3D.DOPPLER_TRACKING_IDLE_STEP
+             */
+            val IDLE_STEP: DopplerTracking get() = DopplerTracking(1L)
+            /**
+             * Simulate Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) by tracking positions of
+             * objects that are changed in `_physics_process`. Changes in the relative velocity of this camera
+             * compared to those objects affect how audio is perceived (changing the audio's
+             * `AudioStreamPlayer3D.pitch_scale`).
+             *
+             * Generated from Godot docs: Camera3D.DOPPLER_TRACKING_PHYSICS_STEP
+             */
+            val PHYSICS_STEP: DopplerTracking get() = DopplerTracking(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Camera3D? =
             wrap(handle.segment)

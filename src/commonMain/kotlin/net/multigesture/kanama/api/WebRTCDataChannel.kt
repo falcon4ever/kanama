@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,15 +10,15 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: WebRTCDataChannel
  */
 open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
-    var writeMode: Long
+    var writeMode: WebRTCDataChannel.WriteMode
         @JvmName("writeModeProperty")
         get() = getWriteMode()
         @JvmName("setWriteModeProperty")
         set(value) = setWriteMode(value)
 
-    fun poll(): Long {
+    fun poll(): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment)
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
     }
 
     fun closeConnection() {
@@ -30,19 +31,19 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(wasStringPacketBind, segment)
     }
 
-    fun setWriteMode(writeMode: Long) {
+    fun setWriteMode(writeMode: WebRTCDataChannel.WriteMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWriteModeBind, segment, writeMode)
+        ObjectCalls.ptrcallWithLongArg(setWriteModeBind, segment, writeMode.value)
     }
 
-    fun getWriteMode(): Long {
+    fun getWriteMode(): WebRTCDataChannel.WriteMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getWriteModeBind, segment)
+        return WebRTCDataChannel.WriteMode(ObjectCalls.ptrcallNoArgsRetLong(getWriteModeBind, segment))
     }
 
-    fun getReadyState(): Long {
+    fun getReadyState(): WebRTCDataChannel.ChannelState {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, segment)
+        return WebRTCDataChannel.ChannelState(ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, segment))
     }
 
     fun getLabel(): String {
@@ -85,14 +86,25 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getBufferedAmountBind, segment)
     }
 
-    companion object {
-        const val WRITE_MODE_TEXT: Long = 0L
-        const val WRITE_MODE_BINARY: Long = 1L
-        const val STATE_CONNECTING: Long = 0L
-        const val STATE_OPEN: Long = 1L
-        const val STATE_CLOSING: Long = 2L
-        const val STATE_CLOSED: Long = 3L
+    @JvmInline
+    value class WriteMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val TEXT: WriteMode get() = WriteMode(0L)
+            val BINARY: WriteMode get() = WriteMode(1L)
+        }
+    }
 
+    @JvmInline
+    value class ChannelState(override val value: Long) : GodotEnumValue {
+        companion object {
+            val CONNECTING: ChannelState get() = ChannelState(0L)
+            val OPEN: ChannelState get() = ChannelState(1L)
+            val CLOSING: ChannelState get() = ChannelState(2L)
+            val CLOSED: ChannelState get() = ChannelState(3L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebRTCDataChannel? =
             wrap(handle.segment)

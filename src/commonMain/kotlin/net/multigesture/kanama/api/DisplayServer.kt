@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,241 +32,6 @@ object DisplayServer {
     const val MAIN_WINDOW_ID: Long = 0L
     const val INVALID_WINDOW_ID: Long = -1L
     const val INVALID_INDICATOR_ID: Long = -1L
-    const val FEATURE_GLOBAL_MENU: Long = 0L
-    const val FEATURE_SUBWINDOWS: Long = 1L
-    const val FEATURE_TOUCHSCREEN: Long = 2L
-    const val FEATURE_MOUSE: Long = 3L
-    const val FEATURE_MOUSE_WARP: Long = 4L
-    const val FEATURE_CLIPBOARD: Long = 5L
-    const val FEATURE_VIRTUAL_KEYBOARD: Long = 6L
-    const val FEATURE_CURSOR_SHAPE: Long = 7L
-    const val FEATURE_CUSTOM_CURSOR_SHAPE: Long = 8L
-    const val FEATURE_NATIVE_DIALOG: Long = 9L
-    const val FEATURE_IME: Long = 10L
-    const val FEATURE_WINDOW_TRANSPARENCY: Long = 11L
-    const val FEATURE_HIDPI: Long = 12L
-    const val FEATURE_ICON: Long = 13L
-    const val FEATURE_NATIVE_ICON: Long = 14L
-    const val FEATURE_ORIENTATION: Long = 15L
-    const val FEATURE_SWAP_BUFFERS: Long = 16L
-    const val FEATURE_CLIPBOARD_PRIMARY: Long = 18L
-    const val FEATURE_TEXT_TO_SPEECH: Long = 19L
-    const val FEATURE_EXTEND_TO_TITLE: Long = 20L
-    const val FEATURE_SCREEN_CAPTURE: Long = 21L
-    const val FEATURE_STATUS_INDICATOR: Long = 22L
-    const val FEATURE_NATIVE_HELP: Long = 23L
-    const val FEATURE_NATIVE_DIALOG_INPUT: Long = 24L
-    const val FEATURE_NATIVE_DIALOG_FILE: Long = 25L
-    const val FEATURE_NATIVE_DIALOG_FILE_EXTRA: Long = 26L
-    const val FEATURE_WINDOW_DRAG: Long = 27L
-    const val FEATURE_SCREEN_EXCLUDE_FROM_CAPTURE: Long = 28L
-    const val FEATURE_WINDOW_EMBEDDING: Long = 29L
-    const val FEATURE_NATIVE_DIALOG_FILE_MIME: Long = 30L
-    const val FEATURE_EMOJI_AND_SYMBOL_PICKER: Long = 31L
-    const val FEATURE_NATIVE_COLOR_PICKER: Long = 32L
-    const val FEATURE_SELF_FITTING_WINDOWS: Long = 33L
-    const val FEATURE_ACCESSIBILITY_SCREEN_READER: Long = 34L
-    const val FEATURE_HDR_OUTPUT: Long = 35L
-    const val FEATURE_PIP_MODE: Long = 36L
-    const val ROLE_UNKNOWN: Long = 0L
-    const val ROLE_DEFAULT_BUTTON: Long = 1L
-    const val ROLE_AUDIO: Long = 2L
-    const val ROLE_VIDEO: Long = 3L
-    const val ROLE_STATIC_TEXT: Long = 4L
-    const val ROLE_CONTAINER: Long = 5L
-    const val ROLE_PANEL: Long = 6L
-    const val ROLE_BUTTON: Long = 7L
-    const val ROLE_LINK: Long = 8L
-    const val ROLE_CHECK_BOX: Long = 9L
-    const val ROLE_RADIO_BUTTON: Long = 10L
-    const val ROLE_CHECK_BUTTON: Long = 11L
-    const val ROLE_SCROLL_BAR: Long = 12L
-    const val ROLE_SCROLL_VIEW: Long = 13L
-    const val ROLE_SPLITTER: Long = 14L
-    const val ROLE_SLIDER: Long = 15L
-    const val ROLE_SPIN_BUTTON: Long = 16L
-    const val ROLE_PROGRESS_INDICATOR: Long = 17L
-    const val ROLE_TEXT_FIELD: Long = 18L
-    const val ROLE_MULTILINE_TEXT_FIELD: Long = 19L
-    const val ROLE_COLOR_PICKER: Long = 20L
-    const val ROLE_TABLE: Long = 21L
-    const val ROLE_CELL: Long = 22L
-    const val ROLE_ROW: Long = 23L
-    const val ROLE_ROW_GROUP: Long = 24L
-    const val ROLE_ROW_HEADER: Long = 25L
-    const val ROLE_COLUMN_HEADER: Long = 26L
-    const val ROLE_TREE: Long = 27L
-    const val ROLE_TREE_ITEM: Long = 28L
-    const val ROLE_LIST: Long = 29L
-    const val ROLE_LIST_ITEM: Long = 30L
-    const val ROLE_LIST_BOX: Long = 31L
-    const val ROLE_LIST_BOX_OPTION: Long = 32L
-    const val ROLE_TAB_BAR: Long = 33L
-    const val ROLE_TAB: Long = 34L
-    const val ROLE_TAB_PANEL: Long = 35L
-    const val ROLE_MENU_BAR: Long = 36L
-    const val ROLE_MENU: Long = 37L
-    const val ROLE_MENU_ITEM: Long = 38L
-    const val ROLE_MENU_ITEM_CHECK_BOX: Long = 39L
-    const val ROLE_MENU_ITEM_RADIO: Long = 40L
-    const val ROLE_IMAGE: Long = 41L
-    const val ROLE_WINDOW: Long = 42L
-    const val ROLE_TITLE_BAR: Long = 43L
-    const val ROLE_DIALOG: Long = 44L
-    const val ROLE_TOOLTIP: Long = 45L
-    const val ROLE_REGION: Long = 46L
-    const val ROLE_TEXT_RUN: Long = 47L
-    const val POPUP_MENU: Long = 0L
-    const val POPUP_LIST: Long = 1L
-    const val POPUP_TREE: Long = 2L
-    const val POPUP_DIALOG: Long = 3L
-    const val FLAG_HIDDEN: Long = 0L
-    const val FLAG_MULTISELECTABLE: Long = 1L
-    const val FLAG_REQUIRED: Long = 2L
-    const val FLAG_VISITED: Long = 3L
-    const val FLAG_BUSY: Long = 4L
-    const val FLAG_MODAL: Long = 5L
-    const val FLAG_TOUCH_PASSTHROUGH: Long = 6L
-    const val FLAG_READONLY: Long = 7L
-    const val FLAG_DISABLED: Long = 8L
-    const val FLAG_CLIPS_CHILDREN: Long = 9L
-    const val ACTION_CLICK: Long = 0L
-    const val ACTION_FOCUS: Long = 1L
-    const val ACTION_BLUR: Long = 2L
-    const val ACTION_COLLAPSE: Long = 3L
-    const val ACTION_EXPAND: Long = 4L
-    const val ACTION_DECREMENT: Long = 5L
-    const val ACTION_INCREMENT: Long = 6L
-    const val ACTION_HIDE_TOOLTIP: Long = 7L
-    const val ACTION_SHOW_TOOLTIP: Long = 8L
-    const val ACTION_SET_TEXT_SELECTION: Long = 9L
-    const val ACTION_REPLACE_SELECTED_TEXT: Long = 10L
-    const val ACTION_SCROLL_BACKWARD: Long = 11L
-    const val ACTION_SCROLL_DOWN: Long = 12L
-    const val ACTION_SCROLL_FORWARD: Long = 13L
-    const val ACTION_SCROLL_LEFT: Long = 14L
-    const val ACTION_SCROLL_RIGHT: Long = 15L
-    const val ACTION_SCROLL_UP: Long = 16L
-    const val ACTION_SCROLL_INTO_VIEW: Long = 17L
-    const val ACTION_SCROLL_TO_POINT: Long = 18L
-    const val ACTION_SET_SCROLL_OFFSET: Long = 19L
-    const val ACTION_SET_VALUE: Long = 20L
-    const val ACTION_SHOW_CONTEXT_MENU: Long = 21L
-    const val ACTION_CUSTOM: Long = 22L
-    const val LIVE_OFF: Long = 0L
-    const val LIVE_POLITE: Long = 1L
-    const val LIVE_ASSERTIVE: Long = 2L
-    const val SCROLL_UNIT_ITEM: Long = 0L
-    const val SCROLL_UNIT_PAGE: Long = 1L
-    const val SCROLL_HINT_TOP_LEFT: Long = 0L
-    const val SCROLL_HINT_BOTTOM_RIGHT: Long = 1L
-    const val SCROLL_HINT_TOP_EDGE: Long = 2L
-    const val SCROLL_HINT_BOTTOM_EDGE: Long = 3L
-    const val SCROLL_HINT_LEFT_EDGE: Long = 4L
-    const val SCROLL_HINT_RIGHT_EDGE: Long = 5L
-    const val MOUSE_MODE_VISIBLE: Long = 0L
-    const val MOUSE_MODE_HIDDEN: Long = 1L
-    const val MOUSE_MODE_CAPTURED: Long = 2L
-    const val MOUSE_MODE_CONFINED: Long = 3L
-    const val MOUSE_MODE_CONFINED_HIDDEN: Long = 4L
-    const val MOUSE_MODE_MAX: Long = 5L
-    const val SCREEN_LANDSCAPE: Long = 0L
-    const val SCREEN_PORTRAIT: Long = 1L
-    const val SCREEN_REVERSE_LANDSCAPE: Long = 2L
-    const val SCREEN_REVERSE_PORTRAIT: Long = 3L
-    const val SCREEN_SENSOR_LANDSCAPE: Long = 4L
-    const val SCREEN_SENSOR_PORTRAIT: Long = 5L
-    const val SCREEN_SENSOR: Long = 6L
-    const val KEYBOARD_TYPE_DEFAULT: Long = 0L
-    const val KEYBOARD_TYPE_MULTILINE: Long = 1L
-    const val KEYBOARD_TYPE_NUMBER: Long = 2L
-    const val KEYBOARD_TYPE_NUMBER_DECIMAL: Long = 3L
-    const val KEYBOARD_TYPE_PHONE: Long = 4L
-    const val KEYBOARD_TYPE_EMAIL_ADDRESS: Long = 5L
-    const val KEYBOARD_TYPE_PASSWORD: Long = 6L
-    const val KEYBOARD_TYPE_URL: Long = 7L
-    const val CURSOR_ARROW: Long = 0L
-    const val CURSOR_IBEAM: Long = 1L
-    const val CURSOR_POINTING_HAND: Long = 2L
-    const val CURSOR_CROSS: Long = 3L
-    const val CURSOR_WAIT: Long = 4L
-    const val CURSOR_BUSY: Long = 5L
-    const val CURSOR_DRAG: Long = 6L
-    const val CURSOR_CAN_DROP: Long = 7L
-    const val CURSOR_FORBIDDEN: Long = 8L
-    const val CURSOR_VSIZE: Long = 9L
-    const val CURSOR_HSIZE: Long = 10L
-    const val CURSOR_BDIAGSIZE: Long = 11L
-    const val CURSOR_FDIAGSIZE: Long = 12L
-    const val CURSOR_MOVE: Long = 13L
-    const val CURSOR_VSPLIT: Long = 14L
-    const val CURSOR_HSPLIT: Long = 15L
-    const val CURSOR_HELP: Long = 16L
-    const val CURSOR_MAX: Long = 17L
-    const val FILE_DIALOG_MODE_OPEN_FILE: Long = 0L
-    const val FILE_DIALOG_MODE_OPEN_FILES: Long = 1L
-    const val FILE_DIALOG_MODE_OPEN_DIR: Long = 2L
-    const val FILE_DIALOG_MODE_OPEN_ANY: Long = 3L
-    const val FILE_DIALOG_MODE_SAVE_FILE: Long = 4L
-    const val WINDOW_MODE_WINDOWED: Long = 0L
-    const val WINDOW_MODE_MINIMIZED: Long = 1L
-    const val WINDOW_MODE_MAXIMIZED: Long = 2L
-    const val WINDOW_MODE_FULLSCREEN: Long = 3L
-    const val WINDOW_MODE_EXCLUSIVE_FULLSCREEN: Long = 4L
-    const val PROGRESS_STATE_NOPROGRESS: Long = 0L
-    const val PROGRESS_STATE_INDETERMINATE: Long = 1L
-    const val PROGRESS_STATE_NORMAL: Long = 2L
-    const val PROGRESS_STATE_ERROR: Long = 3L
-    const val PROGRESS_STATE_PAUSED: Long = 4L
-    const val WINDOW_FLAG_RESIZE_DISABLED: Long = 0L
-    const val WINDOW_FLAG_BORDERLESS: Long = 1L
-    const val WINDOW_FLAG_ALWAYS_ON_TOP: Long = 2L
-    const val WINDOW_FLAG_TRANSPARENT: Long = 3L
-    const val WINDOW_FLAG_NO_FOCUS: Long = 4L
-    const val WINDOW_FLAG_POPUP: Long = 5L
-    const val WINDOW_FLAG_EXTEND_TO_TITLE: Long = 6L
-    const val WINDOW_FLAG_MOUSE_PASSTHROUGH: Long = 7L
-    const val WINDOW_FLAG_SHARP_CORNERS: Long = 8L
-    const val WINDOW_FLAG_EXCLUDE_FROM_CAPTURE: Long = 9L
-    const val WINDOW_FLAG_POPUP_WM_HINT: Long = 10L
-    const val WINDOW_FLAG_MINIMIZE_DISABLED: Long = 11L
-    const val WINDOW_FLAG_MAXIMIZE_DISABLED: Long = 12L
-    const val WINDOW_FLAG_MAX: Long = 13L
-    const val WINDOW_EVENT_MOUSE_ENTER: Long = 0L
-    const val WINDOW_EVENT_MOUSE_EXIT: Long = 1L
-    const val WINDOW_EVENT_FOCUS_IN: Long = 2L
-    const val WINDOW_EVENT_FOCUS_OUT: Long = 3L
-    const val WINDOW_EVENT_CLOSE_REQUEST: Long = 4L
-    const val WINDOW_EVENT_GO_BACK_REQUEST: Long = 5L
-    const val WINDOW_EVENT_DPI_CHANGE: Long = 6L
-    const val WINDOW_EVENT_TITLEBAR_CHANGE: Long = 7L
-    const val WINDOW_EVENT_FORCE_CLOSE: Long = 8L
-    const val WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED: Long = 9L
-    const val WINDOW_EDGE_TOP_LEFT: Long = 0L
-    const val WINDOW_EDGE_TOP: Long = 1L
-    const val WINDOW_EDGE_TOP_RIGHT: Long = 2L
-    const val WINDOW_EDGE_LEFT: Long = 3L
-    const val WINDOW_EDGE_RIGHT: Long = 4L
-    const val WINDOW_EDGE_BOTTOM_LEFT: Long = 5L
-    const val WINDOW_EDGE_BOTTOM: Long = 6L
-    const val WINDOW_EDGE_BOTTOM_RIGHT: Long = 7L
-    const val WINDOW_EDGE_MAX: Long = 8L
-    const val VSYNC_DISABLED: Long = 0L
-    const val VSYNC_ENABLED: Long = 1L
-    const val VSYNC_ADAPTIVE: Long = 2L
-    const val VSYNC_MAILBOX: Long = 3L
-    const val DISPLAY_HANDLE: Long = 0L
-    const val WINDOW_HANDLE: Long = 1L
-    const val WINDOW_VIEW: Long = 2L
-    const val OPENGL_CONTEXT: Long = 3L
-    const val EGL_DISPLAY: Long = 4L
-    const val EGL_CONFIG: Long = 5L
-    const val GLX_VISUALID: Long = 6L
-    const val GLX_FBCONFIG: Long = 7L
-    const val TTS_UTTERANCE_STARTED: Long = 0L
-    const val TTS_UTTERANCE_ENDED: Long = 1L
-    const val TTS_UTTERANCE_CANCELED: Long = 2L
-    const val TTS_UTTERANCE_BOUNDARY: Long = 3L
 
     /**
      * Returns `true` if the specified `feature` is supported by the current `DisplayServer`, `false`
@@ -274,8 +40,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.has_feature
      */
     @JvmStatic
-    fun hasFeature(feature: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature)
+    fun hasFeature(feature: DisplayServer.Feature): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature.value)
     }
 
     /**
@@ -343,8 +109,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_add_item
      */
     @JvmStatic
-    fun globalMenuAddItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun globalMenuAddItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -360,8 +126,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_add_check_item
      */
     @JvmStatic
-    fun globalMenuAddCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun globalMenuAddCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -377,8 +143,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_add_icon_item
      */
     @JvmStatic
-    fun globalMenuAddIconItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun globalMenuAddIconItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -394,8 +160,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_add_icon_check_item
      */
     @JvmStatic
-    fun globalMenuAddIconCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun globalMenuAddIconCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -413,8 +179,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_add_radio_check_item
      */
     @JvmStatic
-    fun globalMenuAddRadioCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddRadioCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun globalMenuAddRadioCheckItem(menuRoot: String, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddRadioCheckItemBind, singleton, menuRoot, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -433,8 +199,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_add_icon_radio_check_item
      */
     @JvmStatic
-    fun globalMenuAddIconRadioCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun globalMenuAddIconRadioCheckItem(menuRoot: String, icon: Texture2D?, label: String, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithStringObjectStringTwoCallableVariantLongIntArgsRetInt(globalMenuAddIconRadioCheckItemBind, singleton, menuRoot, icon?.requireOpenHandle() ?: NULL_SEGMENT, label, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -453,8 +219,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_add_multistate_item
      */
     @JvmStatic
-    fun globalMenuAddMultistateItem(menuRoot: String, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Long = 0L, index: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(globalMenuAddMultistateItemBind, singleton, menuRoot, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator, index)
+    fun globalMenuAddMultistateItem(menuRoot: String, label: String, maxStates: Int, defaultState: Int, callback: GodotCallable, keyCallback: GodotCallable, tag: Any? = null, accelerator: Key = Key.NONE, index: Int = -1): Int {
+        return ObjectCalls.ptrcallWithTwoStringTwoIntTwoCallableVariantLongIntArgsRetInt(globalMenuAddMultistateItemBind, singleton, menuRoot, label, maxStates, defaultState, callback.target.segment, callback.method, keyCallback.target.segment, keyCallback.method, tag, accelerator.value, index)
     }
 
     /**
@@ -589,8 +355,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_get_item_accelerator
      */
     @JvmStatic
-    fun globalMenuGetItemAccelerator(menuRoot: String, idx: Int): Long {
-        return ObjectCalls.ptrcallWithStringAndIntArgRetLong(globalMenuGetItemAcceleratorBind, singleton, menuRoot, idx)
+    fun globalMenuGetItemAccelerator(menuRoot: String, idx: Int): Key {
+        return Key(ObjectCalls.ptrcallWithStringAndIntArgRetLong(globalMenuGetItemAcceleratorBind, singleton, menuRoot, idx))
     }
 
     /**
@@ -784,8 +550,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.global_menu_set_item_accelerator
      */
     @JvmStatic
-    fun globalMenuSetItemAccelerator(menuRoot: String, idx: Int, keycode: Long) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(globalMenuSetItemAcceleratorBind, singleton, menuRoot, idx, keycode)
+    fun globalMenuSetItemAccelerator(menuRoot: String, idx: Int, keycode: Key) {
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(globalMenuSetItemAcceleratorBind, singleton, menuRoot, idx, keycode.value)
     }
 
     /**
@@ -1015,17 +781,18 @@ object DisplayServer {
 
     /**
      * Adds a callback, which is called when the utterance has started, finished, canceled or reached a
-     * text boundary. - `TTS_UTTERANCE_STARTED`, `TTS_UTTERANCE_ENDED`, and `TTS_UTTERANCE_CANCELED`
-     * callable's method should take one `int` parameter, the utterance ID. - `TTS_UTTERANCE_BOUNDARY`
-     * callable's method should take two `int` parameters, the index of the character and the utterance
-     * ID. Note: The granularity of the boundary callbacks is engine dependent. Note: This method is
-     * implemented on Android, iOS, Web, Linux (X11/Wayland), macOS, and Windows.
+     * text boundary. - `TTSUtteranceEvent.STARTED`, `TTSUtteranceEvent.ENDED`, and
+     * `TTSUtteranceEvent.CANCELED` callable's method should take one `int` parameter, the utterance
+     * ID. - `TTSUtteranceEvent.BOUNDARY` callable's method should take two `int` parameters, the index
+     * of the character and the utterance ID. Note: The granularity of the boundary callbacks is engine
+     * dependent. Note: This method is implemented on Android, iOS, Web, Linux (X11/Wayland), macOS,
+     * and Windows.
      *
      * Generated from Godot docs: DisplayServer.tts_set_utterance_callback
      */
     @JvmStatic
-    fun ttsSetUtteranceCallback(event: Long, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithLongCallableArgs(ttsSetUtteranceCallbackBind, singleton, event, callable.target.segment, callable.method)
+    fun ttsSetUtteranceCallback(event: DisplayServer.TTSUtteranceEvent, callable: GodotCallable) {
+        ObjectCalls.ptrcallWithLongCallableArgs(ttsSetUtteranceCallbackBind, singleton, event.value, callable.target.segment, callable.method)
     }
 
     /**
@@ -1090,8 +857,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.mouse_set_mode
      */
     @JvmStatic
-    fun mouseSetMode(mouseMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(mouseSetModeBind, singleton, mouseMode)
+    fun mouseSetMode(mouseMode: DisplayServer.MouseMode) {
+        ObjectCalls.ptrcallWithLongArg(mouseSetModeBind, singleton, mouseMode.value)
     }
 
     /**
@@ -1100,8 +867,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.mouse_get_mode
      */
     @JvmStatic
-    fun mouseGetMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(mouseGetModeBind, singleton)
+    fun mouseGetMode(): DisplayServer.MouseMode {
+        return DisplayServer.MouseMode(ObjectCalls.ptrcallNoArgsRetLong(mouseGetModeBind, singleton))
     }
 
     /**
@@ -1134,8 +901,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.mouse_get_button_state
      */
     @JvmStatic
-    fun mouseGetButtonState(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(mouseGetButtonStateBind, singleton)
+    fun mouseGetButtonState(): MouseButtonMask {
+        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(mouseGetButtonStateBind, singleton))
     }
 
     /**
@@ -1454,27 +1221,27 @@ object DisplayServer {
      * constants can be used as `screen`: `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`,
      * `SCREEN_WITH_MOUSE_FOCUS`, or `SCREEN_WITH_KEYBOARD_FOCUS`. Note: This method is implemented on
      * Android and iOS. Note: On iOS, this method has no effect if
-     * `ProjectSettings.display/window/handheld/orientation` is not set to `SCREEN_SENSOR`.
+     * `ProjectSettings.display/window/handheld/orientation` is not set to `ScreenOrientation.SENSOR`.
      *
      * Generated from Godot docs: DisplayServer.screen_set_orientation
      */
     @JvmStatic
-    fun screenSetOrientation(orientation: Long, screen: Int = -1) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(screenSetOrientationBind, singleton, orientation, screen)
+    fun screenSetOrientation(orientation: DisplayServer.ScreenOrientation, screen: Int = -1) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(screenSetOrientationBind, singleton, orientation.value, screen)
     }
 
     /**
      * Returns the `screen`'s current orientation. See also `screen_set_orientation`. Returns
-     * `SCREEN_LANDSCAPE` if `screen` is invalid. Note: One of the following constants can be used as
-     * `screen`: `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or
+     * `ScreenOrientation.LANDSCAPE` if `screen` is invalid. Note: One of the following constants can
+     * be used as `screen`: `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or
      * `SCREEN_WITH_KEYBOARD_FOCUS`. Note: This method is implemented on Android and iOS. On other
-     * platforms, this method always returns `SCREEN_LANDSCAPE`.
+     * platforms, this method always returns `ScreenOrientation.LANDSCAPE`.
      *
      * Generated from Godot docs: DisplayServer.screen_get_orientation
      */
     @JvmStatic
-    fun screenGetOrientation(screen: Int = -1): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(screenGetOrientationBind, singleton, screen)
+    fun screenGetOrientation(screen: Int = -1): DisplayServer.ScreenOrientation {
+        return DisplayServer.ScreenOrientation(ObjectCalls.ptrcallWithIntArgRetLong(screenGetOrientationBind, singleton, screen))
     }
 
     /**
@@ -1530,8 +1297,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.window_get_native_handle
      */
     @JvmStatic
-    fun windowGetNativeHandle(handleType: Long, windowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetLong(windowGetNativeHandleBind, singleton, handleType, windowId)
+    fun windowGetNativeHandle(handleType: DisplayServer.HandleType, windowId: Int = 0): Long {
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetLong(windowGetNativeHandleBind, singleton, handleType.value, windowId)
     }
 
     /**
@@ -1826,21 +1593,21 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.window_get_mode
      */
     @JvmStatic
-    fun windowGetMode(windowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(windowGetModeBind, singleton, windowId)
+    fun windowGetMode(windowId: Int = 0): DisplayServer.WindowMode {
+        return DisplayServer.WindowMode(ObjectCalls.ptrcallWithIntArgRetLong(windowGetModeBind, singleton, windowId))
     }
 
     /**
      * Sets window mode for the given window to `mode`. Note: On Android, setting it to
-     * `WINDOW_MODE_FULLSCREEN` or `WINDOW_MODE_EXCLUSIVE_FULLSCREEN` will enable immersive mode. Note:
+     * `WindowMode.FULLSCREEN` or `WindowMode.EXCLUSIVE_FULLSCREEN` will enable immersive mode. Note:
      * Setting the window to full screen forcibly sets the borderless flag to `true`, so make sure to
      * set it back to `false` when not wanted.
      *
      * Generated from Godot docs: DisplayServer.window_set_mode
      */
     @JvmStatic
-    fun windowSetMode(mode: Long, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(windowSetModeBind, singleton, mode, windowId)
+    fun windowSetMode(mode: DisplayServer.WindowMode, windowId: Int = 0) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(windowSetModeBind, singleton, mode.value, windowId)
     }
 
     /**
@@ -1849,8 +1616,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.window_set_flag
      */
     @JvmStatic
-    fun windowSetFlag(flag: Long, enabled: Boolean, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithLongBoolIntArgs(windowSetFlagBind, singleton, flag, enabled, windowId)
+    fun windowSetFlag(flag: DisplayServer.WindowFlags, enabled: Boolean, windowId: Int = 0) {
+        ObjectCalls.ptrcallWithLongBoolIntArgs(windowSetFlagBind, singleton, flag.value, enabled, windowId)
     }
 
     /**
@@ -1859,8 +1626,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.window_get_flag
      */
     @JvmStatic
-    fun windowGetFlag(flag: Long, windowId: Int = 0): Boolean {
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetBool(windowGetFlagBind, singleton, flag, windowId)
+    fun windowGetFlag(flag: DisplayServer.WindowFlags, windowId: Int = 0): Boolean {
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetBool(windowGetFlagBind, singleton, flag.value, windowId)
     }
 
     /**
@@ -1875,7 +1642,7 @@ object DisplayServer {
     }
 
     /**
-     * When `WINDOW_FLAG_EXTEND_TO_TITLE` flag is set, set offset to the center of the first titlebar
+     * When `WindowFlags.EXTEND_TO_TITLE` flag is set, set offset to the center of the first titlebar
      * button. Note: This flag is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.window_set_window_buttons_offset
@@ -1887,7 +1654,7 @@ object DisplayServer {
 
     /**
      * Returns left margins (`x`), right margins (`y`) and height (`z`) of the title that are safe to
-     * use (contains no buttons or other elements) when `WINDOW_FLAG_EXTEND_TO_TITLE` flag is set.
+     * use (contains no buttons or other elements) when `WindowFlags.EXTEND_TO_TITLE` flag is set.
      *
      * Generated from Godot docs: DisplayServer.window_get_safe_title_margins
      */
@@ -1930,8 +1697,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.window_set_taskbar_progress_state
      */
     @JvmStatic
-    fun windowSetTaskbarProgressState(state: Long, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(windowSetTaskbarProgressStateBind, singleton, state, windowId)
+    fun windowSetTaskbarProgressState(state: DisplayServer.ProgressState, windowId: Int = 0) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(windowSetTaskbarProgressStateBind, singleton, state.value, windowId)
     }
 
     /**
@@ -2020,15 +1787,15 @@ object DisplayServer {
     /**
      * Sets the V-Sync mode of the given window. See also
      * `ProjectSettings.display/window/vsync/vsync_mode`. Depending on the platform and used renderer,
-     * the engine will fall back to `VSYNC_ENABLED` if the desired mode is not supported. Note: V-Sync
-     * modes other than `VSYNC_ENABLED` are only supported in the Forward+ and Mobile rendering
-     * methods, not Compatibility.
+     * the engine will fall back to `VSyncMode.ENABLED` if the desired mode is not supported. Note:
+     * V-Sync modes other than `VSyncMode.ENABLED` are only supported in the Forward+ and Mobile
+     * rendering methods, not Compatibility.
      *
      * Generated from Godot docs: DisplayServer.window_set_vsync_mode
      */
     @JvmStatic
-    fun windowSetVsyncMode(vsyncMode: Long, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(windowSetVsyncModeBind, singleton, vsyncMode, windowId)
+    fun windowSetVsyncMode(vsyncMode: DisplayServer.VSyncMode, windowId: Int = 0) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(windowSetVsyncModeBind, singleton, vsyncMode.value, windowId)
     }
 
     /**
@@ -2037,8 +1804,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.window_get_vsync_mode
      */
     @JvmStatic
-    fun windowGetVsyncMode(windowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(windowGetVsyncModeBind, singleton, windowId)
+    fun windowGetVsyncMode(windowId: Int = 0): DisplayServer.VSyncMode {
+        return DisplayServer.VSyncMode(ObjectCalls.ptrcallWithIntArgRetLong(windowGetVsyncModeBind, singleton, windowId))
     }
 
     /**
@@ -2256,8 +2023,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.window_start_resize
      */
     @JvmStatic
-    fun windowStartResize(edge: Long, windowId: Int = 0) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(windowStartResizeBind, singleton, edge, windowId)
+    fun windowStartResize(edge: DisplayServer.WindowResizeEdge, windowId: Int = 0) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(windowStartResizeBind, singleton, edge.value, windowId)
     }
 
     /**
@@ -2329,8 +2096,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_create_element
      */
     @JvmStatic
-    fun accessibilityCreateElement(windowId: Int, role: Long): RID {
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetRID(accessibilityCreateElementBind, singleton, windowId, role)
+    fun accessibilityCreateElement(windowId: Int, role: DisplayServer.AccessibilityRole): RID {
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetRID(accessibilityCreateElementBind, singleton, windowId, role.value)
     }
 
     /**
@@ -2342,8 +2109,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_create_sub_element
      */
     @JvmStatic
-    fun accessibilityCreateSubElement(parentRid: RID, role: Long, insertPos: Int = -1): RID {
-        return ObjectCalls.ptrcallWithRIDLongIntArgsRetRID(accessibilityCreateSubElementBind, singleton, parentRid, role, insertPos)
+    fun accessibilityCreateSubElement(parentRid: RID, role: DisplayServer.AccessibilityRole, insertPos: Int = -1): RID {
+        return ObjectCalls.ptrcallWithRIDLongIntArgsRetRID(accessibilityCreateSubElementBind, singleton, parentRid, role.value, insertPos)
     }
 
     /**
@@ -2450,8 +2217,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_update_set_role
      */
     @JvmStatic
-    fun accessibilityUpdateSetRole(id: RID, role: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetRoleBind, singleton, id, role)
+    fun accessibilityUpdateSetRole(id: RID, role: DisplayServer.AccessibilityRole) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetRoleBind, singleton, id, role.value)
     }
 
     /**
@@ -2662,8 +2429,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_update_set_live
      */
     @JvmStatic
-    fun accessibilityUpdateSetLive(id: RID, live: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetLiveBind, singleton, id, live)
+    fun accessibilityUpdateSetLive(id: RID, live: DisplayServer.AccessibilityLiveMode) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetLiveBind, singleton, id, live.value)
     }
 
     /**
@@ -2674,13 +2441,13 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_update_add_action
      */
     @JvmStatic
-    fun accessibilityUpdateAddAction(id: RID, action: Long, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(accessibilityUpdateAddActionBind, singleton, id, action, callable.target.segment, callable.method)
+    fun accessibilityUpdateAddAction(id: RID, action: DisplayServer.AccessibilityAction, callable: GodotCallable) {
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(accessibilityUpdateAddActionBind, singleton, id, action.value, callable.target.segment, callable.method)
     }
 
     /**
      * Adds support for a custom accessibility action. `action_id` is passed as an argument to the
-     * callback of `ACTION_CUSTOM` action.
+     * callback of `AccessibilityAction.CUSTOM` action.
      *
      * Generated from Godot docs: DisplayServer.accessibility_update_add_custom_action
      */
@@ -2805,8 +2572,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_update_set_popup_type
      */
     @JvmStatic
-    fun accessibilityUpdateSetPopupType(id: RID, popup: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetPopupTypeBind, singleton, id, popup)
+    fun accessibilityUpdateSetPopupType(id: RID, popup: DisplayServer.AccessibilityPopupType) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetPopupTypeBind, singleton, id, popup.value)
     }
 
     /**
@@ -2915,8 +2682,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_update_set_text_align
      */
     @JvmStatic
-    fun accessibilityUpdateSetTextAlign(id: RID, align: Long) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetTextAlignBind, singleton, id, align)
+    fun accessibilityUpdateSetTextAlign(id: RID, align: HorizontalAlignment) {
+        ObjectCalls.ptrcallWithRIDAndLongArg(accessibilityUpdateSetTextAlignBind, singleton, id, align.value)
     }
 
     /**
@@ -2937,8 +2704,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.accessibility_update_set_flag
      */
     @JvmStatic
-    fun accessibilityUpdateSetFlag(id: RID, flag: Long, value: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(accessibilityUpdateSetFlagBind, singleton, id, flag, value)
+    fun accessibilityUpdateSetFlag(id: RID, flag: DisplayServer.AccessibilityFlags, value: Boolean) {
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(accessibilityUpdateSetFlagBind, singleton, id, flag.value, value)
     }
 
     /**
@@ -3099,8 +2866,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.virtual_keyboard_show
      */
     @JvmStatic
-    fun virtualKeyboardShow(existingText: String, position: Rect2, type: Long = 0L, maxLength: Int = -1, cursorStart: Int = -1, cursorEnd: Int = -1) {
-        ObjectCalls.ptrcallWithStringRect2LongThreeIntArgs(virtualKeyboardShowBind, singleton, existingText, position, type, maxLength, cursorStart, cursorEnd)
+    fun virtualKeyboardShow(existingText: String, position: Rect2, type: DisplayServer.VirtualKeyboardType = DisplayServer.VirtualKeyboardType.DEFAULT, maxLength: Int = -1, cursorStart: Int = -1, cursorEnd: Int = -1) {
+        ObjectCalls.ptrcallWithStringRect2LongThreeIntArgs(virtualKeyboardShowBind, singleton, existingText, position, type.value, maxLength, cursorStart, cursorEnd)
     }
 
     /**
@@ -3156,8 +2923,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.cursor_set_shape
      */
     @JvmStatic
-    fun cursorSetShape(shape: Long) {
-        ObjectCalls.ptrcallWithLongArg(cursorSetShapeBind, singleton, shape)
+    fun cursorSetShape(shape: DisplayServer.CursorShape) {
+        ObjectCalls.ptrcallWithLongArg(cursorSetShapeBind, singleton, shape.value)
     }
 
     /**
@@ -3166,8 +2933,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.cursor_get_shape
      */
     @JvmStatic
-    fun cursorGetShape(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(cursorGetShapeBind, singleton)
+    fun cursorGetShape(): DisplayServer.CursorShape {
+        return DisplayServer.CursorShape(ObjectCalls.ptrcallNoArgsRetLong(cursorGetShapeBind, singleton))
     }
 
     /**
@@ -3182,8 +2949,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.cursor_set_custom_image
      */
     @JvmStatic
-    fun cursorSetCustomImage(cursor: Resource?, shape: Long = 0L, hotspot: Vector2 = Vector2(0f, 0f)) {
-        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(cursorSetCustomImageBind, singleton, cursor?.requireOpenHandle() ?: NULL_SEGMENT, shape, hotspot)
+    fun cursorSetCustomImage(cursor: Resource?, shape: DisplayServer.CursorShape = DisplayServer.CursorShape.ARROW, hotspot: Vector2 = Vector2(0f, 0f)) {
+        ObjectCalls.ptrcallWithObjectLongAndVector2Arg(cursorSetCustomImageBind, singleton, cursor?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
     }
 
     /**
@@ -3214,27 +2981,27 @@ object DisplayServer {
     /**
      * Shows a text dialog which uses the operating system's native look-and-feel. `callback` should
      * accept a single `int` parameter which corresponds to the index of the pressed button. Note: This
-     * method is implemented if the display server has the `FEATURE_NATIVE_DIALOG` feature. Supported
+     * method is implemented if the display server has the `Feature.NATIVE_DIALOG` feature. Supported
      * platforms include macOS, Windows, and Android.
      *
      * Generated from Godot docs: DisplayServer.dialog_show
      */
     @JvmStatic
-    fun dialogShow(title: String, description: String, buttons: List<String>, callback: GodotCallable): Long {
-        return ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(dialogShowBind, singleton, title, description, buttons, callback.target.segment, callback.method)
+    fun dialogShow(title: String, description: String, buttons: List<String>, callback: GodotCallable): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithTwoStringPackedStringListCallableArgsRetLong(dialogShowBind, singleton, title, description, buttons, callback.target.segment, callback.method))
     }
 
     /**
      * Shows a text input dialog which uses the operating system's native look-and-feel. `callback`
      * should accept a single `String` parameter which contains the text field's contents. Note: This
-     * method is implemented if the display server has the `FEATURE_NATIVE_DIALOG_INPUT` feature.
+     * method is implemented if the display server has the `Feature.NATIVE_DIALOG_INPUT` feature.
      * Supported platforms include macOS, Windows, and Android.
      *
      * Generated from Godot docs: DisplayServer.dialog_input_text
      */
     @JvmStatic
-    fun dialogInputText(title: String, description: String, existingText: String, callback: GodotCallable): Long {
-        return ObjectCalls.ptrcallWithThreeStringCallableArgsRetLong(dialogInputTextBind, singleton, title, description, existingText, callback.target.segment, callback.method)
+    fun dialogInputText(title: String, description: String, existingText: String, callback: GodotCallable): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithThreeStringCallableArgsRetLong(dialogInputTextBind, singleton, title, description, existingText, callback.target.segment, callback.method))
     }
 
     /**
@@ -3245,7 +3012,7 @@ object DisplayServer {
      * Callbacks have the following arguments: `status: bool, selected_paths: PackedStringArray,
      * selected_filter_index: int`. On Android, the third callback argument (`selected_filter_index`)
      * is always `0`. Note: This method is implemented if the display server has the
-     * `FEATURE_NATIVE_DIALOG_FILE` feature. Supported platforms include Linux (X11/Wayland), Windows,
+     * `Feature.NATIVE_DIALOG_FILE` feature. Supported platforms include Linux (X11/Wayland), Windows,
      * macOS, and Android. Note: `current_directory` might be ignored. Note: Embedded file dialogs and
      * Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs
      * also support MIME types. Note: On Android and Linux, `show_hidden` is ignored. Note: On Android
@@ -3254,16 +3021,16 @@ object DisplayServer {
      * `OS.get_granted_permissions` to get a list of saved bookmarks. Note: On Android, this method
      * uses the Android Storage Access Framework (SAF). The file picker returns a URI instead of a
      * filesystem path. This URI can be passed directly to `FileAccess` to perform read/write
-     * operations. When using `FILE_DIALOG_MODE_OPEN_DIR`, it returns a tree URI that grants full
-     * access to the selected directory. File operations inside this directory can be performed by
-     * passing a path on the form `treeUri#relative/path/to/file` to `FileAccess`. To avoid opening the
-     * file picker again after each app restart, you can take persistable URI permission as follows:
+     * operations. When using `FileDialogMode.OPEN_DIR`, it returns a tree URI that grants full access
+     * to the selected directory. File operations inside this directory can be performed by passing a
+     * path on the form `treeUri#relative/path/to/file` to `FileAccess`. To avoid opening the file
+     * picker again after each app restart, you can take persistable URI permission as follows:
      *
      * Generated from Godot docs: DisplayServer.file_dialog_show
      */
     @JvmStatic
-    fun fileDialogShow(title: String, currentDirectory: String, filename: String, showHidden: Boolean, mode: Long, filters: List<String>, callback: GodotCallable, parentWindowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(fileDialogShowBind, singleton, title, currentDirectory, filename, showHidden, mode, filters, callback.target.segment, callback.method, parentWindowId)
+    fun fileDialogShow(title: String, currentDirectory: String, filename: String, showHidden: Boolean, mode: DisplayServer.FileDialogMode, filters: List<String>, callback: GodotCallable, parentWindowId: Int = 0): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong(fileDialogShowBind, singleton, title, currentDirectory, filename, showHidden, mode.value, filters, callback.target.segment, callback.method, parentWindowId))
     }
 
     /**
@@ -3277,7 +3044,7 @@ object DisplayServer {
      * default boolean value (`bool`). Callbacks have the following arguments: `status: bool,
      * selected_paths: PackedStringArray, selected_filter_index: int, selected_option: Dictionary`.
      * Note: This method is implemented if the display server has the
-     * `FEATURE_NATIVE_DIALOG_FILE_EXTRA` feature. Supported platforms include Linux (X11/Wayland),
+     * `Feature.NATIVE_DIALOG_FILE_EXTRA` feature. Supported platforms include Linux (X11/Wayland),
      * Windows, and macOS. Note: `current_directory` might be ignored. Note: Embedded file dialogs and
      * Windows file dialogs support only file extensions, while Android, Linux, and macOS file dialogs
      * also support MIME types. Note: On Linux (X11), `show_hidden` is ignored. Note: On macOS, native
@@ -3288,8 +3055,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.file_dialog_with_options_show
      */
     @JvmStatic
-    fun fileDialogWithOptionsShow(title: String, currentDirectory: String, root: String, filename: String, showHidden: Boolean, mode: Long, filters: List<String>, options: List<Map<String, Any?>>, callback: GodotCallable, parentWindowId: Int = 0): Long {
-        return ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(fileDialogWithOptionsShowBind, singleton, title, currentDirectory, root, filename, showHidden, mode, filters, options, callback.target.segment, callback.method, parentWindowId)
+    fun fileDialogWithOptionsShow(title: String, currentDirectory: String, root: String, filename: String, showHidden: Boolean, mode: DisplayServer.FileDialogMode, filters: List<String>, options: List<Map<String, Any?>>, callback: GodotCallable, parentWindowId: Int = 0): GodotError {
+        return GodotError(ObjectCalls.ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong(fileDialogWithOptionsShowBind, singleton, title, currentDirectory, root, filename, showHidden, mode.value, filters, options, callback.target.segment, callback.method, parentWindowId))
     }
 
     /**
@@ -3367,8 +3134,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.keyboard_get_keycode_from_physical
      */
     @JvmStatic
-    fun keyboardGetKeycodeFromPhysical(keycode: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(keyboardGetKeycodeFromPhysicalBind, singleton, keycode)
+    fun keyboardGetKeycodeFromPhysical(keycode: Key): Key {
+        return Key(ObjectCalls.ptrcallWithLongArgRetLong(keyboardGetKeycodeFromPhysicalBind, singleton, keycode.value))
     }
 
     /**
@@ -3378,8 +3145,8 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.keyboard_get_label_from_physical
      */
     @JvmStatic
-    fun keyboardGetLabelFromPhysical(keycode: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetLong(keyboardGetLabelFromPhysicalBind, singleton, keycode)
+    fun keyboardGetLabelFromPhysical(keycode: Key): Key {
+        return Key(ObjectCalls.ptrcallWithLongArgRetLong(keyboardGetLabelFromPhysicalBind, singleton, keycode.value))
     }
 
     /**
@@ -3395,7 +3162,7 @@ object DisplayServer {
     /**
      * Displays OS native color picker. Callbacks have the following arguments: `status: bool, color:
      * Color`. Note: This method is implemented if the display server has the
-     * `FEATURE_NATIVE_COLOR_PICKER` feature. Note: This method is only implemented on Linux
+     * `Feature.NATIVE_COLOR_PICKER` feature. Note: This method is only implemented on Linux
      * (X11/Wayland).
      *
      * Generated from Godot docs: DisplayServer.color_picker
@@ -3434,7 +3201,7 @@ object DisplayServer {
      * specially crafted `.ico` or `.icns` icons, `set_native_icon` allows specifying different icons
      * depending on the size the icon is displayed at. This size is determined by the operating system
      * and user preferences (including the display scale factor). To use icons in other formats, use
-     * `set_icon` instead. Note: Requires support for `FEATURE_NATIVE_ICON`.
+     * `set_icon` instead. Note: Requires support for `Feature.NATIVE_ICON`.
      *
      * Generated from Godot docs: DisplayServer.set_native_icon
      */
@@ -3446,7 +3213,7 @@ object DisplayServer {
     /**
      * Sets the application icon and icons of all windows with an `Image`. To use icons in the
      * operating system's native format, use `set_native_icon` instead. Note: Requires support for
-     * `FEATURE_ICON`.
+     * `Feature.ICON`.
      *
      * Generated from Godot docs: DisplayServer.set_icon
      */
@@ -3495,7 +3262,7 @@ object DisplayServer {
      * activated by the right mouse button, selecting the status icon and pressing Shift + F10, or the
      * applications key. The menu's activation callback for the other mouse buttons is still triggered.
      * Note: Native popup is only supported if `NativeMenu` supports the
-     * `NativeMenu.FEATURE_POPUP_MENU` feature.
+     * `NativeMenu.Feature.POPUP_MENU` feature.
      *
      * Generated from Godot docs: DisplayServer.status_indicator_set_menu
      */
@@ -3673,6 +3440,1827 @@ object DisplayServer {
 
     object Signals {
         const val orientationChanged: String = "orientation_changed"
+    }
+
+    /**
+     * Godot's `DisplayServer.Feature` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.Feature
+     */
+    @JvmInline
+    value class Feature(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Display server supports global menu. This allows the application to display its menu items in
+             * the operating system's top bar. macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_GLOBAL_MENU
+             */
+            val GLOBAL_MENU: Feature get() = Feature(0L)
+            /**
+             * Display server supports multiple windows that can be moved outside of the main window. Windows,
+             * macOS, Linux (X11)
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_SUBWINDOWS
+             */
+            val SUBWINDOWS: Feature get() = Feature(1L)
+            /**
+             * Display server supports touchscreen input. Windows, Linux (X11/Wayland), Android, iOS, Web
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_TOUCHSCREEN
+             */
+            val TOUCHSCREEN: Feature get() = Feature(2L)
+            /**
+             * Display server supports mouse input. Windows, macOS, Linux (X11/Wayland), Android, Web
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_MOUSE
+             */
+            val MOUSE: Feature get() = Feature(3L)
+            /**
+             * Display server supports warping mouse coordinates to keep the mouse cursor constrained within an
+             * area, but looping when one of the edges is reached. Windows, macOS, Linux (X11/Wayland)
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_MOUSE_WARP
+             */
+            val MOUSE_WARP: Feature get() = Feature(4L)
+            /**
+             * Display server supports setting and getting clipboard data. See also
+             * `Feature.CLIPBOARD_PRIMARY`. Windows, macOS, Linux (X11/Wayland), Android, iOS, Web
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_CLIPBOARD
+             */
+            val CLIPBOARD: Feature get() = Feature(5L)
+            /**
+             * Display server supports popping up a virtual keyboard when requested to input text without a
+             * physical keyboard. Android, iOS, Web
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_VIRTUAL_KEYBOARD
+             */
+            val VIRTUAL_KEYBOARD: Feature get() = Feature(6L)
+            /**
+             * Display server supports setting the mouse cursor shape to be different from the default.
+             * Windows, macOS, Linux (X11/Wayland), Android, Web
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_CURSOR_SHAPE
+             */
+            val CURSOR_SHAPE: Feature get() = Feature(7L)
+            /**
+             * Display server supports setting the mouse cursor shape to a custom image. Windows, macOS, Linux
+             * (X11/Wayland), Web
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_CUSTOM_CURSOR_SHAPE
+             */
+            val CUSTOM_CURSOR_SHAPE: Feature get() = Feature(8L)
+            /**
+             * Display server supports spawning text dialogs using the operating system's native look-and-feel.
+             * See `dialog_show`. Windows, macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_DIALOG
+             */
+            val NATIVE_DIALOG: Feature get() = Feature(9L)
+            /**
+             * Display server supports Input Method Editor (https://en.wikipedia.org/wiki/Input_method), which
+             * is commonly used for inputting Chinese/Japanese/Korean text. This is handled by the operating
+             * system, rather than by Godot. Windows, macOS, Linux (X11)
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_IME
+             */
+            val IME: Feature get() = Feature(10L)
+            /**
+             * Display server supports windows can use per-pixel transparency to make windows behind them
+             * partially or fully visible. Windows, macOS, Linux (X11/Wayland), Android
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_WINDOW_TRANSPARENCY
+             */
+            val WINDOW_TRANSPARENCY: Feature get() = Feature(11L)
+            /**
+             * Display server supports querying the operating system's display scale factor. This allows
+             * automatically detecting the hiDPI display reliably, instead of guessing based on the screen
+             * resolution and the display's reported DPI (which might be unreliable due to broken monitor
+             * EDID). Windows, Linux (Wayland), macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_HIDPI
+             */
+            val HIDPI: Feature get() = Feature(12L)
+            /**
+             * Display server supports changing the window icon (usually displayed in the top-left corner).
+             * Windows, macOS, Linux (X11/Wayland) Note: Use on Wayland requires the compositor to implement
+             * the xdg_toplevel_icon_v1
+             * (https://wayland.app/protocols/xdg-toplevel-icon-v1#xdg_toplevel_icon_v1) protocol, which not
+             * all compositors do. See xdg_toplevel_icon_v1#compositor-support
+             * (https://wayland.app/protocols/xdg-toplevel-icon-v1#compositor-support) for more information on
+             * individual compositor support.
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_ICON
+             */
+            val ICON: Feature get() = Feature(13L)
+            /**
+             * Display server supports changing the window icon (usually displayed in the top-left corner).
+             * Windows, macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_ICON
+             */
+            val NATIVE_ICON: Feature get() = Feature(14L)
+            /**
+             * Display server supports changing the screen orientation. Android, iOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_ORIENTATION
+             */
+            val ORIENTATION: Feature get() = Feature(15L)
+            /**
+             * Display server supports V-Sync status can be changed from the default (which is forced to be
+             * enabled platforms not supporting this feature). Windows, macOS, Linux (X11/Wayland)
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_SWAP_BUFFERS
+             */
+            val SWAP_BUFFERS: Feature get() = Feature(16L)
+            /**
+             * Display server supports Primary clipboard can be used. This is a different clipboard from
+             * `Feature.CLIPBOARD`. Linux (X11/Wayland)
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_CLIPBOARD_PRIMARY
+             */
+            val CLIPBOARD_PRIMARY: Feature get() = Feature(18L)
+            /**
+             * Display server supports text-to-speech. See `tts_*` methods. Windows, macOS, Linux
+             * (X11/Wayland), Android, iOS, Web
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_TEXT_TO_SPEECH
+             */
+            val TEXT_TO_SPEECH: Feature get() = Feature(19L)
+            /**
+             * Display server supports expanding window content to the title. See
+             * `WindowFlags.EXTEND_TO_TITLE`. macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_EXTEND_TO_TITLE
+             */
+            val EXTEND_TO_TITLE: Feature get() = Feature(20L)
+            /**
+             * Display server supports reading screen pixels. See `screen_get_pixel`.
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_SCREEN_CAPTURE
+             */
+            val SCREEN_CAPTURE: Feature get() = Feature(21L)
+            /**
+             * Display server supports application status indicators.
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_STATUS_INDICATOR
+             */
+            val STATUS_INDICATOR: Feature get() = Feature(22L)
+            /**
+             * Display server supports native help system search callbacks. See `help_set_search_callbacks`.
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_HELP
+             */
+            val NATIVE_HELP: Feature get() = Feature(23L)
+            /**
+             * Display server supports spawning text input dialogs using the operating system's native
+             * look-and-feel. See `dialog_input_text`. Windows, macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_DIALOG_INPUT
+             */
+            val NATIVE_DIALOG_INPUT: Feature get() = Feature(24L)
+            /**
+             * Display server supports spawning dialogs for selecting files or directories using the operating
+             * system's native look-and-feel. See `file_dialog_show`. Windows, macOS, Linux (X11/Wayland),
+             * Android
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_DIALOG_FILE
+             */
+            val NATIVE_DIALOG_FILE: Feature get() = Feature(25L)
+            /**
+             * The display server supports all features of `Feature.NATIVE_DIALOG_FILE`, with the added
+             * functionality of Options and native dialog file access to `res://` and `user://` paths. See
+             * `file_dialog_show` and `file_dialog_with_options_show`. Windows, macOS, Linux (X11/Wayland)
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_DIALOG_FILE_EXTRA
+             */
+            val NATIVE_DIALOG_FILE_EXTRA: Feature get() = Feature(26L)
+            /**
+             * The display server supports initiating window drag and resize operations on demand. See
+             * `window_start_drag` and `window_start_resize`.
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_WINDOW_DRAG
+             */
+            val WINDOW_DRAG: Feature get() = Feature(27L)
+            /**
+             * Display server supports `WindowFlags.EXCLUDE_FROM_CAPTURE` window flag. Windows, macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_SCREEN_EXCLUDE_FROM_CAPTURE
+             */
+            val SCREEN_EXCLUDE_FROM_CAPTURE: Feature get() = Feature(28L)
+            /**
+             * Display server supports embedding a window from another process. Windows, Linux (X11), macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_WINDOW_EMBEDDING
+             */
+            val WINDOW_EMBEDDING: Feature get() = Feature(29L)
+            /**
+             * Native file selection dialog supports MIME types as filters.
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_DIALOG_FILE_MIME
+             */
+            val NATIVE_DIALOG_FILE_MIME: Feature get() = Feature(30L)
+            /**
+             * Display server supports system emoji and symbol picker. Windows, macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_EMOJI_AND_SYMBOL_PICKER
+             */
+            val EMOJI_AND_SYMBOL_PICKER: Feature get() = Feature(31L)
+            /**
+             * Display server supports native color picker. Linux (X11/Wayland)
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_NATIVE_COLOR_PICKER
+             */
+            val NATIVE_COLOR_PICKER: Feature get() = Feature(32L)
+            /**
+             * Display server automatically fits popups according to the screen boundaries. Window nodes should
+             * not attempt to do that themselves.
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_SELF_FITTING_WINDOWS
+             */
+            val SELF_FITTING_WINDOWS: Feature get() = Feature(33L)
+            /**
+             * Display server supports interaction with screen reader or Braille display. Linux (X11/Wayland),
+             * macOS, Windows
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_ACCESSIBILITY_SCREEN_READER
+             */
+            val ACCESSIBILITY_SCREEN_READER: Feature get() = Feature(34L)
+            /**
+             * Display server supports HDR output. Linux (Wayland), macOS, iOS, visionOS, Windows
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_HDR_OUTPUT
+             */
+            val HDR_OUTPUT: Feature get() = Feature(35L)
+            /**
+             * Display server supports putting the application in picture-in-picture mode. Android
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_PIP_MODE
+             */
+            val PIP_MODE: Feature get() = Feature(36L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.AccessibilityRole` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`DisplayServer.AccessibilityRole.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityRole
+     */
+    @JvmInline
+    value class AccessibilityRole(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Unknown or custom role.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_UNKNOWN
+             */
+            val UNKNOWN: AccessibilityRole get() = AccessibilityRole(0L)
+            /**
+             * Default dialog button element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_DEFAULT_BUTTON
+             */
+            val DEFAULT_BUTTON: AccessibilityRole get() = AccessibilityRole(1L)
+            /**
+             * Audio player element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_AUDIO
+             */
+            val AUDIO: AccessibilityRole get() = AccessibilityRole(2L)
+            /**
+             * Video player element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_VIDEO
+             */
+            val VIDEO: AccessibilityRole get() = AccessibilityRole(3L)
+            /**
+             * Non-editable text label.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_STATIC_TEXT
+             */
+            val STATIC_TEXT: AccessibilityRole get() = AccessibilityRole(4L)
+            /**
+             * Container element. Elements with this role are used for internal structure and ignored by screen
+             * readers.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_CONTAINER
+             */
+            val CONTAINER: AccessibilityRole get() = AccessibilityRole(5L)
+            /**
+             * Panel container element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_PANEL
+             */
+            val PANEL: AccessibilityRole get() = AccessibilityRole(6L)
+            /**
+             * Button element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_BUTTON
+             */
+            val BUTTON: AccessibilityRole get() = AccessibilityRole(7L)
+            /**
+             * Link element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_LINK
+             */
+            val LINK: AccessibilityRole get() = AccessibilityRole(8L)
+            /**
+             * Check box element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_CHECK_BOX
+             */
+            val CHECK_BOX: AccessibilityRole get() = AccessibilityRole(9L)
+            /**
+             * Radio button element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_RADIO_BUTTON
+             */
+            val RADIO_BUTTON: AccessibilityRole get() = AccessibilityRole(10L)
+            /**
+             * Check button element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_CHECK_BUTTON
+             */
+            val CHECK_BUTTON: AccessibilityRole get() = AccessibilityRole(11L)
+            /**
+             * Scroll bar element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_SCROLL_BAR
+             */
+            val SCROLL_BAR: AccessibilityRole get() = AccessibilityRole(12L)
+            /**
+             * Scroll container element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_SCROLL_VIEW
+             */
+            val SCROLL_VIEW: AccessibilityRole get() = AccessibilityRole(13L)
+            /**
+             * Container splitter handle element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_SPLITTER
+             */
+            val SPLITTER: AccessibilityRole get() = AccessibilityRole(14L)
+            /**
+             * Slider element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_SLIDER
+             */
+            val SLIDER: AccessibilityRole get() = AccessibilityRole(15L)
+            /**
+             * Spin box element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_SPIN_BUTTON
+             */
+            val SPIN_BUTTON: AccessibilityRole get() = AccessibilityRole(16L)
+            /**
+             * Progress indicator element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_PROGRESS_INDICATOR
+             */
+            val PROGRESS_INDICATOR: AccessibilityRole get() = AccessibilityRole(17L)
+            /**
+             * Editable text field element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TEXT_FIELD
+             */
+            val TEXT_FIELD: AccessibilityRole get() = AccessibilityRole(18L)
+            /**
+             * Multiline editable text field element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_MULTILINE_TEXT_FIELD
+             */
+            val MULTILINE_TEXT_FIELD: AccessibilityRole get() = AccessibilityRole(19L)
+            /**
+             * Color picker element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_COLOR_PICKER
+             */
+            val COLOR_PICKER: AccessibilityRole get() = AccessibilityRole(20L)
+            /**
+             * Table element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TABLE
+             */
+            val TABLE: AccessibilityRole get() = AccessibilityRole(21L)
+            /**
+             * Table/tree cell element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_CELL
+             */
+            val CELL: AccessibilityRole get() = AccessibilityRole(22L)
+            /**
+             * Table/tree row element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_ROW
+             */
+            val ROW: AccessibilityRole get() = AccessibilityRole(23L)
+            /**
+             * Table/tree row group element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_ROW_GROUP
+             */
+            val ROW_GROUP: AccessibilityRole get() = AccessibilityRole(24L)
+            /**
+             * Table/tree row header element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_ROW_HEADER
+             */
+            val ROW_HEADER: AccessibilityRole get() = AccessibilityRole(25L)
+            /**
+             * Table/tree column header element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_COLUMN_HEADER
+             */
+            val COLUMN_HEADER: AccessibilityRole get() = AccessibilityRole(26L)
+            /**
+             * Tree view element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TREE
+             */
+            val TREE: AccessibilityRole get() = AccessibilityRole(27L)
+            /**
+             * Tree view item element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TREE_ITEM
+             */
+            val TREE_ITEM: AccessibilityRole get() = AccessibilityRole(28L)
+            /**
+             * List element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_LIST
+             */
+            val LIST: AccessibilityRole get() = AccessibilityRole(29L)
+            /**
+             * List item element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_LIST_ITEM
+             */
+            val LIST_ITEM: AccessibilityRole get() = AccessibilityRole(30L)
+            /**
+             * List view element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_LIST_BOX
+             */
+            val LIST_BOX: AccessibilityRole get() = AccessibilityRole(31L)
+            /**
+             * List view item element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_LIST_BOX_OPTION
+             */
+            val LIST_BOX_OPTION: AccessibilityRole get() = AccessibilityRole(32L)
+            /**
+             * Tab bar element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TAB_BAR
+             */
+            val TAB_BAR: AccessibilityRole get() = AccessibilityRole(33L)
+            /**
+             * Tab bar item element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TAB
+             */
+            val TAB: AccessibilityRole get() = AccessibilityRole(34L)
+            /**
+             * Tab panel element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TAB_PANEL
+             */
+            val TAB_PANEL: AccessibilityRole get() = AccessibilityRole(35L)
+            /**
+             * Menu bar element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_MENU_BAR
+             */
+            val MENU_BAR: AccessibilityRole get() = AccessibilityRole(36L)
+            /**
+             * Popup menu element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_MENU
+             */
+            val MENU: AccessibilityRole get() = AccessibilityRole(37L)
+            /**
+             * Popup menu item element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_MENU_ITEM
+             */
+            val MENU_ITEM: AccessibilityRole get() = AccessibilityRole(38L)
+            /**
+             * Popup menu check button item element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_MENU_ITEM_CHECK_BOX
+             */
+            val MENU_ITEM_CHECK_BOX: AccessibilityRole get() = AccessibilityRole(39L)
+            /**
+             * Popup menu radio button item element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_MENU_ITEM_RADIO
+             */
+            val MENU_ITEM_RADIO: AccessibilityRole get() = AccessibilityRole(40L)
+            /**
+             * Image element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_IMAGE
+             */
+            val IMAGE: AccessibilityRole get() = AccessibilityRole(41L)
+            /**
+             * Window element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_WINDOW
+             */
+            val WINDOW: AccessibilityRole get() = AccessibilityRole(42L)
+            /**
+             * Embedded window title bar element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TITLE_BAR
+             */
+            val TITLE_BAR: AccessibilityRole get() = AccessibilityRole(43L)
+            /**
+             * Dialog window element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_DIALOG
+             */
+            val DIALOG: AccessibilityRole get() = AccessibilityRole(44L)
+            /**
+             * Tooltip element.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TOOLTIP
+             */
+            val TOOLTIP: AccessibilityRole get() = AccessibilityRole(45L)
+            /**
+             * Region/landmark element. Screen readers can navigate between regions using landmark navigation.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_REGION
+             */
+            val REGION: AccessibilityRole get() = AccessibilityRole(46L)
+            /**
+             * Unifor text run. Note: This role is used for internal text elements, and should not be assigned
+             * to nodes.
+             *
+             * Generated from Godot docs: DisplayServer.ROLE_TEXT_RUN
+             */
+            val TEXT_RUN: AccessibilityRole get() = AccessibilityRole(47L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.AccessibilityPopupType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityPopupType.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityPopupType
+     */
+    @JvmInline
+    value class AccessibilityPopupType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Popup menu.
+             *
+             * Generated from Godot docs: DisplayServer.POPUP_MENU
+             */
+            val MENU: AccessibilityPopupType get() = AccessibilityPopupType(0L)
+            /**
+             * Popup list.
+             *
+             * Generated from Godot docs: DisplayServer.POPUP_LIST
+             */
+            val LIST: AccessibilityPopupType get() = AccessibilityPopupType(1L)
+            /**
+             * Popup tree view.
+             *
+             * Generated from Godot docs: DisplayServer.POPUP_TREE
+             */
+            val TREE: AccessibilityPopupType get() = AccessibilityPopupType(2L)
+            /**
+             * Popup dialog.
+             *
+             * Generated from Godot docs: DisplayServer.POPUP_DIALOG
+             */
+            val DIALOG: AccessibilityPopupType get() = AccessibilityPopupType(3L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.AccessibilityFlags` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityFlags.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityFlags
+     */
+    @JvmInline
+    value class AccessibilityFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Element is hidden for accessibility tools.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_HIDDEN
+             */
+            val HIDDEN: AccessibilityFlags get() = AccessibilityFlags(0L)
+            /**
+             * Element supports multiple item selection.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_MULTISELECTABLE
+             */
+            val MULTISELECTABLE: AccessibilityFlags get() = AccessibilityFlags(1L)
+            /**
+             * Element require user input.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_REQUIRED
+             */
+            val REQUIRED: AccessibilityFlags get() = AccessibilityFlags(2L)
+            /**
+             * Element is a visited link.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_VISITED
+             */
+            val VISITED: AccessibilityFlags get() = AccessibilityFlags(3L)
+            /**
+             * Element content is not ready (e.g. loading).
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_BUSY
+             */
+            val BUSY: AccessibilityFlags get() = AccessibilityFlags(4L)
+            /**
+             * Element is modal window.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_MODAL
+             */
+            val MODAL: AccessibilityFlags get() = AccessibilityFlags(5L)
+            /**
+             * Element allows touches to be passed through when a screen reader is in touch exploration mode.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_TOUCH_PASSTHROUGH
+             */
+            val TOUCH_PASSTHROUGH: AccessibilityFlags get() = AccessibilityFlags(6L)
+            /**
+             * Element is text field with selectable but read-only text.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_READONLY
+             */
+            val READONLY: AccessibilityFlags get() = AccessibilityFlags(7L)
+            /**
+             * Element is disabled.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_DISABLED
+             */
+            val DISABLED: AccessibilityFlags get() = AccessibilityFlags(8L)
+            /**
+             * Element clips children.
+             *
+             * Generated from Godot docs: DisplayServer.FLAG_CLIPS_CHILDREN
+             */
+            val CLIPS_CHILDREN: AccessibilityFlags get() = AccessibilityFlags(9L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.AccessibilityAction` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityAction.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityAction
+     */
+    @JvmInline
+    value class AccessibilityAction(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Single click action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_CLICK
+             */
+            val CLICK: AccessibilityAction get() = AccessibilityAction(0L)
+            /**
+             * Focus action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_FOCUS
+             */
+            val FOCUS: AccessibilityAction get() = AccessibilityAction(1L)
+            /**
+             * Blur action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_BLUR
+             */
+            val BLUR: AccessibilityAction get() = AccessibilityAction(2L)
+            /**
+             * Collapse action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_COLLAPSE
+             */
+            val COLLAPSE: AccessibilityAction get() = AccessibilityAction(3L)
+            /**
+             * Expand action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_EXPAND
+             */
+            val EXPAND: AccessibilityAction get() = AccessibilityAction(4L)
+            /**
+             * Decrement action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_DECREMENT
+             */
+            val DECREMENT: AccessibilityAction get() = AccessibilityAction(5L)
+            /**
+             * Increment action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_INCREMENT
+             */
+            val INCREMENT: AccessibilityAction get() = AccessibilityAction(6L)
+            /**
+             * Hide tooltip action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_HIDE_TOOLTIP
+             */
+            val HIDE_TOOLTIP: AccessibilityAction get() = AccessibilityAction(7L)
+            /**
+             * Show tooltip action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SHOW_TOOLTIP
+             */
+            val SHOW_TOOLTIP: AccessibilityAction get() = AccessibilityAction(8L)
+            /**
+             * Set text selection action, callback argument is set to `Dictionary` with the following keys: -
+             * `"start_element"` accessibility element of the selection start. - `"start_char"` character
+             * offset relative to the accessibility element of the selection start. - `"end_element"`
+             * accessibility element of the selection end. - `"end_char"` character offset relative to the
+             * accessibility element of the selection end.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SET_TEXT_SELECTION
+             */
+            val SET_TEXT_SELECTION: AccessibilityAction get() = AccessibilityAction(9L)
+            /**
+             * Replace text action, callback argument is set to `String` with the replacement text.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_REPLACE_SELECTED_TEXT
+             */
+            val REPLACE_SELECTED_TEXT: AccessibilityAction get() = AccessibilityAction(10L)
+            /**
+             * Scroll backward action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_BACKWARD
+             */
+            val SCROLL_BACKWARD: AccessibilityAction get() = AccessibilityAction(11L)
+            /**
+             * Scroll down action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_DOWN
+             */
+            val SCROLL_DOWN: AccessibilityAction get() = AccessibilityAction(12L)
+            /**
+             * Scroll forward action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_FORWARD
+             */
+            val SCROLL_FORWARD: AccessibilityAction get() = AccessibilityAction(13L)
+            /**
+             * Scroll left action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_LEFT
+             */
+            val SCROLL_LEFT: AccessibilityAction get() = AccessibilityAction(14L)
+            /**
+             * Scroll right action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_RIGHT
+             */
+            val SCROLL_RIGHT: AccessibilityAction get() = AccessibilityAction(15L)
+            /**
+             * Scroll up action, callback argument is set to `AccessibilityScrollUnit`.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_UP
+             */
+            val SCROLL_UP: AccessibilityAction get() = AccessibilityAction(16L)
+            /**
+             * Scroll into view action, callback argument is set to `AccessibilityScrollHint`.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_INTO_VIEW
+             */
+            val SCROLL_INTO_VIEW: AccessibilityAction get() = AccessibilityAction(17L)
+            /**
+             * Scroll to point action, callback argument is set to `Vector2` with the relative point
+             * coordinates.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SCROLL_TO_POINT
+             */
+            val SCROLL_TO_POINT: AccessibilityAction get() = AccessibilityAction(18L)
+            /**
+             * Set scroll offset action, callback argument is set to `Vector2` with the scroll offset.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SET_SCROLL_OFFSET
+             */
+            val SET_SCROLL_OFFSET: AccessibilityAction get() = AccessibilityAction(19L)
+            /**
+             * Set value action, callback argument is set to `String` or number with the new value.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SET_VALUE
+             */
+            val SET_VALUE: AccessibilityAction get() = AccessibilityAction(20L)
+            /**
+             * Show context menu action, callback argument is not set.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_SHOW_CONTEXT_MENU
+             */
+            val SHOW_CONTEXT_MENU: AccessibilityAction get() = AccessibilityAction(21L)
+            /**
+             * Custom action, callback argument is set to the integer action ID.
+             *
+             * Generated from Godot docs: DisplayServer.ACTION_CUSTOM
+             */
+            val CUSTOM: AccessibilityAction get() = AccessibilityAction(22L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.AccessibilityLiveMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityLiveMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityLiveMode
+     */
+    @JvmInline
+    value class AccessibilityLiveMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Indicates that updates to the live region should not be presented.
+             *
+             * Generated from Godot docs: DisplayServer.LIVE_OFF
+             */
+            val OFF: AccessibilityLiveMode get() = AccessibilityLiveMode(0L)
+            /**
+             * Indicates that updates to the live region should be presented at the next opportunity (for
+             * example at the end of speaking the current sentence).
+             *
+             * Generated from Godot docs: DisplayServer.LIVE_POLITE
+             */
+            val POLITE: AccessibilityLiveMode get() = AccessibilityLiveMode(1L)
+            /**
+             * Indicates that updates to the live region have the highest priority and should be presented
+             * immediately.
+             *
+             * Generated from Godot docs: DisplayServer.LIVE_ASSERTIVE
+             */
+            val ASSERTIVE: AccessibilityLiveMode get() = AccessibilityLiveMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.AccessibilityScrollUnit` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityScrollUnit.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityScrollUnit
+     */
+    @JvmInline
+    value class AccessibilityScrollUnit(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The amount by which to scroll. A single item of a list, line of text.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_UNIT_ITEM
+             */
+            val ITEM: AccessibilityScrollUnit get() = AccessibilityScrollUnit(0L)
+            /**
+             * The amount by which to scroll. A single page.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_UNIT_PAGE
+             */
+            val PAGE: AccessibilityScrollUnit get() = AccessibilityScrollUnit(1L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.AccessibilityScrollHint` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`DisplayServer.AccessibilityScrollHint.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.AccessibilityScrollHint
+     */
+    @JvmInline
+    value class AccessibilityScrollHint(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * A preferred position for the node scrolled into view. Top-left edge of the scroll container.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_HINT_TOP_LEFT
+             */
+            val TOP_LEFT: AccessibilityScrollHint get() = AccessibilityScrollHint(0L)
+            /**
+             * A preferred position for the node scrolled into view. Bottom-right edge of the scroll container.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_HINT_BOTTOM_RIGHT
+             */
+            val BOTTOM_RIGHT: AccessibilityScrollHint get() = AccessibilityScrollHint(1L)
+            /**
+             * A preferred position for the node scrolled into view. Top edge of the scroll container.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_HINT_TOP_EDGE
+             */
+            val TOP_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(2L)
+            /**
+             * A preferred position for the node scrolled into view. Bottom edge of the scroll container.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_HINT_BOTTOM_EDGE
+             */
+            val BOTTOM_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(3L)
+            /**
+             * A preferred position for the node scrolled into view. Left edge of the scroll container.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_HINT_LEFT_EDGE
+             */
+            val LEFT_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(4L)
+            /**
+             * A preferred position for the node scrolled into view. Right edge of the scroll container.
+             *
+             * Generated from Godot docs: DisplayServer.SCROLL_HINT_RIGHT_EDGE
+             */
+            val RIGHT_EDGE: AccessibilityScrollHint get() = AccessibilityScrollHint(5L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.MouseMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.MouseMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.MouseMode
+     */
+    @JvmInline
+    value class MouseMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Makes the mouse cursor visible if it is hidden.
+             *
+             * Generated from Godot docs: DisplayServer.MOUSE_MODE_VISIBLE
+             */
+            val VISIBLE: MouseMode get() = MouseMode(0L)
+            /**
+             * Makes the mouse cursor hidden if it is visible.
+             *
+             * Generated from Godot docs: DisplayServer.MOUSE_MODE_HIDDEN
+             */
+            val HIDDEN: MouseMode get() = MouseMode(1L)
+            /**
+             * Captures the mouse. The mouse will be hidden and its position locked at the center of the window
+             * manager's window. Note: If you want to process the mouse's movement in this mode, you need to
+             * use `InputEventMouseMotion.relative`.
+             *
+             * Generated from Godot docs: DisplayServer.MOUSE_MODE_CAPTURED
+             */
+            val CAPTURED: MouseMode get() = MouseMode(2L)
+            /**
+             * Confines the mouse cursor to the game window, and make it visible.
+             *
+             * Generated from Godot docs: DisplayServer.MOUSE_MODE_CONFINED
+             */
+            val CONFINED: MouseMode get() = MouseMode(3L)
+            /**
+             * Confines the mouse cursor to the game window, and make it hidden.
+             *
+             * Generated from Godot docs: DisplayServer.MOUSE_MODE_CONFINED_HIDDEN
+             */
+            val CONFINED_HIDDEN: MouseMode get() = MouseMode(4L)
+            /**
+             * Max value of the `MouseMode`.
+             *
+             * Generated from Godot docs: DisplayServer.MOUSE_MODE_MAX
+             */
+            val MAX: MouseMode get() = MouseMode(5L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.ScreenOrientation` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`DisplayServer.ScreenOrientation.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.ScreenOrientation
+     */
+    @JvmInline
+    value class ScreenOrientation(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Default landscape orientation.
+             *
+             * Generated from Godot docs: DisplayServer.SCREEN_LANDSCAPE
+             */
+            val LANDSCAPE: ScreenOrientation get() = ScreenOrientation(0L)
+            /**
+             * Default portrait orientation.
+             *
+             * Generated from Godot docs: DisplayServer.SCREEN_PORTRAIT
+             */
+            val PORTRAIT: ScreenOrientation get() = ScreenOrientation(1L)
+            /**
+             * Reverse landscape orientation (upside down).
+             *
+             * Generated from Godot docs: DisplayServer.SCREEN_REVERSE_LANDSCAPE
+             */
+            val REVERSE_LANDSCAPE: ScreenOrientation get() = ScreenOrientation(2L)
+            /**
+             * Reverse portrait orientation (upside down).
+             *
+             * Generated from Godot docs: DisplayServer.SCREEN_REVERSE_PORTRAIT
+             */
+            val REVERSE_PORTRAIT: ScreenOrientation get() = ScreenOrientation(3L)
+            /**
+             * Automatic landscape orientation (default or reverse depending on sensor).
+             *
+             * Generated from Godot docs: DisplayServer.SCREEN_SENSOR_LANDSCAPE
+             */
+            val SENSOR_LANDSCAPE: ScreenOrientation get() = ScreenOrientation(4L)
+            /**
+             * Automatic portrait orientation (default or reverse depending on sensor).
+             *
+             * Generated from Godot docs: DisplayServer.SCREEN_SENSOR_PORTRAIT
+             */
+            val SENSOR_PORTRAIT: ScreenOrientation get() = ScreenOrientation(5L)
+            /**
+             * Automatic landscape or portrait orientation (default or reverse depending on sensor).
+             *
+             * Generated from Godot docs: DisplayServer.SCREEN_SENSOR
+             */
+            val SENSOR: ScreenOrientation get() = ScreenOrientation(6L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.VirtualKeyboardType` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.VirtualKeyboardType.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.VirtualKeyboardType
+     */
+    @JvmInline
+    value class VirtualKeyboardType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Default text virtual keyboard.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_DEFAULT
+             */
+            val DEFAULT: VirtualKeyboardType get() = VirtualKeyboardType(0L)
+            /**
+             * Multiline virtual keyboard.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_MULTILINE
+             */
+            val MULTILINE: VirtualKeyboardType get() = VirtualKeyboardType(1L)
+            /**
+             * Virtual number keypad, useful for PIN entry.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_NUMBER
+             */
+            val NUMBER: VirtualKeyboardType get() = VirtualKeyboardType(2L)
+            /**
+             * Virtual number keypad, useful for entering fractional numbers.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_NUMBER_DECIMAL
+             */
+            val NUMBER_DECIMAL: VirtualKeyboardType get() = VirtualKeyboardType(3L)
+            /**
+             * Virtual phone number keypad.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_PHONE
+             */
+            val PHONE: VirtualKeyboardType get() = VirtualKeyboardType(4L)
+            /**
+             * Virtual keyboard with additional keys to assist with typing email addresses.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_EMAIL_ADDRESS
+             */
+            val EMAIL_ADDRESS: VirtualKeyboardType get() = VirtualKeyboardType(5L)
+            /**
+             * Virtual keyboard for entering a password. On most platforms, this should disable autocomplete
+             * and autocapitalization. Note: This is not supported on Web. Instead, this behaves identically to
+             * `VirtualKeyboardType.DEFAULT`.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_PASSWORD
+             */
+            val PASSWORD: VirtualKeyboardType get() = VirtualKeyboardType(6L)
+            /**
+             * Virtual keyboard with additional keys to assist with typing URLs.
+             *
+             * Generated from Godot docs: DisplayServer.KEYBOARD_TYPE_URL
+             */
+            val URL: VirtualKeyboardType get() = VirtualKeyboardType(7L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.CursorShape` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.CursorShape.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.CursorShape
+     */
+    @JvmInline
+    value class CursorShape(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Arrow cursor shape. This is the default when not pointing anything that overrides the mouse
+             * cursor, such as a `LineEdit` or `TextEdit`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_ARROW
+             */
+            val ARROW: CursorShape get() = CursorShape(0L)
+            /**
+             * I-beam cursor shape. This is used by default when hovering a control that accepts text input,
+             * such as `LineEdit` or `TextEdit`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_IBEAM
+             */
+            val IBEAM: CursorShape get() = CursorShape(1L)
+            /**
+             * Pointing hand cursor shape. This is used by default when hovering a `LinkButton` or a URL tag in
+             * a `RichTextLabel`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_POINTING_HAND
+             */
+            val POINTING_HAND: CursorShape get() = CursorShape(2L)
+            /**
+             * Crosshair cursor. This is intended to be displayed when the user needs precise aim over an
+             * element, such as a rectangle selection tool or a color picker.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_CROSS
+             */
+            val CROSS: CursorShape get() = CursorShape(3L)
+            /**
+             * Wait cursor. On most cursor themes, this displays a spinning icon besides the arrow. Intended to
+             * be used for non-blocking operations (when the user can do something else at the moment). See
+             * also `CursorShape.BUSY`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_WAIT
+             */
+            val WAIT: CursorShape get() = CursorShape(4L)
+            /**
+             * Wait cursor. On most cursor themes, this replaces the arrow with a spinning icon. Intended to be
+             * used for blocking operations (when the user can't do anything else at the moment). See also
+             * `CursorShape.WAIT`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_BUSY
+             */
+            val BUSY: CursorShape get() = CursorShape(5L)
+            /**
+             * Dragging hand cursor. This is displayed during drag-and-drop operations. See also
+             * `CursorShape.CAN_DROP`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_DRAG
+             */
+            val DRAG: CursorShape get() = CursorShape(6L)
+            /**
+             * "Can drop" cursor. This is displayed during drag-and-drop operations if hovering over a
+             * `Control` that can accept the drag-and-drop event. On most cursor themes, this displays a
+             * dragging hand with an arrow symbol besides it. See also `CursorShape.DRAG`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_CAN_DROP
+             */
+            val CAN_DROP: CursorShape get() = CursorShape(7L)
+            /**
+             * Forbidden cursor. This is displayed during drag-and-drop operations if the hovered `Control`
+             * can't accept the drag-and-drop event.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_FORBIDDEN
+             */
+            val FORBIDDEN: CursorShape get() = CursorShape(8L)
+            /**
+             * Vertical resize cursor. Intended to be displayed when the hovered `Control` can be vertically
+             * resized using the mouse. See also `CursorShape.VSPLIT`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_VSIZE
+             */
+            val VSIZE: CursorShape get() = CursorShape(9L)
+            /**
+             * Horizontal resize cursor. Intended to be displayed when the hovered `Control` can be
+             * horizontally resized using the mouse. See also `CursorShape.HSPLIT`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_HSIZE
+             */
+            val HSIZE: CursorShape get() = CursorShape(10L)
+            /**
+             * Secondary diagonal resize cursor (top-right/bottom-left). Intended to be displayed when the
+             * hovered `Control` can be resized on both axes at once using the mouse.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_BDIAGSIZE
+             */
+            val BDIAGSIZE: CursorShape get() = CursorShape(11L)
+            /**
+             * Main diagonal resize cursor (top-left/bottom-right). Intended to be displayed when the hovered
+             * `Control` can be resized on both axes at once using the mouse.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_FDIAGSIZE
+             */
+            val FDIAGSIZE: CursorShape get() = CursorShape(12L)
+            /**
+             * Move cursor. Intended to be displayed when the hovered `Control` can be moved using the mouse.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_MOVE
+             */
+            val MOVE: CursorShape get() = CursorShape(13L)
+            /**
+             * Vertical split cursor. This is displayed when hovering a `Control` with splits that can be
+             * vertically resized using the mouse, such as `VSplitContainer`. On some cursor themes, this
+             * cursor may have the same appearance as `CursorShape.VSIZE`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_VSPLIT
+             */
+            val VSPLIT: CursorShape get() = CursorShape(14L)
+            /**
+             * Horizontal split cursor. This is displayed when hovering a `Control` with splits that can be
+             * horizontally resized using the mouse, such as `HSplitContainer`. On some cursor themes, this
+             * cursor may have the same appearance as `CursorShape.HSIZE`.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_HSPLIT
+             */
+            val HSPLIT: CursorShape get() = CursorShape(15L)
+            /**
+             * Help cursor. On most cursor themes, this displays a question mark icon instead of the mouse
+             * cursor. Intended to be used when the user has requested help on the next element that will be
+             * clicked.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_HELP
+             */
+            val HELP: CursorShape get() = CursorShape(16L)
+            /**
+             * Represents the size of the `CursorShape` enum.
+             *
+             * Generated from Godot docs: DisplayServer.CURSOR_MAX
+             */
+            val MAX: CursorShape get() = CursorShape(17L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.FileDialogMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.FileDialogMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.FileDialogMode
+     */
+    @JvmInline
+    value class FileDialogMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The native file dialog allows selecting one, and only one file.
+             *
+             * Generated from Godot docs: DisplayServer.FILE_DIALOG_MODE_OPEN_FILE
+             */
+            val OPEN_FILE: FileDialogMode get() = FileDialogMode(0L)
+            /**
+             * The native file dialog allows selecting multiple files.
+             *
+             * Generated from Godot docs: DisplayServer.FILE_DIALOG_MODE_OPEN_FILES
+             */
+            val OPEN_FILES: FileDialogMode get() = FileDialogMode(1L)
+            /**
+             * The native file dialog only allows selecting a directory, disallowing the selection of any file.
+             *
+             * Generated from Godot docs: DisplayServer.FILE_DIALOG_MODE_OPEN_DIR
+             */
+            val OPEN_DIR: FileDialogMode get() = FileDialogMode(2L)
+            /**
+             * The native file dialog allows selecting one file or directory.
+             *
+             * Generated from Godot docs: DisplayServer.FILE_DIALOG_MODE_OPEN_ANY
+             */
+            val OPEN_ANY: FileDialogMode get() = FileDialogMode(3L)
+            /**
+             * The native file dialog will warn when a file exists.
+             *
+             * Generated from Godot docs: DisplayServer.FILE_DIALOG_MODE_SAVE_FILE
+             */
+            val SAVE_FILE: FileDialogMode get() = FileDialogMode(4L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.WindowMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.WindowMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowMode
+     */
+    @JvmInline
+    value class WindowMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Windowed mode, i.e. `Window` doesn't occupy the whole screen (unless set to the size of the
+             * screen).
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_MODE_WINDOWED
+             */
+            val WINDOWED: WindowMode get() = WindowMode(0L)
+            /**
+             * Minimized window mode, i.e. `Window` is not visible and available on window manager's window
+             * list. Normally happens when the minimize button is pressed.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_MODE_MINIMIZED
+             */
+            val MINIMIZED: WindowMode get() = WindowMode(1L)
+            /**
+             * Maximized window mode, i.e. `Window` will occupy whole screen area except task bar and still
+             * display its borders. Normally happens when the maximize button is pressed.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_MODE_MAXIMIZED
+             */
+            val MAXIMIZED: WindowMode get() = WindowMode(2L)
+            /**
+             * Full screen mode with full multi-window support. Full screen window covers the entire display
+             * area of a screen and has no decorations. The display's video mode is not changed. On Android:
+             * This enables immersive mode. On macOS: A new desktop is used to display the running project.
+             * Note: Regardless of the platform, enabling full screen will change the window size to match the
+             * monitor's size. Therefore, make sure your project supports multiple resolutions
+             * ($DOCS_URL/tutorials/rendering/multiple_resolutions.html) when enabling full screen mode.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_MODE_FULLSCREEN
+             */
+            val FULLSCREEN: WindowMode get() = WindowMode(3L)
+            /**
+             * A single window full screen mode. This mode has less overhead, but only one window can be open
+             * on a given screen at a time (opening a child window or application switching will trigger a full
+             * screen transition). Full screen window covers the entire display area of a screen and has no
+             * border or decorations. The display's video mode is not changed. Note: This mode might not work
+             * with screen recording software. On Android: This enables immersive mode. On Windows: Depending
+             * on video driver, full screen transition might cause screens to go black for a moment. On macOS:
+             * A new desktop is used to display the running project. Exclusive full screen mode prevents Dock
+             * and Menu from showing up when the mouse pointer is hovering the edge of the screen. On Linux
+             * (X11): Exclusive full screen mode bypasses compositor. On Linux (Wayland): Equivalent to
+             * `WindowMode.FULLSCREEN`. Note: Regardless of the platform, enabling full screen will change the
+             * window size to match the monitor's size. Therefore, make sure your project supports multiple
+             * resolutions ($DOCS_URL/tutorials/rendering/multiple_resolutions.html) when enabling full screen
+             * mode.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+             */
+            val EXCLUSIVE_FULLSCREEN: WindowMode get() = WindowMode(4L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.ProgressState` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.ProgressState.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.ProgressState
+     */
+    @JvmInline
+    value class ProgressState(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Stops displaying progress and returns the button to its normal state.
+             *
+             * Generated from Godot docs: DisplayServer.PROGRESS_STATE_NOPROGRESS
+             */
+            val NOPROGRESS: ProgressState get() = ProgressState(0L)
+            /**
+             * The progress indicator shows an indeterminate progress. On Windows, the progress indicator does
+             * not grow in size, but cycles repeatedly along the length of the taskbar button by default.
+             *
+             * Generated from Godot docs: DisplayServer.PROGRESS_STATE_INDETERMINATE
+             */
+            val INDETERMINATE: ProgressState get() = ProgressState(1L)
+            /**
+             * The progress indicator shows progress normally.
+             *
+             * Generated from Godot docs: DisplayServer.PROGRESS_STATE_NORMAL
+             */
+            val NORMAL: ProgressState get() = ProgressState(2L)
+            /**
+             * The progress indicator shows that an error has occurred. On Windows, the progress indicator
+             * turns red by default to show that an error has occurred in one of the windows that is
+             * broadcasting progress.
+             *
+             * Generated from Godot docs: DisplayServer.PROGRESS_STATE_ERROR
+             */
+            val ERROR: ProgressState get() = ProgressState(3L)
+            /**
+             * The progress indicator shows it was paused. On Windows, the progress indicator turns yellow by
+             * default to show that progress is currently stopped in one of the windows but can be resumed by
+             * the user.
+             *
+             * Generated from Godot docs: DisplayServer.PROGRESS_STATE_PAUSED
+             */
+            val PAUSED: ProgressState get() = ProgressState(4L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.WindowFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.WindowFlags.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowFlags
+     */
+    @JvmInline
+    value class WindowFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The window can't be resized by dragging its resize grip. It's still possible to resize the
+             * window using `window_set_size`. This flag is ignored for full screen windows. Note: This flag is
+             * implemented on Linux (X11), macOS, and Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_RESIZE_DISABLED
+             */
+            val RESIZE_DISABLED: WindowFlags get() = WindowFlags(0L)
+            /**
+             * The window do not have native title bar and other decorations. This flag is ignored for
+             * full-screen windows. Note: This flag is implemented on Linux (X11/Wayland), macOS, and Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_BORDERLESS
+             */
+            val BORDERLESS: WindowFlags get() = WindowFlags(1L)
+            /**
+             * The window is floating on top of all other windows. This flag is ignored for full-screen
+             * windows. Note: This flag is implemented on Linux (X11), macOS, and Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP
+             */
+            val ALWAYS_ON_TOP: WindowFlags get() = WindowFlags(2L)
+            /**
+             * The window background can be transparent. Note: This flag has no effect if
+             * `is_window_transparency_available` returns `false`. Note: Transparency support is implemented on
+             * Linux (X11/Wayland), macOS, and Windows, but availability might vary depending on GPU driver,
+             * display manager, and compositor capabilities. Note: Transparency support is implemented on
+             * Android, but can only be enabled via
+             * `ProjectSettings.display/window/per_pixel_transparency/allowed`. This flag has no effect on
+             * Android.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_TRANSPARENT
+             */
+            val TRANSPARENT: WindowFlags get() = WindowFlags(3L)
+            /**
+             * The window can't be focused. No-focus window will ignore all input, except mouse clicks. Note:
+             * This flag is implemented on Linux (X11), macOS, and Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_NO_FOCUS
+             */
+            val NO_FOCUS: WindowFlags get() = WindowFlags(4L)
+            /**
+             * Window is part of menu or `OptionButton` dropdown. This flag can't be changed when the window is
+             * visible. An active popup window will exclusively receive all input, without stealing focus from
+             * its parent. Popup windows are automatically closed when uses click outside it, or when an
+             * application is switched. Popup window must have transient parent set (see
+             * `window_set_transient`). Note: This flag is implemented on Linux (X11/Wayland), macOS, and
+             * Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_POPUP
+             */
+            val POPUP: WindowFlags get() = WindowFlags(5L)
+            /**
+             * Window content is expanded to the full size of the window. Unlike borderless window, the frame
+             * is left intact and can be used to resize the window, title bar is transparent, but have
+             * minimize/maximize/close buttons. Use `window_set_window_buttons_offset` to adjust
+             * minimize/maximize/close buttons offset. Use `window_get_safe_title_margins` to determine area
+             * under the title bar that is not covered by decorations. Note: This flag is implemented only on
+             * macOS.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_EXTEND_TO_TITLE
+             */
+            val EXTEND_TO_TITLE: WindowFlags get() = WindowFlags(6L)
+            /**
+             * All mouse events are passed to the underlying window of the same application. Note: This flag is
+             * implemented on Linux (X11), macOS, and Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_MOUSE_PASSTHROUGH
+             */
+            val MOUSE_PASSTHROUGH: WindowFlags get() = WindowFlags(7L)
+            /**
+             * Window style is overridden, forcing sharp corners. Note: This flag is implemented only on
+             * Windows (11).
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_SHARP_CORNERS
+             */
+            val SHARP_CORNERS: WindowFlags get() = WindowFlags(8L)
+            /**
+             * Window is excluded from screenshots taken by `screen_get_image`, `screen_get_image_rect`, and
+             * `screen_get_pixel`. Note: This flag is implemented on macOS and Windows (10, 20H1). Note:
+             * Setting this flag will prevent standard screenshot methods from capturing a window image, but
+             * does NOT guarantee that other apps won't be able to capture an image. It should not be used as a
+             * DRM or security measure.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_EXCLUDE_FROM_CAPTURE
+             */
+            val EXCLUDE_FROM_CAPTURE: WindowFlags get() = WindowFlags(9L)
+            /**
+             * Signals the window manager that this window is supposed to be an implementation-defined "popup"
+             * (usually a floating, borderless, untileable and immovable child window). Note: This flag is
+             * implemented on Linux (Wayland).
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_POPUP_WM_HINT
+             */
+            val POPUP_WM_HINT: WindowFlags get() = WindowFlags(10L)
+            /**
+             * Window minimize button is disabled. Note: This flag is implemented on Linux (X11), macOS, and
+             * Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_MINIMIZE_DISABLED
+             */
+            val MINIMIZE_DISABLED: WindowFlags get() = WindowFlags(11L)
+            /**
+             * Window maximize button is disabled. Note: This flag is implemented on Linux (X11), macOS, and
+             * Windows.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_MAXIMIZE_DISABLED
+             */
+            val MAXIMIZE_DISABLED: WindowFlags get() = WindowFlags(12L)
+            /**
+             * Represents the size of the `WindowFlags` enum.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_FLAG_MAX
+             */
+            val MAX: WindowFlags get() = WindowFlags(13L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.WindowEvent` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.WindowEvent.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowEvent
+     */
+    @JvmInline
+    value class WindowEvent(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Sent when the mouse pointer enters the window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_MOUSE_ENTER
+             */
+            val MOUSE_ENTER: WindowEvent get() = WindowEvent(0L)
+            /**
+             * Sent when the mouse pointer exits the window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_MOUSE_EXIT
+             */
+            val MOUSE_EXIT: WindowEvent get() = WindowEvent(1L)
+            /**
+             * Sent when the window grabs focus.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_FOCUS_IN
+             */
+            val FOCUS_IN: WindowEvent get() = WindowEvent(2L)
+            /**
+             * Sent when the window loses focus.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_FOCUS_OUT
+             */
+            val FOCUS_OUT: WindowEvent get() = WindowEvent(3L)
+            /**
+             * Sent when the user has attempted to close the window (e.g. close button is pressed).
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_CLOSE_REQUEST
+             */
+            val CLOSE_REQUEST: WindowEvent get() = WindowEvent(4L)
+            /**
+             * Sent when the device "Back" button is pressed. Note: This event is implemented only on Android.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_GO_BACK_REQUEST
+             */
+            val GO_BACK_REQUEST: WindowEvent get() = WindowEvent(5L)
+            /**
+             * Sent when the window is moved to the display with different DPI, or display DPI is changed.
+             * Note: This flag is implemented only on macOS and Linux (Wayland).
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_DPI_CHANGE
+             */
+            val DPI_CHANGE: WindowEvent get() = WindowEvent(6L)
+            /**
+             * Sent when the window title bar decoration is changed (e.g. `WindowFlags.EXTEND_TO_TITLE` is set
+             * or window entered/exited full screen mode). Note: This flag is implemented only on macOS.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_TITLEBAR_CHANGE
+             */
+            val TITLEBAR_CHANGE: WindowEvent get() = WindowEvent(7L)
+            /**
+             * Sent when the window has been forcibly closed by the display server. The window will immediately
+             * hide and clean any internal rendering references. Note: This flag is implemented only on Linux
+             * (Wayland).
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_FORCE_CLOSE
+             */
+            val FORCE_CLOSE: WindowEvent get() = WindowEvent(8L)
+            /**
+             * Sent when the output max linear value returned by `Window.get_output_max_linear_value` has
+             * changed. This occurs when HDR output is enabled or disabled and when any HDR output luminance
+             * values of the window have changed, such as when the player adjusts their screen brightness
+             * setting or moves the window to a different screen.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED
+             */
+            val OUTPUT_MAX_LINEAR_VALUE_CHANGED: WindowEvent get() = WindowEvent(9L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.WindowResizeEdge` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`DisplayServer.WindowResizeEdge.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.WindowResizeEdge
+     */
+    @JvmInline
+    value class WindowResizeEdge(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Top-left edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_TOP_LEFT
+             */
+            val TOP_LEFT: WindowResizeEdge get() = WindowResizeEdge(0L)
+            /**
+             * Top edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_TOP
+             */
+            val TOP: WindowResizeEdge get() = WindowResizeEdge(1L)
+            /**
+             * Top-right edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_TOP_RIGHT
+             */
+            val TOP_RIGHT: WindowResizeEdge get() = WindowResizeEdge(2L)
+            /**
+             * Left edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_LEFT
+             */
+            val LEFT: WindowResizeEdge get() = WindowResizeEdge(3L)
+            /**
+             * Right edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_RIGHT
+             */
+            val RIGHT: WindowResizeEdge get() = WindowResizeEdge(4L)
+            /**
+             * Bottom-left edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_BOTTOM_LEFT
+             */
+            val BOTTOM_LEFT: WindowResizeEdge get() = WindowResizeEdge(5L)
+            /**
+             * Bottom edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_BOTTOM
+             */
+            val BOTTOM: WindowResizeEdge get() = WindowResizeEdge(6L)
+            /**
+             * Bottom-right edge of a window.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_BOTTOM_RIGHT
+             */
+            val BOTTOM_RIGHT: WindowResizeEdge get() = WindowResizeEdge(7L)
+            /**
+             * Represents the size of the `WindowResizeEdge` enum.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_EDGE_MAX
+             */
+            val MAX: WindowResizeEdge get() = WindowResizeEdge(8L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.VSyncMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.VSyncMode.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.VSyncMode
+     */
+    @JvmInline
+    value class VSyncMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No vertical synchronization, which means the engine will display frames as fast as possible
+             * (tearing may be visible). Framerate is unlimited (regardless of `Engine.max_fps`).
+             *
+             * Generated from Godot docs: DisplayServer.VSYNC_DISABLED
+             */
+            val DISABLED: VSyncMode get() = VSyncMode(0L)
+            /**
+             * Default vertical synchronization mode, the image is displayed only on vertical blanking
+             * intervals (no tearing is visible). Framerate is limited by the monitor refresh rate (regardless
+             * of `Engine.max_fps`).
+             *
+             * Generated from Godot docs: DisplayServer.VSYNC_ENABLED
+             */
+            val ENABLED: VSyncMode get() = VSyncMode(1L)
+            /**
+             * Behaves like `VSyncMode.DISABLED` when the framerate drops below the screen's refresh rate to
+             * reduce stuttering (tearing may be visible). Otherwise, vertical synchronization is enabled to
+             * avoid tearing. Framerate is limited by the monitor refresh rate (regardless of
+             * `Engine.max_fps`). Behaves like `VSyncMode.ENABLED` when using the Compatibility rendering
+             * method.
+             *
+             * Generated from Godot docs: DisplayServer.VSYNC_ADAPTIVE
+             */
+            val ADAPTIVE: VSyncMode get() = VSyncMode(2L)
+            /**
+             * Displays the most recent image in the queue on vertical blanking intervals, while rendering to
+             * the other images (no tearing is visible). Framerate is unlimited (regardless of
+             * `Engine.max_fps`). Although not guaranteed, the images can be rendered as fast as possible,
+             * which may reduce input lag (also called "Fast" V-Sync mode). `VSyncMode.MAILBOX` works best when
+             * at least twice as many frames as the display refresh rate are rendered. Behaves like
+             * `VSyncMode.ENABLED` when using the Compatibility rendering method.
+             *
+             * Generated from Godot docs: DisplayServer.VSYNC_MAILBOX
+             */
+            val MAILBOX: VSyncMode get() = VSyncMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.HandleType` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`DisplayServer.HandleType.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.HandleType
+     */
+    @JvmInline
+    value class HandleType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Display handle: - Linux (X11): `X11::Display*` for the display. - Linux (Wayland): `wl_display`
+             * for the display. - Android: `EGLDisplay` for the display.
+             *
+             * Generated from Godot docs: DisplayServer.DISPLAY_HANDLE
+             */
+            val DISPLAY_HANDLE: HandleType get() = HandleType(0L)
+            /**
+             * Window handle: - Windows: `HWND` for the window. - Linux (X11): `X11::Window*` for the window. -
+             * Linux (Wayland): `wl_surface` for the window. - macOS: `NSWindow*` for the window. - iOS:
+             * `UIViewController*` for the view controller. - Android: `jObject` for the activity.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_HANDLE
+             */
+            val WINDOW_HANDLE: HandleType get() = HandleType(1L)
+            /**
+             * Window view: - Windows: `HDC` for the window (only with the Compatibility renderer). - macOS:
+             * `NSView*` for the window main view. - iOS: `UIView*` for the window main view.
+             *
+             * Generated from Godot docs: DisplayServer.WINDOW_VIEW
+             */
+            val WINDOW_VIEW: HandleType get() = HandleType(2L)
+            /**
+             * OpenGL context (only with the Compatibility renderer): - Windows: `HGLRC` for the window (native
+             * GL), or `EGLContext` for the window (ANGLE). - Linux (X11): `GLXContext*` for the window. -
+             * Linux (Wayland): `EGLContext` for the window. - macOS: `NSOpenGLContext*` for the window (native
+             * GL), or `EGLContext` for the window (ANGLE). - Android: `EGLContext` for the window.
+             *
+             * Generated from Godot docs: DisplayServer.OPENGL_CONTEXT
+             */
+            val OPENGL_CONTEXT: HandleType get() = HandleType(3L)
+            /**
+             * - Windows: `EGLDisplay` for the window (ANGLE). - macOS: `EGLDisplay` for the window (ANGLE). -
+             * Linux (Wayland): `EGLDisplay` for the window.
+             *
+             * Generated from Godot docs: DisplayServer.EGL_DISPLAY
+             */
+            val EGL_DISPLAY: HandleType get() = HandleType(4L)
+            /**
+             * - Windows: `EGLConfig` for the window (ANGLE). - macOS: `EGLConfig` for the window (ANGLE). -
+             * Linux (Wayland): `EGLConfig` for the window.
+             *
+             * Generated from Godot docs: DisplayServer.EGL_CONFIG
+             */
+            val EGL_CONFIG: HandleType get() = HandleType(5L)
+            /**
+             * The GLX `VisualID` for the window. Note: Only available on Linux when using X11.
+             *
+             * Generated from Godot docs: DisplayServer.GLX_VISUALID
+             */
+            val GLX_VISUALID: HandleType get() = HandleType(6L)
+            /**
+             * The `GLXFBConfig` for the window. Note: Only available on Linux when using X11.
+             *
+             * Generated from Godot docs: DisplayServer.GLX_FBCONFIG
+             */
+            val GLX_FBCONFIG: HandleType get() = HandleType(7L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.TTSUtteranceEvent` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`DisplayServer.TTSUtteranceEvent.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.TTSUtteranceEvent
+     */
+    @JvmInline
+    value class TTSUtteranceEvent(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Utterance has begun to be spoken.
+             *
+             * Generated from Godot docs: DisplayServer.TTS_UTTERANCE_STARTED
+             */
+            val STARTED: TTSUtteranceEvent get() = TTSUtteranceEvent(0L)
+            /**
+             * Utterance was successfully finished.
+             *
+             * Generated from Godot docs: DisplayServer.TTS_UTTERANCE_ENDED
+             */
+            val ENDED: TTSUtteranceEvent get() = TTSUtteranceEvent(1L)
+            /**
+             * Utterance was canceled, or TTS service was unable to process it.
+             *
+             * Generated from Godot docs: DisplayServer.TTS_UTTERANCE_CANCELED
+             */
+            val CANCELED: TTSUtteranceEvent get() = TTSUtteranceEvent(2L)
+            /**
+             * Utterance reached a word or sentence boundary.
+             *
+             * Generated from Godot docs: DisplayServer.TTS_UTTERANCE_BOUNDARY
+             */
+            val BOUNDARY: TTSUtteranceEvent get() = TTSUtteranceEvent(3L)
+        }
     }
 
     @JvmStatic

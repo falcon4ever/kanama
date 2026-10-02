@@ -17,7 +17,7 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
         @JvmName("setBoundsSizeProperty")
         set(value) = setBoundsSize(value)
 
-    var planeAlignment: Long
+    var planeAlignment: OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment
         @JvmName("planeAlignmentProperty")
         get() = getPlaneAlignment()
         @JvmName("setPlaneAlignmentProperty")
@@ -39,14 +39,14 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
         return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, segment)
     }
 
-    fun setPlaneAlignment(planeAlignment: Long) {
+    fun setPlaneAlignment(planeAlignment: OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPlaneAlignmentBind, segment, planeAlignment)
+        ObjectCalls.ptrcallWithLongArg(setPlaneAlignmentBind, segment, planeAlignment.value)
     }
 
-    fun getPlaneAlignment(): Long {
+    fun getPlaneAlignment(): OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaneAlignmentBind, segment)
+        return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallNoArgsRetLong(getPlaneAlignmentBind, segment))
     }
 
     fun setPlaneLabel(planeLabel: String) {

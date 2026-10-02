@@ -253,8 +253,8 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true`, the curve will bake up vectors used for orientation. This is used when
-     * `PathFollow3D.rotation_mode` is set to `PathFollow3D.ROTATION_ORIENTED`. Changing it forces the
-     * cache to be recomputed.
+     * `PathFollow3D.rotation_mode` is set to `PathFollow3D.RotationMode.ORIENTED`. Changing it forces
+     * the cache to be recomputed.
      *
      * Generated from Godot docs: Curve3D.set_up_vector_enabled
      */
@@ -265,8 +265,8 @@ class Curve3D(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true`, the curve will bake up vectors used for orientation. This is used when
-     * `PathFollow3D.rotation_mode` is set to `PathFollow3D.ROTATION_ORIENTED`. Changing it forces the
-     * cache to be recomputed.
+     * `PathFollow3D.rotation_mode` is set to `PathFollow3D.RotationMode.ORIENTED`. Changing it forces
+     * the cache to be recomputed.
      *
      * Generated from Godot docs: Curve3D.is_up_vector_enabled
      */

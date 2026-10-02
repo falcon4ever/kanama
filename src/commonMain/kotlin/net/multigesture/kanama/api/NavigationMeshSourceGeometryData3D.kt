@@ -121,10 +121,11 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     }
 
     /**
-     * Adds an `Array` the size of `Mesh.ARRAY_MAX` and with vertices at index `Mesh.ARRAY_VERTEX` and
-     * indices at index `Mesh.ARRAY_INDEX` to the navigation mesh baking data. The array must have
-     * valid triangulated mesh data to be considered. Since `NavigationMesh` resources have no
-     * transform, all vertex positions need to be offset by the node's transform using `xform`.
+     * Adds an `Array` the size of `Mesh.ArrayType.MAX` and with vertices at index
+     * `Mesh.ArrayType.VERTEX` and indices at index `Mesh.ArrayType.INDEX` to the navigation mesh
+     * baking data. The array must have valid triangulated mesh data to be considered. Since
+     * `NavigationMesh` resources have no transform, all vertex positions need to be offset by the
+     * node's transform using `xform`.
      *
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.add_mesh_array
      */

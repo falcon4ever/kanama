@@ -16,7 +16,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
         @JvmName("setBoundsSizeProperty")
         set(value) = setBoundsSize(value)
 
-    var markerType: Long
+    var markerType: OpenXRSpatialComponentMarkerList.MarkerType
         @JvmName("markerTypeProperty")
         get() = getMarkerType()
         @JvmName("setMarkerTypeProperty")
@@ -38,14 +38,14 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
         return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, segment)
     }
 
-    fun setMarkerType(markerType: Long) {
+    fun setMarkerType(markerType: OpenXRSpatialComponentMarkerList.MarkerType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMarkerTypeBind, segment, markerType)
+        ObjectCalls.ptrcallWithLongArg(setMarkerTypeBind, segment, markerType.value)
     }
 
-    fun getMarkerType(): Long {
+    fun getMarkerType(): OpenXRSpatialComponentMarkerList.MarkerType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMarkerTypeBind, segment)
+        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallNoArgsRetLong(getMarkerTypeBind, segment))
     }
 
     fun setMarkerId(markerId: Long) {

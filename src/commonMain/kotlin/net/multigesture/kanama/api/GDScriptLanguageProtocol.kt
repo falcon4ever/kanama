@@ -43,8 +43,8 @@ object GDScriptLanguageProtocol {
     }
 
     @JvmStatic
-    fun onClientConnected(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(onClientConnectedBind, singleton)
+    fun onClientConnected(): GodotError {
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(onClientConnectedBind, singleton))
     }
 
     @JvmStatic

@@ -12,7 +12,7 @@ import net.multigesture.kanama.types.RID
  * Generated from Godot docs: RDUniform
  */
 class RDUniform(handle: GodotHandle) : RefCounted(handle) {
-    var uniformType: Long
+    var uniformType: RenderingDevice.UniformType
         @JvmName("uniformTypeProperty")
         get() = getUniformType()
         @JvmName("setUniformTypeProperty")
@@ -29,9 +29,9 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDUniform.set_uniform_type
      */
-    fun setUniformType(pMember: Long) {
+    fun setUniformType(pMember: RenderingDevice.UniformType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, segment, pMember)
+        ObjectCalls.ptrcallWithLongArg(setUniformTypeBind, segment, pMember.value)
     }
 
     /**
@@ -39,9 +39,9 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: RDUniform.get_uniform_type
      */
-    fun getUniformType(): Long {
+    fun getUniformType(): RenderingDevice.UniformType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, segment)
+        return RenderingDevice.UniformType(ObjectCalls.ptrcallNoArgsRetLong(getUniformTypeBind, segment))
     }
 
     /**

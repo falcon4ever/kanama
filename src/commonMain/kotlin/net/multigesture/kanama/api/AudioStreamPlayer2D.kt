@@ -90,7 +90,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setAreaMaskProperty")
         set(value) = setAreaMask(value)
 
-    var playbackType: Long
+    var playbackType: AudioServer.PlaybackType
         @JvmName("playbackTypeProperty")
         get() = getPlaybackType()
         @JvmName("setPlaybackTypeProperty")
@@ -415,8 +415,8 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer2D.set_playback_type
      */
-    fun setPlaybackType(playbackType: Long) {
-        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType)
+    fun setPlaybackType(playbackType: AudioServer.PlaybackType) {
+        ObjectCalls.ptrcallWithLongArg(setPlaybackTypeBind, segment, playbackType.value)
     }
 
     /**
@@ -425,8 +425,8 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: AudioStreamPlayer2D.get_playback_type
      */
-    fun getPlaybackType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment)
+    fun getPlaybackType(): AudioServer.PlaybackType {
+        return AudioServer.PlaybackType(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment))
     }
 
     object Signals {

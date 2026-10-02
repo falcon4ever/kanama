@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,29 +10,34 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeTransformVecMult
  */
 class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(handle) {
-    var operator: Long
+    var operator: VisualShaderNodeTransformVecMult.Operator
         @JvmName("operatorProperty")
         get() = getOperator()
         @JvmName("setOperatorProperty")
         set(value) = setOperator(value)
 
-    fun setOperator(op: Long) {
+    fun setOperator(op: VisualShaderNodeTransformVecMult.Operator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op)
+        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op.value)
     }
 
-    fun getOperator(): Long {
+    fun getOperator(): VisualShaderNodeTransformVecMult.Operator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment)
+        return VisualShaderNodeTransformVecMult.Operator(ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment))
+    }
+
+    @JvmInline
+    value class Operator(override val value: Long) : GodotEnumValue {
+        companion object {
+            val AxB: Operator get() = Operator(0L)
+            val BxA: Operator get() = Operator(1L)
+            val OP_3x3_AxB: Operator get() = Operator(2L)
+            val OP_3x3_BxA: Operator get() = Operator(3L)
+            val MAX: Operator get() = Operator(4L)
+        }
     }
 
     companion object {
-        const val OP_AxB: Long = 0L
-        const val OP_BxA: Long = 1L
-        const val OP_3x3_AxB: Long = 2L
-        const val OP_3x3_BxA: Long = 3L
-        const val OP_MAX: Long = 4L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformVecMult? =
             wrap(handle.segment)

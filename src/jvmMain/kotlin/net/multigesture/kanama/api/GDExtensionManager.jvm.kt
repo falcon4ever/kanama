@@ -13,13 +13,12 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Loads the extension already in address space via the given path and initialization function. The
- * `path` needs to be unique and start with `"libgodot://"`. Returns `LOAD_STATUS_OK` if
- * successful.
+ * `path` needs to be unique and start with `"libgodot://"`. Returns `LoadStatus.OK` if successful.
  *
  * Generated from Godot docs: GDExtensionManager.load_extension_from_function
  */
-fun GDExtensionManager.loadExtensionFromFunction(path: String, initFunc: MemorySegment): Long {
-    return ObjectCalls.ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong(loadExtensionFromFunctionBind, gDExtensionManagerSingleton, path, initFunc)
+fun GDExtensionManager.loadExtensionFromFunction(path: String, initFunc: MemorySegment): GDExtensionManager.LoadStatus {
+    return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringConstGDExtensionInitializationFunctionPtrArgsRetLong(loadExtensionFromFunctionBind, gDExtensionManagerSingleton, path, initFunc))
 }
 
 private val gDExtensionManagerSingleton: RawSegment by lazy {

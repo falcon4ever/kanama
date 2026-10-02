@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -34,35 +35,35 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
 
     var patchMarginLeft: Int
         @JvmName("patchMarginLeftProperty")
-        get() = getPatchMargin(0L)
+        get() = getPatchMargin(Side.LEFT)
         @JvmName("setPatchMarginLeftProperty")
-        set(value) = setPatchMargin(0L, value)
+        set(value) = setPatchMargin(Side.LEFT, value)
 
     var patchMarginTop: Int
         @JvmName("patchMarginTopProperty")
-        get() = getPatchMargin(1L)
+        get() = getPatchMargin(Side.TOP)
         @JvmName("setPatchMarginTopProperty")
-        set(value) = setPatchMargin(1L, value)
+        set(value) = setPatchMargin(Side.TOP, value)
 
     var patchMarginRight: Int
         @JvmName("patchMarginRightProperty")
-        get() = getPatchMargin(2L)
+        get() = getPatchMargin(Side.RIGHT)
         @JvmName("setPatchMarginRightProperty")
-        set(value) = setPatchMargin(2L, value)
+        set(value) = setPatchMargin(Side.RIGHT, value)
 
     var patchMarginBottom: Int
         @JvmName("patchMarginBottomProperty")
-        get() = getPatchMargin(3L)
+        get() = getPatchMargin(Side.BOTTOM)
         @JvmName("setPatchMarginBottomProperty")
-        set(value) = setPatchMargin(3L, value)
+        set(value) = setPatchMargin(Side.BOTTOM, value)
 
-    var axisStretchHorizontal: Long
+    var axisStretchHorizontal: NinePatchRect.AxisStretchMode
         @JvmName("axisStretchHorizontalProperty")
         get() = getHAxisStretchMode()
         @JvmName("setAxisStretchHorizontalProperty")
         set(value) = setHAxisStretchMode(value)
 
-    var axisStretchVertical: Long
+    var axisStretchVertical: NinePatchRect.AxisStretchMode
         @JvmName("axisStretchVerticalProperty")
         get() = getVAxisStretchMode()
         @JvmName("setAxisStretchVerticalProperty")
@@ -93,8 +94,8 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: NinePatchRect.set_patch_margin
      */
-    fun setPatchMargin(margin: Long, value: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setPatchMarginBind, segment, margin, value)
+    fun setPatchMargin(margin: Side, value: Int) {
+        ObjectCalls.ptrcallWithLongAndIntArgs(setPatchMarginBind, segment, margin.value, value)
     }
 
     /**
@@ -104,8 +105,8 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: NinePatchRect.get_patch_margin
      */
-    fun getPatchMargin(margin: Long): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getPatchMarginBind, segment, margin)
+    fun getPatchMargin(margin: Side): Int {
+        return ObjectCalls.ptrcallWithLongArgRetInt(getPatchMarginBind, segment, margin.value)
     }
 
     /**
@@ -153,8 +154,8 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: NinePatchRect.set_h_axis_stretch_mode
      */
-    fun setHAxisStretchMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode)
+    fun setHAxisStretchMode(mode: NinePatchRect.AxisStretchMode) {
+        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -162,8 +163,8 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: NinePatchRect.get_h_axis_stretch_mode
      */
-    fun getHAxisStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment)
+    fun getHAxisStretchMode(): NinePatchRect.AxisStretchMode {
+        return NinePatchRect.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment))
     }
 
     /**
@@ -171,8 +172,8 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: NinePatchRect.set_v_axis_stretch_mode
      */
-    fun setVAxisStretchMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode)
+    fun setVAxisStretchMode(mode: NinePatchRect.AxisStretchMode) {
+        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -180,19 +181,50 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: NinePatchRect.get_v_axis_stretch_mode
      */
-    fun getVAxisStretchMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment)
+    fun getVAxisStretchMode(): NinePatchRect.AxisStretchMode {
+        return NinePatchRect.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment))
     }
 
     object Signals {
         const val textureChanged: String = "texture_changed"
     }
 
-    companion object {
-        const val AXIS_STRETCH_MODE_STRETCH: Long = 0L
-        const val AXIS_STRETCH_MODE_TILE: Long = 1L
-        const val AXIS_STRETCH_MODE_TILE_FIT: Long = 2L
+    /**
+     * Godot's `NinePatchRect.AxisStretchMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`NinePatchRect.AxisStretchMode.<NAME>`).
+     *
+     * Generated from Godot docs: NinePatchRect.AxisStretchMode
+     */
+    @JvmInline
+    value class AxisStretchMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Stretches the center texture across the NinePatchRect. This may cause the texture to be
+             * distorted.
+             *
+             * Generated from Godot docs: NinePatchRect.AXIS_STRETCH_MODE_STRETCH
+             */
+            val STRETCH: AxisStretchMode get() = AxisStretchMode(0L)
+            /**
+             * Repeats the center texture across the NinePatchRect. This won't cause any visible distortion.
+             * The texture must be seamless for this to work without displaying artifacts between edges.
+             *
+             * Generated from Godot docs: NinePatchRect.AXIS_STRETCH_MODE_TILE
+             */
+            val TILE: AxisStretchMode get() = AxisStretchMode(1L)
+            /**
+             * Repeats the center texture across the NinePatchRect, but will also stretch the texture to make
+             * sure each tile is visible in full. This may cause the texture to be distorted, but less than
+             * `AxisStretchMode.STRETCH`. The texture must be seamless for this to work without displaying
+             * artifacts between edges.
+             *
+             * Generated from Godot docs: NinePatchRect.AXIS_STRETCH_MODE_TILE_FIT
+             */
+            val TILE_FIT: AxisStretchMode get() = AxisStretchMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NinePatchRect? =
             wrap(handle.segment)

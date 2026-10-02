@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -60,7 +61,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
         @JvmName("setActionProperty")
         set(value) = setAction(value)
 
-    var visibilityMode: Long
+    var visibilityMode: TouchScreenButton.VisibilityMode
         @JvmName("visibilityModeProperty")
         get() = getVisibilityMode()
         @JvmName("setVisibilityModeProperty")
@@ -199,8 +200,8 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TouchScreenButton.set_visibility_mode
      */
-    fun setVisibilityMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode)
+    fun setVisibilityMode(mode: TouchScreenButton.VisibilityMode) {
+        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode.value)
     }
 
     /**
@@ -208,8 +209,8 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      *
      * Generated from Godot docs: TouchScreenButton.get_visibility_mode
      */
-    fun getVisibilityMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment)
+    fun getVisibilityMode(): TouchScreenButton.VisibilityMode {
+        return TouchScreenButton.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment))
     }
 
     /**
@@ -248,10 +249,32 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
         const val released: String = "released"
     }
 
-    companion object {
-        const val VISIBILITY_ALWAYS: Long = 0L
-        const val VISIBILITY_TOUCHSCREEN_ONLY: Long = 1L
+    /**
+     * Godot's `TouchScreenButton.VisibilityMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`TouchScreenButton.VisibilityMode.<NAME>`).
+     *
+     * Generated from Godot docs: TouchScreenButton.VisibilityMode
+     */
+    @JvmInline
+    value class VisibilityMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Always visible.
+             *
+             * Generated from Godot docs: TouchScreenButton.VISIBILITY_ALWAYS
+             */
+            val ALWAYS: VisibilityMode get() = VisibilityMode(0L)
+            /**
+             * Visible on touch screens only.
+             *
+             * Generated from Godot docs: TouchScreenButton.VISIBILITY_TOUCHSCREEN_ONLY
+             */
+            val TOUCHSCREEN_ONLY: VisibilityMode get() = VisibilityMode(1L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TouchScreenButton? =
             wrap(handle.segment)

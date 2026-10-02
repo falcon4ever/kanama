@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -279,20 +280,20 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Duplicates this resource, returning a new resource with its `export`ed or
-     * `PROPERTY_USAGE_STORAGE` properties copied from the original. If `deep` is `false`, a shallow
-     * copy is returned: nested `Array`, `Dictionary`, and `Resource` properties are not duplicated and
-     * are shared with the original resource. If `deep` is `true`, a deep copy is returned: all nested
-     * arrays, dictionaries, and packed arrays are also duplicated (recursively). Any `Resource` found
-     * inside will only be duplicated if it's local, like `DEEP_DUPLICATE_INTERNAL` used with
-     * `duplicate_deep`. The following exceptions apply: - Subresource properties with the
-     * `PROPERTY_USAGE_ALWAYS_DUPLICATE` flag are always duplicated (recursively or not, depending on
-     * `deep`). - Subresource properties with the `PROPERTY_USAGE_NEVER_DUPLICATE` flag are never
-     * duplicated. Note: For custom resources, this method will fail if `Object._init` has been defined
-     * with required parameters. Note: When duplicating with `deep` set to `true`, each resource found,
-     * including the one on which this method is called, will be only duplicated once and referenced as
-     * many times as needed in the duplicate. For instance, if you are duplicating resource A that
-     * happens to have resource B referenced twice, you'll get a new resource A' referencing a new
-     * resource B' twice.
+     * `PropertyUsageFlags.STORAGE` properties copied from the original. If `deep` is `false`, a
+     * shallow copy is returned: nested `Array`, `Dictionary`, and `Resource` properties are not
+     * duplicated and are shared with the original resource. If `deep` is `true`, a deep copy is
+     * returned: all nested arrays, dictionaries, and packed arrays are also duplicated (recursively).
+     * Any `Resource` found inside will only be duplicated if it's local, like
+     * `DeepDuplicateMode.INTERNAL` used with `duplicate_deep`. The following exceptions apply: -
+     * Subresource properties with the `PropertyUsageFlags.ALWAYS_DUPLICATE` flag are always duplicated
+     * (recursively or not, depending on `deep`). - Subresource properties with the
+     * `PropertyUsageFlags.NEVER_DUPLICATE` flag are never duplicated. Note: For custom resources, this
+     * method will fail if `Object._init` has been defined with required parameters. Note: When
+     * duplicating with `deep` set to `true`, each resource found, including the one on which this
+     * method is called, will be only duplicated once and referenced as many times as needed in the
+     * duplicate. For instance, if you are duplicating resource A that happens to have resource B
+     * referenced twice, you'll get a new resource A' referencing a new resource B' twice.
      *
      * Generated from Godot docs: Resource.duplicate
      */
@@ -312,9 +313,9 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Resource.duplicate_deep
      */
-    fun duplicateDeep(deepSubresourcesMode: Long = 1L): Resource? {
+    fun duplicateDeep(deepSubresourcesMode: Resource.DeepDuplicateMode = Resource.DeepDuplicateMode.INTERNAL): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, deepSubresourcesMode)
+        val ret = ObjectCalls.ptrcallWithLongArgRetObject(duplicateDeepBind, segment, deepSubresourcesMode.value)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -327,14 +328,46 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
      *
      * Generated from Godot docs: Resource.copy_from_resource
      */
-    fun copyFromResource(resource: Resource?): Long {
+    fun copyFromResource(resource: Resource?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     object Signals {
         const val changed: String = "changed"
         const val setupLocalToSceneRequested: String = "setup_local_to_scene_requested"
+    }
+
+    /**
+     * Godot's `Resource.DeepDuplicateMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`Resource.DeepDuplicateMode.<NAME>`).
+     *
+     * Generated from Godot docs: Resource.DeepDuplicateMode
+     */
+    @JvmInline
+    value class DeepDuplicateMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No subresources at all are duplicated. This is useful even in a deep duplication to have all the
+             * arrays and dictionaries duplicated but still pointing to the original resources.
+             *
+             * Generated from Godot docs: Resource.DEEP_DUPLICATE_NONE
+             */
+            val NONE: DeepDuplicateMode get() = DeepDuplicateMode(0L)
+            /**
+             * Only subresources without a path or with a scene-local path will be duplicated.
+             *
+             * Generated from Godot docs: Resource.DEEP_DUPLICATE_INTERNAL
+             */
+            val INTERNAL: DeepDuplicateMode get() = DeepDuplicateMode(1L)
+            /**
+             * Every subresource found will be duplicated, even if it has a non-local path. In other words,
+             * even potentially big resources stored separately will be duplicated.
+             *
+             * Generated from Godot docs: Resource.DEEP_DUPLICATE_ALL
+             */
+            val ALL: DeepDuplicateMode get() = DeepDuplicateMode(2L)
+        }
     }
 
     companion object {
@@ -348,10 +381,6 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         fun generateSceneUniqueId(): String {
             return ObjectCalls.ptrcallNoArgsRetString(generateSceneUniqueIdBind, NULL_SEGMENT)
         }
-
-        const val DEEP_DUPLICATE_NONE: Long = 0L
-        const val DEEP_DUPLICATE_INTERNAL: Long = 1L
-        const val DEEP_DUPLICATE_ALL: Long = 2L
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Resource =

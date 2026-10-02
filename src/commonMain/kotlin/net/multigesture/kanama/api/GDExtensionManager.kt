@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -14,45 +15,39 @@ object GDExtensionManager {
         ObjectCalls.getSingleton("GDExtensionManager")
     }
 
-    const val LOAD_STATUS_OK: Long = 0L
-    const val LOAD_STATUS_FAILED: Long = 1L
-    const val LOAD_STATUS_ALREADY_LOADED: Long = 2L
-    const val LOAD_STATUS_NOT_LOADED: Long = 3L
-    const val LOAD_STATUS_NEEDS_RESTART: Long = 4L
-
     /**
      * Loads an extension by absolute file path. The `path` needs to point to a valid `GDExtension`.
-     * Returns `LOAD_STATUS_OK` if successful.
+     * Returns `LoadStatus.OK` if successful.
      *
      * Generated from Godot docs: GDExtensionManager.load_extension
      */
     @JvmStatic
-    fun loadExtension(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(loadExtensionBind, singleton, path)
+    fun loadExtension(path: String): GDExtensionManager.LoadStatus {
+        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(loadExtensionBind, singleton, path))
     }
 
     /**
      * Reloads the extension at the given file path. The `path` needs to point to a valid
-     * `GDExtension`, otherwise this method may return either `LOAD_STATUS_NOT_LOADED` or
-     * `LOAD_STATUS_FAILED`. Note: You can only reload extensions in the editor. In release builds,
-     * this method always fails and returns `LOAD_STATUS_FAILED`.
+     * `GDExtension`, otherwise this method may return either `LoadStatus.NOT_LOADED` or
+     * `LoadStatus.FAILED`. Note: You can only reload extensions in the editor. In release builds, this
+     * method always fails and returns `LoadStatus.FAILED`.
      *
      * Generated from Godot docs: GDExtensionManager.reload_extension
      */
     @JvmStatic
-    fun reloadExtension(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(reloadExtensionBind, singleton, path)
+    fun reloadExtension(path: String): GDExtensionManager.LoadStatus {
+        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(reloadExtensionBind, singleton, path))
     }
 
     /**
      * Unloads an extension by file path. The `path` needs to point to an already loaded `GDExtension`,
-     * otherwise this method returns `LOAD_STATUS_NOT_LOADED`.
+     * otherwise this method returns `LoadStatus.NOT_LOADED`.
      *
      * Generated from Godot docs: GDExtensionManager.unload_extension
      */
     @JvmStatic
-    fun unloadExtension(path: String): Long {
-        return ObjectCalls.ptrcallWithStringArgRetLong(unloadExtensionBind, singleton, path)
+    fun unloadExtension(path: String): GDExtensionManager.LoadStatus {
+        return GDExtensionManager.LoadStatus(ObjectCalls.ptrcallWithStringArgRetLong(unloadExtensionBind, singleton, path))
     }
 
     /**
@@ -91,6 +86,49 @@ object GDExtensionManager {
         const val extensionsReloaded: String = "extensions_reloaded"
         const val extensionLoaded: String = "extension_loaded"
         const val extensionUnloading: String = "extension_unloading"
+    }
+
+    /**
+     * Godot's `GDExtensionManager.LoadStatus` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`GDExtensionManager.LoadStatus.<NAME>`).
+     *
+     * Generated from Godot docs: GDExtensionManager.LoadStatus
+     */
+    @JvmInline
+    value class LoadStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The extension has loaded successfully.
+             *
+             * Generated from Godot docs: GDExtensionManager.LOAD_STATUS_OK
+             */
+            val OK: LoadStatus get() = LoadStatus(0L)
+            /**
+             * The extension has failed to load, possibly because it does not exist or has missing
+             * dependencies.
+             *
+             * Generated from Godot docs: GDExtensionManager.LOAD_STATUS_FAILED
+             */
+            val FAILED: LoadStatus get() = LoadStatus(1L)
+            /**
+             * The extension has already been loaded.
+             *
+             * Generated from Godot docs: GDExtensionManager.LOAD_STATUS_ALREADY_LOADED
+             */
+            val ALREADY_LOADED: LoadStatus get() = LoadStatus(2L)
+            /**
+             * The extension has not been loaded.
+             *
+             * Generated from Godot docs: GDExtensionManager.LOAD_STATUS_NOT_LOADED
+             */
+            val NOT_LOADED: LoadStatus get() = LoadStatus(3L)
+            /**
+             * The extension requires the application to restart to fully load.
+             *
+             * Generated from Godot docs: GDExtensionManager.LOAD_STATUS_NEEDS_RESTART
+             */
+            val NEEDS_RESTART: LoadStatus get() = LoadStatus(4L)
+        }
     }
 
     @JvmStatic

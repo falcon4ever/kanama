@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -25,7 +26,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
         @JvmName("setUseHdrProperty")
         set(value) = setUseHdr(value)
 
-    var fill: Long
+    var fill: GradientTexture2D.Fill
         @JvmName("fillProperty")
         get() = getFill()
         @JvmName("setFillProperty")
@@ -43,7 +44,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
         @JvmName("setFillToProperty")
         set(value) = setFillTo(value)
 
-    var repeat: Long
+    var repeat: GradientTexture2D.Repeat
         @JvmName("repeatProperty")
         get() = getRepeat()
         @JvmName("setRepeatProperty")
@@ -92,10 +93,10 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     /**
-     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
+     * If `true`, the generated texture will support high dynamic range (`Image.Format.RGBAF` format).
      * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
      * generated texture will use low dynamic range; overbright colors will be clamped
-     * (`Image.FORMAT_RGBA8` format).
+     * (`Image.Format.RGBA8` format).
      *
      * Generated from Godot docs: GradientTexture2D.set_use_hdr
      */
@@ -105,10 +106,10 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     /**
-     * If `true`, the generated texture will support high dynamic range (`Image.FORMAT_RGBAF` format).
+     * If `true`, the generated texture will support high dynamic range (`Image.Format.RGBAF` format).
      * This allows for glow effects to work if `Environment.glow_enabled` is `true`. If `false`, the
      * generated texture will use low dynamic range; overbright colors will be clamped
-     * (`Image.FORMAT_RGBA8` format).
+     * (`Image.Format.RGBA8` format).
      *
      * Generated from Godot docs: GradientTexture2D.is_using_hdr
      */
@@ -122,9 +123,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: GradientTexture2D.set_fill
      */
-    fun setFill(fill: Long) {
+    fun setFill(fill: GradientTexture2D.Fill) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFillBind, segment, fill)
+        ObjectCalls.ptrcallWithLongArg(setFillBind, segment, fill.value)
     }
 
     /**
@@ -132,9 +133,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: GradientTexture2D.get_fill
      */
-    fun getFill(): Long {
+    fun getFill(): GradientTexture2D.Fill {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getFillBind, segment)
+        return GradientTexture2D.Fill(ObjectCalls.ptrcallNoArgsRetLong(getFillBind, segment))
     }
 
     /**
@@ -182,9 +183,9 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: GradientTexture2D.set_repeat
      */
-    fun setRepeat(repeat: Long) {
+    fun setRepeat(repeat: GradientTexture2D.Repeat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRepeatBind, segment, repeat)
+        ObjectCalls.ptrcallWithLongArg(setRepeatBind, segment, repeat.value)
     }
 
     /**
@@ -192,20 +193,80 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: GradientTexture2D.get_repeat
      */
-    fun getRepeat(): Long {
+    fun getRepeat(): GradientTexture2D.Repeat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, segment)
+        return GradientTexture2D.Repeat(ObjectCalls.ptrcallNoArgsRetLong(getRepeatBind, segment))
+    }
+
+    /**
+     * Godot's `GradientTexture2D.Fill` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GradientTexture2D.Fill.<NAME>`).
+     *
+     * Generated from Godot docs: GradientTexture2D.Fill
+     */
+    @JvmInline
+    value class Fill(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The colors are linearly interpolated in a straight line.
+             *
+             * Generated from Godot docs: GradientTexture2D.FILL_LINEAR
+             */
+            val LINEAR: Fill get() = Fill(0L)
+            /**
+             * The colors are linearly interpolated in a circular pattern.
+             *
+             * Generated from Godot docs: GradientTexture2D.FILL_RADIAL
+             */
+            val RADIAL: Fill get() = Fill(1L)
+            /**
+             * The colors are linearly interpolated in a square pattern.
+             *
+             * Generated from Godot docs: GradientTexture2D.FILL_SQUARE
+             */
+            val SQUARE: Fill get() = Fill(2L)
+            /**
+             * The colors are linearly interpolated in a cone pattern.
+             *
+             * Generated from Godot docs: GradientTexture2D.FILL_CONIC
+             */
+            val CONIC: Fill get() = Fill(3L)
+        }
+    }
+
+    /**
+     * Godot's `GradientTexture2D.Repeat` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`GradientTexture2D.Repeat.<NAME>`).
+     *
+     * Generated from Godot docs: GradientTexture2D.Repeat
+     */
+    @JvmInline
+    value class Repeat(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The gradient fill is restricted to the range defined by `fill_from` to `fill_to` offsets.
+             *
+             * Generated from Godot docs: GradientTexture2D.REPEAT_NONE
+             */
+            val NONE: Repeat get() = Repeat(0L)
+            /**
+             * The texture is filled starting from `fill_from` to `fill_to` offsets, repeating the same pattern
+             * in both directions.
+             *
+             * Generated from Godot docs: GradientTexture2D.REPEAT
+             */
+            val REPEAT: Repeat get() = Repeat(1L)
+            /**
+             * The texture is filled starting from `fill_from` to `fill_to` offsets, mirroring the pattern in
+             * both directions.
+             *
+             * Generated from Godot docs: GradientTexture2D.REPEAT_MIRROR
+             */
+            val MIRROR: Repeat get() = Repeat(2L)
+        }
     }
 
     companion object {
-        const val FILL_LINEAR: Long = 0L
-        const val FILL_RADIAL: Long = 1L
-        const val FILL_SQUARE: Long = 2L
-        const val FILL_CONIC: Long = 3L
-        const val REPEAT_NONE: Long = 0L
-        const val REPEAT: Long = 1L
-        const val REPEAT_MIRROR: Long = 2L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GradientTexture2D? =
             wrap(handle.segment)

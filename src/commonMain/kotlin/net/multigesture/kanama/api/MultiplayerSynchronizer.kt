@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -35,7 +36,7 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
         @JvmName("setReplicationConfigProperty")
         set(value) = setReplicationConfig(value)
 
-    var visibilityUpdateMode: Long
+    var visibilityUpdateMode: MultiplayerSynchronizer.VisibilityUpdateMode
         @JvmName("visibilityUpdateModeProperty")
         get() = getVisibilityUpdateMode()
         @JvmName("setVisibilityUpdateModeProperty")
@@ -79,12 +80,12 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
         return SceneReplicationConfig.wrap(ObjectCalls.ptrcallNoArgsRetObject(getReplicationConfigBind, segment))
     }
 
-    fun setVisibilityUpdateMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityUpdateModeBind, segment, mode)
+    fun setVisibilityUpdateMode(mode: MultiplayerSynchronizer.VisibilityUpdateMode) {
+        ObjectCalls.ptrcallWithLongArg(setVisibilityUpdateModeBind, segment, mode.value)
     }
 
-    fun getVisibilityUpdateMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVisibilityUpdateModeBind, segment)
+    fun getVisibilityUpdateMode(): MultiplayerSynchronizer.VisibilityUpdateMode {
+        return MultiplayerSynchronizer.VisibilityUpdateMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityUpdateModeBind, segment))
     }
 
     fun updateVisibility(forPeer: Int = 0) {
@@ -121,11 +122,16 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
         const val visibilityChanged: String = "visibility_changed"
     }
 
-    companion object {
-        const val VISIBILITY_PROCESS_IDLE: Long = 0L
-        const val VISIBILITY_PROCESS_PHYSICS: Long = 1L
-        const val VISIBILITY_PROCESS_NONE: Long = 2L
+    @JvmInline
+    value class VisibilityUpdateMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            val IDLE: VisibilityUpdateMode get() = VisibilityUpdateMode(0L)
+            val PHYSICS: VisibilityUpdateMode get() = VisibilityUpdateMode(1L)
+            val NONE: VisibilityUpdateMode get() = VisibilityUpdateMode(2L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiplayerSynchronizer? =
             wrap(handle.segment)

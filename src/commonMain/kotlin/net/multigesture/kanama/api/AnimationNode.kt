@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -150,9 +151,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: AnimationNode.blend_animation
      */
-    fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Long = 0L) {
+    fun blendAnimation(animation: String, time: Double, delta: Double, seeked: Boolean, isExternalSeeking: Boolean, blend: Double, loopedFlag: Animation.LoopedFlag = Animation.LoopedFlag.NONE) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, segment, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag)
+        ObjectCalls.ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs(blendAnimationBind, segment, animation, time, delta, seeked, isExternalSeeking, blend, loopedFlag.value)
     }
 
     /**
@@ -162,9 +163,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: AnimationNode.blend_node
      */
-    fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
+    fun blendNode(name: String, node: AnimationNode?, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: AnimationNode.FilterAction = AnimationNode.FilterAction.IGNORE, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
+        return ObjectCalls.ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
     }
 
     /**
@@ -174,9 +175,9 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: AnimationNode.blend_input
      */
-    fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: Long = 0L, sync: Boolean = true, testOnly: Boolean = false): Double {
+    fun blendInput(inputIndex: Int, time: Double, seek: Boolean, isExternalSeeking: Boolean, blend: Double, filter: AnimationNode.FilterAction = AnimationNode.FilterAction.IGNORE, sync: Boolean = true, testOnly: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, segment, inputIndex, time, seek, isExternalSeeking, blend, filter, sync, testOnly)
+        return ObjectCalls.ptrcallWithIntDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble(blendInputBind, segment, inputIndex, time, seek, isExternalSeeking, blend, filter.value, sync, testOnly)
     }
 
     /**
@@ -208,12 +209,43 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
         const val animationNodeRemoved: String = "animation_node_removed"
     }
 
-    companion object {
-        const val FILTER_IGNORE: Long = 0L
-        const val FILTER_PASS: Long = 1L
-        const val FILTER_STOP: Long = 2L
-        const val FILTER_BLEND: Long = 3L
+    /**
+     * Godot's `AnimationNode.FilterAction` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AnimationNode.FilterAction.<NAME>`).
+     *
+     * Generated from Godot docs: AnimationNode.FilterAction
+     */
+    @JvmInline
+    value class FilterAction(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not use filtering.
+             *
+             * Generated from Godot docs: AnimationNode.FILTER_IGNORE
+             */
+            val IGNORE: FilterAction get() = FilterAction(0L)
+            /**
+             * Paths matching the filter will be allowed to pass.
+             *
+             * Generated from Godot docs: AnimationNode.FILTER_PASS
+             */
+            val PASS: FilterAction get() = FilterAction(1L)
+            /**
+             * Paths matching the filter will be discarded.
+             *
+             * Generated from Godot docs: AnimationNode.FILTER_STOP
+             */
+            val STOP: FilterAction get() = FilterAction(2L)
+            /**
+             * Paths matching the filter will be blended (by the blend value).
+             *
+             * Generated from Godot docs: AnimationNode.FILTER_BLEND
+             */
+            val BLEND: FilterAction get() = FilterAction(3L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNode? =
             wrap(handle.segment)

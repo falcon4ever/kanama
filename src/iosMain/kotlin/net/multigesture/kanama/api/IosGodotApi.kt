@@ -82,8 +82,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_loa
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_sprite2d_set_texture
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_kill
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_set_parallel
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_property_color
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_property_vector2
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_callback
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_method
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_viewport_get_visible_rect
@@ -130,6 +128,37 @@ interface KanamaCoroutineOwner {
 }
 
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
+    // ===== BEGIN GENERATED ENUMS: AudioStreamPlayer (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `AudioStreamPlayer.MixTarget` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`AudioStreamPlayer.MixTarget.<NAME>`).
+     *
+     * Generated from Godot docs: AudioStreamPlayer.MixTarget
+     */
+    value class MixTarget(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The audio will be played only on the first channel. This is the default.
+             *
+             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_STEREO
+             */
+            val STEREO: MixTarget get() = MixTarget(0L)
+            /**
+             * The audio will be played on all surround channels.
+             *
+             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_SURROUND
+             */
+            val SURROUND: MixTarget get() = MixTarget(1L)
+            /**
+             * The audio will be played on the second channel, which is usually the center.
+             *
+             * Generated from Godot docs: AudioStreamPlayer.MIX_TARGET_CENTER
+             */
+            val CENTER: MixTarget get() = MixTarget(2L)
+        }
+    }
+    // ===== END GENERATED ENUMS: AudioStreamPlayer =====
+
     fun setStreamFromPath(path: String) {
         ResourceLoader.loadAudioStream(path)?.use { stream ->
             setStream(stream)
@@ -179,11 +208,197 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
 // types are the generated shared classes (task 117 P2'): Tweener, PropertyTweener, MethodTweener
 // and CallbackTweener are one generated class each now, carrying their own fluent
 // setTrans/setEase/setDelay/from with the generator's self-return collapse.
-class Tween(handle: GodotHandle) : RefCounted(handle) {
+actual class Tween(handle: GodotHandle) : RefCounted(handle) {
+    // ===== BEGIN GENERATED ENUMS: Tween (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `Tween.TweenProcessMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Tween.TweenProcessMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TweenProcessMode
+     */
+    actual value class TweenProcessMode
+    actual constructor(
+        actual override val value: Long,
+    ) : GodotEnumValue {
+        actual companion object {
+            /**
+             * The `Tween` updates after each physics frame (see `Node._physics_process`).
+             *
+             * Generated from Godot docs: Tween.TWEEN_PROCESS_PHYSICS
+             */
+            actual val PHYSICS: TweenProcessMode get() = TweenProcessMode(0L)
+            /**
+             * The `Tween` updates after each process frame (see `Node._process`).
+             *
+             * Generated from Godot docs: Tween.TWEEN_PROCESS_IDLE
+             */
+            actual val IDLE: TweenProcessMode get() = TweenProcessMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `Tween.TweenPauseMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tween.TweenPauseMode.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TweenPauseMode
+     */
+    actual value class TweenPauseMode
+    actual constructor(
+        actual override val value: Long,
+    ) : GodotEnumValue {
+        actual companion object {
+            /**
+             * If the `Tween` has a bound node, it will process when that node can process (see
+             * `Node.process_mode`). Otherwise it's the same as `TweenPauseMode.STOP`.
+             *
+             * Generated from Godot docs: Tween.TWEEN_PAUSE_BOUND
+             */
+            actual val BOUND: TweenPauseMode get() = TweenPauseMode(0L)
+            /**
+             * If `SceneTree` is paused, the `Tween` will also pause.
+             *
+             * Generated from Godot docs: Tween.TWEEN_PAUSE_STOP
+             */
+            actual val STOP: TweenPauseMode get() = TweenPauseMode(1L)
+            /**
+             * The `Tween` will process regardless of whether `SceneTree` is paused.
+             *
+             * Generated from Godot docs: Tween.TWEEN_PAUSE_PROCESS
+             */
+            actual val PROCESS: TweenPauseMode get() = TweenPauseMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `Tween.TransitionType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`Tween.TransitionType.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.TransitionType
+     */
+    actual value class TransitionType
+    actual constructor(
+        actual override val value: Long,
+    ) : GodotEnumValue {
+        actual companion object {
+            /**
+             * The animation is interpolated linearly.
+             *
+             * Generated from Godot docs: Tween.TRANS_LINEAR
+             */
+            actual val LINEAR: TransitionType get() = TransitionType(0L)
+            /**
+             * The animation is interpolated using a sine function.
+             *
+             * Generated from Godot docs: Tween.TRANS_SINE
+             */
+            actual val SINE: TransitionType get() = TransitionType(1L)
+            /**
+             * The animation is interpolated with a quintic (to the power of 5) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_QUINT
+             */
+            actual val QUINT: TransitionType get() = TransitionType(2L)
+            /**
+             * The animation is interpolated with a quartic (to the power of 4) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_QUART
+             */
+            actual val QUART: TransitionType get() = TransitionType(3L)
+            /**
+             * The animation is interpolated with a quadratic (to the power of 2) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_QUAD
+             */
+            actual val QUAD: TransitionType get() = TransitionType(4L)
+            /**
+             * The animation is interpolated with an exponential (to the power of x) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_EXPO
+             */
+            actual val EXPO: TransitionType get() = TransitionType(5L)
+            /**
+             * The animation is interpolated with elasticity, wiggling around the edges.
+             *
+             * Generated from Godot docs: Tween.TRANS_ELASTIC
+             */
+            actual val ELASTIC: TransitionType get() = TransitionType(6L)
+            /**
+             * The animation is interpolated with a cubic (to the power of 3) function.
+             *
+             * Generated from Godot docs: Tween.TRANS_CUBIC
+             */
+            actual val CUBIC: TransitionType get() = TransitionType(7L)
+            /**
+             * The animation is interpolated with a function using square roots.
+             *
+             * Generated from Godot docs: Tween.TRANS_CIRC
+             */
+            actual val CIRC: TransitionType get() = TransitionType(8L)
+            /**
+             * The animation is interpolated by bouncing at the end.
+             *
+             * Generated from Godot docs: Tween.TRANS_BOUNCE
+             */
+            actual val BOUNCE: TransitionType get() = TransitionType(9L)
+            /**
+             * The animation is interpolated backing out at ends.
+             *
+             * Generated from Godot docs: Tween.TRANS_BACK
+             */
+            actual val BACK: TransitionType get() = TransitionType(10L)
+            /**
+             * The animation is interpolated like a spring towards the end.
+             *
+             * Generated from Godot docs: Tween.TRANS_SPRING
+             */
+            actual val SPRING: TransitionType get() = TransitionType(11L)
+        }
+    }
+
+    /**
+     * Godot's `Tween.EaseType` enum as a typed value: `.value` is the raw number Godot uses, and the
+     * companion holds the named values (`Tween.EaseType.<NAME>`).
+     *
+     * Generated from Godot docs: Tween.EaseType
+     */
+    actual value class EaseType
+    actual constructor(
+        actual override val value: Long,
+    ) : GodotEnumValue {
+        actual companion object {
+            /**
+             * The interpolation starts slowly and speeds up towards the end.
+             *
+             * Generated from Godot docs: Tween.EASE_IN
+             */
+            actual val IN: EaseType get() = EaseType(0L)
+            /**
+             * The interpolation starts quickly and slows down towards the end.
+             *
+             * Generated from Godot docs: Tween.EASE_OUT
+             */
+            actual val OUT: EaseType get() = EaseType(1L)
+            /**
+             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is slowest at both ends.
+             *
+             * Generated from Godot docs: Tween.EASE_IN_OUT
+             */
+            actual val IN_OUT: EaseType get() = EaseType(2L)
+            /**
+             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is fastest at both ends.
+             *
+             * Generated from Godot docs: Tween.EASE_OUT_IN
+             */
+            actual val OUT_IN: EaseType get() = EaseType(3L)
+        }
+    }
+    // ===== END GENERATED ENUMS: Tween =====
+
     fun setParallel(parallel: Boolean): Tween {
         releaseIosFluentSelf(
             segment,
             IosGodot.tweenSetParallel(segment.address(), if (parallel) 1 else 0),
+            "Tween.set_parallel",
         )
         return this
     }
@@ -193,42 +408,56 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
         releaseIosFluentSelf(
             segment,
             ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment).address(),
+            "Tween.bind_node",
         )
         return this
     }
 
     // Tween.set_ease(ease) — ptrcall (int arg, returns self). Tween-level default ease (distinct
     // from Tweener.setEase, which configures an individual tweener).
-    fun setEase(ease: Long): Tween {
+    fun setEase(ease: Tween.EaseType): Tween {
         releaseIosFluentSelf(
             segment,
-            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease).address(),
+            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value).address(),
+            "Tween.set_ease",
         )
         return this
     }
 
     // Tween.tween_callback(Callable(target, method)). Routed through the C shim (Callable arg).
-    fun tweenCallback(target: GodotObject, method: String): CallbackTweener? =
-        IosGodot.tweenTweenCallback(segment.address(), target.segment.address(), method)
-            .takeIf { it != 0L }
-            ?.let { CallbackTweener(GodotHandle(MemorySegment.ofAddress(it))) }
+    fun tweenCallback(target: GodotObject, method: String): CallbackTweener =
+        requireGodotReturn(
+            IosGodot.tweenTweenCallback(segment.address(), target.segment.address(), method)
+                .takeIf { it != 0L }
+                ?.let { CallbackTweener(GodotHandle(MemorySegment.ofAddress(it))) },
+            "Tween.tween_callback",
+        )
 
     // Tween.tween_method(Callable(target, method), from, to, duration) — animates [from]->[to] over
     // [duration], calling target.method(value) each frame. Callable arg → routed through the C shim.
-    fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): MethodTweener? =
-        IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
-            .takeIf { it != 0L }
-            ?.let { MethodTweener(GodotHandle(MemorySegment.ofAddress(it))) }
+    fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): MethodTweener =
+        requireGodotReturn(
+            IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
+                .takeIf { it != 0L }
+                ?.let { MethodTweener(GodotHandle(MemorySegment.ofAddress(it))) },
+            "Tween.tween_method",
+        )
 
-    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener? {
-        val addr = segment.address()
-        val targetAddr = target.segment.address()
-        return when (finalValue) {
-            is Vector2 -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, finalValue.x.toDouble(), finalValue.y.toDouble(), duration)
-            is Color -> IosGodot.tweenTweenPropertyColor(addr, targetAddr, property, finalValue.r.toDouble(), finalValue.g.toDouble(), finalValue.b.toDouble(), finalValue.a.toDouble(), duration)
-            else -> IosGodot.tweenTweenPropertyVector2(addr, targetAddr, property, 0.0, 0.0, duration)
-        }.takeIf { it != 0L }?.let { PropertyTweener(GodotHandle(MemorySegment.ofAddress(it))) }
-    }
+    // Tween.tween_property through the general Variant encoder (task 128 A review): any
+    // Variant-expressible final value (Double, Long, Vector2/3, Color, a typed GodotEnumValue, ...),
+    // as on desktop. The old Vector2 / Color C-shim pair tweened every other value to Vector2(0, 0).
+    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener =
+        requireGodotReturn(
+            ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+                tweenPropertyBind,
+                segment,
+                target.segment,
+                property,
+                finalValue,
+                duration,
+            ).takeIf { it.address() != 0L }?.let { PropertyTweener(GodotHandle(it)) },
+            "Tween.tween_property",
+        )
 
     fun kill() {
         IosGodot.tweenKill(segment.address())
@@ -239,20 +468,16 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     }
 
     companion object {
-        const val TRANS_BACK = 10L
-        const val TRANS_ELASTIC = 6L
-        const val EASE_IN = 0L
-        const val EASE_OUT = 1L
-        const val EASE_IN_OUT = 2L
-        const val EASE_OUT_IN = 3L
 
         private val bindNodeBind by lazy { ObjectCalls.getMethodBind("Tween", "bind_node", 2946786331L) }
         private val setEaseBind by lazy { ObjectCalls.getMethodBind("Tween", "set_ease", 1208117252L) }
+        private val tweenPropertyBind by lazy { ObjectCalls.getMethodBind("Tween", "tween_property", 4049770449L) }
     }
 }
 
-private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long) {
-    if (returned == 0L) return
+// `meta: "required"` (task 128 A): a null fluent return throws instead of being ignored.
+private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long, godotMethod: String) {
+    if (returned == 0L) requireGodotReturn<Any>(null, godotMethod)
     check(returned == receiver.address()) {
         "Godot fluent RefCounted call returned a different object"
     }
@@ -260,9 +485,9 @@ private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long) {
 }
 
 class InputEventMouseButton(handle: GodotHandle) : GodotObject(handle) {
-    fun getButtonIndex(): Long =
-        if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(segment.address())
-        else MOUSE_BUTTON_LEFT
+    fun getButtonIndex(): MouseButton =
+        MouseButton(if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(segment.address())
+        else MouseButton.LEFT.value)
 
     fun isPressed(): Boolean =
         IosGodot.inputEventIsPressed(segment.address())
@@ -271,9 +496,6 @@ class InputEventMouseButton(handle: GodotHandle) : GodotObject(handle) {
         IosGodot.inputEventIsReleased(segment.address())
 
     companion object {
-        const val MOUSE_BUTTON_LEFT = 1L
-        const val MOUSE_BUTTON_RIGHT = 2L
-        const val MOUSE_BUTTON_MIDDLE = 3L
 
         fun from(value: GodotObject): InputEventMouseButton? =
             if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle)
@@ -361,6 +583,94 @@ object Mathf {
 // shim and wrap the result to the concrete type. The generator emits no typed-load sugar, so this
 // stays bespoke.
 object ResourceLoader {
+    // ===== BEGIN GENERATED ENUMS: ResourceLoader (scripts/generate_api_wrapper.py — do not edit) =====
+    /**
+     * Godot's `ResourceLoader.ThreadLoadStatus` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`ResourceLoader.ThreadLoadStatus.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceLoader.ThreadLoadStatus
+     */
+    value class ThreadLoadStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The resource is invalid, or has not been loaded with `load_threaded_request`.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_INVALID_RESOURCE
+             */
+            val INVALID_RESOURCE: ThreadLoadStatus get() = ThreadLoadStatus(0L)
+            /**
+             * The resource is still being loaded.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_IN_PROGRESS
+             */
+            val IN_PROGRESS: ThreadLoadStatus get() = ThreadLoadStatus(1L)
+            /**
+             * Some error occurred during loading and it failed.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_FAILED
+             */
+            val FAILED: ThreadLoadStatus get() = ThreadLoadStatus(2L)
+            /**
+             * The resource was loaded successfully and can be accessed via `load_threaded_get`.
+             *
+             * Generated from Godot docs: ResourceLoader.THREAD_LOAD_LOADED
+             */
+            val LOADED: ThreadLoadStatus get() = ThreadLoadStatus(3L)
+        }
+    }
+
+    /**
+     * Godot's `ResourceLoader.CacheMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`ResourceLoader.CacheMode.<NAME>`).
+     *
+     * Generated from Godot docs: ResourceLoader.CacheMode
+     */
+    value class CacheMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Neither the main resource (the one requested to be loaded) nor any of its subresources are
+             * retrieved from cache nor stored into it. Dependencies (external resources) are loaded with
+             * `CacheMode.REUSE`.
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE
+             */
+            val IGNORE: CacheMode get() = CacheMode(0L)
+            /**
+             * The main resource (the one requested to be loaded), its subresources, and its dependencies
+             * (external resources) are retrieved from cache if present, instead of loaded. Those not cached
+             * are loaded and then stored into the cache. The same rules are propagated recursively down the
+             * tree of dependencies (external resources).
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REUSE
+             */
+            val REUSE: CacheMode get() = CacheMode(1L)
+            /**
+             * Like `CacheMode.REUSE`, but the cache is checked for the main resource (the one requested to be
+             * loaded) as well as for each of its subresources. Those already in the cache, as long as the
+             * loaded and cached types match, have their data refreshed from storage into the already existing
+             * instances. Otherwise, they are recreated as completely new objects.
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REPLACE
+             */
+            val REPLACE: CacheMode get() = CacheMode(2L)
+            /**
+             * Like `CacheMode.IGNORE`, but propagated recursively down the tree of dependencies (external
+             * resources).
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_IGNORE_DEEP
+             */
+            val IGNORE_DEEP: CacheMode get() = CacheMode(3L)
+            /**
+             * Like `CacheMode.REPLACE`, but propagated recursively down the tree of dependencies (external
+             * resources).
+             *
+             * Generated from Godot docs: ResourceLoader.CACHE_MODE_REPLACE_DEEP
+             */
+            val REPLACE_DEEP: CacheMode get() = CacheMode(4L)
+        }
+    }
+    // ===== END GENERATED ENUMS: ResourceLoader =====
+
     fun load(path: String): Resource? =
         IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let {
             Resource(GodotHandle(MemorySegment.ofAddress(it)))
@@ -386,13 +696,12 @@ object ResourceLoader {
             LightmapGIData(GodotHandle(MemorySegment.ofAddress(it)))
         }
 
-    const val THREAD_LOAD_INVALID_RESOURCE = 0L
-    const val THREAD_LOAD_IN_PROGRESS = 1L
-    const val THREAD_LOAD_FAILED = 2L
-    const val THREAD_LOAD_LOADED = 3L
-    const val CACHE_MODE_REUSE = 1L
 
-    data class ThreadLoadStatus(val status: Long, val progress: Double?)
+    /**
+     * [loadThreadedGetStatusWithProgress]'s result (named `ThreadLoadStatus` before task 128 A, when
+     * that name became Godot's enum `ResourceLoader.ThreadLoadStatus`).
+     */
+    data class ThreadLoadProgress(val status: ResourceLoader.ThreadLoadStatus, val progress: Double?)
 
     // Threaded loading: the request goes through the generic Variant call path (int return decodes
     // cleanly). The status poll ptrcalls load_threaded_get_status with the optional progress
@@ -401,17 +710,17 @@ object ResourceLoader {
         path: String,
         typeHint: String = "",
         useSubThreads: Boolean = false,
-        cacheMode: Long = CACHE_MODE_REUSE,
-    ): Long =
-        (ObjectCalls.callWithVariantArgs(loadThreadedRequestBind, singleton, listOf(path, typeHint, useSubThreads, cacheMode)) as? Number)?.toLong()
-            ?: THREAD_LOAD_INVALID_RESOURCE
+        cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE,
+    ): GodotError =
+        GodotError((ObjectCalls.callWithVariantArgs(loadThreadedRequestBind, singleton, listOf(path, typeHint, useSubThreads, cacheMode.value)) as? Number)?.toLong()
+            ?: 0L)
 
-    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadStatus {
+    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadProgress {
         val (status, progress) = ObjectCalls.ptrcallLoadStatusWithProgress(loadThreadedGetStatusBind, singleton, path)
         return if (status < 0) {
-            ThreadLoadStatus(THREAD_LOAD_INVALID_RESOURCE, null)
+            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus.INVALID_RESOURCE, null)
         } else {
-            ThreadLoadStatus(status, progress)
+            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus(status), progress)
         }
     }
 
@@ -770,12 +1079,6 @@ internal object IosGodot {
 
     fun objectDisconnectCallable(sourceObject: Long, signalName: String, targetObject: Long, callbackId: Long): Int =
         kanama_ios_godot_object_disconnect_callable(sourceObject, signalName, targetObject, callbackId)
-
-    fun tweenTweenPropertyVector2(tween: Long, target: Long, property: String, x: Double, y: Double, duration: Double): Long =
-        kanama_ios_godot_tween_tween_property_vector2(tween, target, property, x, y, duration)
-
-    fun tweenTweenPropertyColor(tween: Long, target: Long, property: String, r: Double, g: Double, b: Double, a: Double, duration: Double): Long =
-        kanama_ios_godot_tween_tween_property_color(tween, target, property, r, g, b, a, duration)
 
     fun tweenSetParallel(tween: Long, parallel: Int): Long =
         kanama_ios_godot_tween_set_parallel(tween, parallel)

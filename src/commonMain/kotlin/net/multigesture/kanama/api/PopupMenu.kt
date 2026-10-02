@@ -43,7 +43,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
         @JvmName("setAllowSearchProperty")
         set(value) = setAllowSearch(value)
 
-    var systemMenuId: Long
+    var systemMenuId: NativeMenu.SystemMenus
         @JvmName("systemMenuIdProperty")
         get() = getSystemMenu()
         @JvmName("setSystemMenuIdProperty")
@@ -144,73 +144,73 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
     /**
      * Adds a new item with text `label`. An `id` can optionally be provided, as well as an accelerator
      * (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is
-     * provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be
-     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
-     * more info on accelerators. Note: The provided `id` is used only in `id_pressed` and `id_focused`
-     * signals. It's not related to the `index` arguments in e.g. `set_item_checked`.
+     * provided, then the default value of 0 (corresponding to `Key.NONE`) will be assigned to the item
+     * (which means it won't have any accelerator). See `get_item_accelerator` for more info on
+     * accelerators. Note: The provided `id` is used only in `id_pressed` and `id_focused` signals.
+     * It's not related to the `index` arguments in e.g. `set_item_checked`.
      *
      * Generated from Godot docs: PopupMenu.add_item
      */
-    fun addItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, segment, label, id, accel)
+    fun addItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addItemBind, segment, label, id, accel.value)
     }
 
     /**
      * Adds a new item with text `label` and icon `texture`. An `id` can optionally be provided, as
      * well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If
-     * no `accel` is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`)
-     * will be assigned to the item (which means it won't have any accelerator). See
-     * `get_item_accelerator` for more info on accelerators.
+     * no `accel` is provided, then the default value of 0 (corresponding to `Key.NONE`) will be
+     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
+     * more info on accelerators.
      *
      * Generated from Godot docs: PopupMenu.add_icon_item
      */
-    fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
+    fun addIconItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
      * Adds a new checkable item with text `label`. An `id` can optionally be provided, as well as an
      * accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel`
-     * is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be
-     * assigned to the item (which means it won't have any accelerator). See `get_item_accelerator` for
-     * more info on accelerators. Note: Checkable items just display a checkmark, but don't have any
-     * built-in checking behavior and must be checked/unchecked manually. See `set_item_checked` for
-     * more info on how to control it.
+     * is provided, then the default value of 0 (corresponding to `Key.NONE`) will be assigned to the
+     * item (which means it won't have any accelerator). See `get_item_accelerator` for more info on
+     * accelerators. Note: Checkable items just display a checkmark, but don't have any built-in
+     * checking behavior and must be checked/unchecked manually. See `set_item_checked` for more info
+     * on how to control it.
      *
      * Generated from Godot docs: PopupMenu.add_check_item
      */
-    fun addCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, segment, label, id, accel)
+    fun addCheckItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addCheckItemBind, segment, label, id, accel.value)
     }
 
     /**
      * Adds a new checkable item with text `label` and icon `texture`. An `id` can optionally be
      * provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from
-     * the index. If no `accel` is provided, then the default value of 0 (corresponding to
-     * `@GlobalScope.KEY_NONE`) will be assigned to the item (which means it won't have any
-     * accelerator). See `get_item_accelerator` for more info on accelerators. Note: Checkable items
-     * just display a checkmark, but don't have any built-in checking behavior and must be
-     * checked/unchecked manually. See `set_item_checked` for more info on how to control it.
+     * the index. If no `accel` is provided, then the default value of 0 (corresponding to `Key.NONE`)
+     * will be assigned to the item (which means it won't have any accelerator). See
+     * `get_item_accelerator` for more info on accelerators. Note: Checkable items just display a
+     * checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually.
+     * See `set_item_checked` for more info on how to control it.
      *
      * Generated from Godot docs: PopupMenu.add_icon_check_item
      */
-    fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
+    fun addIconCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
      * Adds a new radio check button with text `label`. An `id` can optionally be provided, as well as
      * an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no
-     * `accel` is provided, then the default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will
-     * be assigned to the item (which means it won't have any accelerator). See `get_item_accelerator`
-     * for more info on accelerators. Note: Checkable items just display a checkmark, but don't have
-     * any built-in checking behavior and must be checked/unchecked manually. See `set_item_checked`
-     * for more info on how to control it.
+     * `accel` is provided, then the default value of 0 (corresponding to `Key.NONE`) will be assigned
+     * to the item (which means it won't have any accelerator). See `get_item_accelerator` for more
+     * info on accelerators. Note: Checkable items just display a checkmark, but don't have any
+     * built-in checking behavior and must be checked/unchecked manually. See `set_item_checked` for
+     * more info on how to control it.
      *
      * Generated from Godot docs: PopupMenu.add_radio_check_item
      */
-    fun addRadioCheckItem(label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, segment, label, id, accel)
+    fun addRadioCheckItem(label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringIntAndLongArgs(addRadioCheckItemBind, segment, label, id, accel.value)
     }
 
     /**
@@ -218,8 +218,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.add_icon_radio_check_item
      */
-    fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel)
+    fun addIconRadioCheckItem(texture: Texture2D?, label: String, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithObjectStringIntLongArgs(addIconRadioCheckItemBind, segment, texture?.requireOpenHandle() ?: NULL_SEGMENT, label, id, accel.value)
     }
 
     /**
@@ -227,14 +227,13 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * items can have more than two states, as defined by `max_states`. The default value is defined by
      * `default_state`. An `id` can optionally be provided, as well as an accelerator (`accel`). If no
      * `id` is provided, one will be created from the index. If no `accel` is provided, then the
-     * default value of 0 (corresponding to `@GlobalScope.KEY_NONE`) will be assigned to the item
-     * (which means it won't have any accelerator). See `get_item_accelerator` for more info on
-     * accelerators.
+     * default value of 0 (corresponding to `Key.NONE`) will be assigned to the item (which means it
+     * won't have any accelerator). See `get_item_accelerator` for more info on accelerators.
      *
      * Generated from Godot docs: PopupMenu.add_multistate_item
      */
-    fun addMultistateItem(label: String, maxStates: Int, defaultState: Int = 0, id: Int = -1, accel: Long = 0L) {
-        ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, segment, label, maxStates, defaultState, id, accel)
+    fun addMultistateItem(label: String, maxStates: Int, defaultState: Int = 0, id: Int = -1, accel: Key = Key.NONE) {
+        ObjectCalls.ptrcallWithStringThreeIntLongArgs(addMultistateItemBind, segment, label, maxStates, defaultState, id, accel.value)
     }
 
     /**
@@ -349,8 +348,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.set_item_text_direction
      */
-    fun setItemTextDirection(index: Int, direction: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, index, direction)
+    fun setItemTextDirection(index: Int, direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemTextDirectionBind, segment, index, direction.value)
     }
 
     /**
@@ -366,13 +365,13 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
 
     /**
      * Sets the auto translate mode of the item at the given `index`. Items use
-     * `Node.AUTO_TRANSLATE_MODE_INHERIT` by default, which uses the same auto translate mode as the
+     * `Node.AutoTranslateMode.INHERIT` by default, which uses the same auto translate mode as the
      * `PopupMenu` itself.
      *
      * Generated from Godot docs: PopupMenu.set_item_auto_translate_mode
      */
-    fun setItemAutoTranslateMode(index: Int, mode: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, index, mode)
+    fun setItemAutoTranslateMode(index: Int, mode: Node.AutoTranslateMode) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, index, mode.value)
     }
 
     /**
@@ -431,8 +430,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.set_item_accelerator
      */
-    fun setItemAccelerator(index: Int, accel: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, segment, index, accel)
+    fun setItemAccelerator(index: Int, accel: Key) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAcceleratorBind, segment, index, accel.value)
     }
 
     /**
@@ -606,8 +605,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.get_item_text_direction
      */
-    fun getItemTextDirection(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, index)
+    fun getItemTextDirection(index: Int): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallWithIntArgRetLong(getItemTextDirectionBind, segment, index))
     }
 
     /**
@@ -624,8 +623,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.get_item_auto_translate_mode
      */
-    fun getItemAutoTranslateMode(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, index)
+    fun getItemAutoTranslateMode(index: Int): Node.AutoTranslateMode {
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, index))
     }
 
     /**
@@ -688,12 +687,12 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * that can be pressed to trigger the menu button even if it's not currently open. The return value
      * is an integer which is generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR
      * such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). If no accelerator is defined for the specified
-     * `index`, `get_item_accelerator` returns `0` (corresponding to `@GlobalScope.KEY_NONE`).
+     * `index`, `get_item_accelerator` returns `0` (corresponding to `Key.NONE`).
      *
      * Generated from Godot docs: PopupMenu.get_item_accelerator
      */
-    fun getItemAccelerator(index: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, segment, index)
+    fun getItemAccelerator(index: Int): Key {
+        return Key(ObjectCalls.ptrcallWithIntArgRetLong(getItemAcceleratorBind, segment, index))
     }
 
     /**
@@ -1020,8 +1019,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.set_system_menu
      */
-    fun setSystemMenu(systemMenuId: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, segment, systemMenuId)
+    fun setSystemMenu(systemMenuId: NativeMenu.SystemMenus) {
+        ObjectCalls.ptrcallWithLongArg(setSystemMenuBind, segment, systemMenuId.value)
     }
 
     /**
@@ -1030,8 +1029,8 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      *
      * Generated from Godot docs: PopupMenu.get_system_menu
      */
-    fun getSystemMenu(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, segment)
+    fun getSystemMenu(): NativeMenu.SystemMenus {
+        return NativeMenu.SystemMenus(ObjectCalls.ptrcallNoArgsRetLong(getSystemMenuBind, segment))
     }
 
     /**

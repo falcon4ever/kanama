@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: BlitMaterial
  */
 class BlitMaterial(handle: GodotHandle) : Material(handle) {
-    var blendMode: Long
+    var blendMode: BlitMaterial.BlendMode
         @JvmName("blendModeProperty")
         get() = getBlendMode()
         @JvmName("setBlendModeProperty")
@@ -22,9 +23,9 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BlitMaterial.set_blend_mode
      */
-    fun setBlendMode(blendMode: Long) {
+    fun setBlendMode(blendMode: BlitMaterial.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode.value)
     }
 
     /**
@@ -32,18 +33,54 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BlitMaterial.get_blend_mode
      */
-    fun getBlendMode(): Long {
+    fun getBlendMode(): BlitMaterial.BlendMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
+        return BlitMaterial.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
+    }
+
+    /**
+     * Godot's `BlitMaterial.BlendMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BlitMaterial.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: BlitMaterial.BlendMode
+     */
+    @JvmInline
+    value class BlendMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Mix blending mode. Colors are assumed to be independent of the alpha (opacity) value.
+             *
+             * Generated from Godot docs: BlitMaterial.BLEND_MODE_MIX
+             */
+            val MIX: BlendMode get() = BlendMode(0L)
+            /**
+             * Additive blending mode.
+             *
+             * Generated from Godot docs: BlitMaterial.BLEND_MODE_ADD
+             */
+            val ADD: BlendMode get() = BlendMode(1L)
+            /**
+             * Subtractive blending mode.
+             *
+             * Generated from Godot docs: BlitMaterial.BLEND_MODE_SUB
+             */
+            val SUB: BlendMode get() = BlendMode(2L)
+            /**
+             * Multiplicative blending mode.
+             *
+             * Generated from Godot docs: BlitMaterial.BLEND_MODE_MUL
+             */
+            val MUL: BlendMode get() = BlendMode(3L)
+            /**
+             * No blending mode, direct color copy.
+             *
+             * Generated from Godot docs: BlitMaterial.BLEND_MODE_DISABLED
+             */
+            val DISABLED: BlendMode get() = BlendMode(4L)
+        }
     }
 
     companion object {
-        const val BLEND_MODE_MIX: Long = 0L
-        const val BLEND_MODE_ADD: Long = 1L
-        const val BLEND_MODE_SUB: Long = 2L
-        const val BLEND_MODE_MUL: Long = 3L
-        const val BLEND_MODE_DISABLED: Long = 4L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BlitMaterial? =
             wrap(handle.segment)

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -27,9 +28,9 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
         @JvmName("setLinkedParentGraphFrameProperty")
         set(value) = setFrame(value)
 
-    fun getDefaultInputPort(type: Long): Int {
+    fun getDefaultInputPort(type: VisualShaderNode.PortType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetInt(getDefaultInputPortBind, segment, type)
+        return ObjectCalls.ptrcallWithLongArgRetInt(getDefaultInputPortBind, segment, type.value)
     }
 
     fun setOutputPortForPreview(port: Int) {
@@ -82,18 +83,23 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getFrameBind, segment)
     }
 
-    companion object {
-        const val PORT_TYPE_SCALAR: Long = 0L
-        const val PORT_TYPE_SCALAR_INT: Long = 1L
-        const val PORT_TYPE_SCALAR_UINT: Long = 2L
-        const val PORT_TYPE_VECTOR_2D: Long = 3L
-        const val PORT_TYPE_VECTOR_3D: Long = 4L
-        const val PORT_TYPE_VECTOR_4D: Long = 5L
-        const val PORT_TYPE_BOOLEAN: Long = 6L
-        const val PORT_TYPE_TRANSFORM: Long = 7L
-        const val PORT_TYPE_SAMPLER: Long = 8L
-        const val PORT_TYPE_MAX: Long = 9L
+    @JvmInline
+    value class PortType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val SCALAR: PortType get() = PortType(0L)
+            val SCALAR_INT: PortType get() = PortType(1L)
+            val SCALAR_UINT: PortType get() = PortType(2L)
+            val VECTOR_2D: PortType get() = PortType(3L)
+            val VECTOR_3D: PortType get() = PortType(4L)
+            val VECTOR_4D: PortType get() = PortType(5L)
+            val BOOLEAN: PortType get() = PortType(6L)
+            val TRANSFORM: PortType get() = PortType(7L)
+            val SAMPLER: PortType get() = PortType(8L)
+            val MAX: PortType get() = PortType(9L)
+        }
+    }
 
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNode? =
             wrap(handle.segment)

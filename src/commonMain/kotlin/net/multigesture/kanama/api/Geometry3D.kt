@@ -47,8 +47,8 @@ object Geometry3D {
      * Generated from Godot docs: Geometry3D.build_cylinder_planes
      */
     @JvmStatic
-    fun buildCylinderPlanes(radius: Double, height: Double, sides: Int, axis: Long = 2L): List<Plane> {
-        return ObjectCalls.ptrcallWithTwoDoubleIntLongArgsRetPlaneList(buildCylinderPlanesBind, singleton, radius, height, sides, axis)
+    fun buildCylinderPlanes(radius: Double, height: Double, sides: Int, axis: Vector3.Axis = Vector3.Axis.Z): List<Plane> {
+        return ObjectCalls.ptrcallWithTwoDoubleIntLongArgsRetPlaneList(buildCylinderPlanesBind, singleton, radius, height, sides, axis.value)
     }
 
     /**
@@ -61,8 +61,8 @@ object Geometry3D {
      * Generated from Godot docs: Geometry3D.build_capsule_planes
      */
     @JvmStatic
-    fun buildCapsulePlanes(radius: Double, height: Double, sides: Int, lats: Int, axis: Long = 2L): List<Plane> {
-        return ObjectCalls.ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(buildCapsulePlanesBind, singleton, radius, height, sides, lats, axis)
+    fun buildCapsulePlanes(radius: Double, height: Double, sides: Int, lats: Int, axis: Vector3.Axis = Vector3.Axis.Z): List<Plane> {
+        return ObjectCalls.ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList(buildCapsulePlanesBind, singleton, radius, height, sides, lats, axis.value)
     }
 
     /**

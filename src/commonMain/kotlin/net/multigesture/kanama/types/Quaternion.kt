@@ -198,7 +198,7 @@ data class Quaternion(
     /**
      * Constructs a new `Quaternion` from the given `Vector3` of Euler angles
      * (https://en.wikipedia.org/wiki/Euler_angles), in radians. In Godot, Euler angles always use
-     * intrinsic order. This method always uses the intrinsic YXZ convention (`EULER_ORDER_YXZ`).
+     * intrinsic order. This method always uses the intrinsic YXZ convention (`EulerOrder.YXZ`).
      *
      * Generated from Godot docs: Quaternion.from_euler
      */

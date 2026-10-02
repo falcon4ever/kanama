@@ -43,13 +43,13 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
         @JvmName("setSpecularShininessProperty")
         set(value) = setSpecularShininess(value)
 
-    var textureFilter: Long
+    var textureFilter: CanvasItem.TextureFilter
         @JvmName("textureFilterProperty")
         get() = getTextureFilter()
         @JvmName("setTextureFilterProperty")
         set(value) = setTextureFilter(value)
 
-    var textureRepeat: Long
+    var textureRepeat: CanvasItem.TextureRepeat
         @JvmName("textureRepeatProperty")
         get() = getTextureRepeat()
         @JvmName("setTextureRepeatProperty")
@@ -197,9 +197,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CanvasTexture.set_texture_filter
      */
-    fun setTextureFilter(filter: Long) {
+    fun setTextureFilter(filter: CanvasItem.TextureFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, filter)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, filter.value)
     }
 
     /**
@@ -207,9 +207,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CanvasTexture.get_texture_filter
      */
-    fun getTextureFilter(): Long {
+    fun getTextureFilter(): CanvasItem.TextureFilter {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
+        return CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
     }
 
     /**
@@ -217,9 +217,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CanvasTexture.set_texture_repeat
      */
-    fun setTextureRepeat(repeat: Long) {
+    fun setTextureRepeat(repeat: CanvasItem.TextureRepeat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, repeat)
+        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, repeat.value)
     }
 
     /**
@@ -227,9 +227,9 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      *
      * Generated from Godot docs: CanvasTexture.get_texture_repeat
      */
-    fun getTextureRepeat(): Long {
+    fun getTextureRepeat(): CanvasItem.TextureRepeat {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment)
+        return CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment))
     }
 
     companion object {

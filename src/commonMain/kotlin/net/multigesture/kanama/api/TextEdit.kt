@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -88,13 +89,13 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setEmptySelectionClipboardEnabledProperty")
         set(value) = setEmptySelectionClipboardEnabled(value)
 
-    var wrapMode: Long
+    var wrapMode: TextEdit.LineWrappingMode
         @JvmName("wrapModeProperty")
         get() = getLineWrappingMode()
         @JvmName("setWrapModeProperty")
         set(value) = setLineWrappingMode(value)
 
-    var autowrapMode: Long
+    var autowrapMode: TextServer.AutowrapMode
         @JvmName("autowrapModeProperty")
         get() = getAutowrapMode()
         @JvmName("setAutowrapModeProperty")
@@ -178,7 +179,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setMinimapWidthProperty")
         set(value) = setMinimapWidth(value)
 
-    var caretType: Long
+    var caretType: TextEdit.CaretType
         @JvmName("caretTypeProperty")
         get() = getCaretType()
         @JvmName("setCaretTypeProperty")
@@ -274,7 +275,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setDrawSpacesProperty")
         set(value) = setDrawSpaces(value)
 
-    var textDirection: Long
+    var textDirection: Control.TextDirection
         @JvmName("textDirectionProperty")
         get() = getTextDirection()
         @JvmName("setTextDirectionProperty")
@@ -286,7 +287,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setLanguageProperty")
         set(value) = setLanguage(value)
 
-    var structuredTextBidiOverride: Long
+    var structuredTextBidiOverride: TextServer.StructuredTextParser
         @JvmName("structuredTextBidiOverrideProperty")
         get() = getStructuredTextBidiOverride()
         @JvmName("setStructuredTextBidiOverrideProperty")
@@ -351,8 +352,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.set_text_direction
      */
-    fun setTextDirection(direction: Long) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction)
+    fun setTextDirection(direction: Control.TextDirection) {
+        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -360,8 +361,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.get_text_direction
      */
-    fun getTextDirection(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment)
+    fun getTextDirection(): Control.TextDirection {
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
     }
 
     /**
@@ -389,8 +390,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.set_structured_text_bidi_override
      */
-    fun setStructuredTextBidiOverride(parser: Long) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser)
+    fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
+        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -398,8 +399,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.get_structured_text_bidi_override
      */
-    fun getStructuredTextBidiOverride(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment)
+    fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -911,8 +912,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.start_action
      */
-    fun startAction(action: Long) {
-        ObjectCalls.ptrcallWithLongArg(startActionBind, segment, action)
+    fun startAction(action: TextEdit.EditAction) {
+        ObjectCalls.ptrcallWithLongArg(startActionBind, segment, action.value)
     }
 
     /**
@@ -1144,8 +1145,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.set_caret_type
      */
-    fun setCaretType(type: Long) {
-        ObjectCalls.ptrcallWithLongArg(setCaretTypeBind, segment, type)
+    fun setCaretType(type: TextEdit.CaretType) {
+        ObjectCalls.ptrcallWithLongArg(setCaretTypeBind, segment, type.value)
     }
 
     /**
@@ -1153,8 +1154,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.get_caret_type
      */
-    fun getCaretType(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCaretTypeBind, segment)
+    fun getCaretType(): TextEdit.CaretType {
+        return TextEdit.CaretType(ObjectCalls.ptrcallNoArgsRetLong(getCaretTypeBind, segment))
     }
 
     /**
@@ -1646,8 +1647,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.set_selection_mode
      */
-    fun setSelectionMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setSelectionModeBind, segment, mode)
+    fun setSelectionMode(mode: TextEdit.SelectionMode) {
+        ObjectCalls.ptrcallWithLongArg(setSelectionModeBind, segment, mode.value)
     }
 
     /**
@@ -1655,8 +1656,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.get_selection_mode
      */
-    fun getSelectionMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getSelectionModeBind, segment)
+    fun getSelectionMode(): TextEdit.SelectionMode {
+        return TextEdit.SelectionMode(ObjectCalls.ptrcallNoArgsRetLong(getSelectionModeBind, segment))
     }
 
     /**
@@ -1866,8 +1867,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.set_line_wrapping_mode
      */
-    fun setLineWrappingMode(mode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setLineWrappingModeBind, segment, mode)
+    fun setLineWrappingMode(mode: TextEdit.LineWrappingMode) {
+        ObjectCalls.ptrcallWithLongArg(setLineWrappingModeBind, segment, mode.value)
     }
 
     /**
@@ -1875,26 +1876,26 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.get_line_wrapping_mode
      */
-    fun getLineWrappingMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getLineWrappingModeBind, segment)
+    fun getLineWrappingMode(): TextEdit.LineWrappingMode {
+        return TextEdit.LineWrappingMode(ObjectCalls.ptrcallNoArgsRetLong(getLineWrappingModeBind, segment))
     }
 
     /**
-     * If `wrap_mode` is set to `LINE_WRAPPING_BOUNDARY`, sets text wrapping mode.
+     * If `wrap_mode` is set to `LineWrappingMode.BOUNDARY`, sets text wrapping mode.
      *
      * Generated from Godot docs: TextEdit.set_autowrap_mode
      */
-    fun setAutowrapMode(autowrapMode: Long) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode)
+    fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
+        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
-     * If `wrap_mode` is set to `LINE_WRAPPING_BOUNDARY`, sets text wrapping mode.
+     * If `wrap_mode` is set to `LineWrappingMode.BOUNDARY`, sets text wrapping mode.
      *
      * Generated from Godot docs: TextEdit.get_autowrap_mode
      */
-    fun getAutowrapMode(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment)
+    fun getAutowrapMode(): TextServer.AutowrapMode {
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
     }
 
     /**
@@ -2184,7 +2185,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Returns the total number of lines in the text. This includes wrapped lines and excludes folded
-     * lines. If `wrap_mode` is set to `LINE_WRAPPING_NONE` and no lines are folded (see
+     * lines. If `wrap_mode` is set to `LineWrappingMode.NONE` and no lines are folded (see
      * `CodeEdit.is_line_folded`) then this is equivalent to `get_line_count`. See
      * `get_visible_line_count_in_range` for a limited range of lines.
      *
@@ -2311,8 +2312,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.set_gutter_type
      */
-    fun setGutterType(gutter: Int, type: Long) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setGutterTypeBind, segment, gutter, type)
+    fun setGutterType(gutter: Int, type: TextEdit.GutterType) {
+        ObjectCalls.ptrcallWithIntAndLongArgs(setGutterTypeBind, segment, gutter, type.value)
     }
 
     /**
@@ -2321,8 +2322,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      *
      * Generated from Godot docs: TextEdit.get_gutter_type
      */
-    fun getGutterType(gutter: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getGutterTypeBind, segment, gutter)
+    fun getGutterType(gutter: Int): TextEdit.GutterType {
+        return TextEdit.GutterType(ObjectCalls.ptrcallWithIntArgRetLong(getGutterTypeBind, segment, gutter))
     }
 
     /**
@@ -2363,8 +2364,8 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If `true`, the mouse cursor will change to a pointing hand (`Control.CURSOR_POINTING_HAND`) when
-     * hovering over the gutter at the given index. See `is_gutter_clickable` and
+     * If `true`, the mouse cursor will change to a pointing hand (`Control.CursorShape.POINTING_HAND`)
+     * when hovering over the gutter at the given index. See `is_gutter_clickable` and
      * `set_line_gutter_clickable`.
      *
      * Generated from Godot docs: TextEdit.set_gutter_clickable
@@ -2414,7 +2415,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     /**
      * Set a custom draw callback for the gutter at the given index. `draw_callback` must take the
      * following arguments: A line index `int`, a gutter index `int`, and an area `Rect2`. This
-     * callback only works when the gutter type is `GUTTER_TYPE_CUSTOM` (see `set_gutter_type`).
+     * callback only works when the gutter type is `GutterType.CUSTOM` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.set_gutter_custom_draw
      */
@@ -2451,7 +2452,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Sets the text for `gutter` on `line` to `text`. This only works when the gutter type is
-     * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
+     * `GutterType.STRING` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.set_line_gutter_text
      */
@@ -2461,7 +2462,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Returns the text currently in `gutter` at `line`. This only works when the gutter type is
-     * `GUTTER_TYPE_STRING` (see `set_gutter_type`).
+     * `GutterType.STRING` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.get_line_gutter_text
      */
@@ -2471,7 +2472,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Sets the icon for `gutter` on `line` to `icon`. This only works when the gutter type is
-     * `GUTTER_TYPE_ICON` (see `set_gutter_type`).
+     * `GutterType.ICON` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.set_line_gutter_icon
      */
@@ -2481,7 +2482,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Returns the icon currently in `gutter` at `line`. This only works when the gutter type is
-     * `GUTTER_TYPE_ICON` (see `set_gutter_type`).
+     * `GutterType.ICON` (see `set_gutter_type`).
      *
      * Generated from Godot docs: TextEdit.get_line_gutter_icon
      */
@@ -2736,59 +2737,400 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         const val gutterRemoved: String = "gutter_removed"
     }
 
-    companion object {
-        const val MENU_CUT: Long = 0L
-        const val MENU_COPY: Long = 1L
-        const val MENU_PASTE: Long = 2L
-        const val MENU_CLEAR: Long = 3L
-        const val MENU_SELECT_ALL: Long = 4L
-        const val MENU_UNDO: Long = 5L
-        const val MENU_REDO: Long = 6L
-        const val MENU_SUBMENU_TEXT_DIR: Long = 7L
-        const val MENU_DIR_INHERITED: Long = 8L
-        const val MENU_DIR_AUTO: Long = 9L
-        const val MENU_DIR_LTR: Long = 10L
-        const val MENU_DIR_RTL: Long = 11L
-        const val MENU_DISPLAY_UCC: Long = 12L
-        const val MENU_SUBMENU_INSERT_UCC: Long = 13L
-        const val MENU_INSERT_LRM: Long = 14L
-        const val MENU_INSERT_RLM: Long = 15L
-        const val MENU_INSERT_LRE: Long = 16L
-        const val MENU_INSERT_RLE: Long = 17L
-        const val MENU_INSERT_LRO: Long = 18L
-        const val MENU_INSERT_RLO: Long = 19L
-        const val MENU_INSERT_PDF: Long = 20L
-        const val MENU_INSERT_ALM: Long = 21L
-        const val MENU_INSERT_LRI: Long = 22L
-        const val MENU_INSERT_RLI: Long = 23L
-        const val MENU_INSERT_FSI: Long = 24L
-        const val MENU_INSERT_PDI: Long = 25L
-        const val MENU_INSERT_ZWJ: Long = 26L
-        const val MENU_INSERT_ZWNJ: Long = 27L
-        const val MENU_INSERT_WJ: Long = 28L
-        const val MENU_INSERT_SHY: Long = 29L
-        const val MENU_EMOJI_AND_SYMBOL: Long = 30L
-        const val MENU_MAX: Long = 31L
-        const val ACTION_NONE: Long = 0L
-        const val ACTION_TYPING: Long = 1L
-        const val ACTION_BACKSPACE: Long = 2L
-        const val ACTION_DELETE: Long = 3L
-        const val SEARCH_MATCH_CASE: Long = 1L
-        const val SEARCH_WHOLE_WORDS: Long = 2L
-        const val SEARCH_BACKWARDS: Long = 4L
-        const val CARET_TYPE_LINE: Long = 0L
-        const val CARET_TYPE_BLOCK: Long = 1L
-        const val SELECTION_MODE_NONE: Long = 0L
-        const val SELECTION_MODE_SHIFT: Long = 1L
-        const val SELECTION_MODE_POINTER: Long = 2L
-        const val SELECTION_MODE_WORD: Long = 3L
-        const val SELECTION_MODE_LINE: Long = 4L
-        const val LINE_WRAPPING_NONE: Long = 0L
-        const val LINE_WRAPPING_BOUNDARY: Long = 1L
-        const val GUTTER_TYPE_STRING: Long = 0L
-        const val GUTTER_TYPE_ICON: Long = 1L
-        const val GUTTER_TYPE_CUSTOM: Long = 2L
+    /**
+     * Godot's `TextEdit.MenuItems` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.MenuItems.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.MenuItems
+     */
+    @JvmInline
+    value class MenuItems(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Cuts (copies and clears) the selected text.
+             *
+             * Generated from Godot docs: TextEdit.MENU_CUT
+             */
+            val CUT: MenuItems get() = MenuItems(0L)
+            /**
+             * Copies the selected text.
+             *
+             * Generated from Godot docs: TextEdit.MENU_COPY
+             */
+            val COPY: MenuItems get() = MenuItems(1L)
+            /**
+             * Pastes the clipboard text over the selected text (or at the cursor's position).
+             *
+             * Generated from Godot docs: TextEdit.MENU_PASTE
+             */
+            val PASTE: MenuItems get() = MenuItems(2L)
+            /**
+             * Erases the whole `TextEdit` text.
+             *
+             * Generated from Godot docs: TextEdit.MENU_CLEAR
+             */
+            val CLEAR: MenuItems get() = MenuItems(3L)
+            /**
+             * Selects the whole `TextEdit` text.
+             *
+             * Generated from Godot docs: TextEdit.MENU_SELECT_ALL
+             */
+            val SELECT_ALL: MenuItems get() = MenuItems(4L)
+            /**
+             * Undoes the previous action.
+             *
+             * Generated from Godot docs: TextEdit.MENU_UNDO
+             */
+            val UNDO: MenuItems get() = MenuItems(5L)
+            /**
+             * Redoes the previous action.
+             *
+             * Generated from Godot docs: TextEdit.MENU_REDO
+             */
+            val REDO: MenuItems get() = MenuItems(6L)
+            /**
+             * ID of "Text Writing Direction" submenu.
+             *
+             * Generated from Godot docs: TextEdit.MENU_SUBMENU_TEXT_DIR
+             */
+            val SUBMENU_TEXT_DIR: MenuItems get() = MenuItems(7L)
+            /**
+             * Sets text direction to inherited.
+             *
+             * Generated from Godot docs: TextEdit.MENU_DIR_INHERITED
+             */
+            val DIR_INHERITED: MenuItems get() = MenuItems(8L)
+            /**
+             * Sets text direction to automatic.
+             *
+             * Generated from Godot docs: TextEdit.MENU_DIR_AUTO
+             */
+            val DIR_AUTO: MenuItems get() = MenuItems(9L)
+            /**
+             * Sets text direction to left-to-right.
+             *
+             * Generated from Godot docs: TextEdit.MENU_DIR_LTR
+             */
+            val DIR_LTR: MenuItems get() = MenuItems(10L)
+            /**
+             * Sets text direction to right-to-left.
+             *
+             * Generated from Godot docs: TextEdit.MENU_DIR_RTL
+             */
+            val DIR_RTL: MenuItems get() = MenuItems(11L)
+            /**
+             * Toggles control character display.
+             *
+             * Generated from Godot docs: TextEdit.MENU_DISPLAY_UCC
+             */
+            val DISPLAY_UCC: MenuItems get() = MenuItems(12L)
+            /**
+             * ID of "Insert Control Character" submenu.
+             *
+             * Generated from Godot docs: TextEdit.MENU_SUBMENU_INSERT_UCC
+             */
+            val SUBMENU_INSERT_UCC: MenuItems get() = MenuItems(13L)
+            /**
+             * Inserts left-to-right mark (LRM) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_LRM
+             */
+            val INSERT_LRM: MenuItems get() = MenuItems(14L)
+            /**
+             * Inserts right-to-left mark (RLM) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_RLM
+             */
+            val INSERT_RLM: MenuItems get() = MenuItems(15L)
+            /**
+             * Inserts start of left-to-right embedding (LRE) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_LRE
+             */
+            val INSERT_LRE: MenuItems get() = MenuItems(16L)
+            /**
+             * Inserts start of right-to-left embedding (RLE) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_RLE
+             */
+            val INSERT_RLE: MenuItems get() = MenuItems(17L)
+            /**
+             * Inserts start of left-to-right override (LRO) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_LRO
+             */
+            val INSERT_LRO: MenuItems get() = MenuItems(18L)
+            /**
+             * Inserts start of right-to-left override (RLO) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_RLO
+             */
+            val INSERT_RLO: MenuItems get() = MenuItems(19L)
+            /**
+             * Inserts pop direction formatting (PDF) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_PDF
+             */
+            val INSERT_PDF: MenuItems get() = MenuItems(20L)
+            /**
+             * Inserts Arabic letter mark (ALM) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_ALM
+             */
+            val INSERT_ALM: MenuItems get() = MenuItems(21L)
+            /**
+             * Inserts left-to-right isolate (LRI) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_LRI
+             */
+            val INSERT_LRI: MenuItems get() = MenuItems(22L)
+            /**
+             * Inserts right-to-left isolate (RLI) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_RLI
+             */
+            val INSERT_RLI: MenuItems get() = MenuItems(23L)
+            /**
+             * Inserts first strong isolate (FSI) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_FSI
+             */
+            val INSERT_FSI: MenuItems get() = MenuItems(24L)
+            /**
+             * Inserts pop direction isolate (PDI) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_PDI
+             */
+            val INSERT_PDI: MenuItems get() = MenuItems(25L)
+            /**
+             * Inserts zero width joiner (ZWJ) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_ZWJ
+             */
+            val INSERT_ZWJ: MenuItems get() = MenuItems(26L)
+            /**
+             * Inserts zero width non-joiner (ZWNJ) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_ZWNJ
+             */
+            val INSERT_ZWNJ: MenuItems get() = MenuItems(27L)
+            /**
+             * Inserts word joiner (WJ) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_WJ
+             */
+            val INSERT_WJ: MenuItems get() = MenuItems(28L)
+            /**
+             * Inserts soft hyphen (SHY) character.
+             *
+             * Generated from Godot docs: TextEdit.MENU_INSERT_SHY
+             */
+            val INSERT_SHY: MenuItems get() = MenuItems(29L)
+            /**
+             * Opens system emoji and symbol picker.
+             *
+             * Generated from Godot docs: TextEdit.MENU_EMOJI_AND_SYMBOL
+             */
+            val EMOJI_AND_SYMBOL: MenuItems get() = MenuItems(30L)
+            /**
+             * Represents the size of the `MenuItems` enum.
+             *
+             * Generated from Godot docs: TextEdit.MENU_MAX
+             */
+            val MAX: MenuItems get() = MenuItems(31L)
+        }
+    }
 
+    /**
+     * Godot's `TextEdit.EditAction` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.EditAction.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.EditAction
+     */
+    @JvmInline
+    value class EditAction(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * No current action.
+             *
+             * Generated from Godot docs: TextEdit.ACTION_NONE
+             */
+            val NONE: EditAction get() = EditAction(0L)
+            /**
+             * A typing action.
+             *
+             * Generated from Godot docs: TextEdit.ACTION_TYPING
+             */
+            val TYPING: EditAction get() = EditAction(1L)
+            /**
+             * A backwards delete action.
+             *
+             * Generated from Godot docs: TextEdit.ACTION_BACKSPACE
+             */
+            val BACKSPACE: EditAction get() = EditAction(2L)
+            /**
+             * A forward delete action.
+             *
+             * Generated from Godot docs: TextEdit.ACTION_DELETE
+             */
+            val DELETE: EditAction get() = EditAction(3L)
+        }
+    }
+
+    /**
+     * Godot's `TextEdit.SearchFlags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.SearchFlags.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.SearchFlags
+     */
+    @JvmInline
+    value class SearchFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Match case when searching.
+             *
+             * Generated from Godot docs: TextEdit.SEARCH_MATCH_CASE
+             */
+            val MATCH_CASE: SearchFlags get() = SearchFlags(1L)
+            /**
+             * Match whole words when searching.
+             *
+             * Generated from Godot docs: TextEdit.SEARCH_WHOLE_WORDS
+             */
+            val WHOLE_WORDS: SearchFlags get() = SearchFlags(2L)
+            /**
+             * Search from end to beginning.
+             *
+             * Generated from Godot docs: TextEdit.SEARCH_BACKWARDS
+             */
+            val BACKWARDS: SearchFlags get() = SearchFlags(4L)
+        }
+    }
+
+    /**
+     * Godot's `TextEdit.CaretType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.CaretType.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.CaretType
+     */
+    @JvmInline
+    value class CaretType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Vertical line caret.
+             *
+             * Generated from Godot docs: TextEdit.CARET_TYPE_LINE
+             */
+            val LINE: CaretType get() = CaretType(0L)
+            /**
+             * Block caret.
+             *
+             * Generated from Godot docs: TextEdit.CARET_TYPE_BLOCK
+             */
+            val BLOCK: CaretType get() = CaretType(1L)
+        }
+    }
+
+    /**
+     * Godot's `TextEdit.SelectionMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`TextEdit.SelectionMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.SelectionMode
+     */
+    @JvmInline
+    value class SelectionMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Not selecting.
+             *
+             * Generated from Godot docs: TextEdit.SELECTION_MODE_NONE
+             */
+            val NONE: SelectionMode get() = SelectionMode(0L)
+            /**
+             * Select as if `shift` is pressed.
+             *
+             * Generated from Godot docs: TextEdit.SELECTION_MODE_SHIFT
+             */
+            val SHIFT: SelectionMode get() = SelectionMode(1L)
+            /**
+             * Select single characters as if the user single clicked.
+             *
+             * Generated from Godot docs: TextEdit.SELECTION_MODE_POINTER
+             */
+            val POINTER: SelectionMode get() = SelectionMode(2L)
+            /**
+             * Select whole words as if the user double clicked.
+             *
+             * Generated from Godot docs: TextEdit.SELECTION_MODE_WORD
+             */
+            val WORD: SelectionMode get() = SelectionMode(3L)
+            /**
+             * Select whole lines as if the user triple clicked.
+             *
+             * Generated from Godot docs: TextEdit.SELECTION_MODE_LINE
+             */
+            val LINE: SelectionMode get() = SelectionMode(4L)
+        }
+    }
+
+    /**
+     * Godot's `TextEdit.LineWrappingMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`TextEdit.LineWrappingMode.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.LineWrappingMode
+     */
+    @JvmInline
+    value class LineWrappingMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Line wrapping is disabled.
+             *
+             * Generated from Godot docs: TextEdit.LINE_WRAPPING_NONE
+             */
+            val NONE: LineWrappingMode get() = LineWrappingMode(0L)
+            /**
+             * Line wrapping occurs at the control boundary, beyond what would normally be visible.
+             *
+             * Generated from Godot docs: TextEdit.LINE_WRAPPING_BOUNDARY
+             */
+            val BOUNDARY: LineWrappingMode get() = LineWrappingMode(1L)
+        }
+    }
+
+    /**
+     * Godot's `TextEdit.GutterType` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TextEdit.GutterType.<NAME>`).
+     *
+     * Generated from Godot docs: TextEdit.GutterType
+     */
+    @JvmInline
+    value class GutterType(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * When a gutter is set to string using `set_gutter_type`, it is used to contain text set via the
+             * `set_line_gutter_text` method.
+             *
+             * Generated from Godot docs: TextEdit.GUTTER_TYPE_STRING
+             */
+            val STRING: GutterType get() = GutterType(0L)
+            /**
+             * When a gutter is set to icon using `set_gutter_type`, it is used to contain an icon set via the
+             * `set_line_gutter_icon` method.
+             *
+             * Generated from Godot docs: TextEdit.GUTTER_TYPE_ICON
+             */
+            val ICON: GutterType get() = GutterType(1L)
+            /**
+             * When a gutter is set to custom using `set_gutter_type`, it is used to contain custom visuals
+             * controlled by a callback method set via the `set_gutter_custom_draw` method.
+             *
+             * Generated from Godot docs: TextEdit.GUTTER_TYPE_CUSTOM
+             */
+            val CUSTOM: GutterType get() = GutterType(2L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextEdit? =
             wrap(handle.segment)

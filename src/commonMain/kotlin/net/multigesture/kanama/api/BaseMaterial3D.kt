@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -14,7 +15,7 @@ import net.multigesture.kanama.types.Vector3
  * Generated from Godot docs: BaseMaterial3D
  */
 open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
-    var transparency: Long
+    var transparency: BaseMaterial3D.Transparency
         @JvmName("transparencyProperty")
         get() = getTransparency()
         @JvmName("setTransparencyProperty")
@@ -32,7 +33,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmName("setAlphaHashScaleProperty")
         set(value) = setAlphaHashScale(value)
 
-    var alphaAntialiasingMode: Long
+    var alphaAntialiasingMode: BaseMaterial3D.AlphaAntiAliasing
         @JvmName("alphaAntialiasingModeProperty")
         get() = getAlphaAntialiasing()
         @JvmName("setAlphaAntialiasingModeProperty")
@@ -44,19 +45,19 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmName("setAlphaAntialiasingEdgeProperty")
         set(value) = setAlphaAntialiasingEdge(value)
 
-    var blendMode: Long
+    var blendMode: BaseMaterial3D.BlendMode
         @JvmName("blendModeProperty")
         get() = getBlendMode()
         @JvmName("setBlendModeProperty")
         set(value) = setBlendMode(value)
 
-    var cullMode: Long
+    var cullMode: BaseMaterial3D.CullMode
         @JvmName("cullModeProperty")
         get() = getCullMode()
         @JvmName("setCullModeProperty")
         set(value) = setCullMode(value)
 
-    var depthDrawMode: Long
+    var depthDrawMode: BaseMaterial3D.DepthDrawMode
         @JvmName("depthDrawModeProperty")
         get() = getDepthDrawMode()
         @JvmName("setDepthDrawModeProperty")
@@ -64,29 +65,29 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var noDepthTest: Boolean
         @JvmName("noDepthTestProperty")
-        get() = getFlag(0L)
+        get() = getFlag(BaseMaterial3D.Flags.DISABLE_DEPTH_TEST)
         @JvmName("setNoDepthTestProperty")
-        set(value) = setFlag(0L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.DISABLE_DEPTH_TEST, value)
 
-    var depthTest: Long
+    var depthTest: BaseMaterial3D.DepthTest
         @JvmName("depthTestProperty")
         get() = getDepthTest()
         @JvmName("setDepthTestProperty")
         set(value) = setDepthTest(value)
 
-    var shadingMode: Long
+    var shadingMode: BaseMaterial3D.ShadingMode
         @JvmName("shadingModeProperty")
         get() = getShadingMode()
         @JvmName("setShadingModeProperty")
         set(value) = setShadingMode(value)
 
-    var diffuseMode: Long
+    var diffuseMode: BaseMaterial3D.DiffuseMode
         @JvmName("diffuseModeProperty")
         get() = getDiffuseMode()
         @JvmName("setDiffuseModeProperty")
         set(value) = setDiffuseMode(value)
 
-    var specularMode: Long
+    var specularMode: BaseMaterial3D.SpecularMode
         @JvmName("specularModeProperty")
         get() = getSpecularMode()
         @JvmName("setSpecularModeProperty")
@@ -94,33 +95,33 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var disableAmbientLight: Boolean
         @JvmName("disableAmbientLightProperty")
-        get() = getFlag(14L)
+        get() = getFlag(BaseMaterial3D.Flags.DISABLE_AMBIENT_LIGHT)
         @JvmName("setDisableAmbientLightProperty")
-        set(value) = setFlag(14L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.DISABLE_AMBIENT_LIGHT, value)
 
     var disableFog: Boolean
         @JvmName("disableFogProperty")
-        get() = getFlag(21L)
+        get() = getFlag(BaseMaterial3D.Flags.DISABLE_FOG)
         @JvmName("setDisableFogProperty")
-        set(value) = setFlag(21L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.DISABLE_FOG, value)
 
     var disableSpecularOcclusion: Boolean
         @JvmName("disableSpecularOcclusionProperty")
-        get() = getFlag(22L)
+        get() = getFlag(BaseMaterial3D.Flags.DISABLE_SPECULAR_OCCLUSION)
         @JvmName("setDisableSpecularOcclusionProperty")
-        set(value) = setFlag(22L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.DISABLE_SPECULAR_OCCLUSION, value)
 
     var vertexColorUseAsAlbedo: Boolean
         @JvmName("vertexColorUseAsAlbedoProperty")
-        get() = getFlag(1L)
+        get() = getFlag(BaseMaterial3D.Flags.ALBEDO_FROM_VERTEX_COLOR)
         @JvmName("setVertexColorUseAsAlbedoProperty")
-        set(value) = setFlag(1L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.ALBEDO_FROM_VERTEX_COLOR, value)
 
     var vertexColorIsSrgb: Boolean
         @JvmName("vertexColorIsSrgbProperty")
-        get() = getFlag(2L)
+        get() = getFlag(BaseMaterial3D.Flags.SRGB_VERTEX_COLOR)
         @JvmName("setVertexColorIsSrgbProperty")
-        set(value) = setFlag(2L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.SRGB_VERTEX_COLOR, value)
 
     var albedoColor: Color
         @JvmName("albedoColorProperty")
@@ -130,27 +131,27 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var albedoTexture: Texture2D?
         @JvmName("albedoTextureProperty")
-        get() = getTexture(0L)
+        get() = getTexture(BaseMaterial3D.TextureParam.ALBEDO)
         @JvmName("setAlbedoTextureProperty")
-        set(value) = setTexture(0L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.ALBEDO, value)
 
     var albedoTextureForceSrgb: Boolean
         @JvmName("albedoTextureForceSrgbProperty")
-        get() = getFlag(12L)
+        get() = getFlag(BaseMaterial3D.Flags.ALBEDO_TEXTURE_FORCE_SRGB)
         @JvmName("setAlbedoTextureForceSrgbProperty")
-        set(value) = setFlag(12L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.ALBEDO_TEXTURE_FORCE_SRGB, value)
 
     var albedoTextureMsdf: Boolean
         @JvmName("albedoTextureMsdfProperty")
-        get() = getFlag(20L)
+        get() = getFlag(BaseMaterial3D.Flags.ALBEDO_TEXTURE_MSDF)
         @JvmName("setAlbedoTextureMsdfProperty")
-        set(value) = setFlag(20L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.ALBEDO_TEXTURE_MSDF, value)
 
     var ormTexture: Texture2D?
         @JvmName("ormTextureProperty")
-        get() = getTexture(17L)
+        get() = getTexture(BaseMaterial3D.TextureParam.ORM)
         @JvmName("setOrmTextureProperty")
-        set(value) = setTexture(17L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.ORM, value)
 
     var metallic: Double
         @JvmName("metallicProperty")
@@ -166,11 +167,11 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var metallicTexture: Texture2D?
         @JvmName("metallicTextureProperty")
-        get() = getTexture(1L)
+        get() = getTexture(BaseMaterial3D.TextureParam.METALLIC)
         @JvmName("setMetallicTextureProperty")
-        set(value) = setTexture(1L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.METALLIC, value)
 
-    var metallicTextureChannel: Long
+    var metallicTextureChannel: BaseMaterial3D.TextureChannel
         @JvmName("metallicTextureChannelProperty")
         get() = getMetallicTextureChannel()
         @JvmName("setMetallicTextureChannelProperty")
@@ -184,11 +185,11 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var roughnessTexture: Texture2D?
         @JvmName("roughnessTextureProperty")
-        get() = getTexture(2L)
+        get() = getTexture(BaseMaterial3D.TextureParam.ROUGHNESS)
         @JvmName("setRoughnessTextureProperty")
-        set(value) = setTexture(2L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.ROUGHNESS, value)
 
-    var roughnessTextureChannel: Long
+    var roughnessTextureChannel: BaseMaterial3D.TextureChannel
         @JvmName("roughnessTextureChannelProperty")
         get() = getRoughnessTextureChannel()
         @JvmName("setRoughnessTextureChannelProperty")
@@ -196,9 +197,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var emissionEnabled: Boolean
         @JvmName("emissionEnabledProperty")
-        get() = getFeature(0L)
+        get() = getFeature(BaseMaterial3D.Feature.EMISSION)
         @JvmName("setEmissionEnabledProperty")
-        set(value) = setFeature(0L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.EMISSION, value)
 
     var emission: Color
         @JvmName("emissionProperty")
@@ -218,7 +219,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmName("setEmissionIntensityProperty")
         set(value) = setEmissionIntensity(value)
 
-    var emissionOperator: Long
+    var emissionOperator: BaseMaterial3D.EmissionOperator
         @JvmName("emissionOperatorProperty")
         get() = getEmissionOperator()
         @JvmName("setEmissionOperatorProperty")
@@ -226,21 +227,21 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var emissionOnUv2: Boolean
         @JvmName("emissionOnUv2Property")
-        get() = getFlag(11L)
+        get() = getFlag(BaseMaterial3D.Flags.EMISSION_ON_UV2)
         @JvmName("setEmissionOnUv2Property")
-        set(value) = setFlag(11L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.EMISSION_ON_UV2, value)
 
     var emissionTexture: Texture2D?
         @JvmName("emissionTextureProperty")
-        get() = getTexture(3L)
+        get() = getTexture(BaseMaterial3D.TextureParam.EMISSION)
         @JvmName("setEmissionTextureProperty")
-        set(value) = setTexture(3L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.EMISSION, value)
 
     var normalEnabled: Boolean
         @JvmName("normalEnabledProperty")
-        get() = getFeature(1L)
+        get() = getFeature(BaseMaterial3D.Feature.NORMAL_MAPPING)
         @JvmName("setNormalEnabledProperty")
-        set(value) = setFeature(1L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.NORMAL_MAPPING, value)
 
     var normalScale: Double
         @JvmName("normalScaleProperty")
@@ -250,27 +251,27 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var normalTexture: Texture2D?
         @JvmName("normalTextureProperty")
-        get() = getTexture(4L)
+        get() = getTexture(BaseMaterial3D.TextureParam.NORMAL)
         @JvmName("setNormalTextureProperty")
-        set(value) = setTexture(4L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.NORMAL, value)
 
     var bentNormalEnabled: Boolean
         @JvmName("bentNormalEnabledProperty")
-        get() = getFeature(12L)
+        get() = getFeature(BaseMaterial3D.Feature.BENT_NORMAL_MAPPING)
         @JvmName("setBentNormalEnabledProperty")
-        set(value) = setFeature(12L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.BENT_NORMAL_MAPPING, value)
 
     var bentNormalTexture: Texture2D?
         @JvmName("bentNormalTextureProperty")
-        get() = getTexture(18L)
+        get() = getTexture(BaseMaterial3D.TextureParam.BENT_NORMAL)
         @JvmName("setBentNormalTextureProperty")
-        set(value) = setTexture(18L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.BENT_NORMAL, value)
 
     var rimEnabled: Boolean
         @JvmName("rimEnabledProperty")
-        get() = getFeature(2L)
+        get() = getFeature(BaseMaterial3D.Feature.RIM)
         @JvmName("setRimEnabledProperty")
-        set(value) = setFeature(2L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.RIM, value)
 
     var rim: Double
         @JvmName("rimProperty")
@@ -286,15 +287,15 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var rimTexture: Texture2D?
         @JvmName("rimTextureProperty")
-        get() = getTexture(5L)
+        get() = getTexture(BaseMaterial3D.TextureParam.RIM)
         @JvmName("setRimTextureProperty")
-        set(value) = setTexture(5L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.RIM, value)
 
     var clearcoatEnabled: Boolean
         @JvmName("clearcoatEnabledProperty")
-        get() = getFeature(3L)
+        get() = getFeature(BaseMaterial3D.Feature.CLEARCOAT)
         @JvmName("setClearcoatEnabledProperty")
-        set(value) = setFeature(3L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.CLEARCOAT, value)
 
     var clearcoat: Double
         @JvmName("clearcoatProperty")
@@ -310,15 +311,15 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var clearcoatTexture: Texture2D?
         @JvmName("clearcoatTextureProperty")
-        get() = getTexture(6L)
+        get() = getTexture(BaseMaterial3D.TextureParam.CLEARCOAT)
         @JvmName("setClearcoatTextureProperty")
-        set(value) = setTexture(6L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.CLEARCOAT, value)
 
     var anisotropyEnabled: Boolean
         @JvmName("anisotropyEnabledProperty")
-        get() = getFeature(4L)
+        get() = getFeature(BaseMaterial3D.Feature.ANISOTROPY)
         @JvmName("setAnisotropyEnabledProperty")
-        set(value) = setFeature(4L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.ANISOTROPY, value)
 
     var anisotropy: Double
         @JvmName("anisotropyProperty")
@@ -328,15 +329,15 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var anisotropyFlowmap: Texture2D?
         @JvmName("anisotropyFlowmapProperty")
-        get() = getTexture(7L)
+        get() = getTexture(BaseMaterial3D.TextureParam.FLOWMAP)
         @JvmName("setAnisotropyFlowmapProperty")
-        set(value) = setTexture(7L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.FLOWMAP, value)
 
     var aoEnabled: Boolean
         @JvmName("aoEnabledProperty")
-        get() = getFeature(5L)
+        get() = getFeature(BaseMaterial3D.Feature.AMBIENT_OCCLUSION)
         @JvmName("setAoEnabledProperty")
-        set(value) = setFeature(5L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.AMBIENT_OCCLUSION, value)
 
     var aoLightAffect: Double
         @JvmName("aoLightAffectProperty")
@@ -346,17 +347,17 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var aoTexture: Texture2D?
         @JvmName("aoTextureProperty")
-        get() = getTexture(8L)
+        get() = getTexture(BaseMaterial3D.TextureParam.AMBIENT_OCCLUSION)
         @JvmName("setAoTextureProperty")
-        set(value) = setTexture(8L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.AMBIENT_OCCLUSION, value)
 
     var aoOnUv2: Boolean
         @JvmName("aoOnUv2Property")
-        get() = getFlag(10L)
+        get() = getFlag(BaseMaterial3D.Flags.AO_ON_UV2)
         @JvmName("setAoOnUv2Property")
-        set(value) = setFlag(10L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.AO_ON_UV2, value)
 
-    var aoTextureChannel: Long
+    var aoTextureChannel: BaseMaterial3D.TextureChannel
         @JvmName("aoTextureChannelProperty")
         get() = getAoTextureChannel()
         @JvmName("setAoTextureChannelProperty")
@@ -364,9 +365,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var heightmapEnabled: Boolean
         @JvmName("heightmapEnabledProperty")
-        get() = getFeature(6L)
+        get() = getFeature(BaseMaterial3D.Feature.HEIGHT_MAPPING)
         @JvmName("setHeightmapEnabledProperty")
-        set(value) = setFeature(6L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.HEIGHT_MAPPING, value)
 
     var heightmapScale: Double
         @JvmName("heightmapScaleProperty")
@@ -406,21 +407,21 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var heightmapTexture: Texture2D?
         @JvmName("heightmapTextureProperty")
-        get() = getTexture(9L)
+        get() = getTexture(BaseMaterial3D.TextureParam.HEIGHTMAP)
         @JvmName("setHeightmapTextureProperty")
-        set(value) = setTexture(9L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.HEIGHTMAP, value)
 
     var heightmapFlipTexture: Boolean
         @JvmName("heightmapFlipTextureProperty")
-        get() = getFlag(17L)
+        get() = getFlag(BaseMaterial3D.Flags.INVERT_HEIGHTMAP)
         @JvmName("setHeightmapFlipTextureProperty")
-        set(value) = setFlag(17L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.INVERT_HEIGHTMAP, value)
 
     var subsurfScatterEnabled: Boolean
         @JvmName("subsurfScatterEnabledProperty")
-        get() = getFeature(7L)
+        get() = getFeature(BaseMaterial3D.Feature.SUBSURFACE_SCATTERING)
         @JvmName("setSubsurfScatterEnabledProperty")
-        set(value) = setFeature(7L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.SUBSURFACE_SCATTERING, value)
 
     var subsurfScatterStrength: Double
         @JvmName("subsurfScatterStrengthProperty")
@@ -430,21 +431,21 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var subsurfScatterSkinMode: Boolean
         @JvmName("subsurfScatterSkinModeProperty")
-        get() = getFlag(18L)
+        get() = getFlag(BaseMaterial3D.Flags.SUBSURFACE_MODE_SKIN)
         @JvmName("setSubsurfScatterSkinModeProperty")
-        set(value) = setFlag(18L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.SUBSURFACE_MODE_SKIN, value)
 
     var subsurfScatterTexture: Texture2D?
         @JvmName("subsurfScatterTextureProperty")
-        get() = getTexture(10L)
+        get() = getTexture(BaseMaterial3D.TextureParam.SUBSURFACE_SCATTERING)
         @JvmName("setSubsurfScatterTextureProperty")
-        set(value) = setTexture(10L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.SUBSURFACE_SCATTERING, value)
 
     var subsurfScatterTransmittanceEnabled: Boolean
         @JvmName("subsurfScatterTransmittanceEnabledProperty")
-        get() = getFeature(8L)
+        get() = getFeature(BaseMaterial3D.Feature.SUBSURFACE_TRANSMITTANCE)
         @JvmName("setSubsurfScatterTransmittanceEnabledProperty")
-        set(value) = setFeature(8L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.SUBSURFACE_TRANSMITTANCE, value)
 
     var subsurfScatterTransmittanceColor: Color
         @JvmName("subsurfScatterTransmittanceColorProperty")
@@ -454,9 +455,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var subsurfScatterTransmittanceTexture: Texture2D?
         @JvmName("subsurfScatterTransmittanceTextureProperty")
-        get() = getTexture(11L)
+        get() = getTexture(BaseMaterial3D.TextureParam.SUBSURFACE_TRANSMITTANCE)
         @JvmName("setSubsurfScatterTransmittanceTextureProperty")
-        set(value) = setTexture(11L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.SUBSURFACE_TRANSMITTANCE, value)
 
     var subsurfScatterTransmittanceDepth: Double
         @JvmName("subsurfScatterTransmittanceDepthProperty")
@@ -472,9 +473,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var backlightEnabled: Boolean
         @JvmName("backlightEnabledProperty")
-        get() = getFeature(9L)
+        get() = getFeature(BaseMaterial3D.Feature.BACKLIGHT)
         @JvmName("setBacklightEnabledProperty")
-        set(value) = setFeature(9L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.BACKLIGHT, value)
 
     var backlight: Color
         @JvmName("backlightProperty")
@@ -484,15 +485,15 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var backlightTexture: Texture2D?
         @JvmName("backlightTextureProperty")
-        get() = getTexture(12L)
+        get() = getTexture(BaseMaterial3D.TextureParam.BACKLIGHT)
         @JvmName("setBacklightTextureProperty")
-        set(value) = setTexture(12L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.BACKLIGHT, value)
 
     var refractionEnabled: Boolean
         @JvmName("refractionEnabledProperty")
-        get() = getFeature(10L)
+        get() = getFeature(BaseMaterial3D.Feature.REFRACTION)
         @JvmName("setRefractionEnabledProperty")
-        set(value) = setFeature(10L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.REFRACTION, value)
 
     var refractionScale: Double
         @JvmName("refractionScaleProperty")
@@ -502,11 +503,11 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var refractionTexture: Texture2D?
         @JvmName("refractionTextureProperty")
-        get() = getTexture(13L)
+        get() = getTexture(BaseMaterial3D.TextureParam.REFRACTION)
         @JvmName("setRefractionTextureProperty")
-        set(value) = setTexture(13L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.REFRACTION, value)
 
-    var refractionTextureChannel: Long
+    var refractionTextureChannel: BaseMaterial3D.TextureChannel
         @JvmName("refractionTextureChannelProperty")
         get() = getRefractionTextureChannel()
         @JvmName("setRefractionTextureChannelProperty")
@@ -514,23 +515,23 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var detailEnabled: Boolean
         @JvmName("detailEnabledProperty")
-        get() = getFeature(11L)
+        get() = getFeature(BaseMaterial3D.Feature.DETAIL)
         @JvmName("setDetailEnabledProperty")
-        set(value) = setFeature(11L, value)
+        set(value) = setFeature(BaseMaterial3D.Feature.DETAIL, value)
 
     var detailMask: Texture2D?
         @JvmName("detailMaskProperty")
-        get() = getTexture(14L)
+        get() = getTexture(BaseMaterial3D.TextureParam.DETAIL_MASK)
         @JvmName("setDetailMaskProperty")
-        set(value) = setTexture(14L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.DETAIL_MASK, value)
 
-    var detailBlendMode: Long
+    var detailBlendMode: BaseMaterial3D.BlendMode
         @JvmName("detailBlendModeProperty")
         get() = getDetailBlendMode()
         @JvmName("setDetailBlendModeProperty")
         set(value) = setDetailBlendMode(value)
 
-    var detailUvLayer: Long
+    var detailUvLayer: BaseMaterial3D.DetailUV
         @JvmName("detailUvLayerProperty")
         get() = getDetailUv()
         @JvmName("setDetailUvLayerProperty")
@@ -538,15 +539,15 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var detailAlbedo: Texture2D?
         @JvmName("detailAlbedoProperty")
-        get() = getTexture(15L)
+        get() = getTexture(BaseMaterial3D.TextureParam.DETAIL_ALBEDO)
         @JvmName("setDetailAlbedoProperty")
-        set(value) = setTexture(15L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.DETAIL_ALBEDO, value)
 
     var detailNormal: Texture2D?
         @JvmName("detailNormalProperty")
-        get() = getTexture(16L)
+        get() = getTexture(BaseMaterial3D.TextureParam.DETAIL_NORMAL)
         @JvmName("setDetailNormalProperty")
-        set(value) = setTexture(16L, value)
+        set(value) = setTexture(BaseMaterial3D.TextureParam.DETAIL_NORMAL, value)
 
     var uv1Scale: Vector3
         @JvmName("uv1ScaleProperty")
@@ -562,9 +563,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var uv1Triplanar: Boolean
         @JvmName("uv1TriplanarProperty")
-        get() = getFlag(6L)
+        get() = getFlag(BaseMaterial3D.Flags.UV1_USE_TRIPLANAR)
         @JvmName("setUv1TriplanarProperty")
-        set(value) = setFlag(6L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.UV1_USE_TRIPLANAR, value)
 
     var uv1TriplanarSharpness: Double
         @JvmName("uv1TriplanarSharpnessProperty")
@@ -574,9 +575,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var uv1WorldTriplanar: Boolean
         @JvmName("uv1WorldTriplanarProperty")
-        get() = getFlag(8L)
+        get() = getFlag(BaseMaterial3D.Flags.UV1_USE_WORLD_TRIPLANAR)
         @JvmName("setUv1WorldTriplanarProperty")
-        set(value) = setFlag(8L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.UV1_USE_WORLD_TRIPLANAR, value)
 
     var uv2Scale: Vector3
         @JvmName("uv2ScaleProperty")
@@ -592,9 +593,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var uv2Triplanar: Boolean
         @JvmName("uv2TriplanarProperty")
-        get() = getFlag(7L)
+        get() = getFlag(BaseMaterial3D.Flags.UV2_USE_TRIPLANAR)
         @JvmName("setUv2TriplanarProperty")
-        set(value) = setFlag(7L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.UV2_USE_TRIPLANAR, value)
 
     var uv2TriplanarSharpness: Double
         @JvmName("uv2TriplanarSharpnessProperty")
@@ -604,11 +605,11 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var uv2WorldTriplanar: Boolean
         @JvmName("uv2WorldTriplanarProperty")
-        get() = getFlag(9L)
+        get() = getFlag(BaseMaterial3D.Flags.UV2_USE_WORLD_TRIPLANAR)
         @JvmName("setUv2WorldTriplanarProperty")
-        set(value) = setFlag(9L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.UV2_USE_WORLD_TRIPLANAR, value)
 
-    var textureFilter: Long
+    var textureFilter: BaseMaterial3D.TextureFilter
         @JvmName("textureFilterProperty")
         get() = getTextureFilter()
         @JvmName("setTextureFilterProperty")
@@ -616,23 +617,23 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var textureRepeat: Boolean
         @JvmName("textureRepeatProperty")
-        get() = getFlag(16L)
+        get() = getFlag(BaseMaterial3D.Flags.USE_TEXTURE_REPEAT)
         @JvmName("setTextureRepeatProperty")
-        set(value) = setFlag(16L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.USE_TEXTURE_REPEAT, value)
 
     var disableReceiveShadows: Boolean
         @JvmName("disableReceiveShadowsProperty")
-        get() = getFlag(13L)
+        get() = getFlag(BaseMaterial3D.Flags.DONT_RECEIVE_SHADOWS)
         @JvmName("setDisableReceiveShadowsProperty")
-        set(value) = setFlag(13L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.DONT_RECEIVE_SHADOWS, value)
 
     var shadowToOpacity: Boolean
         @JvmName("shadowToOpacityProperty")
-        get() = getFlag(15L)
+        get() = getFlag(BaseMaterial3D.Flags.USE_SHADOW_TO_OPACITY)
         @JvmName("setShadowToOpacityProperty")
-        set(value) = setFlag(15L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.USE_SHADOW_TO_OPACITY, value)
 
-    var billboardMode: Long
+    var billboardMode: BaseMaterial3D.BillboardMode
         @JvmName("billboardModeProperty")
         get() = getBillboardMode()
         @JvmName("setBillboardModeProperty")
@@ -640,9 +641,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var billboardKeepScale: Boolean
         @JvmName("billboardKeepScaleProperty")
-        get() = getFlag(5L)
+        get() = getFlag(BaseMaterial3D.Flags.BILLBOARD_KEEP_SCALE)
         @JvmName("setBillboardKeepScaleProperty")
-        set(value) = setFlag(5L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.BILLBOARD_KEEP_SCALE, value)
 
     var particlesAnimHFrames: Int
         @JvmName("particlesAnimHFramesProperty")
@@ -676,15 +677,15 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var fixedSize: Boolean
         @JvmName("fixedSizeProperty")
-        get() = getFlag(4L)
+        get() = getFlag(BaseMaterial3D.Flags.FIXED_SIZE)
         @JvmName("setFixedSizeProperty")
-        set(value) = setFlag(4L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.FIXED_SIZE, value)
 
     var usePointSize: Boolean
         @JvmName("usePointSizeProperty")
-        get() = getFlag(3L)
+        get() = getFlag(BaseMaterial3D.Flags.USE_POINT_SIZE)
         @JvmName("setUsePointSizeProperty")
-        set(value) = setFlag(3L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.USE_POINT_SIZE, value)
 
     var pointSize: Double
         @JvmName("pointSizeProperty")
@@ -694,15 +695,15 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var useParticleTrails: Boolean
         @JvmName("useParticleTrailsProperty")
-        get() = getFlag(19L)
+        get() = getFlag(BaseMaterial3D.Flags.PARTICLE_TRAILS_MODE)
         @JvmName("setUseParticleTrailsProperty")
-        set(value) = setFlag(19L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.PARTICLE_TRAILS_MODE, value)
 
     var useZClipScale: Boolean
         @JvmName("useZClipScaleProperty")
-        get() = getFlag(23L)
+        get() = getFlag(BaseMaterial3D.Flags.USE_Z_CLIP_SCALE)
         @JvmName("setUseZClipScaleProperty")
-        set(value) = setFlag(23L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.USE_Z_CLIP_SCALE, value)
 
     var zClipScale: Double
         @JvmName("zClipScaleProperty")
@@ -712,9 +713,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     var useFovOverride: Boolean
         @JvmName("useFovOverrideProperty")
-        get() = getFlag(24L)
+        get() = getFlag(BaseMaterial3D.Flags.USE_FOV_OVERRIDE)
         @JvmName("setUseFovOverrideProperty")
-        set(value) = setFlag(24L, value)
+        set(value) = setFlag(BaseMaterial3D.Flags.USE_FOV_OVERRIDE, value)
 
     var fovOverride: Double
         @JvmName("fovOverrideProperty")
@@ -746,7 +747,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmName("setMsdfOutlineSizeProperty")
         set(value) = setMsdfOutlineSize(value)
 
-    var distanceFadeMode: Long
+    var distanceFadeMode: BaseMaterial3D.DistanceFadeMode
         @JvmName("distanceFadeModeProperty")
         get() = getDistanceFade()
         @JvmName("setDistanceFadeModeProperty")
@@ -764,7 +765,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmName("setDistanceFadeMaxDistanceProperty")
         set(value) = setDistanceFadeMaxDistance(value)
 
-    var stencilMode: Long
+    var stencilMode: BaseMaterial3D.StencilMode
         @JvmName("stencilModeProperty")
         get() = getStencilMode()
         @JvmName("setStencilModeProperty")
@@ -776,7 +777,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmName("setStencilFlagsProperty")
         set(value) = setStencilFlags(value)
 
-    var stencilCompare: Long
+    var stencilCompare: BaseMaterial3D.StencilCompare
         @JvmName("stencilCompareProperty")
         get() = getStencilCompare()
         @JvmName("setStencilCompareProperty")
@@ -828,26 +829,26 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The material's transparency mode. Some transparency modes will disable shadow casting. Any
-     * transparency mode other than `TRANSPARENCY_DISABLED` has a greater performance impact compared
+     * transparency mode other than `Transparency.DISABLED` has a greater performance impact compared
      * to opaque rendering. See also `blend_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_transparency
      */
-    fun setTransparency(transparency: Long) {
+    fun setTransparency(transparency: BaseMaterial3D.Transparency) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTransparencyBind, segment, transparency)
+        ObjectCalls.ptrcallWithLongArg(setTransparencyBind, segment, transparency.value)
     }
 
     /**
      * The material's transparency mode. Some transparency modes will disable shadow casting. Any
-     * transparency mode other than `TRANSPARENCY_DISABLED` has a greater performance impact compared
+     * transparency mode other than `Transparency.DISABLED` has a greater performance impact compared
      * to opaque rendering. See also `blend_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_transparency
      */
-    fun getTransparency(): Long {
+    fun getTransparency(): BaseMaterial3D.Transparency {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTransparencyBind, segment)
+        return BaseMaterial3D.Transparency(ObjectCalls.ptrcallNoArgsRetLong(getTransparencyBind, segment))
     }
 
     /**
@@ -855,9 +856,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_alpha_antialiasing
      */
-    fun setAlphaAntialiasing(alphaAa: Long) {
+    fun setAlphaAntialiasing(alphaAa: BaseMaterial3D.AlphaAntiAliasing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa)
+        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa.value)
     }
 
     /**
@@ -865,9 +866,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_alpha_antialiasing
      */
-    fun getAlphaAntialiasing(): Long {
+    fun getAlphaAntialiasing(): BaseMaterial3D.AlphaAntiAliasing {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment)
+        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment))
     }
 
     /**
@@ -897,9 +898,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_shading_mode
      */
-    fun setShadingMode(shadingMode: Long) {
+    fun setShadingMode(shadingMode: BaseMaterial3D.ShadingMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setShadingModeBind, segment, shadingMode)
+        ObjectCalls.ptrcallWithLongArg(setShadingModeBind, segment, shadingMode.value)
     }
 
     /**
@@ -909,18 +910,18 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_shading_mode
      */
-    fun getShadingMode(): Long {
+    fun getShadingMode(): BaseMaterial3D.ShadingMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getShadingModeBind, segment)
+        return BaseMaterial3D.ShadingMode(ObjectCalls.ptrcallNoArgsRetLong(getShadingModeBind, segment))
     }
 
     /**
      * Adjusts the strength of specular reflections. Specular reflections are composed of scene
      * reflections and the specular lobe which is the bright spot that is reflected from light sources.
      * When set to `0.0`, no specular reflections will be visible. This differs from the
-     * `SPECULAR_DISABLED` `SpecularMode` as `SPECULAR_DISABLED` only applies to the specular lobe from
-     * the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should be left
-     * at `0.5` in most cases. See also `roughness`.
+     * `SpecularMode.DISABLED` `SpecularMode` as `SpecularMode.DISABLED` only applies to the specular
+     * lobe from the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should
+     * be left at `0.5` in most cases. See also `roughness`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_specular
      */
@@ -933,9 +934,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      * Adjusts the strength of specular reflections. Specular reflections are composed of scene
      * reflections and the specular lobe which is the bright spot that is reflected from light sources.
      * When set to `0.0`, no specular reflections will be visible. This differs from the
-     * `SPECULAR_DISABLED` `SpecularMode` as `SPECULAR_DISABLED` only applies to the specular lobe from
-     * the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should be left
-     * at `0.5` in most cases. See also `roughness`.
+     * `SpecularMode.DISABLED` `SpecularMode` as `SpecularMode.DISABLED` only applies to the specular
+     * lobe from the light source. Note: Unlike `metallic`, this is not energy-conserving, so it should
+     * be left at `0.5` in most cases. See also `roughness`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_specular
      */
@@ -1381,9 +1382,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_detail_uv
      */
-    fun setDetailUv(detailUv: Long) {
+    fun setDetailUv(detailUv: BaseMaterial3D.DetailUV) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDetailUvBind, segment, detailUv)
+        ObjectCalls.ptrcallWithLongArg(setDetailUvBind, segment, detailUv.value)
     }
 
     /**
@@ -1391,9 +1392,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_detail_uv
      */
-    fun getDetailUv(): Long {
+    fun getDetailUv(): BaseMaterial3D.DetailUV {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDetailUvBind, segment)
+        return BaseMaterial3D.DetailUV(ObjectCalls.ptrcallNoArgsRetLong(getDetailUvBind, segment))
     }
 
     /**
@@ -1402,9 +1403,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_blend_mode
      */
-    fun setBlendMode(blendMode: Long) {
+    fun setBlendMode(blendMode: BaseMaterial3D.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode)
+        ObjectCalls.ptrcallWithLongArg(setBlendModeBind, segment, blendMode.value)
     }
 
     /**
@@ -1413,9 +1414,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_blend_mode
      */
-    fun getBlendMode(): Long {
+    fun getBlendMode(): BaseMaterial3D.BlendMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment)
+        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendModeBind, segment))
     }
 
     /**
@@ -1423,9 +1424,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_depth_draw_mode
      */
-    fun setDepthDrawMode(depthDrawMode: Long) {
+    fun setDepthDrawMode(depthDrawMode: BaseMaterial3D.DepthDrawMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthDrawModeBind, segment, depthDrawMode)
+        ObjectCalls.ptrcallWithLongArg(setDepthDrawModeBind, segment, depthDrawMode.value)
     }
 
     /**
@@ -1433,33 +1434,33 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_depth_draw_mode
      */
-    fun getDepthDrawMode(): Long {
+    fun getDepthDrawMode(): BaseMaterial3D.DepthDrawMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDepthDrawModeBind, segment)
+        return BaseMaterial3D.DepthDrawMode(ObjectCalls.ptrcallNoArgsRetLong(getDepthDrawModeBind, segment))
     }
 
     /**
      * Determines which comparison operator is used when testing depth. Note: Changing `depth_test` to
      * a non-default value only has a visible effect when used on a transparent material, or a material
-     * that has `depth_draw_mode` set to `DEPTH_DRAW_DISABLED`.
+     * that has `depth_draw_mode` set to `DepthDrawMode.DISABLED`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_depth_test
      */
-    fun setDepthTest(depthTest: Long) {
+    fun setDepthTest(depthTest: BaseMaterial3D.DepthTest) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDepthTestBind, segment, depthTest)
+        ObjectCalls.ptrcallWithLongArg(setDepthTestBind, segment, depthTest.value)
     }
 
     /**
      * Determines which comparison operator is used when testing depth. Note: Changing `depth_test` to
      * a non-default value only has a visible effect when used on a transparent material, or a material
-     * that has `depth_draw_mode` set to `DEPTH_DRAW_DISABLED`.
+     * that has `depth_draw_mode` set to `DepthDrawMode.DISABLED`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_depth_test
      */
-    fun getDepthTest(): Long {
+    fun getDepthTest(): BaseMaterial3D.DepthTest {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDepthTestBind, segment)
+        return BaseMaterial3D.DepthTest(ObjectCalls.ptrcallNoArgsRetLong(getDepthTestBind, segment))
     }
 
     /**
@@ -1468,9 +1469,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_cull_mode
      */
-    fun setCullMode(cullMode: Long) {
+    fun setCullMode(cullMode: BaseMaterial3D.CullMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, cullMode)
+        ObjectCalls.ptrcallWithLongArg(setCullModeBind, segment, cullMode.value)
     }
 
     /**
@@ -1479,9 +1480,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_cull_mode
      */
-    fun getCullMode(): Long {
+    fun getCullMode(): BaseMaterial3D.CullMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment)
+        return BaseMaterial3D.CullMode(ObjectCalls.ptrcallNoArgsRetLong(getCullModeBind, segment))
     }
 
     /**
@@ -1489,9 +1490,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_diffuse_mode
      */
-    fun setDiffuseMode(diffuseMode: Long) {
+    fun setDiffuseMode(diffuseMode: BaseMaterial3D.DiffuseMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDiffuseModeBind, segment, diffuseMode)
+        ObjectCalls.ptrcallWithLongArg(setDiffuseModeBind, segment, diffuseMode.value)
     }
 
     /**
@@ -1499,9 +1500,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_diffuse_mode
      */
-    fun getDiffuseMode(): Long {
+    fun getDiffuseMode(): BaseMaterial3D.DiffuseMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDiffuseModeBind, segment)
+        return BaseMaterial3D.DiffuseMode(ObjectCalls.ptrcallNoArgsRetLong(getDiffuseModeBind, segment))
     }
 
     /**
@@ -1512,9 +1513,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_specular_mode
      */
-    fun setSpecularMode(specularMode: Long) {
+    fun setSpecularMode(specularMode: BaseMaterial3D.SpecularMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSpecularModeBind, segment, specularMode)
+        ObjectCalls.ptrcallWithLongArg(setSpecularModeBind, segment, specularMode.value)
     }
 
     /**
@@ -1525,9 +1526,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_specular_mode
      */
-    fun getSpecularMode(): Long {
+    fun getSpecularMode(): BaseMaterial3D.SpecularMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSpecularModeBind, segment)
+        return BaseMaterial3D.SpecularMode(ObjectCalls.ptrcallNoArgsRetLong(getSpecularModeBind, segment))
     }
 
     /**
@@ -1535,9 +1536,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_flag
      */
-    fun setFlag(flag: Long, enable: Boolean) {
+    fun setFlag(flag: BaseMaterial3D.Flags, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagBind, segment, flag.value, enable)
     }
 
     /**
@@ -1545,9 +1546,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_flag
      */
-    fun getFlag(flag: Long): Boolean {
+    fun getFlag(flag: BaseMaterial3D.Flags): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagBind, segment, flag.value)
     }
 
     /**
@@ -1558,9 +1559,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_texture_filter
      */
-    fun setTextureFilter(mode: Long) {
+    fun setTextureFilter(mode: BaseMaterial3D.TextureFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -1571,9 +1572,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_texture_filter
      */
-    fun getTextureFilter(): Long {
+    fun getTextureFilter(): BaseMaterial3D.TextureFilter {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment)
+        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
     }
 
     /**
@@ -1582,9 +1583,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_feature
      */
-    fun setFeature(feature: Long, enable: Boolean) {
+    fun setFeature(feature: BaseMaterial3D.Feature, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFeatureBind, segment, feature, enable)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(setFeatureBind, segment, feature.value, enable)
     }
 
     /**
@@ -1593,9 +1594,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_feature
      */
-    fun getFeature(feature: Long): Boolean {
+    fun getFeature(feature: BaseMaterial3D.Feature): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFeatureBind, segment, feature)
+        return ObjectCalls.ptrcallWithLongArgRetBool(getFeatureBind, segment, feature.value)
     }
 
     /**
@@ -1604,9 +1605,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_texture
      */
-    fun setTexture(param: Long, texture: Texture2D?) {
+    fun setTexture(param: BaseMaterial3D.TextureParam, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, param, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithLongAndObjectArg(setTextureBind, segment, param.value, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -1615,9 +1616,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_texture
      */
-    fun getTexture(param: Long): Texture2D? {
+    fun getTexture(param: BaseMaterial3D.TextureParam): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, param))
+        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, param.value))
     }
 
     /**
@@ -1625,9 +1626,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_detail_blend_mode
      */
-    fun setDetailBlendMode(detailBlendMode: Long) {
+    fun setDetailBlendMode(detailBlendMode: BaseMaterial3D.BlendMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDetailBlendModeBind, segment, detailBlendMode)
+        ObjectCalls.ptrcallWithLongArg(setDetailBlendModeBind, segment, detailBlendMode.value)
     }
 
     /**
@@ -1635,9 +1636,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_detail_blend_mode
      */
-    fun getDetailBlendMode(): Long {
+    fun getDetailBlendMode(): BaseMaterial3D.BlendMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDetailBlendModeBind, segment)
+        return BaseMaterial3D.BlendMode(ObjectCalls.ptrcallNoArgsRetLong(getDetailBlendModeBind, segment))
     }
 
     /**
@@ -1788,9 +1789,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_billboard_mode
      */
-    fun setBillboardMode(mode: Long) {
+    fun setBillboardMode(mode: BaseMaterial3D.BillboardMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode.value)
     }
 
     /**
@@ -1801,14 +1802,14 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_billboard_mode
      */
-    fun getBillboardMode(): Long {
+    fun getBillboardMode(): BaseMaterial3D.BillboardMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment)
+        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment))
     }
 
     /**
      * The number of horizontal frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_h_frames
      */
@@ -1819,7 +1820,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The number of horizontal frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_h_frames
      */
@@ -1830,7 +1831,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The number of vertical frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_v_frames
      */
@@ -1841,7 +1842,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * The number of vertical frames in the particle sprite sheet. Only enabled when using
-     * `BILLBOARD_PARTICLES`. See `billboard_mode`.
+     * `BillboardMode.PARTICLES`. See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_v_frames
      */
@@ -1851,8 +1852,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * If `true`, particle animations are looped. Only enabled when using `BILLBOARD_PARTICLES`. See
-     * `billboard_mode`.
+     * If `true`, particle animations are looped. Only enabled when using `BillboardMode.PARTICLES`.
+     * See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_loop
      */
@@ -1862,8 +1863,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * If `true`, particle animations are looped. Only enabled when using `BILLBOARD_PARTICLES`. See
-     * `billboard_mode`.
+     * If `true`, particle animations are looped. Only enabled when using `BillboardMode.PARTICLES`.
+     * See `billboard_mode`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_loop
      */
@@ -2027,9 +2028,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_emission_operator
      */
-    fun setEmissionOperator(operator: Long) {
+    fun setEmissionOperator(operator: BaseMaterial3D.EmissionOperator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEmissionOperatorBind, segment, operator)
+        ObjectCalls.ptrcallWithLongArg(setEmissionOperatorBind, segment, operator.value)
     }
 
     /**
@@ -2037,9 +2038,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_emission_operator
      */
-    fun getEmissionOperator(): Long {
+    fun getEmissionOperator(): BaseMaterial3D.EmissionOperator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getEmissionOperatorBind, segment)
+        return BaseMaterial3D.EmissionOperator(ObjectCalls.ptrcallNoArgsRetLong(getEmissionOperatorBind, segment))
     }
 
     /**
@@ -2116,8 +2117,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * If `true`, enables the vertex grow setting. This can be used to create mesh-based outlines using
-     * a second material pass and its `cull_mode` set to `CULL_FRONT`. See also `grow_amount`. Note:
-     * Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
+     * a second material pass and its `cull_mode` set to `CullMode.FRONT`. See also `grow_amount`.
+     * Note: Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
      * corners. This can be alleviated by designing the mesh to use smooth normals exclusively using
      * face weighted normals (http://wiki.polycount.com/wiki/Face_weighted_normals) in the 3D authoring
      * software. In this case, grow will be able to join every outline together, just like in the
@@ -2132,8 +2133,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * If `true`, enables the vertex grow setting. This can be used to create mesh-based outlines using
-     * a second material pass and its `cull_mode` set to `CULL_FRONT`. See also `grow_amount`. Note:
-     * Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
+     * a second material pass and its `cull_mode` set to `CullMode.FRONT`. See also `grow_amount`.
+     * Note: Vertex growth cannot create new vertices, which means that visible gaps may occur in sharp
      * corners. This can be alleviated by designing the mesh to use smooth normals exclusively using
      * face weighted normals (http://wiki.polycount.com/wiki/Face_weighted_normals) in the 3D authoring
      * software. In this case, grow will be able to join every outline together, just like in the
@@ -2154,9 +2155,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_metallic_texture_channel
      */
-    fun setMetallicTextureChannel(channel: Long) {
+    fun setMetallicTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMetallicTextureChannelBind, segment, channel)
+        ObjectCalls.ptrcallWithLongArg(setMetallicTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2167,9 +2168,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_metallic_texture_channel
      */
-    fun getMetallicTextureChannel(): Long {
+    fun getMetallicTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getMetallicTextureChannelBind, segment)
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getMetallicTextureChannelBind, segment))
     }
 
     /**
@@ -2180,9 +2181,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_roughness_texture_channel
      */
-    fun setRoughnessTextureChannel(channel: Long) {
+    fun setRoughnessTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRoughnessTextureChannelBind, segment, channel)
+        ObjectCalls.ptrcallWithLongArg(setRoughnessTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2193,9 +2194,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_roughness_texture_channel
      */
-    fun getRoughnessTextureChannel(): Long {
+    fun getRoughnessTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRoughnessTextureChannelBind, segment)
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getRoughnessTextureChannelBind, segment))
     }
 
     /**
@@ -2206,9 +2207,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_ao_texture_channel
      */
-    fun setAoTextureChannel(channel: Long) {
+    fun setAoTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAoTextureChannelBind, segment, channel)
+        ObjectCalls.ptrcallWithLongArg(setAoTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2219,9 +2220,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_ao_texture_channel
      */
-    fun getAoTextureChannel(): Long {
+    fun getAoTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAoTextureChannelBind, segment)
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getAoTextureChannelBind, segment))
     }
 
     /**
@@ -2232,9 +2233,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_refraction_texture_channel
      */
-    fun setRefractionTextureChannel(channel: Long) {
+    fun setRefractionTextureChannel(channel: BaseMaterial3D.TextureChannel) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRefractionTextureChannelBind, segment, channel)
+        ObjectCalls.ptrcallWithLongArg(setRefractionTextureChannelBind, segment, channel.value)
     }
 
     /**
@@ -2245,9 +2246,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_refraction_texture_channel
      */
-    fun getRefractionTextureChannel(): Long {
+    fun getRefractionTextureChannel(): BaseMaterial3D.TextureChannel {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getRefractionTextureChannelBind, segment)
+        return BaseMaterial3D.TextureChannel(ObjectCalls.ptrcallNoArgsRetLong(getRefractionTextureChannelBind, segment))
     }
 
     /**
@@ -2341,9 +2342,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_distance_fade
      */
-    fun setDistanceFade(mode: Long) {
+    fun setDistanceFade(mode: BaseMaterial3D.DistanceFadeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDistanceFadeBind, segment, mode)
+        ObjectCalls.ptrcallWithLongArg(setDistanceFadeBind, segment, mode.value)
     }
 
     /**
@@ -2351,9 +2352,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_distance_fade
      */
-    fun getDistanceFade(): Long {
+    fun getDistanceFade(): BaseMaterial3D.DistanceFadeMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getDistanceFadeBind, segment)
+        return BaseMaterial3D.DistanceFadeMode(ObjectCalls.ptrcallNoArgsRetLong(getDistanceFadeBind, segment))
     }
 
     /**
@@ -2440,7 +2441,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * Overrides the `Camera3D`'s field of view angle (in degrees). Note: This behaves as if the field
-     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KEEP_HEIGHT`.
+     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KeepAspect.HEIGHT`.
      * Additionally, it may not look correct on a non-perspective camera where the field of view
      * setting is ignored.
      *
@@ -2453,7 +2454,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
 
     /**
      * Overrides the `Camera3D`'s field of view angle (in degrees). Note: This behaves as if the field
-     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KEEP_HEIGHT`.
+     * of view is set on a `Camera3D` with `Camera3D.keep_aspect` set to `Camera3D.KeepAspect.HEIGHT`.
      * Additionally, it may not look correct on a non-perspective camera where the field of view
      * setting is ignored.
      *
@@ -2469,9 +2470,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_stencil_mode
      */
-    fun setStencilMode(stencilMode: Long) {
+    fun setStencilMode(stencilMode: BaseMaterial3D.StencilMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStencilModeBind, segment, stencilMode)
+        ObjectCalls.ptrcallWithLongArg(setStencilModeBind, segment, stencilMode.value)
     }
 
     /**
@@ -2479,9 +2480,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_stencil_mode
      */
-    fun getStencilMode(): Long {
+    fun getStencilMode(): BaseMaterial3D.StencilMode {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStencilModeBind, segment)
+        return BaseMaterial3D.StencilMode(ObjectCalls.ptrcallNoArgsRetLong(getStencilModeBind, segment))
     }
 
     /**
@@ -2509,9 +2510,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.set_stencil_compare
      */
-    fun setStencilCompare(stencilCompare: Long) {
+    fun setStencilCompare(stencilCompare: BaseMaterial3D.StencilCompare) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setStencilCompareBind, segment, stencilCompare)
+        ObjectCalls.ptrcallWithLongArg(setStencilCompareBind, segment, stencilCompare.value)
     }
 
     /**
@@ -2519,9 +2520,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      *
      * Generated from Godot docs: BaseMaterial3D.get_stencil_compare
      */
-    fun getStencilCompare(): Long {
+    fun getStencilCompare(): BaseMaterial3D.StencilCompare {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getStencilCompareBind, segment)
+        return BaseMaterial3D.StencilCompare(ObjectCalls.ptrcallNoArgsRetLong(getStencilCompareBind, segment))
     }
 
     /**
@@ -2565,7 +2566,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The outline thickness for `STENCIL_MODE_OUTLINE`.
+     * The outline thickness for `StencilMode.OUTLINE`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_stencil_effect_outline_thickness
      */
@@ -2575,7 +2576,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The outline thickness for `STENCIL_MODE_OUTLINE`.
+     * The outline thickness for `StencilMode.OUTLINE`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_stencil_effect_outline_thickness
      */
@@ -2584,139 +2585,1129 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getStencilEffectOutlineThicknessBind, segment)
     }
 
-    companion object {
-        const val TEXTURE_ALBEDO: Long = 0L
-        const val TEXTURE_METALLIC: Long = 1L
-        const val TEXTURE_ROUGHNESS: Long = 2L
-        const val TEXTURE_EMISSION: Long = 3L
-        const val TEXTURE_NORMAL: Long = 4L
-        const val TEXTURE_BENT_NORMAL: Long = 18L
-        const val TEXTURE_RIM: Long = 5L
-        const val TEXTURE_CLEARCOAT: Long = 6L
-        const val TEXTURE_FLOWMAP: Long = 7L
-        const val TEXTURE_AMBIENT_OCCLUSION: Long = 8L
-        const val TEXTURE_HEIGHTMAP: Long = 9L
-        const val TEXTURE_SUBSURFACE_SCATTERING: Long = 10L
-        const val TEXTURE_SUBSURFACE_TRANSMITTANCE: Long = 11L
-        const val TEXTURE_BACKLIGHT: Long = 12L
-        const val TEXTURE_REFRACTION: Long = 13L
-        const val TEXTURE_DETAIL_MASK: Long = 14L
-        const val TEXTURE_DETAIL_ALBEDO: Long = 15L
-        const val TEXTURE_DETAIL_NORMAL: Long = 16L
-        const val TEXTURE_ORM: Long = 17L
-        const val TEXTURE_MAX: Long = 19L
-        const val TEXTURE_FILTER_NEAREST: Long = 0L
-        const val TEXTURE_FILTER_LINEAR: Long = 1L
-        const val TEXTURE_FILTER_NEAREST_WITH_MIPMAPS: Long = 2L
-        const val TEXTURE_FILTER_LINEAR_WITH_MIPMAPS: Long = 3L
-        const val TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC: Long = 4L
-        const val TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC: Long = 5L
-        const val TEXTURE_FILTER_MAX: Long = 6L
-        const val DETAIL_UV_1: Long = 0L
-        const val DETAIL_UV_2: Long = 1L
-        const val TRANSPARENCY_DISABLED: Long = 0L
-        const val TRANSPARENCY_ALPHA: Long = 1L
-        const val TRANSPARENCY_ALPHA_SCISSOR: Long = 2L
-        const val TRANSPARENCY_ALPHA_HASH: Long = 3L
-        const val TRANSPARENCY_ALPHA_DEPTH_PRE_PASS: Long = 4L
-        const val TRANSPARENCY_MAX: Long = 5L
-        const val SHADING_MODE_UNSHADED: Long = 0L
-        const val SHADING_MODE_PER_PIXEL: Long = 1L
-        const val SHADING_MODE_PER_VERTEX: Long = 2L
-        const val SHADING_MODE_MAX: Long = 3L
-        const val FEATURE_EMISSION: Long = 0L
-        const val FEATURE_NORMAL_MAPPING: Long = 1L
-        const val FEATURE_RIM: Long = 2L
-        const val FEATURE_CLEARCOAT: Long = 3L
-        const val FEATURE_ANISOTROPY: Long = 4L
-        const val FEATURE_AMBIENT_OCCLUSION: Long = 5L
-        const val FEATURE_HEIGHT_MAPPING: Long = 6L
-        const val FEATURE_SUBSURFACE_SCATTERING: Long = 7L
-        const val FEATURE_SUBSURFACE_TRANSMITTANCE: Long = 8L
-        const val FEATURE_BACKLIGHT: Long = 9L
-        const val FEATURE_REFRACTION: Long = 10L
-        const val FEATURE_DETAIL: Long = 11L
-        const val FEATURE_BENT_NORMAL_MAPPING: Long = 12L
-        const val FEATURE_MAX: Long = 13L
-        const val BLEND_MODE_MIX: Long = 0L
-        const val BLEND_MODE_ADD: Long = 1L
-        const val BLEND_MODE_SUB: Long = 2L
-        const val BLEND_MODE_MUL: Long = 3L
-        const val BLEND_MODE_PREMULT_ALPHA: Long = 4L
-        const val ALPHA_ANTIALIASING_OFF: Long = 0L
-        const val ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE: Long = 1L
-        const val ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE: Long = 2L
-        const val DEPTH_DRAW_OPAQUE_ONLY: Long = 0L
-        const val DEPTH_DRAW_ALWAYS: Long = 1L
-        const val DEPTH_DRAW_DISABLED: Long = 2L
-        const val DEPTH_TEST_DEFAULT: Long = 0L
-        const val DEPTH_TEST_INVERTED: Long = 1L
-        const val CULL_BACK: Long = 0L
-        const val CULL_FRONT: Long = 1L
-        const val CULL_DISABLED: Long = 2L
-        const val FLAG_DISABLE_DEPTH_TEST: Long = 0L
-        const val FLAG_ALBEDO_FROM_VERTEX_COLOR: Long = 1L
-        const val FLAG_SRGB_VERTEX_COLOR: Long = 2L
-        const val FLAG_USE_POINT_SIZE: Long = 3L
-        const val FLAG_FIXED_SIZE: Long = 4L
-        const val FLAG_BILLBOARD_KEEP_SCALE: Long = 5L
-        const val FLAG_UV1_USE_TRIPLANAR: Long = 6L
-        const val FLAG_UV2_USE_TRIPLANAR: Long = 7L
-        const val FLAG_UV1_USE_WORLD_TRIPLANAR: Long = 8L
-        const val FLAG_UV2_USE_WORLD_TRIPLANAR: Long = 9L
-        const val FLAG_AO_ON_UV2: Long = 10L
-        const val FLAG_EMISSION_ON_UV2: Long = 11L
-        const val FLAG_ALBEDO_TEXTURE_FORCE_SRGB: Long = 12L
-        const val FLAG_DONT_RECEIVE_SHADOWS: Long = 13L
-        const val FLAG_DISABLE_AMBIENT_LIGHT: Long = 14L
-        const val FLAG_USE_SHADOW_TO_OPACITY: Long = 15L
-        const val FLAG_USE_TEXTURE_REPEAT: Long = 16L
-        const val FLAG_INVERT_HEIGHTMAP: Long = 17L
-        const val FLAG_SUBSURFACE_MODE_SKIN: Long = 18L
-        const val FLAG_PARTICLE_TRAILS_MODE: Long = 19L
-        const val FLAG_ALBEDO_TEXTURE_MSDF: Long = 20L
-        const val FLAG_DISABLE_FOG: Long = 21L
-        const val FLAG_DISABLE_SPECULAR_OCCLUSION: Long = 22L
-        const val FLAG_USE_Z_CLIP_SCALE: Long = 23L
-        const val FLAG_USE_FOV_OVERRIDE: Long = 24L
-        const val FLAG_MAX: Long = 25L
-        const val DIFFUSE_BURLEY: Long = 0L
-        const val DIFFUSE_LAMBERT: Long = 1L
-        const val DIFFUSE_LAMBERT_WRAP: Long = 2L
-        const val DIFFUSE_TOON: Long = 3L
-        const val SPECULAR_SCHLICK_GGX: Long = 0L
-        const val SPECULAR_TOON: Long = 1L
-        const val SPECULAR_DISABLED: Long = 2L
-        const val BILLBOARD_DISABLED: Long = 0L
-        const val BILLBOARD_ENABLED: Long = 1L
-        const val BILLBOARD_FIXED_Y: Long = 2L
-        const val BILLBOARD_PARTICLES: Long = 3L
-        const val TEXTURE_CHANNEL_RED: Long = 0L
-        const val TEXTURE_CHANNEL_GREEN: Long = 1L
-        const val TEXTURE_CHANNEL_BLUE: Long = 2L
-        const val TEXTURE_CHANNEL_ALPHA: Long = 3L
-        const val TEXTURE_CHANNEL_GRAYSCALE: Long = 4L
-        const val EMISSION_OP_ADD: Long = 0L
-        const val EMISSION_OP_MULTIPLY: Long = 1L
-        const val DISTANCE_FADE_DISABLED: Long = 0L
-        const val DISTANCE_FADE_PIXEL_ALPHA: Long = 1L
-        const val DISTANCE_FADE_PIXEL_DITHER: Long = 2L
-        const val DISTANCE_FADE_OBJECT_DITHER: Long = 3L
-        const val STENCIL_MODE_DISABLED: Long = 0L
-        const val STENCIL_MODE_OUTLINE: Long = 1L
-        const val STENCIL_MODE_XRAY: Long = 2L
-        const val STENCIL_MODE_CUSTOM: Long = 3L
-        const val STENCIL_FLAG_READ: Long = 1L
-        const val STENCIL_FLAG_WRITE: Long = 2L
-        const val STENCIL_FLAG_WRITE_DEPTH_FAIL: Long = 4L
-        const val STENCIL_COMPARE_ALWAYS: Long = 0L
-        const val STENCIL_COMPARE_LESS: Long = 1L
-        const val STENCIL_COMPARE_EQUAL: Long = 2L
-        const val STENCIL_COMPARE_LESS_OR_EQUAL: Long = 3L
-        const val STENCIL_COMPARE_GREATER: Long = 4L
-        const val STENCIL_COMPARE_NOT_EQUAL: Long = 5L
-        const val STENCIL_COMPARE_GREATER_OR_EQUAL: Long = 6L
+    /**
+     * Godot's `BaseMaterial3D.TextureParam` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.TextureParam.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.TextureParam
+     */
+    @JvmInline
+    value class TextureParam(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Texture specifying per-pixel color.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_ALBEDO
+             */
+            val ALBEDO: TextureParam get() = TextureParam(0L)
+            /**
+             * Texture specifying per-pixel metallic value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_METALLIC
+             */
+            val METALLIC: TextureParam get() = TextureParam(1L)
+            /**
+             * Texture specifying per-pixel roughness value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_ROUGHNESS
+             */
+            val ROUGHNESS: TextureParam get() = TextureParam(2L)
+            /**
+             * Texture specifying per-pixel emission color.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_EMISSION
+             */
+            val EMISSION: TextureParam get() = TextureParam(3L)
+            /**
+             * Texture specifying per-pixel normal vector.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_NORMAL
+             */
+            val NORMAL: TextureParam get() = TextureParam(4L)
+            /**
+             * Texture specifying per-pixel bent normal vector.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_BENT_NORMAL
+             */
+            val BENT_NORMAL: TextureParam get() = TextureParam(18L)
+            /**
+             * Texture specifying per-pixel rim value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_RIM
+             */
+            val RIM: TextureParam get() = TextureParam(5L)
+            /**
+             * Texture specifying per-pixel clearcoat value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_CLEARCOAT
+             */
+            val CLEARCOAT: TextureParam get() = TextureParam(6L)
+            /**
+             * Texture specifying per-pixel flowmap direction for use with `anisotropy`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FLOWMAP
+             */
+            val FLOWMAP: TextureParam get() = TextureParam(7L)
+            /**
+             * Texture specifying per-pixel ambient occlusion value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_AMBIENT_OCCLUSION
+             */
+            val AMBIENT_OCCLUSION: TextureParam get() = TextureParam(8L)
+            /**
+             * Texture specifying per-pixel height.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_HEIGHTMAP
+             */
+            val HEIGHTMAP: TextureParam get() = TextureParam(9L)
+            /**
+             * Texture specifying per-pixel subsurface scattering.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_SUBSURFACE_SCATTERING
+             */
+            val SUBSURFACE_SCATTERING: TextureParam get() = TextureParam(10L)
+            /**
+             * Texture specifying per-pixel transmittance for subsurface scattering.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_SUBSURFACE_TRANSMITTANCE
+             */
+            val SUBSURFACE_TRANSMITTANCE: TextureParam get() = TextureParam(11L)
+            /**
+             * Texture specifying per-pixel backlight color.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_BACKLIGHT
+             */
+            val BACKLIGHT: TextureParam get() = TextureParam(12L)
+            /**
+             * Texture specifying per-pixel refraction strength.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_REFRACTION
+             */
+            val REFRACTION: TextureParam get() = TextureParam(13L)
+            /**
+             * Texture specifying per-pixel detail mask blending value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_DETAIL_MASK
+             */
+            val DETAIL_MASK: TextureParam get() = TextureParam(14L)
+            /**
+             * Texture specifying per-pixel detail color.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_DETAIL_ALBEDO
+             */
+            val DETAIL_ALBEDO: TextureParam get() = TextureParam(15L)
+            /**
+             * Texture specifying per-pixel detail normal.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_DETAIL_NORMAL
+             */
+            val DETAIL_NORMAL: TextureParam get() = TextureParam(16L)
+            /**
+             * Texture holding ambient occlusion, roughness, and metallic.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_ORM
+             */
+            val ORM: TextureParam get() = TextureParam(17L)
+            /**
+             * Represents the size of the `TextureParam` enum.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_MAX
+             */
+            val MAX: TextureParam get() = TextureParam(19L)
+        }
+    }
 
+    /**
+     * Godot's `BaseMaterial3D.TextureFilter` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.TextureFilter.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.TextureFilter
+     */
+    @JvmInline
+    value class TextureFilter(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The texture filter reads from the nearest pixel only. This makes the texture look pixelated from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FILTER_NEAREST
+             */
+            val NEAREST: TextureFilter get() = TextureFilter(0L)
+            /**
+             * The texture filter blends between the nearest 4 pixels. This makes the texture look smooth from
+             * up close, and grainy from a distance (due to mipmaps not being sampled).
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FILTER_LINEAR
+             */
+            val LINEAR: TextureFilter get() = TextureFilter(1L)
+            /**
+             * The texture filter reads from the nearest pixel and blends between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look pixelated from up close, and smooth from a distance.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+             */
+            val NEAREST_WITH_MIPMAPS: TextureFilter get() = TextureFilter(2L)
+            /**
+             * The texture filter blends between the nearest 4 pixels and between the nearest 2 mipmaps (or
+             * uses the nearest mipmap if
+             * `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter` is `true`). This
+             * makes the texture look smooth from up close, and smooth from a distance.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+             */
+            val LINEAR_WITH_MIPMAPS: TextureFilter get() = TextureFilter(3L)
+            /**
+             * The texture filter reads from the nearest pixel and blends between 2 mipmaps (or uses the
+             * nearest mipmap if `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter`
+             * is `true`) based on the angle between the surface and the camera view. This makes the texture
+             * look pixelated from up close, and smooth from a distance. Anisotropic filtering improves texture
+             * quality on surfaces that are almost in line with the camera, but is slightly slower. The
+             * anisotropic filtering level can be changed by adjusting
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC
+             */
+            val NEAREST_WITH_MIPMAPS_ANISOTROPIC: TextureFilter get() = TextureFilter(4L)
+            /**
+             * The texture filter blends between the nearest 4 pixels and blends between 2 mipmaps (or uses the
+             * nearest mipmap if `ProjectSettings.rendering/textures/default_filters/use_nearest_mipmap_filter`
+             * is `true`) based on the angle between the surface and the camera view. This makes the texture
+             * look smooth from up close, and smooth from a distance. Anisotropic filtering improves texture
+             * quality on surfaces that are almost in line with the camera, but is slightly slower. The
+             * anisotropic filtering level can be changed by adjusting
+             * `ProjectSettings.rendering/textures/default_filters/anisotropic_filtering_level`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+             */
+            val LINEAR_WITH_MIPMAPS_ANISOTROPIC: TextureFilter get() = TextureFilter(5L)
+            /**
+             * Represents the size of the `TextureFilter` enum.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_FILTER_MAX
+             */
+            val MAX: TextureFilter get() = TextureFilter(6L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.DetailUV` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.DetailUV.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DetailUV
+     */
+    @JvmInline
+    value class DetailUV(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Use `UV` with the detail texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DETAIL_UV_1
+             */
+            val UV_1: DetailUV get() = DetailUV(0L)
+            /**
+             * Use `UV2` with the detail texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DETAIL_UV_2
+             */
+            val UV_2: DetailUV get() = DetailUV(1L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.Transparency` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.Transparency.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.Transparency
+     */
+    @JvmInline
+    value class Transparency(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The material will not use transparency. This is the fastest to render.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TRANSPARENCY_DISABLED
+             */
+            val DISABLED: Transparency get() = Transparency(0L)
+            /**
+             * The material will use the texture's alpha values for transparency. This is the slowest to
+             * render, and disables shadow casting.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TRANSPARENCY_ALPHA
+             */
+            val ALPHA: Transparency get() = Transparency(1L)
+            /**
+             * The material will cut off all values below a threshold, the rest will remain opaque. The opaque
+             * portions will be rendered in the depth prepass. This is faster to render than alpha blending,
+             * but slower than opaque rendering. This also supports casting shadows.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+             */
+            val ALPHA_SCISSOR: Transparency get() = Transparency(2L)
+            /**
+             * The material will cut off all values below a spatially-deterministic threshold, the rest will
+             * remain opaque. This is faster to render than alpha blending, but slower than opaque rendering.
+             * This also supports casting shadows. Alpha hashing is suited for hair rendering.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TRANSPARENCY_ALPHA_HASH
+             */
+            val ALPHA_HASH: Transparency get() = Transparency(3L)
+            /**
+             * The material will use the texture's alpha value for transparency, but will discard fragments
+             * with an alpha of less than 0.99 during the depth prepass and fragments with an alpha less than
+             * 0.1 during the shadow pass. This also supports casting shadows.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+             */
+            val ALPHA_DEPTH_PRE_PASS: Transparency get() = Transparency(4L)
+            /**
+             * Represents the size of the `Transparency` enum.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TRANSPARENCY_MAX
+             */
+            val MAX: Transparency get() = Transparency(5L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.ShadingMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.ShadingMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.ShadingMode
+     */
+    @JvmInline
+    value class ShadingMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The object will not receive shadows. This is the fastest to render, but it disables all
+             * interactions with lights.
+             *
+             * Generated from Godot docs: BaseMaterial3D.SHADING_MODE_UNSHADED
+             */
+            val UNSHADED: ShadingMode get() = ShadingMode(0L)
+            /**
+             * The object will be shaded per pixel. Useful for realistic shading effects.
+             *
+             * Generated from Godot docs: BaseMaterial3D.SHADING_MODE_PER_PIXEL
+             */
+            val PER_PIXEL: ShadingMode get() = ShadingMode(1L)
+            /**
+             * The object will be shaded per vertex. Useful when you want cheaper shaders and do not care about
+             * visual quality.
+             *
+             * Generated from Godot docs: BaseMaterial3D.SHADING_MODE_PER_VERTEX
+             */
+            val PER_VERTEX: ShadingMode get() = ShadingMode(2L)
+            /**
+             * Represents the size of the `ShadingMode` enum.
+             *
+             * Generated from Godot docs: BaseMaterial3D.SHADING_MODE_MAX
+             */
+            val MAX: ShadingMode get() = ShadingMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.Feature` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.Feature.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.Feature
+     */
+    @JvmInline
+    value class Feature(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Constant for setting `emission_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_EMISSION
+             */
+            val EMISSION: Feature get() = Feature(0L)
+            /**
+             * Constant for setting `normal_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_NORMAL_MAPPING
+             */
+            val NORMAL_MAPPING: Feature get() = Feature(1L)
+            /**
+             * Constant for setting `rim_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_RIM
+             */
+            val RIM: Feature get() = Feature(2L)
+            /**
+             * Constant for setting `clearcoat_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_CLEARCOAT
+             */
+            val CLEARCOAT: Feature get() = Feature(3L)
+            /**
+             * Constant for setting `anisotropy_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_ANISOTROPY
+             */
+            val ANISOTROPY: Feature get() = Feature(4L)
+            /**
+             * Constant for setting `ao_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_AMBIENT_OCCLUSION
+             */
+            val AMBIENT_OCCLUSION: Feature get() = Feature(5L)
+            /**
+             * Constant for setting `heightmap_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_HEIGHT_MAPPING
+             */
+            val HEIGHT_MAPPING: Feature get() = Feature(6L)
+            /**
+             * Constant for setting `subsurf_scatter_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_SUBSURFACE_SCATTERING
+             */
+            val SUBSURFACE_SCATTERING: Feature get() = Feature(7L)
+            /**
+             * Constant for setting `subsurf_scatter_transmittance_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_SUBSURFACE_TRANSMITTANCE
+             */
+            val SUBSURFACE_TRANSMITTANCE: Feature get() = Feature(8L)
+            /**
+             * Constant for setting `backlight_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_BACKLIGHT
+             */
+            val BACKLIGHT: Feature get() = Feature(9L)
+            /**
+             * Constant for setting `refraction_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_REFRACTION
+             */
+            val REFRACTION: Feature get() = Feature(10L)
+            /**
+             * Constant for setting `detail_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_DETAIL
+             */
+            val DETAIL: Feature get() = Feature(11L)
+            /**
+             * Constant for setting `bent_normal_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_BENT_NORMAL_MAPPING
+             */
+            val BENT_NORMAL_MAPPING: Feature get() = Feature(12L)
+            /**
+             * Represents the size of the `Feature` enum.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_MAX
+             */
+            val MAX: Feature get() = Feature(13L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.BlendMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.BlendMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.BlendMode
+     */
+    @JvmInline
+    value class BlendMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Default blend mode. The color of the object is blended over the background based on the object's
+             * alpha value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BLEND_MODE_MIX
+             */
+            val MIX: BlendMode get() = BlendMode(0L)
+            /**
+             * The color of the object is added to the background.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BLEND_MODE_ADD
+             */
+            val ADD: BlendMode get() = BlendMode(1L)
+            /**
+             * The color of the object is subtracted from the background.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BLEND_MODE_SUB
+             */
+            val SUB: BlendMode get() = BlendMode(2L)
+            /**
+             * The color of the object is multiplied by the background.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BLEND_MODE_MUL
+             */
+            val MUL: BlendMode get() = BlendMode(3L)
+            /**
+             * The color of the object is added to the background and the alpha channel is used to mask out the
+             * background. This is effectively a hybrid of the blend mix and add modes, useful for effects like
+             * fire where you want the flame to add but the smoke to mix. By default, this works with unshaded
+             * materials using premultiplied textures. For shaded materials, use the `PREMUL_ALPHA_FACTOR`
+             * built-in so that lighting can be modulated as well.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BLEND_MODE_PREMULT_ALPHA
+             */
+            val PREMULT_ALPHA: BlendMode get() = BlendMode(4L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.AlphaAntiAliasing` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`BaseMaterial3D.AlphaAntiAliasing.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.AlphaAntiAliasing
+     */
+    @JvmInline
+    value class AlphaAntiAliasing(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables Alpha AntiAliasing for the material.
+             *
+             * Generated from Godot docs: BaseMaterial3D.ALPHA_ANTIALIASING_OFF
+             */
+            val OFF: AlphaAntiAliasing get() = AlphaAntiAliasing(0L)
+            /**
+             * Enables AlphaToCoverage. Alpha values in the material are passed to the AntiAliasing sample
+             * mask.
+             *
+             * Generated from Godot docs: BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
+             */
+            val ALPHA_TO_COVERAGE: AlphaAntiAliasing get() = AlphaAntiAliasing(1L)
+            /**
+             * Enables AlphaToCoverage and forces all non-zero alpha values to `1`. Alpha values in the
+             * material are passed to the AntiAliasing sample mask.
+             *
+             * Generated from Godot docs: BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
+             */
+            val ALPHA_TO_COVERAGE_AND_TO_ONE: AlphaAntiAliasing get() = AlphaAntiAliasing(2L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.DepthDrawMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.DepthDrawMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DepthDrawMode
+     */
+    @JvmInline
+    value class DepthDrawMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Default depth draw mode. Depth is drawn only for opaque objects during the opaque prepass (if
+             * any) and during the opaque pass.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DEPTH_DRAW_OPAQUE_ONLY
+             */
+            val OPAQUE_ONLY: DepthDrawMode get() = DepthDrawMode(0L)
+            /**
+             * Objects will write to depth during the opaque and the transparent passes. Transparent objects
+             * that are close to the camera may obscure other transparent objects behind them. Note: This does
+             * not influence whether transparent objects are included in the depth prepass or not. For that,
+             * see `Transparency`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DEPTH_DRAW_ALWAYS
+             */
+            val ALWAYS: DepthDrawMode get() = DepthDrawMode(1L)
+            /**
+             * Objects will not write their depth to the depth buffer, even during the depth prepass (if
+             * enabled).
+             *
+             * Generated from Godot docs: BaseMaterial3D.DEPTH_DRAW_DISABLED
+             */
+            val DISABLED: DepthDrawMode get() = DepthDrawMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.DepthTest` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.DepthTest.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DepthTest
+     */
+    @JvmInline
+    value class DepthTest(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Depth test will discard the pixel if it is behind other pixels.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DEPTH_TEST_DEFAULT
+             */
+            val DEFAULT: DepthTest get() = DepthTest(0L)
+            /**
+             * Depth test will discard the pixel if it is in front of other pixels. Useful for stencil effects.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DEPTH_TEST_INVERTED
+             */
+            val INVERTED: DepthTest get() = DepthTest(1L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.CullMode` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`BaseMaterial3D.CullMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.CullMode
+     */
+    @JvmInline
+    value class CullMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Default cull mode. The back of the object is culled when not visible. Back face triangles will
+             * be culled when facing the camera. This results in only the front side of triangles being drawn.
+             * For closed-surface meshes, this means that only the exterior of the mesh will be visible.
+             *
+             * Generated from Godot docs: BaseMaterial3D.CULL_BACK
+             */
+            val BACK: CullMode get() = CullMode(0L)
+            /**
+             * Front face triangles will be culled when facing the camera. This results in only the back side
+             * of triangles being drawn. For closed-surface meshes, this means that the interior of the mesh
+             * will be drawn instead of the exterior.
+             *
+             * Generated from Godot docs: BaseMaterial3D.CULL_FRONT
+             */
+            val FRONT: CullMode get() = CullMode(1L)
+            /**
+             * No face culling is performed; both the front face and back face will be visible.
+             *
+             * Generated from Godot docs: BaseMaterial3D.CULL_DISABLED
+             */
+            val DISABLED: CullMode get() = CullMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.Flags` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`BaseMaterial3D.Flags.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.Flags
+     */
+    @JvmInline
+    value class Flags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables the depth test, so this object is drawn on top of all others drawn before it. This puts
+             * the object in the transparent draw pass where it is sorted based on distance to camera. Objects
+             * drawn after it in the draw order may cover it. This also disables writing to depth.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_DISABLE_DEPTH_TEST
+             */
+            val DISABLE_DEPTH_TEST: Flags get() = Flags(0L)
+            /**
+             * Set `ALBEDO` to the per-vertex color specified in the mesh.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_ALBEDO_FROM_VERTEX_COLOR
+             */
+            val ALBEDO_FROM_VERTEX_COLOR: Flags get() = Flags(1L)
+            /**
+             * Vertex colors are considered to be stored in nonlinear sRGB encoding and are converted to linear
+             * encoding during rendering. See also `vertex_color_is_srgb`. Note: Only effective when using the
+             * Forward+ and Mobile rendering methods.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_SRGB_VERTEX_COLOR
+             */
+            val SRGB_VERTEX_COLOR: Flags get() = Flags(2L)
+            /**
+             * Uses point size to alter the size of primitive points. Also changes the albedo texture lookup to
+             * use `POINT_COORD` instead of `UV`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_USE_POINT_SIZE
+             */
+            val USE_POINT_SIZE: Flags get() = Flags(3L)
+            /**
+             * Object is scaled by depth so that it always appears the same size on screen.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_FIXED_SIZE
+             */
+            val FIXED_SIZE: Flags get() = Flags(4L)
+            /**
+             * Shader will keep the scale set for the mesh. Otherwise the scale is lost when billboarding. Only
+             * applies when `billboard_mode` is `BillboardMode.ENABLED`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_BILLBOARD_KEEP_SCALE
+             */
+            val BILLBOARD_KEEP_SCALE: Flags get() = Flags(5L)
+            /**
+             * Use triplanar texture lookup for all texture lookups that would normally use `UV`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_UV1_USE_TRIPLANAR
+             */
+            val UV1_USE_TRIPLANAR: Flags get() = Flags(6L)
+            /**
+             * Use triplanar texture lookup for all texture lookups that would normally use `UV2`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_UV2_USE_TRIPLANAR
+             */
+            val UV2_USE_TRIPLANAR: Flags get() = Flags(7L)
+            /**
+             * Use triplanar texture lookup for all texture lookups that would normally use `UV`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_UV1_USE_WORLD_TRIPLANAR
+             */
+            val UV1_USE_WORLD_TRIPLANAR: Flags get() = Flags(8L)
+            /**
+             * Use triplanar texture lookup for all texture lookups that would normally use `UV2`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_UV2_USE_WORLD_TRIPLANAR
+             */
+            val UV2_USE_WORLD_TRIPLANAR: Flags get() = Flags(9L)
+            /**
+             * Use `UV2` coordinates to look up from the `ao_texture`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_AO_ON_UV2
+             */
+            val AO_ON_UV2: Flags get() = Flags(10L)
+            /**
+             * Use `UV2` coordinates to look up from the `emission_texture`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_EMISSION_ON_UV2
+             */
+            val EMISSION_ON_UV2: Flags get() = Flags(11L)
+            /**
+             * Forces the shader to convert albedo from nonlinear sRGB encoding to linear encoding. See also
+             * `albedo_texture_force_srgb`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_ALBEDO_TEXTURE_FORCE_SRGB
+             */
+            val ALBEDO_TEXTURE_FORCE_SRGB: Flags get() = Flags(12L)
+            /**
+             * Disables receiving shadows from other objects.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_DONT_RECEIVE_SHADOWS
+             */
+            val DONT_RECEIVE_SHADOWS: Flags get() = Flags(13L)
+            /**
+             * Disables receiving ambient light.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_DISABLE_AMBIENT_LIGHT
+             */
+            val DISABLE_AMBIENT_LIGHT: Flags get() = Flags(14L)
+            /**
+             * Enables the shadow to opacity feature.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_USE_SHADOW_TO_OPACITY
+             */
+            val USE_SHADOW_TO_OPACITY: Flags get() = Flags(15L)
+            /**
+             * Enables the texture to repeat when UV coordinates are outside the 0-1 range. If using one of the
+             * linear filtering modes, this can result in artifacts at the edges of a texture when the sampler
+             * filters across the edges of the texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_USE_TEXTURE_REPEAT
+             */
+            val USE_TEXTURE_REPEAT: Flags get() = Flags(16L)
+            /**
+             * Invert values read from a depth texture to convert them to height values (heightmap).
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_INVERT_HEIGHTMAP
+             */
+            val INVERT_HEIGHTMAP: Flags get() = Flags(17L)
+            /**
+             * Enables the skin mode for subsurface scattering which is used to improve the look of subsurface
+             * scattering when used for human skin.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_SUBSURFACE_MODE_SKIN
+             */
+            val SUBSURFACE_MODE_SKIN: Flags get() = Flags(18L)
+            /**
+             * Enables parts of the shader required for `GPUParticles3D` trails to function. This also requires
+             * using a mesh with appropriate skinning, such as `RibbonTrailMesh` or `TubeTrailMesh`. Enabling
+             * this feature outside of materials used in `GPUParticles3D` meshes will break material rendering.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_PARTICLE_TRAILS_MODE
+             */
+            val PARTICLE_TRAILS_MODE: Flags get() = Flags(19L)
+            /**
+             * Enables multichannel signed distance field rendering shader.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_ALBEDO_TEXTURE_MSDF
+             */
+            val ALBEDO_TEXTURE_MSDF: Flags get() = Flags(20L)
+            /**
+             * Disables receiving depth-based or volumetric fog.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_DISABLE_FOG
+             */
+            val DISABLE_FOG: Flags get() = Flags(21L)
+            /**
+             * Disables specular occlusion.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_DISABLE_SPECULAR_OCCLUSION
+             */
+            val DISABLE_SPECULAR_OCCLUSION: Flags get() = Flags(22L)
+            /**
+             * Enables using `z_clip_scale`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_USE_Z_CLIP_SCALE
+             */
+            val USE_Z_CLIP_SCALE: Flags get() = Flags(23L)
+            /**
+             * Enables using `fov_override`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_USE_FOV_OVERRIDE
+             */
+            val USE_FOV_OVERRIDE: Flags get() = Flags(24L)
+            /**
+             * Represents the size of the `Flags` enum.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FLAG_MAX
+             */
+            val MAX: Flags get() = Flags(25L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.DiffuseMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.DiffuseMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DiffuseMode
+     */
+    @JvmInline
+    value class DiffuseMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Default diffuse scattering algorithm.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DIFFUSE_BURLEY
+             */
+            val BURLEY: DiffuseMode get() = DiffuseMode(0L)
+            /**
+             * Diffuse scattering ignores roughness.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DIFFUSE_LAMBERT
+             */
+            val LAMBERT: DiffuseMode get() = DiffuseMode(1L)
+            /**
+             * Extends Lambert to cover more than 90 degrees when roughness increases.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DIFFUSE_LAMBERT_WRAP
+             */
+            val LAMBERT_WRAP: DiffuseMode get() = DiffuseMode(2L)
+            /**
+             * Uses a hard cut for lighting, with smoothing affected by roughness.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DIFFUSE_TOON
+             */
+            val TOON: DiffuseMode get() = DiffuseMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.SpecularMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.SpecularMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.SpecularMode
+     */
+    @JvmInline
+    value class SpecularMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Default specular blob. Note: Forward+ uses multiscattering for more accurate reflections,
+             * although the impact of multiscattering is more noticeable on rough metallic surfaces than on
+             * smooth, non-metallic surfaces. Note: Mobile and Compatibility don't perform multiscattering for
+             * performance reasons. Instead, they perform single scattering, which means rough metallic
+             * surfaces may look slightly darker than intended.
+             *
+             * Generated from Godot docs: BaseMaterial3D.SPECULAR_SCHLICK_GGX
+             */
+            val SCHLICK_GGX: SpecularMode get() = SpecularMode(0L)
+            /**
+             * Toon blob which changes size based on roughness.
+             *
+             * Generated from Godot docs: BaseMaterial3D.SPECULAR_TOON
+             */
+            val TOON: SpecularMode get() = SpecularMode(1L)
+            /**
+             * No specular blob. This is slightly faster to render than other specular modes.
+             *
+             * Generated from Godot docs: BaseMaterial3D.SPECULAR_DISABLED
+             */
+            val DISABLED: SpecularMode get() = SpecularMode(2L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.BillboardMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.BillboardMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.BillboardMode
+     */
+    @JvmInline
+    value class BillboardMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Billboard mode is disabled.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BILLBOARD_DISABLED
+             */
+            val DISABLED: BillboardMode get() = BillboardMode(0L)
+            /**
+             * The object's Z axis will always face the camera.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BILLBOARD_ENABLED
+             */
+            val ENABLED: BillboardMode get() = BillboardMode(1L)
+            /**
+             * The object's X axis will always face the camera.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BILLBOARD_FIXED_Y
+             */
+            val FIXED_Y: BillboardMode get() = BillboardMode(2L)
+            /**
+             * Used for particle systems when assigned to `GPUParticles3D` and `CPUParticles3D` nodes (flipbook
+             * animation). Enables `particles_anim_*` properties. The `ParticleProcessMaterial.anim_speed_min`
+             * or `CPUParticles3D.anim_speed_min` should also be set to a value bigger than zero for the
+             * animation to play.
+             *
+             * Generated from Godot docs: BaseMaterial3D.BILLBOARD_PARTICLES
+             */
+            val PARTICLES: BillboardMode get() = BillboardMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.TextureChannel` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.TextureChannel.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.TextureChannel
+     */
+    @JvmInline
+    value class TextureChannel(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Used to read from the red channel of a texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_CHANNEL_RED
+             */
+            val RED: TextureChannel get() = TextureChannel(0L)
+            /**
+             * Used to read from the green channel of a texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+             */
+            val GREEN: TextureChannel get() = TextureChannel(1L)
+            /**
+             * Used to read from the blue channel of a texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+             */
+            val BLUE: TextureChannel get() = TextureChannel(2L)
+            /**
+             * Used to read from the alpha channel of a texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_CHANNEL_ALPHA
+             */
+            val ALPHA: TextureChannel get() = TextureChannel(3L)
+            /**
+             * Used to read from the linear (non-perceptual) average of the red, green and blue channels of a
+             * texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.TEXTURE_CHANNEL_GRAYSCALE
+             */
+            val GRAYSCALE: TextureChannel get() = TextureChannel(4L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.EmissionOperator` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`BaseMaterial3D.EmissionOperator.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.EmissionOperator
+     */
+    @JvmInline
+    value class EmissionOperator(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Adds the emission color to the color from the emission texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.EMISSION_OP_ADD
+             */
+            val ADD: EmissionOperator get() = EmissionOperator(0L)
+            /**
+             * Multiplies the emission color by the color from the emission texture.
+             *
+             * Generated from Godot docs: BaseMaterial3D.EMISSION_OP_MULTIPLY
+             */
+            val MULTIPLY: EmissionOperator get() = EmissionOperator(1L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.DistanceFadeMode` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`BaseMaterial3D.DistanceFadeMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.DistanceFadeMode
+     */
+    @JvmInline
+    value class DistanceFadeMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Do not use distance fade.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DISTANCE_FADE_DISABLED
+             */
+            val DISABLED: DistanceFadeMode get() = DistanceFadeMode(0L)
+            /**
+             * Smoothly fades the object out based on each pixel's distance from the camera using the alpha
+             * channel.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DISTANCE_FADE_PIXEL_ALPHA
+             */
+            val PIXEL_ALPHA: DistanceFadeMode get() = DistanceFadeMode(1L)
+            /**
+             * Smoothly fades the object out based on each pixel's distance from the camera using a dithering
+             * approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling
+             * transparency. On certain hardware, this can be faster than `DistanceFadeMode.PIXEL_ALPHA`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
+             */
+            val PIXEL_DITHER: DistanceFadeMode get() = DistanceFadeMode(2L)
+            /**
+             * Smoothly fades the object out based on the object's distance from the camera using a dithering
+             * approach. Dithering discards pixels based on a set pattern to smoothly fade without enabling
+             * transparency. On certain hardware, this can be faster than `DistanceFadeMode.PIXEL_ALPHA` and
+             * `DistanceFadeMode.PIXEL_DITHER`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.DISTANCE_FADE_OBJECT_DITHER
+             */
+            val OBJECT_DITHER: DistanceFadeMode get() = DistanceFadeMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.StencilMode` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.StencilMode.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.StencilMode
+     */
+    @JvmInline
+    value class StencilMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Disables stencil operations.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_MODE_DISABLED
+             */
+            val DISABLED: StencilMode get() = StencilMode(0L)
+            /**
+             * Stencil preset which applies an outline to the object. Note: Requires a `Material.next_pass`
+             * material which will be automatically applied. Any manual changes made to `Material.next_pass`
+             * will be lost when the stencil properties are modified or the scene is reloaded. To safely apply
+             * a `Material.next_pass` material on a material that uses stencil presets, use
+             * `GeometryInstance3D.material_overlay` instead.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_MODE_OUTLINE
+             */
+            val OUTLINE: StencilMode get() = StencilMode(1L)
+            /**
+             * Stencil preset which shows a silhouette of the object behind walls. Note: Requires a
+             * `Material.next_pass` material which will be automatically applied. Any manual changes made to
+             * `Material.next_pass` will be lost when the stencil properties are modified or the scene is
+             * reloaded. To safely apply a `Material.next_pass` material on a material that uses stencil
+             * presets, use `GeometryInstance3D.material_overlay` instead.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_MODE_XRAY
+             */
+            val XRAY: StencilMode get() = StencilMode(2L)
+            /**
+             * Enables stencil operations without a preset.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_MODE_CUSTOM
+             */
+            val CUSTOM: StencilMode get() = StencilMode(3L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.StencilFlags` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.StencilFlags.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.StencilFlags
+     */
+    @JvmInline
+    value class StencilFlags(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * The material will only be rendered where it passes a stencil comparison with existing stencil
+             * buffer values.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_FLAG_READ
+             */
+            val READ: StencilFlags get() = StencilFlags(1L)
+            /**
+             * The material will write the reference value to the stencil buffer where it passes the depth
+             * test.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_FLAG_WRITE
+             */
+            val WRITE: StencilFlags get() = StencilFlags(2L)
+            /**
+             * The material will write the reference value to the stencil buffer where it fails the depth test.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_FLAG_WRITE_DEPTH_FAIL
+             */
+            val WRITE_DEPTH_FAIL: StencilFlags get() = StencilFlags(4L)
+        }
+    }
+
+    /**
+     * Godot's `BaseMaterial3D.StencilCompare` enum as a typed value: `.value` is the raw number Godot
+     * uses, and the companion holds the named values (`BaseMaterial3D.StencilCompare.<NAME>`).
+     *
+     * Generated from Godot docs: BaseMaterial3D.StencilCompare
+     */
+    @JvmInline
+    value class StencilCompare(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Always passes the stencil test.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_COMPARE_ALWAYS
+             */
+            val ALWAYS: StencilCompare get() = StencilCompare(0L)
+            /**
+             * Passes the stencil test when the reference value is less than the existing stencil value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_COMPARE_LESS
+             */
+            val LESS: StencilCompare get() = StencilCompare(1L)
+            /**
+             * Passes the stencil test when the reference value is equal to the existing stencil value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_COMPARE_EQUAL
+             */
+            val EQUAL: StencilCompare get() = StencilCompare(2L)
+            /**
+             * Passes the stencil test when the reference value is less than or equal to the existing stencil
+             * value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_COMPARE_LESS_OR_EQUAL
+             */
+            val LESS_OR_EQUAL: StencilCompare get() = StencilCompare(3L)
+            /**
+             * Passes the stencil test when the reference value is greater than the existing stencil value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_COMPARE_GREATER
+             */
+            val GREATER: StencilCompare get() = StencilCompare(4L)
+            /**
+             * Passes the stencil test when the reference value is not equal to the existing stencil value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_COMPARE_NOT_EQUAL
+             */
+            val NOT_EQUAL: StencilCompare get() = StencilCompare(5L)
+            /**
+             * Passes the stencil test when the reference value is greater than or equal to the existing
+             * stencil value.
+             *
+             * Generated from Godot docs: BaseMaterial3D.STENCIL_COMPARE_GREATER_OR_EQUAL
+             */
+            val GREATER_OR_EQUAL: StencilCompare get() = StencilCompare(6L)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BaseMaterial3D? =
             wrap(handle.segment)

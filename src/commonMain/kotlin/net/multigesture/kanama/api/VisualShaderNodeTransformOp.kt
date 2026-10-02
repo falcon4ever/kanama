@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -9,34 +10,39 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeTransformOp
  */
 class VisualShaderNodeTransformOp(handle: GodotHandle) : VisualShaderNode(handle) {
-    var operator: Long
+    var operator: VisualShaderNodeTransformOp.Operator
         @JvmName("operatorProperty")
         get() = getOperator()
         @JvmName("setOperatorProperty")
         set(value) = setOperator(value)
 
-    fun setOperator(op: Long) {
+    fun setOperator(op: VisualShaderNodeTransformOp.Operator) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op)
+        ObjectCalls.ptrcallWithLongArg(setOperatorBind, segment, op.value)
     }
 
-    fun getOperator(): Long {
+    fun getOperator(): VisualShaderNodeTransformOp.Operator {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment)
+        return VisualShaderNodeTransformOp.Operator(ObjectCalls.ptrcallNoArgsRetLong(getOperatorBind, segment))
+    }
+
+    @JvmInline
+    value class Operator(override val value: Long) : GodotEnumValue {
+        companion object {
+            val AxB: Operator get() = Operator(0L)
+            val BxA: Operator get() = Operator(1L)
+            val AxB_COMP: Operator get() = Operator(2L)
+            val BxA_COMP: Operator get() = Operator(3L)
+            val ADD: Operator get() = Operator(4L)
+            val A_MINUS_B: Operator get() = Operator(5L)
+            val B_MINUS_A: Operator get() = Operator(6L)
+            val A_DIV_B: Operator get() = Operator(7L)
+            val B_DIV_A: Operator get() = Operator(8L)
+            val MAX: Operator get() = Operator(9L)
+        }
     }
 
     companion object {
-        const val OP_AxB: Long = 0L
-        const val OP_BxA: Long = 1L
-        const val OP_AxB_COMP: Long = 2L
-        const val OP_BxA_COMP: Long = 3L
-        const val OP_ADD: Long = 4L
-        const val OP_A_MINUS_B: Long = 5L
-        const val OP_B_MINUS_A: Long = 6L
-        const val OP_A_DIV_B: Long = 7L
-        const val OP_B_DIV_A: Long = 8L
-        const val OP_MAX: Long = 9L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformOp? =
             wrap(handle.segment)

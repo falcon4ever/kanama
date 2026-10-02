@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -39,7 +40,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
         @JvmName("setIgdOurAddrProperty")
         set(value) = setIgdOurAddr(value)
 
-    var igdStatus: Long
+    var igdStatus: UPNPDevice.IGDStatus
         @JvmName("igdStatusProperty")
         get() = getIgdStatus()
         @JvmName("setIgdStatusProperty")
@@ -115,28 +116,33 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(getIgdOurAddrBind, segment)
     }
 
-    fun setIgdStatus(status: Long) {
+    fun setIgdStatus(status: UPNPDevice.IGDStatus) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setIgdStatusBind, segment, status)
+        ObjectCalls.ptrcallWithLongArg(setIgdStatusBind, segment, status.value)
     }
 
-    fun getIgdStatus(): Long {
+    fun getIgdStatus(): UPNPDevice.IGDStatus {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getIgdStatusBind, segment)
+        return UPNPDevice.IGDStatus(ObjectCalls.ptrcallNoArgsRetLong(getIgdStatusBind, segment))
+    }
+
+    @JvmInline
+    value class IGDStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            val OK: IGDStatus get() = IGDStatus(0L)
+            val HTTP_ERROR: IGDStatus get() = IGDStatus(1L)
+            val HTTP_EMPTY: IGDStatus get() = IGDStatus(2L)
+            val NO_URLS: IGDStatus get() = IGDStatus(3L)
+            val NO_IGD: IGDStatus get() = IGDStatus(4L)
+            val DISCONNECTED: IGDStatus get() = IGDStatus(5L)
+            val UNKNOWN_DEVICE: IGDStatus get() = IGDStatus(6L)
+            val INVALID_CONTROL: IGDStatus get() = IGDStatus(7L)
+            val MALLOC_ERROR: IGDStatus get() = IGDStatus(8L)
+            val UNKNOWN_ERROR: IGDStatus get() = IGDStatus(9L)
+        }
     }
 
     companion object {
-        const val IGD_STATUS_OK: Long = 0L
-        const val IGD_STATUS_HTTP_ERROR: Long = 1L
-        const val IGD_STATUS_HTTP_EMPTY: Long = 2L
-        const val IGD_STATUS_NO_URLS: Long = 3L
-        const val IGD_STATUS_NO_IGD: Long = 4L
-        const val IGD_STATUS_DISCONNECTED: Long = 5L
-        const val IGD_STATUS_UNKNOWN_DEVICE: Long = 6L
-        const val IGD_STATUS_INVALID_CONTROL: Long = 7L
-        const val IGD_STATUS_MALLOC_ERROR: Long = 8L
-        const val IGD_STATUS_UNKNOWN_ERROR: Long = 9L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UPNPDevice? =
             wrap(handle.segment)

@@ -31,9 +31,9 @@ class DirAccessHandle internal constructor(handle: GodotHandle) : RefCounted(han
         return DirAccess.getDirectoriesHandle(segment)
     }
 
-    fun createLink(source: String, target: String): Long {
+    fun createLink(source: String, target: String): GodotError {
         checkOpen()
-        return DirAccess.createLinkHandle(segment, source, target)
+        return GodotError(DirAccess.createLinkHandle(segment, source, target))
     }
 
     companion object {

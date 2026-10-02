@@ -50,6 +50,16 @@ EXCLUDED = {
     "ObjectCalls": "generated helper seam; each backend keeps platform-only helpers beside it "
     "(see the expect file) -- scripts/check_objectcalls_parity.py owns it",
 }
+# Expect classifiers generated as ENUM-ONLY expects (task 128 A): a shared-tree signature names one of
+# their enums, so the generator declares only the nested enum value classes in common; the rest of each
+# platform's class is the hand-written per-platform API, one-sided by construction until the class is
+# generated once. Their `actual` members must still pair with the expect (parse errors stay errors);
+# only the public members the expect does not declare are scoped out -- and listed, per platform, as
+# the cross-platform gap task 129 closes.
+HAND_SURFACE_SCOPED = {
+    "Tween": "hand-written per-platform API; removed by task 129 (generated once)",
+    "FileAccess": "hand-written per-platform API; removed by task 129 (generated once)",
+}
 # Expect classifiers whose actual is a `typealias` to an existing type: the aliased type's
 # surface is not something the actual declares, so there is nothing to compare.
 TYPEALIAS_ACTUALS = {
@@ -399,7 +409,9 @@ def compare(expect: Decl, actual: Decl, src: Source, root: Path, platform: str) 
             f"(expect {sorted(map(str, expected))}, actual {sorted(map(str, (m.key for m in marked)))})"
         )
     body = actual.body or (actual.pos, actual.pos)
-    in_body = count_keyword(src, "actual", body[0] + 1, body[1]) if actual.body else 0
+    # A nested `actual value class X` puts its `actual constructor(` at this body's depth too (task 128
+    # enum-only expects); like a top-level class header's, it belongs to the nested class.
+    in_body = count_keyword(src, "actual", body[0] + 1, body[1], header_ctor=False) if actual.body else 0
     parsed_in_body = sum(1 for m in marked if actual.body and body[0] < m.pos < body[1])
     if in_body != parsed_in_body:
         errors.append(
@@ -461,6 +473,7 @@ def main() -> int:
 
     compared: list[str] = []
     skipped: list[str] = []
+    scoped: dict[str, dict[str, set[str]]] = {}
     for path in expect_files:
         try:
             src = load(path)
@@ -507,8 +520,15 @@ def main() -> int:
                         )
                     continue
                 new_findings, new_errors = compare(expect, actual, actual_src, root, platform)
-                findings.extend(new_findings)
                 errors.extend(new_errors)
+                if expect.name in HAND_SURFACE_SCOPED:
+                    scoped.setdefault(expect.name, {})[platform] = {
+                        m.describe()
+                        for m in actual.members + implicit_constructor(actual)
+                        if not (HIDDEN & set(m.mods)) and "actual" not in m.mods
+                    }
+                else:
+                    findings.extend(new_findings)
             if expect.kind in CLASSIFIERS and expect.name not in TYPEALIAS_ACTUALS:
                 compared.append(f"{expect.name} ({len(expect.members)} member(s))")
 
@@ -516,6 +536,13 @@ def main() -> int:
         print(f"{TAG} excluded: {reason}")
     for name, reason in TYPEALIAS_ACTUALS.items():
         print(f"{TAG} not compared: {name} -- {reason}")
+    for name, per_platform in sorted(scoped.items()):
+        print(f"{TAG} scoped: {name} -- {HAND_SURFACE_SCOPED[name]}; one-sided public members:")
+        platforms = sorted(per_platform)
+        for platform in platforms:
+            others = set().union(*(per_platform[p] for p in platforms if p != platform))
+            only = sorted(per_platform[platform] - others)
+            print(f"    {platform} only ({len(only)}): {', '.join(only) if only else '-'}")
     if errors:
         print(f"{TAG} FAIL could not parse {len(errors)} declaration(s); the gate never skips one:", file=sys.stderr)
         for error in errors:

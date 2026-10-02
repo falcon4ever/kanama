@@ -119,10 +119,10 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * If set to `true`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are used to detect
+     * If set to `true`, shapes of type `PhysicsServer2D.ShapeType.SEPARATION_RAY` are used to detect
      * collisions and can stop the motion. Can be useful when snapping to the ground. If set to
-     * `false`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are only used for separation when
-     * overlapping with other bodies. That's the main use for separation ray shapes.
+     * `false`, shapes of type `PhysicsServer2D.ShapeType.SEPARATION_RAY` are only used for separation
+     * when overlapping with other bodies. That's the main use for separation ray shapes.
      *
      * Generated from Godot docs: PhysicsTestMotionParameters2D.is_collide_separation_ray_enabled
      */
@@ -132,10 +132,10 @@ class PhysicsTestMotionParameters2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * If set to `true`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are used to detect
+     * If set to `true`, shapes of type `PhysicsServer2D.ShapeType.SEPARATION_RAY` are used to detect
      * collisions and can stop the motion. Can be useful when snapping to the ground. If set to
-     * `false`, shapes of type `PhysicsServer2D.SHAPE_SEPARATION_RAY` are only used for separation when
-     * overlapping with other bodies. That's the main use for separation ray shapes.
+     * `false`, shapes of type `PhysicsServer2D.ShapeType.SEPARATION_RAY` are only used for separation
+     * when overlapping with other bodies. That's the main use for separation ray shapes.
      *
      * Generated from Godot docs: PhysicsTestMotionParameters2D.set_collide_separation_ray_enabled
      */

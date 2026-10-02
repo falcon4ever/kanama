@@ -16,27 +16,27 @@ import net.multigesture.kanama.types.Vector2
 open class StyleBox(handle: GodotHandle) : Resource(handle) {
     var contentMarginLeft: Double
         @JvmName("contentMarginLeftProperty")
-        get() = getContentMargin(0L)
+        get() = getContentMargin(Side.LEFT)
         @JvmName("setContentMarginLeftProperty")
-        set(value) = setContentMargin(0L, value)
+        set(value) = setContentMargin(Side.LEFT, value)
 
     var contentMarginTop: Double
         @JvmName("contentMarginTopProperty")
-        get() = getContentMargin(1L)
+        get() = getContentMargin(Side.TOP)
         @JvmName("setContentMarginTopProperty")
-        set(value) = setContentMargin(1L, value)
+        set(value) = setContentMargin(Side.TOP, value)
 
     var contentMarginRight: Double
         @JvmName("contentMarginRightProperty")
-        get() = getContentMargin(2L)
+        get() = getContentMargin(Side.RIGHT)
         @JvmName("setContentMarginRightProperty")
-        set(value) = setContentMargin(2L, value)
+        set(value) = setContentMargin(Side.RIGHT, value)
 
     var contentMarginBottom: Double
         @JvmName("contentMarginBottomProperty")
-        get() = getContentMargin(3L)
+        get() = getContentMargin(Side.BOTTOM)
         @JvmName("setContentMarginBottomProperty")
-        set(value) = setContentMargin(3L, value)
+        set(value) = setContentMargin(Side.BOTTOM, value)
 
     /**
      * Returns the minimum size that this stylebox can be shrunk to.
@@ -55,9 +55,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: StyleBox.set_content_margin
      */
-    fun setContentMargin(margin: Long, offset: Double) {
+    fun setContentMargin(margin: Side, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setContentMarginBind, segment, margin, offset)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setContentMarginBind, segment, margin.value, offset)
     }
 
     /**
@@ -77,9 +77,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: StyleBox.get_content_margin
      */
-    fun getContentMargin(margin: Long): Double {
+    fun getContentMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getContentMarginBind, segment, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getContentMarginBind, segment, margin.value)
     }
 
     /**
@@ -88,9 +88,9 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: StyleBox.get_margin
      */
-    fun getMargin(margin: Long): Double {
+    fun getMargin(margin: Side): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getMarginBind, segment, margin)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getMarginBind, segment, margin.value)
     }
 
     /**

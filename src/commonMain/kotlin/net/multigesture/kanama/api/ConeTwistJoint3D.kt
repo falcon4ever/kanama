@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -14,33 +15,33 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
     var swingSpan: Double
         @JvmName("swingSpanProperty")
-        get() = getParam(0L)
+        get() = getParam(ConeTwistJoint3D.Param.SWING_SPAN)
         @JvmName("setSwingSpanProperty")
-        set(value) = setParam(0L, value)
+        set(value) = setParam(ConeTwistJoint3D.Param.SWING_SPAN, value)
 
     var twistSpan: Double
         @JvmName("twistSpanProperty")
-        get() = getParam(1L)
+        get() = getParam(ConeTwistJoint3D.Param.TWIST_SPAN)
         @JvmName("setTwistSpanProperty")
-        set(value) = setParam(1L, value)
+        set(value) = setParam(ConeTwistJoint3D.Param.TWIST_SPAN, value)
 
     var bias: Double
         @JvmName("biasProperty")
-        get() = getParam(2L)
+        get() = getParam(ConeTwistJoint3D.Param.BIAS)
         @JvmName("setBiasProperty")
-        set(value) = setParam(2L, value)
+        set(value) = setParam(ConeTwistJoint3D.Param.BIAS, value)
 
     var softness: Double
         @JvmName("softnessProperty")
-        get() = getParam(3L)
+        get() = getParam(ConeTwistJoint3D.Param.SOFTNESS)
         @JvmName("setSoftnessProperty")
-        set(value) = setParam(3L, value)
+        set(value) = setParam(ConeTwistJoint3D.Param.SOFTNESS, value)
 
     var relaxation: Double
         @JvmName("relaxationProperty")
-        get() = getParam(4L)
+        get() = getParam(ConeTwistJoint3D.Param.RELAXATION)
         @JvmName("setRelaxationProperty")
-        set(value) = setParam(4L, value)
+        set(value) = setParam(ConeTwistJoint3D.Param.RELAXATION, value)
 
     /**
      * Twist is the rotation around the twist axis, this value defined how far the joint can twist.
@@ -48,8 +49,8 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: ConeTwistJoint3D.set_param
      */
-    fun setParam(param: Long, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param, value)
+    fun setParam(param: ConeTwistJoint3D.Param, value: Double) {
+        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamBind, segment, param.value, value)
     }
 
     /**
@@ -58,18 +59,63 @@ class ConeTwistJoint3D(handle: GodotHandle) : Joint3D(handle) {
      *
      * Generated from Godot docs: ConeTwistJoint3D.get_param
      */
-    fun getParam(param: Long): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param)
+    fun getParam(param: ConeTwistJoint3D.Param): Double {
+        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamBind, segment, param.value)
+    }
+
+    /**
+     * Godot's `ConeTwistJoint3D.Param` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`ConeTwistJoint3D.Param.<NAME>`).
+     *
+     * Generated from Godot docs: ConeTwistJoint3D.Param
+     */
+    @JvmInline
+    value class Param(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Swing is rotation from side to side, around the axis perpendicular to the twist axis. The swing
+             * span defines, how much rotation will not get corrected along the swing axis. Could be defined as
+             * looseness in the `ConeTwistJoint3D`. If below 0.05, this behavior is locked.
+             *
+             * Generated from Godot docs: ConeTwistJoint3D.PARAM_SWING_SPAN
+             */
+            val SWING_SPAN: Param get() = Param(0L)
+            /**
+             * Twist is the rotation around the twist axis, this value defined how far the joint can twist.
+             * Twist is locked if below 0.05.
+             *
+             * Generated from Godot docs: ConeTwistJoint3D.PARAM_TWIST_SPAN
+             */
+            val TWIST_SPAN: Param get() = Param(1L)
+            /**
+             * The speed with which the swing or twist will take place. The higher, the faster.
+             *
+             * Generated from Godot docs: ConeTwistJoint3D.PARAM_BIAS
+             */
+            val BIAS: Param get() = Param(2L)
+            /**
+             * The ease with which the joint starts to twist. If it's too low, it takes more force to start
+             * twisting the joint.
+             *
+             * Generated from Godot docs: ConeTwistJoint3D.PARAM_SOFTNESS
+             */
+            val SOFTNESS: Param get() = Param(3L)
+            /**
+             * Defines, how fast the swing- and twist-speed-difference on both sides gets synced.
+             *
+             * Generated from Godot docs: ConeTwistJoint3D.PARAM_RELAXATION
+             */
+            val RELAXATION: Param get() = Param(4L)
+            /**
+             * Represents the size of the `Param` enum.
+             *
+             * Generated from Godot docs: ConeTwistJoint3D.PARAM_MAX
+             */
+            val MAX: Param get() = Param(5L)
+        }
     }
 
     companion object {
-        const val PARAM_SWING_SPAN: Long = 0L
-        const val PARAM_TWIST_SPAN: Long = 1L
-        const val PARAM_BIAS: Long = 2L
-        const val PARAM_SOFTNESS: Long = 3L
-        const val PARAM_RELAXATION: Long = 4L
-        const val PARAM_MAX: Long = 5L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ConeTwistJoint3D? =
             wrap(handle.segment)

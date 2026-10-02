@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -10,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: VisualShaderNodeTexture
  */
 class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
-    var source: Long
+    var source: VisualShaderNodeTexture.Source
         @JvmName("sourceProperty")
         get() = getSource()
         @JvmName("setSourceProperty")
@@ -22,20 +23,20 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
         @JvmName("setTextureProperty")
         set(value) = setTexture(value)
 
-    var textureType: Long
+    var textureType: VisualShaderNodeTexture.TextureType
         @JvmName("textureTypeProperty")
         get() = getTextureType()
         @JvmName("setTextureTypeProperty")
         set(value) = setTextureType(value)
 
-    fun setSource(value: Long) {
+    fun setSource(value: VisualShaderNodeTexture.Source) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value)
+        ObjectCalls.ptrcallWithLongArg(setSourceBind, segment, value.value)
     }
 
-    fun getSource(): Long {
+    fun getSource(): VisualShaderNodeTexture.Source {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment)
+        return VisualShaderNodeTexture.Source(ObjectCalls.ptrcallNoArgsRetLong(getSourceBind, segment))
     }
 
     fun setTexture(value: Texture2D?) {
@@ -48,31 +49,42 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
         return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
-    fun setTextureType(value: Long) {
+    fun setTextureType(value: VisualShaderNodeTexture.TextureType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, value)
+        ObjectCalls.ptrcallWithLongArg(setTextureTypeBind, segment, value.value)
     }
 
-    fun getTextureType(): Long {
+    fun getTextureType(): VisualShaderNodeTexture.TextureType {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment)
+        return VisualShaderNodeTexture.TextureType(ObjectCalls.ptrcallNoArgsRetLong(getTextureTypeBind, segment))
+    }
+
+    @JvmInline
+    value class Source(override val value: Long) : GodotEnumValue {
+        companion object {
+            val TEXTURE: Source get() = Source(0L)
+            val SCREEN: Source get() = Source(1L)
+            val SOURCE_2D_TEXTURE: Source get() = Source(2L)
+            val SOURCE_2D_NORMAL: Source get() = Source(3L)
+            val DEPTH: Source get() = Source(4L)
+            val PORT: Source get() = Source(5L)
+            val SOURCE_3D_NORMAL: Source get() = Source(6L)
+            val ROUGHNESS: Source get() = Source(7L)
+            val MAX: Source get() = Source(8L)
+        }
+    }
+
+    @JvmInline
+    value class TextureType(override val value: Long) : GodotEnumValue {
+        companion object {
+            val DATA: TextureType get() = TextureType(0L)
+            val COLOR: TextureType get() = TextureType(1L)
+            val NORMAL_MAP: TextureType get() = TextureType(2L)
+            val MAX: TextureType get() = TextureType(3L)
+        }
     }
 
     companion object {
-        const val SOURCE_TEXTURE: Long = 0L
-        const val SOURCE_SCREEN: Long = 1L
-        const val SOURCE_2D_TEXTURE: Long = 2L
-        const val SOURCE_2D_NORMAL: Long = 3L
-        const val SOURCE_DEPTH: Long = 4L
-        const val SOURCE_PORT: Long = 5L
-        const val SOURCE_3D_NORMAL: Long = 6L
-        const val SOURCE_ROUGHNESS: Long = 7L
-        const val SOURCE_MAX: Long = 8L
-        const val TYPE_DATA: Long = 0L
-        const val TYPE_COLOR: Long = 1L
-        const val TYPE_NORMAL_MAP: Long = 2L
-        const val TYPE_MAX: Long = 3L
-
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture? =
             wrap(handle.segment)

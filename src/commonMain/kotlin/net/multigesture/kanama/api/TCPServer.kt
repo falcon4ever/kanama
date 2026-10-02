@@ -20,9 +20,9 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      *
      * Generated from Godot docs: TCPServer.listen
      */
-    fun listen(port: Int, bindAddress: String = "*"): Long {
+    fun listen(port: Int, bindAddress: String = "*"): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress)
+        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress))
     }
 
     /**

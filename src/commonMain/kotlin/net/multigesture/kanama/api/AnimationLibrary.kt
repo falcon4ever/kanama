@@ -16,9 +16,9 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: AnimationLibrary.add_animation
      */
-    fun addAnimation(name: String, animation: Animation?): Long {
+    fun addAnimation(name: String, animation: Animation?): GodotError {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, segment, name, animation?.requireOpenHandle() ?: NULL_SEGMENT)
+        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationBind, segment, name, animation?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
