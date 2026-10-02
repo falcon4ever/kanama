@@ -353,6 +353,19 @@ python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 stage "ObjectCalls member/name parity (desktop vs iOS)"
 python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
 
+stage "no default argument on an expect declaration (task 117 D24)"
+# Android compiles a copy of the common + JVM sources with every *.expect.kt skipped and `actual`
+# stripped, so a default declared only on an `expect` does not exist on that lane: callers that
+# omit the argument compile on desktop and iOS and fail on Android. Overloads instead.
+python3 "$ROOT_DIR/scripts/check_expect_no_defaults.py"
+
+stage "no public member an expect lacks on an actual (task 117 D1)"
+# The compiler forces every expect member to have an actual, but lets an actual class/object carry
+# extra PUBLIC members silently: API on one platform only. This is the one-sided-member check of the
+# retired check_wrapper_parity.py, now against the expect (ObjectCalls excluded; its parity gate
+# above owns it).
+python3 "$ROOT_DIR/scripts/check_actual_public_surface.py"
+
 stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, task 117 P2')"
 # A zero instance is the generator's static-method marker (NULL_SEGMENT for an `is_static`
 # method) and over twenty kanama_ios_godot_* entry points early-return on it, so a static routed
@@ -375,12 +388,6 @@ stage "iOS PT tag table parity (five copies, task 119 item 30)"
 # compares the generated region by member NAMES only, so a renumber compiles everywhere and fails
 # only at the shim's tag dispatch on a phone. This gate is the comparison.
 python3 "$ROOT_DIR/scripts/check_pt_tag_tables.py"
-
-stage "hand-shaped wrapper parity (desktop vs iOS, task 117)"
-# The remaining hand-shaped classes (the gate prints the count) must keep identical public shapes before they can become
-# expect/actual; every known divergence is listed with its decision in the allowlist, which can
-# only shrink (a stale line fails too).
-python3 "$ROOT_DIR/scripts/check_wrapper_parity.py"
 
 stage "shell script lint (shellcheck)"
 # Hard-required (the unzip/ios_template_preflight precedent): the gate itself

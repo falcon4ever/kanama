@@ -35,6 +35,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
+import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
@@ -3811,23 +3812,33 @@ actual object ObjectCalls {
   }
 
   /**
-   * Generic Variant `Object.call` dispatch.
-   *
-   * [owned] selects the return decode for calls that mint a fresh object whose sole reference lives
-   * in the return Variant (e.g. ClassDB.class_call_static returning a freshly constructed
-   * Resource). With the borrowed default the C side extracts the handle and destroys the Variant,
-   * freeing a RefCounted before Kotlin sees it. When [owned] is true the C side retains a
-   * RefCounted result before that destroy and reports it, so it comes back as the owning
-   * [RefCounted] wrapper (close() releases — task-31 return-ownership); non-RefCounted objects stay
-   * borrowed. Owned callers should use the named [callWithVariantArgsOwned] wrapper so the
-   * generator can select it as a dispatch helper via `METHOD_CALL_SHAPE_OVERRIDES`, mirroring
-   * [ptrcallWithStringNameArgRetVariantScalarOwned] for ClassDB.instantiate.
+   * Generic Variant `Object.call` dispatch with the borrowed return decode — the `expect object
+   * ObjectCalls` member (task 117 D27). It carries no `owned` flag: an `expect` declaration takes
+   * no default argument (D24), so the owned decode is its own member, [callWithVariantArgsOwned],
+   * and the flag is a private detail of this file (desktop has the same split).
    */
-  fun callWithVariantArgs(
+  actual fun callWithVariantArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     args: List<Any?>,
-    owned: Boolean = false,
+  ): Any? = callWithVariantArgs(methodBind, instance, args, owned = false)
+
+  /**
+   * The body of [callWithVariantArgs] and [callWithVariantArgsOwned].
+   *
+   * [owned] selects the return decode for calls that mint a fresh object whose sole reference lives
+   * in the return Variant (e.g. ClassDB.class_call_static returning a freshly constructed
+   * Resource). With the borrowed decode the C side extracts the handle and destroys the Variant,
+   * freeing a RefCounted before Kotlin sees it. When [owned] is true the C side retains a
+   * RefCounted result before that destroy and reports it, so it comes back as the owning
+   * [RefCounted] wrapper (close() releases — task-31 return-ownership); non-RefCounted objects stay
+   * borrowed.
+   */
+  private fun callWithVariantArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    args: List<Any?>,
+    owned: Boolean,
   ): Any? = memScoped {
     val (tags, ptrs, n) = encodeVariantArgs(args)
     val outInt = alloc<LongVar>()
@@ -4098,10 +4109,10 @@ actual object ObjectCalls {
     ptrcallRetTypedByteArrayList(methodBind, instance, null, null, 0)
   }
 
-  fun ptrcallNoArgsRetCallable(methodBind: MemorySegment, instance: MemorySegment): GodotCallable? =
-    memScoped {
-      ptrcallRetCallable(methodBind, instance, null, null, 0)
-    }
+  actual fun ptrcallNoArgsRetCallable(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+  ): GodotCallable? = memScoped { ptrcallRetCallable(methodBind, instance, null, null, 0) }
 
   actual fun ptrcallNoArgsRetDictionary(
     methodBind: MemorySegment,
@@ -7850,7 +7861,7 @@ actual object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetCallable(
+  actual fun ptrcallWithIntArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -18797,7 +18808,7 @@ actual object ObjectCalls {
     ptrcallRetByteArray(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithRIDArgRetCallable(
+  actual fun ptrcallWithRIDArgRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -20623,7 +20634,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithRIDIntArgsRetCallable(
+  actual fun ptrcallWithRIDIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     rid: RID,
@@ -26615,7 +26626,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithStringIntArgsRetCallable(
+  actual fun ptrcallWithStringIntArgsRetCallable(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: String,
@@ -36222,10 +36233,10 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTypedMaterialListArg(
+  actual fun ptrcallWithTypedMaterialListArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    values: List<*>,
+    values: List<Material>,
   ) = memScoped {
     val c0 = packTypedObjectArrayDesc(values)
     val types = allocArray<IntVar>(1)
@@ -42007,10 +42018,10 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // task 117 P2' follow-up — SHARED-TREE STATIC dispatch (the ptrcallDispatch fix above). These
   // rows call the generated wrapper API, NOT the hand-written ptrcallStatic* helpers: every
-  // `is_static` method in src/sharedApi renders `NULL_SEGMENT` as the instance, and before the fix
-  // the iOS C instance entry point early-returned on a null instance, so all 72 such call sites
-  // across 36 shared classes were silent no-ops (null / 0 / default) on device while passing on
-  // desktop. A regression that drops the dispatcher fails every row here.
+  // `is_static` method in the shared tree renders `NULL_SEGMENT` as the instance, and before the
+  // fix the iOS C instance entry point early-returned on a null instance, so all 72 such call
+  // sites across 36 shared classes were silent no-ops (null / 0 / default) on device while passing
+  // on desktop. A regression that drops the dispatcher fails every row here.
   run {
     // Image.create_from_data: 2x2 RGBA8 needs exactly 2*2*4 = 16 bytes.
     val fromData =

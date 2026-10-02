@@ -90,7 +90,7 @@ def platform_class_set_lines(classes: dict[str, ApiClass], wrapper_classes: set[
         "One generated tree, held to the single-tree drift gate (`check_single_tree`: committed == fresh "
         "regen for every generated file; see wrapper-maintenance.md).",
         "",
-        f"- Shared tree (`src/sharedApi/kotlin/.../api`): {shared} classes compiled by desktop, Android and "
+        f"- Shared tree (`src/commonMain/kotlin/.../api`, common code): {shared} classes compiled by desktop, Android and "
         f"iOS. {companions} of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose "
         "ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.",
         f"- Per-platform (`PER_PLATFORM_WRAPPERS`, {len(PER_PLATFORM_WRAPPERS)} classes): desktop generates "
@@ -146,7 +146,7 @@ def render_markdown(
         generated,
         "",
         "This page distinguishes generator coverage from promoted source coverage. "
-        "Generator coverage is the practical API reach for upcoming wrapper promotion; promoted coverage only counts wrappers currently checked into the shared tree `src/sharedApi/kotlin/net/multigesture/kanama/api` or the desktop directory `src/jvmMain/kotlin/net/multigesture/kanama/api`.",
+        "Generator coverage is the practical API reach for upcoming wrapper promotion; promoted coverage only counts wrappers currently checked into the shared tree `src/commonMain/kotlin/net/multigesture/kanama/api` or the desktop directory `src/jvmMain/kotlin/net/multigesture/kanama/api`.",
         "",
         "## Generator Summary",
         "",

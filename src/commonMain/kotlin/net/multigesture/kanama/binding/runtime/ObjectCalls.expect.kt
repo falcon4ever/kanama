@@ -1,5 +1,7 @@
 package net.multigesture.kanama.binding.runtime
 
+import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
@@ -36,17 +38,14 @@ import net.multigesture.kanama.types.Vector4
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
- * Excluded, and listed in the gate as such: `callWithVariantArgs`, `ptrcallNoArgsRetCallable`,
- * `ptrcallWithIntArgRetCallable`, `ptrcallWithRIDArgRetCallable`,
- * `ptrcallWithRIDIntArgsRetCallable`, `ptrcallWithStringIntArgsRetCallable`,
- * `ptrcallWithTypedMaterialListArg` -- their signatures name a wrapper class the common fragment
- * cannot see (per-platform or shared-tree, until task 117 moves the tree to commonMain) or carry a
- * default argument (which an `expect` member cannot express on the Android lane). The
- * `ptrcallWithIntArgRetVector3` overload taking `value: Long` is desktop-only and stays
- * platform-only for the same reason. The `ptrcallWithNodePathArgRetBool` overload taking `path:
- * String` is desktop-only and stays platform-only for the same reason. The
+ * Every helper the tree calls is a member. The `ptrcallWithIntArgRetVector3` overload taking
+ * `value: Long` is desktop-only and stays platform-only: iOS has only the overload the tree calls,
+ * and an `expect` member must be actualized on both backends. The `ptrcallWithNodePathArgRetBool`
+ * overload taking `path: String` is desktop-only and stays platform-only: iOS has only the overload
+ * the tree calls, and an `expect` member must be actualized on both backends. The
  * `ptrcallWithNodePathArgRetObject` overload taking `path: String` is desktop-only and stays
- * platform-only for the same reason.
+ * platform-only: iOS has only the overload the tree calls, and an `expect` member must be
+ * actualized on both backends.
  */
 expect object ObjectCalls {
   fun <T : Any> ptrcallNoArgsRetTypedObjectList(
@@ -143,6 +142,8 @@ expect object ObjectCalls {
     wrapper: (RawSegment) -> T?,
   ): List<T>
 
+  fun callWithVariantArgs(methodBind: RawSegment, instance: RawSegment, args: List<Any?>): Any?
+
   fun callWithVariantArgsOwned(methodBind: RawSegment, instance: RawSegment, args: List<Any?>): Any?
 
   fun constructObject(className: String): RawSegment
@@ -168,6 +169,8 @@ expect object ObjectCalls {
   fun ptrcallNoArgsRetByteArray(methodBind: RawSegment, instance: RawSegment): ByteArray
 
   fun ptrcallNoArgsRetByteArrayList(methodBind: RawSegment, instance: RawSegment): List<ByteArray>
+
+  fun ptrcallNoArgsRetCallable(methodBind: RawSegment, instance: RawSegment): GodotCallable?
 
   fun ptrcallNoArgsRetColor(methodBind: RawSegment, instance: RawSegment): Color
 
@@ -1369,6 +1372,12 @@ expect object ObjectCalls {
     instance: RawSegment,
     value: Int,
   ): ByteArray
+
+  fun ptrcallWithIntArgRetCallable(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Int,
+  ): GodotCallable?
 
   fun ptrcallWithIntArgRetColor(methodBind: RawSegment, instance: RawSegment, value: Int): Color
 
@@ -4816,6 +4825,12 @@ expect object ObjectCalls {
     rid: RID,
   ): ByteArray
 
+  fun ptrcallWithRIDArgRetCallable(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+  ): GodotCallable?
+
   fun ptrcallWithRIDArgRetDictionary(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -5313,6 +5328,13 @@ expect object ObjectCalls {
     value: Int,
     vector: Vector3,
   )
+
+  fun ptrcallWithRIDIntArgsRetCallable(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    rid: RID,
+    value: Int,
+  ): GodotCallable?
 
   fun ptrcallWithRIDIntBoolDoubleVector2Args(
     methodBind: RawSegment,
@@ -7067,6 +7089,13 @@ expect object ObjectCalls {
     index: Int,
     value: Any?,
   )
+
+  fun ptrcallWithStringIntArgsRetCallable(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: String,
+    index: Int,
+  ): GodotCallable?
 
   fun ptrcallWithStringIntByteArrayArgs(
     methodBind: RawSegment,
@@ -10070,6 +10099,12 @@ expect object ObjectCalls {
   )
 
   fun ptrcallWithTypedIntListArg(methodBind: RawSegment, instance: RawSegment, values: List<Long>)
+
+  fun ptrcallWithTypedMaterialListArg(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    values: List<Material>,
+  )
 
   fun ptrcallWithTypedStringListArg(
     methodBind: RawSegment,

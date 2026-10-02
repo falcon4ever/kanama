@@ -9,7 +9,8 @@ KANAMA-IOS-HANDWRITTEN marker within the 2 lines above it — so you cannot add 
 stub without recording it (and it shows up in scripts/ios_handwritten_report.py).
 
 Scans the iOS wrapper sources: src/iosMain/kotlin/net/multigesture/kanama/api/*.kt plus
-the shared tree src/sharedApi/kotlin/net/multigesture/kanama/api/*.kt (task 103).
+the shared tree src/commonMain/kotlin/net/multigesture/kanama/api/*.kt (task 103; common
+code since task 117 P4').
 Run: python3 scripts/check_ios_no_silent_stubs.py   (exit 1 on un-annotated stub)
 """
 

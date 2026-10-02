@@ -2,8 +2,9 @@
 """Gate: every `ObjectCalls` helper the shared wrapper tree calls is a MEMBER of
 `object ObjectCalls` on desktop and on iOS, with the same parameter names in the same order.
 
-`src/sharedApi/kotlin` is compiled by the root module's JVM and iOS targets and (through the
-Android remap) by the Android plugin, and it reaches the engine through exactly one seam:
+The wrapper tree (`src/commonMain/kotlin/net/multigesture/kanama/api`, common code since task 117
+P4') is compiled by the root module's JVM and iOS targets and (through the Android remap) by the
+Android plugin, and it reaches the engine through exactly one seam:
 `net.multigesture.kanama.binding.runtime.ObjectCalls`. Task 104 step 3 turns that object into an
 `expect object` with one `actual` per platform, and an `expect` member can only be actualized by a
 MEMBER with the SAME parameter names -- a platform-only extension function `fun ObjectCalls.x(...)`
@@ -47,7 +48,6 @@ from pathlib import Path
 from generate_api_wrapper import (
     match_closer,
     referenced_objectcalls_helpers,
-    render_objectcalls_expect,
     strip_comments,
 )
 
@@ -182,33 +182,31 @@ def render(signature: Signature) -> str:
 
 
 def check_expect_members(referenced: list[str], desktop: dict[str, list[Signature]]) -> int:
-    """The generated `expect object ObjectCalls` declares exactly the referenced helpers, minus the
-    documented exceptions.
+    """The generated `expect object ObjectCalls` declares exactly the referenced helpers -- with NO
+    platform-only exceptions.
 
     The compiler already proves that both backends implement every `expect` member -- that is what
     parcel C' bought. What it cannot notice is a helper the tree CALLS that never made it into the
-    `expect` object: the shared api tree is platform-compiled source, so such a call resolves
-    against the platform member and the seam silently stops being the contract. This is that check.
+    `expect` object: the call would resolve against the platform member and the seam would
+    silently stop being the contract. Until task 117 P4' seven referenced helpers were such
+    documented exceptions (six named a wrapper class the common fragment could not see,
+    `callWithVariantArgs` carried a default argument); the tree is common code now, so the
+    exception list is empty and this check holds it there.
     """
     if not EXPECT.exists():
         print(f"[objectcalls_parity] FAIL missing {EXPECT.relative_to(ROOT)}", file=sys.stderr)
         return 1
     declared = set(parse_members(EXPECT))
-    # The exceptions are the generator's own: `render_objectcalls_expect()` returns the helpers it
-    # excluded (a signature naming a hand-shaped platform class, or a default argument), computed
-    # from the desktop signatures it renders from. Reading them here instead of mirroring the list
-    # means the two can never disagree (task 119 finding 17).
-    _, excluded, _ = render_objectcalls_expect()
-    exceptions = set(excluded)
-    want = {name for name in referenced if name in desktop} - exceptions
-    missing = sorted(want - declared)
+    want = {name for name in referenced if name in desktop}
+    exceptions = sorted(want - declared)
     extra = sorted(declared - want)
-    if missing or extra:
+    if exceptions or extra:
         print(
-            "[objectcalls_parity] FAIL the generated expect object does not match the referenced set",
+            "[objectcalls_parity] FAIL the generated expect object does not match the referenced set "
+            f"({len(exceptions)} platform-only exception(s); the list must be empty since task 117 P4')",
             file=sys.stderr,
         )
-        for name in missing:
+        for name in exceptions:
             print(f"    missing-from-expect  {name}", file=sys.stderr)
         for name in extra:
             print(f"    not-referenced       {name}", file=sys.stderr)
@@ -220,7 +218,7 @@ def check_expect_members(referenced: list[str], desktop: dict[str, list[Signatur
         return 1
     print(
         f"[objectcalls_parity] PASS expect object declares {len(declared)} referenced helper(s); "
-        f"{len(exceptions)} platform-only exception(s): {', '.join(sorted(exceptions))}"
+        "0 platform-only exceptions"
     )
     return 0
 

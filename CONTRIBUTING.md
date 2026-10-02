@@ -167,9 +167,13 @@ Hand-authored candidates:
 - Classes with Kanama-specific factories, closeable handles, or dynamic
   behavior
 
-The hand-shaped exemption lists (`DESKTOP_HANDSHAPED` / `IOS_HANDSHAPED` in
-`scripts/check_wrapper_generator.py`) and the generator policy audits must stay
-current when changing this boundary — the full drift-gate fails otherwise.
+The per-platform table (`PER_PLATFORM_WRAPPERS` in `scripts/generate_api_wrapper.py`;
+`DESKTOP_HANDSHAPED` / `IOS_HANDSHAPED` are views of it) and the generator policy audits
+must stay current when changing this boundary — the full drift-gate fails otherwise.
+Everything else is generated once into the shared tree, `src/commonMain/kotlin/.../api`,
+which is KMP common code: it may name only common declarations (the platform classes it
+needs are `expect`s with one `actual` per platform, and an `expect` carries no default
+argument).
 
 ## Porting And Demo Integration
 

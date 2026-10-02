@@ -54,16 +54,16 @@ TAG = "[pt_tags]"
 
 # Blanks comments and string/char literals in place (offsets and line numbers survive), so a
 # `PT_*` mentioned in a comment or a string is never read as a declaration. Imported rather than
-# copied: it is the same Kotlin-source utility the hand-shaped wrapper parity gate parses with, and
-# one function cannot disagree with itself (task 119 findings 12/17). The import is clean --
-# `check_wrapper_parity` runs nothing at module level.
+# copied: it is the generator's Kotlin-source utility (it lived in the hand-shaped wrapper parity
+# gate until task 117 P4' retired that gate), and one function cannot disagree with itself (task
+# 119 findings 12/17).
 sys.path.insert(0, str(SCRIPTS))
-from check_wrapper_parity import strip_noise  # noqa: E402
 from generate_api_wrapper import (  # noqa: E402
     IOS_GENERATED_BEGIN,
     IOS_GENERATED_END,
     IOS_PT_TAG_VALUES,
     ios_generated_region,
+    strip_noise,
 )
 
 C_SHIM = ROOT / "ios/bootstrap/kanama_ios_shim.c"
