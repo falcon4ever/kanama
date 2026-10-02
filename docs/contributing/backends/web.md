@@ -186,6 +186,9 @@ and the property table:
   `meta: "required"` are non-null (`Node.createTween(): Tween`) through the
   same `requireGodotReturn` as desktop/iOS — a null throws
   `IllegalStateException("Godot returned null from required <Class>.<method>")`.
+  No object return is a raw `GodotHandle`: a class whose Web wrapper is a
+  `WEB_HANDSHAPED` facade is wrapped in it (`wrap_facade` policy:
+  `SceneTree.getRoot(): Window`), and the gate rejects a raw handle.
 - **Typed enums (task 128 C).** Every slot Godot types `enum::X` /
   `bitfield::X` uses the same value class as desktop/iOS (`Node.ProcessMode`,
   `GodotObject.ConnectFlags`, `GodotError`), with the same value names: the

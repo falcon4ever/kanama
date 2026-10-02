@@ -479,8 +479,13 @@ def emit_opcode(tree: Tree, call: BackendCallPolicy, policy: dict) -> Member:
         convert = ""
         if ret == "Unit":
             ret = ""
-    if policy.get("raw_handle_return"):
-        ret, convert = "GodotHandle?", "?.let { it.toWebId() }"
+    if policy.get("wrap_facade"):
+        # A Godot class whose Web wrapper is a WEB_HANDSHAPED facade (not in the generated tree):
+        # wrap the tracked handle in that facade so the return type matches desktop/iOS.
+        facade = str(policy["wrap_facade"])
+        if facade not in WEB_HANDSHAPED:
+            raise GenerationError(f"opcode {call.opcode}: wrap_facade {facade} is not a WEB_HANDSHAPED facade")
+        ret, convert = f"{facade}?", f"?.let {{ {facade}(it.toWebId()) }}"
     nonnull = policy.get("nonnull")
     # Decision 9 (task 128): an object return Godot marks `meta: "required"` is non-null, and a null
     # throws through the one helper (`requireGodotReturn`, same message as desktop/iOS).
@@ -726,7 +731,7 @@ WRAPPER_POLICY: dict[int, dict] = {
     # SceneTree: the exit code must fit Godot's int32 ABI before any command is emitted; the root
     # window stays a raw handle because Window is a hand-shaped facade (see WEB_HANDSHAPED).
     52: {"param_types": {"exitCode": "Long"}, "guards": ['require(exitCode in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) { "SceneTree.quit exit code must fit Godot\'s int32 ABI" }']},
-    250: {"raw_handle_return": True, "nonnull": "SceneTree has no root window", "no_property": True, "doc": "Root window as a tracked handle; wrap it with [Window] to reach the mode calls, or use [root] for the Viewport view."},
+    250: {"wrap_facade": "Window", "no_property": True, "doc": "The root window (desktop/iOS shape: `Window`, non-null); [root] is its Viewport view."},
     168: {"extra_names": ["setPaused"]},
     # AnimationMixer root-motion rotation crosses as euler angles (the applier converts).
     235: {
@@ -1079,7 +1084,7 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
         "custom": """
   /** The root window as its Viewport face (the tps corpus's `getTree().root`). */
   val root: Viewport
-    get() = Viewport(getRoot())
+    get() = Viewport(getRoot().handle)
 
   /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
   suspend fun delaySeconds(seconds: Double) = SceneTree.delaySeconds(seconds)

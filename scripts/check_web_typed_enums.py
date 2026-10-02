@@ -11,7 +11,8 @@ its Godot method through that descriptor and reads the COMMITTED sources:
       the function named after the method, uses the value class (`Node.ProcessMode`, `GodotError`),
       never a raw `Long`/`Int`; a property has its getter's type.
   (b) required returns -- an object return Godot marks `meta: "required"` is non-null and goes through
-      `requireGodotReturn` (desktop/iOS semantics: a null throws naming the Godot method).
+      `requireGodotReturn` (desktop/iOS semantics: a null throws naming the Godot method); and no
+      object return surfaces as a raw `GodotHandle` (desktop/iOS return the wrapper class).
   (c) names -- every value emitted in a Web value class equals THE naming function
       (`godot_enum_model.enum_value_name`) under the frozen prefix lock, and every value class the
       Web tree emits is one the model knows under that owner (so Web and native names cannot drift).
@@ -94,7 +95,12 @@ def main() -> int:
                         f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- Godot {call.class_name}.{call.method_name} "
                         f"returns {rv['type']}; expected {' / '.join(sorted(want))}"
                     )
-            elif rv.get("meta") == "required":
+            elif rv.get("type") in api.classes and fun.ret.rstrip("?") == "GodotHandle":
+                failures.append(
+                    f"{rel}:{fun.line}: {fun.name}(): {fun.ret} -- {call.class_name}.{call.method_name} returns "
+                    f"{rv['type']}; a raw GodotHandle diverges from desktop/iOS (wrap it in its Web class)"
+                )
+            if rv.get("type") in api.classes and rv.get("meta") == "required" and want is None:
                 required += 1
                 if fun.ret.endswith("?"):
                     failures.append(

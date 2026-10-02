@@ -246,9 +246,10 @@ object IP {
 
 /**
  * Window. Two shapes share the class:
- * - **Handle-backed** (task 64 tier 3): `Window(getTree().getRoot())` wraps the tracked root
- *   window, and [setMode] / [getMode] (and the [mode] property) are real engine calls --
- *   FullScreenHandler's F11 toggle reads the mode the engine reports.
+ * - **Handle-backed** (task 64 tier 3): `getTree().getRoot()` returns the tracked root window
+ *   wrapped in this class (desktop/iOS shape since task 128 C), and [setMode] / [getMode] (and
+ *   the [mode] property) are real engine calls -- FullScreenHandler's F11 toggle reads the mode
+ *   the engine reports.
  * - **Handle-less facade** ([Node.getWindow]): the tps settings menu's target. Mode and 3D
  *   scaling are fixed by the browser canvas there, so those writes are mirrored Kotlin-side and
  *   never reach the engine (the pre-existing facade contract, documented here and unchanged).
@@ -260,6 +261,13 @@ class Window internal constructor() {
   constructor(godotObject: GodotHandle) : this() {
     windowHandle = godotObject
   }
+
+  /**
+   * The engine handle of a handle-backed window (desktop's `GodotObject.handle`); the handle-less
+   * browser-window facade has none and fails loud.
+   */
+  val handle: GodotHandle
+    get() = checkNotNull(windowHandle) { "the handle-less browser-window facade has no engine handle" }
 
   /** Facade mirror for the handle-less window; unused when a handle is present. */
   private var facadeMode: Window.Mode = Window.Mode.WINDOWED

@@ -447,7 +447,7 @@ class Main(godotObject: GodotHandle) :
    *   real), then released.
    * - 32: `erase_action` makes `has_action` false again.
    * - 64: `set_process_mode(ALWAYS)` reads back 3 (then restored to INHERIT).
-   * - 128: `Window(getTree().getRoot()).getMode()` is a legal Window.Mode.
+   * - 128: `getTree().getRoot().getMode()` is a legal Window.Mode.
    *
    * A healthy run returns 255. The event handle is closed in `finally`, after the attach: the
    * InputMap keeps its own reference (the create/close contract on Web, see docs/contributing/backends/web.md).
@@ -492,7 +492,7 @@ class Main(godotObject: GodotHandle) :
     if (self.getProcessMode() == Node.ProcessMode.ALWAYS) mask = mask or 64L
     self.setProcessMode(Node.ProcessMode.INHERIT)
 
-    val root = Window(self.getTree().getRoot())
+    val root = self.getTree().getRoot()
     val mode = root.getMode().value
     if (mode in Window.Mode.WINDOWED.value..Window.Mode.EXCLUSIVE_FULLSCREEN.value) mask = mask or 128L
     return mask

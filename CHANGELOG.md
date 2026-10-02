@@ -135,7 +135,11 @@ versioning once public releases begin.
   `GodotEnumValue` as INT. Removed on Web: the hand subsets (`InputEventKey.KEY_*`,
   `InputEventMouseButton.MOUSE_BUTTON_*`, `PhysicsBody3D.BODY_AXIS_*`), the enum `const val`s
   (`Window.MODE_*`, `DisplayServer.VSYNC_*`, ...) and the Web-only top-level `BodyAxis` alias object
-  (use `PhysicsServer3D.BodyAxis`). Gate: `scripts/check_web_typed_enums.py` (local_ci).
+  (use `PhysicsServer3D.BodyAxis`). **Web `SceneTree.getRoot()` returns `Window`** (non-null, the
+  desktop/iOS type; it was a raw `GodotHandle` to wrap by hand), so a shared
+  `getTree().getRoot().setMode(...)` compiles on Web; `Window.handle` exposes the engine handle.
+  Gate: `scripts/check_web_typed_enums.py` (local_ci), which also rejects a Web object return
+  surfaced as a raw `GodotHandle`.
 
 ### Changed — the API tree is common code (task 117 P4′)
 

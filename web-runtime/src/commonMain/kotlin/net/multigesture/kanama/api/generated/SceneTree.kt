@@ -39,12 +39,12 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
 
   fun setPaused(enable: Boolean) = setPause(enable)
 
-  /** Root window as a tracked handle; wrap it with [Window] to reach the mode calls, or use [root] for the Viewport view. */
-  fun getRoot(): GodotHandle {
+  /** The root window (desktop/iOS shape: `Window`, non-null); [root] is its Viewport view. */
+  fun getRoot(): Window {
     val returned = GodotBackendCalls.invokeNoArgsRetHandle(
       D.SCENETREE_GET_ROOT,
       requireOpenHandle(),
-    )?.let { it.toWebId() }
+    )?.let { Window(it.toWebId()) }
     return requireGodotReturn(returned, "SceneTree.get_root")
   }
 
@@ -85,7 +85,7 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
 
   /** The root window as its Viewport face (the tps corpus's `getTree().root`). */
   val root: Viewport
-    get() = Viewport(getRoot())
+    get() = Viewport(getRoot().handle)
 
   /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
   suspend fun delaySeconds(seconds: Double) = SceneTree.delaySeconds(seconds)
@@ -145,7 +145,7 @@ fun SceneTree.setPause(enable: Boolean) = setPause(enable)
 fun SceneTree.setPaused(enable: Boolean) = setPaused(enable)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-fun SceneTree.getRoot(): GodotHandle = getRoot()
+fun SceneTree.getRoot(): Window = getRoot()
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 fun SceneTree.isPaused(): Boolean = isPaused()
