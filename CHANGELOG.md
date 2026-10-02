@@ -215,31 +215,42 @@ versioning once public releases begin.
 - **Godot enums as script members (task 128 B), desktop/Android, iOS and Web.** A Godot enum value
   class is a valid `@ScriptProperty` / `@Export` type: `var mode: Node.ProcessMode =
   Node.ProcessMode.ALWAYS` exports as an `int` with `PROPERTY_HINT_ENUM` (a bitfield such as
-  `Node.ProcessThreadMessages` with `PROPERTY_HINT_FLAGS`) and a hint string in the format of
-  Godot's own enum properties with the values spelled out
-  (`Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4`, `Messages:1,Messages Physics:2,Messages
-  All:3`); unlike a Kotlin `enum class` it stores the **Godot value**, not an ordinal, so scenes
-  saved by a GDScript/C# version load unchanged and an unlisted value is kept, not clamped. The
-  default (`X.VALUE`, `X(3L)`, or a bitfield `or`-chain) is constant-folded into the inspector
-  default; an initializer ktfmt wrapped onto the line after the `=` is now read as the default for
-  every property type (it used to be dropped, which on Web failed the build as "not a plain
-  literal"). `List<Node.ProcessMode>` exports as a typed int array (`"2/2:<hint>"`) on desktop and iOS
-  (a build error on Web, like `List<enum class>`); on Web the scalar export goes through
-  `@export_custom(<hint>, "<hint string>")` so the proxy reports the same metadata. A nullable enum
-  member is a build error (the slot is an `int`). `@RegisterFunction` parameters and returns,
-  `@Signal` arguments (emitted as INT, delivered typed to the generated `connect*` / `await*`
-  helpers) and `@Rpc` arguments take the value classes on every emitter; GDScript sees the `int`.
-  **Engine virtuals:** the 185 slots (96 parameters, 89 returns) of the 167 engine virtuals Godot types
-  `enum::` / `bitfield::` (e.g. `Material._get_shader_mode(): Shader.Mode`, `Texture2D._get_format():
-  Image.Format`, `TextServerExtension._has_feature(feature: TextServer.Feature)`) take the value
-  class; an override still declaring `Long` (or the wrong enum) **fails the build** naming the type
-  to use, and the two `meta: "required"` `_get_space_state` returns must be declared non-null.
-  Desktop object returns from `@OverrideVirtual` / `@RegisterFunction` (`GodotObject`) compile now
-  (the registrar wrote the task-104 `GodotHandle` where the raw address goes). The processor reads
-  names and values from `processor/.../godot-enums.tsv`, written from the same model as the wrappers
-  by `generate_api_wrapper.py --write-tree` and held to it by the wrapper drift gate;
-  `virtual-signatures.tsv` (schema 2) marks the required returns; the serialized script model is
-  schema 7. User `enum class` exports are unchanged.
+  `Node.ProcessThreadMessages` with `PROPERTY_HINT_FLAGS`) and a hint string in the style of Godot's
+  own native enum properties, with the values spelled out
+  (`Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4`,
+  `Messages:1,Messages Physics:2,Messages All:3`; GDScript's `@export` of the same enum uses the full
+  names and treats a bitfield as an enum). Like GDScript's export it also reports the enum's identity
+  on desktop and iOS: `class_name` = Godot's qualified name (`Node.ProcessMode`) and
+  `PROPERTY_USAGE_CLASS_IS_ENUM` (`_CLASS_IS_BITFIELD` for a bitfield) in usage; the iOS script
+  property descriptor gained a `className`. Unlike a Kotlin `enum class` it stores the **Godot
+  value**, not an ordinal, so scenes saved by a GDScript/C# version load unchanged and an unlisted
+  value is kept, not clamped. The default (`X.VALUE`, `X(3L)`, or a bitfield `or`-chain, also wrapped
+  over several lines) is constant-folded into the inspector default; an initializer ktfmt wrapped
+  onto the line after the `=` or after a binary operator is now read as the default for every
+  property type (it used to be dropped, which on Web failed the build as "not a plain literal").
+  `List<Node.ProcessMode>` exports as a typed int array (`"2/2:<hint>"`) on desktop and iOS (a build
+  error on Web, like `List<enum class>`). On Web the scalar export goes through
+  `@export_custom(<hint>, "<hint string>")`, which cannot set `class_name`, so a Web build reports
+  the hint and hint string without the class marker. A nullable enum member is a build error on
+  every target (the slot is an `int`). `@RegisterFunction` parameters and returns, `@Signal`
+  arguments (emitted as INT; the generated `connect*` callbacks receive them typed, and `await*` for
+  a one-argument signal; a multi-argument `await*` still returns `List<Any?>`) and `@Rpc` arguments
+  take the value classes on every emitter; GDScript sees the `int`.
+  **Engine virtuals:** the 185 slots (96 parameters, 89 returns) of the 167 engine virtuals Godot
+  types `enum::` / `bitfield::` (e.g. `Material._get_shader_mode(): Shader.Mode`,
+  `Texture2D._get_format(): Image.Format`, `TextServerExtension._has_feature(feature:
+  TextServer.Feature)`) take the value class; an override still declaring `Long` (or the wrong enum)
+  **fails the build** naming the type to use, and the two `meta: "required"` `_get_space_state`
+  returns must be declared non-null. Desktop object returns from `@OverrideVirtual` /
+  `@RegisterFunction` (`GodotObject`, on `@ScriptClass` and `@RegisterClass`) compile now (the
+  registrar wrote the task-104 `GodotHandle` where the raw address goes). The processor reads names
+  and values from `processor/.../godot-enums.tsv`, written from the same model as the wrappers by
+  `generate_api_wrapper.py --write-tree` and held to it by the wrapper drift gate;
+  `virtual-signatures.tsv` (schema 2) marks the required returns and is now drift-checked by a
+  local_ci stage; the serialized script model is schema 7. Compile fixtures: the example project
+  (desktop, run by `runtime_smoke.sh`), `src/iosScriptFixtures` (compiled into the CI iOS
+  xcframework build) and the web3d smoke sources (the Web matrix). User `enum class` exports are
+  unchanged.
 - **`InputEventMouseButton.create()` on every backend (task 128 C; Web protocol 28 → 29).** A shared
   script registers a mouse-button input action the same way everywhere:
   `InputEventMouseButton.create().also { it.buttonIndex = MouseButton.LEFT }`, then

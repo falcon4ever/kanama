@@ -55,8 +55,10 @@ available when you need lower-level Godot API behavior.
 A signal argument can be one of Godot's enums (`Node.ProcessMode`,
 `BaseMaterial3D.Flags`, see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields)).
 It is emitted as the `int` it stands for, which is what a GDScript handler
-connected to the signal receives, and the generated `connect*` / `await*`
-helpers hand Kotlin the typed value:
+connected to the signal receives. The generated `connect*` helper hands its
+Kotlin callback every argument typed, and `await*` returns the typed value for
+a one-argument signal (for two or more arguments `await*` returns the raw
+`List<Any?>`, where an enum is its `Long`):
 
 ```kotlin
 @Signal

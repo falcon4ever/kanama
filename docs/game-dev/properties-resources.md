@@ -129,7 +129,7 @@ on desktop, Android, and iOS.
 
 A property typed with one of Godot's own enums (every Godot enum is a typed
 value class in Kanama, see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields))
-exports the way GDScript's `@export var mode: Node.ProcessMode` does:
+exports as an inspector dropdown (a bitfield as flag checkboxes):
 
 ```kotlin
 @ScriptProperty
@@ -142,13 +142,29 @@ var messages: Node.ProcessThreadMessages = Node.ProcessThreadMessages.MESSAGES
 var allowedModes: List<Node.ProcessMode> = emptyList()
 ```
 
-- The property registers as an `int` with `PROPERTY_HINT_ENUM` (a bitfield
-  with `PROPERTY_HINT_FLAGS`) and a hint string in the format Godot's own enum
-  properties use, with the values spelled out:
-  `Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4`,
+- The inspector metadata follows Godot's **native-property style** — what the
+  engine's own `Node.process_mode` shows — not GDScript's: an `int` with
+  `PROPERTY_HINT_ENUM` (a bitfield with `PROPERTY_HINT_FLAGS`) and a hint
+  string of the Kanama value names as Godot capitalizes them, with the values
+  spelled out: `Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4`,
   `Messages:1,Messages Physics:2,Messages All:3`. Whether a type is a bitfield
   is Godot's call: `BaseMaterial3D.Flags`, despite its name, is an enum of flag
   indices and exports as a dropdown.
+- How that differs from GDScript's `@export var mode: Node.ProcessMode`:
+  GDScript's hint string uses the **full** Godot names (`Process Mode
+  Inherit:0,Process Mode Pausable:1,…`), and GDScript exports a **bitfield as
+  `PROPERTY_HINT_ENUM`** too (a dropdown of single flags, `Flag Process Thread
+  Messages:1,…`), where Kanama shows flag checkboxes. The stored value is the
+  same `int` either way, so scenes are interchangeable.
+- Like GDScript's export, the property also carries the enum's identity:
+  `class_name` is Godot's qualified name (`Node.ProcessMode`) and usage
+  includes `PROPERTY_USAGE_CLASS_IS_ENUM` (for a bitfield, Godot's native
+  `PROPERTY_USAGE_CLASS_IS_BITFIELD`, which GDScript types as a plain `int`, so
+  assigning a combination of flags does not warn), so typed GDScript sees
+  `$Node.mode` as a `Node.ProcessMode`. On Web the generated GDScript proxy
+  declares the property with `@export_custom(<hint>, "<hint string>")`, which
+  cannot set `class_name`, so a Web build reports the hint and hint string
+  only (no class marker).
 - Unlike a Kotlin `enum class`, the stored value is the **Godot value**, not an
   ordinal, so a scene saved by a GDScript or C# version of the script loads
   unchanged, and a value the inspector does not list (a newer Godot's, or an
