@@ -222,7 +222,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class InterpolationMode(val value: Long) {
+    value class InterpolationMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Linear interpolation.
@@ -247,7 +247,7 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ColorSpace(val value: Long) {
+    value class ColorSpace(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * sRGB color space.

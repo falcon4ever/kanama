@@ -2920,7 +2920,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class BGMode(val value: Long) {
+    value class BGMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Clears the background using the clear color defined in
@@ -2972,7 +2972,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class AmbientSource(val value: Long) {
+    value class AmbientSource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Gather ambient light from whichever source is specified as the background.
@@ -3003,7 +3003,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ReflectionSource(val value: Long) {
+    value class ReflectionSource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use the background for reflections.
@@ -3027,7 +3027,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ToneMapper(val value: Long) {
+    value class ToneMapper(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Does not modify color data, resulting in a linear tonemapping curve which unnaturally clips
@@ -3076,7 +3076,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class GlowBlendMode(val value: Long) {
+    value class GlowBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Adds the glow effect to the scene.
@@ -3126,7 +3126,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class FogMode(val value: Long) {
+    value class FogMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use a physically-based fog model defined primarily by fog density.
@@ -3145,7 +3145,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class SDFGIYScale(val value: Long) {
+    value class SDFGIYScale(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use 50% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be twice as short as they are

@@ -179,7 +179,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
     }
 
     @JvmInline
-    value class Resolution(val value: Long) {
+    value class Resolution(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Bake a 16×16×16 signed distance field. This is the fastest option, but also the least precise.

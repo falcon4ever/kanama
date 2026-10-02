@@ -433,7 +433,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class UpdateMode(val value: Long) {
+    value class UpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Update the probe once on the next frame (recommended for most objects). The corresponding
@@ -459,7 +459,7 @@ class ReflectionProbe(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class AmbientMode(val value: Long) {
+    value class AmbientMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not apply any ambient lighting inside the `ReflectionProbe`'s box defined by its `size`.

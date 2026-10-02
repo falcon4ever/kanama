@@ -91,7 +91,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     }
 
     @JvmInline
-    value class TextureType(val value: Long) {
+    value class TextureType(override val value: Long) : GodotEnumValue {
         companion object {
             val DATA: TextureType get() = TextureType(0L)
             val COLOR: TextureType get() = TextureType(1L)
@@ -102,7 +102,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     }
 
     @JvmInline
-    value class ColorDefault(val value: Long) {
+    value class ColorDefault(override val value: Long) : GodotEnumValue {
         companion object {
             val WHITE: ColorDefault get() = ColorDefault(0L)
             val BLACK: ColorDefault get() = ColorDefault(1L)
@@ -112,7 +112,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     }
 
     @JvmInline
-    value class TextureFilter(val value: Long) {
+    value class TextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
             val DEFAULT: TextureFilter get() = TextureFilter(0L)
             val NEAREST: TextureFilter get() = TextureFilter(1L)
@@ -126,7 +126,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     }
 
     @JvmInline
-    value class TextureRepeat(val value: Long) {
+    value class TextureRepeat(override val value: Long) : GodotEnumValue {
         companion object {
             val DEFAULT: TextureRepeat get() = TextureRepeat(0L)
             val ENABLED: TextureRepeat get() = TextureRepeat(1L)
@@ -136,7 +136,7 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     }
 
     @JvmInline
-    value class TextureSource(val value: Long) {
+    value class TextureSource(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: TextureSource get() = TextureSource(0L)
             val SCREEN: TextureSource get() = TextureSource(1L)

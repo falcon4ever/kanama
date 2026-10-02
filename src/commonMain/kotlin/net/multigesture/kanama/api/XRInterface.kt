@@ -354,7 +354,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Capabilities(val value: Long) {
+    value class Capabilities(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No XR capabilities.
@@ -405,7 +405,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class TrackingStatus(val value: Long) {
+    value class TrackingStatus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Tracking is behaving as expected.
@@ -443,7 +443,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class PlayAreaMode(val value: Long) {
+    value class PlayAreaMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Play area mode not set or not available.
@@ -488,7 +488,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class EnvironmentBlendMode(val value: Long) {
+    value class EnvironmentBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Opaque blend mode. This is typically used for VR devices.
@@ -515,7 +515,7 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class VRSTextureFormat(val value: Long) {
+    value class VRSTextureFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The texture format is the same as returned by `XRVRS.make_vrs_texture`.

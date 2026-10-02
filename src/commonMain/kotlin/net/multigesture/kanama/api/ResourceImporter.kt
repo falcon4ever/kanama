@@ -14,7 +14,7 @@ open class ResourceImporter(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     @JvmInline
-    value class ImportOrder(val value: Long) {
+    value class ImportOrder(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The default import order.

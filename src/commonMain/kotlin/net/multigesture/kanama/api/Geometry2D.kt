@@ -324,7 +324,7 @@ object Geometry2D {
     }
 
     @JvmInline
-    value class PolyBooleanOperation(val value: Long) {
+    value class PolyBooleanOperation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Create regions where either subject or clip polygons (or both) are filled.
@@ -354,7 +354,7 @@ object Geometry2D {
     }
 
     @JvmInline
-    value class PolyJoinType(val value: Long) {
+    value class PolyJoinType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Squaring is applied uniformally at all convex edge joins at `1 * delta`.
@@ -381,7 +381,7 @@ object Geometry2D {
     }
 
     @JvmInline
-    value class PolyEndType(val value: Long) {
+    value class PolyEndType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Endpoints are joined using the `PolyJoinType` value and the path filled as a polygon.

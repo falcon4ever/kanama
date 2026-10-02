@@ -2605,7 +2605,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class FontAntialiasing(val value: Long) {
+    value class FontAntialiasing(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Font glyphs are rasterized as 1-bit bitmaps.
@@ -2631,7 +2631,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class FontLCDSubpixelLayout(val value: Long) {
+    value class FontLCDSubpixelLayout(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Unknown or unsupported subpixel layout, LCD subpixel antialiasing is disabled.
@@ -2673,7 +2673,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Direction(val value: Long) {
+    value class Direction(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Text direction is determined based on contents and current locale.
@@ -2704,7 +2704,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Orientation(val value: Long) {
+    value class Orientation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Text is written horizontally.
@@ -2723,7 +2723,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class JustificationFlag(val value: Long) {
+    value class JustificationFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: JustificationFlag): JustificationFlag = JustificationFlag(value or other.value)
 
         infix fun and(other: JustificationFlag): JustificationFlag = JustificationFlag(value and other.value)
@@ -2795,7 +2795,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class AutowrapMode(val value: Long) {
+    value class AutowrapMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Autowrap is disabled.
@@ -2827,7 +2827,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class LineBreakFlag(val value: Long) {
+    value class LineBreakFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: LineBreakFlag): LineBreakFlag = LineBreakFlag(value or other.value)
 
         infix fun and(other: LineBreakFlag): LineBreakFlag = LineBreakFlag(value and other.value)
@@ -2902,7 +2902,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class VisibleCharactersBehavior(val value: Long) {
+    value class VisibleCharactersBehavior(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Trims text before the shaping. e.g, increasing `Label.visible_characters` or
@@ -2943,7 +2943,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class OverrunBehavior(val value: Long) {
+    value class OverrunBehavior(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No text trimming is performed.
@@ -2995,7 +2995,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class TextOverrunFlag(val value: Long) {
+    value class TextOverrunFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: TextOverrunFlag): TextOverrunFlag = TextOverrunFlag(value or other.value)
 
         infix fun and(other: TextOverrunFlag): TextOverrunFlag = TextOverrunFlag(value and other.value)
@@ -3054,7 +3054,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class GraphemeFlag(val value: Long) {
+    value class GraphemeFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: GraphemeFlag): GraphemeFlag = GraphemeFlag(value or other.value)
 
         infix fun and(other: GraphemeFlag): GraphemeFlag = GraphemeFlag(value and other.value)
@@ -3154,7 +3154,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Hinting(val value: Long) {
+    value class Hinting(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables font hinting (smoother but less crisp).
@@ -3180,7 +3180,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class SubpixelPositioning(val value: Long) {
+    value class SubpixelPositioning(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Glyph horizontal position is rounded to the whole pixel size, each glyph is rasterized once.
@@ -3229,7 +3229,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Feature(val value: Long) {
+    value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * TextServer supports simple text layouts.
@@ -3326,7 +3326,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ContourPointTag(val value: Long) {
+    value class ContourPointTag(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Contour point is on the curve.
@@ -3351,7 +3351,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class SpacingType(val value: Long) {
+    value class SpacingType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Spacing for each glyph.
@@ -3387,7 +3387,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class FontStyle(val value: Long) {
+    value class FontStyle(override val value: Long) : GodotEnumValue {
         infix fun or(other: FontStyle): FontStyle = FontStyle(value or other.value)
 
         infix fun and(other: FontStyle): FontStyle = FontStyle(value and other.value)
@@ -3421,7 +3421,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class StructuredTextParser(val value: Long) {
+    value class StructuredTextParser(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use default Unicode BiDi algorithm.
@@ -3469,7 +3469,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class FixedSizeScaleMode(val value: Long) {
+    value class FixedSizeScaleMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Bitmap font is not scaled.

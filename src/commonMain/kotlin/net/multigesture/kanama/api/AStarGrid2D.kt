@@ -449,7 +449,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Heuristic(val value: Long) {
+    value class Heuristic(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The Euclidean heuristic (https://en.wikipedia.org/wiki/Euclidean_distance) to be used for the
@@ -488,7 +488,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class DiagonalMode(val value: Long) {
+    value class DiagonalMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The pathfinding algorithm will ignore solid neighbors around the target cell and allow passing
@@ -527,7 +527,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class CellShape(val value: Long) {
+    value class CellShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Rectangular cell shape.

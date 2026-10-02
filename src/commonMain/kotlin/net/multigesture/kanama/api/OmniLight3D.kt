@@ -39,7 +39,7 @@ class OmniLight3D(handle: GodotHandle) : Light3D(handle) {
     }
 
     @JvmInline
-    value class ShadowMode(val value: Long) {
+    value class ShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Shadows are rendered to a dual-paraboloid texture. Faster than `SHADOW_CUBE`, but lower-quality.

@@ -82,7 +82,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
     }
 
     @JvmInline
-    value class Status(val value: Long) {
+    value class Status(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * A status representing a `StreamPeerTLS` that is disconnected.

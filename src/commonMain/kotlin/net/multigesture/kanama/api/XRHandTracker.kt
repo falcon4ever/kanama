@@ -167,7 +167,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     }
 
     @JvmInline
-    value class HandTrackingSource(val value: Long) {
+    value class HandTrackingSource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The source of hand tracking data is unknown.
@@ -206,7 +206,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     }
 
     @JvmInline
-    value class HandJoint(val value: Long) {
+    value class HandJoint(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Palm joint.
@@ -374,7 +374,7 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     }
 
     @JvmInline
-    value class HandJointFlags(val value: Long) {
+    value class HandJointFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: HandJointFlags): HandJointFlags = HandJointFlags(value or other.value)
 
         infix fun and(other: HandJointFlags): HandJointFlags = HandJointFlags(value and other.value)

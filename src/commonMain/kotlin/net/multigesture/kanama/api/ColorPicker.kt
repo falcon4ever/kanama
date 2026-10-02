@@ -374,7 +374,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
     }
 
     @JvmInline
-    value class ColorModeType(val value: Long) {
+    value class ColorModeType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Allows editing the color with Red/Green/Blue sliders in sRGB color space.
@@ -408,7 +408,7 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
     }
 
     @JvmInline
-    value class PickerShapeType(val value: Long) {
+    value class PickerShapeType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * HSV Color Model rectangle color space.

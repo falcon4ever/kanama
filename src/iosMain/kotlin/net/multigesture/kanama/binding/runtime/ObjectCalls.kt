@@ -31,6 +31,7 @@ import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosCallableRegistry
@@ -1998,6 +1999,13 @@ actual object ObjectCalls {
         desc.tag = PT_INT64
         desc.ptr = c.ptr
       }
+      // A typed Godot enum / bitfield boxed through an `Any?` argument is its INT (task 128 A).
+      is GodotEnumValue -> {
+        val c = alloc<LongVar>()
+        c.value = value.value
+        desc.tag = PT_INT64
+        desc.ptr = c.ptr
+      }
       is Float -> {
         val c = alloc<DoubleVar>()
         c.value = value.toDouble()
@@ -3582,6 +3590,13 @@ actual object ObjectCalls {
         is Long -> {
           val c = alloc<LongVar>()
           c.value = a
+          tags[i] = PT_INT64
+          ptrs[i] = c.ptr.reinterpret<CPointed>()
+        }
+        // A typed Godot enum / bitfield boxed through `vararg Any?` is its INT (task 128 A).
+        is GodotEnumValue -> {
+          val c = alloc<LongVar>()
+          c.value = a.value
           tags[i] = PT_INT64
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
@@ -41950,7 +41965,23 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_PHYSICS in back &&
         back == net.multigesture.kanama.api.Node.ProcessThreadMessages.MESSAGES_ALL,
     )
+    // The dynamic Variant path (task 128 A follow-up): a typed enum handed to an `Any?` argument is
+    // encoded as INT with its value. PAUSABLE (1) differs from the ALWAYS (3) set above and from a
+    // nil/no-op 0; before the encoder knew GodotEnumValue this threw "unsupported Variant
+    // argument".
+    node.set("process_mode", net.multigesture.kanama.api.Node.ProcessMode.PAUSABLE)
+    check(
+      "typed-enum-dynamic(Object.set process_mode PAUSABLE -> INT 1)",
+      node.getProcessMode() == net.multigesture.kanama.api.Node.ProcessMode.PAUSABLE,
+    )
     ObjectCalls.destroyObject(node.segment)
+    net.multigesture.kanama.api.ConfigFile.create().use { config ->
+      config.setValue("video", "display_mode", net.multigesture.kanama.api.Window.Mode.FULLSCREEN)
+      check(
+        "typed-enum-dynamic(ConfigFile.setValue Window.Mode.FULLSCREEN -> Long 3)",
+        (config.getValue("video", "display_mode") as? Number)?.toLong() == 3L,
+      )
+    }
   }
 
   // RefCounted return-slot ownership (task 31 iOS mirror): every RefCounted-typed ptrcall

@@ -357,7 +357,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
     }
 
     @JvmInline
-    value class DockLayout(val value: Long) {
+    value class DockLayout(override val value: Long) : GodotEnumValue {
         infix fun or(other: DockLayout): DockLayout = DockLayout(value or other.value)
 
         infix fun and(other: DockLayout): DockLayout = DockLayout(value and other.value)
@@ -397,7 +397,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
     }
 
     @JvmInline
-    value class DockSlot(val value: Long) {
+    value class DockSlot(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The dock is closed.

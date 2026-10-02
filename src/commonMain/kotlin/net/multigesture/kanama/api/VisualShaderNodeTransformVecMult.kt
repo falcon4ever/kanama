@@ -27,7 +27,7 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
     }
 
     @JvmInline
-    value class Operator(val value: Long) {
+    value class Operator(override val value: Long) : GodotEnumValue {
         companion object {
             val AxB: Operator get() = Operator(0L)
             val BxA: Operator get() = Operator(1L)

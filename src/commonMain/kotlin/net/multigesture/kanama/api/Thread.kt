@@ -73,7 +73,7 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Priority(val value: Long) {
+    value class Priority(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * A thread running with lower priority than normally.

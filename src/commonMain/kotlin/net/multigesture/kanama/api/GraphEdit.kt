@@ -902,7 +902,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class PanningScheme(val value: Long) {
+    value class PanningScheme(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Mouse Wheel will zoom, Ctrl + Mouse Wheel will move the view.
@@ -920,7 +920,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class GridPattern(val value: Long) {
+    value class GridPattern(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Draw the grid using solid lines.

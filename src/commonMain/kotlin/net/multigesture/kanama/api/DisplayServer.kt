@@ -3442,7 +3442,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class Feature(val value: Long) {
+    value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Display server supports global menu. This allows the application to display its menu items in
@@ -3697,7 +3697,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class AccessibilityRole(val value: Long) {
+    value class AccessibilityRole(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Unknown or custom role.
@@ -3993,7 +3993,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class AccessibilityPopupType(val value: Long) {
+    value class AccessibilityPopupType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Popup menu.
@@ -4023,7 +4023,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class AccessibilityFlags(val value: Long) {
+    value class AccessibilityFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Element is hidden for accessibility tools.
@@ -4089,7 +4089,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class AccessibilityAction(val value: Long) {
+    value class AccessibilityAction(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Single click action, callback argument is not set.
@@ -4238,7 +4238,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class AccessibilityLiveMode(val value: Long) {
+    value class AccessibilityLiveMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Indicates that updates to the live region should not be presented.
@@ -4264,7 +4264,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class AccessibilityScrollUnit(val value: Long) {
+    value class AccessibilityScrollUnit(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The amount by which to scroll. A single item of a list, line of text.
@@ -4282,7 +4282,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class AccessibilityScrollHint(val value: Long) {
+    value class AccessibilityScrollHint(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * A preferred position for the node scrolled into view. Top-left edge of the scroll container.
@@ -4324,7 +4324,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class MouseMode(val value: Long) {
+    value class MouseMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Makes the mouse cursor visible if it is hidden.
@@ -4368,7 +4368,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class ScreenOrientation(val value: Long) {
+    value class ScreenOrientation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default landscape orientation.
@@ -4416,7 +4416,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class VirtualKeyboardType(val value: Long) {
+    value class VirtualKeyboardType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default text virtual keyboard.
@@ -4472,7 +4472,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class CursorShape(val value: Long) {
+    value class CursorShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Arrow cursor shape. This is the default when not pointing anything that overrides the mouse
@@ -4608,7 +4608,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class FileDialogMode(val value: Long) {
+    value class FileDialogMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The native file dialog allows selecting one, and only one file.
@@ -4644,7 +4644,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class WindowMode(val value: Long) {
+    value class WindowMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Windowed mode, i.e. `Window` doesn't occupy the whole screen (unless set to the size of the
@@ -4700,7 +4700,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class ProgressState(val value: Long) {
+    value class ProgressState(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Stops displaying progress and returns the button to its normal state.
@@ -4741,7 +4741,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class WindowFlags(val value: Long) {
+    value class WindowFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The window can't be resized by dragging its resize grip. It's still possible to resize the
@@ -4862,7 +4862,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class WindowEvent(val value: Long) {
+    value class WindowEvent(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Sent when the mouse pointer enters the window.
@@ -4935,7 +4935,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class WindowResizeEdge(val value: Long) {
+    value class WindowResizeEdge(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Top-left edge of a window.
@@ -4995,7 +4995,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class VSyncMode(val value: Long) {
+    value class VSyncMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No vertical synchronization, which means the engine will display frames as fast as possible
@@ -5036,7 +5036,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class HandleType(val value: Long) {
+    value class HandleType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Display handle: - Linux (X11): `X11::Display*` for the display. - Linux (Wayland): `wl_display`
@@ -5099,7 +5099,7 @@ object DisplayServer {
     }
 
     @JvmInline
-    value class TTSUtteranceEvent(val value: Long) {
+    value class TTSUtteranceEvent(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Utterance has begun to be spoken.

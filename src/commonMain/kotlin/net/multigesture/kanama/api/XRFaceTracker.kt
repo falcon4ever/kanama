@@ -59,7 +59,7 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
     }
 
     @JvmInline
-    value class BlendShapeEntry(val value: Long) {
+    value class BlendShapeEntry(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Right eye looks outwards.

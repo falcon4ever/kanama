@@ -319,7 +319,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class DrawMode(val value: Long) {
+    value class DrawMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The normal state (i.e. not pressed, not hovered, not toggled and enabled) of buttons.
@@ -355,7 +355,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ActionMode(val value: Long) {
+    value class ActionMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Require just a press to consider the button clicked.

@@ -169,7 +169,7 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class Operation(val value: Long) {
+    value class Operation(override val value: Long) : GodotEnumValue {
         companion object {
             val UNION: Operation get() = Operation(0L)
             val INTERSECTION: Operation get() = Operation(1L)

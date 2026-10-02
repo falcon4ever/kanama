@@ -192,7 +192,7 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class NodeType(val value: Long) {
+    value class NodeType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * There's no node (no file or buffer opened).

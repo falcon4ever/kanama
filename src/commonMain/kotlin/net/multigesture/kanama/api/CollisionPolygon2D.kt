@@ -172,7 +172,7 @@ class CollisionPolygon2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class BuildMode(val value: Long) {
+    value class BuildMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Collisions will include the polygon and its contained area. In this mode the node has the same

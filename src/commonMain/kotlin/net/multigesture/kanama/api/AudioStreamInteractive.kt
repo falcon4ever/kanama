@@ -144,7 +144,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class TransitionFromTime(val value: Long) {
+    value class TransitionFromTime(override val value: Long) : GodotEnumValue {
         companion object {
             val IMMEDIATE: TransitionFromTime get() = TransitionFromTime(0L)
             val NEXT_BEAT: TransitionFromTime get() = TransitionFromTime(1L)
@@ -154,7 +154,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class TransitionToTime(val value: Long) {
+    value class TransitionToTime(override val value: Long) : GodotEnumValue {
         companion object {
             val SAME_POSITION: TransitionToTime get() = TransitionToTime(0L)
             val START: TransitionToTime get() = TransitionToTime(1L)
@@ -163,7 +163,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class FadeMode(val value: Long) {
+    value class FadeMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: FadeMode get() = FadeMode(0L)
             val IN: FadeMode get() = FadeMode(1L)
@@ -174,7 +174,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class AutoAdvanceMode(val value: Long) {
+    value class AutoAdvanceMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: AutoAdvanceMode get() = AutoAdvanceMode(0L)
             val ENABLED: AutoAdvanceMode get() = AutoAdvanceMode(1L)

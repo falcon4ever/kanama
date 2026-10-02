@@ -384,7 +384,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
     }
 
     @JvmInline
-    value class FillMode(val value: Long) {
+    value class FillMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The `texture_progress` fills from left to right.

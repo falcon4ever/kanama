@@ -178,7 +178,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     }
 
     @JvmInline
-    value class Shape(val value: Long) {
+    value class Shape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Gives the mesh a single flat face.

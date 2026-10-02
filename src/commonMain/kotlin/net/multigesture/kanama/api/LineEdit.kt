@@ -1163,7 +1163,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class MenuItems(val value: Long) {
+    value class MenuItems(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Cuts (copies and clears) the selected text.
@@ -1362,7 +1362,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class VirtualKeyboardType(val value: Long) {
+    value class VirtualKeyboardType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default text virtual keyboard.
@@ -1418,7 +1418,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ExpandMode(val value: Long) {
+    value class ExpandMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use the original size for the right icon.

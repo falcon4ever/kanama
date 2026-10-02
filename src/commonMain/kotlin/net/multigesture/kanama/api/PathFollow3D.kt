@@ -261,7 +261,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class RotationMode(val value: Long) {
+    value class RotationMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Forbids the PathFollow3D to rotate.

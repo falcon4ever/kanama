@@ -331,7 +331,7 @@ object ClassDB {
     }
 
     @JvmInline
-    value class APIType(val value: Long) {
+    value class APIType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Native Core class type.

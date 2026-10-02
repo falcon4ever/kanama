@@ -131,7 +131,7 @@ interface KanamaCoroutineOwner {
 
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
     // ===== BEGIN GENERATED ENUMS: AudioStreamPlayer (scripts/generate_api_wrapper.py — do not edit) =====
-    value class MixTarget(val value: Long) {
+    value class MixTarget(override val value: Long) : GodotEnumValue {
         companion object {
             val STEREO: MixTarget get() = MixTarget(0L)
             val SURROUND: MixTarget get() = MixTarget(1L)
@@ -193,8 +193,8 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
     // ===== BEGIN GENERATED ENUMS: Tween (scripts/generate_api_wrapper.py — do not edit) =====
     actual value class TweenProcessMode
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             actual val PHYSICS: TweenProcessMode get() = TweenProcessMode(0L)
             actual val IDLE: TweenProcessMode get() = TweenProcessMode(1L)
@@ -203,8 +203,8 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
 
     actual value class TweenPauseMode
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             actual val BOUND: TweenPauseMode get() = TweenPauseMode(0L)
             actual val STOP: TweenPauseMode get() = TweenPauseMode(1L)
@@ -214,8 +214,8 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
 
     actual value class TransitionType
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             actual val LINEAR: TransitionType get() = TransitionType(0L)
             actual val SINE: TransitionType get() = TransitionType(1L)
@@ -234,8 +234,8 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
 
     actual value class EaseType
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             actual val IN: EaseType get() = EaseType(0L)
             actual val OUT: EaseType get() = EaseType(1L)
@@ -429,7 +429,7 @@ object Mathf {
 // stays bespoke.
 object ResourceLoader {
     // ===== BEGIN GENERATED ENUMS: ResourceLoader (scripts/generate_api_wrapper.py — do not edit) =====
-    value class ThreadLoadStatus(val value: Long) {
+    value class ThreadLoadStatus(override val value: Long) : GodotEnumValue {
         companion object {
             val INVALID_RESOURCE: ThreadLoadStatus get() = ThreadLoadStatus(0L)
             val IN_PROGRESS: ThreadLoadStatus get() = ThreadLoadStatus(1L)
@@ -438,7 +438,7 @@ object ResourceLoader {
         }
     }
 
-    value class CacheMode(val value: Long) {
+    value class CacheMode(override val value: Long) : GodotEnumValue {
         companion object {
             val IGNORE: CacheMode get() = CacheMode(0L)
             val REUSE: CacheMode get() = CacheMode(1L)

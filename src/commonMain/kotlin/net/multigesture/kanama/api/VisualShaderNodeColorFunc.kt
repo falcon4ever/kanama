@@ -27,7 +27,7 @@ class VisualShaderNodeColorFunc(handle: GodotHandle) : VisualShaderNode(handle) 
     }
 
     @JvmInline
-    value class Function(val value: Long) {
+    value class Function(override val value: Long) : GodotEnumValue {
         companion object {
             val GRAYSCALE: Function get() = Function(0L)
             val HSV2RGB: Function get() = Function(1L)

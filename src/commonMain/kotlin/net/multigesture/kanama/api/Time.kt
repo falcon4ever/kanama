@@ -200,7 +200,7 @@ object Time {
     }
 
     @JvmInline
-    value class Month(val value: Long) {
+    value class Month(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The month of January, represented numerically as `01`.
@@ -278,7 +278,7 @@ object Time {
     }
 
     @JvmInline
-    value class Weekday(val value: Long) {
+    value class Weekday(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The day of the week Sunday, represented numerically as `0`.

@@ -86,7 +86,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class ErrorCode(val value: Long) {
+    value class ErrorCode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The request could not be parsed as it was not valid by JSON standard (`JSON.parse` failed).

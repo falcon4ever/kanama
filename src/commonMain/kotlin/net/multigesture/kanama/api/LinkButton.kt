@@ -237,7 +237,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
     }
 
     @JvmInline
-    value class UnderlineMode(val value: Long) {
+    value class UnderlineMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The LinkButton will always show an underline at the bottom of its text.

@@ -106,7 +106,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     }
 
     @JvmInline
-    value class BodyFlags(val value: Long) {
+    value class BodyFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: BodyFlags): BodyFlags = BodyFlags(value or other.value)
 
         infix fun and(other: BodyFlags): BodyFlags = BodyFlags(value and other.value)
@@ -140,7 +140,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     }
 
     @JvmInline
-    value class Joint(val value: Long) {
+    value class Joint(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Root joint.
@@ -674,7 +674,7 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     }
 
     @JvmInline
-    value class JointFlags(val value: Long) {
+    value class JointFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: JointFlags): JointFlags = JointFlags(value or other.value)
 
         infix fun and(other: JointFlags): JointFlags = JointFlags(value and other.value)

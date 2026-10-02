@@ -169,7 +169,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class RPCMode(val value: Long) {
+    value class RPCMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Used with `Node.rpc_config` to disable a method or property for all RPC calls, making it

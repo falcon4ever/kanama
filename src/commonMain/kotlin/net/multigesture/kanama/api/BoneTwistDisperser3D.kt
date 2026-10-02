@@ -355,7 +355,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     @JvmInline
-    value class DisperseMode(val value: Long) {
+    value class DisperseMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Assign amounts so that they monotonically increase from `0.0` to `1.0`, ensuring all weights are

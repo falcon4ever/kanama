@@ -298,7 +298,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     }
 
     @JvmInline
-    value class OneShotRequest(val value: Long) {
+    value class OneShotRequest(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The default state of the request. Nothing is done.
@@ -328,7 +328,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     }
 
     @JvmInline
-    value class MixMode(val value: Long) {
+    value class MixMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Blends two animations. See also `AnimationNodeBlend2`.

@@ -1708,7 +1708,7 @@ object NavigationServer3D {
     }
 
     @JvmInline
-    value class ProcessInfo(val value: Long) {
+    value class ProcessInfo(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to get the number of active navigation maps.

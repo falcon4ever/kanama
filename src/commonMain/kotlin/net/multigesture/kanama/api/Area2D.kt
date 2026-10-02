@@ -485,7 +485,7 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
     }
 
     @JvmInline
-    value class SpaceOverride(val value: Long) {
+    value class SpaceOverride(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This area does not affect gravity/damping.

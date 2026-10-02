@@ -791,7 +791,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
     }
 
     @JvmInline
-    value class FreezeMode(val value: Long) {
+    value class FreezeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Static body freeze mode (default). The body is not affected by gravity and forces. It can be
@@ -811,7 +811,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
     }
 
     @JvmInline
-    value class CenterOfMassMode(val value: Long) {
+    value class CenterOfMassMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * In this mode, the body's center of mass is calculated automatically based on its shapes. This
@@ -831,7 +831,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
     }
 
     @JvmInline
-    value class DampMode(val value: Long) {
+    value class DampMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * In this mode, the body's damping value is added to any value set in areas or the default value.
@@ -849,7 +849,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
     }
 
     @JvmInline
-    value class CCDMode(val value: Long) {
+    value class CCDMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Continuous collision detection disabled. This is the fastest way to detect body collisions, but

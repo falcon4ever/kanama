@@ -15,10 +15,12 @@ function (`godot_enum_model.enum_value_name` under the frozen prefix lock). This
   * `GodotObject.CONNECT_DEFAULT` (Kanama's own zero, which Godot does not name) ->
     `GodotObject.ConnectFlags(0L)`.
 
-It prints every rewrite and, separately, what it could NOT fix and a human must: a raw number passed
-where a method now takes an enum (`setProcessMode(3L)`), and `Owner.UPPER_CASE` references to a known
-class that matched no enum value. Comparisons against raw numbers (`connect(...) == 0L`) surface as
-compile errors.
+It prints every rewrite, notes rewritten values that flow into a dynamic `Any?` argument (`call`,
+`set`, `ConfigFile.setValue`: encoded as INT through `GodotEnumValue`, nothing to do), and lists what it
+could NOT fix and a human must: a raw number passed where a method now takes an enum
+(`setProcessMode(3L)`), and `Owner.UPPER_CASE` references to a known class that matched no enum value.
+Comparisons against raw numbers (`connect(...) == 0L`) and values read back from a dynamic call (a
+`Long`) surface as compile errors.
 
     python3 scripts/migrate_enum_constants.py /path/to/kotlin-src [--dry-run]
     python3 scripts/migrate_enum_constants.py --table docs/reference/generated/enum-migration.md [--check]
@@ -101,8 +103,9 @@ def enum_typed_methods(api_path: Path) -> dict[str, set[int]]:
     return result
 
 
-# Calls whose arguments are `Any?` Variants: a value class passed there arrives boxed, not as the
-# Long Godot expects, and the compiler cannot tell (decision 6 keeps the dynamic paths on Long).
+# Calls whose arguments are `Any?` Variants. A value class passed there arrives boxed; every enum
+# value class implements GodotEnumValue and the Variant encoders turn it into the INT it stands for,
+# so these are informational notes, not fixes (dynamic RETURNS still come back as Long).
 DYNAMIC_SINK_RE = re.compile(r"\b(?:setValue|call|callDeferred|set|setDeferred|setMeta|emitSignal|emit|rpc|rpcId)\(")
 REF_RE = re.compile(r"(?<![\w.])((?:net\.multigesture\.kanama\.api\.)?)([A-Z][A-Za-z0-9]*)\.([A-Z][A-Z0-9_]*[A-Z0-9])\b(?!\s*\()(?!\.\w)")
 
@@ -260,6 +263,7 @@ def main() -> int:
     files = [p for path in args.paths for p in ([path] if path.is_file() else sorted(path.rglob("*.kt")))]
     changed_total = 0
     human: list[str] = []
+    info: list[str] = []
     for path in files:
         text = path.read_text(encoding="utf-8")
         new_text, changes, unknown = migrate_text(text, per_owner, unique, known_owners, class_constants)
@@ -268,8 +272,9 @@ def main() -> int:
         changed_total += len(changes)
         human += [f"{path}:{line}: {ref} matched no enum value (constant removed or renamed?)" for line, ref in unknown]
         human += [f"{path}:{line}: raw number where an enum is expected: {call}" for line, call in raw_number_suspects(new_text, methods)]
-        human += [
-            f"{path}:{line}: {new} now flows into a dynamic (Variant/Any?) argument; pass `.value` there"
+        info += [
+            f"{path}:{line}: {new} is passed to a dynamic (Variant/Any?) argument: now encoded as INT "
+            "(GodotEnumValue), no change needed"
             for line, _, new in changes
             if DYNAMIC_SINK_RE.search(new_text.split("\n")[line - 1])
         ]
@@ -277,6 +282,10 @@ def main() -> int:
         if changes and not args.dry_run:
             path.write_text(new_text, encoding="utf-8")
     print(f"{TAG} {changed_total} reference(s) rewritten in {len(files)} file(s){' (dry run)' if args.dry_run else ''}")
+    if info:
+        print(f"{TAG} {len(info)} note(s):")
+        for item in info:
+            print(f"    {item}")
     if human:
         print(f"{TAG} {len(human)} place(s) need a human:")
         for item in human:

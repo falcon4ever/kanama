@@ -70,7 +70,7 @@ class VisibleOnScreenEnabler2D(handle: GodotHandle) : VisibleOnScreenNotifier2D(
     }
 
     @JvmInline
-    value class EnableMode(val value: Long) {
+    value class EnableMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Corresponds to `Node.PROCESS_MODE_INHERIT`.

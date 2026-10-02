@@ -104,7 +104,7 @@ object CameraServer {
     }
 
     @JvmInline
-    value class FeedImage(val value: Long) {
+    value class FeedImage(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The RGBA camera image.

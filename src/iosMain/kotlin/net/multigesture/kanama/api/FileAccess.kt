@@ -15,8 +15,8 @@ actual object FileAccess {
     // ===== BEGIN GENERATED ENUMS: FileAccess (scripts/generate_api_wrapper.py — do not edit) =====
     actual value class ModeFlags
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             actual val READ: ModeFlags get() = ModeFlags(1L)
             actual val WRITE: ModeFlags get() = ModeFlags(2L)
@@ -27,8 +27,8 @@ actual object FileAccess {
 
     actual value class CompressionMode
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             actual val FASTLZ: CompressionMode get() = CompressionMode(0L)
             actual val DEFLATE: CompressionMode get() = CompressionMode(1L)
@@ -40,8 +40,8 @@ actual object FileAccess {
 
     actual value class UnixPermissionFlags
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual infix fun or(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value or other.value)
 
         actual infix fun and(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value and other.value)

@@ -225,7 +225,7 @@ class Timer(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class TimerProcessCallback(val value: Long) {
+    value class TimerProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Update the timer every physics process frame (see `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`).

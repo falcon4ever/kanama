@@ -199,7 +199,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     @JvmInline
-    value class Fill(val value: Long) {
+    value class Fill(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The colors are linearly interpolated in a straight line.
@@ -229,7 +229,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     @JvmInline
-    value class Repeat(val value: Long) {
+    value class Repeat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The gradient fill is restricted to the range defined by `fill_from` to `fill_to` offsets.

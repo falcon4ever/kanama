@@ -228,7 +228,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class ConnectionStatus(val value: Long) {
+    value class ConnectionStatus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The MultiplayerPeer is disconnected.
@@ -252,7 +252,7 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class TransferMode(val value: Long) {
+    value class TransferMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Packets are not acknowledged, no resend attempts are made for lost packets. Packets may arrive

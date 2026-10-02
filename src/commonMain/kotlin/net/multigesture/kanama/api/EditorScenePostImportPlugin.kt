@@ -45,7 +45,7 @@ class EditorScenePostImportPlugin(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class InternalImportCategory(val value: Long) {
+    value class InternalImportCategory(override val value: Long) : GodotEnumValue {
         companion object {
             val NODE: InternalImportCategory get() = InternalImportCategory(0L)
             val MESH_3D_NODE: InternalImportCategory get() = InternalImportCategory(1L)

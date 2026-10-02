@@ -111,7 +111,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
     }
 
     @JvmInline
-    value class AnimationProcessCallback(val value: Long) {
+    value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {
             val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)
             val IDLE: AnimationProcessCallback get() = AnimationProcessCallback(1L)

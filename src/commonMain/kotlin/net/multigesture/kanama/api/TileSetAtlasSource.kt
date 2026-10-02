@@ -495,7 +495,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
     }
 
     @JvmInline
-    value class TileAnimationMode(val value: Long) {
+    value class TileAnimationMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Tile animations start at same time, looking identical.

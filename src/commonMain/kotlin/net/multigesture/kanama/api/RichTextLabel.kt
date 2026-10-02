@@ -1608,7 +1608,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ListType(val value: Long) {
+    value class ListType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Each list item has a number marker.
@@ -1638,7 +1638,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class MenuItems(val value: Long) {
+    value class MenuItems(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Copies the selected text.
@@ -1662,7 +1662,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class MetaUnderline(val value: Long) {
+    value class MetaUnderline(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Meta tag does not display an underline, even if `meta_underlined` is `true`.
@@ -1686,7 +1686,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ImageUpdateMask(val value: Long) {
+    value class ImageUpdateMask(override val value: Long) : GodotEnumValue {
         infix fun or(other: ImageUpdateMask): ImageUpdateMask = ImageUpdateMask(value or other.value)
 
         infix fun and(other: ImageUpdateMask): ImageUpdateMask = ImageUpdateMask(value and other.value)
@@ -1750,7 +1750,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ImageUnit(val value: Long) {
+    value class ImageUnit(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Images drawn with this unit will be in pixels.

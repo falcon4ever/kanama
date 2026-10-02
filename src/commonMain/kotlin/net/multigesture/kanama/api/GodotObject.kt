@@ -29,7 +29,7 @@ import net.multigesture.kanama.types.NodePath
 open class GodotObject(val handle: GodotHandle) {
     // ===== BEGIN GENERATED ENUMS: GodotObject (scripts/generate_api_wrapper.py — do not edit) =====
     @JvmInline
-    value class ConnectFlags(val value: Long) {
+    value class ConnectFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: ConnectFlags): ConnectFlags = ConnectFlags(value or other.value)
 
         infix fun and(other: ConnectFlags): ConnectFlags = ConnectFlags(value and other.value)

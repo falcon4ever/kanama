@@ -31,7 +31,7 @@ class PinJoint3D(handle: GodotHandle) : Joint3D(handle) {
     }
 
     @JvmInline
-    value class Param(val value: Long) {
+    value class Param(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The force with which the pinned objects stay in positional relation to each other. The higher,

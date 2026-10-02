@@ -493,7 +493,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class SamplePartitionType(val value: Long) {
+    value class SamplePartitionType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Convex partitioning that results in a navigation mesh with convex polygons.
@@ -517,7 +517,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ParsedGeometryType(val value: Long) {
+    value class ParsedGeometryType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Parses mesh instances as obstruction geometry. This includes `Polygon2D`, `MeshInstance2D`,
@@ -550,7 +550,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class SourceGeometryMode(val value: Long) {
+    value class SourceGeometryMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scans the child nodes of the root node recursively for geometry.

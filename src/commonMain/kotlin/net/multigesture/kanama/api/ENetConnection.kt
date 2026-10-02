@@ -101,7 +101,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class CompressionMode(val value: Long) {
+    value class CompressionMode(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: CompressionMode get() = CompressionMode(0L)
             val RANGE_CODER: CompressionMode get() = CompressionMode(1L)
@@ -112,7 +112,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class EventType(val value: Long) {
+    value class EventType(override val value: Long) : GodotEnumValue {
         companion object {
             val ERROR: EventType get() = EventType(-1L)
             val NONE: EventType get() = EventType(0L)
@@ -123,7 +123,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class HostStatistic(val value: Long) {
+    value class HostStatistic(override val value: Long) : GodotEnumValue {
         companion object {
             val SENT_DATA: HostStatistic get() = HostStatistic(0L)
             val SENT_PACKETS: HostStatistic get() = HostStatistic(1L)

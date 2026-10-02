@@ -13,7 +13,7 @@ import kotlin.jvm.JvmName
 class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     // ===== BEGIN GENERATED ENUMS: LightmapGI (scripts/generate_api_wrapper.py — do not edit) =====
     @JvmInline
-    value class BakeQuality(val value: Long) {
+    value class BakeQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Low bake quality (fastest bake times). The quality of this preset can be adjusted by changing
@@ -51,7 +51,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class GenerateProbes(val value: Long) {
+    value class GenerateProbes(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Don't generate lightmap probes for lighting dynamic objects.
@@ -87,7 +87,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class BakeError(val value: Long) {
+    value class BakeError(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Lightmap baking was successful.
@@ -172,7 +172,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class EnvironmentMode(val value: Long) {
+    value class EnvironmentMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Ignore environment lighting when baking lightmaps.

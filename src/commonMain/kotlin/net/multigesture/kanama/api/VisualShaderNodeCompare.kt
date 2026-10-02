@@ -59,7 +59,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class ComparisonType(val value: Long) {
+    value class ComparisonType(override val value: Long) : GodotEnumValue {
         companion object {
             val SCALAR: ComparisonType get() = ComparisonType(0L)
             val SCALAR_INT: ComparisonType get() = ComparisonType(1L)
@@ -74,7 +74,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class Function(val value: Long) {
+    value class Function(override val value: Long) : GodotEnumValue {
         companion object {
             val EQUAL: Function get() = Function(0L)
             val NOT_EQUAL: Function get() = Function(1L)
@@ -87,7 +87,7 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class Condition(val value: Long) {
+    value class Condition(override val value: Long) : GodotEnumValue {
         companion object {
             val ALL: Condition get() = Condition(0L)
             val ANY: Condition get() = Condition(1L)

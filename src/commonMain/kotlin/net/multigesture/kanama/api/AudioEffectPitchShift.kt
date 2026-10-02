@@ -104,7 +104,7 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
     }
 
     @JvmInline
-    value class FFTSize(val value: Long) {
+    value class FFTSize(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use a buffer of 256 samples for the Fast Fourier transform. Lowest latency, but least stable

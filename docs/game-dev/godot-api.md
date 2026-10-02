@@ -123,8 +123,12 @@ if (err != GodotError.OK) GD.printErr("save failed: ${err.value}")
   `val f = Control.SizeFlags.EXPAND or Control.SizeFlags.FILL`, `if (Control.SizeFlags.FILL in f)`.
   Godot names no zero for most bitfields; `X(0L)` is the empty set (for example
   `GodotObject.ConnectFlags(0L)`, the default of `connect`).
-- **Dynamic calls** (`call`, `get`, `set`, Variant returns) keep passing and returning `Long`; wrap
-  with `ProcessMode(raw as Long)` when you need the type.
+- **Dynamic calls** (`call`, `set`, `callDeferred`, `emitSignal`, `ConfigFile.setValue`, Array and
+  Dictionary elements) accept the typed values: every enum implements `GodotEnumValue`, and the
+  Variant encoder passes it as the INT it stands for, so `node.set("process_mode",
+  Node.ProcessMode.ALWAYS)` works. What comes BACK from a dynamic path (`get`, `call`,
+  `ConfigFile.getValue`, Variant returns) is a `Long`; wrap it with `ProcessMode(raw as Long)` when
+  you need the type.
 - **Required returns.** An object return Godot marks `meta: "required"` (`Node.createTween()`,
   `SceneTree.getRoot()`, the `Tween`/`Tweener` fluent setters, `CanvasItem.makeInputLocal`, ...)
   is non-null, so chains use `.` rather than `?.`. A null from the engine there is an engine bug

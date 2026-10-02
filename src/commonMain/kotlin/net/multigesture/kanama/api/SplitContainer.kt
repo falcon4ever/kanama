@@ -390,7 +390,7 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class DraggerVisibility(val value: Long) {
+    value class DraggerVisibility(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The split dragger icon is always visible when `autohide` is `false`, otherwise visible only when

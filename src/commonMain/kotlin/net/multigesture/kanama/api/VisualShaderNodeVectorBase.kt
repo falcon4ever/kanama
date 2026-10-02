@@ -27,7 +27,7 @@ open class VisualShaderNodeVectorBase(handle: GodotHandle) : VisualShaderNode(ha
     }
 
     @JvmInline
-    value class OpType(val value: Long) {
+    value class OpType(override val value: Long) : GodotEnumValue {
         companion object {
             val VECTOR_2D: OpType get() = OpType(0L)
             val VECTOR_3D: OpType get() = OpType(1L)

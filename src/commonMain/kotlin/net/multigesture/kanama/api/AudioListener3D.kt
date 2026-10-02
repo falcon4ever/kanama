@@ -84,7 +84,7 @@ class AudioListener3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class DopplerTracking(val value: Long) {
+    value class DopplerTracking(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) simulation (default).

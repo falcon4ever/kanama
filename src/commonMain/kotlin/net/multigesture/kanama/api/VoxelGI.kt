@@ -151,7 +151,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class Subdiv(val value: Long) {
+    value class Subdiv(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use 64 subdivisions. This is the lowest quality setting, but the fastest. Use it if you can, but

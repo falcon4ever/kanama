@@ -943,7 +943,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class IconMode(val value: Long) {
+    value class IconMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Icon is drawn above the text.
@@ -961,7 +961,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class SelectMode(val value: Long) {
+    value class SelectMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Only allow selecting a single item.
@@ -985,7 +985,7 @@ class ItemList(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ScrollHintMode(val value: Long) {
+    value class ScrollHintMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scroll hints will never be shown.

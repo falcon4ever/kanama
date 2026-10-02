@@ -1378,7 +1378,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class SpaceParameter(val value: Long) {
+    value class SpaceParameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get the maximum distance a pair of bodies has to move before their collision
@@ -1459,7 +1459,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class ShapeType(val value: Long) {
+    value class ShapeType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This is the constant for creating world boundary shapes. A world boundary shape is an infinite
@@ -1528,7 +1528,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class AreaParameter(val value: Long) {
+    value class AreaParameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get gravity override mode in an area. See `AreaSpaceOverrideMode` for possible
@@ -1610,7 +1610,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class AreaSpaceOverrideMode(val value: Long) {
+    value class AreaSpaceOverrideMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This area does not affect gravity/damp. These are generally areas that exist only to detect
@@ -1651,7 +1651,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class BodyMode(val value: Long) {
+    value class BodyMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant for static bodies. In this mode, a body can be only moved by user code and doesn't
@@ -1685,7 +1685,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class BodyParameter(val value: Long) {
+    value class BodyParameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get a body's bounce factor. The default value of this parameter is `0.0`.
@@ -1771,7 +1771,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class BodyDampMode(val value: Long) {
+    value class BodyDampMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The body's damping value is added to any value set in areas or the default value.
@@ -1789,7 +1789,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class BodyState(val value: Long) {
+    value class BodyState(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get the current transform matrix of the body.
@@ -1825,7 +1825,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class JointType(val value: Long) {
+    value class JointType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to create pin joints.
@@ -1855,7 +1855,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class JointParam(val value: Long) {
+    value class JointParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get how fast the joint pulls the bodies back to satisfy the joint constraint.
@@ -1886,7 +1886,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class PinJointParam(val value: Long) {
+    value class PinJointParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get a how much the bond of the pin joint can flex. The default value of this
@@ -1917,7 +1917,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class PinJointFlag(val value: Long) {
+    value class PinJointFlag(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If `true`, the pin has a maximum and a minimum rotation.
@@ -1935,7 +1935,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class DampedSpringParam(val value: Long) {
+    value class DampedSpringParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Sets the resting length of the spring joint. The joint will always try to go to back this length
@@ -1964,7 +1964,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class CCDMode(val value: Long) {
+    value class CCDMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables continuous collision detection. This is the fastest way to detect body collisions, but
@@ -1991,7 +1991,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class AreaBodyStatus(val value: Long) {
+    value class AreaBodyStatus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The value of the first parameter and area callback function receives, when an object enters one
@@ -2011,7 +2011,7 @@ object PhysicsServer2D {
     }
 
     @JvmInline
-    value class ProcessInfo(val value: Long) {
+    value class ProcessInfo(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to get the number of objects that are not sleeping.

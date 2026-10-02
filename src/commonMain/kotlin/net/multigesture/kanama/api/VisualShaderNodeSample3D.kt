@@ -27,7 +27,7 @@ open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(hand
     }
 
     @JvmInline
-    value class Source(val value: Long) {
+    value class Source(override val value: Long) : GodotEnumValue {
         companion object {
             val TEXTURE: Source get() = Source(0L)
             val PORT: Source get() = Source(1L)

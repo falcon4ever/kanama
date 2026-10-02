@@ -127,7 +127,7 @@ object IP {
     }
 
     @JvmInline
-    value class ResolverStatus(val value: Long) {
+    value class ResolverStatus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * DNS hostname resolver status: No status.
@@ -157,7 +157,7 @@ object IP {
     }
 
     @JvmInline
-    value class Type(val value: Long) {
+    value class Type(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Address type: None.

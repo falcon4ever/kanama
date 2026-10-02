@@ -588,7 +588,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class TabPosition(val value: Long) {
+    value class TabPosition(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Places the tab bar at the top.

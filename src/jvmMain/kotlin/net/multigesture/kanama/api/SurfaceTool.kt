@@ -17,7 +17,7 @@ import java.lang.foreign.MemorySegment
 class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     // ===== BEGIN GENERATED ENUMS: SurfaceTool (scripts/generate_api_wrapper.py — do not edit) =====
     @JvmInline
-    value class CustomFormat(val value: Long) {
+    value class CustomFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Limits range of data passed to `set_custom` to unsigned normalized 0 to 1 stored in 8 bits per
@@ -85,7 +85,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class SkinWeightCount(val value: Long) {
+    value class SkinWeightCount(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Each individual vertex can be influenced by only 4 bone weights.

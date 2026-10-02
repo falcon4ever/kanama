@@ -348,7 +348,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     }
 
     @JvmInline
-    value class NoiseType(val value: Long) {
+    value class NoiseType(override val value: Long) : GodotEnumValue {
         companion object {
             val VALUE: NoiseType get() = NoiseType(5L)
             val VALUE_CUBIC: NoiseType get() = NoiseType(4L)
@@ -360,7 +360,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     }
 
     @JvmInline
-    value class FractalType(val value: Long) {
+    value class FractalType(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: FractalType get() = FractalType(0L)
             val FBM: FractalType get() = FractalType(1L)
@@ -370,7 +370,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     }
 
     @JvmInline
-    value class CellularDistanceFunction(val value: Long) {
+    value class CellularDistanceFunction(override val value: Long) : GodotEnumValue {
         companion object {
             val EUCLIDEAN: CellularDistanceFunction get() = CellularDistanceFunction(0L)
             val EUCLIDEAN_SQUARED: CellularDistanceFunction get() = CellularDistanceFunction(1L)
@@ -380,7 +380,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     }
 
     @JvmInline
-    value class CellularReturnType(val value: Long) {
+    value class CellularReturnType(override val value: Long) : GodotEnumValue {
         companion object {
             val CELL_VALUE: CellularReturnType get() = CellularReturnType(0L)
             val DISTANCE: CellularReturnType get() = CellularReturnType(1L)
@@ -393,7 +393,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     }
 
     @JvmInline
-    value class DomainWarpType(val value: Long) {
+    value class DomainWarpType(override val value: Long) : GodotEnumValue {
         companion object {
             val SIMPLEX: DomainWarpType get() = DomainWarpType(0L)
             val SIMPLEX_REDUCED: DomainWarpType get() = DomainWarpType(1L)
@@ -402,7 +402,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     }
 
     @JvmInline
-    value class DomainWarpFractalType(val value: Long) {
+    value class DomainWarpFractalType(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: DomainWarpFractalType get() = DomainWarpFractalType(0L)
             val PROGRESSIVE: DomainWarpFractalType get() = DomainWarpFractalType(1L)

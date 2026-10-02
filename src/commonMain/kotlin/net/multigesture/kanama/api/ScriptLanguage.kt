@@ -12,7 +12,7 @@ open class ScriptLanguage(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
 
     @JvmInline
-    value class ScriptNameCasing(val value: Long) {
+    value class ScriptNameCasing(override val value: Long) : GodotEnumValue {
         companion object {
             val AUTO: ScriptNameCasing get() = ScriptNameCasing(0L)
             val PASCAL_CASE: ScriptNameCasing get() = ScriptNameCasing(1L)

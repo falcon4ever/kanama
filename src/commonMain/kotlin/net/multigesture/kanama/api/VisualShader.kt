@@ -129,7 +129,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     }
 
     @JvmInline
-    value class Type(val value: Long) {
+    value class Type(override val value: Long) : GodotEnumValue {
         companion object {
             val VERTEX: Type get() = Type(0L)
             val FRAGMENT: Type get() = Type(1L)
@@ -147,7 +147,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     }
 
     @JvmInline
-    value class VaryingMode(val value: Long) {
+    value class VaryingMode(override val value: Long) : GodotEnumValue {
         companion object {
             val VERTEX_TO_FRAG_LIGHT: VaryingMode get() = VaryingMode(0L)
             val FRAG_TO_LIGHT: VaryingMode get() = VaryingMode(1L)
@@ -156,7 +156,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     }
 
     @JvmInline
-    value class VaryingType(val value: Long) {
+    value class VaryingType(override val value: Long) : GodotEnumValue {
         companion object {
             val FLOAT: VaryingType get() = VaryingType(0L)
             val INT: VaryingType get() = VaryingType(1L)

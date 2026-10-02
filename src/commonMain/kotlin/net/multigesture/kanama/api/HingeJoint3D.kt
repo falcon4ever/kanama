@@ -49,7 +49,7 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
     }
 
     @JvmInline
-    value class Param(val value: Long) {
+    value class Param(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The speed with which the two bodies get pulled together when they move in different directions.
@@ -104,7 +104,7 @@ class HingeJoint3D(handle: GodotHandle) : Joint3D(handle) {
     }
 
     @JvmInline
-    value class Flag(val value: Long) {
+    value class Flag(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If `true`, the hinges maximum and minimum rotation, defined by `angular_limit/lower` and

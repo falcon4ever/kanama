@@ -57,7 +57,7 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ZipAppend(val value: Long) {
+    value class ZipAppend(override val value: Long) : GodotEnumValue {
         companion object {
             val CREATE: ZipAppend get() = ZipAppend(0L)
             val CREATEAFTER: ZipAppend get() = ZipAppend(1L)
@@ -66,7 +66,7 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class CompressionLevel(val value: Long) {
+    value class CompressionLevel(override val value: Long) : GodotEnumValue {
         companion object {
             val DEFAULT: CompressionLevel get() = CompressionLevel(-1L)
             val NONE: CompressionLevel get() = CompressionLevel(0L)

@@ -44,7 +44,7 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class RenderModelTracker(val value: Long) {
+    value class RenderModelTracker(override val value: Long) : GodotEnumValue {
         companion object {
             val ANY: RenderModelTracker get() = RenderModelTracker(0L)
             val NONE_SET: RenderModelTracker get() = RenderModelTracker(1L)

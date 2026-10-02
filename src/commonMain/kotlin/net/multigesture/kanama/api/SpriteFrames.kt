@@ -222,7 +222,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class LoopMode(val value: Long) {
+    value class LoopMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The animation plays once and stops when it reaches the end, or the start if played in reverse.

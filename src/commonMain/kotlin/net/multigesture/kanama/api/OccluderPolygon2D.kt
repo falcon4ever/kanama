@@ -82,7 +82,7 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class CullMode(val value: Long) {
+    value class CullMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Culling is disabled. See `cull_mode`.

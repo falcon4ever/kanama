@@ -12,7 +12,7 @@ class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
     // No conservative instance methods emitted yet.
 
     @JvmInline
-    value class LookupResultType(val value: Long) {
+    value class LookupResultType(override val value: Long) : GodotEnumValue {
         companion object {
             val SCRIPT_LOCATION: LookupResultType get() = LookupResultType(0L)
             val CLASS: LookupResultType get() = LookupResultType(1L)
@@ -30,7 +30,7 @@ class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
     }
 
     @JvmInline
-    value class CodeCompletionLocation(val value: Long) {
+    value class CodeCompletionLocation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The option is local to the location of the code completion query - e.g. a local variable.
@@ -67,7 +67,7 @@ class ScriptLanguageExtension(handle: GodotHandle) : ScriptLanguage(handle) {
     }
 
     @JvmInline
-    value class CodeCompletionKind(val value: Long) {
+    value class CodeCompletionKind(override val value: Long) : GodotEnumValue {
         companion object {
             val CLASS: CodeCompletionKind get() = CodeCompletionKind(0L)
             val FUNCTION: CodeCompletionKind get() = CodeCompletionKind(1L)

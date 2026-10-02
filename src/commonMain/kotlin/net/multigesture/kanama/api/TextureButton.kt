@@ -280,7 +280,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
     }
 
     @JvmInline
-    value class StretchMode(val value: Long) {
+    value class StretchMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scale to fit the node's bounding rectangle.

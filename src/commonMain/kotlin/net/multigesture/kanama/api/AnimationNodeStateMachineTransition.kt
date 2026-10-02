@@ -282,7 +282,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     }
 
     @JvmInline
-    value class SwitchMode(val value: Long) {
+    value class SwitchMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Switch to the next state immediately. The current state will end and blend into the beginning of
@@ -309,7 +309,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     }
 
     @JvmInline
-    value class AdvanceMode(val value: Long) {
+    value class AdvanceMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Don't use this transition.

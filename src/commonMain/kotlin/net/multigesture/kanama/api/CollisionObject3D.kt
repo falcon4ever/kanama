@@ -377,7 +377,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class DisableMode(val value: Long) {
+    value class DisableMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * When `Node.process_mode` is set to `Node.PROCESS_MODE_DISABLED`, remove from the physics

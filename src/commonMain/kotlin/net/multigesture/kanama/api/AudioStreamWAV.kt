@@ -258,7 +258,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class Format(val value: Long) {
+    value class Format(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 8-bit PCM audio codec.
@@ -288,7 +288,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class LoopMode(val value: Long) {
+    value class LoopMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Audio does not loop.

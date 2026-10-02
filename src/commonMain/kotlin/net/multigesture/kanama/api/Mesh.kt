@@ -190,7 +190,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class PrimitiveType(val value: Long) {
+    value class PrimitiveType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Render array as points (one vertex equals one point).
@@ -226,7 +226,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ArrayType(val value: Long) {
+    value class ArrayType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * `PackedVector3Array`, `PackedVector2Array`, or `Array` of vertex positions.
@@ -340,7 +340,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ArrayCustomFormat(val value: Long) {
+    value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Indicates this custom channel contains unsigned normalized byte colors from 0 to 1, encoded as
@@ -407,7 +407,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ArrayFormat(val value: Long) {
+    value class ArrayFormat(override val value: Long) : GodotEnumValue {
         infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
 
         infix fun and(other: ArrayFormat): ArrayFormat = ArrayFormat(value and other.value)
@@ -596,7 +596,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class BlendShapeMode(val value: Long) {
+    value class BlendShapeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Blend shapes are normalized.

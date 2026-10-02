@@ -254,7 +254,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class TitlePosition(val value: Long) {
+    value class TitlePosition(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Makes the title appear at the top of the container.

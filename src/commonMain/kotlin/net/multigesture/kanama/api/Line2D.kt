@@ -434,7 +434,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class LineJointMode(val value: Long) {
+    value class LineJointMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Makes the polyline's joints pointy, connecting the sides of the two segments by extending them
@@ -462,7 +462,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class LineCapMode(val value: Long) {
+    value class LineCapMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Draws no line cap.
@@ -486,7 +486,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class LineTextureMode(val value: Long) {
+    value class LineTextureMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Takes the left pixels of the texture and renders them over the whole polyline.

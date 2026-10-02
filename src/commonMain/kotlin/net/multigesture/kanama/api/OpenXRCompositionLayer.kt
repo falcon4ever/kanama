@@ -291,7 +291,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class Filter(val value: Long) {
+    value class Filter(override val value: Long) : GodotEnumValue {
         companion object {
             val NEAREST: Filter get() = Filter(0L)
             val LINEAR: Filter get() = Filter(1L)
@@ -300,7 +300,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class MipmapMode(val value: Long) {
+    value class MipmapMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: MipmapMode get() = MipmapMode(0L)
             val NEAREST: MipmapMode get() = MipmapMode(1L)
@@ -309,7 +309,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class Wrap(val value: Long) {
+    value class Wrap(override val value: Long) : GodotEnumValue {
         companion object {
             val CLAMP_TO_BORDER: Wrap get() = Wrap(0L)
             val CLAMP_TO_EDGE: Wrap get() = Wrap(1L)
@@ -320,7 +320,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class Swizzle(val value: Long) {
+    value class Swizzle(override val value: Long) : GodotEnumValue {
         companion object {
             val RED: Swizzle get() = Swizzle(0L)
             val GREEN: Swizzle get() = Swizzle(1L)
@@ -332,7 +332,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class EyeVisibility(val value: Long) {
+    value class EyeVisibility(override val value: Long) : GodotEnumValue {
         companion object {
             val BOTH: EyeVisibility get() = EyeVisibility(0L)
             val LEFT: EyeVisibility get() = EyeVisibility(1L)

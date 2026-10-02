@@ -924,7 +924,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class RotationEditMode(val value: Long) {
+    value class RotationEditMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The rotation is edited using a `Vector3` in Euler angles

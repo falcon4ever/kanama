@@ -91,7 +91,7 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     @JvmInline
-    value class DrawableFormat(val value: Long) {
+    value class DrawableFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * OpenGL texture format RGBA with four components, each with a bitdepth of 8.

@@ -182,7 +182,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
     }
 
     @JvmInline
-    value class Resolution(val value: Long) {
+    value class Resolution(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Generate a 256×256 heightmap. Intended for small-scale scenes, or larger scenes with no distant
@@ -232,7 +232,7 @@ class GPUParticlesCollisionHeightField3D(handle: GodotHandle) : GPUParticlesColl
     }
 
     @JvmInline
-    value class UpdateMode(val value: Long) {
+    value class UpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Only update the heightmap when the `GPUParticlesCollisionHeightField3D` node is moved, or when

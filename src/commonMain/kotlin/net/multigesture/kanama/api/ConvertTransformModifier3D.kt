@@ -199,7 +199,7 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
     }
 
     @JvmInline
-    value class TransformMode(val value: Long) {
+    value class TransformMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Convert with position. Transfer the difference.

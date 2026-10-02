@@ -210,7 +210,7 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class FilterAction(val value: Long) {
+    value class FilterAction(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not use filtering.

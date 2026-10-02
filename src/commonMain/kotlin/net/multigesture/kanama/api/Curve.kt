@@ -383,7 +383,7 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TangentMode(val value: Long) {
+    value class TangentMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The tangent on this side of the point is user-defined.

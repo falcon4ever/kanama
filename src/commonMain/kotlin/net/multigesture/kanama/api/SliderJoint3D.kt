@@ -31,7 +31,7 @@ class SliderJoint3D(handle: GodotHandle) : Joint3D(handle) {
     }
 
     @JvmInline
-    value class Param(val value: Long) {
+    value class Param(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant for accessing `linear_limit/upper_distance`. The maximum difference between the pivot

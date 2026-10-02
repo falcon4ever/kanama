@@ -24,6 +24,7 @@ import kotlinx.cinterop.set
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.toLong
 import kotlinx.cinterop.value
+import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
@@ -1100,6 +1101,11 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       retBuf.reinterpret<LongVar>()[0] = value
       retTag[0] = IOS_PT_INT64
     }
+    // A script returning a typed Godot enum / bitfield returns its INT (task 128 A).
+    is GodotEnumValue -> {
+      retBuf.reinterpret<LongVar>()[0] = value.value
+      retTag[0] = IOS_PT_INT64
+    }
     is Int -> {
       retBuf.reinterpret<LongVar>()[0] = value.toLong()
       retTag[0] = IOS_PT_INT64
@@ -1541,6 +1547,8 @@ internal object IosReturnContainerScratch {
       is Boolean -> Pair(IOS_PT_BOOL, byteArrayOf(if (value) 1 else 0))
       is Int -> Pair(IOS_PT_INT64, int64Bytes(value.toLong()))
       is Long -> Pair(IOS_PT_INT64, int64Bytes(value))
+      // Array / Dictionary elements: a typed Godot enum / bitfield is its INT (task 128 A).
+      is GodotEnumValue -> Pair(IOS_PT_INT64, int64Bytes(value.value))
       is Float -> Pair(IOS_PT_FLOAT64, int64Bytes(value.toDouble().toRawBits()))
       is Double -> Pair(IOS_PT_FLOAT64, int64Bytes(value.toRawBits()))
       is String -> Pair(IOS_PT_STRING, value.encodeToByteArray())

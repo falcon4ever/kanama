@@ -11,7 +11,7 @@ import java.lang.foreign.MemorySegment
 object ResourceLoader {
     // ===== BEGIN GENERATED ENUMS: ResourceLoader (scripts/generate_api_wrapper.py — do not edit) =====
     @JvmInline
-    value class ThreadLoadStatus(val value: Long) {
+    value class ThreadLoadStatus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The resource is invalid, or has not been loaded with `load_threaded_request`.
@@ -41,7 +41,7 @@ object ResourceLoader {
     }
 
     @JvmInline
-    value class CacheMode(val value: Long) {
+    value class CacheMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Neither the main resource (the one requested to be loaded) nor any of its subresources are

@@ -102,7 +102,7 @@ object Performance {
     }
 
     @JvmInline
-    value class Monitor(val value: Long) {
+    value class Monitor(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The number of frames rendered in the last second. This metric is only updated once per second,
@@ -502,7 +502,7 @@ object Performance {
     }
 
     @JvmInline
-    value class MonitorType(val value: Long) {
+    value class MonitorType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Monitor output is formatted as an integer value.

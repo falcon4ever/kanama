@@ -702,7 +702,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class DebugVisibilityMode(val value: Long) {
+    value class DebugVisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Hide the collisions or navigation debug shapes in the editor, and use the debug settings to

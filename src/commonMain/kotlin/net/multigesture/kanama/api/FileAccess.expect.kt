@@ -10,7 +10,7 @@ import kotlin.jvm.JvmInline
 // scopes it out until the class is generated once).
 expect object FileAccess {
     @JvmInline
-    value class ModeFlags(val value: Long) {
+    value class ModeFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Opens the file for read operations. The file cursor is positioned at the beginning of the file.
@@ -47,7 +47,7 @@ expect object FileAccess {
     }
 
     @JvmInline
-    value class CompressionMode(val value: Long) {
+    value class CompressionMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Uses the FastLZ (https://fastlz.org/) compression method.
@@ -84,7 +84,7 @@ expect object FileAccess {
     }
 
     @JvmInline
-    value class UnixPermissionFlags(val value: Long) {
+    value class UnixPermissionFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: UnixPermissionFlags): UnixPermissionFlags
 
         infix fun and(other: UnixPermissionFlags): UnixPermissionFlags

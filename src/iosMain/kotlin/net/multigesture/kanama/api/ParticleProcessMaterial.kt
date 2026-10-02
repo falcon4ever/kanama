@@ -13,7 +13,7 @@ import net.multigesture.kanama.types.Vector3
  */
 class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     // ===== BEGIN GENERATED ENUMS: ParticleProcessMaterial (scripts/generate_api_wrapper.py — do not edit) =====
-    value class Parameter(val value: Long) {
+    value class Parameter(override val value: Long) : GodotEnumValue {
         companion object {
             val INITIAL_LINEAR_VELOCITY: Parameter get() = Parameter(0L)
             val ANGULAR_VELOCITY: Parameter get() = Parameter(1L)
@@ -37,7 +37,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
-    value class ParticleFlags(val value: Long) {
+    value class ParticleFlags(override val value: Long) : GodotEnumValue {
         companion object {
             val ALIGN_Y_TO_VELOCITY: ParticleFlags get() = ParticleFlags(0L)
             val ROTATE_Y: ParticleFlags get() = ParticleFlags(1L)
@@ -48,7 +48,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
-    value class EmissionShape(val value: Long) {
+    value class EmissionShape(override val value: Long) : GodotEnumValue {
         companion object {
             val POINT: EmissionShape get() = EmissionShape(0L)
             val SPHERE: EmissionShape get() = EmissionShape(1L)
@@ -61,7 +61,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
-    value class SubEmitterMode(val value: Long) {
+    value class SubEmitterMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: SubEmitterMode get() = SubEmitterMode(0L)
             val CONSTANT: SubEmitterMode get() = SubEmitterMode(1L)
@@ -72,7 +72,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         }
     }
 
-    value class CollisionMode(val value: Long) {
+    value class CollisionMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: CollisionMode get() = CollisionMode(0L)
             val RIGID: CollisionMode get() = CollisionMode(1L)

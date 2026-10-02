@@ -190,7 +190,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class AxisStretchMode(val value: Long) {
+    value class AxisStretchMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Stretches the center texture across the NinePatchRect. This may cause the texture to be

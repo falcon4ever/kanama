@@ -80,7 +80,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
     }
 
     @JvmInline
-    value class TextureMode(val value: Long) {
+    value class TextureMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Store the curve equally across the red, green and blue channels. This uses more video memory,

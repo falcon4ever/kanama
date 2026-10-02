@@ -229,7 +229,7 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
     }
 
     @JvmInline
-    value class ControlState(val value: Long) {
+    value class ControlState(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The type of control used will depend on the value of `editing_integer`. Up-down arrows if

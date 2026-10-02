@@ -1274,7 +1274,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class TextureFilter(val value: Long) {
+    value class TextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The `CanvasItem` will inherit the filter from its parent.
@@ -1356,7 +1356,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class TextureRepeat(val value: Long) {
+    value class TextureRepeat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The `CanvasItem` will inherit the repeat mode from its parent.
@@ -1395,7 +1395,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class ClipChildrenMode(val value: Long) {
+    value class ClipChildrenMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Children are drawn over this node and are not clipped.
@@ -1429,7 +1429,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class OversamplingWithScale(val value: Long) {
+    value class OversamplingWithScale(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The `CanvasItem` will inherit the oversampling mode from its parent.

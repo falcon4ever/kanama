@@ -76,7 +76,7 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ReplicationMode(val value: Long) {
+    value class ReplicationMode(override val value: Long) : GodotEnumValue {
         companion object {
             val NEVER: ReplicationMode get() = ReplicationMode(0L)
             val ALWAYS: ReplicationMode get() = ReplicationMode(1L)

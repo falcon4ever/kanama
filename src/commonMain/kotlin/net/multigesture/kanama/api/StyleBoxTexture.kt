@@ -290,7 +290,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     }
 
     @JvmInline
-    value class AxisStretchMode(val value: Long) {
+    value class AxisStretchMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Stretch the stylebox's texture. This results in visible distortion unless the texture size

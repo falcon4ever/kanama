@@ -406,7 +406,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TransformFormat(val value: Long) {
+    value class TransformFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use this when using 2D transforms.
@@ -424,7 +424,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class PhysicsInterpolationQuality(val value: Long) {
+    value class PhysicsInterpolationQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Always interpolate using Basis lerping, which can produce warping artifacts in some situations.

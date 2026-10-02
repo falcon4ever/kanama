@@ -164,7 +164,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ShadowmaskMode(val value: Long) {
+    value class ShadowmaskMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Shadowmasking is disabled. No shadowmask texture will be created when baking lightmaps. Existing

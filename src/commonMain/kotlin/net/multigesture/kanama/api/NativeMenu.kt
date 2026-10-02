@@ -844,7 +844,7 @@ object NativeMenu {
     }
 
     @JvmInline
-    value class Feature(val value: Long) {
+    value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * `NativeMenu` supports native global main menu.
@@ -880,7 +880,7 @@ object NativeMenu {
     }
 
     @JvmInline
-    value class SystemMenus(val value: Long) {
+    value class SystemMenus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Invalid special system menu ID.

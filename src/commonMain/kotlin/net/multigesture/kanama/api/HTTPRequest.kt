@@ -321,7 +321,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class Result(val value: Long) {
+    value class Result(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Request successful.

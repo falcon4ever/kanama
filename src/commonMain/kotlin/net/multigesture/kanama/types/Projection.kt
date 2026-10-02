@@ -36,7 +36,7 @@ data class Projection(
 ) {
   // ===== BEGIN GENERATED ENUMS: Projection (scripts/generate_api_wrapper.py — do not edit) =====
   @JvmInline
-  value class Planes(val value: Long) {
+  value class Planes(override val value: Long) : net.multigesture.kanama.api.GodotEnumValue {
     companion object {
       val NEAR: Planes
         get() = Planes(0L)

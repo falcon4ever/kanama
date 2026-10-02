@@ -95,7 +95,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class ChangeType(val value: Long) {
+    value class ChangeType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * A new file has been added.
@@ -137,7 +137,7 @@ class EditorVCSInterface(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class TreeArea(val value: Long) {
+    value class TreeArea(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * A commit is encountered from the commit area.

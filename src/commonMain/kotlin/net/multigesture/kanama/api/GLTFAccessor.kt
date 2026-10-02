@@ -257,7 +257,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class GLTFAccessorType(val value: Long) {
+    value class GLTFAccessorType(override val value: Long) : GodotEnumValue {
         companion object {
             val SCALAR: GLTFAccessorType get() = GLTFAccessorType(0L)
             val VEC2: GLTFAccessorType get() = GLTFAccessorType(1L)
@@ -270,7 +270,7 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class GLTFComponentType(val value: Long) {
+    value class GLTFComponentType(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: GLTFComponentType get() = GLTFComponentType(0L)
             val SIGNED_BYTE: GLTFComponentType get() = GLTFComponentType(5120L)

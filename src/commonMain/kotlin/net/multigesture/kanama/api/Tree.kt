@@ -837,7 +837,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class SelectMode(val value: Long) {
+    value class SelectMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Allows selection of a single cell at a time. From the perspective of items, only a single item
@@ -870,7 +870,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class DropModeFlags(val value: Long) {
+    value class DropModeFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables all drop sections. Note: This is the default flag, it has no effect when combined with
@@ -899,7 +899,7 @@ class Tree(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ScrollHintMode(val value: Long) {
+    value class ScrollHintMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scroll hints will never be shown.

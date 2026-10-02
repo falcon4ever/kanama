@@ -123,7 +123,7 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class VisibilityUpdateMode(val value: Long) {
+    value class VisibilityUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             val IDLE: VisibilityUpdateMode get() = VisibilityUpdateMode(0L)
             val PHYSICS: VisibilityUpdateMode get() = VisibilityUpdateMode(1L)

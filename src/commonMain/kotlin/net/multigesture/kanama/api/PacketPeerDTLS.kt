@@ -57,7 +57,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class Status(val value: Long) {
+    value class Status(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * A status representing a `PacketPeerDTLS` that is disconnected.

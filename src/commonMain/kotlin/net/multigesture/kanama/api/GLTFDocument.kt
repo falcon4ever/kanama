@@ -155,7 +155,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class RootNodeMode(val value: Long) {
+    value class RootNodeMode(override val value: Long) : GodotEnumValue {
         companion object {
             val SINGLE_ROOT: RootNodeMode get() = RootNodeMode(0L)
             val KEEP_ROOT: RootNodeMode get() = RootNodeMode(1L)
@@ -164,7 +164,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TextureMapMode(val value: Long) {
+    value class TextureMapMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DO_NOT_REMAP: TextureMapMode get() = TextureMapMode(0L)
             val REMAP_TO_STANDARD_MATERIAL: TextureMapMode get() = TextureMapMode(1L)
@@ -172,7 +172,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class VisibilityMode(val value: Long) {
+    value class VisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {
             val INCLUDE_REQUIRED: VisibilityMode get() = VisibilityMode(0L)
             val INCLUDE_OPTIONAL: VisibilityMode get() = VisibilityMode(1L)
@@ -181,7 +181,7 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ImportFlags(val value: Long) {
+    value class ImportFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: ImportFlags): ImportFlags = ImportFlags(value or other.value)
 
         infix fun and(other: ImportFlags): ImportFlags = ImportFlags(value and other.value)

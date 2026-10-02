@@ -89,7 +89,7 @@ object GDExtensionManager {
     }
 
     @JvmInline
-    value class LoadStatus(val value: Long) {
+    value class LoadStatus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The extension has loaded successfully.

@@ -27,7 +27,7 @@ class VisualShaderNodeFloatFunc(handle: GodotHandle) : VisualShaderNode(handle) 
     }
 
     @JvmInline
-    value class Function(val value: Long) {
+    value class Function(override val value: Long) : GodotEnumValue {
         companion object {
             val SIN: Function get() = Function(0L)
             val COS: Function get() = Function(1L)

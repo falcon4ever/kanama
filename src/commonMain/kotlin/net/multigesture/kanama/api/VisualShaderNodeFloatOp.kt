@@ -27,7 +27,7 @@ class VisualShaderNodeFloatOp(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class Operator(val value: Long) {
+    value class Operator(override val value: Long) : GodotEnumValue {
         companion object {
             val ADD: Operator get() = Operator(0L)
             val SUB: Operator get() = Operator(1L)

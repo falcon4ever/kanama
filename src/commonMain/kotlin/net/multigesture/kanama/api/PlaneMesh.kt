@@ -145,7 +145,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     }
 
     @JvmInline
-    value class Orientation(val value: Long) {
+    value class Orientation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * `PlaneMesh` will face the positive X-axis.

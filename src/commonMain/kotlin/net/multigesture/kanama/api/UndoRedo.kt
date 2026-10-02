@@ -253,7 +253,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class MergeMode(val value: Long) {
+    value class MergeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Makes "do"/"undo" operations stay in separate actions.

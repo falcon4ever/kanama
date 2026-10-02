@@ -1232,7 +1232,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class TreeCellMode(val value: Long) {
+    value class TreeCellMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Cell shows a string label, optionally with an icon. When editable, the text can be edited using

@@ -541,7 +541,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class AnimationCallbackModeProcess(val value: Long) {
+    value class AnimationCallbackModeProcess(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Process animation during physics frames (see `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`). This
@@ -566,7 +566,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class AnimationCallbackModeMethod(val value: Long) {
+    value class AnimationCallbackModeMethod(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Batch method calls during the animation process, then do the calls after events are processed.
@@ -585,7 +585,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class AnimationCallbackModeDiscrete(val value: Long) {
+    value class AnimationCallbackModeDiscrete(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * An `Animation.UPDATE_DISCRETE` track value takes precedence when blending

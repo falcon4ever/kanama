@@ -11,7 +11,7 @@ import java.lang.foreign.MemorySegment
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
     // ===== BEGIN GENERATED ENUMS: AudioStreamPlayer (scripts/generate_api_wrapper.py — do not edit) =====
     @JvmInline
-    value class MixTarget(val value: Long) {
+    value class MixTarget(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The audio will be played only on the first channel. This is the default.

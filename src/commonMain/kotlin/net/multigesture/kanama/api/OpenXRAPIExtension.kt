@@ -254,7 +254,7 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class OpenXRAlphaBlendModeSupport(val value: Long) {
+    value class OpenXRAlphaBlendModeSupport(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: OpenXRAlphaBlendModeSupport get() = OpenXRAlphaBlendModeSupport(0L)
             val REAL: OpenXRAlphaBlendModeSupport get() = OpenXRAlphaBlendModeSupport(1L)

@@ -1378,7 +1378,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class DrawOrder(val value: Long) {
+    value class DrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Particles are drawn in the order emitted.
@@ -1403,7 +1403,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class Parameter(val value: Long) {
+    value class Parameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use with `set_param_min`, `set_param_max`, and `set_param_curve` to set initial velocity
@@ -1496,7 +1496,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class ParticleFlags(val value: Long) {
+    value class ParticleFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use with `set_particle_flag` to set `particle_flag_align_y`.
@@ -1526,7 +1526,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class EmissionShape(val value: Long) {
+    value class EmissionShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * All particles will be emitted from a single point.

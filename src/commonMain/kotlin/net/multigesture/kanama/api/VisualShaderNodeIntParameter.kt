@@ -123,7 +123,7 @@ class VisualShaderNodeIntParameter(handle: GodotHandle) : VisualShaderNodeParame
     }
 
     @JvmInline
-    value class Hint(val value: Long) {
+    value class Hint(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: Hint get() = Hint(0L)
             val RANGE: Hint get() = Hint(1L)

@@ -198,7 +198,7 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class TrackingConfidence(val value: Long) {
+    value class TrackingConfidence(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No tracking information is available for this pose.

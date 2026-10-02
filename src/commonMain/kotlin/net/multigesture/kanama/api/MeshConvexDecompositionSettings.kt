@@ -355,7 +355,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     }
 
     @JvmInline
-    value class Mode(val value: Long) {
+    value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant for voxel-based approximate convex decomposition.

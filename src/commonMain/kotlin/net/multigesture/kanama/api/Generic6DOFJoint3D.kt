@@ -126,7 +126,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
     }
 
     @JvmInline
-    value class Param(val value: Long) {
+    value class Param(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The minimum difference between the pivot points' axes.
@@ -241,7 +241,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
     }
 
     @JvmInline
-    value class Flag(val value: Long) {
+    value class Flag(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If enabled, linear motion is possible within the given limits.

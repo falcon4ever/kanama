@@ -27,7 +27,7 @@ class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNod
     }
 
     @JvmInline
-    value class Mode(val value: Long) {
+    value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
             val LINEAR: Mode get() = Mode(0L)
             val RADIAL: Mode get() = Mode(1L)

@@ -360,7 +360,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class ScrollMode(val value: Long) {
+    value class ScrollMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scrolling disabled, scrollbar will be invisible.
@@ -407,7 +407,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class ScrollHintMode(val value: Long) {
+    value class ScrollHintMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scroll hints will never be shown.

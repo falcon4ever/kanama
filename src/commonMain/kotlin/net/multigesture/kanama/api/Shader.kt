@@ -102,7 +102,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class Mode(val value: Long) {
+    value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Mode used to draw all 3D objects.

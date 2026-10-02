@@ -655,7 +655,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
     }
 
     @JvmInline
-    value class AnimationProcessCallback(val value: Long) {
+    value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {
             val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)
             val IDLE: AnimationProcessCallback get() = AnimationProcessCallback(1L)
@@ -664,7 +664,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
     }
 
     @JvmInline
-    value class AnimationMethodCallMode(val value: Long) {
+    value class AnimationMethodCallMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DEFERRED: AnimationMethodCallMode get() = AnimationMethodCallMode(0L)
             val IMMEDIATE: AnimationMethodCallMode get() = AnimationMethodCallMode(1L)

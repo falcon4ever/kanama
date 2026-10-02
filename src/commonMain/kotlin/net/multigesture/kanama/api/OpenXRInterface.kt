@@ -250,7 +250,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class SessionState(val value: Long) {
+    value class SessionState(override val value: Long) : GodotEnumValue {
         companion object {
             val UNKNOWN: SessionState get() = SessionState(0L)
             val IDLE: SessionState get() = SessionState(1L)
@@ -265,7 +265,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class Hand(val value: Long) {
+    value class Hand(override val value: Long) : GodotEnumValue {
         companion object {
             val LEFT: Hand get() = Hand(0L)
             val RIGHT: Hand get() = Hand(1L)
@@ -274,7 +274,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class HandMotionRange(val value: Long) {
+    value class HandMotionRange(override val value: Long) : GodotEnumValue {
         companion object {
             val UNOBSTRUCTED: HandMotionRange get() = HandMotionRange(0L)
             val CONFORM_TO_CONTROLLER: HandMotionRange get() = HandMotionRange(1L)
@@ -283,7 +283,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class HandTrackedSource(val value: Long) {
+    value class HandTrackedSource(override val value: Long) : GodotEnumValue {
         companion object {
             val UNKNOWN: HandTrackedSource get() = HandTrackedSource(0L)
             val UNOBSTRUCTED: HandTrackedSource get() = HandTrackedSource(1L)
@@ -293,7 +293,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class HandJoints(val value: Long) {
+    value class HandJoints(override val value: Long) : GodotEnumValue {
         companion object {
             val PALM: HandJoints get() = HandJoints(0L)
             val WRIST: HandJoints get() = HandJoints(1L)
@@ -326,7 +326,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class PerfSettingsLevel(val value: Long) {
+    value class PerfSettingsLevel(override val value: Long) : GodotEnumValue {
         companion object {
             val POWER_SAVINGS: PerfSettingsLevel get() = PerfSettingsLevel(0L)
             val SUSTAINED_LOW: PerfSettingsLevel get() = PerfSettingsLevel(1L)
@@ -336,7 +336,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class PerfSettingsSubDomain(val value: Long) {
+    value class PerfSettingsSubDomain(override val value: Long) : GodotEnumValue {
         companion object {
             val COMPOSITING: PerfSettingsSubDomain get() = PerfSettingsSubDomain(0L)
             val RENDERING: PerfSettingsSubDomain get() = PerfSettingsSubDomain(1L)
@@ -345,7 +345,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class PerfSettingsNotificationLevel(val value: Long) {
+    value class PerfSettingsNotificationLevel(override val value: Long) : GodotEnumValue {
         companion object {
             val NORMAL: PerfSettingsNotificationLevel get() = PerfSettingsNotificationLevel(0L)
             val WARNING: PerfSettingsNotificationLevel get() = PerfSettingsNotificationLevel(1L)
@@ -354,7 +354,7 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class HandJointFlags(val value: Long) {
+    value class HandJointFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: HandJointFlags): HandJointFlags = HandJointFlags(value or other.value)
 
         infix fun and(other: HandJointFlags): HandJointFlags = HandJointFlags(value and other.value)

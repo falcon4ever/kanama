@@ -43,7 +43,7 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class HashType(val value: Long) {
+    value class HashType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Hashing algorithm: MD5.

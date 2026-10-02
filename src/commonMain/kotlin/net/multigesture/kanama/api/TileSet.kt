@@ -1004,7 +1004,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TileShape(val value: Long) {
+    value class TileShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Rectangular tile shape.
@@ -1035,7 +1035,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TileLayout(val value: Long) {
+    value class TileLayout(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Tile coordinates layout where both axis stay consistent with their respective local horizontal
@@ -1082,7 +1082,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TileOffsetAxis(val value: Long) {
+    value class TileOffsetAxis(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Horizontal half-offset.
@@ -1100,7 +1100,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class CellNeighbor(val value: Long) {
+    value class CellNeighbor(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Neighbor on the right side.
@@ -1202,7 +1202,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TerrainMode(val value: Long) {
+    value class TerrainMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Requires both corners and side to match with neighboring tiles' terrains.

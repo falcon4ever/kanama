@@ -6247,7 +6247,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class TextureType(val value: Long) {
+    value class TextureType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 2D texture.
@@ -6271,7 +6271,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class TextureLayeredType(val value: Long) {
+    value class TextureLayeredType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Array of 2-dimensional textures (see `Texture2DArray`).
@@ -6295,7 +6295,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CubeMapLayer(val value: Long) {
+    value class CubeMapLayer(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Left face of a `Cubemap`.
@@ -6337,7 +6337,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class TextureDrawableFormat(val value: Long) {
+    value class TextureDrawableFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * OpenGL texture format RGBA with four components, each with a bitdepth of 8.
@@ -6370,7 +6370,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ShaderMode(val value: Long) {
+    value class ShaderMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Shader is a 3D shader.
@@ -6418,7 +6418,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ArrayType(val value: Long) {
+    value class ArrayType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Array is a vertex position array.
@@ -6508,7 +6508,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ArrayCustomFormat(val value: Long) {
+    value class ArrayCustomFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Custom data array contains 8-bit-per-channel red/green/blue/alpha color data. Values are
@@ -6576,7 +6576,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ArrayFormat(val value: Long) {
+    value class ArrayFormat(override val value: Long) : GodotEnumValue {
         infix fun or(other: ArrayFormat): ArrayFormat = ArrayFormat(value or other.value)
 
         infix fun and(other: ArrayFormat): ArrayFormat = ArrayFormat(value and other.value)
@@ -6805,7 +6805,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class PrimitiveType(val value: Long) {
+    value class PrimitiveType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Primitive to draw consists of points.
@@ -6848,7 +6848,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class BlendShapeMode(val value: Long) {
+    value class BlendShapeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Blend shapes are normalized.
@@ -6866,7 +6866,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class MultimeshTransformFormat(val value: Long) {
+    value class MultimeshTransformFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use `Transform2D` to store MultiMesh transform.
@@ -6884,7 +6884,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class MultimeshPhysicsInterpolationQuality(val value: Long) {
+    value class MultimeshPhysicsInterpolationQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * MultiMesh physics interpolation favors speed over quality.
@@ -6902,7 +6902,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class LightProjectorFilter(val value: Long) {
+    value class LightProjectorFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Nearest-neighbor filter for light projectors (use for pixel art light projectors). No mipmaps
@@ -6960,7 +6960,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class LightType(val value: Long) {
+    value class LightType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Directional (sun/moon) light (see `DirectionalLight3D`).
@@ -6990,7 +6990,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class LightParam(val value: Long) {
+    value class LightParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The light's energy multiplier.
@@ -7138,7 +7138,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class LightBakeMode(val value: Long) {
+    value class LightBakeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Light is ignored when baking. This is the fastest mode, but the light will be taken into account
@@ -7172,7 +7172,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class LightOmniShadowMode(val value: Long) {
+    value class LightOmniShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use a dual paraboloid shadow map for omni lights.
@@ -7190,7 +7190,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class LightDirectionalShadowMode(val value: Long) {
+    value class LightDirectionalShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use orthogonal shadow projection for directional light.
@@ -7214,7 +7214,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class LightDirectionalSkyMode(val value: Long) {
+    value class LightDirectionalSkyMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use DirectionalLight3D in both sky rendering and scene lighting.
@@ -7238,7 +7238,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ShadowQuality(val value: Long) {
+    value class ShadowQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Lowest shadow filtering quality (fastest). Soft shadows are not available with this quality
@@ -7302,7 +7302,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ReflectionProbeUpdateMode(val value: Long) {
+    value class ReflectionProbeUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Reflection probe will update reflections once and then stop.
@@ -7320,7 +7320,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ReflectionProbeAmbientMode(val value: Long) {
+    value class ReflectionProbeAmbientMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not apply any ambient lighting inside the reflection probe's box defined by its size.
@@ -7346,7 +7346,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class DecalTexture(val value: Long) {
+    value class DecalTexture(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Albedo texture slot in a decal (`Decal.texture_albedo`).
@@ -7382,7 +7382,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class DecalFilter(val value: Long) {
+    value class DecalFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Nearest-neighbor filter for decals (use for pixel art decals). No mipmaps are used for
@@ -7440,7 +7440,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class VoxelGIQuality(val value: Long) {
+    value class VoxelGIQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Low `VoxelGI` rendering quality using 4 cones.
@@ -7458,7 +7458,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ParticlesMode(val value: Long) {
+    value class ParticlesMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 2D particles.
@@ -7476,7 +7476,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ParticlesTransformAlign(val value: Long) {
+    value class ParticlesTransformAlign(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not align particle transforms relative to the camera or velocity.
@@ -7512,7 +7512,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ParticlesTransformAlignCustomSrc(val value: Long) {
+    value class ParticlesTransformAlignCustomSrc(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not read from CUSTOM when performing billboarding.
@@ -7548,7 +7548,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ParticlesTransformAlignAxis(val value: Long) {
+    value class ParticlesTransformAlignAxis(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use the X axis for local billboarding.
@@ -7566,7 +7566,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ParticlesDrawOrder(val value: Long) {
+    value class ParticlesDrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Draw particles in the order that they appear in the particles array.
@@ -7598,7 +7598,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ParticlesCollisionType(val value: Long) {
+    value class ParticlesCollisionType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Sphere attractor type for `GPUParticles3D` (see `GPUParticlesAttractorSphere3D`).
@@ -7646,7 +7646,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ParticlesCollisionHeightfieldResolution(val value: Long) {
+    value class ParticlesCollisionHeightfieldResolution(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 256×256 heightfield resolution for `GPUParticlesCollisionHeightField3D`.
@@ -7694,7 +7694,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class FogVolumeShape(val value: Long) {
+    value class FogVolumeShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * `FogVolume` will be shaped like an ellipsoid (stretched sphere).
@@ -7741,7 +7741,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportScaling3DMode(val value: Long) {
+    value class ViewportScaling3DMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use bilinear scaling for the viewport's 3D buffer. The amount of scaling can be set using
@@ -7813,7 +7813,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportUpdateMode(val value: Long) {
+    value class ViewportUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not update the viewport's render target.
@@ -7849,7 +7849,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportClearMode(val value: Long) {
+    value class ViewportClearMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Always clear the viewport's render target before drawing.
@@ -7873,7 +7873,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportEnvironmentMode(val value: Long) {
+    value class ViewportEnvironmentMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disable rendering of 3D environment over 2D canvas.
@@ -7905,7 +7905,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportSDFOversize(val value: Long) {
+    value class ViewportSDFOversize(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not oversize the 2D signed distance field. Occluders may disappear when touching the
@@ -7946,7 +7946,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportSDFScale(val value: Long) {
+    value class ViewportSDFScale(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Full resolution 2D signed distance field scale. This has the highest GPU requirements.
@@ -7977,7 +7977,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportMSAA(val value: Long) {
+    value class ViewportMSAA(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Multisample antialiasing for 3D is disabled. This is the default value, and also the fastest
@@ -8016,7 +8016,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportAnisotropicFiltering(val value: Long) {
+    value class ViewportAnisotropicFiltering(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Anisotropic filtering is disabled.
@@ -8058,7 +8058,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportScreenSpaceAA(val value: Long) {
+    value class ViewportScreenSpaceAA(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not perform any antialiasing in the full screen post-process.
@@ -8091,7 +8091,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportOcclusionCullingBuildQuality(val value: Long) {
+    value class ViewportOcclusionCullingBuildQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Low occlusion culling BVH build quality (as defined by Embree). Results in the lowest CPU usage,
@@ -8117,7 +8117,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportRenderInfo(val value: Long) {
+    value class ViewportRenderInfo(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Number of objects drawn in a single frame.
@@ -8147,7 +8147,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportRenderInfoType(val value: Long) {
+    value class ViewportRenderInfoType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Visible render pass (excluding shadows).
@@ -8178,7 +8178,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportDebugDraw(val value: Long) {
+    value class ViewportDebugDraw(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Debug draw is disabled. Default setting.
@@ -8406,7 +8406,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportVRSMode(val value: Long) {
+    value class ViewportVRSMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Variable rate shading is disabled.
@@ -8438,7 +8438,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ViewportVRSUpdateMode(val value: Long) {
+    value class ViewportVRSUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The input texture for variable rate shading will not be processed.
@@ -8468,7 +8468,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class SkyMode(val value: Long) {
+    value class SkyMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Automatically selects the appropriate process mode based on your sky shader. If your shader uses
@@ -8513,7 +8513,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CompositorEffectFlags(val value: Long) {
+    value class CompositorEffectFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The rendering effect requires the color buffer to be resolved if MSAA is enabled.
@@ -8549,7 +8549,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CompositorEffectCallbackType(val value: Long) {
+    value class CompositorEffectCallbackType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The callback is called before our opaque rendering pass, but after depth prepass (if
@@ -8590,7 +8590,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentBG(val value: Long) {
+    value class EnvironmentBG(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use the clear color as background.
@@ -8639,7 +8639,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentAmbientSource(val value: Long) {
+    value class EnvironmentAmbientSource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Gather ambient light from whichever source is specified as the background.
@@ -8669,7 +8669,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentReflectionSource(val value: Long) {
+    value class EnvironmentReflectionSource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use the background for reflections.
@@ -8693,7 +8693,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentGlowBlendMode(val value: Long) {
+    value class EnvironmentGlowBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Adds the glow effect to the scene.
@@ -8744,7 +8744,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentFogMode(val value: Long) {
+    value class EnvironmentFogMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use a physically-based fog model defined primarily by fog density.
@@ -8763,7 +8763,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentToneMapper(val value: Long) {
+    value class EnvironmentToneMapper(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Does not modify color data, resulting in a linear tonemapping curve which unnaturally clips
@@ -8812,7 +8812,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentSSRRoughnessQuality(val value: Long) {
+    value class EnvironmentSSRRoughnessQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Lowest quality of roughness filter for screen-space reflections. Rough materials will not have
@@ -8844,7 +8844,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentSSAOQuality(val value: Long) {
+    value class EnvironmentSSAOQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Lowest quality of screen-space ambient occlusion.
@@ -8881,7 +8881,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentSSILQuality(val value: Long) {
+    value class EnvironmentSSILQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Lowest quality of screen-space indirect lighting.
@@ -8918,7 +8918,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentSDFGIYScale(val value: Long) {
+    value class EnvironmentSDFGIYScale(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use 50% scale for SDFGI on the Y (vertical) axis. SDFGI cells will be twice as short as they are
@@ -8947,7 +8947,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentSDFGIRayCount(val value: Long) {
+    value class EnvironmentSDFGIRayCount(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Throw 4 rays per frame when converging SDFGI. This has the lowest GPU requirements, but creates
@@ -9003,7 +9003,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentSDFGIFramesToConverge(val value: Long) {
+    value class EnvironmentSDFGIFramesToConverge(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Converge SDFGI over 5 frames. This is the most responsive, but creates the most noisy result
@@ -9053,7 +9053,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class EnvironmentSDFGIFramesToUpdateLight(val value: Long) {
+    value class EnvironmentSDFGIFramesToUpdateLight(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Update indirect light from dynamic lights in SDFGI over 1 frame. This is the most responsive,
@@ -9097,7 +9097,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class SubSurfaceScatteringQuality(val value: Long) {
+    value class SubSurfaceScatteringQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables subsurface scattering entirely, even on materials that have
@@ -9128,7 +9128,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class DOFBokehShape(val value: Long) {
+    value class DOFBokehShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Calculate the DOF blur using a box filter. The fastest option, but results in obvious lines in
@@ -9155,7 +9155,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class DOFBlurQuality(val value: Long) {
+    value class DOFBlurQuality(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Lowest quality DOF blur. This is the fastest setting, but you may be able to see filtering
@@ -9187,7 +9187,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class InstanceType(val value: Long) {
+    value class InstanceType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The instance does not have a type.
@@ -9283,7 +9283,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class InstanceFlags(val value: Long) {
+    value class InstanceFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Allows the instance to be used in baked lighting.
@@ -9320,7 +9320,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class ShadowCastingSetting(val value: Long) {
+    value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disable shadows from this instance.
@@ -9351,7 +9351,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class VisibilityRangeFadeMode(val value: Long) {
+    value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disable visibility range fading for the given instance.
@@ -9375,7 +9375,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class BakeChannels(val value: Long) {
+    value class BakeChannels(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Index of `Image` in array of `Image`s returned by `bake_render_uv2`. Image uses
@@ -9414,7 +9414,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasTextureChannel(val value: Long) {
+    value class CanvasTextureChannel(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Diffuse canvas texture (`CanvasTexture.diffuse_texture`).
@@ -9438,7 +9438,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class NinePatchAxisMode(val value: Long) {
+    value class NinePatchAxisMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The nine patch gets stretched where needed.
@@ -9462,7 +9462,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasItemTextureFilter(val value: Long) {
+    value class CanvasItemTextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Uses the default filter mode for this `Viewport`.
@@ -9544,7 +9544,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasItemTextureRepeat(val value: Long) {
+    value class CanvasItemTextureRepeat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Uses the default repeat mode for this `Viewport`.
@@ -9584,7 +9584,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasGroupMode(val value: Long) {
+    value class CanvasGroupMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Child draws over parent and is not clipped.
@@ -9611,7 +9611,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasLightMode(val value: Long) {
+    value class CanvasLightMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 2D point light (see `PointLight2D`).
@@ -9629,7 +9629,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasLightBlendMode(val value: Long) {
+    value class CanvasLightBlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Adds light color additive to the canvas.
@@ -9653,7 +9653,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasLightShadowFilter(val value: Long) {
+    value class CanvasLightShadowFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not apply a filter to canvas light shadows.
@@ -9683,7 +9683,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class CanvasOccluderPolygonCullMode(val value: Long) {
+    value class CanvasOccluderPolygonCullMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Culling of the canvas occluder is disabled.
@@ -9707,7 +9707,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class GlobalShaderParameterType(val value: Long) {
+    value class GlobalShaderParameterType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Boolean global shader parameter (`global uniform bool ...`).
@@ -9906,7 +9906,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class RenderingInfo(val value: Long) {
+    value class RenderingInfo(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Number of objects rendered in the current 3D scene. This varies depending on camera position and
@@ -9993,7 +9993,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class PipelineSource(val value: Long) {
+    value class PipelineSource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Pipeline compilation that was triggered by the 2D canvas renderer.
@@ -10036,7 +10036,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class SplashStretchMode(val value: Long) {
+    value class SplashStretchMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No stretching is applied.
@@ -10078,7 +10078,7 @@ object RenderingServer {
     }
 
     @JvmInline
-    value class Features(val value: Long) {
+    value class Features(override val value: Long) : GodotEnumValue {
         companion object {
             val SHADERS: Features get() = Features(0L)
             val MULTITHREADED: Features get() = Features(1L)

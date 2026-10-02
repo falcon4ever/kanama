@@ -833,7 +833,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     @JvmInline
-    value class OriginFrom(val value: Long) {
+    value class OriginFrom(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The bone rest position of the bone specified in `bone` is used as origin.

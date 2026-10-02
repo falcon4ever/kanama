@@ -27,7 +27,7 @@ class VisualShaderNodeSwitch(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class OpType(val value: Long) {
+    value class OpType(override val value: Long) : GodotEnumValue {
         companion object {
             val FLOAT: OpType get() = OpType(0L)
             val INT: OpType get() = OpType(1L)

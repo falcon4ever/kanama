@@ -730,7 +730,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class AnchorMode(val value: Long) {
+    value class AnchorMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The camera's position is fixed so that the top-left corner is always at the origin.
@@ -748,7 +748,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class Camera2DProcessCallback(val value: Long) {
+    value class Camera2DProcessCallback(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The camera updates during physics frames (see `Node.NOTIFICATION_INTERNAL_PHYSICS_PROCESS`).

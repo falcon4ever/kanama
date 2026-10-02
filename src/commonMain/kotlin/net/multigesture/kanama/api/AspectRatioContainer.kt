@@ -111,7 +111,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class StretchMode(val value: Long) {
+    value class StretchMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The height of child controls is automatically adjusted based on the width of the container.
@@ -145,7 +145,7 @@ class AspectRatioContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class AlignmentMode(val value: Long) {
+    value class AlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Aligns child controls with the beginning (left or top) of the container.

@@ -2102,7 +2102,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class Parameter(val value: Long) {
+    value class Parameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use with `set_param_min`, `set_param_max`, and `set_param_texture` to set initial velocity
@@ -2236,7 +2236,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class ParticleFlags(val value: Long) {
+    value class ParticleFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use with `set_particle_flag` to set `particle_flag_align_y`.
@@ -2268,7 +2268,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class EmissionShape(val value: Long) {
+    value class EmissionShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * All particles will be emitted from a single point.
@@ -2325,7 +2325,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class SubEmitterMode(val value: Long) {
+    value class SubEmitterMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The subemitter is disabled.
@@ -2367,7 +2367,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class CollisionMode(val value: Long) {
+    value class CollisionMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No collision for particles. Particles will go through `GPUParticlesCollision3D` nodes.

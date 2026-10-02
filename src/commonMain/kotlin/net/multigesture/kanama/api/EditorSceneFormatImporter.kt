@@ -33,7 +33,7 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ImportFlags(val value: Long) {
+    value class ImportFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: ImportFlags): ImportFlags = ImportFlags(value or other.value)
 
         infix fun and(other: ImportFlags): ImportFlags = ImportFlags(value and other.value)

@@ -43,7 +43,7 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
     }
 
     @JvmInline
-    value class BillboardType(val value: Long) {
+    value class BillboardType(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: BillboardType get() = BillboardType(0L)
             val ENABLED: BillboardType get() = BillboardType(1L)

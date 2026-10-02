@@ -553,7 +553,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class HandleBinaryImageMode(val value: Long) {
+    value class HandleBinaryImageMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DISCARD_TEXTURES: HandleBinaryImageMode get() = HandleBinaryImageMode(0L)
             val EXTRACT_TEXTURES: HandleBinaryImageMode get() = HandleBinaryImageMode(1L)

@@ -59,7 +59,7 @@ class OpenXRAction(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ActionType(val value: Long) {
+    value class ActionType(override val value: Long) : GodotEnumValue {
         companion object {
             val BOOL: ActionType get() = ActionType(0L)
             val FLOAT: ActionType get() = ActionType(1L)

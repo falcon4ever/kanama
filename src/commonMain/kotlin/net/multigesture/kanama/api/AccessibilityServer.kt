@@ -790,7 +790,7 @@ object AccessibilityServer {
     }
 
     @JvmInline
-    value class AccessibilityRole(val value: Long) {
+    value class AccessibilityRole(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Unknown or custom role.
@@ -1086,7 +1086,7 @@ object AccessibilityServer {
     }
 
     @JvmInline
-    value class AccessibilityPopupType(val value: Long) {
+    value class AccessibilityPopupType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Popup menu.
@@ -1116,7 +1116,7 @@ object AccessibilityServer {
     }
 
     @JvmInline
-    value class AccessibilityFlags(val value: Long) {
+    value class AccessibilityFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Element is hidden for accessibility tools.
@@ -1182,7 +1182,7 @@ object AccessibilityServer {
     }
 
     @JvmInline
-    value class AccessibilityAction(val value: Long) {
+    value class AccessibilityAction(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Single click action, callback argument is not set.
@@ -1331,7 +1331,7 @@ object AccessibilityServer {
     }
 
     @JvmInline
-    value class AccessibilityLiveMode(val value: Long) {
+    value class AccessibilityLiveMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Indicates that updates to the live region should not be presented.
@@ -1357,7 +1357,7 @@ object AccessibilityServer {
     }
 
     @JvmInline
-    value class AccessibilityScrollUnit(val value: Long) {
+    value class AccessibilityScrollUnit(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The amount by which to scroll. A single item of a list, line of text.
@@ -1375,7 +1375,7 @@ object AccessibilityServer {
     }
 
     @JvmInline
-    value class AccessibilityScrollHint(val value: Long) {
+    value class AccessibilityScrollHint(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * A preferred position for the node scrolled into view. Top-left edge of the scroll container.

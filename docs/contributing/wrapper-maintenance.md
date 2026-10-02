@@ -284,7 +284,11 @@ gate all import it.
   entry as-is, appends one only for a new enum, and a value that does not carry its enum's frozen
   prefix keeps Godot's full name, so siblings never change name across Godot versions.
 - **Raw values** are always constructible (`X(3L)`) and readable (`.value`); `toString()` stays the
-  value-class default. Dynamic paths (`call`/`get`/`set`, Variant returns) keep returning `Long`.
+  value-class default. Every value class implements the generated marker `GodotEnumValue`
+  (`GlobalEnums.kt`): the `Any?` -> Variant encoders (desktop `BuiltinTypes.initVariantFromAny`, the
+  iOS `packVariantDesc` / `encodeVariantArgs` / container `taggedValue` / script-return
+  `encodeIosReturn`) map a boxed one to INT, so `set("process_mode", Node.ProcessMode.ALWAYS)` works;
+  dynamic paths (`call`/`get`, Variant returns) still RETURN `Long`.
 - **Companion values are getters** (`val ALWAYS: ProcessMode get() = ProcessMode(3L)`): no backing
   field and no companion static initialiser, the smallest JVM shape that keeps them typed (measured in
   task 128: 1.70 MB of class files for the 786 enums vs 1.98 MB with backing fields).

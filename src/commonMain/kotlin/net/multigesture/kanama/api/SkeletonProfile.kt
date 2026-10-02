@@ -360,7 +360,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TailDirection(val value: Long) {
+    value class TailDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Direction to the average coordinates of bone children.

@@ -308,7 +308,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class JoystickMode(val value: Long) {
+    value class JoystickMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The joystick doesn't move.
@@ -335,7 +335,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class VisibilityMode(val value: Long) {
+    value class VisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The joystick is always visible.

@@ -86,7 +86,7 @@ object ResourceSaver {
     }
 
     @JvmInline
-    value class SaverFlags(val value: Long) {
+    value class SaverFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: SaverFlags): SaverFlags = SaverFlags(value or other.value)
 
         infix fun and(other: SaverFlags): SaverFlags = SaverFlags(value and other.value)

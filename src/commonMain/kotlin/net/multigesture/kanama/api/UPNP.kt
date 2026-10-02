@@ -115,7 +115,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class UPNPResult(val value: Long) {
+    value class UPNPResult(override val value: Long) : GodotEnumValue {
         companion object {
             val SUCCESS: UPNPResult get() = UPNPResult(0L)
             val NOT_AUTHORIZED: UPNPResult get() = UPNPResult(1L)

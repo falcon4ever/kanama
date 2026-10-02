@@ -188,7 +188,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class WriteMode(val value: Long) {
+    value class WriteMode(override val value: Long) : GodotEnumValue {
         companion object {
             val TEXT: WriteMode get() = WriteMode(0L)
             val BINARY: WriteMode get() = WriteMode(1L)
@@ -196,7 +196,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class State(val value: Long) {
+    value class State(override val value: Long) : GodotEnumValue {
         companion object {
             val CONNECTING: State get() = State(0L)
             val OPEN: State get() = State(1L)

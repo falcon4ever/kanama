@@ -39,7 +39,7 @@ data class Vector4(
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector4 (scripts/generate_api_wrapper.py — do not edit) =====
   @JvmInline
-  value class Axis(val value: Long) {
+  value class Axis(override val value: Long) : net.multigesture.kanama.api.GodotEnumValue {
     companion object {
       val X: Axis
         get() = Axis(0L)

@@ -803,7 +803,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class SamplePartitionType(val value: Long) {
+    value class SamplePartitionType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Watershed partitioning. Generally the best choice if you precompute the navigation mesh, use
@@ -835,7 +835,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ParsedGeometryType(val value: Long) {
+    value class ParsedGeometryType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Parses mesh instances as geometry. This includes `MeshInstance3D`, `CSGShape3D`, and `GridMap`
@@ -867,7 +867,7 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class SourceGeometryMode(val value: Long) {
+    value class SourceGeometryMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scans the child nodes of the root node recursively for geometry.

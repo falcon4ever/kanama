@@ -14,8 +14,8 @@ actual object FileAccess {
     @JvmInline
     actual value class ModeFlags
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             /**
              * Opens the file for read operations. The file cursor is positioned at the beginning of the file.
@@ -54,8 +54,8 @@ actual object FileAccess {
     @JvmInline
     actual value class CompressionMode
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             /**
              * Uses the FastLZ (https://fastlz.org/) compression method.
@@ -94,8 +94,8 @@ actual object FileAccess {
     @JvmInline
     actual value class UnixPermissionFlags
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual infix fun or(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value or other.value)
 
         actual infix fun and(other: UnixPermissionFlags): UnixPermissionFlags = UnixPermissionFlags(value and other.value)

@@ -461,7 +461,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     }
 
     @JvmInline
-    value class PathfindingAlgorithm(val value: Long) {
+    value class PathfindingAlgorithm(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The path query uses the default A* pathfinding algorithm.
@@ -473,7 +473,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     }
 
     @JvmInline
-    value class PathPostProcessing(val value: Long) {
+    value class PathPostProcessing(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Applies a funnel algorithm to the raw path corridor found by the pathfinding algorithm. This
@@ -504,7 +504,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     }
 
     @JvmInline
-    value class PathMetadataFlags(val value: Long) {
+    value class PathMetadataFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: PathMetadataFlags): PathMetadataFlags = PathMetadataFlags(value or other.value)
 
         infix fun and(other: PathMetadataFlags): PathMetadataFlags = PathMetadataFlags(value and other.value)

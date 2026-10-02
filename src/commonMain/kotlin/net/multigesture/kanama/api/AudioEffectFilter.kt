@@ -133,7 +133,7 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
     }
 
     @JvmInline
-    value class FilterDB(val value: Long) {
+    value class FilterDB(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Cutting off at 6 dB per octave. One octave is twice the frequency above `cutoff_hz`, or half the

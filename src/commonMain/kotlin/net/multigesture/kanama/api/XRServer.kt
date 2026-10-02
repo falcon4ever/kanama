@@ -300,7 +300,7 @@ object XRServer {
     }
 
     @JvmInline
-    value class TrackerType(val value: Long) {
+    value class TrackerType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The tracker tracks the location of the player's head. This is usually a location centered
@@ -368,7 +368,7 @@ object XRServer {
     }
 
     @JvmInline
-    value class RotationMode(val value: Long) {
+    value class RotationMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Fully reset the orientation of the HMD. Regardless of what direction the user is looking to in

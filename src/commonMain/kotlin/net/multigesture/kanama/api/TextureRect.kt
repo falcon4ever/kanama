@@ -134,7 +134,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ExpandMode(val value: Long) {
+    value class ExpandMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The minimum size will be equal to texture size, i.e. `TextureRect` can't be smaller than the
@@ -180,7 +180,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class StretchMode(val value: Long) {
+    value class StretchMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Scale to fit the node's bounding rectangle.

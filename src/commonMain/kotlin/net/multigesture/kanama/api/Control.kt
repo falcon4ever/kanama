@@ -2412,7 +2412,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class FocusMode(val value: Long) {
+    value class FocusMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The node cannot grab focus. Use with `focus_mode`.
@@ -2443,7 +2443,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class FocusBehaviorRecursive(val value: Long) {
+    value class FocusBehaviorRecursive(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inherits the `focus_behavior_recursive` from the parent control. If there is no parent control,
@@ -2471,7 +2471,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class MouseBehaviorRecursive(val value: Long) {
+    value class MouseBehaviorRecursive(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inherits the `mouse_behavior_recursive` from the parent control. If there is no parent control,
@@ -2499,7 +2499,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class CursorShape(val value: Long) {
+    value class CursorShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Show the system's arrow mouse cursor when the user hovers the node. Use with
@@ -2622,7 +2622,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class LayoutPreset(val value: Long) {
+    value class LayoutPreset(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Snap all 4 anchors to the top-left of the parent control's bounds. Use with
@@ -2744,7 +2744,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class LayoutPresetMode(val value: Long) {
+    value class LayoutPresetMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The control will be resized to its minimum size.
@@ -2774,7 +2774,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class SizeFlags(val value: Long) {
+    value class SizeFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: SizeFlags): SizeFlags = SizeFlags(value or other.value)
 
         infix fun and(other: SizeFlags): SizeFlags = SizeFlags(value and other.value)
@@ -2840,7 +2840,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class MouseFilter(val value: Long) {
+    value class MouseFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The control will receive mouse movement input events and mouse button input events if clicked on
@@ -2880,7 +2880,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class GrowDirection(val value: Long) {
+    value class GrowDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The control will grow to the left or top to make up if its minimum size is changed to be greater
@@ -2907,7 +2907,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class Anchor(val value: Long) {
+    value class Anchor(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Snaps one of the 4 anchor's sides to the origin of the node's `Rect`, in the top left. Use it
@@ -2929,7 +2929,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class LayoutDirection(val value: Long) {
+    value class LayoutDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Automatic layout direction, determined from the parent control layout direction.
@@ -2985,7 +2985,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     @JvmInline
-    value class TextDirection(val value: Long) {
+    value class TextDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Text writing direction is the same as layout direction.

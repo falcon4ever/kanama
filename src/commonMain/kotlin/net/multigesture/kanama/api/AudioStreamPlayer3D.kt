@@ -665,7 +665,7 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class AttenuationModel(val value: Long) {
+    value class AttenuationModel(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Attenuation of loudness according to linear distance.
@@ -697,7 +697,7 @@ class AudioStreamPlayer3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class DopplerTracking(val value: Long) {
+    value class DopplerTracking(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables doppler tracking.

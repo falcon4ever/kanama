@@ -39,8 +39,12 @@ versioning once public releases begin.
 - **Raw values stay reachable:** `ProcessMode(3L)` builds any value, `.value` reads the `Long`, and
   `toString()` is the value-class default (`ProcessMode(value=3)`). **Bitfields** add `or`, `and`,
   `xor`, `inv()` and `in` (`contains`); Godot names no zero for most of them, so the empty set is
-  `X(0L)`. **Dynamic calls** (`call`, `get`, `set`, `ConfigFile.setValue`, Variant returns) still take
-  and return `Long`: pass `.value` there — a value class handed to an `Any?` argument arrives boxed.
+  `X(0L)`. **Dynamic calls take the typed values:** every enum value class implements the generated
+  marker interface `GodotEnumValue` (`val value: Long`), and the `Any?` → Variant encoders (desktop
+  and iOS: `call`, `set`, `callDeferred`, `emitSignal`, `ConfigFile.setValue`, Array/Dictionary
+  elements, iOS script returns) pass it as the INT it stands for — before this, a boxed enum there
+  threw `Unsupported Variant value type: …Node.ProcessMode`. What comes back from a dynamic path
+  (`get`, `call`, `ConfigFile.getValue`, Variant returns) is still a `Long`.
 - **Clean break, no deprecated aliases.** Removed: every `const val` enum value on the wrapper
   companions (non-enum class constants such as `Node.NOTIFICATION_READY` stay `const val`), the hand
   subsets `InputEventKey.KEY_*`, `InputEventMouseButton.MOUSE_BUTTON_*` and
@@ -75,20 +79,26 @@ versioning once public releases begin.
   `actual`s.
 - **Migration.** `scripts/migrate_enum_constants.py <kotlin-src>` rewrites `Owner.OLD_NAME` to
   `Owner.Enum.NEW` (and the hand subsets, `InputEventKey.KEY_W` → `Key.W`), adds the imports a
-  by-name-importing file needs, and lists what a human must fix (raw numbers passed where an enum is
-  now required, typed values flowing into a dynamic `Any?` argument). The full old→new table is
+  by-name-importing file needs, notes typed values that now flow into a dynamic `Any?` argument
+  (encoded as INT, nothing to do), and lists what a human must fix (raw numbers passed where an enum
+  is now required). The full old→new table is
   [docs/reference/generated/enum-migration.md](docs/reference/generated/enum-migration.md). On the 11
-  demos it rewrote 145 references in 104 files; the remaining fixes were by hand (`== 0L` error checks,
-  `List<Long>` settings tables, `ConfigFile.setValue` of an enum, one probe that passed the wrong enum).
+  demos it rewrote 145 references in 22 of 104 files; the remaining fixes were by hand (`== 0L` error
+  checks, `List<Long>` settings tables compared with the stored numbers, one probe that passed the
+  wrong enum).
 - **Binary size and compile time** (macOS arm64, Godot 4.7.2, kanama 3bce70ac → this change):
 
   | | before | after | |
   |---|---:|---:|---:|
-  | `kanama.jar` (desktop addon, kotlin-stdlib bundled) | 12,247,869 B | 14,343,145 B | +17.1 % |
-  | iOS `libkanama_ios_runtime.a` debug (`linkDebugStaticIosArm64`) | 236,065,128 B | 230,610,648 B | −2.3 % |
-  | iOS `libkanama_ios_runtime.a` release (`linkReleaseStaticIosArm64`) | 124,691,160 B | 121,179,784 B | −2.8 % |
-  | clean `compileKotlinJvm` (task time, `--rerun-tasks --no-build-cache`) | 54.3 s | 59.5 s | +9.6 % |
-  | clean `compileKotlinIosArm64` (task time, same flags) | 38.0 s | 39.7 s | +4.5 % |
+  | `kanama.jar` (desktop addon, kotlin-stdlib bundled) | 12,247,869 B | 14,372,822 B | +17.3 % |
+  | iOS `libkanama_ios_runtime.a` debug (`linkDebugStaticIosArm64`) | 236,065,128 B | 230,641,600 B | −2.3 % |
+  | iOS `libkanama_ios_runtime.a` release (`linkReleaseStaticIosArm64`) | 124,691,160 B | 121,195,768 B | −2.8 % |
+  | clean `compileKotlinJvm` (task time, `--rerun-tasks --no-build-cache`) | 54.3 s | 59.6 s | +9.8 % |
+  | clean `compileKotlinIosArm64` (task time, same flags) | 38.0 s | 40.6 s | +6.8 % |
+
+  Of that, the `GodotEnumValue` marker (every value class implementing it) costs +29,677 B of
+  `kanama.jar` (+0.2 %), +30,952 B debug and +15,984 B release on iOS (measured against the same
+  tree without it: 14,343,145 / 230,610,648 / 121,179,784 B).
 
   The enum values are getter-only companion properties (`val ALWAYS: ProcessMode get() =
   ProcessMode(3L)`): no backing field and no companion static initialiser, the smallest JVM shape that

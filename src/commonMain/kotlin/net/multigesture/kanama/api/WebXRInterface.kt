@@ -153,7 +153,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     @JvmInline
-    value class TargetRayMode(val value: Long) {
+    value class TargetRayMode(override val value: Long) : GodotEnumValue {
         companion object {
             val UNKNOWN: TargetRayMode get() = TargetRayMode(0L)
             val GAZE: TargetRayMode get() = TargetRayMode(1L)

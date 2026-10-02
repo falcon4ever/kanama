@@ -271,7 +271,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Method(val value: Long) {
+    value class Method(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * HTTP GET method. The GET method requests a representation of the specified resource. Requests
@@ -347,7 +347,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Status(val value: Long) {
+    value class Status(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Status: Disconnected from the server.
@@ -413,7 +413,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ResponseCode(val value: Long) {
+    value class ResponseCode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * HTTP status code `100 Continue`. Interim response that indicates everything so far is OK and

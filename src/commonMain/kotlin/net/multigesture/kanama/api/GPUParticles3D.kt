@@ -900,7 +900,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class DrawOrder(val value: Long) {
+    value class DrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Particles are drawn in the order emitted.
@@ -932,7 +932,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class EmitFlags(val value: Long) {
+    value class EmitFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Particle starts at the specified position.
@@ -969,7 +969,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class TransformAlign(val value: Long) {
+    value class TransformAlign(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not align particle transforms relative to the camera or velocity.

@@ -164,7 +164,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class SpecialHistory(val value: Long) {
+    value class SpecialHistory(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Global history not associated with any scene, but with external resources etc.

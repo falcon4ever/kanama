@@ -270,7 +270,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ExportFilter(val value: Long) {
+    value class ExportFilter(override val value: Long) : GodotEnumValue {
         companion object {
             val EXPORT_ALL_RESOURCES: ExportFilter get() = ExportFilter(0L)
             val EXPORT_SELECTED_SCENES: ExportFilter get() = ExportFilter(1L)
@@ -281,7 +281,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class FileExportMode(val value: Long) {
+    value class FileExportMode(override val value: Long) : GodotEnumValue {
         companion object {
             val NOT_CUSTOMIZED: FileExportMode get() = FileExportMode(0L)
             val STRIP: FileExportMode get() = FileExportMode(1L)
@@ -291,7 +291,7 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ScriptExportMode(val value: Long) {
+    value class ScriptExportMode(override val value: Long) : GodotEnumValue {
         companion object {
             val TEXT: ScriptExportMode get() = ScriptExportMode(0L)
             val BINARY_TOKENS: ScriptExportMode get() = ScriptExportMode(1L)

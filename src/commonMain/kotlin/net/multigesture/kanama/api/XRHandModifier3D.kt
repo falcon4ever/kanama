@@ -63,7 +63,7 @@ class XRHandModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     @JvmInline
-    value class BoneUpdate(val value: Long) {
+    value class BoneUpdate(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The skeleton's bones are fully updated (both position and rotation) to match the tracked bones.

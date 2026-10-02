@@ -662,7 +662,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
     }
 
     @JvmInline
-    value class GroupCallFlags(val value: Long) {
+    value class GroupCallFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Call nodes within a group with no special behavior (default).

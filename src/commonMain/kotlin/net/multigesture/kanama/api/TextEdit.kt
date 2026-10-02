@@ -2738,7 +2738,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class MenuItems(val value: Long) {
+    value class MenuItems(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Cuts (copies and clears) the selected text.
@@ -2936,7 +2936,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class EditAction(val value: Long) {
+    value class EditAction(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No current action.
@@ -2966,7 +2966,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class SearchFlags(val value: Long) {
+    value class SearchFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Match case when searching.
@@ -2990,7 +2990,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class CaretType(val value: Long) {
+    value class CaretType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Vertical line caret.
@@ -3008,7 +3008,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class SelectionMode(val value: Long) {
+    value class SelectionMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Not selecting.
@@ -3044,7 +3044,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class LineWrappingMode(val value: Long) {
+    value class LineWrappingMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Line wrapping is disabled.
@@ -3062,7 +3062,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class GutterType(val value: Long) {
+    value class GutterType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * When a gutter is set to string using `set_gutter_type`, it is used to contain text set via the

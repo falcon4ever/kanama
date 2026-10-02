@@ -539,7 +539,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class CustomControlContainer(val value: Long) {
+    value class CustomControlContainer(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Main editor toolbar, next to play buttons.
@@ -617,7 +617,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class DockSlot(val value: Long) {
+    value class DockSlot(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The dock is closed.
@@ -690,7 +690,7 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class AfterGUIInput(val value: Long) {
+    value class AfterGUIInput(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Forwards the `InputEvent` to other EditorPlugins.

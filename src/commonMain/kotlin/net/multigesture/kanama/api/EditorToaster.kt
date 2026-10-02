@@ -21,7 +21,7 @@ class EditorToaster(handle: GodotHandle) : HBoxContainer(handle) {
     }
 
     @JvmInline
-    value class Severity(val value: Long) {
+    value class Severity(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Toast will display with an INFO severity.

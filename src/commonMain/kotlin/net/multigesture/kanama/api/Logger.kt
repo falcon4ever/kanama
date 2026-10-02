@@ -14,7 +14,7 @@ class Logger(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     @JvmInline
-    value class ErrorType(val value: Long) {
+    value class ErrorType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The message received is an error.

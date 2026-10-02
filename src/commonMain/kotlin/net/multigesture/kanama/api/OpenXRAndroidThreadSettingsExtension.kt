@@ -14,7 +14,7 @@ class OpenXRAndroidThreadSettingsExtension(handle: GodotHandle) : OpenXRExtensio
     }
 
     @JvmInline
-    value class ThreadType(val value: Long) {
+    value class ThreadType(override val value: Long) : GodotEnumValue {
         companion object {
             val APPLICATION_MAIN: ThreadType get() = ThreadType(0L)
             val APPLICATION_WORKER: ThreadType get() = ThreadType(1L)

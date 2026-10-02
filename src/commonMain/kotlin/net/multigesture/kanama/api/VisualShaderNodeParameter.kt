@@ -59,7 +59,7 @@ open class VisualShaderNodeParameter(handle: GodotHandle) : VisualShaderNode(han
     }
 
     @JvmInline
-    value class Qualifier(val value: Long) {
+    value class Qualifier(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: Qualifier get() = Qualifier(0L)
             val GLOBAL: Qualifier get() = Qualifier(1L)

@@ -599,7 +599,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class ModifierCallbackModeProcess(val value: Long) {
+    value class ModifierCallbackModeProcess(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Set a flag to process modification during physics frames (see

@@ -952,7 +952,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class TrackType(val value: Long) {
+    value class TrackType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Value tracks set values in node properties, but only those which can be interpolated. For 3D
@@ -1016,7 +1016,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class InterpolationType(val value: Long) {
+    value class InterpolationType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No interpolation (nearest value).
@@ -1056,7 +1056,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class UpdateMode(val value: Long) {
+    value class UpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Update between keyframes and hold the value.
@@ -1082,7 +1082,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class LoopMode(val value: Long) {
+    value class LoopMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * At both ends of the animation, the animation will stop playing.
@@ -1107,7 +1107,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class LoopedFlag(val value: Long) {
+    value class LoopedFlag(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This flag indicates that the animation proceeds without any looping.
@@ -1133,7 +1133,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class FindMode(val value: Long) {
+    value class FindMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Finds the nearest time key.

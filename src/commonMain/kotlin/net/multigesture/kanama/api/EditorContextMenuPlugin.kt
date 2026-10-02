@@ -62,7 +62,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ContextMenuSlot(val value: Long) {
+    value class ContextMenuSlot(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Context menu of Scene dock. `_popup_menu` will be called with a list of paths to currently

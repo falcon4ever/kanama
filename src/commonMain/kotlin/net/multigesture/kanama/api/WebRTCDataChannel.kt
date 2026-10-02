@@ -87,7 +87,7 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class WriteMode(val value: Long) {
+    value class WriteMode(override val value: Long) : GodotEnumValue {
         companion object {
             val TEXT: WriteMode get() = WriteMode(0L)
             val BINARY: WriteMode get() = WriteMode(1L)
@@ -95,7 +95,7 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class ChannelState(val value: Long) {
+    value class ChannelState(override val value: Long) : GodotEnumValue {
         companion object {
             val CONNECTING: ChannelState get() = ChannelState(0L)
             val OPEN: ChannelState get() = ChannelState(1L)

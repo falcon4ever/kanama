@@ -117,7 +117,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class AudioStreamGeneratorMixRate(val value: Long) {
+    value class AudioStreamGeneratorMixRate(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Current `AudioServer` output mixing rate.

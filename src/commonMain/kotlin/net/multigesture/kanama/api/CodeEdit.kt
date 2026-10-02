@@ -1271,7 +1271,7 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
     }
 
     @JvmInline
-    value class CodeCompletionKind(val value: Long) {
+    value class CodeCompletionKind(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Marks the option as a class.
@@ -1343,7 +1343,7 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
     }
 
     @JvmInline
-    value class CodeCompletionLocation(val value: Long) {
+    value class CodeCompletionLocation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The option is local to the location of the code completion query - e.g. a local variable.

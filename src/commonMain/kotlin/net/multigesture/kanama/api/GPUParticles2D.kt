@@ -823,7 +823,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class DrawOrder(val value: Long) {
+    value class DrawOrder(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Particles are drawn in the order emitted.
@@ -849,7 +849,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class EmitFlags(val value: Long) {
+    value class EmitFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Particle starts at the specified position.

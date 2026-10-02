@@ -452,7 +452,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     @JvmInline
-    value class BlendMode(val value: Long) {
+    value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The interpolation between animations is linear.
@@ -478,7 +478,7 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     @JvmInline
-    value class SyncMode(val value: Long) {
+    value class SyncMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inactive animations are frozen and do not advance.

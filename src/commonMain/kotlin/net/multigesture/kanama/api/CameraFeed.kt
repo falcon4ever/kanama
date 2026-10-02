@@ -211,7 +211,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class FeedDataType(val value: Long) {
+    value class FeedDataType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No image set for the feed.
@@ -247,7 +247,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class FeedPosition(val value: Long) {
+    value class FeedPosition(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Unspecified position.

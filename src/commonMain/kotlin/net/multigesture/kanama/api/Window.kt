@@ -1662,7 +1662,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class Mode(val value: Long) {
+    value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Windowed mode, i.e. `Window` doesn't occupy the whole screen (unless set to the size of the
@@ -1718,7 +1718,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class Flags(val value: Long) {
+    value class Flags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The window can't be resized by dragging its resize grip. It's still possible to resize the
@@ -1838,7 +1838,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class ContentScaleMode(val value: Long) {
+    value class ContentScaleMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The content will not be scaled to match the `Window`'s size (`content_scale_size` is ignored).
@@ -1864,7 +1864,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class ContentScaleAspect(val value: Long) {
+    value class ContentScaleAspect(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The aspect will be ignored. Scaling will simply stretch the content to fit the target size.
@@ -1905,7 +1905,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class ContentScaleStretch(val value: Long) {
+    value class ContentScaleStretch(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The content will be stretched according to a fractional factor. This fills all the space
@@ -1925,7 +1925,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class LayoutDirection(val value: Long) {
+    value class LayoutDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Automatic layout direction, determined from the parent window layout direction.
@@ -1968,7 +1968,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class WindowInitialPosition(val value: Long) {
+    value class WindowInitialPosition(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Initial window position is determined by `position`.

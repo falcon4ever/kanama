@@ -841,7 +841,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class DataType(val value: Long) {
+    value class DataType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Theme's `Color` item type.

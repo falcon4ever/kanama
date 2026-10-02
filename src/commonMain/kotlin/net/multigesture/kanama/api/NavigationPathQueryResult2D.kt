@@ -162,7 +162,7 @@ class NavigationPathQueryResult2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class PathSegmentType(val value: Long) {
+    value class PathSegmentType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This segment of the path goes through a region.

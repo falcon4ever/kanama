@@ -324,7 +324,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class DebugVisibilityMode(val value: Long) {
+    value class DebugVisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DEFAULT: DebugVisibilityMode get() = DebugVisibilityMode(0L)
             val FORCE_SHOW: DebugVisibilityMode get() = DebugVisibilityMode(1L)

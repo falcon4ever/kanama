@@ -25,7 +25,7 @@ class AudioEffectSpectrumAnalyzerInstance(handle: GodotHandle) : AudioEffectInst
     }
 
     @JvmInline
-    value class MagnitudeMode(val value: Long) {
+    value class MagnitudeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use the average value across the frequency range as magnitude.

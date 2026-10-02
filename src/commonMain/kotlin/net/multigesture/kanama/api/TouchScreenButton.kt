@@ -250,7 +250,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class VisibilityMode(val value: Long) {
+    value class VisibilityMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Always visible.

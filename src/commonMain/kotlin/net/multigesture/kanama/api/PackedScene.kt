@@ -54,7 +54,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class GenEditState(val value: Long) {
+    value class GenEditState(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If passed to `instantiate`, blocks edits to the scene state.

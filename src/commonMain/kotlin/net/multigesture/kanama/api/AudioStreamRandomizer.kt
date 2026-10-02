@@ -233,7 +233,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     }
 
     @JvmInline
-    value class PlaybackMode(val value: Long) {
+    value class PlaybackMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Pick a stream at random according to the probability weights chosen for each stream, but avoid

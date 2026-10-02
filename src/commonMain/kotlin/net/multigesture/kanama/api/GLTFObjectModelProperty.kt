@@ -139,7 +139,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class GLTFObjectModelType(val value: Long) {
+    value class GLTFObjectModelType(override val value: Long) : GodotEnumValue {
         companion object {
             val UNKNOWN: GLTFObjectModelType get() = GLTFObjectModelType(0L)
             val BOOL: GLTFObjectModelType get() = GLTFObjectModelType(1L)

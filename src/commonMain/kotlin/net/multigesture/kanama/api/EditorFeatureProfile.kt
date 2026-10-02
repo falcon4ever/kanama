@@ -142,7 +142,7 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Feature(val value: Long) {
+    value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The 3D editor. If this feature is disabled, the 3D editor won't display but 3D nodes will still

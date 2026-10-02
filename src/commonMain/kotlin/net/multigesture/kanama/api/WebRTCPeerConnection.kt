@@ -72,7 +72,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ConnectionState(val value: Long) {
+    value class ConnectionState(override val value: Long) : GodotEnumValue {
         companion object {
             val NEW: ConnectionState get() = ConnectionState(0L)
             val CONNECTING: ConnectionState get() = ConnectionState(1L)
@@ -84,7 +84,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class GatheringState(val value: Long) {
+    value class GatheringState(override val value: Long) : GodotEnumValue {
         companion object {
             val NEW: GatheringState get() = GatheringState(0L)
             val GATHERING: GatheringState get() = GatheringState(1L)
@@ -93,7 +93,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class SignalingState(val value: Long) {
+    value class SignalingState(override val value: Long) : GodotEnumValue {
         companion object {
             val STABLE: SignalingState get() = SignalingState(0L)
             val HAVE_LOCAL_OFFER: SignalingState get() = SignalingState(1L)

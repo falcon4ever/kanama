@@ -127,7 +127,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
     }
 
     @JvmInline
-    value class ShadowMode(val value: Long) {
+    value class ShadowMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Renders the entire scene's shadow map from an orthogonal point of view. This is the fastest
@@ -154,7 +154,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
     }
 
     @JvmInline
-    value class SkyMode(val value: Long) {
+    value class SkyMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Makes the light visible in both scene lighting and sky rendering.

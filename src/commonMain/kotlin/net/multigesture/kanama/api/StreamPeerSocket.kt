@@ -42,7 +42,7 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
     }
 
     @JvmInline
-    value class Status(val value: Long) {
+    value class Status(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The initial status of the `StreamPeerSocket`. This is also the status after disconnecting.

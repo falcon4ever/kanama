@@ -482,7 +482,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class DrawFlags(val value: Long) {
+    value class DrawFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If set, the texture's transparency and the opacity are used to make those parts of the sprite
@@ -527,7 +527,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     @JvmInline
-    value class AlphaCutMode(val value: Long) {
+    value class AlphaCutMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This mode performs standard alpha blending. It can display translucent areas, but transparency

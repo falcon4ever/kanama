@@ -122,7 +122,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
     }
 
     @JvmInline
-    value class Capability(val value: Long) {
+    value class Capability(override val value: Long) : GodotEnumValue {
         companion object {
             val PLANE_TRACKING: Capability get() = Capability(1000741000L)
             val MARKER_TRACKING_QR_CODE: Capability get() = Capability(1000743000L)
@@ -134,7 +134,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
     }
 
     @JvmInline
-    value class ComponentType(val value: Long) {
+    value class ComponentType(override val value: Long) : GodotEnumValue {
         companion object {
             val BOUNDED_2D: ComponentType get() = ComponentType(1L)
             val BOUNDED_3D: ComponentType get() = ComponentType(2L)

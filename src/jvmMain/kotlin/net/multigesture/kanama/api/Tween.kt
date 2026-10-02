@@ -14,8 +14,8 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     @JvmInline
     actual value class TweenProcessMode
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             /**
              * The `Tween` updates after each physics frame (see `Node._physics_process`).
@@ -35,8 +35,8 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     @JvmInline
     actual value class TweenPauseMode
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             /**
              * If the `Tween` has a bound node, it will process when that node can process (see
@@ -63,8 +63,8 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     @JvmInline
     actual value class TransitionType
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             /**
              * The animation is interpolated linearly.
@@ -144,8 +144,8 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     @JvmInline
     actual value class EaseType
     actual constructor(
-        actual val value: Long,
-    ) {
+        actual override val value: Long,
+    ) : GodotEnumValue {
         actual companion object {
             /**
              * The interpolation starts slowly and speeds up towards the end.

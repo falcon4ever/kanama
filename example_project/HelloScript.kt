@@ -289,12 +289,12 @@ class HelloScript(godotObject: GodotHandle) :
     val savePath = "res://.kanama_resource_saver_smoke.kt"
     val saveAbsolutePath = ProjectSettings.globalizePath(savePath)
     DirAccess.removeAbsolute(saveAbsolutePath)
-    val saveError = loadedScript?.let { ResourceSaver.save(it, savePath) } ?: -1L
+    val saveError = loadedScript?.let { ResourceSaver.save(it, savePath).value } ?: -1L
     val saveExists = FileAccess.fileExists(savePath)
     val saveHasClass =
       saveExists && FileAccess.getFileAsString(savePath).contains("class HelloScript")
-    val saveUidSetError = if (saveExists) ResourceSaver.setUid(savePath, 8675309L) else -1L
-    val saveCleanupError = if (saveExists) DirAccess.removeAbsolute(saveAbsolutePath) else 0L
+    val saveUidSetError = if (saveExists) ResourceSaver.setUid(savePath, 8675309L).value else -1L
+    val saveCleanupError = if (saveExists) DirAccess.removeAbsolute(saveAbsolutePath).value else 0L
     DirAccess.removeAbsolute("$saveAbsolutePath.uid")
     val cachedScript = ResourceLoader.getCachedRef("res://HelloScript.kt")
     val cachedScriptPath = cachedScript?.getPath().orEmpty()
@@ -488,7 +488,7 @@ class HelloScript(godotObject: GodotHandle) :
     val body3d = selfNode.getAsOrNull(targetPath, ::CharacterBody3D)
     val bodyFound = selfNode.hasNode(targetPath) && body3d != null
     val packedScene = PackedScene.create()
-    val packedScenePackError = body3d?.let { packedScene.pack(it) } ?: -1L
+    val packedScenePackError = body3d?.let { packedScene.pack(it).value } ?: -1L
     val packedSceneCanInstantiate = packedScene.canInstantiate()
     val packedSceneInstance = packedScene.instantiate()
     val packedSceneInstanceIsBody = packedSceneInstance?.isClass("CharacterBody3D") ?: false
@@ -588,7 +588,7 @@ class HelloScript(godotObject: GodotHandle) :
     val cameraFov = camera3d?.getFov() ?: 0.0
     val cameraNear = camera3d?.getNear() ?: 0.0
     val cameraFar = camera3d?.getFar() ?: 0.0
-    val cameraProjection = camera3d?.getProjection() ?: -1L
+    val cameraProjection = camera3d?.getProjection()?.value ?: -1L
     val cameraCullMask = camera3d?.getCullMask() ?: 0L
     val cameraCurrent = camera3d?.isCurrent() ?: false
     val ray3d = selfNode.getNodeAsOrNull("../RayCast3D", "RayCast3D", ::RayCast3D)
@@ -703,9 +703,9 @@ class HelloScript(godotObject: GodotHandle) :
     animationPlayer?.advance(0.0)
     val animationActive = animationPlayer?.isActive() ?: false
     val animationDeterministic = animationPlayer?.isDeterministic() ?: false
-    val animationProcessMode = animationPlayer?.getCallbackModeProcess() ?: -1L
-    val animationMethodMode = animationPlayer?.getCallbackModeMethod() ?: -1L
-    val animationDiscreteMode = animationPlayer?.getCallbackModeDiscrete() ?: -1L
+    val animationProcessMode = animationPlayer?.getCallbackModeProcess()?.value ?: -1L
+    val animationMethodMode = animationPlayer?.getCallbackModeMethod()?.value ?: -1L
+    val animationDiscreteMode = animationPlayer?.getCallbackModeDiscrete()?.value ?: -1L
     val animationPolyphony = animationPlayer?.getAudioMaxPolyphony() ?: 0L
     val animationRootLocal = animationPlayer?.isRootMotionLocal() ?: false
     val animationRootMotionPosition = animationPlayer?.getRootMotionPosition() ?: Vector3.ZERO
@@ -729,8 +729,8 @@ class HelloScript(godotObject: GodotHandle) :
     val animationHasSection = animationPlayer?.hasSection() ?: true
     val animationSectionStart = animationPlayer?.getSectionStartTime() ?: 0.0
     val animationSectionEnd = animationPlayer?.getSectionEndTime() ?: 0.0
-    val animationPlayerProcessMode = animationPlayer?.getProcessCallback() ?: -1L
-    val animationPlayerMethodMode = animationPlayer?.getMethodCallMode() ?: -1L
+    val animationPlayerProcessMode = animationPlayer?.getProcessCallback()?.value ?: -1L
+    val animationPlayerMethodMode = animationPlayer?.getMethodCallMode()?.value ?: -1L
     val meshInstance3d =
       selfNode.getNodeAsOrNull("../MeshInstance3D", "MeshInstance3D", ::MeshInstance3D)
     val meshFound = selfNode.hasNode("../MeshInstance3D") && meshInstance3d != null
@@ -771,12 +771,12 @@ class HelloScript(godotObject: GodotHandle) :
     val meshLayerMask = meshInstance3d?.getLayerMask() ?: 0L
     val meshSortingOffset = meshInstance3d?.getSortingOffset() ?: 0.0
     val meshSortingAabb = meshInstance3d?.isSortingUseAabbCenter() ?: false
-    val meshCastShadows = meshInstance3d?.getCastShadowsSetting() ?: -1L
+    val meshCastShadows = meshInstance3d?.getCastShadowsSetting()?.value ?: -1L
     val meshLodBias = meshInstance3d?.getLodBias() ?: 0.0
     val meshTransparency = meshInstance3d?.getTransparency() ?: 0.0
     val meshVisibilityBegin = meshInstance3d?.getVisibilityRangeBegin() ?: 0.0
     val meshVisibilityEnd = meshInstance3d?.getVisibilityRangeEnd() ?: 0.0
-    val meshVisibilityFade = meshInstance3d?.getVisibilityRangeFadeMode() ?: -1L
+    val meshVisibilityFade = meshInstance3d?.getVisibilityRangeFadeMode()?.value ?: -1L
     val meshExtraCull = meshInstance3d?.getExtraCullMargin() ?: 0.0
     val meshLightmapTexelScale = meshInstance3d?.getLightmapTexelScale() ?: 0.0
     val meshIgnoreOcclusion = meshInstance3d?.isIgnoringOcclusionCulling() ?: false
@@ -847,7 +847,7 @@ class HelloScript(godotObject: GodotHandle) :
     val gpuParticlesFixedFps = gpuParticles?.getFixedFps() ?: -1L
     val gpuParticlesFractional = gpuParticles?.getFractionalDelta() ?: true
     val gpuParticlesSpeedScale = gpuParticles?.getSpeedScale() ?: -1.0
-    val gpuParticlesDrawOrder = gpuParticles?.getDrawOrder() ?: -1L
+    val gpuParticlesDrawOrder = gpuParticles?.getDrawOrder()?.value ?: -1L
     val gpuParticlesEmitting = gpuParticles?.isEmitting() ?: false
     gpuParticles?.restart(keepSeed = true)
     val cpuParticles =
@@ -872,7 +872,7 @@ class HelloScript(godotObject: GodotHandle) :
     val cpuParticlesFixedFps = cpuParticles?.getFixedFps() ?: -1L
     val cpuParticlesFractional = cpuParticles?.getFractionalDelta() ?: true
     val cpuParticlesSpeedScale = cpuParticles?.getSpeedScale() ?: -1.0
-    val cpuParticlesDrawOrder = cpuParticles?.getDrawOrder() ?: -1L
+    val cpuParticlesDrawOrder = cpuParticles?.getDrawOrder()?.value ?: -1L
     val cpuParticlesEmitting = cpuParticles?.isEmitting() ?: false
     cpuParticles?.restart(keepSeed = true)
     val timerNode = selfNode.getNodeAsOrNull("../Timer", "Timer", ::Timer)
@@ -889,7 +889,7 @@ class HelloScript(godotObject: GodotHandle) :
     val timerAutostart = timerNode?.hasAutostart() ?: true
     val timerPaused = timerNode?.isPaused() ?: false
     val timerIgnoreTimeScale = timerNode?.isIgnoringTimeScale() ?: false
-    val timerProcessCallback = timerNode?.getTimerProcessCallback() ?: -1L
+    val timerProcessCallback = timerNode?.getTimerProcessCallback()?.value ?: -1L
     val timerTimeLeftBeforeStop = timerNode?.getTimeLeft() ?: 0.0
     val timerStoppedBeforeStop = timerNode?.isStopped() ?: true
     timerNode?.stop()
@@ -1129,6 +1129,27 @@ class HelloScript(godotObject: GodotHandle) :
     val selfThreadMessagesPhysics =
       Node.ProcessThreadMessages.MESSAGES_PHYSICS in selfProcessThreadMessages
     val selfProcessModeTyped = selfProcessMode == Node.ProcessMode.ALWAYS
+    // A typed enum handed to the dynamic Variant path (Object.set, ConfigFile.setValue) is encoded
+    // as INT with its `.value` (task 128 A follow-up). PAUSABLE (1) differs from the ALWAYS (3) set
+    // above and from a nil/no-op 0; the ConfigFile row reads FULLSCREEN back as the Long 3.
+    val dynamicEnumSet =
+      runCatching {
+          selfNode.set("process_mode", Node.ProcessMode.PAUSABLE)
+          selfNode.getProcessMode().value.toString()
+        }
+        .getOrElse { "error:${it.message}" }
+    selfNode.setProcessMode(Node.ProcessMode.ALWAYS)
+    val dynamicEnumConfig =
+      runCatching {
+          ConfigFile.create().use { config ->
+            config.setValue("video", "display_mode", Window.Mode.FULLSCREEN)
+            config.getValue("video", "display_mode").toString()
+          }
+        }
+        .getOrElse { "error:${it.message}" }
+    System.err.println(
+      "[kanama:kt] typed enum dynamic set=$dynamicEnumSet config_roundtrip=$dynamicEnumConfig"
+    )
     selfNode.setProcessThreadGroupOrder(2)
     val selfProcessThreadGroupOrder = selfNode.getProcessThreadGroupOrder()
     selfNode.setProcessInternal(true)
@@ -1271,7 +1292,7 @@ class HelloScript(godotObject: GodotHandle) :
     val uiPosition = uiRoot?.position ?: Vector2.ZERO
     val uiSize = uiRoot?.size ?: Vector2.ZERO
     val uiMinSize = uiRoot?.customMinimumSize ?: Vector2.ZERO
-    val uiMouseFilter = uiRoot?.getMouseFilter() ?: -1L
+    val uiMouseFilter = uiRoot?.getMouseFilter()?.value ?: -1L
     val uiVisibleBefore = uiRoot?.isVisible() ?: false
     uiRoot?.hide()
     val uiVisibleHidden = uiRoot?.isVisible() ?: false
@@ -1291,7 +1312,7 @@ class HelloScript(godotObject: GodotHandle) :
     val buttonToggle = smokeButton?.isToggleMode() ?: false
     val buttonPressed = smokeButton?.isPressed() ?: false
     val buttonDisabled = smokeButton?.isDisabled() ?: true
-    val buttonFocusMode = smokeButton?.getFocusMode() ?: -1L
+    val buttonFocusMode = smokeButton?.getFocusMode()?.value ?: -1L
     val buttonFocused = smokeButton?.hasFocus() ?: false
     smokeButton?.releaseFocus()
     val dynamicLabel =
@@ -1441,7 +1462,8 @@ class HelloScript(godotObject: GodotHandle) :
       dirRenameExists &&
         FileAccess.getFileAsString("res://.kanama_dir_rename_smoke.kt")
           .contains("class HelloScript")
-    val dirRenameCleanupError = if (dirRenameExists) DirAccess.removeAbsolute(dirRenamePath) else 0L
+    val dirRenameCleanupError =
+      if (dirRenameExists) DirAccess.removeAbsolute(dirRenamePath).value else 0L
     DirAccess.removeAbsolute(dirCopyPath)
     DirAccess.removeAbsolute(
       ProjectSettings.globalizePath("res://.kanama_dir_instance_smoke/nested")
@@ -1783,7 +1805,7 @@ class HelloScript(godotObject: GodotHandle) :
         "surface=$surfaceMaterialIsStandard albedo=${assignedMaterialAlbedo.r},${assignedMaterialAlbedo.g}," +
         "${assignedMaterialAlbedo.b},${assignedMaterialAlbedo.a} metallic=$assignedMaterialMetallic " +
         "roughness=$assignedMaterialRoughness shading=${assignedMaterialShading.value} " +
-        "transparency=$assignedMaterialTransparency cull=${assignedMaterialCull.value} priority=$assignedMaterialPriority"
+        "transparency=${assignedMaterialTransparency.value} cull=${assignedMaterialCull.value} priority=$assignedMaterialPriority"
     )
     System.err.println(
       "[kanama:kt] Particles3D gpu_present=${gpuParticles != null} gpu_amount=$gpuParticlesAmount " +

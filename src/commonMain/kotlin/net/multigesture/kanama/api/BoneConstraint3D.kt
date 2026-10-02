@@ -172,7 +172,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     @JvmInline
-    value class ReferenceType(val value: Long) {
+    value class ReferenceType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The reference target is a bone. In this case, the reference target spaces is local space.

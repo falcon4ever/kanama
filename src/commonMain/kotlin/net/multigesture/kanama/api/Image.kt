@@ -880,7 +880,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class Format(val value: Long) {
+    value class Format(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Texture format with a single 8-bit depth representing luminance.
@@ -1243,7 +1243,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class Interpolation(val value: Long) {
+    value class Interpolation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Performs nearest-neighbor interpolation. If the image is resized, it will be pixelated.
@@ -1289,7 +1289,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class AlphaMode(val value: Long) {
+    value class AlphaMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Image is fully opaque. It does not store alpha data.
@@ -1313,7 +1313,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class CompressMode(val value: Long) {
+    value class CompressMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use S3TC compression.
@@ -1355,7 +1355,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class UsedChannels(val value: Long) {
+    value class UsedChannels(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The image only uses one channel for luminance (grayscale).
@@ -1397,7 +1397,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class CompressSource(val value: Long) {
+    value class CompressSource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Source texture (before compression) is a regular texture. Default for all textures.
@@ -1422,7 +1422,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ASTCFormat(val value: Long) {
+    value class ASTCFormat(override val value: Long) : GodotEnumValue {
         companion object {
             val FORMAT_4x4: ASTCFormat get() = ASTCFormat(0L)
             val FORMAT_8x8: ASTCFormat get() = ASTCFormat(1L)

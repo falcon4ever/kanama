@@ -59,7 +59,7 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
     }
 
     @JvmInline
-    value class OpType(val value: Long) {
+    value class OpType(override val value: Long) : GodotEnumValue {
         companion object {
             val SCALAR: OpType get() = OpType(0L)
             val VECTOR_2D: OpType get() = OpType(1L)
@@ -70,7 +70,7 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
     }
 
     @JvmInline
-    value class Function(val value: Long) {
+    value class Function(override val value: Long) : GodotEnumValue {
         companion object {
             val SUM: Function get() = Function(0L)
             val X: Function get() = Function(1L)
@@ -80,7 +80,7 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
     }
 
     @JvmInline
-    value class Precision(val value: Long) {
+    value class Precision(override val value: Long) : GodotEnumValue {
         companion object {
             val NONE: Precision get() = Precision(0L)
             val COARSE: Precision get() = Precision(1L)

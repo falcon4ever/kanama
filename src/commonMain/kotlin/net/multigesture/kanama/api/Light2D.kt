@@ -408,7 +408,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class ShadowFilter(val value: Long) {
+    value class ShadowFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No filter applies to the shadow map. This provides hard shadow edges and is the fastest to
@@ -435,7 +435,7 @@ open class Light2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class BlendMode(val value: Long) {
+    value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Adds the value of pixels corresponding to the Light2D to the values of pixels under it. This is

@@ -127,7 +127,7 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class IGDStatus(val value: Long) {
+    value class IGDStatus(override val value: Long) : GodotEnumValue {
         companion object {
             val OK: IGDStatus get() = IGDStatus(0L)
             val HTTP_ERROR: IGDStatus get() = IGDStatus(1L)

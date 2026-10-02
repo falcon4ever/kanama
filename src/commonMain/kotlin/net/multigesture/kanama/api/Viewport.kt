@@ -1882,7 +1882,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class PositionalShadowAtlasQuadrantSubdiv(val value: Long) {
+    value class PositionalShadowAtlasQuadrantSubdiv(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This quadrant will not be used.
@@ -1940,7 +1940,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class Scaling3DMode(val value: Long) {
+    value class Scaling3DMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use bilinear scaling for the viewport's 3D buffer. The amount of scaling can be set using
@@ -2019,7 +2019,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class MSAA(val value: Long) {
+    value class MSAA(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Multisample antialiasing mode disabled. This is the default value, and is also the fastest
@@ -2060,7 +2060,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class AnisotropicFiltering(val value: Long) {
+    value class AnisotropicFiltering(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Anisotropic filtering is disabled.
@@ -2102,7 +2102,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class ScreenSpaceAA(val value: Long) {
+    value class ScreenSpaceAA(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not perform any antialiasing in the full screen post-process.
@@ -2135,7 +2135,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class RenderInfo(val value: Long) {
+    value class RenderInfo(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Amount of objects in frame.
@@ -2165,7 +2165,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class RenderInfoType(val value: Long) {
+    value class RenderInfoType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Visible render pass (excluding shadows).
@@ -2196,7 +2196,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class DebugDraw(val value: Long) {
+    value class DebugDraw(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Objects are displayed normally.
@@ -2430,7 +2430,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class DefaultCanvasItemTextureFilter(val value: Long) {
+    value class DefaultCanvasItemTextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The texture filter reads from the nearest pixel only. This makes the texture look pixelated from
@@ -2484,7 +2484,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class DefaultCanvasItemTextureRepeat(val value: Long) {
+    value class DefaultCanvasItemTextureRepeat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables textures repeating. Instead, when reading UVs outside the 0-1 range, the value will be
@@ -2524,7 +2524,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class SDFOversize(val value: Long) {
+    value class SDFOversize(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The signed distance field only covers the viewport's own rectangle.
@@ -2561,7 +2561,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class SDFScale(val value: Long) {
+    value class SDFScale(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The signed distance field is rendered at full resolution.
@@ -2591,7 +2591,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class VRSMode(val value: Long) {
+    value class VRSMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Variable Rate Shading is disabled.
@@ -2622,7 +2622,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     @JvmInline
-    value class VRSUpdateMode(val value: Long) {
+    value class VRSUpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The input texture for variable rate shading will not be processed.

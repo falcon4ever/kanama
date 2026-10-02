@@ -157,7 +157,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     @JvmInline
-    value class TransformFlag(val value: Long) {
+    value class TransformFlag(override val value: Long) : GodotEnumValue {
         infix fun or(other: TransformFlag): TransformFlag = TransformFlag(value or other.value)
 
         infix fun and(other: TransformFlag): TransformFlag = TransformFlag(value and other.value)

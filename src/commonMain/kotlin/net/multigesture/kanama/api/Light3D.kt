@@ -518,7 +518,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class Param(val value: Long) {
+    value class Param(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant for accessing `light_energy`.
@@ -657,7 +657,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class BakeMode(val value: Long) {
+    value class BakeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Light is ignored when baking. This is the fastest mode, but the light will not be taken into

@@ -39,7 +39,7 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class BlendMode(val value: Long) {
+    value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Mix blending mode. Colors are assumed to be independent of the alpha (opacity) value.

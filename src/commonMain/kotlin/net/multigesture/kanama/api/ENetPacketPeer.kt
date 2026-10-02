@@ -90,7 +90,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class PeerState(val value: Long) {
+    value class PeerState(override val value: Long) : GodotEnumValue {
         companion object {
             val DISCONNECTED: PeerState get() = PeerState(0L)
             val CONNECTING: PeerState get() = PeerState(1L)
@@ -106,7 +106,7 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
     }
 
     @JvmInline
-    value class PeerStatistic(val value: Long) {
+    value class PeerStatistic(override val value: Long) : GodotEnumValue {
         companion object {
             val PACKET_LOSS: PeerStatistic get() = PeerStatistic(0L)
             val PACKET_LOSS_VARIANCE: PeerStatistic get() = PeerStatistic(1L)

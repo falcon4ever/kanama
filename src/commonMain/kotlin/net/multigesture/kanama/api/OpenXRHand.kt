@@ -82,7 +82,7 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class Hands(val value: Long) {
+    value class Hands(override val value: Long) : GodotEnumValue {
         companion object {
             val LEFT: Hands get() = Hands(0L)
             val RIGHT: Hands get() = Hands(1L)
@@ -91,7 +91,7 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class MotionRange(val value: Long) {
+    value class MotionRange(override val value: Long) : GodotEnumValue {
         companion object {
             val UNOBSTRUCTED: MotionRange get() = MotionRange(0L)
             val CONFORM_TO_CONTROLLER: MotionRange get() = MotionRange(1L)
@@ -100,7 +100,7 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class SkeletonRig(val value: Long) {
+    value class SkeletonRig(override val value: Long) : GodotEnumValue {
         companion object {
             val OPENXR: SkeletonRig get() = SkeletonRig(0L)
             val HUMANOID: SkeletonRig get() = SkeletonRig(1L)
@@ -109,7 +109,7 @@ class OpenXRHand(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class BoneUpdate(val value: Long) {
+    value class BoneUpdate(override val value: Long) : GodotEnumValue {
         companion object {
             val FULL: BoneUpdate get() = BoneUpdate(0L)
             val ROTATION_ONLY: BoneUpdate get() = BoneUpdate(1L)

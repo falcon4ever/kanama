@@ -27,7 +27,7 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
     }
 
     @JvmInline
-    value class OpType(val value: Long) {
+    value class OpType(override val value: Long) : GodotEnumValue {
         companion object {
             val SCALAR: OpType get() = OpType(0L)
             val VECTOR_2D: OpType get() = OpType(1L)

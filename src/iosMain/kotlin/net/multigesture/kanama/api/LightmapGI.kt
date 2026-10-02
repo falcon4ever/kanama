@@ -319,7 +319,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
-    value class BakeQuality(val value: Long) {
+    value class BakeQuality(override val value: Long) : GodotEnumValue {
         companion object {
             val LOW: BakeQuality get() = BakeQuality(0L)
             val MEDIUM: BakeQuality get() = BakeQuality(1L)
@@ -328,7 +328,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
-    value class GenerateProbes(val value: Long) {
+    value class GenerateProbes(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: GenerateProbes get() = GenerateProbes(0L)
             val SUBDIV_4: GenerateProbes get() = GenerateProbes(1L)
@@ -338,7 +338,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
-    value class BakeError(val value: Long) {
+    value class BakeError(override val value: Long) : GodotEnumValue {
         companion object {
             val OK: BakeError get() = BakeError(0L)
             val NO_SCENE_ROOT: BakeError get() = BakeError(1L)
@@ -355,7 +355,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         }
     }
 
-    value class EnvironmentMode(val value: Long) {
+    value class EnvironmentMode(override val value: Long) : GodotEnumValue {
         companion object {
             val DISABLED: EnvironmentMode get() = EnvironmentMode(0L)
             val SCENE: EnvironmentMode get() = EnvironmentMode(1L)

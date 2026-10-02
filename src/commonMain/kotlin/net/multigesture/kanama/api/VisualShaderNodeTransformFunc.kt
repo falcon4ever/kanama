@@ -27,7 +27,7 @@ class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(hand
     }
 
     @JvmInline
-    value class Function(val value: Long) {
+    value class Function(override val value: Long) : GodotEnumValue {
         companion object {
             val INVERSE: Function get() = Function(0L)
             val TRANSPOSE: Function get() = Function(1L)

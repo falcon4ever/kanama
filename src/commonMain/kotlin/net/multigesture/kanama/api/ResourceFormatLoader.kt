@@ -14,7 +14,7 @@ class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     @JvmInline
-    value class CacheMode(val value: Long) {
+    value class CacheMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Neither the main resource (the one requested to be loaded) nor any of its subresources are

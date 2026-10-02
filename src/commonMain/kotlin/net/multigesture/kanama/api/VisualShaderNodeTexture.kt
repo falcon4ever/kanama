@@ -60,7 +60,7 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class Source(val value: Long) {
+    value class Source(override val value: Long) : GodotEnumValue {
         companion object {
             val TEXTURE: Source get() = Source(0L)
             val SCREEN: Source get() = Source(1L)
@@ -75,7 +75,7 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class TextureType(val value: Long) {
+    value class TextureType(override val value: Long) : GodotEnumValue {
         companion object {
             val DATA: TextureType get() = TextureType(0L)
             val COLOR: TextureType get() = TextureType(1L)

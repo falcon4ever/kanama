@@ -102,7 +102,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class RadianceSize(val value: Long) {
+    value class RadianceSize(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Radiance texture size is 32×32 pixels.
@@ -156,7 +156,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class ProcessMode(val value: Long) {
+    value class ProcessMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Automatically selects the appropriate process mode based on your sky shader. If your shader uses

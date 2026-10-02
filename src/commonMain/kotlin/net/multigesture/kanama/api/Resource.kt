@@ -339,7 +339,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class DeepDuplicateMode(val value: Long) {
+    value class DeepDuplicateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No subresources at all are duplicated. This is useful even in a deep duplication to have all the

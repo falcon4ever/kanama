@@ -184,7 +184,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
     fun commit(): ArrayMesh? = commit(null)
 
-    value class CustomFormat(val value: Long) {
+    value class CustomFormat(override val value: Long) : GodotEnumValue {
         companion object {
             val RGBA8_UNORM: CustomFormat get() = CustomFormat(0L)
             val RGBA8_SNORM: CustomFormat get() = CustomFormat(1L)
@@ -198,7 +198,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
         }
     }
 
-    value class SkinWeightCount(val value: Long) {
+    value class SkinWeightCount(override val value: Long) : GodotEnumValue {
         companion object {
             val SKIN_4_WEIGHTS: SkinWeightCount get() = SkinWeightCount(0L)
             val SKIN_8_WEIGHTS: SkinWeightCount get() = SkinWeightCount(1L)

@@ -1100,7 +1100,7 @@ object Input {
     }
 
     @JvmInline
-    value class MouseMode(val value: Long) {
+    value class MouseMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Makes the mouse cursor visible if it is hidden.
@@ -1144,7 +1144,7 @@ object Input {
     }
 
     @JvmInline
-    value class CursorShape(val value: Long) {
+    value class CursorShape(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Arrow cursor. Standard, default pointing cursor.

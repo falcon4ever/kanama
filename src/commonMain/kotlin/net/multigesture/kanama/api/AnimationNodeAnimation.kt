@@ -247,7 +247,7 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     }
 
     @JvmInline
-    value class PlayMode(val value: Long) {
+    value class PlayMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Plays animation in forward direction.

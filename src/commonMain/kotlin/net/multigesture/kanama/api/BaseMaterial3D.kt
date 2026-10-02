@@ -2586,7 +2586,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class TextureParam(val value: Long) {
+    value class TextureParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Texture specifying per-pixel color.
@@ -2712,7 +2712,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class TextureFilter(val value: Long) {
+    value class TextureFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The texture filter reads from the nearest pixel only. This makes the texture look pixelated from
@@ -2780,7 +2780,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class DetailUV(val value: Long) {
+    value class DetailUV(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Use `UV` with the detail texture.
@@ -2798,7 +2798,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class Transparency(val value: Long) {
+    value class Transparency(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The material will not use transparency. This is the fastest to render.
@@ -2847,7 +2847,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class ShadingMode(val value: Long) {
+    value class ShadingMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The object will not receive shadows. This is the fastest to render, but it disables all
@@ -2879,7 +2879,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class Feature(val value: Long) {
+    value class Feature(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant for setting `emission_enabled`.
@@ -2969,7 +2969,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class BlendMode(val value: Long) {
+    value class BlendMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default blend mode. The color of the object is blended over the background based on the object's
@@ -3010,7 +3010,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class AlphaAntiAliasing(val value: Long) {
+    value class AlphaAntiAliasing(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables Alpha AntiAliasing for the material.
@@ -3036,7 +3036,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class DepthDrawMode(val value: Long) {
+    value class DepthDrawMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default depth draw mode. Depth is drawn only for opaque objects during the opaque prepass (if
@@ -3065,7 +3065,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class DepthTest(val value: Long) {
+    value class DepthTest(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Depth test will discard the pixel if it is behind other pixels.
@@ -3083,7 +3083,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class CullMode(val value: Long) {
+    value class CullMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default cull mode. The back of the object is culled when not visible. Back face triangles will
@@ -3111,7 +3111,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class Flags(val value: Long) {
+    value class Flags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables the depth test, so this object is drawn on top of all others drawn before it. This puts
@@ -3285,7 +3285,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class DiffuseMode(val value: Long) {
+    value class DiffuseMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default diffuse scattering algorithm.
@@ -3315,7 +3315,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class SpecularMode(val value: Long) {
+    value class SpecularMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Default specular blob. Note: Forward+ uses multiscattering for more accurate reflections,
@@ -3343,7 +3343,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class BillboardMode(val value: Long) {
+    value class BillboardMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Billboard mode is disabled.
@@ -3376,7 +3376,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class TextureChannel(val value: Long) {
+    value class TextureChannel(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Used to read from the red channel of a texture.
@@ -3413,7 +3413,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class EmissionOperator(val value: Long) {
+    value class EmissionOperator(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Adds the emission color to the color from the emission texture.
@@ -3431,7 +3431,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class DistanceFadeMode(val value: Long) {
+    value class DistanceFadeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not use distance fade.
@@ -3467,7 +3467,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class StencilMode(val value: Long) {
+    value class StencilMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables stencil operations.
@@ -3505,7 +3505,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class StencilFlags(val value: Long) {
+    value class StencilFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The material will only be rendered where it passes a stencil comparison with existing stencil
@@ -3531,7 +3531,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     @JvmInline
-    value class StencilCompare(val value: Long) {
+    value class StencilCompare(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Always passes the stencil test.

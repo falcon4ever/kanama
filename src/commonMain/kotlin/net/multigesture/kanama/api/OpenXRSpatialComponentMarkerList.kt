@@ -26,7 +26,7 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
     }
 
     @JvmInline
-    value class MarkerType(val value: Long) {
+    value class MarkerType(override val value: Long) : GodotEnumValue {
         companion object {
             val UNKNOWN: MarkerType get() = MarkerType(0L)
             val QRCODE: MarkerType get() = MarkerType(1L)

@@ -653,7 +653,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     }
 
     @JvmInline
-    value class MotionMode(val value: Long) {
+    value class MotionMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Apply when notions of walls, ceiling and floor are relevant. In this mode the body motion will
@@ -675,7 +675,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     }
 
     @JvmInline
-    value class PlatformOnLeave(val value: Long) {
+    value class PlatformOnLeave(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Add the last platform velocity to the `velocity` when you leave a moving platform.

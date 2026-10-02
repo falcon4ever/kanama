@@ -32,7 +32,7 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
     }
 
     @JvmInline
-    value class ArucoDict(val value: Long) {
+    value class ArucoDict(override val value: Long) : GodotEnumValue {
         companion object {
             val DICT_4X4_50: ArucoDict get() = ArucoDict(1L)
             val DICT_4X4_100: ArucoDict get() = ArucoDict(2L)

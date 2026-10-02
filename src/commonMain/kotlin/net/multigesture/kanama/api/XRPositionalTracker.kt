@@ -143,7 +143,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     }
 
     @JvmInline
-    value class TrackerHand(val value: Long) {
+    value class TrackerHand(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The hand this tracker is held in is unknown or not applicable.

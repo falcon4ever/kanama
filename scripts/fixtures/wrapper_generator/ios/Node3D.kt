@@ -388,7 +388,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
         const val visibilityChanged: String = "visibility_changed"
     }
 
-    value class RotationEditMode(val value: Long) {
+    value class RotationEditMode(override val value: Long) : GodotEnumValue {
         companion object {
             val EULER: RotationEditMode get() = RotationEditMode(0L)
             val QUATERNION: RotationEditMode get() = RotationEditMode(1L)

@@ -310,7 +310,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     }
 
     @JvmInline
-    value class StateMachineType(val value: Long) {
+    value class StateMachineType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Seeking to the beginning is treated as playing from the start state. Transition to the end state

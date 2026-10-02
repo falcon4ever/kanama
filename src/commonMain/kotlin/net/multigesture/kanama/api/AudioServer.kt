@@ -667,7 +667,7 @@ object AudioServer {
     }
 
     @JvmInline
-    value class SpeakerMode(val value: Long) {
+    value class SpeakerMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Two or fewer speakers were detected.
@@ -697,7 +697,7 @@ object AudioServer {
     }
 
     @JvmInline
-    value class PlaybackType(val value: Long) {
+    value class PlaybackType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The playback will be considered of the type declared at

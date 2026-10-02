@@ -640,7 +640,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class ProjectionType(val value: Long) {
+    value class ProjectionType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Perspective projection. Objects on the screen becomes smaller when they are far away.
@@ -666,7 +666,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class KeepAspect(val value: Long) {
+    value class KeepAspect(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Preserves the horizontal aspect ratio; also known as Vert- scaling. This is usually the best
@@ -688,7 +688,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class DopplerTracking(val value: Long) {
+    value class DopplerTracking(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables Doppler effect (https://en.wikipedia.org/wiki/Doppler_effect) simulation (default).

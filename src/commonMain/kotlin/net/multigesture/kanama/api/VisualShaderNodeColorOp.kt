@@ -27,7 +27,7 @@ class VisualShaderNodeColorOp(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class Operator(val value: Long) {
+    value class Operator(override val value: Long) : GodotEnumValue {
         companion object {
             val SCREEN: Operator get() = Operator(0L)
             val DIFFERENCE: Operator get() = Operator(1L)

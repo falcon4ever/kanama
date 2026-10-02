@@ -84,7 +84,7 @@ open class VisualShaderNode(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class PortType(val value: Long) {
+    value class PortType(override val value: Long) : GodotEnumValue {
         companion object {
             val SCALAR: PortType get() = PortType(0L)
             val SCALAR_INT: PortType get() = PortType(1L)

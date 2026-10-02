@@ -15,7 +15,7 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXR
     }
 
     @JvmInline
-    value class PlaneSemanticLabel(val value: Long) {
+    value class PlaneSemanticLabel(override val value: Long) : GodotEnumValue {
         companion object {
             val UNCATEGORIZED: PlaneSemanticLabel get() = PlaneSemanticLabel(1L)
             val FLOOR: PlaneSemanticLabel get() = PlaneSemanticLabel(2L)

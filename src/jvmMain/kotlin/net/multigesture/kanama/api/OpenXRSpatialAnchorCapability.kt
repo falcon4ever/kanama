@@ -11,7 +11,7 @@ import java.lang.foreign.MemorySegment
 class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     // ===== BEGIN GENERATED ENUMS: OpenXRSpatialAnchorCapability (scripts/generate_api_wrapper.py — do not edit) =====
     @JvmInline
-    value class PersistenceScope(val value: Long) {
+    value class PersistenceScope(override val value: Long) : GodotEnumValue {
         companion object {
             val SYSTEM_MANAGED: PersistenceScope get() = PersistenceScope(1L)
             val LOCAL_ANCHORS: PersistenceScope get() = PersistenceScope(1000781000L)

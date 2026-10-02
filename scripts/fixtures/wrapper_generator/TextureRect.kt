@@ -81,7 +81,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class ExpandMode(val value: Long) {
+    value class ExpandMode(override val value: Long) : GodotEnumValue {
         companion object {
             val KEEP_SIZE: ExpandMode get() = ExpandMode(0L)
             val IGNORE_SIZE: ExpandMode get() = ExpandMode(1L)
@@ -93,7 +93,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class StretchMode(val value: Long) {
+    value class StretchMode(override val value: Long) : GodotEnumValue {
         companion object {
             val SCALE: StretchMode get() = StretchMode(0L)
             val TILE: StretchMode get() = StretchMode(1L)

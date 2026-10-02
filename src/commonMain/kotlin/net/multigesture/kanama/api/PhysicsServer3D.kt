@@ -1855,7 +1855,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class JointType(val value: Long) {
+    value class JointType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The `Joint3D` is a `PinJoint3D`.
@@ -1897,7 +1897,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class PinJointParam(val value: Long) {
+    value class PinJointParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The strength with which the pinned objects try to stay in positional relation to each other. The
@@ -1927,7 +1927,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class HingeJointParam(val value: Long) {
+    value class HingeJointParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The speed with which the two bodies get pulled together when they move in different directions.
@@ -1987,7 +1987,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class HingeJointFlag(val value: Long) {
+    value class HingeJointFlag(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If `true`, the Hinge has a maximum and a minimum rotation.
@@ -2005,7 +2005,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class SliderJointParam(val value: Long) {
+    value class SliderJointParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The maximum difference between the pivot points on their X axis before damping happens.
@@ -2172,7 +2172,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class ConeTwistJointParam(val value: Long) {
+    value class ConeTwistJointParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Swing is rotation from side to side, around the axis perpendicular to the twist axis. The swing
@@ -2215,7 +2215,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class G6DOFJointAxisParam(val value: Long) {
+    value class G6DOFJointAxisParam(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The minimum difference between the pivot points' axes.
@@ -2341,7 +2341,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class G6DOFJointAxisFlag(val value: Long) {
+    value class G6DOFJointAxisFlag(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If set, linear motion is possible within the given limits.
@@ -2379,7 +2379,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class ShapeType(val value: Long) {
+    value class ShapeType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant for creating a world boundary shape (used by the `WorldBoundaryShape3D` resource).
@@ -2454,7 +2454,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class AreaParameter(val value: Long) {
+    value class AreaParameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get gravity override mode in an area. See `AreaSpaceOverrideMode` for possible
@@ -2558,7 +2558,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class AreaSpaceOverrideMode(val value: Long) {
+    value class AreaSpaceOverrideMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * This area does not affect gravity/damp. These are generally areas that exist only to detect
@@ -2599,7 +2599,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class BodyMode(val value: Long) {
+    value class BodyMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant for static bodies. In this mode, a body can be only moved by user code and doesn't
@@ -2633,7 +2633,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class BodyParameter(val value: Long) {
+    value class BodyParameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get a body's bounce factor.
@@ -2705,7 +2705,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class BodyDampMode(val value: Long) {
+    value class BodyDampMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The body's damping value is added to any value set in areas or the default value.
@@ -2723,7 +2723,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class BodyState(val value: Long) {
+    value class BodyState(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get the current transform matrix of the body.
@@ -2759,7 +2759,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class AreaBodyStatus(val value: Long) {
+    value class AreaBodyStatus(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The value of the first parameter and area callback function receives, when an object enters one
@@ -2779,7 +2779,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class ProcessInfo(val value: Long) {
+    value class ProcessInfo(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to get the number of objects that are not sleeping.
@@ -2803,7 +2803,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class SpaceParameter(val value: Long) {
+    value class SpaceParameter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant to set/get the maximum distance a pair of bodies has to move before their collision
@@ -2869,7 +2869,7 @@ object PhysicsServer3D {
     }
 
     @JvmInline
-    value class BodyAxis(val value: Long) {
+    value class BodyAxis(override val value: Long) : GodotEnumValue {
         companion object {
             val LINEAR_X: BodyAxis get() = BodyAxis(1L)
             val LINEAR_Y: BodyAxis get() = BodyAxis(2L)

@@ -33,7 +33,7 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class InitializationLevel(val value: Long) {
+    value class InitializationLevel(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The library is initialized at the same time as the core features of the engine.

@@ -140,7 +140,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
     }
 
     @JvmInline
-    value class TickPosition(val value: Long) {
+    value class TickPosition(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Places the ticks at the bottom of the `HSlider`, or right of the `VSlider`.

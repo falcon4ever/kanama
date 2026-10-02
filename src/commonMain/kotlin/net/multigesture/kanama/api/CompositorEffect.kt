@@ -209,7 +209,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     }
 
     @JvmInline
-    value class EffectCallbackType(val value: Long) {
+    value class EffectCallbackType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The callback is called before our opaque rendering pass, but after depth prepass (if

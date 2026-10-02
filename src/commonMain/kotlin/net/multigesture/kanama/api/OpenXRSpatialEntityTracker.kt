@@ -75,7 +75,7 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
     }
 
     @JvmInline
-    value class EntityTrackingState(val value: Long) {
+    value class EntityTrackingState(override val value: Long) : GodotEnumValue {
         companion object {
             val STOPPED: EntityTrackingState get() = EntityTrackingState(1L)
             val PAUSED: EntityTrackingState get() = EntityTrackingState(2L)

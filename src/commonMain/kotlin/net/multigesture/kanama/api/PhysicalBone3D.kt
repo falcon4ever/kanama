@@ -490,7 +490,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     }
 
     @JvmInline
-    value class DampMode(val value: Long) {
+    value class DampMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * In this mode, the body's damping value is added to any value set in areas or the default value.
@@ -508,7 +508,7 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     }
 
     @JvmInline
-    value class JointType(val value: Long) {
+    value class JointType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No joint is applied to the PhysicsBone3D.

@@ -1718,7 +1718,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class ProcessMode(val value: Long) {
+    value class ProcessMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inherits `process_mode` from the node's parent. This is the default for any newly created node.
@@ -1758,7 +1758,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class ProcessThreadGroup(val value: Long) {
+    value class ProcessThreadGroup(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Process this node based on the thread group mode of the first parent (or grandparent) node that
@@ -1785,7 +1785,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class ProcessThreadMessages(val value: Long) {
+    value class ProcessThreadMessages(override val value: Long) : GodotEnumValue {
         infix fun or(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value or other.value)
 
         infix fun and(other: ProcessThreadMessages): ProcessThreadMessages = ProcessThreadMessages(value and other.value)
@@ -1822,7 +1822,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class PhysicsInterpolationMode(val value: Long) {
+    value class PhysicsInterpolationMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inherits `physics_interpolation_mode` from the node's parent. This is the default for any newly
@@ -1849,7 +1849,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class DuplicateFlags(val value: Long) {
+    value class DuplicateFlags(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Duplicate the node's signal connections that are connected with the `Object.CONNECT_PERSIST`
@@ -1894,7 +1894,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class InternalMode(val value: Long) {
+    value class InternalMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The node will not be internal.
@@ -1919,7 +1919,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class AutoTranslateMode(val value: Long) {
+    value class AutoTranslateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Inherits `auto_translate_mode` from the node's parent. This is the default for any newly created

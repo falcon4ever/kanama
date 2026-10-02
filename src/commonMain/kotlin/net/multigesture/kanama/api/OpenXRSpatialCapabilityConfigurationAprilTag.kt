@@ -32,7 +32,7 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
     }
 
     @JvmInline
-    value class AprilTagDict(val value: Long) {
+    value class AprilTagDict(override val value: Long) : GodotEnumValue {
         companion object {
             val DICT_16H5: AprilTagDict get() = AprilTagDict(1L)
             val DICT_25H9: AprilTagDict get() = AprilTagDict(2L)

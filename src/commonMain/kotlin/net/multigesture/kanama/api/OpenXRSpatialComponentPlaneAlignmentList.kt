@@ -15,7 +15,7 @@ class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpat
     }
 
     @JvmInline
-    value class PlaneAlignment(val value: Long) {
+    value class PlaneAlignment(override val value: Long) : GodotEnumValue {
         companion object {
             val HORIZONTAL_UPWARD: PlaneAlignment get() = PlaneAlignment(0L)
             val HORIZONTAL_DOWNWARD: PlaneAlignment get() = PlaneAlignment(1L)

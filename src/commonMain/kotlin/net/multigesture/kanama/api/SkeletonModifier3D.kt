@@ -76,7 +76,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class BoneAxis(val value: Long) {
+    value class BoneAxis(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Enumerated value for the +X axis.
@@ -118,7 +118,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class BoneDirection(val value: Long) {
+    value class BoneDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Enumerated value for the +X axis.
@@ -166,7 +166,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class SecondaryDirection(val value: Long) {
+    value class SecondaryDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Enumerated value for the case when the axis is undefined.
@@ -220,7 +220,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     @JvmInline
-    value class RotationAxis(val value: Long) {
+    value class RotationAxis(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Enumerated value for the rotation of the X axis.

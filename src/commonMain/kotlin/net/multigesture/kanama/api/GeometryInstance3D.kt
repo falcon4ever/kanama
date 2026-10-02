@@ -520,7 +520,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class ShadowCastingSetting(val value: Long) {
+    value class ShadowCastingSetting(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Will not cast any shadows. Use this to improve performance for small geometry that is unlikely
@@ -554,7 +554,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class GIMode(val value: Long) {
+    value class GIMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disabled global illumination mode. Use for dynamic objects that do not contribute to global
@@ -586,7 +586,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class LightmapScale(val value: Long) {
+    value class LightmapScale(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The standard texel density for lightmapping with `LightmapGI`.
@@ -625,7 +625,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class VisibilityRangeFadeMode(val value: Long) {
+    value class VisibilityRangeFadeMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Will not fade itself nor its visibility dependencies, hysteresis will be used instead. This is

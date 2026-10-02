@@ -14,7 +14,7 @@ open class ImageFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
 
     @JvmInline
-    value class LoaderFlags(val value: Long) {
+    value class LoaderFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: LoaderFlags): LoaderFlags = LoaderFlags(value or other.value)
 
         infix fun and(other: LoaderFlags): LoaderFlags = LoaderFlags(value and other.value)

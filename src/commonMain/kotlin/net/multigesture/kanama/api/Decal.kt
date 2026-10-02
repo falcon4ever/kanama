@@ -394,7 +394,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     @JvmInline
-    value class DecalTexture(val value: Long) {
+    value class DecalTexture(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * `Texture2D` corresponding to `texture_albedo`.

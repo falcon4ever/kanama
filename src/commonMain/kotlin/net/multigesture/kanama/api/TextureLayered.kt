@@ -84,7 +84,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
     }
 
     @JvmInline
-    value class LayeredType(val value: Long) {
+    value class LayeredType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Texture is a generic `Texture2DArray`.

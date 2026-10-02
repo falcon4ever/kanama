@@ -1206,7 +1206,7 @@ object OS {
     }
 
     @JvmInline
-    value class RenderingDriver(val value: Long) {
+    value class RenderingDriver(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The Vulkan rendering driver. It requires Vulkan 1.0 support and automatically uses features from
@@ -1239,7 +1239,7 @@ object OS {
     }
 
     @JvmInline
-    value class SystemDir(val value: Long) {
+    value class SystemDir(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Refers to the Desktop directory path.
@@ -1293,7 +1293,7 @@ object OS {
     }
 
     @JvmInline
-    value class StdHandleType(val value: Long) {
+    value class StdHandleType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Standard I/O device is invalid. No data can be received from or sent to these standard I/O

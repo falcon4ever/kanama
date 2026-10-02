@@ -131,7 +131,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class AlignmentMode(val value: Long) {
+    value class AlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The child controls will be arranged at the beginning of the container, i.e. top if orientation
@@ -157,7 +157,7 @@ open class FlowContainer(handle: GodotHandle) : Container(handle) {
     }
 
     @JvmInline
-    value class LastWrapAlignmentMode(val value: Long) {
+    value class LastWrapAlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The last partially filled row or column will wrap aligned to the previous row or column in

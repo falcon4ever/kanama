@@ -680,7 +680,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class AlignmentMode(val value: Long) {
+    value class AlignmentMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Aligns tabs to the left.
@@ -710,7 +710,7 @@ class TabBar(handle: GodotHandle) : Control(handle) {
     }
 
     @JvmInline
-    value class CloseButtonDisplayPolicy(val value: Long) {
+    value class CloseButtonDisplayPolicy(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Never show the close buttons.

@@ -611,7 +611,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     }
 
     @JvmInline
-    value class FileMode(val value: Long) {
+    value class FileMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The dialog allows selecting one, and only one file.
@@ -647,7 +647,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     }
 
     @JvmInline
-    value class Access(val value: Long) {
+    value class Access(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The dialog only allows accessing files under the `Resource` path (`res://`).
@@ -671,7 +671,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     }
 
     @JvmInline
-    value class DisplayMode(val value: Long) {
+    value class DisplayMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The dialog displays files as a grid of thumbnails. Use `thumbnail_size` to adjust their size.
@@ -689,7 +689,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     }
 
     @JvmInline
-    value class Customization(val value: Long) {
+    value class Customization(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Toggles visibility of the favorite button, and the favorite list on the left side of the dialog.

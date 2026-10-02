@@ -62,7 +62,7 @@ class BackBufferCopy(handle: GodotHandle) : Node2D(handle) {
     }
 
     @JvmInline
-    value class CopyMode(val value: Long) {
+    value class CopyMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Disables the buffering mode. This means the `BackBufferCopy` node will directly use the portion

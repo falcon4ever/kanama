@@ -27,7 +27,7 @@ class VisualShaderNodeParticleEmit(handle: GodotHandle) : VisualShaderNode(handl
     }
 
     @JvmInline
-    value class EmitFlags(val value: Long) {
+    value class EmitFlags(override val value: Long) : GodotEnumValue {
         companion object {
             val POSITION: EmitFlags get() = EmitFlags(1L)
             val ROT_SCALE: EmitFlags get() = EmitFlags(2L)

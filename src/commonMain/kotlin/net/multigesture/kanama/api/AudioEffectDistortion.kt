@@ -148,7 +148,7 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     }
 
     @JvmInline
-    value class Mode(val value: Long) {
+    value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Flattens the waveform at 0 dB in a sharp manner. `drive` increases amplitude of samples

@@ -1550,7 +1550,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class DeviceType(val value: Long) {
+    value class DeviceType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Rendering device type does not match any of the other enum values or is unknown.
@@ -1601,7 +1601,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class DriverResource(val value: Long) {
+    value class DriverResource(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Specific device object based on a physical device (`rid` parameter is ignored). - Vulkan: Vulkan
@@ -1703,7 +1703,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class DataFormat(val value: Long) {
+    value class DataFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 4-bit-per-channel red/green channel data format, packed into 8 bits. Values are in the `[0.0,
@@ -3202,7 +3202,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class BarrierMask(val value: Long) {
+    value class BarrierMask(override val value: Long) : GodotEnumValue {
         infix fun or(other: BarrierMask): BarrierMask = BarrierMask(value or other.value)
 
         infix fun and(other: BarrierMask): BarrierMask = BarrierMask(value and other.value)
@@ -3261,7 +3261,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class TextureType(val value: Long) {
+    value class TextureType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 1-dimensional texture.
@@ -3315,7 +3315,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class TextureSamples(val value: Long) {
+    value class TextureSamples(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Perform 1 texture sample (this is the fastest but lowest-quality for antialiasing).
@@ -3370,7 +3370,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class TextureUsageBits(val value: Long) {
+    value class TextureUsageBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: TextureUsageBits): TextureUsageBits = TextureUsageBits(value or other.value)
 
         infix fun and(other: TextureUsageBits): TextureUsageBits = TextureUsageBits(value and other.value)
@@ -3458,7 +3458,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class TextureSwizzle(val value: Long) {
+    value class TextureSwizzle(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Return the sampled value as-is.
@@ -3512,7 +3512,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class TextureSliceType(val value: Long) {
+    value class TextureSliceType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * 2-dimensional texture slice.
@@ -3536,7 +3536,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class SamplerFilter(val value: Long) {
+    value class SamplerFilter(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Nearest-neighbor sampler filtering. Sampling at higher resolutions than the source will result
@@ -3556,7 +3556,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class SamplerRepeatMode(val value: Long) {
+    value class SamplerRepeatMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Sample with repeating enabled.
@@ -3604,7 +3604,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class SamplerBorderColor(val value: Long) {
+    value class SamplerBorderColor(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Return a floating-point transparent black color when sampling outside the `[0.0, 1.0]` range.
@@ -3658,7 +3658,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class VertexFrequency(val value: Long) {
+    value class VertexFrequency(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Vertex attribute addressing is a function of the vertex. This is used to specify the rate at
@@ -3678,7 +3678,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class IndexBufferFormat(val value: Long) {
+    value class IndexBufferFormat(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Index buffer in 16-bit unsigned integer format. This limits the maximum index that can be
@@ -3698,7 +3698,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class StorageBufferUsage(val value: Long) {
+    value class StorageBufferUsage(override val value: Long) : GodotEnumValue {
         infix fun or(other: StorageBufferUsage): StorageBufferUsage = StorageBufferUsage(value or other.value)
 
         infix fun and(other: StorageBufferUsage): StorageBufferUsage = StorageBufferUsage(value and other.value)
@@ -3715,7 +3715,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class BufferCreationBits(val value: Long) {
+    value class BufferCreationBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: BufferCreationBits): BufferCreationBits = BufferCreationBits(value or other.value)
 
         infix fun and(other: BufferCreationBits): BufferCreationBits = BufferCreationBits(value and other.value)
@@ -3754,7 +3754,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class AccelerationStructureFlagBits(val value: Long) {
+    value class AccelerationStructureFlagBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: AccelerationStructureFlagBits): AccelerationStructureFlagBits = AccelerationStructureFlagBits(value or other.value)
 
         infix fun and(other: AccelerationStructureFlagBits): AccelerationStructureFlagBits = AccelerationStructureFlagBits(value and other.value)
@@ -3804,7 +3804,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class AccelerationStructureGeometryFlagBits(val value: Long) {
+    value class AccelerationStructureGeometryFlagBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: AccelerationStructureGeometryFlagBits): AccelerationStructureGeometryFlagBits = AccelerationStructureGeometryFlagBits(value or other.value)
 
         infix fun and(other: AccelerationStructureGeometryFlagBits): AccelerationStructureGeometryFlagBits = AccelerationStructureGeometryFlagBits(value and other.value)
@@ -3832,7 +3832,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class AccelerationStructureInstanceFlagBits(val value: Long) {
+    value class AccelerationStructureInstanceFlagBits(override val value: Long) : GodotEnumValue {
         infix fun or(other: AccelerationStructureInstanceFlagBits): AccelerationStructureInstanceFlagBits = AccelerationStructureInstanceFlagBits(value or other.value)
 
         infix fun and(other: AccelerationStructureInstanceFlagBits): AccelerationStructureInstanceFlagBits = AccelerationStructureInstanceFlagBits(value and other.value)
@@ -3874,7 +3874,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class UniformType(val value: Long) {
+    value class UniformType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Sampler uniform.
@@ -3970,7 +3970,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class RenderPrimitive(val value: Long) {
+    value class RenderPrimitive(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Point rendering primitive (with constant size, regardless of distance from camera).
@@ -4060,7 +4060,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class PolygonCullMode(val value: Long) {
+    value class PolygonCullMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not use polygon front face or backface culling.
@@ -4084,7 +4084,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class PolygonFrontFace(val value: Long) {
+    value class PolygonFrontFace(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Clockwise winding order to determine which face of a polygon is its front face.
@@ -4102,7 +4102,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class StencilOperation(val value: Long) {
+    value class StencilOperation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Keep the current stencil value.
@@ -4166,7 +4166,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class CompareOperator(val value: Long) {
+    value class CompareOperator(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * "Never" comparison (opposite of `COMPARE_OP_ALWAYS`).
@@ -4226,7 +4226,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class LogicOperation(val value: Long) {
+    value class LogicOperation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Clear logic operation (result is always `0`). See also `LOGIC_OP_SET`.
@@ -4336,7 +4336,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class BlendFactor(val value: Long) {
+    value class BlendFactor(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Constant `0.0` blend factor.
@@ -4469,7 +4469,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class BlendOperation(val value: Long) {
+    value class BlendOperation(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Additive blending operation (`source + destination`).
@@ -4511,7 +4511,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class PipelineDynamicStateFlags(val value: Long) {
+    value class PipelineDynamicStateFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: PipelineDynamicStateFlags): PipelineDynamicStateFlags = PipelineDynamicStateFlags(value or other.value)
 
         infix fun and(other: PipelineDynamicStateFlags): PipelineDynamicStateFlags = PipelineDynamicStateFlags(value and other.value)
@@ -4544,7 +4544,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class InitialAction(val value: Long) {
+    value class InitialAction(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Load the previous contents of the framebuffer.
@@ -4580,7 +4580,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class FinalAction(val value: Long) {
+    value class FinalAction(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Store the result of the draw list in the framebuffer. This is generally what you want to do.
@@ -4607,7 +4607,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class ShaderStage(val value: Long) {
+    value class ShaderStage(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Vertex shader stage. This can be used to manipulate vertices from a shader (but not create new
@@ -4747,7 +4747,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class ShaderLanguage(val value: Long) {
+    value class ShaderLanguage(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Khronos' GLSL shading language (used natively by OpenGL and Vulkan). This is the language used
@@ -4767,7 +4767,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class PipelineSpecializationConstantType(val value: Long) {
+    value class PipelineSpecializationConstantType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Boolean specialization constant.
@@ -4791,7 +4791,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class Features(val value: Long) {
+    value class Features(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Support for MetalFX spatial upscaling.
@@ -4839,7 +4839,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class Limit(val value: Long) {
+    value class Limit(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Maximum number of uniform sets that can be bound at a given time.
@@ -5089,7 +5089,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class MemoryType(val value: Long) {
+    value class MemoryType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Memory taken by textures.
@@ -5114,7 +5114,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class BreadcrumbMarker(val value: Long) {
+    value class BreadcrumbMarker(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * No breadcrumb marker will be added.
@@ -5210,7 +5210,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     @JvmInline
-    value class DrawFlags(val value: Long) {
+    value class DrawFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: DrawFlags): DrawFlags = DrawFlags(value or other.value)
 
         infix fun and(other: DrawFlags): DrawFlags = DrawFlags(value and other.value)

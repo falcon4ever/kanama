@@ -855,7 +855,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     @JvmInline
-    value class CenterFrom(val value: Long) {
+    value class CenterFrom(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The world origin is defined as center.

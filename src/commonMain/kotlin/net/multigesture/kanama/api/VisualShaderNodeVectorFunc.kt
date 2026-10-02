@@ -27,7 +27,7 @@ class VisualShaderNodeVectorFunc(handle: GodotHandle) : VisualShaderNodeVectorBa
     }
 
     @JvmInline
-    value class Function(val value: Long) {
+    value class Function(override val value: Long) : GodotEnumValue {
         companion object {
             val NORMALIZE: Function get() = Function(0L)
             val SATURATE: Function get() = Function(1L)

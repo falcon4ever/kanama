@@ -58,7 +58,7 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class Mode(val value: Long) {
+    value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * AES electronic codebook encryption mode.

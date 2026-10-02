@@ -310,7 +310,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ExportMessageType(val value: Long) {
+    value class ExportMessageType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Invalid message type used as the default value when no type is specified.
@@ -341,7 +341,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class DebugFlags(val value: Long) {
+    value class DebugFlags(override val value: Long) : GodotEnumValue {
         infix fun or(other: DebugFlags): DebugFlags = DebugFlags(value or other.value)
 
         infix fun and(other: DebugFlags): DebugFlags = DebugFlags(value and other.value)

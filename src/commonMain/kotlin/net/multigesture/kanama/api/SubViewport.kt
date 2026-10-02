@@ -168,7 +168,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class ClearMode(val value: Long) {
+    value class ClearMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Always clear the render target before drawing.
@@ -192,7 +192,7 @@ class SubViewport(handle: GodotHandle) : Viewport(handle) {
     }
 
     @JvmInline
-    value class UpdateMode(val value: Long) {
+    value class UpdateMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * Do not update the render target.

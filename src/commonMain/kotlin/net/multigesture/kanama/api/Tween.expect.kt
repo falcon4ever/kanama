@@ -10,7 +10,7 @@ import kotlin.jvm.JvmInline
 // scopes it out until the class is generated once).
 expect class Tween {
     @JvmInline
-    value class TweenProcessMode(val value: Long) {
+    value class TweenProcessMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The `Tween` updates after each physics frame (see `Node._physics_process`).
@@ -28,7 +28,7 @@ expect class Tween {
     }
 
     @JvmInline
-    value class TweenPauseMode(val value: Long) {
+    value class TweenPauseMode(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * If the `Tween` has a bound node, it will process when that node can process (see
@@ -53,7 +53,7 @@ expect class Tween {
     }
 
     @JvmInline
-    value class TransitionType(val value: Long) {
+    value class TransitionType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The animation is interpolated linearly.
@@ -131,7 +131,7 @@ expect class Tween {
     }
 
     @JvmInline
-    value class EaseType(val value: Long) {
+    value class EaseType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
              * The interpolation starts slowly and speeds up towards the end.

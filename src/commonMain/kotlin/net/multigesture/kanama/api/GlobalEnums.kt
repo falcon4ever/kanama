@@ -7,8 +7,18 @@ import kotlin.jvm.JvmInline
 // on a collision (Error -> GodotError, PropertyHint -> GodotPropertyHint, Variant.Type ->
 // VariantType, Variant.Operator -> VariantOperator). scripts/check_typed_enums.py keeps the rule.
 
+/**
+ * The marker every generated Godot enum / bitfield value class implements (task 128 A): the
+ * Variant encoders of every backend map a boxed one to INT with its [value], so a typed enum
+ * handed to a dynamic `Any?` argument (`call`, `set`, `ConfigFile.setValue`, Array /
+ * Dictionary elements) reaches Godot as the number it stands for.
+ */
+interface GodotEnumValue {
+    val value: Long
+}
+
 @JvmInline
-value class Side(val value: Long) {
+value class Side(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Left side, usually used for `Control` or `StyleBox`-derived classes.
@@ -38,7 +48,7 @@ value class Side(val value: Long) {
 }
 
 @JvmInline
-value class Corner(val value: Long) {
+value class Corner(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Top-left corner.
@@ -68,7 +78,7 @@ value class Corner(val value: Long) {
 }
 
 @JvmInline
-value class Orientation(val value: Long) {
+value class Orientation(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * General vertical alignment, usually used for `Separator`, `ScrollBar`, `Slider`, etc.
@@ -86,7 +96,7 @@ value class Orientation(val value: Long) {
 }
 
 @JvmInline
-value class ClockDirection(val value: Long) {
+value class ClockDirection(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Clockwise rotation. Used by some methods (e.g. `Image.rotate_90`).
@@ -104,7 +114,7 @@ value class ClockDirection(val value: Long) {
 }
 
 @JvmInline
-value class HorizontalAlignment(val value: Long) {
+value class HorizontalAlignment(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Horizontal left alignment, usually for text-derived classes.
@@ -134,7 +144,7 @@ value class HorizontalAlignment(val value: Long) {
 }
 
 @JvmInline
-value class VerticalAlignment(val value: Long) {
+value class VerticalAlignment(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Vertical top alignment, usually for text-derived classes.
@@ -164,7 +174,7 @@ value class VerticalAlignment(val value: Long) {
 }
 
 @JvmInline
-value class InlineAlignment(val value: Long) {
+value class InlineAlignment(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Aligns the top of the inline object (e.g. image, table) to the position of the text specified by
@@ -258,7 +268,7 @@ value class InlineAlignment(val value: Long) {
 }
 
 @JvmInline
-value class EulerOrder(val value: Long) {
+value class EulerOrder(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Specifies that Euler angles should be in intrinsic XYZ order. When composing, the rotations
@@ -312,7 +322,7 @@ value class EulerOrder(val value: Long) {
 }
 
 @JvmInline
-value class Key(val value: Long) {
+value class Key(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Enum value which doesn't correspond to any key. This is used to initialize `Key` properties with
@@ -1477,7 +1487,7 @@ value class Key(val value: Long) {
 }
 
 @JvmInline
-value class KeyModifierMask(val value: Long) {
+value class KeyModifierMask(override val value: Long) : GodotEnumValue {
     infix fun or(other: KeyModifierMask): KeyModifierMask = KeyModifierMask(value or other.value)
 
     infix fun and(other: KeyModifierMask): KeyModifierMask = KeyModifierMask(value and other.value)
@@ -1548,7 +1558,7 @@ value class KeyModifierMask(val value: Long) {
 }
 
 @JvmInline
-value class KeyLocation(val value: Long) {
+value class KeyLocation(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Used for keys which only appear once, or when a comparison doesn't need to differentiate the
@@ -1574,7 +1584,7 @@ value class KeyLocation(val value: Long) {
 }
 
 @JvmInline
-value class MouseButton(val value: Long) {
+value class MouseButton(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Enum value which doesn't correspond to any mouse button. This is used to initialize
@@ -1641,7 +1651,7 @@ value class MouseButton(val value: Long) {
 }
 
 @JvmInline
-value class MouseButtonMask(val value: Long) {
+value class MouseButtonMask(override val value: Long) : GodotEnumValue {
     infix fun or(other: MouseButtonMask): MouseButtonMask = MouseButtonMask(value or other.value)
 
     infix fun and(other: MouseButtonMask): MouseButtonMask = MouseButtonMask(value and other.value)
@@ -1687,7 +1697,7 @@ value class MouseButtonMask(val value: Long) {
 }
 
 @JvmInline
-value class JoyButton(val value: Long) {
+value class JoyButton(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * An invalid game controller button.
@@ -1875,7 +1885,7 @@ value class JoyButton(val value: Long) {
 }
 
 @JvmInline
-value class JoyAxis(val value: Long) {
+value class JoyAxis(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * An invalid game controller axis.
@@ -1936,7 +1946,7 @@ value class JoyAxis(val value: Long) {
 }
 
 @JvmInline
-value class MIDIMessage(val value: Long) {
+value class MIDIMessage(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Does not correspond to any MIDI message. This is the default value of `InputEventMIDI.message`.
@@ -2074,7 +2084,7 @@ value class MIDIMessage(val value: Long) {
 }
 
 @JvmInline
-value class GodotError(val value: Long) {
+value class GodotError(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Methods that return `Error` return `OK` when no error occurred. Since `OK` has value `0`, and
@@ -2377,7 +2387,7 @@ value class GodotError(val value: Long) {
 }
 
 @JvmInline
-value class GodotPropertyHint(val value: Long) {
+value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * The property has no hint for the editor. However, the hint string is still read, which can be
@@ -2715,7 +2725,7 @@ value class GodotPropertyHint(val value: Long) {
 }
 
 @JvmInline
-value class PropertyUsageFlags(val value: Long) {
+value class PropertyUsageFlags(override val value: Long) : GodotEnumValue {
     infix fun or(other: PropertyUsageFlags): PropertyUsageFlags = PropertyUsageFlags(value or other.value)
 
     infix fun and(other: PropertyUsageFlags): PropertyUsageFlags = PropertyUsageFlags(value and other.value)
@@ -2940,7 +2950,7 @@ value class PropertyUsageFlags(val value: Long) {
 }
 
 @JvmInline
-value class MethodFlags(val value: Long) {
+value class MethodFlags(override val value: Long) : GodotEnumValue {
     infix fun or(other: MethodFlags): MethodFlags = MethodFlags(value or other.value)
 
     infix fun and(other: MethodFlags): MethodFlags = MethodFlags(value and other.value)
@@ -3012,7 +3022,7 @@ value class MethodFlags(val value: Long) {
 }
 
 @JvmInline
-value class VariantType(val value: Long) {
+value class VariantType(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Variable is `null`.
@@ -3258,7 +3268,7 @@ value class VariantType(val value: Long) {
 }
 
 @JvmInline
-value class VariantOperator(val value: Long) {
+value class VariantOperator(override val value: Long) : GodotEnumValue {
     companion object {
         /**
          * Equality operator (`==`).

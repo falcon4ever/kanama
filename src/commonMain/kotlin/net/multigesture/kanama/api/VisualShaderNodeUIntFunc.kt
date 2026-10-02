@@ -27,7 +27,7 @@ class VisualShaderNodeUIntFunc(handle: GodotHandle) : VisualShaderNode(handle) {
     }
 
     @JvmInline
-    value class Function(val value: Long) {
+    value class Function(override val value: Long) : GodotEnumValue {
         companion object {
             val NEGATE: Function get() = Function(0L)
             val BITWISE_NOT: Function get() = Function(1L)

@@ -39,7 +39,7 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
     }
 
     @JvmInline
-    value class ResultStatus(val value: Long) {
+    value class ResultStatus(override val value: Long) : GodotEnumValue {
         companion object {
             val RUNNING: ResultStatus get() = ResultStatus(0L)
             val FINISHED: ResultStatus get() = ResultStatus(1L)

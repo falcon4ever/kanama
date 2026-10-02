@@ -108,7 +108,7 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
     }
 
     @JvmInline
-    value class CompressionMode(val value: Long) {
+    value class CompressionMode(override val value: Long) : GodotEnumValue {
         companion object {
             val LOSSLESS: CompressionMode get() = CompressionMode(0L)
             val LOSSY: CompressionMode get() = CompressionMode(1L)

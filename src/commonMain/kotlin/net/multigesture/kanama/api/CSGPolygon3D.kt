@@ -252,7 +252,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     @JvmInline
-    value class Mode(val value: Long) {
+    value class Mode(override val value: Long) : GodotEnumValue {
         companion object {
             val DEPTH: Mode get() = Mode(0L)
             val SPIN: Mode get() = Mode(1L)
@@ -261,7 +261,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     @JvmInline
-    value class PathRotation(val value: Long) {
+    value class PathRotation(override val value: Long) : GodotEnumValue {
         companion object {
             val POLYGON: PathRotation get() = PathRotation(0L)
             val PATH: PathRotation get() = PathRotation(1L)
@@ -270,7 +270,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     @JvmInline
-    value class PathIntervalType(val value: Long) {
+    value class PathIntervalType(override val value: Long) : GodotEnumValue {
         companion object {
             val DISTANCE: PathIntervalType get() = PathIntervalType(0L)
             val SUBDIVIDE: PathIntervalType get() = PathIntervalType(1L)
