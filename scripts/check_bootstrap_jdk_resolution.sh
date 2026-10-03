@@ -62,16 +62,20 @@ fi
 GOOD_JDK="$WORK/jdk25-like"
 fake_jdk "$GOOD_JDK"
 
+OLD_JDK_AS_GOOD="$WORK/jdk-first-define"
+fake_jdk "$OLD_JDK_AS_GOOD"
+
 NO_MD_JDK="$WORK/jdk-no-platform-header"
 fake_jdk "$NO_MD_JDK"
 find "$NO_MD_JDK/include" -name jni_md.h -delete
 
 failures=0
+case_build_name=""
 run_case() {
   # run_case <name> <expect: ok|fail> <expected output regex> <env JAVA_HOME or -> <cmake -D args...>
   local name="$1" expect="$2" pattern="$3" java_home="$4"
   shift 4
-  local build_dir="$WORK/build-$name" log="$WORK/$name.log" rc=0
+  local build_dir="$WORK/build-${case_build_name:-$name}" log="$WORK/$name.log" rc=0
   if [[ "$java_home" == "-" ]]; then
     env -u JAVA_HOME cmake -S "$ROOT_DIR/bootstrap" -B "$build_dir" "$@" >"$log" 2>&1 || rc=$?
   else
@@ -115,6 +119,27 @@ run_case env_real ok \
 # A -DKANAMA_JAVA_HOME that is a JRE / not a JDK (no include/jni.h) is skipped, not trusted.
 run_case gradle_not_a_jdk_falls_through ok \
   "Kanama bootstrap JDK: ${GOOD_JDK} \\(via JAVA_HOME\\)" "$GOOD_JDK" "-DKANAMA_JAVA_HOME=$WORK/not-a-jdk"
+# -DKANAMA_JAVA_HOME is remembered by CMake's cache; a later configure of the same build dir
+# without it must read JAVA_HOME again instead of reusing the old JDK.
+case_build_name="sticky"
+run_case cache_first_configure_with_define ok \
+  "Kanama bootstrap JDK: ${OLD_JDK_AS_GOOD} \\(via -DKANAMA_JAVA_HOME" "-" "-DKANAMA_JAVA_HOME=$OLD_JDK_AS_GOOD"
+run_case cache_not_sticky ok \
+  "Kanama bootstrap JDK: ${GOOD_JDK} \\(via JAVA_HOME\\)" "$GOOD_JDK"
+case_build_name=""
+# The spec's exit gate: no JAVA_HOME, no -D, and find_package(JNI) landing on a stale system
+# header (forced with its own cache variables) stops with the clear message on every OS.
+case "$(uname -s)" in
+  Darwin) fallback_platform=darwin ;;
+  MINGW* | MSYS* | CYGWIN*) fallback_platform=win32 ;;
+  *) fallback_platform=linux ;;
+esac
+run_case fallback_stale_system_header fail \
+  "jni.h under ${OLD_JDK} \\(found via find_package\\(JNI\\)" "-" \
+  "-DKANAMA_SKIP_JAVA_HOME_TOOL=ON" "-DJAVA_INCLUDE_PATH=$OLD_JDK/include" "-DJAVA_INCLUDE_PATH2=$OLD_JDK/include/$fallback_platform"
+run_case fallback_good_system_header ok \
+  "Kanama bootstrap JDK: ${GOOD_JDK} \\(via find_package\\(JNI\\)" "-" \
+  "-DKANAMA_SKIP_JAVA_HOME_TOOL=ON" "-DJAVA_INCLUDE_PATH=$GOOD_JDK/include" "-DJAVA_INCLUDE_PATH2=$GOOD_JDK/include/$fallback_platform"
 # A JDK without the per-OS jni_md.h fails with its own message instead of a compile error.
 run_case missing_platform_header fail \
   "No jni_md.h under ${NO_MD_JDK}" "$NO_MD_JDK"

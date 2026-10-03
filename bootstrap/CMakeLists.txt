@@ -24,7 +24,9 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
 # (with no JDK 25 registered it prints the default JVM and exits 0, which once compiled
 # bootstrap.c against a JDK 8 jni.h), and a Linux system default can be as old. A jni.h
 # without JNI_VERSION_21 stops the configure with a message naming the JDK it came from.
-# Plain variables, not cache entries, so a changed JAVA_HOME is re-read on re-configure.
+# -DKANAMA_JAVA_HOME lands in CMakeCache.txt; it is copied to a plain variable and removed
+# from the cache right away, so the next configure without it re-reads JAVA_HOME instead of
+# reusing a stale JDK path. Everything below is a plain variable for the same reason.
 if(APPLE)
     set(KANAMA_JNI_PLATFORM_DIR darwin)
 elseif(WIN32)
@@ -32,8 +34,17 @@ elseif(WIN32)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(KANAMA_JNI_PLATFORM_DIR linux)
 else()
+    # Unknown host: no per-OS include dir is known, so jni_md.h is not checked (below).
+    message(WARNING "Unknown host ${CMAKE_SYSTEM_NAME}: not checking for jni_md.h under include/<os>")
     set(KANAMA_JNI_PLATFORM_DIR "")
 endif()
+
+set(KANAMA_GRADLE_JDK_HOME "")
+if(KANAMA_JAVA_HOME)
+    set(KANAMA_GRADLE_JDK_HOME "${KANAMA_JAVA_HOME}")
+endif()
+unset(KANAMA_JAVA_HOME CACHE)
+unset(KANAMA_JAVA_HOME)
 
 set(KANAMA_JDK_HOME "")
 set(KANAMA_JDK_ORIGIN "")
@@ -42,15 +53,17 @@ set(KANAMA_JNI_INCLUDE_DIRS "")
 
 set(KANAMA_JDK_CANDIDATES "")
 set(KANAMA_JDK_CANDIDATE_ORIGINS "")
-if(KANAMA_JAVA_HOME)
-    list(APPEND KANAMA_JDK_CANDIDATES "${KANAMA_JAVA_HOME}")
+if(KANAMA_GRADLE_JDK_HOME)
+    list(APPEND KANAMA_JDK_CANDIDATES "${KANAMA_GRADLE_JDK_HOME}")
     list(APPEND KANAMA_JDK_CANDIDATE_ORIGINS "-DKANAMA_JAVA_HOME (the JDK Gradle builds with)")
 endif()
 if(DEFINED ENV{JAVA_HOME} AND NOT "$ENV{JAVA_HOME}" STREQUAL "")
     list(APPEND KANAMA_JDK_CANDIDATES "$ENV{JAVA_HOME}")
     list(APPEND KANAMA_JDK_CANDIDATE_ORIGINS "JAVA_HOME")
 endif()
-if(APPLE)
+# KANAMA_SKIP_JAVA_HOME_TOOL exists so the gate (scripts/check_bootstrap_jdk_resolution.sh) can
+# reach the find_package(JNI) fallback on a Mac that has a JDK 25 registered.
+if(APPLE AND NOT KANAMA_SKIP_JAVA_HOME_TOOL)
     execute_process(
         COMMAND /usr/libexec/java_home -v 25
         OUTPUT_VARIABLE KANAMA_MAC_JAVA_HOME
@@ -112,7 +125,7 @@ foreach(KANAMA_JNI_DIR IN LISTS KANAMA_JNI_INCLUDE_DIRS)
         set(KANAMA_JNI_MD_FOUND TRUE)
     endif()
 endforeach()
-if(NOT KANAMA_JNI_MD_FOUND)
+if(NOT KANAMA_JNI_MD_FOUND AND KANAMA_JNI_PLATFORM_DIR)
     message(FATAL_ERROR "No jni_md.h under ${KANAMA_JDK_HOME}/include/${KANAMA_JNI_PLATFORM_DIR} (found via ${KANAMA_JDK_ORIGIN}); set JAVA_HOME to a full JDK 25+ for this host (${CMAKE_SYSTEM_NAME})")
 endif()
 message(STATUS "Kanama bootstrap JDK: ${KANAMA_JDK_HOME} (via ${KANAMA_JDK_ORIGIN})")
