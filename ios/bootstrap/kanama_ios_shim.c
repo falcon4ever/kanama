@@ -5909,6 +5909,28 @@ static int32_t kanama_ios_retain_refcounted_object(GDExtensionObjectPtr object) 
     return 1;
 }
 
+// Task 131 review: the RefCounted test for every element of a returned object Array. Godot sets
+// bit 63 of a RefCounted object's instance id (ObjectID::is_ref_counted), so one interface call
+// answers it -- no Object.is_class ptrcall per element (a 100-node list paid one each). Falls back
+// to the is_class path when object_get_instance_id did not resolve.
+static void kanama_ios_retain_refcounted_element(GDExtensionObjectPtr object) {
+    if (g_object_get_instance_id == NULL) {
+        kanama_ios_retain_refcounted_object(object);
+        return;
+    }
+    uint64_t id = (uint64_t)g_object_get_instance_id((GDExtensionConstObjectPtr)object);
+    if ((id & (UINT64_C(1) << 63)) == 0) return;
+    GDExtensionMethodBindPtr reference_bind = kanama_ios_get_method_bind_cached(
+        &g_ref_counted_reference_bind,
+        "RefCounted",
+        "reference",
+        KANAMA_IOS_REF_COUNTED_NOARGS_HASH
+    );
+    if (reference_bind == NULL) return;
+    GDExtensionBool referenced = 0;
+    g_object_method_bind_ptrcall(reference_bind, object, NULL, &referenced);
+}
+
 int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name) {
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_node_is_in_group_bind,
@@ -10677,86 +10699,10 @@ static void kanama_ios_cache_array_methods(void) {
     }
 }
 
-// Typed-object-array (Array[Object]) ptrcall return -> object handles. Drives the call through
-// the generic dispatcher (so arg-shapes like a single bool are constructed the same way as any
-// ptrcall) with ret_out = an 8-byte Array opaque slot (Array is an OPAQUE_8_BYTE_TYPE — NOT 16
-// like Packed*Array), then reads each element back via the Array size/get builtins +
-// variant_to_object. Element handles are written into out_handles (caller-owned). Two-call length
-// protocol like the Packed*Array helpers: pass out_handles=NULL to learn the count, then call
-// again with a buffer of that capacity (the ptrcall re-runs each call). Returns the FULL element
-// count (negative on resolution failure). cap is an ELEMENT count.
-int64_t kanama_ios_godot_ptrcall_ret_object_array(
-    int64_t method_bind,
-    int64_t instance,
-    const int32_t *arg_types,
-    const void *const *arg_ptrs,
-    int32_t arg_count,
-    int64_t *out_handles,
-    int64_t cap
-) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return -1;
-    }
-    if (method_bind == 0) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return -1;
-    }
-    if (instance == 0) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return -1;
-    }
-    kanama_ios_cache_array_methods();
-    if (g_array_size_method == NULL || g_array_get_method == NULL || g_variant_to_object == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", g_array_size_method == NULL ? "g_array_size_method"
-                         : g_array_get_method == NULL ? "g_array_get_method"
-                         : "g_variant_to_object");
-        return -1;
-    }
-
-    // Array opaque size is 8 bytes on 64-bit (OPAQUE_8_BYTE_TYPES) — a single uint64_t slot, NOT
-    // the 16-byte Packed*Array storage. The generic dispatcher writes the Array opaque into it.
-    uint64_t array_storage = 0;
-    kanama_ios_godot_ptrcall(
-        method_bind, instance, arg_types, arg_ptrs, arg_count,
-        KANAMA_IOS_PT_OBJECT /* any non-void ret tag → ret_out is used */, &array_storage);
-
-    int64_t size = 0;
-    g_array_size_method(&array_storage, NULL, &size, 0);
-
-    if (out_handles != NULL && cap > 0 && size > 0) {
-        int64_t n = (size < cap) ? size : cap;
-        for (int64_t i = 0; i < n; i++) {
-            // Array.get(i) returns a Variant; read its object pointer (0 for non-Object elements).
-            uint8_t ret_variant[24] = {0};
-            const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)&i };
-            g_array_get_method(&array_storage, args, ret_variant, 1);
-            int64_t handle = 0;
-            GDExtensionVariantType elem_type = g_variant_get_type != NULL
-                ? g_variant_get_type((GDExtensionConstVariantPtr)ret_variant)
-                : KANAMA_IOS_VARIANT_TYPE_NIL;
-            if (elem_type == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
-                GDExtensionObjectPtr obj_ptr = NULL;
-                g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
-                handle = (int64_t)(intptr_t)obj_ptr;
-            }
-            if (g_variant_destroy != NULL) {
-                g_variant_destroy((GDExtensionVariantPtr)ret_variant);
-            }
-            out_handles[i] = handle;
-        }
-    }
-
-    if (g_array_destructor != NULL) {
-        g_array_destructor((GDExtensionTypePtr)&array_storage);
-    }
-    return size;
-}
-
 // task 100 (parcel 9) — typed-object-array (Array[Object]) returns on EVERY audited arg shape.
-// Same arg cells as kanama_ios_godot_ptrcall; the method runs ONCE (the two-call length protocol
-// of kanama_ios_godot_ptrcall_ret_object_array above re-invokes it, which is only safe for pure
-// getters — Noise.get_image_3d or RenderingServer.bake_render_uv2 must not run twice). The element
+// Same arg cells as kanama_ios_godot_ptrcall; the method runs ONCE (the removed two-call length
+// protocol re-invoked it, which is only safe for pure getters — Noise.get_image_3d or
+// RenderingServer.bake_render_uv2 must not run twice). The element
 // handles are written into out_handles when they fit cap (an ELEMENT count), otherwise into a
 // malloc'd single pending slot that kanama_ios_godot_take_pending_object_handles drains. Handles
 // of a RefCounted element are RETAINED (+1, task 131 S5) before the returned Array is destroyed
@@ -10845,7 +10791,7 @@ static int64_t kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
                 // The Kotlin wrapper owns it (close() releases), like desktop's
                 // BuiltinTypes.readArrayObjectsOwned.
                 if (obj_ptr != NULL) {
-                    kanama_ios_retain_refcounted_object(obj_ptr);
+                    kanama_ios_retain_refcounted_element(obj_ptr);
                 }
             }
             if (g_variant_destroy != NULL) {
@@ -12290,7 +12236,7 @@ static void kanama_ios_ptrcall_selftest(void) {
         const void *gca[1] = { &include_internal };
         int64_t kids[8];
         for (int i = 0; i < 8; i++) { kids[i] = -1; }
-        int64_t kid_count = kanama_ios_godot_ptrcall_ret_object_array(
+        int64_t kid_count = kanama_ios_godot_ptrcall_ret_object_handles(
             kanama_ios_godot_get_method_bind("Node", "get_children", 873284517),
             parent, gct, gca, 1, kids, 8);
         KANAMA_IOS_ST_CHECK("typed-object-array-ret get_children==[c0,c1]",
@@ -12299,7 +12245,7 @@ static void kanama_ios_ptrcall_selftest(void) {
 
     // (String,String,bool,bool)->Array[Node] return: a parent with two "Coin*"-named children plus
     // one "Door" child; find_children("Coin*", "", recursive=true, owned=false) returns the two coins
-    // in tree order. Exercises ret_object_array with a PT_STRING x2 + PT_BOOL x2 arg layout — each
+    // in tree order. Exercises ret_object_handles with a PT_STRING x2 + PT_BOOL x2 arg layout — each
     // Godot String is built C-side from the cstr (and destroyed) by the generic dispatcher, then the
     // same Array read-back runs. owned=false so the unowned (no SceneTree owner) children still match;
     // the "Door" child must be excluded by the name pattern. Plain Node is safe at init. Phase 2.7d-3.
@@ -12343,7 +12289,7 @@ static void kanama_ios_ptrcall_selftest(void) {
         const void *fca[4] = { pattern, type_filter, &recursive, &owned };
         int64_t found[8];
         for (int i = 0; i < 8; i++) { found[i] = -1; }
-        int64_t found_count = kanama_ios_godot_ptrcall_ret_object_array(
+        int64_t found_count = kanama_ios_godot_ptrcall_ret_object_handles(
             kanama_ios_godot_get_method_bind("Node", "find_children", 2560337219),
             parent, fct, fca, 4, found, 8);
         KANAMA_IOS_ST_CHECK("typed-object-array-ret find_children(Coin*)==[c0,c1]",

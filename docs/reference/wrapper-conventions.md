@@ -216,6 +216,13 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
 
 - A `RefCounted`-typed return of a typed wrapper (`getMesh()`, `X.create()`, `ResourceLoader.load…`,
   a `Tweener`) is **owned**: it carries a reference that is yours. `close()` it or `use { }` it.
+- So is **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`,
+  `getProcessedTweens()`, ...): the Array is destroyed right after the decode, so each element is
+  retained first and its wrapper owns that reference (task 131; desktop, Android and iOS). Close
+  each element. An element of an untyped `Array[Object]` that is `RefCounted` comes back as a
+  `RefCounted` wrapper so it can be closed. Kept by `audit_generator_shape_policy.py` (every
+  returned object Array decodes through `readArrayObjectsOwned`). Array and Dictionary elements
+  read through a dynamic path (a Variant) stay borrowed.
 - `close()` releases your reference; it destroys the object only if that was the last one.
   Calling a member on a closed wrapper throws `IllegalStateException` instead of reaching freed
   memory (`emits_receiver_guard`, `checkOpen()` in the hand root `RefCounted`).

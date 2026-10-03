@@ -13,6 +13,7 @@ import net.multigesture.kanama.api.Area2D
 import net.multigesture.kanama.api.Area3D
 import net.multigesture.kanama.api.BaseButton
 import net.multigesture.kanama.api.GodotCallable
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.Node
@@ -1669,7 +1670,19 @@ actual object ObjectCalls {
     text: String,
     first: Int,
     second: Int,
-  ): List<GodotObject> {
+  ): List<GodotObject> =
+    ptrcallWithStringTwoIntArgsRetTypedObjectList(methodBind, instance, text, first, second) {
+      GodotObject(GodotHandle(it))
+    }
+
+  actual fun <T : Any> ptrcallWithStringTwoIntArgsRetTypedObjectList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    text: String,
+    first: Int,
+    second: Int,
+    wrapper: (MemorySegment) -> T?,
+  ): List<T> {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val firstCell = arena.allocate(JAVA_INT)
@@ -1684,25 +1697,13 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
         objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-        return BuiltinTypes.readArrayObjectsOwned(ret)
+        return BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
         GodotStrings.destroyString(stringCell)
       }
     }
   }
-
-  actual fun <T : Any> ptrcallWithStringTwoIntArgsRetTypedObjectList(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    text: String,
-    first: Int,
-    second: Int,
-    wrapper: (MemorySegment) -> T?,
-  ): List<T> =
-    ptrcallWithStringTwoIntArgsRetObjectList(methodBind, instance, text, first, second).mapNotNull {
-      wrapper(it.segment)
-    }
 
   fun ptrcallWithThreeIntTwoBoolArgsRetObjectList(
     methodBind: MemorySegment,
@@ -1712,7 +1713,29 @@ actual object ObjectCalls {
     third: Int,
     firstBool: Boolean,
     secondBool: Boolean,
-  ): List<GodotObject> {
+  ): List<GodotObject> =
+    ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(
+      methodBind,
+      instance,
+      first,
+      second,
+      third,
+      firstBool,
+      secondBool,
+    ) {
+      GodotObject(GodotHandle(it))
+    }
+
+  actual fun <T : Any> ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: Int,
+    second: Int,
+    third: Int,
+    firstBool: Boolean,
+    secondBool: Boolean,
+    wrapper: (MemorySegment) -> T?,
+  ): List<T> {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_INT)
       val secondCell = arena.allocate(JAVA_INT)
@@ -1733,33 +1756,12 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, secondBoolCell)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return try {
-        BuiltinTypes.readArrayObjectsOwned(ret)
+        BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
       }
     }
   }
-
-  actual fun <T : Any> ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    first: Int,
-    second: Int,
-    third: Int,
-    firstBool: Boolean,
-    secondBool: Boolean,
-    wrapper: (MemorySegment) -> T?,
-  ): List<T> =
-    ptrcallWithThreeIntTwoBoolArgsRetObjectList(
-        methodBind,
-        instance,
-        first,
-        second,
-        third,
-        firstBool,
-        secondBool,
-      )
-      .mapNotNull { wrapper(it.segment) }
 
   fun ptrcallWithThreeIntBoolDoubleBoolArgsRetObjectList(
     methodBind: MemorySegment,
@@ -1770,7 +1772,31 @@ actual object ObjectCalls {
     firstBool: Boolean,
     value: Double,
     secondBool: Boolean,
-  ): List<GodotObject> {
+  ): List<GodotObject> =
+    ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(
+      methodBind,
+      instance,
+      first,
+      second,
+      third,
+      firstBool,
+      value,
+      secondBool,
+    ) {
+      GodotObject(GodotHandle(it))
+    }
+
+  actual fun <T : Any> ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: Int,
+    second: Int,
+    third: Int,
+    firstBool: Boolean,
+    value: Double,
+    secondBool: Boolean,
+    wrapper: (MemorySegment) -> T?,
+  ): List<T> {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_INT)
       val secondCell = arena.allocate(JAVA_INT)
@@ -1794,35 +1820,12 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, secondBoolCell)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return try {
-        BuiltinTypes.readArrayObjectsOwned(ret)
+        BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
       }
     }
   }
-
-  actual fun <T : Any> ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    first: Int,
-    second: Int,
-    third: Int,
-    firstBool: Boolean,
-    value: Double,
-    secondBool: Boolean,
-    wrapper: (MemorySegment) -> T?,
-  ): List<T> =
-    ptrcallWithThreeIntBoolDoubleBoolArgsRetObjectList(
-        methodBind,
-        instance,
-        first,
-        second,
-        third,
-        firstBool,
-        value,
-        secondBool,
-      )
-      .mapNotNull { wrapper(it.segment) }
 
   actual fun <T : Any> ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList(
     methodBind: MemorySegment,
@@ -3903,23 +3906,30 @@ actual object ObjectCalls {
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
-  ): List<GodotObject> {
-    Arena.ofConfined().use { arena ->
-      val ridCell = arena.allocate(JAVA_LONG)
-      ridCell.set(JAVA_LONG, 0, value.value)
-      val args = arena.allocate(ADDRESS, 1)
-      args.setAtIndex(ADDRESS, 0, ridCell)
-      return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjectsOwned)
+  ): List<GodotObject> =
+    ptrcallWithRIDArgRetTypedObjectList(methodBind, instance, value) {
+      GodotObject(GodotHandle(it))
     }
-  }
 
   actual fun <T : Any> ptrcallWithRIDArgRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: RID,
     wrapper: (MemorySegment) -> T?,
-  ): List<T> =
-    ptrcallWithRIDArgRetObjectList(methodBind, instance, value).mapNotNull { wrapper(it.segment) }
+  ): List<T> {
+    Arena.ofConfined().use { arena ->
+      val ridCell = arena.allocate(JAVA_LONG)
+      ridCell.set(JAVA_LONG, 0, value.value)
+      val args = arena.allocate(ADDRESS, 1)
+      args.setAtIndex(ADDRESS, 0, ridCell)
+      return callArrayReturn(
+        methodBind,
+        instance,
+        args,
+        { BuiltinTypes.readArrayObjectsOwned(it, wrapper) },
+      )
+    }
+  }
 
   actual fun ptrcallWithRIDArgRetPackedInt32List(
     methodBind: MemorySegment,
@@ -11185,7 +11195,18 @@ actual object ObjectCalls {
     instance: MemorySegment,
     values: List<*>,
     size: Int,
-  ): List<GodotObject> {
+  ): List<GodotObject> =
+    ptrcallWithObjectListIntArgsRetTypedObjectList(methodBind, instance, values, size) {
+      GodotObject(GodotHandle(it))
+    }
+
+  actual fun <T : Any> ptrcallWithObjectListIntArgsRetTypedObjectList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    values: List<*>,
+    size: Int,
+    wrapper: (MemorySegment) -> T?,
+  ): List<T> {
     Arena.ofConfined().use { arena ->
       val argArray = arena.allocate(8L, 8L)
       val sizeCell = arena.allocate(JAVA_INT)
@@ -11195,23 +11216,17 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, argArray)
         args.setAtIndex(ADDRESS, 1, sizeCell)
-        return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjectsOwned)
+        return callArrayReturn(
+          methodBind,
+          instance,
+          args,
+          { BuiltinTypes.readArrayObjectsOwned(it, wrapper) },
+        )
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
     }
   }
-
-  actual fun <T : Any> ptrcallWithObjectListIntArgsRetTypedObjectList(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    values: List<*>,
-    size: Int,
-    wrapper: (MemorySegment) -> T?,
-  ): List<T> =
-    ptrcallWithObjectListIntArgsRetObjectList(methodBind, instance, values, size).mapNotNull {
-      wrapper(it.segment)
-    }
 
   actual fun ptrcallWithStringAndObjectListArgs(
     methodBind: MemorySegment,
@@ -19890,29 +19905,29 @@ actual object ObjectCalls {
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
-  ): List<GodotObject> {
-    Arena.ofConfined().use { arena ->
-      val arr = arena.allocate(ADDRESS, 1)
-      arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-      val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
-      return try {
-        BuiltinTypes.readArrayObjectsOwned(ret)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
-      }
+  ): List<GodotObject> =
+    ptrcallWithStringNameArgRetTypedObjectList(methodBind, instance, name) {
+      GodotObject(GodotHandle(it))
     }
-  }
 
   actual fun <T : Any> ptrcallWithStringNameArgRetTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
     wrapper: (MemorySegment) -> T?,
-  ): List<T> =
-    ptrcallWithStringNameArgRetObjectList(methodBind, instance, name).mapNotNull {
-      wrapper(it.segment)
+  ): List<T> {
+    Arena.ofConfined().use { arena ->
+      val arr = arena.allocate(ADDRESS, 1)
+      arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
+      val ret = arena.allocate(8L, 8L)
+      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      return try {
+        BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
+      } finally {
+        BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
+      }
     }
+  }
 
   /** Calls [methodBind] with one StringName argument and decodes Array[Node]. */
   fun ptrcallWithStringNameArgRetTypedNodeList(
@@ -37503,7 +37518,19 @@ actual object ObjectCalls {
     rid: RID,
     values: List<RID>,
     size: Vector2i,
-  ): List<GodotObject> {
+  ): List<GodotObject> =
+    ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(methodBind, instance, rid, values, size) {
+      GodotObject(GodotHandle(it))
+    }
+
+  actual fun <T : Any> ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    rid: RID,
+    values: List<RID>,
+    size: Vector2i,
+    wrapper: (MemorySegment) -> T?,
+  ): List<T> {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val valuesCell = arena.allocate(8L, 8L)
@@ -37516,23 +37543,17 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, valuesCell)
         args.setAtIndex(ADDRESS, 2, sizeCell)
-        return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjectsOwned)
+        return callArrayReturn(
+          methodBind,
+          instance,
+          args,
+          { BuiltinTypes.readArrayObjectsOwned(it, wrapper) },
+        )
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, valuesCell)
       }
     }
   }
-
-  actual fun <T : Any> ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    rid: RID,
-    values: List<RID>,
-    size: Vector2i,
-    wrapper: (MemorySegment) -> T?,
-  ): List<T> =
-    ptrcallWithRIDRIDListVector2iArgsRetObjectList(methodBind, instance, rid, values, size)
-      .mapNotNull { wrapper(it.segment) }
 
   actual fun ptrcallWithRIDListObjectListUInt32ArgsRetRID(
     methodBind: MemorySegment,

@@ -835,32 +835,14 @@ typedef struct {
 } KanamaIosVariantArgDesc;
 
 /*
- * Typed-object-array (Array[Object]) ptrcall return -> object handles. Drives the call through
- * the generic dispatcher (arg_types/arg_ptrs/arg_count laid out as for kanama_ios_godot_ptrcall),
- * returning an Array whose elements' object pointers are written into out_handles. Two-call length
- * protocol: pass out_handles=NULL to learn the count, then call again with a buffer of that
- * capacity (cap is an ELEMENT count). Returns the FULL element count (negative on resolution
- * failure). Non-Object elements yield a 0 handle.
- */
-int64_t kanama_ios_godot_ptrcall_ret_object_array(
-    int64_t method_bind,
-    int64_t instance,
-    const int32_t *arg_types,
-    const void *const *arg_ptrs,
-    int32_t arg_count,
-    int64_t *out_handles,
-    int64_t cap
-);
-
-/*
  * task 100 (parcel 9) — typed-object-array (Array[Object]) return on every audited arg shape: the
  * method runs ONCE; the element object handles land in out_handles when they fit cap (an ELEMENT
  * count), otherwise in a single pending slot the caller drains with
  * kanama_ios_godot_take_pending_object_handles. The returned Array is destroyed inside the call, so
  * each RefCounted element is RETAINED (+1, owned by the caller's wrapper; task 131 S5); other
  * handles are borrowed. Returns the full element count, or -1 on a null method/instance,
- * an unavailable API or an allocation failure. Supersedes the two-call protocol of
- * kanama_ios_godot_ptrcall_ret_object_array for every typed-object-list return.
+ * an unavailable API or an allocation failure. The only typed-object-list return entry (the
+ * two-call kanama_ios_godot_ptrcall_ret_object_array was removed, task 131).
  */
 int64_t kanama_ios_godot_ptrcall_ret_object_handles(
     int64_t method_bind,

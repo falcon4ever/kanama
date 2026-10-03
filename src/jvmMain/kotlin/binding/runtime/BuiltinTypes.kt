@@ -286,15 +286,15 @@ object BuiltinTypes {
       is ByteArray -> variantFromPackedByteArrayInto(value, variantOut, arena)
       is List<*> -> variantFromArrayInto(value, variantOut, arena)
       is Map<*, *> -> variantFromDictionaryInto(value, variantOut, arena)
-      // A wrapper of a freed object encodes as nil, silently (task 131 item 2, GDScript semantics).
+      // A wrapper of a freed object encodes as nil, silently (task 131 item 2, GDScript semantics);
+      // a closed RefCounted still throws its closed-handle error. Variant(Object*) refs a
+      // RefCounted value itself, so no extra retain here (it would leak when the temporary
+      // Variant is destroyed).
       is GodotObject -> {
         val segment = FreedObjectChecks.valueSegment(value)
         if (segment.address() == 0L) initNilVariant(variantOut)
         else variantFromObjectInto(segment, variantOut, arena)
       }
-      // Variant(Object*) already refs RefCounted values; adding an extra
-      // retain here leaks whenever the temporary Variant is destroyed.
-      is Resource -> variantFromObjectInto(value.requireOpenHandle(), variantOut, arena)
       else -> error("Unsupported Variant value type: ${value::class.qualifiedName}")
     }
   }
@@ -1299,19 +1299,36 @@ object BuiltinTypes {
   fun readArrayObjectsOwned(src: MemorySegment): List<GodotObject> =
     readArrayObjectsOwned(src) { handle -> GodotObject(GodotHandle(handle)) }
 
-  fun <T : Any> readArrayObjectsOwned(src: MemorySegment, wrapper: (MemorySegment) -> T?): List<T> =
-    readArrayObjects(src) { handle ->
-      when (val value = wrapper(handle)) {
-        is RefCounted -> value.also { it.retainForKotlinWrapper() }
-        // Untyped Object element: ask the engine once whether it is RefCounted.
-        is GodotObject ->
-          if (value::class == GodotObject::class && value.isClass("RefCounted")) {
-            @Suppress("UNCHECKED_CAST")
-            (RefCounted(value.handle).also { it.retainForKotlinWrapper() } as T)
-          } else value
-        else -> value
+  fun <T : Any> readArrayObjectsOwned(src: MemorySegment, wrapper: (MemorySegment) -> T?): List<T> {
+    val retained = ArrayList<RefCounted>()
+    try {
+      return readArrayObjects(src) { handle ->
+        when (val value = wrapper(handle)) {
+          is RefCounted ->
+            value.also {
+              it.retainForKotlinWrapper()
+              retained += it
+            }
+          // Untyped Object element: Godot sets bit 63 of a RefCounted object's instance id
+          // (ObjectID::is_ref_counted), and the wrapper captured that id at construction, so this
+          // costs no engine call. Typed wrappers (Node, ...) never take this branch.
+          is GodotObject ->
+            if (value::class == GodotObject::class && value.instanceId < 0L) {
+              @Suppress("UNCHECKED_CAST")
+              (RefCounted(value.handle).also {
+                it.retainForKotlinWrapper()
+                retained += it
+              } as T)
+            } else value
+          else -> value
+        }
       }
+    } catch (t: Throwable) {
+      // A decode that fails midway releases what it already retained: nobody else will.
+      retained.forEach { runCatching { it.close() } }
+      throw t
     }
+  }
 
   /**
    * The pointer KSP-generated glue writes when it hands [value] to Godot as a value (a
@@ -1321,6 +1338,28 @@ object BuiltinTypes {
    */
   @JvmStatic
   fun objectValueSegment(value: GodotObject): MemorySegment = FreedObjectChecks.valueSegment(value)
+
+  /**
+   * The Godot object a custom-script-typed value ([script], whose owner is [owner]) stands for when
+   * KSP-generated glue hands it to Godot (a `@ScriptProperty` of a script type, or a `List`/`Map`
+   * of them): a `KanamaScript`'s captured `self` wrapper, else a wrapper of [owner]. Null -- nil --
+   * when the freed-object check is on and the owner was freed, decided from the instance id
+   * captured when the runtime created the script ([ScriptOwnerIds]), never by reading the owner
+   * (task 131 item 2). Public for the generated registrars only.
+   */
+  @JvmStatic
+  fun scriptValue(script: Any, owner: GodotHandle): GodotObject? {
+    if (script is net.multigesture.kanama.api.KanamaScript<*>) {
+      (script.self as? GodotObject)?.let {
+        return if (FreedObjectChecks.valueSegment(it).address() == 0L) null else it
+      }
+    }
+    val id = ScriptOwnerIds.idOf(script)
+    if (id != null && FreedObjectChecks.enabled && !ObjectRuntime.isLive(owner.segment, id)) {
+      return null
+    }
+    return GodotObject(owner)
+  }
 
   /**
    * Writes [value] into the return Variant [ret] as KSP-generated glue does for an Object-typed
@@ -1978,8 +2017,8 @@ object BuiltinTypes {
       values.forEach { value ->
         val objectHandle =
           when (value) {
-            is Resource -> value.requireOpenHandle()
-            // A freed element is a null Object element, silently (task 131 item 2).
+            // A freed element (a borrowed Resource included) is a null Object element, silently
+            // (task 131 item 2); a closed RefCounted still throws its closed-handle error.
             is GodotObject -> FreedObjectChecks.valueSegment(value)
             else ->
               error(

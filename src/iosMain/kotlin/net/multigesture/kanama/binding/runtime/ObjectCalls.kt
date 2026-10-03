@@ -3075,9 +3075,24 @@ actual object ObjectCalls {
           parked
         }
       val out = ArrayList<T>(count.toInt())
-      for (i in 0 until count.toInt()) {
-        val obj = ownedListElement(fromHandle(MemorySegment.ofAddress(buf[i])))
-        if (obj != null) out.add(obj)
+      var next = 0
+      try {
+        while (next < count.toInt()) {
+          val obj = ownedListElement(fromHandle(MemorySegment.ofAddress(buf[next])))
+          next++
+          if (obj != null) out.add(obj)
+        }
+      } catch (t: Throwable) {
+        // The C side retained every RefCounted element; a decode that fails midway releases the
+        // ones nobody will own (task 131 review: no leak on a failed decode).
+        out.forEach { (it as? RefCounted)?.let { r -> runCatching { r.close() } } }
+        for (i in next until count.toInt()) {
+          val handle = buf[i]
+          if (handle != 0L && IosGodot.objectGetInstanceId(handle) < 0L) {
+            runCatching { RefCounted(GodotHandle(MemorySegment.ofAddress(handle))).close() }
+          }
+        }
+        throw t
       }
       out
     }
@@ -3089,12 +3104,9 @@ actual object ObjectCalls {
    */
   @Suppress("UNCHECKED_CAST")
   internal fun <T> ownedListElement(obj: T?): T? =
-    if (
-      obj is GodotObject &&
-        obj !is RefCounted &&
-        obj::class == GodotObject::class &&
-        obj.isClass("RefCounted")
-    ) {
+    // Bit 63 of the captured instance id marks a RefCounted object (ObjectID::is_ref_counted): no
+    // engine call. Typed wrappers (Node, ...) are not exactly GodotObject and pass through.
+    if (obj is GodotObject && obj::class == GodotObject::class && obj.instanceId < 0L) {
       RefCounted(obj.handle) as T
     } else obj
 

@@ -73,12 +73,22 @@ only `--write`.
   of the game (or of the editor for `@Tool` scripts) at worst. Release export templates skip the
   check (it costs one engine call per wrapper call, about 11-20 ns), so keep `GD.isInstanceValid`
   before using an object that may be gone.
-- **RefCounted elements of a returned typed Array are owned** (desktop, Android, iOS). A method
-  returning `Array[SomeRefCounted]` (`Engine.captureScriptBacktraces()`, …) used to hand back
-  wrappers of objects the destroyed Array had already freed. Each RefCounted element is now retained
-  before the Array is destroyed, and its wrapper owns that `+1`: `close()` it like any
-  RefCounted-typed return. (Ownership class for task 132 D1: "element of a returned typed Array" is
+- **Behaviour change: the RefCounted elements of a returned typed Array are owned** (desktop,
+  Android, iOS). A method returning `Array[SomeRefCounted]` used to hand back wrappers of objects
+  the destroyed Array had already freed when it held their only reference
+  (`Engine.captureScriptBacktraces()`), or borrowed views that were safe to drop. Each RefCounted
+  element is now retained before the Array is destroyed, and its wrapper owns that `+1`.
+  **Migration:** close the elements of these lists like any RefCounted-typed return
+  (`list.forEach { it.close() }`, or `use { }` per element), for example
+  `GLTFState.getMaterials()` / `getMeshes()` / `getTextures()` / `getImages()` / `getSkins()` /
+  `getAnimations()`, `InputMap.actionGetEvents()`, `TranslationServer.getTranslations()`,
+  `ENetConnection.getPeers()`, `SceneTree.getProcessedTweens()` (closing a tween wrapper never
+  stops the tween) and `Engine.captureScriptBacktraces()`. Dropping them without `close()` is now
+  a leak reported at exit; task 132's GC fallback will turn a forgotten `close()` into a late
+  release. An element of an untyped `Array[Object]` that is RefCounted comes back as a closable
+  `RefCounted` wrapper. (Ownership class for task 132 D1: "element of a returned typed Array" is
   owned, like the return itself; Array/Dictionary elements decoded from a Variant stay borrowed.)
+  See [Resource Ownership](docs/game-dev/godot-api.md#resource-ownership).
 - **Two wrappers of one Godot object are equal** (F23): `equals`/`hashCode` (now final) and
   `isSameInstance` compare the instance id, not the JVM wrapper, on desktop, Android and iOS, so
   `node == other`, `List.contains`, `Set` and `Map` keys behave like GDScript's `==`, whatever the

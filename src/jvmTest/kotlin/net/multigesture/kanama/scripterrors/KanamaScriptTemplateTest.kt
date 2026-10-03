@@ -116,6 +116,49 @@ class KanamaScriptTemplateTest {
   }
 
   @Test
+  fun everyInternalConstructorBaseHasAConstructionPath() {
+    // Every engine wrapper whose constructor is internal (in any platform's tree) must be in
+    // FACTORY_BASES or ANCESTOR_FALLBACK, or a New Script on it would not compile.
+    val nonEngine =
+      setOf(
+        "FileAccessHandle",
+        "DirAccessHandle",
+        "OwnedScriptResource",
+        "SignalConnection",
+        "GodotSignal",
+      )
+    val internalCtor = Regex("""class (\w+)(<[^>]*>)? (@PublishedApi )?internal constructor""")
+    val found =
+      listOf("src/commonMain", "src/jvmMain", "src/iosMain")
+        .flatMap { root ->
+          File("$root/kotlin/net/multigesture/kanama/api").walkTopDown().filter {
+            it.isFile && it.name.endsWith(".kt")
+          }
+        }
+        .flatMap { file -> internalCtor.findAll(file.readText()).map { it.groupValues[1] } }
+        .toSet() - nonEngine
+    assertTrue(found.isNotEmpty())
+    val covered = KanamaScriptTemplate.FACTORY_BASES + KanamaScriptTemplate.ANCESTOR_FALLBACK.keys
+    assertEquals(emptySet(), found - covered, "bases without a template construction path")
+  }
+
+  @Test
+  fun aBaseWithoutAConstructionPathFallsBackToItsAncestorAndSaysSo() {
+    val source = KanamaScriptTemplate.source("Crate", "BoxMesh", "game", nodeDerived = false)
+    assertTrue(
+      source.contains(
+        "// BoxMesh has no public wrapper constructor: `self` is its PrimitiveMesh view.\n"
+      )
+    )
+    assertTrue(source.contains("@ScriptClass(attachTo = \"BoxMesh\")\n"))
+    assertTrue(source.contains("KanamaScript<PrimitiveMesh>(godotObject, ::PrimitiveMesh)"))
+    val tween = KanamaScriptTemplate.source("T", "Tween", "game", nodeDerived = false)
+    assertTrue(
+      tween.contains("KanamaScript<RefCounted>(godotObject, { RefCounted.fromHandle(it)!! })")
+    )
+  }
+
+  @Test
   fun thePackageComesFromTheDirectory() {
     // The package most scripts in the directory declare (Kanama projects keep one per folder).
     assertEquals(

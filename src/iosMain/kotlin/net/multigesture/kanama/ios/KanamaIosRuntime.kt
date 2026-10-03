@@ -1214,6 +1214,15 @@ fun kanamaIosRuntimeScriptInstanceCallV(
   }
 }
 
+/**
+ * The owner handle a `@ScriptClass` value encodes as: its captured `self` wrapper through
+ * [FreedObjectChecks.valueSegment] (0, nil, once the owner was freed), else the raw owner handle (a
+ * script whose `self` is not an engine wrapper).
+ */
+internal fun scriptValueAddress(script: KanamaScript<*>): Long =
+  (script.self as? GodotObject)?.let { FreedObjectChecks.valueSegment(it).address() }
+    ?: script.godotObject.segment.address()
+
 // Encode a value-returning virtual/method result into the C return scratch as PT-tagged bytes,
 // matching kanama_ios_pt_arg_to_variant's reads (Phase 5.3b). Unsupported/Unit -> PT_VOID.
 @OptIn(ExperimentalForeignApi::class)
@@ -1266,8 +1275,10 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
     }
     // A @ScriptClass instance answers as its owner object (node_paths-exported script refs), the
     // same identity desktop's generated getter pre-wraps as GodotObject(it.godotObject).
+    // A freed owner ships 0 (nil), decided by the `self` wrapper captured at script creation,
+    // never by reading the owner (task 131 item 2).
     is KanamaScript<*> -> {
-      retBuf.reinterpret<LongVar>()[0] = value.godotObject.segment.address()
+      retBuf.reinterpret<LongVar>()[0] = scriptValueAddress(value)
       retTag[0] = IOS_PT_OBJECT
     }
     is Vector2 -> {
@@ -1709,7 +1720,7 @@ internal object IosReturnContainerScratch {
       // A freed element ships 0 (nil), silently (task 131 item 2).
       is GodotObject ->
         Pair(IOS_PT_OBJECT, int64Bytes(FreedObjectChecks.valueSegment(value).address()))
-      is KanamaScript<*> -> Pair(IOS_PT_OBJECT, int64Bytes(value.godotObject.segment.address()))
+      is KanamaScript<*> -> Pair(IOS_PT_OBJECT, int64Bytes(scriptValueAddress(value)))
       // task 100 parcel 10: a PackedByteArray value (OggPacketSequence packet data inside an
       // Array[Array]) travels as its raw bytes; the C boxer rebuilds the packed array.
       is ByteArray -> Pair(IOS_PT_PACKED_BYTE_ARRAY, value)

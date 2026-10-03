@@ -4680,9 +4680,11 @@ internal class ScriptCodeEmitter(
       property.arrayElementWrapperFqName != null ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       property.customScriptFqName != null ->
-        "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr?.let { net.multigesture.kanama.api.GodotObject(it.godotObject) }, a) }"
+        // Task 131 item 2: the owner through scriptValue (nil once the owner was freed), never a
+        // fresh wrapper over a possibly freed pointer.
+        "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr?.let { net.multigesture.kanama.binding.runtime.BuiltinTypes.scriptValue(it, it.godotObject) }, a) }"
       property.arrayElementCustomScriptFqName != null ->
-        "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr.map { net.multigesture.kanama.api.GodotObject(it.godotObject) }, a) }"
+        "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr.map { net.multigesture.kanama.binding.runtime.BuiltinTypes.scriptValue(it, it.godotObject) }, a) }"
       property.arrayElementString ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       property.arrayElementEnumFqName != null ->
@@ -4711,7 +4713,7 @@ internal class ScriptCodeEmitter(
           when {
             property.mapValueEnumFqName != null -> "v.ordinal.toLong()"
             property.mapValueCustomScriptFqName != null ->
-              "net.multigesture.kanama.api.GodotObject(v.godotObject)"
+              "net.multigesture.kanama.binding.runtime.BuiltinTypes.scriptValue(v, v.godotObject)"
             else -> "v"
           }
         "$valueExpr.entries.associate { (k, v) -> $keyConv to $valueConv }"

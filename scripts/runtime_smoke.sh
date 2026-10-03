@@ -317,6 +317,9 @@ fi
 # are retained before the Array is destroyed: alive, usable, then closed. Before, each was already
 # freed (valid=false), and closing it was a use-after-free.
 check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
+# Task 131 review: custom-script-typed exports (a KanamaScript type, a plain script type, a List
+# and a Map of them) whose nodes were freed read back as nil, without reading the freed owners.
+check "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.

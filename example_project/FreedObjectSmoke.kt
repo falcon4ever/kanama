@@ -11,6 +11,8 @@ import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node3D
+import net.multigesture.kanama.api.ResourceLoader
+import net.multigesture.kanama.api.kotlinScriptInstance
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
 /**
@@ -35,6 +37,12 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 @ScriptClass(attachTo = "Node")
 class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
   @ScriptProperty var target: Node? = null
+
+  // Custom-script-typed exports (task 131 review): held after their nodes are freed.
+  @ScriptProperty var scriptTarget: FreedScriptTarget? = null
+  @ScriptProperty var scriptTargets: List<FreedScriptTarget> = emptyList()
+  @ScriptProperty var plainTarget: FreedPlainTarget? = null
+  @ScriptProperty var plainTargetMap: Map<String, FreedPlainTarget> = emptyMap()
 
   private var victim: Node? = null
 
@@ -77,6 +85,26 @@ class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
     )
     System.err.println("[kanama:kt] FreedObjectSmoke caught=$caught")
 
+    // Custom-script values whose nodes were freed read back as nil too, decided by the `self`
+    // wrapper (KanamaScript) or the owner id captured at script creation (plain class), never by
+    // reading the freed owner.
+    val scriptNode = scripted("res://FreedScriptTarget.kt")
+    val plainNode = scripted("res://FreedPlainTarget.kt")
+    val scripted = scriptNode.kotlinScriptInstance<FreedScriptTarget>()
+    val plain = plainNode.kotlinScriptInstance<FreedPlainTarget>()
+    scriptTarget = scripted
+    scriptTargets = listOfNotNull(scripted)
+    plainTarget = plain
+    plainTargetMap = if (plain != null) mapOf("a" to plain) else emptyMap()
+    val liveScriptRead = self.get("script_target") != null && self.get("plain_target") != null
+    ObjectCalls.destroyObject(scriptNode.handle.segment)
+    ObjectCalls.destroyObject(plainNode.handle.segment)
+    System.err.println(
+      "[kanama:kt] FreedObjectSmoke script_values live_read=$liveScriptRead " +
+        "script_target=${self.get("script_target")} script_targets=${self.get("script_targets")} " +
+        "plain_target=${self.get("plain_target")} plain_target_map=${self.get("plain_target_map")}"
+    )
+
     val backtraces = Engine.captureScriptBacktraces()
     val backtracesValid = backtraces.map { GD.isInstanceValid(it) }
     val languages = backtraces.map { it.getLanguageName() }
@@ -84,6 +112,15 @@ class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
     System.err.println(
       "[kanama:kt] FreedObjectSmoke backtraces valid=$backtracesValid languages=$languages"
     )
+  }
+
+  private fun scripted(path: String): Node {
+    val node = Node(GodotHandle(ObjectCalls.constructObject("Node")))
+    ResourceLoader.load(path, "Script")?.let { script ->
+      node.setScript(script)
+      script.close()
+    }
+    return node
   }
 
   @Method(name = "freed_target") fun freedTarget(): GodotObject = victim!!

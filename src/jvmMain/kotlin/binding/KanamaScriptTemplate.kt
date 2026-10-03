@@ -33,7 +33,9 @@ internal object KanamaScriptTemplate {
    * `Object` is Kanama's `GodotObject`; a base that is not an engine class name (Godot passes a
    * quoted script path for a custom type) falls back to `Node`. A wrapper whose constructor is not
    * public ([FACTORY_BASES], e.g. `RefCounted`, whose wrapper ownership is explicit) is built
-   * through its borrowed-view factory `fromHandle`.
+   * through its borrowed-view factory `fromHandle`; a base with no public construction path at all
+   * ([ANCESTOR_FALLBACK]) gets its nearest constructible ancestor as `self`, and the template says
+   * so in a comment. `KanamaScriptTemplateTest` holds both sets to the wrapper sources.
    */
   fun source(
     className: String,
@@ -46,7 +48,12 @@ internal object KanamaScriptTemplate {
     val validBase = IDENTIFIER.matches(baseClass)
     val attachTo = if (validBase) baseClass else "Node"
     val stub = nodeDerived || !validBase
-    val wrapper = if (attachTo == "Object") "GodotObject" else attachTo
+    val fallbackFrom = attachTo.takeIf { it in ANCESTOR_FALLBACK }
+    val wrapper =
+      when (attachTo) {
+        "Object" -> "GodotObject"
+        else -> ANCESTOR_FALLBACK[attachTo] ?: attachTo
+      }
     val construct = if (wrapper in FACTORY_BASES) "{ $wrapper.fromHandle(it)!! }" else "::$wrapper"
     val supertype = "KanamaScript<$wrapper>(godotObject, $construct)"
     val body = if (stub) " {" else ""
@@ -67,6 +74,11 @@ internal object KanamaScriptTemplate {
         .sorted()
         .forEach { appendLine("import $it") }
       appendLine()
+      if (fallbackFrom != null) {
+        appendLine(
+          "// $fallbackFrom has no public wrapper constructor: `self` is its $wrapper view."
+        )
+      }
       appendLine("@ScriptClass(attachTo = \"$attachTo\")")
       if (globalClass) appendLine("@GlobalClass")
       if (header.length <= MAX_LINE) {
@@ -90,6 +102,13 @@ internal object KanamaScriptTemplate {
    * the wrapper's public `fromHandle` (a borrowed view, never closed) instead of `::Wrapper`.
    */
   val FACTORY_BASES: Set<String> = setOf("RefCounted", "ShaderMaterial", "NoiseTexture2D")
+
+  /**
+   * Engine bases whose wrapper has neither a public constructor nor a `fromHandle` on every
+   * platform, mapped to the nearest ancestor that does: the template's `self` is that view.
+   */
+  val ANCESTOR_FALLBACK: Map<String, String> =
+    mapOf("BoxMesh" to "PrimitiveMesh", "BoxShape3D" to "Shape3D", "Tween" to "RefCounted")
 
   /** True when [template] (the text Godot passes to `_make_template`) asks for `@GlobalClass`. */
   fun wantsGlobalClass(template: String): Boolean = template.contains("@GlobalClass")

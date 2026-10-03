@@ -17,6 +17,7 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.ObjectRuntime
 import net.multigesture.kanama.binding.runtime.ScriptErrors
+import net.multigesture.kanama.binding.runtime.ScriptOwnerIds
 
 /**
  * Task 131 items 6 (F23) and 2 (F2), without an engine: the instance-id capture and the liveness
@@ -107,6 +108,39 @@ class WrapperIdentityTest {
     // GDScript semantics: holding / returning a freed object is nil, not an error.
     assertEquals(0L, FreedObjectChecks.valueSegment(node).address())
     assertEquals(0L, BuiltinTypes.objectValueSegment(node).address())
+  }
+
+  /** A plain `@ScriptClass` shape: no KanamaScript base, so no `self`. */
+  private class PlainScript(val godotObject: GodotHandle)
+
+  /** A KanamaScript shape: `self` is the wrapper captured at script creation. */
+  private class SelfScript(godotObject: GodotHandle) :
+    net.multigesture.kanama.api.KanamaScript<Node>(godotObject, ::Node)
+
+  @Test
+  fun aCustomScriptValueOfAFreedOwnerIsNilWithoutReadingTheOwner() {
+    FreedObjectChecks.enabled = true
+    // The fake engine faults on any read of a freed owner (what object_get_instance_id on freed
+    // memory is): the old generated shape `GodotObject(it.godotObject)` trips it.
+    ObjectRuntime.instanceIdOverride = { segment ->
+      check(segment.address() !in freed) { "read the freed owner" }
+      segment.address() + 1000
+    }
+    val plain = PlainScript(handle(0x5000))
+    ScriptOwnerIds.remember(plain, 0x5000L + 1000)
+    val withSelf = SelfScript(handle(0x6000))
+    assertEquals(
+      0x5000L,
+      BuiltinTypes.scriptValue(plain, plain.godotObject)!!.handle.segment.address(),
+    )
+    assertTrue(BuiltinTypes.scriptValue(withSelf, withSelf.godotObject) === withSelf.self)
+
+    freed += 0x5000
+    freed += 0x6000
+    assertEquals(null, BuiltinTypes.scriptValue(plain, plain.godotObject))
+    assertEquals(null, BuiltinTypes.scriptValue(withSelf, withSelf.godotObject))
+    // The red shape, for comparison: building a wrapper over the freed owner reads it.
+    assertFailsWith<IllegalStateException> { GodotObject(plain.godotObject) }
   }
 
   @Test
