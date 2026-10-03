@@ -23,6 +23,10 @@ class/method totals and
 [Wrapper Generator Report](../reference/generated/wrapper-generator-report.md) for the
 generator reach and skip categories.
 
+The rules the generated wrappers follow (names, properties, integer and decimal types, enums,
+nullability, ownership, defaults, collections, platform parity) and how a change to them is
+announced are listed in [Generated API Conventions](../reference/wrapper-conventions.md).
+
 When writing gameplay code, prefer typed wrappers such as `Node`, `Node3D`,
 `CharacterBody3D`, `Area3D`, `AnimationPlayer`, `Control`, `ResourceLoader`,
 `Input`, and `Mathf` whenever they exist. For your own Kanama scripts, prefer

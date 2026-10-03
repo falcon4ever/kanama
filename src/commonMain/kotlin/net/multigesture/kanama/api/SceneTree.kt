@@ -715,7 +715,9 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         // resolved the running tree through Engine.get_main_loop(), and the iOS hand-written class
         // carried the same static forms on its companion. SceneTree is one generated class now, so
         // those entry points live here: same names, delegating to active(), typed like the instance
-        // member each one calls (see the CHANGELOG for the signatures whose types changed).
+        // member each one calls (see the CHANGELOG for the signatures whose types changed). Every
+        // return type is written out, `Unit` included, so the public-signature gate
+        // (scripts/check_public_signature_changes.py) records it instead of an inferred type.
         // They carry NO @JvmStatic: a @JvmStatic companion member compiles to a static method on
         // SceneTree itself, which would clash with the instance method of the same JVM signature.
         // A Kotlin caller writes SceneTree.quit() either way; only active() and the two legacy
@@ -778,7 +780,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          */
         fun isPaused(): Boolean = active().isPaused()
 
-        fun setPaused(value: Boolean) = active().setPaused(value)
+        fun setPaused(value: Boolean): Unit = active().setPaused(value)
 
         /**
          * Returns the number of nodes inside this tree.
@@ -806,7 +808,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.quit
          */
-        fun quit(exitCode: Int = 0) = active().quit(exitCode)
+        fun quit(exitCode: Int = 0): Unit = active().quit(exitCode)
 
         /**
          * Changes the running scene to the one at the given `path`, after loading it into a `PackedScene`
@@ -833,7 +835,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.unload_current_scene
          */
-        fun unloadCurrentScene() = active().unloadCurrentScene()
+        fun unloadCurrentScene(): Unit = active().unloadCurrentScene()
 
         /**
          * Sets a custom `MultiplayerAPI` with the given `root_path` (controlling also the relative
@@ -846,7 +848,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_multiplayer
          */
-        fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath = NodePath("")) =
+        fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath = NodePath("")): Unit =
             active().setMultiplayer(multiplayer, rootPath)
 
         /**
@@ -878,7 +880,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_multiplayer_poll_enabled
          */
-        fun setMultiplayerPollEnabled(enabled: Boolean) = active().setMultiplayerPollEnabled(enabled)
+        fun setMultiplayerPollEnabled(enabled: Boolean): Unit = active().setMultiplayerPollEnabled(enabled)
 
         /**
          * Returns `true` if a node added to the given group `name` exists in the tree.
@@ -923,7 +925,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_current_scene
          */
-        fun setCurrentScene(childNode: Node) = active().setCurrentScene(childNode)
+        fun setCurrentScene(childNode: Node): Unit = active().setCurrentScene(childNode)
 
         /**
          * Returns the first `Node` found inside the tree, that has been added to the given `group`, in
@@ -947,7 +949,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.queue_delete
          */
-        fun queueDelete(obj: GodotObject) = active().queueDelete(obj)
+        fun queueDelete(obj: GodotObject): Unit = active().queueDelete(obj)
 
         /**
          * Changes the running scene to a new instance of the given `PackedScene` (which must be valid).
@@ -993,7 +995,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_edited_scene_root
          */
-        fun setEditedSceneRoot(scene: Node) = active().setEditedSceneRoot(scene)
+        fun setEditedSceneRoot(scene: Node): Unit = active().setEditedSceneRoot(scene)
 
         /**
          * Calls `method` on each node inside this tree added to the given `group`. You can pass arguments
@@ -1006,7 +1008,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.call_group
          */
-        fun callGroup(groupName: String, methodName: String, vararg args: Any?) =
+        fun callGroup(groupName: String, methodName: String, vararg args: Any?): Unit =
             active().callGroup(groupName, methodName, *args)
 
         /**
@@ -1018,7 +1020,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.notify_group
          */
-        fun notifyGroup(groupName: String, notification: Int) = active().notifyGroup(groupName, notification)
+        fun notifyGroup(groupName: String, notification: Int): Unit = active().notifyGroup(groupName, notification)
 
         /**
          * Calls the given `method` on each node inside this tree added to the given `group`. Use `flags`
@@ -1028,7 +1030,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.call_group_flags
          */
-        fun callGroupFlags(flags: Long, groupName: String, methodName: String, vararg args: Any?) =
+        fun callGroupFlags(flags: Long, groupName: String, methodName: String, vararg args: Any?): Unit =
             active().callGroupFlags(flags, groupName, methodName, *args)
 
         /**
@@ -1037,7 +1039,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.notify_group_flags
          */
-        fun notifyGroupFlags(flags: Long, groupName: String, notification: Int) =
+        fun notifyGroupFlags(flags: Long, groupName: String, notification: Int): Unit =
             active().notifyGroupFlags(flags, groupName, notification)
 
         /**
@@ -1049,7 +1051,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_group_flags
          */
-        fun setGroupFlags(flags: Long, groupName: String, property: String, value: Any?) =
+        fun setGroupFlags(flags: Long, groupName: String, property: String, value: Any?): Unit =
             active().setGroupFlags(flags, groupName, property, value)
 
         /**
@@ -1062,7 +1064,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_group
          */
-        fun setGroup(groupName: String, property: String, value: Any?) = active().setGroup(groupName, property, value)
+        fun setGroup(groupName: String, property: String, value: Any?): Unit = active().setGroup(groupName, property, value)
 
         /**
          * Returns a new `SceneTreeTimer`. After `time_sec` in seconds have passed, the timer will emit
@@ -1113,7 +1115,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
             processAlways: Boolean = true,
             processInPhysics: Boolean = false,
             ignoreTimeScale: Boolean = false,
-        ) = active().delaySeconds(timeSec, processAlways, processInPhysics, ignoreTimeScale)
+        ): Unit = active().delaySeconds(timeSec, processAlways, processInPhysics, ignoreTimeScale)
 
         /**
          * Returns `true` if accessibility features are enabled, and accessibility information updates are
@@ -1145,7 +1147,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_auto_accept_quit
          */
-        fun setAutoAcceptQuit(enabled: Boolean) = active().setAutoAcceptQuit(enabled)
+        fun setAutoAcceptQuit(enabled: Boolean): Unit = active().setAutoAcceptQuit(enabled)
 
         /**
          * If `true`, the application quits automatically when navigating back (e.g. using the system
@@ -1163,7 +1165,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_quit_on_go_back
          */
-        fun setQuitOnGoBack(enabled: Boolean) = active().setQuitOnGoBack(enabled)
+        fun setQuitOnGoBack(enabled: Boolean): Unit = active().setQuitOnGoBack(enabled)
 
         /**
          * If `true`, collision shapes will be visible when running the game from the editor for debugging
@@ -1172,7 +1174,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_debug_collisions_hint
          */
-        fun setDebugCollisionsHint(enabled: Boolean) = active().setDebugCollisionsHint(enabled)
+        fun setDebugCollisionsHint(enabled: Boolean): Unit = active().setDebugCollisionsHint(enabled)
 
         /**
          * If `true`, collision shapes will be visible when running the game from the editor for debugging
@@ -1191,7 +1193,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_debug_paths_hint
          */
-        fun setDebugPathsHint(enabled: Boolean) = active().setDebugPathsHint(enabled)
+        fun setDebugPathsHint(enabled: Boolean): Unit = active().setDebugPathsHint(enabled)
 
         /**
          * If `true`, curves from `Path2D` and `Path3D` nodes will be visible when running the game from
@@ -1210,7 +1212,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_debug_navigation_hint
          */
-        fun setDebugNavigationHint(enabled: Boolean) = active().setDebugNavigationHint(enabled)
+        fun setDebugNavigationHint(enabled: Boolean): Unit = active().setDebugNavigationHint(enabled)
 
         /**
          * If `true`, navigation polygons will be visible when running the game from the editor for
@@ -1231,7 +1233,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          *
          * Generated from Godot docs: SceneTree.set_physics_interpolation_enabled
          */
-        fun setPhysicsInterpolationEnabled(enabled: Boolean) = active().setPhysicsInterpolationEnabled(enabled)
+        fun setPhysicsInterpolationEnabled(enabled: Boolean): Unit = active().setPhysicsInterpolationEnabled(enabled)
 
         /**
          * If `true`, the renderer will interpolate the transforms of objects (both physics and

@@ -37,7 +37,7 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
     GodotBackendCalls.invokeBoolArg(D.SCENETREE_SET_PAUSE, requireOpenHandle(), enable)
   }
 
-  fun setPaused(enable: Boolean) = setPause(enable)
+  fun setPaused(enable: Boolean): Unit = setPause(enable)
 
   /** The root window (desktop/iOS shape: `Window`, non-null); [root] is its Viewport view. */
   fun getRoot(): Window {
@@ -88,7 +88,7 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
     get() = Viewport(getRoot().handle)
 
   /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
-  suspend fun delaySeconds(seconds: Double) = SceneTree.delaySeconds(seconds)
+  suspend fun delaySeconds(seconds: Double): Unit = SceneTree.delaySeconds(seconds)
 
   value class GroupCallFlags(override val value: Long) : GodotEnumValue {
     companion object {
@@ -120,9 +120,9 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
      * the shared demo scripts call them. The shared DemoPage takes its browser branch before
      * reaching them (a page has no app to quit); the members exist so it compiles on Web.
      */
-    fun quit(exitCode: Long = 0L) = currentOwnerTree().quit(exitCode)
+    fun quit(exitCode: Long = 0L): Unit = currentOwnerTree().quit(exitCode)
 
-    fun unloadCurrentScene() = currentOwnerTree().unloadCurrentScene()
+    fun unloadCurrentScene(): Unit = currentOwnerTree().unloadCurrentScene()
 
     private fun currentOwnerTree(): SceneTree =
       Node(GodotHandle(WebFrameScheduler.requireCurrentOwner())).getTree()

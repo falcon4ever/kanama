@@ -1163,7 +1163,9 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
         // resolved the running tree through Engine.get_main_loop(), and the iOS hand-written class
         // carried the same static forms on its companion. SceneTree is one generated class now, so
         // those entry points live here: same names, delegating to active(), typed like the instance
-        // member each one calls (see the CHANGELOG for the signatures whose types changed).
+        // member each one calls (see the CHANGELOG for the signatures whose types changed). Every
+        // return type is written out, `Unit` included, so the public-signature gate
+        // (scripts/check_public_signature_changes.py) records it instead of an inferred type.
         // They carry NO @JvmStatic: a @JvmStatic companion member compiles to a static method on
         // SceneTree itself, which would clash with the instance method of the same JVM signature.
         // A Kotlin caller writes SceneTree.quit() either way; only active() and the two legacy
@@ -1218,28 +1220,28 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun isPaused(): Boolean = active().isPaused()
 
-        fun setPaused(value: Boolean) = active().setPaused(value)
+        fun setPaused(value: Boolean): Unit = active().setPaused(value)
 
         fun getNodeCount(): Int = active().getNodeCount()
 
         fun getFrame(): Long = active().getFrame()
 
-        fun quit(exitCode: Int = 0) = active().quit(exitCode)
+        fun quit(exitCode: Int = 0): Unit = active().quit(exitCode)
 
         fun changeSceneToFile(path: String): GodotError = active().changeSceneToFile(path)
 
         fun reloadCurrentScene(): GodotError = active().reloadCurrentScene()
 
-        fun unloadCurrentScene() = active().unloadCurrentScene()
+        fun unloadCurrentScene(): Unit = active().unloadCurrentScene()
 
-        fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath = NodePath("")) =
+        fun setMultiplayer(multiplayer: MultiplayerAPI?, rootPath: NodePath = NodePath("")): Unit =
             active().setMultiplayer(multiplayer, rootPath)
 
         fun getMultiplayer(forPath: NodePath = NodePath("")): MultiplayerAPI = active().getMultiplayer(forPath)
 
         fun isMultiplayerPollEnabled(): Boolean = active().isMultiplayerPollEnabled()
 
-        fun setMultiplayerPollEnabled(enabled: Boolean) = active().setMultiplayerPollEnabled(enabled)
+        fun setMultiplayerPollEnabled(enabled: Boolean): Unit = active().setMultiplayerPollEnabled(enabled)
 
         fun hasGroup(name: String): Boolean = active().hasGroup(name)
 
@@ -1249,13 +1251,13 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun getCurrentScene(): Node? = active().getCurrentScene()
 
-        fun setCurrentScene(childNode: Node) = active().setCurrentScene(childNode)
+        fun setCurrentScene(childNode: Node): Unit = active().setCurrentScene(childNode)
 
         fun getFirstNodeInGroup(name: String): Node? = active().getFirstNodeInGroup(name)
 
         fun getNodesInGroup(name: String): List<Node> = active().getNodesInGroup(name)
 
-        fun queueDelete(obj: GodotObject) = active().queueDelete(obj)
+        fun queueDelete(obj: GodotObject): Unit = active().queueDelete(obj)
 
         fun changeSceneToPacked(packedScene: PackedScene): GodotError = active().changeSceneToPacked(packedScene)
 
@@ -1263,23 +1265,23 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun getEditedSceneRoot(): Node? = active().getEditedSceneRoot()
 
-        fun setEditedSceneRoot(scene: Node) = active().setEditedSceneRoot(scene)
+        fun setEditedSceneRoot(scene: Node): Unit = active().setEditedSceneRoot(scene)
 
-        fun callGroup(groupName: String, methodName: String, vararg args: Any?) =
+        fun callGroup(groupName: String, methodName: String, vararg args: Any?): Unit =
             active().callGroup(groupName, methodName, *args)
 
-        fun notifyGroup(groupName: String, notification: Int) = active().notifyGroup(groupName, notification)
+        fun notifyGroup(groupName: String, notification: Int): Unit = active().notifyGroup(groupName, notification)
 
-        fun callGroupFlags(flags: Long, groupName: String, methodName: String, vararg args: Any?) =
+        fun callGroupFlags(flags: Long, groupName: String, methodName: String, vararg args: Any?): Unit =
             active().callGroupFlags(flags, groupName, methodName, *args)
 
-        fun notifyGroupFlags(flags: Long, groupName: String, notification: Int) =
+        fun notifyGroupFlags(flags: Long, groupName: String, notification: Int): Unit =
             active().notifyGroupFlags(flags, groupName, notification)
 
-        fun setGroupFlags(flags: Long, groupName: String, property: String, value: Any?) =
+        fun setGroupFlags(flags: Long, groupName: String, property: String, value: Any?): Unit =
             active().setGroupFlags(flags, groupName, property, value)
 
-        fun setGroup(groupName: String, property: String, value: Any?) = active().setGroup(groupName, property, value)
+        fun setGroup(groupName: String, property: String, value: Any?): Unit = active().setGroup(groupName, property, value)
 
         fun createTimer(
             timeSec: Double,
@@ -1319,7 +1321,7 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
             processAlways: Boolean = true,
             processInPhysics: Boolean = false,
             ignoreTimeScale: Boolean = false,
-        ) = active().delaySeconds(timeSec, processAlways, processInPhysics, ignoreTimeScale)
+        ): Unit = active().delaySeconds(timeSec, processAlways, processInPhysics, ignoreTimeScale)
 
         fun isAccessibilityEnabled(): Boolean = active().isAccessibilityEnabled()
 
@@ -1327,25 +1329,25 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         fun isAutoAcceptQuit(): Boolean = active().isAutoAcceptQuit()
 
-        fun setAutoAcceptQuit(enabled: Boolean) = active().setAutoAcceptQuit(enabled)
+        fun setAutoAcceptQuit(enabled: Boolean): Unit = active().setAutoAcceptQuit(enabled)
 
         fun isQuitOnGoBack(): Boolean = active().isQuitOnGoBack()
 
-        fun setQuitOnGoBack(enabled: Boolean) = active().setQuitOnGoBack(enabled)
+        fun setQuitOnGoBack(enabled: Boolean): Unit = active().setQuitOnGoBack(enabled)
 
-        fun setDebugCollisionsHint(enabled: Boolean) = active().setDebugCollisionsHint(enabled)
+        fun setDebugCollisionsHint(enabled: Boolean): Unit = active().setDebugCollisionsHint(enabled)
 
         fun isDebuggingCollisionsHint(): Boolean = active().isDebuggingCollisionsHint()
 
-        fun setDebugPathsHint(enabled: Boolean) = active().setDebugPathsHint(enabled)
+        fun setDebugPathsHint(enabled: Boolean): Unit = active().setDebugPathsHint(enabled)
 
         fun isDebuggingPathsHint(): Boolean = active().isDebuggingPathsHint()
 
-        fun setDebugNavigationHint(enabled: Boolean) = active().setDebugNavigationHint(enabled)
+        fun setDebugNavigationHint(enabled: Boolean): Unit = active().setDebugNavigationHint(enabled)
 
         fun isDebuggingNavigationHint(): Boolean = active().isDebuggingNavigationHint()
 
-        fun setPhysicsInterpolationEnabled(enabled: Boolean) = active().setPhysicsInterpolationEnabled(enabled)
+        fun setPhysicsInterpolationEnabled(enabled: Boolean): Unit = active().setPhysicsInterpolationEnabled(enabled)
 
         fun isPhysicsInterpolationEnabled(): Boolean = active().isPhysicsInterpolationEnabled()
 """.strip("\n"),

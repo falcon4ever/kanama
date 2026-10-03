@@ -573,7 +573,9 @@ def emit_extras(tree: Tree, call: BackendCallPolicy, policy: dict, primary: Memb
     extras: list[Member] = []
     forward = ", ".join(p.name for p in primary.params)
     for extra in policy.get("extra_names", ()):
-        signature = render_signature(extra, primary.params, primary.ret)
+        # An expression body states its type, `Unit` included, so scripts/check_public_signature_changes.py
+        # records it rather than an inferred one.
+        signature = render_signature(extra, primary.params, primary.ret or "Unit")
         body = signature[:-1] + [f"{signature[-1]} = {primary.name}({forward})"]
         extras.append(Member(body, _alias(owner, extra, primary.params, primary.ret), extra, primary.params, primary.ret))
     for godot_type, extra in policy.get("typed_loads", {}).items():
@@ -1103,7 +1105,7 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
     get() = Viewport(getRoot().handle)
 
   /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
-  suspend fun delaySeconds(seconds: Double) = SceneTree.delaySeconds(seconds)
+  suspend fun delaySeconds(seconds: Double): Unit = SceneTree.delaySeconds(seconds)
 """,
         "companion": """
     suspend fun delaySeconds(seconds: Double) {
@@ -1126,9 +1128,9 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
      * the shared demo scripts call them. The shared DemoPage takes its browser branch before
      * reaching them (a page has no app to quit); the members exist so it compiles on Web.
      */
-    fun quit(exitCode: Long = 0L) = currentOwnerTree().quit(exitCode)
+    fun quit(exitCode: Long = 0L): Unit = currentOwnerTree().quit(exitCode)
 
-    fun unloadCurrentScene() = currentOwnerTree().unloadCurrentScene()
+    fun unloadCurrentScene(): Unit = currentOwnerTree().unloadCurrentScene()
 
     private fun currentOwnerTree(): SceneTree =
       Node(GodotHandle(WebFrameScheduler.requireCurrentOwner())).getTree()

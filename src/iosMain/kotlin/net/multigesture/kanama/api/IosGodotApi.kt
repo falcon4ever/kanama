@@ -789,21 +789,21 @@ object GD {
     private fun joinValues(values: Array<out Any?>): String =
         values.joinToString("") { it?.toString() ?: "<null>" }
 
-    fun print(vararg values: Any?) = println(joinValues(values))
+    fun print(vararg values: Any?): Unit = println(joinValues(values))
 
-    fun printRich(vararg values: Any?) = println(joinValues(values))
+    fun printRich(vararg values: Any?): Unit = println(joinValues(values))
 
-    fun printErr(vararg values: Any?) = println(joinValues(values))
+    fun printErr(vararg values: Any?): Unit = println(joinValues(values))
 
-    fun printS(vararg values: Any?) = println(values.joinToString(" ") { it?.toString() ?: "<null>" })
+    fun printS(vararg values: Any?): Unit = println(values.joinToString(" ") { it?.toString() ?: "<null>" })
 
-    fun printRaw(vararg values: Any?) = kotlin.io.print(joinValues(values))
+    fun printRaw(vararg values: Any?): Unit = kotlin.io.print(joinValues(values))
 
-    fun printVerbose(vararg values: Any?) = println(joinValues(values))
+    fun printVerbose(vararg values: Any?): Unit = println(joinValues(values))
 
-    fun pushWarning(vararg values: Any?) = println("WARNING: " + joinValues(values))
+    fun pushWarning(vararg values: Any?): Unit = println("WARNING: " + joinValues(values))
 
-    fun pushError(vararg values: Any?) = println("ERROR: " + joinValues(values))
+    fun pushError(vararg values: Any?): Unit = println("ERROR: " + joinValues(values))
 
     // @GlobalScope math facade (pure-Kotlin, matching the desktop GD utility helpers).
     fun signf(value: Double): Double = kotlin.math.sign(value)

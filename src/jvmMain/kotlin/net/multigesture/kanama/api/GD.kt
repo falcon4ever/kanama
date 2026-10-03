@@ -430,31 +430,31 @@ object GD {
     }
 
     @JvmStatic
-    fun print(vararg values: Any?) = callVoidVarargUtility("print", COMMON_VARARG_HASH, values)
+    fun print(vararg values: Any?): Unit = callVoidVarargUtility("print", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun printRich(vararg values: Any?) = callVoidVarargUtility("print_rich", COMMON_VARARG_HASH, values)
+    fun printRich(vararg values: Any?): Unit = callVoidVarargUtility("print_rich", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun printErr(vararg values: Any?) = callVoidVarargUtility("printerr", COMMON_VARARG_HASH, values)
+    fun printErr(vararg values: Any?): Unit = callVoidVarargUtility("printerr", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun printS(vararg values: Any?) = callVoidVarargUtility("prints", COMMON_VARARG_HASH, values)
+    fun printS(vararg values: Any?): Unit = callVoidVarargUtility("prints", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun printT(vararg values: Any?) = callVoidVarargUtility("printt", COMMON_VARARG_HASH, values)
+    fun printT(vararg values: Any?): Unit = callVoidVarargUtility("printt", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun printRaw(vararg values: Any?) = callVoidVarargUtility("printraw", COMMON_VARARG_HASH, values)
+    fun printRaw(vararg values: Any?): Unit = callVoidVarargUtility("printraw", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun printVerbose(vararg values: Any?) = callVoidVarargUtility("print_verbose", COMMON_VARARG_HASH, values)
+    fun printVerbose(vararg values: Any?): Unit = callVoidVarargUtility("print_verbose", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun pushWarning(vararg values: Any?) = callVoidVarargUtility("push_warning", COMMON_VARARG_HASH, values)
+    fun pushWarning(vararg values: Any?): Unit = callVoidVarargUtility("push_warning", COMMON_VARARG_HASH, values)
 
     @JvmStatic
-    fun pushError(vararg values: Any?) = callVoidVarargUtility("push_error", COMMON_VARARG_HASH, values)
+    fun pushError(vararg values: Any?): Unit = callVoidVarargUtility("push_error", COMMON_VARARG_HASH, values)
 
     @JvmStatic
     fun str(vararg values: Any?): String = callStringVarargUtility("str", STR_HASH, values)
@@ -526,7 +526,7 @@ object GD {
      * Generated from Godot docs: @GlobalScope.randomize
      */
     @JvmStatic
-    fun randomize() = callVoidNoArgsUtility("randomize", RANDOMIZE_HASH)
+    fun randomize(): Unit = callVoidNoArgsUtility("randomize", RANDOMIZE_HASH)
 
     /**
      * Sets Godot's global random number generator seed for reproducible
@@ -535,7 +535,7 @@ object GD {
      * Generated from Godot docs: @GlobalScope.seed
      */
     @JvmStatic
-    fun seed(value: Long) = callVoidOneLongUtility("seed", SEED_HASH, value)
+    fun seed(value: Long): Unit = callVoidOneLongUtility("seed", SEED_HASH, value)
 
     /**
      * Returns the `Variant.Type` of [value] (`TYPE_OBJECT` = 24 for a wrapper,

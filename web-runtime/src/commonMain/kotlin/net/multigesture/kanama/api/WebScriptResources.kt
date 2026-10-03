@@ -13,7 +13,7 @@ internal constructor(
   /** The owning resource wrapper. Save it, assign it into a slot, or [close] to release. */
   val resource: ScriptResource,
 ) : AutoCloseable {
-  override fun close() = resource.close()
+  override fun close(): Unit = resource.close()
 }
 
 /** Resource wrapper over a live script handle whose creation reference we own. */
