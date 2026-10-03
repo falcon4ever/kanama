@@ -5,8 +5,9 @@ Godot resources to Kotlin wrapper types.
 
 ## Exported Properties
 
-Use `@ScriptProperty` on `@ScriptClass` scripts and `@RegisterProperty` on
-registered classes. `@Export` is available as a migration-friendly alias. Use
+Use `@Export` (GDScript `@export`) on `@ScriptClass` scripts and on
+`@RegisterClass` types alike. (Before Kanama 0.5 the names were `@ScriptProperty`
+and `@RegisterProperty`, with the same parameters.) Use
 `PropertyHint` and `PropertyUsage` constants instead of raw Godot integers when
 you need inspector metadata.
 
@@ -16,16 +17,16 @@ class Player(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
     @ExportCategory("Tuning")
     @ExportGroup("Movement")
-    @ScriptProperty(hint = PropertyHint.RANGE, hintString = "0,20,0.1")
+    @Export(hint = PropertyHint.RANGE, hintString = "0,20,0.1")
     var speed: Double = 5.0
 
     @ExportSubgroup("Jump")
-    @ScriptProperty
+    @Export
     var jumpVelocity: Double = 8.0
 }
 ```
 
-`@ScriptProperty(name = "...")` and `@Export(name = "...")` override the
+`@Export(name = "...")` overrides the
 Godot-facing `snake_case` property name. `usage = PropertyUsage.READ_ONLY or
 PropertyUsage.EDITOR` and other usage flags are available for advanced
 inspector behavior, but ordinary exported gameplay data should keep the
@@ -95,7 +96,7 @@ enum class Difficulty { EASY, NORMAL, HARD }
 @ScriptClass(attachTo = "Node")
 class GameRules(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
-    @ScriptProperty
+    @Export
     var difficulty = Difficulty.NORMAL
 }
 ```
@@ -107,15 +108,14 @@ entry instead of crashing). Because storage is ordinal-based, reordering or
 removing enum entries silently remaps values already saved in scenes — append
 new entries at the end, the same trade-off C# has with implicit enum values.
 
-Enum exports are supported on `@ScriptClass` scripts (`@ScriptProperty` /
-`@Export`) on desktop, Android, and iOS; `@RegisterProperty` on
-`@RegisterClass` classes does not accept enum types yet.
+Enum exports are supported on `@ScriptClass` scripts on desktop, Android, and
+iOS; `@Export` on `@RegisterClass` classes does not accept enum types yet.
 
 Lists of enums export too, as a typed int array whose elements render the
 same dropdown (C# `Difficulty[]` parity):
 
 ```kotlin
-@ScriptProperty
+@Export
 var unlockedModes: List<Difficulty> = emptyList()
 ```
 
@@ -132,13 +132,13 @@ value class in Kanama, see [Godot Enums and Bitfields](godot-api.md#godot-enums-
 exports as an inspector dropdown (a bitfield as flag checkboxes):
 
 ```kotlin
-@ScriptProperty
+@Export
 var mode: Node.ProcessMode = Node.ProcessMode.PAUSABLE
 
-@ScriptProperty // a bitfield: flag checkboxes
+@Export // a bitfield: flag checkboxes
 var messages: Node.ProcessThreadMessages = Node.ProcessThreadMessages.MESSAGES
 
-@ScriptProperty
+@Export
 var allowedModes: List<Node.ProcessMode> = emptyList()
 ```
 
@@ -186,7 +186,7 @@ var allowedModes: List<Node.ProcessMode> = emptyList()
 type pickers:
 
 ```kotlin
-@ScriptProperty
+@Export
 var mapRegions: Map<Long, UnitMetadata> = mapOf()
 ```
 
@@ -206,9 +206,8 @@ Defaults must be empty (`emptyMap()` / `mapOf()`); populate initial entries in
 the scene or inspector. A plain `Map<String, Any?>` also works as an untyped
 Dictionary export.
 
-Dictionary exports are supported on `@ScriptClass` scripts (`@ScriptProperty` /
-`@Export`); `@RegisterProperty` on `@RegisterClass` classes does not accept
-`Map` (or `List`) types.
+Dictionary exports are supported on `@ScriptClass` scripts; `@Export` on
+`@RegisterClass` classes does not accept `Map` (or `List`) types.
 
 ### Nil values and malformed entries
 
@@ -245,15 +244,15 @@ Kotlin default on iOS.
 
 ## Inspector Buttons
 
-Use `@ToolButton` on a zero-argument function in a `@Tool @ScriptClass` to
-show a clickable button in the inspector:
+Use `@ExportToolButton` (GDScript `@export_tool_button`) on a zero-argument
+function in a `@Tool @ScriptClass` to show a clickable button in the inspector:
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
 @Tool
 class Spawner(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
-    @ToolButton(text = "Rebuild", icon = "Reload")
+    @ExportToolButton(text = "Rebuild", icon = "Reload")
     fun rebuild() {
         rebuildPreview()
         notifyInspectorChanged()
@@ -261,7 +260,7 @@ class Spawner(godotObject: GodotHandle) :
 }
 ```
 
-`@ExportToolButton` is available as an alias for C# migration. The generated
+The generated
 button is editor-facing metadata only; keep the script in `@Tool` mode and
 guard editor-only work the same way you would for any other tool script.
 
@@ -271,14 +270,14 @@ Exported node references should use the target wrapper type when the original
 GDScript exported an object reference:
 
 ```kotlin
-@ScriptProperty
+@Export
 var crosshair: TextureRect? = null
 ```
 
 Use `NodePath` only when the original script intentionally exposed a path value:
 
 ```kotlin
-@ScriptProperty
+@Export
 var viewPath: NodePath = NodePath("../View")
 ```
 
@@ -363,10 +362,10 @@ with a `= null` default; base-typed slots accept engine subtypes (an
 `AudioStreamWAV` or `AudioStreamOggVorbis` lands in an `AudioStream` slot):
 
 ```kotlin
-@ScriptProperty
+@Export
 var stream: AudioStream? = null
 
-@ScriptProperty
+@Export
 var icons: List<Texture2D> = emptyList()
 ```
 
@@ -437,7 +436,7 @@ class WeaponForge(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     @Export
     var weapon: Weapon? = null
 
-    @ToolButton(text = "Save weapon")
+    @ExportToolButton(text = "Save weapon")
     fun saveWeapon() {
         val weapon = weapon ?: return
         ResourceSaver.save(Resource.fromHandle(weapon.godotObject), "res://weapon.tres")

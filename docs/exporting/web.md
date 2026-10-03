@@ -65,7 +65,7 @@ fails the Web compile — that is the fail-loud coverage gate working as
 intended. Files under the merged root resolve to `res://kotlin-src/*.kt` and
 match the scene script attachments on both platforms.
 
-`@ScriptProperty`/`@Export` declarations are portable including `NodePath`
+`@Export` declarations are portable including `NodePath`
 properties and hint metadata (a `PropertyHint.RANGE` hint reaches the generated
 proxy as `@export_range(...)`). Two Web-specific rules fail the build loudly
 instead of silently mis-hydrating: a property default must be spelled as a

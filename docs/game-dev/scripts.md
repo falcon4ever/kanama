@@ -65,7 +65,7 @@ specifically, see
 
 | GDScript | Kanama | Note |
 |---|---|---|
-| `int` | `Long` | Use `Long` for your own `@RegisterFunction` parameters and returns (`Int` there is a build error); a `@ScriptProperty` may also be `Int` (narrowed on read and write). Engine wrappers follow Godot's signature: Godot's `int` is 64-bit, but where the signature is 32-bit (`int32` in `extension_api.json`, such as `GridMap.setCellItem(position, item: Int, orientation: Int)`) the generated wrapper takes and returns `Int`, so expect both `Int` and `Long` when calling the engine |
+| `int` | `Long` | Use `Long` for the parameters and returns of your own registered (public) functions (`Int` there is a build error); an `@Export` property may also be `Int` (narrowed on read and write). Engine wrappers follow Godot's signature: Godot's `int` is 64-bit, but where the signature is 32-bit (`int32` in `extension_api.json`, such as `GridMap.setCellItem(position, item: Int, orientation: Int)`) the generated wrapper takes and returns `Int`, so expect both `Int` and `Long` when calling the engine |
 | `Node.ProcessMode` (any Godot enum / bitfield) | `Node.ProcessMode` | A typed value class over the `int`; see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields) |
 | `float` (method args/returns) | `Double` | Godot's ABI uses 64-bit slots for scalar float |
 | `bool` | `Boolean` | |
@@ -103,9 +103,31 @@ GDScript uses overridable virtual methods. Kanama uses annotations:
 | `func _physics_process(delta):` | `@OnPhysicsProcess` |
 | `func _enter_tree():` | `@OnEnterTree` |
 | `func _exit_tree():` | `@OnExitTree` |
+| `func _input(event):` | `@OnInput` |
+| `func _unhandled_input(event):` | `@OnUnhandledInput` |
+| `func _shortcut_input(event):` | `@OnShortcutInput` |
+| `func _unhandled_key_input(event):` | `@OnUnhandledKeyInput` |
 
 The function name is up to you — the annotation is what wires it up. Drop the
-leading underscore; `fun ready()` is the convention.
+leading underscore; `fun ready()` is the convention. A function named like an
+engine virtual without an annotation (`fun _process(delta: Double)`, as a
+GDScript habit would write it) is a build error naming the annotation to add:
+Godot would never call it as the virtual.
+
+The four input callbacks receive the event typed, as in GDScript; cast it to the
+subclass you handle:
+
+```kotlin
+@OnUnhandledInput
+fun unhandledInput(event: InputEvent) {
+    if (event.isActionPressed("ui_accept")) restart()
+    val motion = InputEventMouseMotion.from(event) ?: return
+    look(motion.getRelative())
+}
+```
+
+(Before Kanama 0.5 the parameter was a `GodotObject`; such a handler is now a
+build error naming the fix.)
 
 On the experimental Web backend, lifecycle dispatch covers `@OnEnterTree` too
 (since protocol 16); a virtual the Web proxy does not dispatch is rejected at build
@@ -165,14 +187,56 @@ number with `Shader.Mode(raw)` and read one with `.value`. The two
 
 | GDScript | Kanama |
 |---|---|
-| `@export var speed = 5.0` | `@ScriptProperty var speed: Double = 5.0` |
+| `@export var speed = 5.0` | `@Export var speed: Double = 5.0` |
 | `@export_group("Movement")` | `@ExportGroup("Movement")` on first property in group |
-| `@export var scene: PackedScene` | `@ScriptProperty var scene: PackedScene? = null` |
+| `@export var scene: PackedScene` | `@Export var scene: PackedScene? = null` |
+| `@export_tool_button("Rebuild")` | `@ExportToolButton("Rebuild")` on a zero-argument function |
 | `@tool` | `@Tool` on the class |
+| `class_name Player` | `@GlobalClass` on the class |
 
-Use `@ScriptProperty` for `@ScriptClass` scripts and `@RegisterProperty` for
-`@RegisterClass` types. `@Export` works as an alias in both contexts. See
-[Exports and Resources](properties-resources.md).
+`@Export` is the one property annotation, on `@ScriptClass` scripts and on
+`@RegisterClass` types alike. See [Exports and Resources](properties-resources.md).
+
+## Functions Godot Can Call
+
+Like a GDScript `func`, **every public function of a script class is registered
+with Godot**, under its Kotlin name converted to snake_case: `fun showMessage(text:
+String)` is `show_message`, callable from GDScript, `call()`, signal connections
+and `Callable`s. No annotation is needed.
+
+```kotlin
+@ScriptClass(attachTo = "CanvasLayer")
+class Hud(godotObject: GodotHandle) : KanamaScript<CanvasLayer>(godotObject, ::CanvasLayer) {
+    fun showMessage(text: String) { ... }          // Godot: show_message
+
+    @GodotName("_on_start_button_pressed")         // the name the editor saved in the .tscn
+    fun onStartButtonPressed() { ... }
+
+    private fun layout() { ... }                   // Kotlin-only
+    internal fun debugState(): Map<String, Any> = mapOf()   // Kotlin-only
+}
+```
+
+- **`@GodotName("...")`** gives a function another Godot-side name, used verbatim.
+  Use it where Godot must find the function under a name its Kotlin spelling does
+  not produce, typically a signal connection the editor saved as
+  `_on_start_button_pressed`.
+- **`private`, `protected` and `internal`** functions stay Kotlin-only. Scripts are
+  compiled as one module, so other scripts still call an `internal` function.
+- A registered function's parameters and return must be types Godot can carry
+  (`Long`, `Double`, `Boolean`, `String`, the value types, Godot enums, the
+  supported node and resource wrappers, `GodotObject`). Any other type in a public
+  function is a build error that names it: make the function `internal` or
+  `private` if Godot never calls it.
+- `suspend` functions, extension functions, generic functions, and an `override`
+  of a member that is not a script's (`toString()`, an interface method) are
+  Kotlin-only even when public.
+- Functions with a lifecycle annotation, `@OverrideVirtual`, `@Signal` or
+  `@ExportToolButton` are wired by that annotation and not registered twice.
+- Two functions on one Godot name (Kotlin overloads, for one) are a build error:
+  Godot has no overloads.
+
+`@RegisterClass` types follow the same rule.
 
 ## Printing and Errors
 
@@ -279,13 +343,12 @@ PlayerSignals.hitEnemy(this, 10L)
 For multiplayer RPC methods, KSP also generates typed `*Rpcs` helpers from
 `@Rpc` declarations. See [Multiplayer](multiplayer.md).
 
-A Godot enum works as a `@RegisterFunction` parameter or return, a `@Signal`
+A Godot enum works as a registered function's parameter or return, a `@Signal`
 argument and an `@Rpc` argument: it crosses into Godot as the `int` it stands
 for (so GDScript callers pass and receive `Node.PROCESS_MODE_ALWAYS`), and
 Kotlin sees the value class:
 
 ```kotlin
-@RegisterFunction
 fun nextMode(mode: Node.ProcessMode): Node.ProcessMode = Node.ProcessMode(mode.value + 1)
 
 @Signal fun modeChanged(mode: Node.ProcessMode) = Unit
@@ -293,12 +356,11 @@ fun nextMode(mode: Node.ProcessMode): Node.ProcessMode = Node.ProcessMode(mode.v
 
 ## Registered Method Helpers
 
-KSP generates a `*Methods` helper object for every Kanama script method
-registered with `@RegisterFunction`. Use these helpers when Kotlin code needs
+KSP generates a `*Methods` helper object for every registered function of a
+Kanama script. Use these helpers when Kotlin code needs
 to invoke another Kanama script's public Godot-facing method:
 
 ```kotlin
-@RegisterFunction
 fun damage(amount: Double) {
     health -= amount
 }
@@ -325,11 +387,11 @@ where the target is a GDScript object or an intentionally dynamic autoload.
 ## Node Lookup
 
 GDScript's `$NodeName` shorthand does not exist in Kanama. Use exported
-`@ScriptProperty` references (preferred) or typed lookup helpers:
+`@Export` references (preferred) or typed lookup helpers:
 
 ```kotlin
 // Preferred: let the inspector wire it
-@ScriptProperty var label: Label? = null
+@Export var label: Label? = null
 
 // Manual lookup for required scene structure
 val label = self.requireAs("Label", ::Label)
@@ -366,7 +428,7 @@ classes must be in the same project and the referenced class must be
 Godot calls into Kanama on whichever thread made the call, and Kanama runs it
 there. For the scene tree that is the engine's main thread: every callback a
 script receives — `@OnReady`, `@OnProcess`, `@OnPhysicsProcess`,
-`@RegisterFunction` calls from GDScript, signal callbacks, `@OverrideVirtual` —
+registered functions called from GDScript, signal callbacks, `@OverrideVirtual` —
 arrives on the main thread, `initialize` ran there, and `MainThread.post` /
 `KanamaScope` (`KanamaDispatchers.Main`) drain their queues there once per frame.
 That is also the rule for your own threads: **hand results back to the main
@@ -404,7 +466,7 @@ variable unset it costs one boolean read per call.
 ## Known Gotchas
 
 - **Default arguments depend on how Godot reaches the method.** On a
-  `@ScriptClass` script, a `@RegisterFunction` method whose trailing parameters
+  `@ScriptClass` script, a registered function whose trailing parameters
   have Kotlin defaults is dispatched by argument count: a Godot-side caller that
   omits them (`call("spawn")`, an untyped `obj.spawn()`, a connection with fewer
   bound arguments) gets the Kotlin defaults. Desktop, Android and iOS do this
@@ -414,7 +476,7 @@ variable unset it costs one boolean read per call.
   rejects a call that omits any parameter: pass them explicitly or use overloads.
 - **KSP must run** before IntelliJ resolves generated helpers like
   `PlayerMethods`, `PlayerSignals`, or `PlayerRpcs`. Run a Gradle sync or
-  build after adding new `@RegisterFunction`, `@Signal`, or `@Rpc`
+  build after adding new public functions, `@Signal`, or `@Rpc`
   declarations.
 - **`@Tool` scripts run in the editor.** Guard editor-only code against
   partially initialized scenes — exported node references may be `null` during
