@@ -28,22 +28,19 @@ class PropertyInitializerParsingTest {
       "3.0",
       initializerOf(
         "lifetimeRandom",
-        "@ScriptProperty(name = \"lifetime_random\") var lifetimeRandom = 3.0",
+        "@Export(name = \"lifetime_random\") var lifetimeRandom = 3.0",
       ),
     )
     assertEquals(
       "emptyList()",
       initializerOf(
         "forceLoop",
-        "@ScriptProperty(name = \"_force_loop\") var forceLoop: List<String> = emptyList()",
+        "@Export(name = \"_force_loop\") var forceLoop: List<String> = emptyList()",
       ),
     )
     assertEquals(
       "null",
-      initializerOf(
-        "cameraBase",
-        "@ScriptProperty(name = \"camera_base\") var cameraBase: Node3D? = null",
-      ),
+      initializerOf("cameraBase", "@Export(name = \"camera_base\") var cameraBase: Node3D? = null"),
     )
   }
 

@@ -2,7 +2,8 @@ package net.multigesture.kanama.processor
 
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
-import com.google.devtools.ksp.isPublic
+import com.google.devtools.ksp.getVisibility
+import com.google.devtools.ksp.isConstructor
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
@@ -14,6 +15,7 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.google.devtools.ksp.symbol.KSNode
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.Modifier
@@ -26,8 +28,8 @@ import java.io.File
  * For each `@RegisterClass` type, emits a complete `<ClassName>Registrar` into
  * `build/generated/ksp/main/kotlin/net/multigesture/kanama/generated`. The registrar covers:
  * - class registration (create/free/getVirtual upcalls + ClassDB.registerClass)
- * - `@RegisterFunction` methods (call/ptrcall upcalls + registerMethod)
- * - `@RegisterProperty` properties (synthetic get_/set_ methods + registerProperty)
+ * - every public function as a method (call/ptrcall upcalls + registerMethod)
+ * - `@Export` properties (synthetic get_/set_ methods + registerProperty)
  * - `@OnReady` / `@OnEnterTree` / `@OnExitTree` virtuals (per-virtual dispatch keyed by interned
  *   StringName storage)
  *
@@ -87,6 +89,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       val model =
         try {
           buildClassModel(symbol, fqName)
+        } catch (e: ReportedErrors) {
+          continue
         } catch (e: IllegalArgumentException) {
           env.logger.error("[kanama:ksp] ${e.message}", symbol)
           continue
@@ -115,6 +119,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       val model =
         try {
           buildScriptModel(symbol, fqName)
+        } catch (e: ReportedErrors) {
+          continue
         } catch (e: IllegalArgumentException) {
           env.logger.error("[kanama:ksp] ${e.message}", symbol)
           continue
@@ -179,11 +185,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           ?.arguments
           ?.firstOrNull { it.name?.asString() == "attachTo" }
           ?.value as? String ?: "Node"
-      val isGlobalClass =
-        symbol.annotations.any {
-          val name = it.shortName.asString()
-          name == "GlobalClass" || name == "ClassName"
-        }
+      val isGlobalClass = symbol.annotations.any { it.shortName.asString() == "GlobalClass" }
       val info = ScriptClassTypeInfo(fqName, simpleName, attachTo, isGlobalClass)
       byName[fqName] = info
     }
@@ -282,106 +284,59 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     val virtuals = mutableListOf<VirtualModel>()
     val signals = mutableListOf<SignalModel>()
 
+    val errors = ErrorCollector()
+    errors.removedAnnotations(cls, simpleName)
     for (fn in cls.getDeclaredFunctions()) {
-      if (!fn.isPublic()) continue
+      if (fn.isConstructor()) continue
+      val kotlinName = fn.simpleName.asString()
       val annotationNames = fn.annotations.map { it.shortName.asString() }.toSet()
-      if ("Rpc" in annotationNames) {
-        throw IllegalArgumentException(
-          "$simpleName.${fn.simpleName.asString()}: @Rpc is only supported on @ScriptClass methods"
+      for (name in annotationNames intersect setOf("Rpc", "OverrideVirtual", "ExportToolButton")) {
+        errors.add(
+          "$simpleName.$kotlinName: @$name is only supported on @ScriptClass functions",
+          fn,
         )
       }
-      for (ann in fn.annotations) {
-        val callName = "call${capitalize(fn.simpleName.asString())}"
-        val kotlinName = fn.simpleName.asString()
-        when (ann.shortName.asString()) {
-          "RegisterFunction",
-          "Method" -> methods += buildMethodModel(fn, ann, simpleName)
-          "OnReady",
-          "Ready" -> virtuals += VirtualModel("_ready", callName, kotlinName)
-          "OnEnterTree",
-          "EnterTree" -> virtuals += VirtualModel("_enter_tree", callName, kotlinName)
-          "OnExitTree",
-          "ExitTree" -> virtuals += VirtualModel("_exit_tree", callName, kotlinName)
-          "OnProcess",
-          "Process" ->
-            virtuals +=
-              VirtualModel(
-                "_process",
-                callName,
-                kotlinName,
-                args = listOf(ArgModel("delta", TypeMapping.FLOAT)),
-              )
-          "OnPhysicsProcess",
-          "PhysicsProcess" ->
-            virtuals +=
-              VirtualModel(
-                "_physics_process",
-                callName,
-                kotlinName,
-                args = listOf(ArgModel("delta", TypeMapping.FLOAT)),
-              )
-          "OnInput",
-          "Input" ->
-            virtuals +=
-              VirtualModel(
-                "_input",
-                callName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "OnUnhandledInput",
-          "UnhandledInput" ->
-            virtuals +=
-              VirtualModel(
-                "_unhandled_input",
-                callName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "OnShortcutInput",
-          "ShortcutInput" ->
-            virtuals +=
-              VirtualModel(
-                "_shortcut_input",
-                callName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "OnUnhandledKeyInput",
-          "UnhandledKeyInput" ->
-            virtuals +=
-              VirtualModel(
-                "_unhandled_key_input",
-                callName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "Signal" -> signals += buildSignalModel(fn, ann, simpleName)
-        }
+      if (annotationNames.any { it in setOf("Rpc", "OverrideVirtual", "ExportToolButton") })
+        continue
+      val callName = "call${capitalize(kotlinName)}"
+      when (val decision = FunctionRegistration.decide(functionFacts(fn, simpleName, parent))) {
+        is FunctionRegistration.Decision.Error -> errors.add(decision.message, fn)
+        is FunctionRegistration.Decision.KotlinOnly -> Unit
+        is FunctionRegistration.Decision.Register ->
+          errors.capture(fn) { methods += buildMethodModel(fn, decision.godotName, simpleName) }
+        FunctionRegistration.Decision.Role ->
+          for (ann in fn.annotations) {
+            val annName = ann.shortName.asString()
+            val virtualName = FunctionRegistration.LIFECYCLE_VIRTUALS[annName]
+            when {
+              virtualName != null ->
+                errors.capture(fn) {
+                  virtuals +=
+                    VirtualModel(
+                      virtualName,
+                      callName,
+                      kotlinName,
+                      args = lifecycleArgs(fn, annName, simpleName),
+                    )
+                }
+              annName == "Signal" ->
+                errors.capture(fn) { signals += buildSignalModel(fn, ann, simpleName) }
+            }
+          }
       }
     }
+    errors.duplicateNames(
+      simpleName,
+      methods.map { it.godotName to it.kotlinName } +
+        virtuals.map { it.virtualName to it.kotlinMethodName },
+      cls,
+    )
 
     for (prop in cls.getDeclaredProperties()) {
-      if (
-        prop.annotations.none {
-          it.shortName.asString() == "RegisterProperty" || it.shortName.asString() == "Export"
-        }
-      )
-        continue
-      properties += buildPropertyModel(prop, simpleName)
+      if (prop.annotations.none { it.shortName.asString() == "Export" }) continue
+      errors.capture(prop) { properties += buildPropertyModel(prop, simpleName) }
     }
+    errors.throwIfAny()
 
     return ClassModel(
       simpleName = simpleName,
@@ -518,16 +473,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
   private fun buildMethodModel(
     fn: KSFunctionDeclaration,
-    ann: com.google.devtools.ksp.symbol.KSAnnotation,
+    godotName: String,
     ownerSimpleName: String,
   ): MethodModel {
     val kotlinName = fn.simpleName.asString()
-    val nameOverride = ann.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? String
-    val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
+    val where = "$ownerSimpleName.$kotlinName"
 
     val resolvedReturn = fn.returnType?.resolve()
-    val returnEnum =
-      resolvedReturn?.let { godotEnumOf(it, "$ownerSimpleName.$kotlinName", "return") }
+    val returnEnum = resolvedReturn?.let { godotEnumOf(it, where, "return") }
     val returnType =
       resolvedReturn?.let { type ->
         val fq = type.declaration.qualifiedName?.asString()
@@ -536,7 +489,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         else
           fqToTypeMapping(fq)
             ?: throw IllegalArgumentException(
-              "$ownerSimpleName.$kotlinName: unsupported return type '$fq'"
+              FunctionRegistration.unsupportedTypeMessage(where, "the return", returnTypeName(type))
             )
       }
 
@@ -545,16 +498,21 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         val name = p.name?.asString() ?: "arg"
         val type = p.type.resolve()
         val arg =
-          fqToArgModel(name, type, "$ownerSimpleName.$kotlinName")
+          fqToArgModel(name, type, where)
             ?: throw IllegalArgumentException(
-              "$ownerSimpleName.$kotlinName: unsupported parameter type '${type.declaration.qualifiedName?.asString()}' for '$name'"
+              FunctionRegistration.unsupportedTypeMessage(
+                where,
+                "parameter '$name'",
+                returnTypeName(type),
+              )
             )
         arg.copy(hasDefault = p.hasDefault)
       }
     val firstDefault = args.indexOfFirst { it.hasDefault }
     if (firstDefault >= 0 && args.drop(firstDefault).any { !it.hasDefault }) {
       throw IllegalArgumentException(
-        "$ownerSimpleName.$kotlinName: @RegisterFunction default arguments must be trailing"
+        "$where: a registered function's default arguments must be trailing (Godot fills " +
+          "omitted arguments from the end)"
       )
     }
 
@@ -567,6 +525,162 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       rpc = buildRpcModel(fn),
       returnGodotEnum = returnEnum?.ref,
     )
+  }
+
+  private fun returnTypeName(type: KSType): String {
+    val base = type.declaration.qualifiedName?.asString() ?: type.declaration.simpleName.asString()
+    val args =
+      if (type.arguments.isEmpty()) ""
+      else
+        type.arguments.joinToString(", ", "<", ">") {
+          it.type?.resolve()?.declaration?.simpleName?.asString() ?: "*"
+        }
+    return base + args + if (type.isMarkedNullable) "?" else ""
+  }
+
+  /**
+   * The engine-virtual arguments a lifecycle handler receives: `delta` for the two process
+   * callbacks, the typed `InputEvent` for the four input callbacks (task 133 B; before 0.5 it was a
+   * bare `GodotObject`), nothing for the tree callbacks. An input handler declared with any other
+   * parameter list is a build error naming the fix.
+   */
+  private fun lifecycleArgs(
+    fn: KSFunctionDeclaration,
+    annotation: String,
+    ownerSimpleName: String,
+  ): List<ArgModel> =
+    when (annotation) {
+      "OnProcess",
+      "OnPhysicsProcess" -> listOf(ArgModel("delta", TypeMapping.FLOAT))
+      in FunctionRegistration.INPUT_LIFECYCLE -> {
+        val types =
+          fn.parameters.map { p ->
+            runCatching { p.type.resolve() }
+              .getOrNull()
+              ?.let { t ->
+                (t.declaration.qualifiedName?.asString() ?: "?") +
+                  if (t.isMarkedNullable) "?" else ""
+              }
+          }
+        FunctionRegistration.inputHandlerError(
+            "$ownerSimpleName.${fn.simpleName.asString()}",
+            annotation,
+            fn.parameters.map { it.name?.asString() ?: "event" },
+            types,
+          )
+          ?.let { throw IllegalArgumentException(it) }
+        listOf(ArgModel("event", TypeMapping.OBJECT, FunctionRegistration.INPUT_EVENT_FQN))
+      }
+      else -> emptyList()
+    }
+
+  /** KSP facts about [fn] for [FunctionRegistration.decide]. */
+  private fun functionFacts(
+    fn: KSFunctionDeclaration,
+    ownerSimpleName: String,
+    attachTo: String,
+  ): FunctionRegistration.Facts {
+    val kotlinName = fn.simpleName.asString()
+    // getVisibility() follows an `override` without its own modifier to the member it overrides
+    // (an override of a `protected open fun` is protected).
+    val visibility =
+      when (fn.getVisibility()) {
+        com.google.devtools.ksp.symbol.Visibility.PRIVATE -> FunctionRegistration.Visibility.PRIVATE
+        com.google.devtools.ksp.symbol.Visibility.PROTECTED ->
+          FunctionRegistration.Visibility.PROTECTED
+        com.google.devtools.ksp.symbol.Visibility.PUBLIC,
+        com.google.devtools.ksp.symbol.Visibility.JAVA_PACKAGE ->
+          FunctionRegistration.Visibility.PUBLIC
+        else -> FunctionRegistration.Visibility.INTERNAL
+      }
+    val annotationNames = fn.annotations.map { it.shortName.asString() }.toSet()
+    val godotName =
+      fn.annotations
+        .firstOrNull { it.shortName.asString() == "GodotName" }
+        ?.let { ann ->
+          (ann.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? String)
+            ?: (ann.arguments.firstOrNull()?.value as? String)
+            ?: annotationStringArgFromSource(fn, "GodotName")
+            ?: throw IllegalArgumentException(
+              "$ownerSimpleName.$kotlinName: @GodotName needs the Godot name as a string literal"
+            )
+        }
+    val overridesNonScriptMember =
+      Modifier.OVERRIDE in fn.modifiers &&
+        run {
+          val overridden = runCatching { fn.findOverridee() }.getOrNull() ?: return@run false
+          val owner = overridden.parentDeclaration as? KSClassDeclaration ?: return@run true
+          owner.annotations.none {
+            val n = it.shortName.asString()
+            n == "ScriptClass" || n == "RegisterClass"
+          }
+        }
+    val nameIsEngineVirtual =
+      kotlinName.startsWith("_") &&
+        (kotlinName in FunctionRegistration.LIFECYCLE_VIRTUALS.values ||
+          VirtualSignatureTable.resolve(attachTo, kotlinName) != null)
+    return FunctionRegistration.Facts(
+      owner = ownerSimpleName,
+      kotlinName = kotlinName,
+      visibility = visibility,
+      annotations = annotationNames,
+      godotNameOverride = godotName,
+      isSuspend = Modifier.SUSPEND in fn.modifiers,
+      hasExtensionReceiver = fn.extensionReceiver != null,
+      hasTypeParameters = fn.typeParameters.isNotEmpty(),
+      overridesNonScriptMember = overridesNonScriptMember,
+      nameIsEngineVirtual = nameIsEngineVirtual,
+    )
+  }
+
+  /** Errors found while building one class model, reported at their declarations. */
+  private inner class ErrorCollector {
+    private var count = 0
+
+    fun add(message: String, node: KSNode) {
+      count++
+      env.logger.error("[kanama:ksp] $message", node)
+    }
+
+    fun capture(node: KSNode, block: () -> Unit) {
+      try {
+        block()
+      } catch (e: IllegalArgumentException) {
+        add(e.message ?: e.toString(), node)
+      }
+    }
+
+    /** Task 133 B: a removed annotation alias anywhere on [cls] or its members. */
+    fun removedAnnotations(cls: KSClassDeclaration, simpleName: String) {
+      fun check(node: KSAnnotated, where: String) {
+        for (ann in node.annotations) {
+          val name = ann.shortName.asString()
+          if (name !in FunctionRegistration.REMOVED_ANNOTATIONS) continue
+          val resolved = runCatching { ann.annotationType.resolve() }.getOrNull()
+          val fq = resolved?.declaration?.qualifiedName?.asString()
+          val ours =
+            resolved == null ||
+              resolved.isError ||
+              fq == null ||
+              fq.startsWith("net.multigesture.kanama.annotations.")
+          if (!ours) continue
+          FunctionRegistration.removedAnnotationError(where, name)?.let { add(it, node) }
+        }
+      }
+      check(cls, simpleName)
+      for (fn in cls.getDeclaredFunctions()) check(fn, "$simpleName.${fn.simpleName.asString()}")
+      for (prop in cls.getDeclaredProperties()) {
+        check(prop, "$simpleName.${prop.simpleName.asString()}")
+      }
+    }
+
+    fun duplicateNames(owner: String, entries: List<Pair<String, String>>, node: KSNode) {
+      FunctionRegistration.duplicateNameErrors(owner, entries).forEach { add(it, node) }
+    }
+
+    fun throwIfAny() {
+      if (count > 0) throw ReportedErrors()
+    }
   }
 
   private fun buildRpcModel(fn: KSFunctionDeclaration): RpcModel? {
@@ -585,10 +699,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     ownerSimpleName: String,
   ): PropertyModel {
     val kotlinName = prop.simpleName.asString()
-    val ann =
-      prop.annotations.firstOrNull {
-        it.shortName.asString() == "RegisterProperty" || it.shortName.asString() == "Export"
-      }
+    val ann = prop.annotations.firstOrNull { it.shortName.asString() == "Export" }
     val nameOverride =
       ann?.arguments?.firstOrNull { it.name?.asString() == "name" }?.value as? String
     val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
@@ -649,11 +760,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         ?.firstOrNull { it.name?.asString() == "attachTo" }
         ?.value as? String ?: "Node"
     val isTool = cls.annotations.any { it.shortName.asString() == "Tool" }
-    val isGlobalClass =
-      cls.annotations.any {
-        val name = it.shortName.asString()
-        name == "GlobalClass" || name == "ClassName"
-      }
+    val isGlobalClass = cls.annotations.any { it.shortName.asString() == "GlobalClass" }
     val fileName = cls.containingFile?.fileName
     if (isGlobalClass && fileName != null && fileName != "$simpleName.kt") {
       // The runtime maps a script path back to its global class by the
@@ -675,147 +782,78 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     val signals = mutableListOf<SignalModel>()
     val toolButtons = mutableListOf<ToolButtonModel>()
 
+    val errors = ErrorCollector()
+    errors.removedAnnotations(cls, simpleName)
     for (fn in cls.getDeclaredFunctions()) {
-      if (!fn.isPublic()) continue
-      val annotationNames = fn.annotations.map { it.shortName.asString() }.toSet()
-      warnOnLikelyUnregisteredSceneCallback(cls, fn, annotationNames)
-      if (
-        "Rpc" in annotationNames &&
-          annotationNames.none { it == "RegisterFunction" || it == "Method" }
-      ) {
-        throw IllegalArgumentException(
-          "$simpleName.${fn.simpleName.asString()}: @Rpc requires @RegisterFunction/@Method"
-        )
-      }
-      if (
-        annotationNames.any { it == "ToolButton" || it == "ExportToolButton" } &&
-          annotationNames.any { it == "RegisterFunction" || it == "Method" }
-      ) {
-        throw IllegalArgumentException(
-          "$simpleName.${fn.simpleName.asString()}: @ToolButton cannot be combined with @RegisterFunction/@Method"
-        )
-      }
-      for (ann in fn.annotations) {
-        val kotlinName = fn.simpleName.asString()
-        when (ann.shortName.asString()) {
-          "OnReady",
-          "Ready" -> virtuals += VirtualModel("_ready", kotlinName, kotlinName)
-          "OnEnterTree",
-          "EnterTree" -> virtuals += VirtualModel("_enter_tree", kotlinName, kotlinName)
-          "OnExitTree",
-          "ExitTree" -> virtuals += VirtualModel("_exit_tree", kotlinName, kotlinName)
-          "OnProcess",
-          "Process" ->
-            virtuals +=
-              VirtualModel(
-                "_process",
-                kotlinName,
-                kotlinName,
-                args = listOf(ArgModel("delta", TypeMapping.FLOAT)),
-              )
-          "OnPhysicsProcess",
-          "PhysicsProcess" ->
-            virtuals +=
-              VirtualModel(
-                "_physics_process",
-                kotlinName,
-                kotlinName,
-                args = listOf(ArgModel("delta", TypeMapping.FLOAT)),
-              )
-          "OnInput",
-          "Input" ->
-            virtuals +=
-              VirtualModel(
-                "_input",
-                kotlinName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "OnUnhandledInput",
-          "UnhandledInput" ->
-            virtuals +=
-              VirtualModel(
-                "_unhandled_input",
-                kotlinName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "OnShortcutInput",
-          "ShortcutInput" ->
-            virtuals +=
-              VirtualModel(
-                "_shortcut_input",
-                kotlinName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "OnUnhandledKeyInput",
-          "UnhandledKeyInput" ->
-            virtuals +=
-              VirtualModel(
-                "_unhandled_key_input",
-                kotlinName,
-                kotlinName,
-                args =
-                  listOf(
-                    ArgModel("event", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
-                  ),
-              )
-          "OverrideVirtual" -> virtuals += buildVirtualOverrideModel(fn, attachTo, simpleName)
-          "RegisterFunction",
-          "Method" -> methods += buildMethodModel(fn, ann, simpleName)
-          "Signal" -> signals += buildSignalModel(fn, ann, simpleName)
-          "ToolButton",
-          "ExportToolButton" -> {
-            if (!isTool) {
-              throw IllegalArgumentException(
-                "$simpleName.$kotlinName: @ToolButton requires @Tool on the script class"
-              )
+      if (fn.isConstructor()) continue
+      val kotlinName = fn.simpleName.asString()
+      when (val decision = FunctionRegistration.decide(functionFacts(fn, simpleName, attachTo))) {
+        is FunctionRegistration.Decision.Error -> errors.add(decision.message, fn)
+        is FunctionRegistration.Decision.KotlinOnly -> Unit
+        is FunctionRegistration.Decision.Register ->
+          errors.capture(fn) { methods += buildMethodModel(fn, decision.godotName, simpleName) }
+        FunctionRegistration.Decision.Role ->
+          for (ann in fn.annotations) {
+            val annName = ann.shortName.asString()
+            val virtualName = FunctionRegistration.LIFECYCLE_VIRTUALS[annName]
+            when {
+              virtualName != null ->
+                errors.capture(fn) {
+                  virtuals +=
+                    VirtualModel(
+                      virtualName,
+                      kotlinName,
+                      kotlinName,
+                      args = lifecycleArgs(fn, annName, simpleName),
+                    )
+                }
+              annName == "OverrideVirtual" ->
+                errors.capture(fn) {
+                  virtuals += buildVirtualOverrideModel(fn, attachTo, simpleName)
+                }
+              annName == "Signal" ->
+                errors.capture(fn) { signals += buildSignalModel(fn, ann, simpleName) }
+              annName == "ExportToolButton" ->
+                errors.capture(fn) {
+                  if (!isTool) {
+                    throw IllegalArgumentException(
+                      "$simpleName.$kotlinName: @ExportToolButton requires @Tool on the script class"
+                    )
+                  }
+                  val button = buildToolButtonModel(fn, ann, simpleName)
+                  toolButtons += button
+                  methods += button.method
+                }
             }
-            val button = buildToolButtonModel(fn, ann, simpleName)
-            toolButtons += button
-            methods += button.method
           }
-        }
       }
     }
+    errors.duplicateNames(
+      simpleName,
+      methods.map { it.godotName to it.kotlinName } +
+        virtuals.map { it.virtualName to it.kotlinMethodName },
+      cls,
+    )
 
     for (prop in cls.getDeclaredProperties()) {
-      if (
-        prop.annotations.none {
-          it.shortName.asString() == "ScriptProperty" || it.shortName.asString() == "Export"
-        }
-      )
-        continue
+      if (prop.annotations.none { it.shortName.asString() == "Export" }) continue
       val kotlinName = prop.simpleName.asString()
       if (Modifier.LATEINIT in prop.modifiers) {
         // A lateinit export has no inspector default, and a get before the field
         // is assigned throws UninitializedPropertyAccessException into the engine.
         env.logger.warn(
-          "[kanama:ksp] $simpleName.$kotlinName: lateinit @ScriptProperty has no default and " +
+          "[kanama:ksp] $simpleName.$kotlinName: lateinit @Export has no default and " +
             "crashes if Godot reads it before assignment; prefer a nullable type with '= null'.",
           prop,
         )
       }
-      val ann =
-        prop.annotations.firstOrNull {
-          it.shortName.asString() == "ScriptProperty" || it.shortName.asString() == "Export"
-        }
+      val ann = prop.annotations.firstOrNull { it.shortName.asString() == "Export" }
       val nameOverride =
         ann?.arguments?.firstOrNull { it.name?.asString() == "name" }?.value as? String
       val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
       val resolvedType = prop.type.resolve()
       val fq = resolvedType.declaration.qualifiedName?.asString()
-      // On the iOS (Kotlin/Native) target a @ScriptProperty may reference an API wrapper
+      // On the iOS (Kotlin/Native) target a @Export may reference an API wrapper
       // that exists only in the desktop source set (the hand-curated iosMain api/ subset is
       // smaller), so its type fails to resolve here. Degrade gracefully — skip the property
       // with a warning, like the old regex path did — instead of failing the whole script.
@@ -946,6 +984,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         )
     }
 
+    errors.throwIfAny()
     return ScriptModel(
       simpleName,
       fqName,
@@ -968,13 +1007,13 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     val kotlinName = fn.simpleName.asString()
     if (fn.parameters.isNotEmpty()) {
       throw IllegalArgumentException(
-        "$ownerSimpleName.$kotlinName: @ToolButton functions must not take parameters"
+        "$ownerSimpleName.$kotlinName: @ExportToolButton functions must not take parameters"
       )
     }
     val returnFq = fn.returnType?.resolve()?.declaration?.qualifiedName?.asString()
     if (returnFq != null && returnFq != "kotlin.Unit") {
       throw IllegalArgumentException(
-        "$ownerSimpleName.$kotlinName: @ToolButton functions must return Unit"
+        "$ownerSimpleName.$kotlinName: @ExportToolButton functions must return Unit"
       )
     }
     val sourceArgs = toolButtonAnnotationArgsFromSource(fn)
@@ -1075,49 +1114,6 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       )
       return
     }
-  }
-
-  private fun warnOnLikelyUnregisteredSceneCallback(
-    cls: KSClassDeclaration,
-    fn: KSFunctionDeclaration,
-    annotationNames: Set<String>,
-  ) {
-    val callableAnnotations =
-      setOf(
-        "RegisterFunction",
-        "Method",
-        "OnReady",
-        "Ready",
-        "OnEnterTree",
-        "EnterTree",
-        "OnExitTree",
-        "ExitTree",
-        "OnProcess",
-        "Process",
-        "OnPhysicsProcess",
-        "PhysicsProcess",
-        "OnInput",
-        "Input",
-        "OnUnhandledInput",
-        "UnhandledInput",
-        "OnShortcutInput",
-        "ShortcutInput",
-        "OnUnhandledKeyInput",
-        "UnhandledKeyInput",
-        "Signal",
-      )
-    if (annotationNames.any { it in callableAnnotations }) return
-
-    val kotlinName = fn.simpleName.asString()
-    if (!kotlinName.startsWith("on") || kotlinName.length <= 2 || !kotlinName[2].isUpperCase())
-      return
-
-    env.logger.warn(
-      "[kanama:ksp] ${cls.simpleName.asString()}.$kotlinName looks like a scene signal callback " +
-        "but is not exposed to Godot. Saved .tscn connections require " +
-        "@RegisterFunction(\"_${camelToSnake(kotlinName)}\") or an explicit matching method name.",
-      fn,
-    )
   }
 
   private fun emitScriptRegistrar(model: ScriptModel, sourceFile: KSFile) {
@@ -2131,30 +2127,35 @@ private fun StringBuilder.appendMethodHelpers(simpleName: String, methods: List<
     val helperArgs = if (argNames.isNotEmpty()) ", $argNames" else ""
     val directArgs = argNames
     val returnType = method.returnKotlinType
+    // Every public function is registered (task 133 B), so a parameter may well be called
+    // `instance` or `target`: the helper's own receiver parameter then takes another name.
+    val taken = method.args.map { it.name }.toSet()
+    val instance = if ("instance" in taken) "kanamaInstance" else "instance"
+    val target = if ("target" in taken) "kanamaTarget" else "target"
 
     if (returnType == null) {
-      appendLine("    fun ${method.kotlinName}(instance: $simpleName$params) {")
-      appendLine("        instance.${method.kotlinName}($directArgs)")
+      appendLine("    fun ${method.kotlinName}($instance: $simpleName$params) {")
+      appendLine("        $instance.${method.kotlinName}($directArgs)")
       appendLine("    }")
       appendLine()
       appendLine(
-        "    fun ${method.kotlinName}(target: net.multigesture.kanama.api.GodotObject$params): Boolean {"
+        "    fun ${method.kotlinName}($target: net.multigesture.kanama.api.GodotObject$params): Boolean {"
       )
       appendLine(
-        "        val instance = target.kotlinScriptInstance<$simpleName>() ?: return false"
+        "        val $instance = $target.kotlinScriptInstance<$simpleName>() ?: return false"
       )
-      appendLine("        ${method.kotlinName}(instance$helperArgs)")
+      appendLine("        ${method.kotlinName}($instance$helperArgs)")
       appendLine("        return true")
       appendLine("    }")
     } else {
-      appendLine("    fun ${method.kotlinName}(instance: $simpleName$params): $returnType =")
-      appendLine("        instance.${method.kotlinName}($directArgs)")
+      appendLine("    fun ${method.kotlinName}($instance: $simpleName$params): $returnType =")
+      appendLine("        $instance.${method.kotlinName}($directArgs)")
       appendLine()
       appendLine(
-        "    fun ${method.kotlinName}(target: net.multigesture.kanama.api.GodotObject$params): $returnType? ="
+        "    fun ${method.kotlinName}($target: net.multigesture.kanama.api.GodotObject$params): $returnType? ="
       )
       appendLine(
-        "        target.kotlinScriptInstance<$simpleName>()?.let { ${method.kotlinName}(it$helperArgs) }"
+        "        $target.kotlinScriptInstance<$simpleName>()?.let { ${method.kotlinName}(it$helperArgs) }"
       )
     }
     appendLine()
@@ -2219,9 +2220,7 @@ private fun toolButtonAnnotationArgsFromSource(
   val start = (location.lineNumber - 8).coerceAtLeast(0)
   val end = (location.lineNumber - 1).coerceIn(0, sourceLines.lastIndex)
   val annotation =
-    (start..end)
-      .map { sourceLines[it].trim() }
-      .firstOrNull { it.startsWith("@ToolButton(") || it.startsWith("@ExportToolButton(") }
+    (start..end).map { sourceLines[it].trim() }.firstOrNull { it.startsWith("@ExportToolButton(") }
       ?: return ToolButtonAnnotationArgs()
   val body = annotation.substringAfter('(', "").substringBeforeLast(')', "")
   fun namedString(name: String): String? =
@@ -2237,6 +2236,24 @@ private fun toolButtonAnnotationArgsFromSource(
     icon = namedString("icon"),
     name = namedString("name"),
   )
+}
+
+/**
+ * The first string argument of `@<annotation>("...")` written on the lines just above [fn] (or on
+ * its own line), for targets where KSP does not expose a function annotation's argument values (the
+ * same fallback [toolButtonAnnotationArgsFromSource] uses).
+ */
+private fun annotationStringArgFromSource(fn: KSFunctionDeclaration, annotation: String): String? {
+  val location = fn.location as? FileLocation ?: return null
+  val sourceLines = runCatching { File(location.filePath).readLines() }.getOrNull() ?: return null
+  val start = (location.lineNumber - 8).coerceAtLeast(0)
+  val end = (location.lineNumber - 1).coerceIn(0, sourceLines.lastIndex)
+  val pattern =
+    Regex("""@${Regex.escape(annotation)}\(\s*(?:name\s*=\s*)?($kotlinStringLiteralPattern)""")
+  return (start..end)
+    .reversed()
+    .firstNotNullOfOrNull { pattern.find(sourceLines[it])?.groupValues?.get(1) }
+    ?.let(::unquoteKotlinStringLiteral)
 }
 
 private fun unquoteKotlinStringLiteral(value: String): String =
@@ -2365,10 +2382,13 @@ private val INITIALIZER_CONTINUATION =
 
 /**
  * A script declaration error that is a build error on every target. The iOS/Web model builder
- * degrades an unresolvable `@ScriptProperty` type to a warning (a desktop-only wrapper is absent on
+ * degrades an unresolvable `@Export` type to a warning (a desktop-only wrapper is absent on
  * Kotlin/Native); an error of this type is not that and is never degraded (task 128 B).
  */
 internal class ScriptDeclarationError(message: String) : IllegalArgumentException(message)
+
+/** Thrown after a class's errors were each reported at their declaration (task 133 B). */
+private class ReportedErrors : RuntimeException()
 
 private fun stripLineComment(line: String): String {
   var inString = false
@@ -2426,7 +2446,7 @@ private fun normalizeScriptPropertyDefaultLiteral(initializer: String, type: Typ
     // initial entries in the inspector, the same policy as ARRAY above.
     TypeMapping.DICTIONARY ->
       initializer.takeIf { it == "emptyMap()" || it == "mapOf()" }?.let { "emptyMap()" }
-    // Return-only virtual shapes (task 13/29); not @ScriptProperty default literals.
+    // Return-only virtual shapes (task 13/29); not @Export default literals.
     TypeMapping.PACKED_STRING_ARRAY -> null
     TypeMapping.VARIANT -> null
     TypeMapping.PACKED_BYTE_ARRAY,
@@ -3047,7 +3067,7 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
       "        System.err.println(\"[kanama:kt] registered class ${model.simpleName} : ${model.parentClassName}\")"
     )
 
-    // Emit method registration calls for @RegisterFunction methods.
+    // Emit method registration calls for the registered (public) functions.
     for (m in model.methods) {
       emitMethodRegistration(m)
     }
@@ -3624,7 +3644,7 @@ internal class ScriptCodeEmitter(
     for (v in model.virtuals) {
       sb.appendLine("    private var ${nameVar(v.virtualName)}: Long = 0L")
     }
-    // @RegisterFunction methods
+    // Registered (public) functions
     for (m in model.methods) {
       sb.appendLine("    private var ${nameVar(m.godotName)}: Long = 0L")
     }
@@ -3632,11 +3652,11 @@ internal class ScriptCodeEmitter(
     for (s in model.signals) {
       sb.appendLine("    private var ${nameVar(s.godotName)}: Long = 0L")
     }
-    // @ScriptProperty properties
+    // @Export properties
     for (p in model.properties) {
       sb.appendLine("    private var ${nameVar(p.godotName)}: Long = 0L")
     }
-    // @ToolButton callable properties
+    // @ExportToolButton callable properties
     for (button in model.toolButtons) {
       sb.appendLine("    private var ${nameVar(button.propertyName)}: Long = 0L")
     }
@@ -3716,7 +3736,7 @@ internal class ScriptCodeEmitter(
     if (hasInspectableProperties) {
       // Hand the script-level property list to KanamaScript so the
       // editor placeholder instance (used for non-@Tool scripts in
-      // editor mode) can expose @ScriptProperty fields in the
+      // editor mode) can expose @Export fields in the
       // inspector without invoking the user's factory.
       sb.appendLine("            propertyListPtr = propertyListPtr,")
       sb.appendLine("            propertyCount = ${scriptPropertyListEntryCount()},")
@@ -4807,13 +4827,16 @@ internal class ScriptCodeEmitter(
   companion object {
     private val RESOURCE_WRAPPER_FROM_HANDLE = RESOURCE_WRAPPERS_WITH_FROM_HANDLE
 
-    /** Turns a godot name like "_ready" or "my_speed" into a valid Kotlin field name. */
+    /**
+     * Turns a godot name like "_ready" or "my_speed" into a Kotlin field name, one field per
+     * distinct name: the virtual `_process` and a registered public `fun process()` (task 133 B
+     * registers every public function) must not share `processNameValue`, so the name is kept
+     * verbatim between a fixed prefix and suffix.
+     */
     private fun nameVar(godotName: String): String =
-      godotName
-        .trimStart('_')
-        .split('_')
-        .mapIndexed { i, part -> if (i == 0) part else part.replaceFirstChar { it.uppercase() } }
-        .joinToString("") + "NameValue"
+      "n_" +
+        godotName.map { if (it.isLetterOrDigit() || it == '_') it else '_' }.joinToString("") +
+        "_NameValue"
   }
 }
 

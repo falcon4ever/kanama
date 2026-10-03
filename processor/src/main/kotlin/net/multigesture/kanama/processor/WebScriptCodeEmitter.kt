@@ -87,7 +87,7 @@ internal enum class WebMethodArm(val dispatch: WebDispatch) {
 }
 
 /**
- * The proxy push arm an `@ScriptProperty` takes at hydration, keyed the same way the emitted
+ * The proxy push arm an `@Export` takes at hydration, keyed the same way the emitted
  * `_kanama_ensure_created` body is. [WebPropertyArm.NONE] is the historical `else -> Unit` silent
  * drop; task 64's `unsupportedWebPropertyErrors` already fails the build for it, so a NONE entry in
  * the manifest means that guard has a hole.
@@ -517,8 +517,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
     /**
-     * The push arm the proxy emits for an `@ScriptProperty` at hydration. Same contract as
-     * [methodArm]: the emitter switches on this value, and the manifest reports it.
+     * The push arm the proxy emits for an `@Export` at hydration. Same contract as [methodArm]: the
+     * emitter switches on this value, and the manifest reports it.
      */
     fun propertyArm(property: ScriptPropertyModel): WebPropertyArm =
       when (property.type) {
@@ -678,12 +678,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
     /**
-     * Errors for `@ScriptProperty`/`@Export` declarations a Web build would mishandle (task 64,
-     * mirroring [undispatchedVirtualErrors]): a property type without the full Web arm set
-     * (declaration, push, pull, registry accessors) used to emit non-compiling registry code or
-     * silently drop values; an expression default used to hydrate the type default over the Kotlin
-     * initializer; an unexpressible hint used to vanish from the proxy. Each is a build error
-     * naming the script, the property, and the fix. Empty on every non-Web target.
+     * Errors for `@Export`/`@Export` declarations a Web build would mishandle (task 64, mirroring
+     * [undispatchedVirtualErrors]): a property type without the full Web arm set (declaration,
+     * push, pull, registry accessors) used to emit non-compiling registry code or silently drop
+     * values; an expression default used to hydrate the type default over the Kotlin initializer;
+     * an unexpressible hint used to vanish from the proxy. Each is a build error naming the script,
+     * the property, and the fix. Empty on every non-Web target.
      */
     fun unsupportedWebPropertyErrors(
       model: ScriptModel,
@@ -727,7 +727,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
               else -> property.type.toString()
             }
           errors +=
-            "$where: @ScriptProperty type '$declared' has no full Kanama Web property arm set " +
+            "$where: @Export type '$declared' has no full Kanama Web property arm set " +
               "(declaration/push/pull/registry); a Web build would emit broken or silently " +
               "dropped property code. Use a Web-supported property type " +
               "(String, Long, Double, Boolean, Vector2, Vector2i, Vector3, NodePath, a wrapped " +
