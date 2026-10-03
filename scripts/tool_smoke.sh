@@ -96,4 +96,35 @@ check_absent "ReentrantPlaceholderProbe CONSTRUCTED"
 check "\[kanama:adapter\] boundary first-lifecycle-upcall-install"
 check_absent "\[kanama:adapter\] downcall .* phase=post-boundary"
 
+# kanama#277 -- Build Scripts must pick a JDK >= 25 itself: the 'kanama/build/jdk_path' setting,
+# then JAVA_HOME, then the install locations, and fail with one clear message instead of running a
+# build that dies in the native bootstrap's compile. The editor plugin lives twice
+# (the starter template and the example project) and the two must not drift.
+if ! cmp -s "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd" \
+  "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd"; then
+  smoke_fail "plugin copies differ" "templates/starter/addons/kanama_tools/plugin.gd vs example_project/addons/kanama_tools/plugin.gd"
+fi
+JDK_SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/kanama_jdk_resolution_gd.XXXXXX")"
+trap 'rm -rf "$JDK_SCRATCH"' EXIT
+mkdir -p "$JDK_SCRATCH/project/addons" "$JDK_SCRATCH/jdks"
+cp -R "$ROOT_DIR/templates/starter/addons/kanama_tools" "$JDK_SCRATCH/project/addons/"
+cp "$ROOT_DIR/scripts/check_editor_jdk_resolution.gd" "$JDK_SCRATCH/project/"
+printf 'config_version=5\n\n[application]\nconfig/name="kanama-jdk-resolution"\n' >"$JDK_SCRATCH/project/project.godot"
+JDK_PROJECT_FOR_GODOT="$JDK_SCRATCH/project"
+JDK_TMP_FOR_GODOT="$JDK_SCRATCH/jdks"
+if command -v cygpath >/dev/null 2>&1; then
+  JDK_PROJECT_FOR_GODOT="$(cygpath -m "$JDK_SCRATCH/project")"
+  JDK_TMP_FOR_GODOT="$(cygpath -m "$JDK_SCRATCH/jdks")"
+fi
+# JAVA_HOME is removed from the process on purpose: the editor of the bug report started without it.
+if ! env -u JAVA_HOME KANAMA_JDK_TEST_TMP="$JDK_TMP_FOR_GODOT" "$GODOT_BIN" --headless \
+  --path "$JDK_PROJECT_FOR_GODOT" --script res://check_editor_jdk_resolution.gd >"$LOG_FILE.jdk" 2>&1; then
+  cat "$LOG_FILE.jdk" >&2
+  smoke_fail "JDK resolution test failed" "scripts/check_editor_jdk_resolution.gd (log: $LOG_FILE.jdk)"
+fi
+if ! grep -Fq "[jdk_test] PASS" "$LOG_FILE.jdk"; then
+  cat "$LOG_FILE.jdk" >&2
+  smoke_fail "JDK resolution test did not report PASS" "scripts/check_editor_jdk_resolution.gd (log: $LOG_FILE.jdk)"
+fi
+
 echo "[tool_smoke] PASS"

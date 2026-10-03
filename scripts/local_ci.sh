@@ -418,6 +418,9 @@ stage "shell script lint (shellcheck)"
 # prints install instructions and exits 2 when shellcheck is absent.
 "$ROOT_DIR/scripts/check_shell_lint.sh"
 
+stage "JDK install-location table parity (kanama#277)"
+python3 "$ROOT_DIR/scripts/check_jdk_locations_parity.py"
+
 stage "JDWP bootstrap/project-setting guard"
 if ! rg -q 'debug/jdwp_port' "$ROOT_DIR/bootstrap/bootstrap.c" "$ROOT_DIR/example_project/addons/kanama_tools/plugin.gd" "$ROOT_DIR/templates/starter/addons/kanama_tools/plugin.gd"; then
   echo "[local_ci] JDWP project setting is not wired through bootstrap and editor tools" >&2
@@ -451,6 +454,9 @@ if ! rg -Fq 'libjvm not found. Kanama desktop runtime requires a JDK 25+' "$ROOT
   echo "[local_ci] native bootstrap missing clear libjvm diagnostic" >&2
   exit 1
 fi
+
+stage "Gradle templates configure (release kit + consumer script)"
+"$ROOT_DIR/scripts/check_gradle_templates_configure.sh"
 
 stage "gradle sync"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar
@@ -669,6 +675,9 @@ done
 
 if [[ $skip_bootstrap -eq 0 ]]; then
   if command -v cmake >/dev/null 2>&1; then
+    stage "bootstrap JDK resolution (kanama#277)"
+    "$ROOT_DIR/scripts/check_bootstrap_jdk_resolution.sh"
+
     stage "bootstrap cmake build"
     bootstrap_build_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_bootstrap_build.XXXXXX")"
     cmake -S "$ROOT_DIR/bootstrap" -B "$bootstrap_build_dir" -DCMAKE_BUILD_TYPE=Release
@@ -752,6 +761,9 @@ for godot_bin in "${godot_bins[@]}"; do
 
   stage "@Tool smoke: $godot_bin"
   "$ROOT_DIR/scripts/tool_smoke.sh" "$godot_bin"
+
+  stage "JDK lookup parity, bootstrap.c vs plugin: $godot_bin"
+  "$ROOT_DIR/scripts/check_jdk_lookup_parity.sh" "$godot_bin"
 
   stage "hot reload smoke: $godot_bin"
   "$ROOT_DIR/scripts/hot_reload_smoke.sh" "$godot_bin"
