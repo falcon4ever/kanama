@@ -305,12 +305,14 @@ your reference destroys a live object.
 
 Do not call `close()` on a Godot object that the scene tree still needs. In
 particular, `createTween()` returns a live Godot `Tween`; after scheduling
-work with `tweenProperty`, `tweenMethod`, or `tweenCallback`, let Godot own the
-running tween.
+work, let Godot own the running tween. The `Tweener` that `tweenProperty`,
+`tweenMethod` and `tweenCallback` hand back is a different object: it is an
+owned `RefCounted` return, so close it once you have configured it, as the
+[Resource Ownership](godot-api.md#resource-ownership) rule says.
 
 ```kotlin
 val tween = self.createTween() ?: return
-tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2)
+tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2).close()
 ```
 
 If you keep a `Tween` in a field so you can cancel it later, kill it through
@@ -324,7 +326,7 @@ fun fadeOut() {
     fadeTween = null
     val tween = self.createTween() ?: return
     fadeTween = tween
-    tween.tweenProperty(self, "modulate", Color.TRANSPARENT, 0.2)
+    tween.tweenProperty(self, "modulate", Color.TRANSPARENT, 0.2).close()
     tween.signal(Tween.Signals.finished).connect(self, argumentCount = 0, flags = GodotObject.ConnectFlags.ONE_SHOT) {
         if (fadeTween === tween) {
             fadeTween = null

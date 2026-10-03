@@ -65,7 +65,7 @@ specifically, see
 
 | GDScript | Kanama | Note |
 |---|---|---|
-| `int` | `Long` | Use `Long` at all GDExtension boundaries |
+| `int` | `Long` | Use `Long` for your own `@RegisterFunction` parameters and returns (`Int` there is a build error); a `@ScriptProperty` may also be `Int` (narrowed on read and write). Engine wrappers follow Godot's signature: Godot's `int` is 64-bit, but where the signature is 32-bit (`int32` in `extension_api.json`, such as `GridMap.setCellItem(position, item: Int, orientation: Int)`) the generated wrapper takes and returns `Int`, so expect both `Int` and `Long` when calling the engine |
 | `Node.ProcessMode` (any Godot enum / bitfield) | `Node.ProcessMode` | A typed value class over the `int`; see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields) |
 | `float` (method args/returns) | `Double` | Godot's ABI uses 64-bit slots for scalar float |
 | `bool` | `Boolean` | |
@@ -226,10 +226,16 @@ them. Use the `Build Scripts` toolbar button (Kanama Tools plugin) or:
 Hot reload reloads the jar without restarting Godot. See
 [The Editor Loop](../getting-started/editor-workflow.md).
 
-## Packages Are Mandatory
+## Declare a Package
 
-Every script file must declare a package. Scripts without a package cannot
-reference other scripts and cause issues with generated registrars:
+Every script file should declare a package; the starter script and every demo do.
+The build does not enforce it: a package-less `@ScriptClass` builds, loads and
+runs on desktop. The generated registrars and helper names are derived from the
+fully qualified class name, though, and the iOS emitter builds its imports,
+`*Methods`/`*Signals` helpers and per-package compatibility sources from the
+package, so a package-less script has no tested path there. The editor's
+**New Script** dialog currently creates a script without a `package` line, so
+add one yourself:
 
 ```kotlin
 package com.mygame.scripts
@@ -385,9 +391,15 @@ variable unset it costs one boolean read per call.
 
 ## Known Gotchas
 
-- **Registered methods have no default arguments from Godot's side.** If a
-  `@RegisterFunction` method has Kotlin default parameters, Godot still requires
-  all arguments when calling it. Pass them explicitly or use overloads.
+- **Default arguments depend on how Godot reaches the method.** On a
+  `@ScriptClass` script, a `@RegisterFunction` method whose trailing parameters
+  have Kotlin defaults is dispatched by argument count: a Godot-side caller that
+  omits them (`call("spawn")`, an untyped `obj.spawn()`, a connection with fewer
+  bound arguments) gets the Kotlin defaults. Desktop, Android and iOS do this
+  (iOS: task 114); the Web backend is not covered here. The method metadata
+  Godot receives lists every parameter. A `@RegisterClass` type's methods are registered in
+  `ClassDB` with no default arguments (`default_argument_count` is 0), so Godot
+  rejects a call that omits any parameter: pass them explicitly or use overloads.
 - **KSP must run** before IntelliJ resolves generated helpers like
   `PlayerMethods`, `PlayerSignals`, or `PlayerRpcs`. Run a Gradle sync or
   build after adding new `@RegisterFunction`, `@Signal`, or `@Rpc`
