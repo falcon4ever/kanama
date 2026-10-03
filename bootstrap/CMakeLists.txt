@@ -116,7 +116,7 @@ if(NOT KANAMA_JDK_HOME)
 endif()
 file(STRINGS "${KANAMA_JNI_HEADER}" JNI_HAS_VERSION_21 REGEX "JNI_VERSION_21")
 if(NOT JNI_HAS_VERSION_21)
-    message(FATAL_ERROR "jni.h under ${KANAMA_JDK_HOME} (found via ${KANAMA_JDK_ORIGIN}) predates JDK 21 (no JNI_VERSION_21). Kanama needs a JDK 25+ header: set JAVA_HOME to a JDK 25+ home directory (a desktop launcher does not inherit your shell's JAVA_HOME; in the Godot editor set the project setting kanama/build/jdk_path), or run the build through Gradle on JDK 25.")
+    message(FATAL_ERROR "jni.h under ${KANAMA_JDK_HOME} (found via ${KANAMA_JDK_ORIGIN}) predates JDK 21 (no JNI_VERSION_21). Kanama needs a JDK 25+ header: set JAVA_HOME to a JDK 25+ home directory (a desktop launcher does not inherit your shell's JAVA_HOME; in the Godot editor set the Editor Setting kanama/build/jdk_path), or run the build through Gradle on JDK 25.")
 endif()
 # jni.h includes jni_md.h from the per-OS dir (include/darwin, include/linux, include/win32).
 set(KANAMA_JNI_MD_FOUND FALSE)

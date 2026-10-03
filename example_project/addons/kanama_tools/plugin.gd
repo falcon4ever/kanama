@@ -14,6 +14,7 @@ const SETTING_JAVA_PREFLIGHT_ENABLED := "kanama/tools/java_preflight_enabled"
 const SETTING_BUILD_JDK_PATH := "kanama/build/jdk_path"
 const MIN_JDK_MAJOR := 25
 const JDK_HINT_FILE := "kanama_jdk_home"
+const META_HINT_AT_START := "kanama_tools_runtime_hint_at_start"
 const MODE_BUILD := "build"
 const MODE_RUNTIME := "runtime"
 const SETTING_JDWP_ENABLED := "kanama/debug/jdwp_enabled"
@@ -39,13 +40,14 @@ var _is_build_running := false
 var _jar_menu_added := false
 var _last_developer_mode_enabled := false
 var _java_preflight_dialog_shown := false
+var _restart_needed_message := ""
 
 
 func _enter_tree() -> void:
     _ensure_project_settings()
     _ensure_editor_settings()
     _sync_runtime_jdk_hint()
-    get_editor_interface().get_editor_settings().settings_changed.connect(_sync_runtime_jdk_hint)
+    get_editor_interface().get_editor_settings().settings_changed.connect(_on_editor_settings_changed)
     call_deferred("_run_java_preflight")
     add_tool_menu_item(MENU_BUILD_SYNC, _on_build_sync_pressed)
     add_tool_menu_item(MENU_OPEN_KOTLIN_SOURCES, _on_open_kotlin_sources_pressed)
@@ -62,8 +64,8 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
     set_process(false)
     var editor_settings := get_editor_interface().get_editor_settings()
-    if editor_settings != null and editor_settings.settings_changed.is_connected(_sync_runtime_jdk_hint):
-        editor_settings.settings_changed.disconnect(_sync_runtime_jdk_hint)
+    if editor_settings != null and editor_settings.settings_changed.is_connected(_on_editor_settings_changed):
+        editor_settings.settings_changed.disconnect(_on_editor_settings_changed)
     remove_tool_menu_item(MENU_BUILD_SYNC)
     remove_tool_menu_item(MENU_OPEN_KOTLIN_SOURCES)
     if _jar_menu_added:
@@ -214,14 +216,47 @@ func _ensure_editor_settings() -> void:
 
 ## Hand the explicit setting to bootstrap.c (see write_runtime_jdk_hint). Only a valid explicit
 ## setting is written; an empty or invalid one removes the file.
-func _sync_runtime_jdk_hint() -> void:
+func _on_editor_settings_changed() -> void:
+    _sync_runtime_jdk_hint(true)
+
+
+func _sync_runtime_jdk_hint(announce: bool = false) -> void:
     var home := ""
     var setting := read_jdk_path_setting()
     if not setting.is_empty():
         var resolution := resolve_runtime_jdk_from_environment()
         if bool(resolution.get("ok", false)) and String(resolution.get("source", "")).contains(SETTING_BUILD_JDK_PATH):
             home = String(resolution["home"])
-    write_runtime_jdk_hint(ProjectSettings.globalize_path("res://"), home)
+    var project_dir := ProjectSettings.globalize_path("res://")
+    # The runtime read the hint when the editor started, which is before this plugin loads; what the
+    # file held then is what the running runtime used. Remember it for the whole editor session.
+    if not Engine.has_meta(META_HINT_AT_START):
+        Engine.set_meta(META_HINT_AT_START, read_runtime_jdk_hint(project_dir))
+    write_runtime_jdk_hint(project_dir, home)
+    var restart_before := _restart_needed_message
+    _restart_needed_message = runtime_restart_message(String(Engine.get_meta(META_HINT_AT_START)), home)
+    if announce and _restart_needed_message != restart_before and not _restart_needed_message.is_empty():
+        _run_java_preflight(true)
+
+
+## The hint file's current content (empty when absent).
+static func read_runtime_jdk_hint(project_dir: String) -> String:
+    var hint_path := project_dir.path_join(".godot").path_join(JDK_HINT_FILE)
+    if not FileAccess.file_exists(hint_path):
+        return ""
+    return FileAccess.get_file_as_string(hint_path).strip_edges()
+
+
+## Non-empty when the JDK the runtime would load now (`wanted_home`: the explicit setting, "" when none)
+## differs from the one the running runtime loaded (`started_hint`: the hint it saw at editor start).
+## The runtime reads the hint once, in kanama_entry, before this plugin can write it, so on the first
+## open of a project (a fresh clone, a deleted .godot) the preflight alone would say OK.
+static func runtime_restart_message(started_hint: String, wanted_home: String) -> String:
+    if started_hint == wanted_home:
+        return ""
+    if wanted_home.is_empty():
+        return "[kanama:tools] The running Kanama runtime loaded the JDK %s from an earlier '%s'; that setting is empty now. Restart the editor to go back to JAVA_HOME / the install locations." % [started_hint, SETTING_BUILD_JDK_PATH]
+    return "[kanama:tools] Restart the editor to use JDK %s: '%s' is set to it, but the Kanama runtime in this editor started before the setting was applied to this project and loaded another JDK (or none)." % [wanted_home, SETTING_BUILD_JDK_PATH]
 
 
 func _ensure_project_settings() -> void:
@@ -424,7 +459,7 @@ static func _resolve_from_environment(mode: String, setting_override: Variant) -
         mode,
         setting,
         OS.get_environment("JAVA_HOME"),
-        jdk_install_candidates(OS.get_name(), home_dir, OS.get_environment("ProgramFiles"), OS.get_environment("KANAMA_JDK_SEARCH_DIRS")),
+        jdk_install_candidates(OS.get_name(), home_dir, OS.get_environment("ProgramFiles"), OS.get_environment("KANAMA_TEST_JDK_SEARCH_DIRS")),
         OS.get_name(),
     )
 
@@ -491,7 +526,7 @@ static func resolve_jdk(mode: String, setting_value: String, java_home_env: Stri
         if best.is_empty() or _jdk_better(info, best):
             best = info
     if not best.is_empty():
-        return _jdk_success(best, "the best JDK in the install locations (exactly %d preferred, GA over EA)" % MIN_JDK_MAJOR, notes)
+        return _jdk_success(best, "the best JDK %d+ in the install locations (exactly %d preferred, GA over EA)" % [MIN_JDK_MAJOR, MIN_JDK_MAJOR], notes)
 
     var lines: Array = [
         "Kanama could not find a JDK %d or newer %s." % [MIN_JDK_MAJOR, purpose],
@@ -584,21 +619,25 @@ static func inspect_jdk(home_path: String, mode: String = MODE_BUILD, os_name: S
     return {"ok": true, "home": home, "version": version, "parts": parts, "major": int(parts[0]), "ea": version.contains("-ea"), "reason": ""}
 
 
-## "25.0.4.1" -> [25, 0, 4, 1]; "26-ea" -> [26]; "1.8.0_302" -> [8, 0, 302]; "" -> [].
+## "25.0.4.1" -> [25, 0, 4, 1]; "26-ea" -> [26]; "1.8.0_302" -> [8, 0, 302]; "" -> []. A component
+## saturates at 999999999, exactly as bootstrap.c's jdk_parse_version does.
 static func parse_java_version(version: String) -> Array:
     var parts: Array = []
-    var digits := ""
+    var digits := 0
+    var have_digits := false
     for ch in version:
         if ch >= "0" and ch <= "9":
-            digits += ch
+            digits = digits * 10 + int(ch) if digits < 100000000 else 999999999
+            have_digits = true
             continue
-        if not digits.is_empty():
-            parts.append(int(digits))
-            digits = ""
+        if have_digits:
+            parts.append(digits)
+            digits = 0
+            have_digits = false
         if ch != "." and ch != "_" and ch != "+":
             break
-    if not digits.is_empty():
-        parts.append(int(digits))
+    if have_digits:
+        parts.append(digits)
     if parts.size() >= 2 and int(parts[0]) == 1:
         parts.pop_front()
     return parts
@@ -645,7 +684,7 @@ const JDK_LOCATIONS := [
 
 
 ## JDK home candidates from the table: the children of each parent (names sorted). A non-empty
-## `search_dirs` (KANAMA_JDK_SEARCH_DIRS, a path list whose entries are parents of JDK homes)
+## `search_dirs` (KANAMA_TEST_JDK_SEARCH_DIRS, a path list whose entries are parents of JDK homes)
 ## replaces the table; tests use it to lay out fake JDKs for bootstrap.c and the plugin alike.
 static func jdk_install_candidates(os_name: String, home_dir: String, program_files: String, search_dirs: String = "") -> Array:
     var entries: Array = []  # [parent, suffix, prefix]
@@ -803,6 +842,8 @@ func _run_java_preflight(force_dialog: bool = false) -> bool:
     if not bool(ProjectSettings.get_setting(SETTING_JAVA_PREFLIGHT_ENABLED, true)):
         return true
     var result := _detect_desktop_jvm()
+    if bool(result.get("ok", false)) and not _restart_needed_message.is_empty():
+        result = {"ok": false, "message": _restart_needed_message}
     if bool(result.get("ok", false)):
         print("[kanama:tools] Java runtime preflight ok: %s" % String(result.get("path", "")))
         return true

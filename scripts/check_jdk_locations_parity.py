@@ -28,6 +28,11 @@ SOURCES = (
 STRING_RE = re.compile(r'"([^"]*)"')
 
 
+# One row, in either language: {"a", "b", "c", "d"},  (C)  or  ["a", "b", "c", "d"],  (GDScript).
+ROW_RE = re.compile(r'^\s*[\{\[]\s*"[^"]*"\s*(?:,\s*"[^"]*"\s*){3}[\}\]]\s*,?\s*$')
+COMMENT_PREFIXES = ("//", "/*", "*", "#")
+
+
 def table(path: Path) -> list[tuple[str, ...]]:
     text = path.read_text(encoding="utf-8")
     begin = text.find("KANAMA_JDK_LOCATIONS_BEGIN")
@@ -35,14 +40,17 @@ def table(path: Path) -> list[tuple[str, ...]]:
     if begin < 0 or end < begin:
         raise SystemExit(f"{TAG} FAIL {path.relative_to(ROOT)}: no KANAMA_JDK_LOCATIONS_BEGIN/END markers")
     rows = []
-    # Skip the marker line itself (it carries prose in parentheses, not a row).
+    # Skip the marker line itself (it carries prose in parentheses, not a row). A commented-out row is
+    # not a row: it drops out of the table, so a row disabled on one side only is a difference.
     for line in text[begin:end].splitlines()[1:]:
-        strings = STRING_RE.findall(line)
-        if not strings:
+        stripped = line.strip()
+        if not stripped or stripped.startswith(COMMENT_PREFIXES):
             continue
-        if len(strings) != 4:
-            raise SystemExit(f"{TAG} FAIL {path.relative_to(ROOT)}: row without 4 strings: {line.strip()}")
-        rows.append(tuple(strings))
+        if stripped in ("static const JdkLocation k_jdk_locations[] = {", "const JDK_LOCATIONS := [", "};", "]"):
+            continue
+        if not ROW_RE.match(line):
+            raise SystemExit(f"{TAG} FAIL {path.relative_to(ROOT)}: unrecognised line in the table: {stripped}")
+        rows.append(tuple(STRING_RE.findall(line)))
     if not rows:
         raise SystemExit(f"{TAG} FAIL {path.relative_to(ROOT)}: empty table")
     return rows

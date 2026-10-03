@@ -7,7 +7,7 @@
 # kanama/build/jdk_path, JAVA_HOME, then the best JDK 25+ in the install locations: GA before EA,
 # exactly 25 before newer, newer version, smaller path). This gate lays out fake JDKs (symlinks to
 # the real JDK 25 plus a `release` file of their own, so the real libjvm boots) under a scratch
-# directory, points KANAMA_JDK_SEARCH_DIRS at it, and for each scenario starts the example project
+# directory, points KANAMA_TEST_JDK_SEARCH_DIRS at it, and for each scenario starts the example project
 # in Godot (bootstrap.c's "[kanama] using libjvm:" line) and runs the plugin's resolution
 # (scripts/print_jdk_lookup.gd), then asserts both chose the expected JDK, JAVA_HOME unset
 # unless a scenario sets it. The location TABLES are compared by check_jdk_locations_parity.py.
@@ -93,6 +93,9 @@ run_logged() {
 
 failures=0
 scenario_n=0
+# table_mode=1: the scenario uses the REAL location table: no search-dir override, HOME points at
+# <root>/home, and the fake JDKs sit at paths relative to it (so ~ and the per-OS suffix expansion run).
+table_mode=0
 # scenario <name> <expected dir name or NONE> <java_home dir name or -> <hint dir name or -> <jdk dirs...>
 # A dir name is relative to the scenario's fake root; each scenario gets its own root.
 scenario() {
@@ -101,21 +104,29 @@ scenario() {
   scenario_n=$((scenario_n + 1))
   local root="$WORK/s$scenario_n"
   mkdir -p "$root"
+  local jdk_base="$root"
+  if [[ $table_mode -eq 1 ]]; then
+    jdk_base="$root/home"
+    mkdir -p "$jdk_base"
+  fi
   local spec
   for spec in "$@"; do
     # spec = dirname=version[=nolibjvm]
     IFS='=' read -r dir_name version flavour <<<"$spec"
-    fake_jdk "$root/$dir_name" "$version" "${flavour:-}"
+    fake_jdk "$jdk_base/$dir_name" "$version" "${flavour:-}"
   done
-  local -a env_args=("KANAMA_JDK_SEARCH_DIRS=$root")
+  local -a env_args=("KANAMA_TEST_JDK_SEARCH_DIRS=$root")
+  if [[ $table_mode -eq 1 ]]; then
+    env_args=("HOME=$jdk_base")
+  fi
   local java_home_value=""
   if [[ "$java_home_name" != "-" ]]; then
-    java_home_value="$root/$java_home_name"
+    java_home_value="$jdk_base/$java_home_name"
   fi
   local setting=""
   rm -f "$HINT_FILE"
   if [[ "$hint_name" != "-" ]]; then
-    setting="$root/$hint_name"
+    setting="$jdk_base/$hint_name"
     mkdir -p "$PROJECT_DIR/.godot"
     printf '%s\n' "$setting" >"$HINT_FILE"
   fi
@@ -138,7 +149,7 @@ scenario() {
   if [[ "$expected" == "NONE" ]]; then
     want="NONE"
   else
-    want="$root/$expected/lib/server/libjvm.$([[ "$(uname -s)" == "Darwin" ]] && echo dylib || echo so)"
+    want="$jdk_base/$expected/lib/server/libjvm.$([[ "$(uname -s)" == "Darwin" ]] && echo dylib || echo so)"
   fi
   if [[ "$boot_pick" == "$want" && "$plugin_pick" == "$want" ]]; then
     echo "$TAG ok   $name -> ${expected}"
@@ -171,6 +182,18 @@ scenario java_home_wins jdk-26 jdk-26 - jdk-25=25.0.4.1 jdk-26=26.0.1
 scenario old_java_home_skipped jdk-25 jdk-17 - jdk-25=25.0.4.1 jdk-17=17.0.12
 # The explicit setting (bootstrap.c reads it as <project>/.godot/kanama_jdk_home) beats JAVA_HOME and the scan.
 scenario setting_wins jdk-26 jdk-25 jdk-26 jdk-25=25.0.4.1 jdk-26=26.0.1
+
+# The real table (no override): a fake JDK 25.99.0 under the fake HOME beats the machine's own JDK 25
+# (newer patch of exactly 25), so both sides must have expanded the table's "~" rows. On macOS the
+# per-OS suffix (~/Library/Java/JavaVirtualMachines/<x>.jdk/Contents/Home) is exercised too.
+table_mode=1
+scenario table_home_dot_jdks .jdks/jdk-25-fake - - .jdks/jdk-25-fake=25.99.0
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  scenario table_home_macos_suffix Library/Java/JavaVirtualMachines/fake.jdk/Contents/Home - - Library/Java/JavaVirtualMachines/fake.jdk/Contents/Home=25.99.0
+else
+  scenario table_home_sdkman .sdkman/candidates/java/25.99.0-fake - - .sdkman/candidates/java/25.99.0-fake=25.99.0
+fi
+table_mode=0
 
 if [[ $failures -ne 0 ]]; then
   echo "$TAG FAIL -- $failures scenario(s)" >&2

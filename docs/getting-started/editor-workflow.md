@@ -100,9 +100,14 @@ starting a build that fails inside the native compile.
 The native **runtime** cannot read editor settings at load time, so the plugin
 writes a valid `kanama/build/jdk_path` to `.godot/kanama_jdk_home` in the project
 (and removes the file when the setting is empty or invalid), which the runtime
-reads first. Restart the editor after changing the setting: the editor's own
-runtime was already loaded when you changed it. A game exported with a bundled
-runtime ignores all of this and uses its own `runtime/` folder.
+reads first. If that JDK has since been removed or is older than 25, the runtime
+logs `[kanama] ignoring .godot/kanama_jdk_home=...` with the reason and continues
+with `JAVA_HOME` and the install locations. The runtime reads the file once, when
+Godot loads the extension, which is before the plugin can write it: on the first
+open of a project (a fresh clone, or a deleted `.godot`) and after you change the
+setting, the plugin warns **"Restart the editor to use JDK ..."** instead of
+reporting OK. A game exported with a bundled runtime ignores all of this and uses
+its own `runtime/` folder.
 
 **Gradle itself** can run on any JDK 25+. The build pins its toolchain to JDK 25;
 if only another JDK (a JDK 26-only machine, say) is installed, Gradle downloads a

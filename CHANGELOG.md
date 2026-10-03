@@ -19,8 +19,10 @@ versioning once public releases begin.
 - **The native runtime finds the same JDK.** `bootstrap.c` only knew a bundled runtime, `JAVA_HOME` and a
   few fixed `*-25-*` paths, so with only a JDK 26 installed and no `JAVA_HOME` the extension logged
   "libjvm not found". It now follows the same order (bundled runtime, the plugin-recorded
-  `kanama/build/jdk_path`, `JAVA_HOME`, the install locations) and the editor's startup preflight
-  mirrors it, so the warning appears exactly when the runtime would fail. The two location tables are
+  `kanama/build/jdk_path`, `JAVA_HOME`, the install locations; a stale recorded JDK is logged as
+  ignored, then skipped) and the editor's startup preflight mirrors it, so the warning appears when the
+  runtime would fail. The runtime reads the recorded setting once at load, so on a project's first open
+  or after changing the setting the preflight says "Restart the editor to use JDK ..." rather than OK. The two location tables are
   held equal by `scripts/check_jdk_locations_parity.py`, and `scripts/check_jdk_lookup_parity.sh` runs
   both against fake JDK layouts. **Behaviour change:** a `JAVA_HOME` that points at a JDK older than 25
   is now skipped for the install-location search instead of being loaded and failing later.

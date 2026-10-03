@@ -24,7 +24,7 @@ func _init() -> void:
         printerr("[jdk_test] FAIL cannot load res://addons/kanama_tools/plugin.gd")
         quit(2)
         return
-    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "execute_with_java_home", "detect_desktop_jvm", "resolve_runtime_jdk", "resolve_runtime_jdk_from_environment", "write_runtime_jdk_hint", "jdk_install_candidates"]:
+    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "execute_with_java_home", "detect_desktop_jvm", "resolve_runtime_jdk", "resolve_runtime_jdk_from_environment", "write_runtime_jdk_hint", "jdk_install_candidates", "runtime_restart_message", "read_runtime_jdk_hint"]:
         if not _plugin.has_method(required):
             printerr("[jdk_test] FAIL the plugin has no %s()" % required)
             quit(1)
@@ -134,7 +134,7 @@ func _init() -> void:
     r = _plugin.resolve_build_jdk("", jdk17, [jdk25])
     _expect("success has an empty message", bool(r["ok"]) and String(r["message"]).is_empty())
 
-    # --- KANAMA_JDK_SEARCH_DIRS replaces the location table (the parents of JDK homes)
+    # --- KANAMA_TEST_JDK_SEARCH_DIRS replaces the location table (the parents of JDK homes)
     var cands: Array = _plugin.jdk_install_candidates("Linux", "/nonexistent-home", "", tmp)
     _expect("search dirs: children of the dir, sorted", jdk25 in cands and jdk17 in cands and cands.find(jdk17) < cands.find(jdk25))
     cands = _plugin.jdk_install_candidates("Linux", "/nonexistent-home", "", "")
@@ -147,6 +147,33 @@ func _init() -> void:
     _expect("hint file written", FileAccess.file_exists(hint_file) and FileAccess.get_file_as_string(hint_file).strip_edges() == jdk25)
     _plugin.write_runtime_jdk_hint(project, "")
     _expect("hint file removed", not FileAccess.file_exists(hint_file))
+
+    # --- version components saturate at 999999999 (bootstrap.c does the same; no overflow, no wrap)
+    _expect("absurd component saturates", _plugin.parse_java_version("99999999999999999999.1") == [999999999, 1])
+    _expect("leading zeros are digits (1.2 is the legacy 1.x form, so [2])", _plugin.parse_java_version("0000000001.2") == [2])
+    _expect("a 9-digit component is exact", _plugin.parse_java_version("123456789") == [123456789])
+
+    # --- the table's ~ / $ProgramFiles / suffix expansion (the plugin side; check_jdk_lookup_parity.sh does ~ and suffix for bootstrap.c)
+    var fake_home := tmp.path_join("fake-home")
+    DirAccess.make_dir_recursive_absolute(fake_home.path_join(".jdks/jdk-a"))
+    DirAccess.make_dir_recursive_absolute(fake_home.path_join("Library/Java/JavaVirtualMachines/x.jdk"))
+    DirAccess.make_dir_recursive_absolute(fake_home.path_join(".jdks/.hidden"))
+    var fake_pf := tmp.path_join("fake-program-files")
+    DirAccess.make_dir_recursive_absolute(fake_pf.path_join("Eclipse Adoptium/jdk-25"))
+    var linux_cands: Array = _plugin.jdk_install_candidates("Linux", fake_home, "", "")
+    _expect("~ expands to the home dir (~/.jdks/*), hidden entries skipped", linux_cands.has(fake_home.path_join(".jdks/jdk-a")) and not linux_cands.has(fake_home.path_join(".jdks/.hidden")))
+    var mac_cands: Array = _plugin.jdk_install_candidates("macOS", fake_home, "", "")
+    _expect("macOS suffix Contents/Home below each child", mac_cands.has(fake_home.path_join("Library/Java/JavaVirtualMachines/x.jdk/Contents/Home")))
+    var win_cands: Array = _plugin.jdk_install_candidates("Windows", fake_home, fake_pf, "")
+    _expect("$ProgramFiles expands (Windows)", win_cands.has(fake_pf.path_join("Eclipse Adoptium/jdk-25")))
+
+    # --- first open with the JDK only in the setting: the runtime started without the hint, so restart
+    _expect("no restart needed when nothing changed", _plugin.runtime_restart_message("", "").is_empty() and _plugin.runtime_restart_message(jdk25, jdk25).is_empty())
+    var restart: String = _plugin.runtime_restart_message("", jdk25)
+    _expect("first open: restart message names the JDK and the setting", restart.contains(jdk25) and restart.contains("Restart the editor") and restart.contains("kanama/build/jdk_path"))
+    _expect("hint changed: restart", not String(_plugin.runtime_restart_message(jdk17, jdk25)).is_empty())
+    _expect("setting cleared after a hint: restart", String(_plugin.runtime_restart_message(jdk25, "")).contains(jdk25))
+    _expect("hint reader: absent is empty", _plugin.read_runtime_jdk_hint(tmp.path_join("no-such-project")) == "")
 
     # --- the libjvm preflight shares the resolution (no "libjvm not found" while a JDK 25+ resolves)
     var os_name := OS.get_name()

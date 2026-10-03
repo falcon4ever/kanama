@@ -2,7 +2,7 @@
 #
 # Helper of scripts/check_jdk_lookup_parity.sh, run as
 #   godot --headless --path <project with addons/kanama_tools> --script res://print_jdk_lookup.gd
-# with JAVA_HOME / KANAMA_JDK_SEARCH_DIRS as the scenario sets them and KANAMA_PARITY_SETTING as the
+# with JAVA_HOME / KANAMA_TEST_JDK_SEARCH_DIRS as the scenario sets them and KANAMA_PARITY_SETTING as the
 # explicit 'kanama/build/jdk_path'. Prints "[parity] libjvm=<path>" or "[parity] libjvm=NONE".
 extends SceneTree
 

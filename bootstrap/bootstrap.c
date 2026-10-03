@@ -54,6 +54,7 @@ typedef void *(WINAPI *AddDllDirectoryFn)(const wchar_t *);
 #endif
 #ifndef _WIN32
 #include <dirent.h>
+#include <sys/stat.h>
 #endif
 #include <stdio.h>
 #include <stdint.h>
@@ -157,6 +158,7 @@ static const char *jvm_relative_lib_path(void) {
 #endif
 }
 
+#ifndef __ANDROID__
 static void build_java_home_jvm_path(char *path, size_t path_size, const char *java_home) {
 #ifdef _WIN32
     snprintf(path, path_size, "%s\\%s", java_home, jvm_relative_lib_path());
@@ -164,6 +166,7 @@ static void build_java_home_jvm_path(char *path, size_t path_size, const char *j
     snprintf(path, path_size, "%s/%s", java_home, jvm_relative_lib_path());
 #endif
 }
+#endif /* !__ANDROID__ */
 
 static char *trim_ascii(char *s);
 
@@ -279,7 +282,7 @@ static const char *find_bundled_runtime_jvm(void) {
  * (addons/kanama_tools/plugin.gd) implements the same lookup for its preflight,
  * and scripts/check_jdk_locations_parity.py holds the two location tables equal.
  *
- * KANAMA_JDK_SEARCH_DIRS (path-list of directories whose children are JDK homes)
+ * KANAMA_TEST_JDK_SEARCH_DIRS (path-list of directories whose children are JDK homes)
  * replaces the built-in location table; it exists so tests can lay out fake JDKs.
  */
 #define KANAMA_MIN_JDK_MAJOR 25
@@ -354,7 +357,8 @@ static void jdk_note_rejected(const char *home, const char *why) {
     }
 }
 
-/* "25.0.4.1" -> {25,0,4,1}; "26-ea" -> {26}, ea; "1.8.0_302" -> {8,0,302}. */
+/* "25.0.4.1" -> {25,0,4,1}; "26-ea" -> {26}, ea; "1.8.0_302" -> {8,0,302}.
+ * A component saturates at 999999999 (the plugin's parse_java_version does the same). */
 static void jdk_parse_version(const char *text, JdkVersion *out) {
     memset(out, 0, sizeof *out);
     out->ea = strstr(text, "-ea") != NULL;
@@ -362,7 +366,7 @@ static void jdk_parse_version(const char *text, JdkVersion *out) {
     int have_digits = 0;
     for (const char *c = text; *c; c++) {
         if (*c >= '0' && *c <= '9') {
-            digits = digits * 10 + (*c - '0');
+            digits = digits < 100000000 ? digits * 10 + (*c - '0') : 999999999;
             have_digits = 1;
             continue;
         }
@@ -400,7 +404,8 @@ static int jdk_compare_parts(const JdkVersion *a, const JdkVersion *b) {
     return 0;
 }
 
-/* Reads <home>/release's JAVA_VERSION. 0 on success. */
+/* Reads <home>/release's JAVA_VERSION. 0 on success, -1 no readable release file,
+ * -2 a release file without a usable JAVA_VERSION. */
 static int jdk_read_version(const char *home, JdkVersion *out) {
     char release_path[JDK_PATH_MAX + 16];
     snprintf(release_path, sizeof release_path, "%s%srelease", home, PATH_SEP);
@@ -425,13 +430,14 @@ static int jdk_read_version(const char *home, JdkVersion *out) {
     }
     fclose(file);
     jdk_parse_version(version, out);
-    return out->count > 0 ? 0 : -1;
+    return out->count > 0 ? 0 : -2;
 }
 
 /* A home is usable when its release says JDK >= 25 and its libjvm exists. */
 static int jdk_usable(const char *home, JdkVersion *version, char *libjvm, size_t libjvm_size) {
-    if (jdk_read_version(home, version) != 0) {
-        jdk_note_rejected(home, "no readable release file");
+    int read_rc = jdk_read_version(home, version);
+    if (read_rc != 0) {
+        jdk_note_rejected(home, read_rc == -1 ? "no readable release file" : "release file has no usable JAVA_VERSION");
         return 0;
     }
     if (version->parts[0] < KANAMA_MIN_JDK_MAJOR) {
@@ -546,9 +552,14 @@ static void jdk_scan_parent(const char *parent, const char *prefix, const char *
     while ((entry = readdir(dir)) != NULL) {
         const char *name = entry->d_name;
 #endif
-        if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) {
+        if (name[0] == '.') {
+            continue; /* hidden entries, "." and ".." (the plugin's directory listing skips them too) */
+        }
+#ifdef _WIN32
+        if (!(entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
             continue;
         }
+#endif
         if (prefix_len > 0 && strncmp(name, prefix, prefix_len) != 0) {
             continue;
         }
@@ -558,6 +569,17 @@ static void jdk_scan_parent(const char *parent, const char *prefix, const char *
         if (n < 0 || (size_t)n >= sizeof home) {
             continue;
         }
+#ifndef _WIN32
+        {
+            /* Only directories (a symlink to one counts), like the plugin's listing. */
+            char child[JDK_PATH_MAX];
+            struct stat st;
+            snprintf(child, sizeof child, "%s%s%s", parent, PATH_SEP, name);
+            if (stat(child, &st) != 0 || !S_ISDIR(st.st_mode)) {
+                continue;
+            }
+        }
+#endif
         jdk_consider(home, best);
 #ifdef _WIN32
     } while (FindNextFileA(find, &entry));
@@ -569,7 +591,7 @@ static void jdk_scan_parent(const char *parent, const char *prefix, const char *
 }
 
 static void jdk_scan_install_locations(JdkBest *best) {
-    const char *override = getenv("KANAMA_JDK_SEARCH_DIRS");
+    const char *override = getenv("KANAMA_TEST_JDK_SEARCH_DIRS");
     if (override && *override) {
 #ifdef _WIN32
         const char list_sep = ';';
@@ -670,7 +692,26 @@ static void print_missing_jvm_diagnostic(void) {
     for (int i = 0; i < g_jdk_rejected_count; i++) {
         fprintf(stderr, "[kanama] skipped %s\n", g_jdk_rejected[i]);
     }
-    fprintf(stderr, "[kanama] also searched the install locations (/usr/lib/jvm, /Library/Java/JavaVirtualMachines, Program Files, ~/.jdks, ~/.sdkman) for a JDK 25+ and found none.\n");
+    const char *test_dirs = getenv("KANAMA_TEST_JDK_SEARCH_DIRS");
+    if (test_dirs && *test_dirs) {
+        fprintf(stderr, "[kanama] searched KANAMA_TEST_JDK_SEARCH_DIRS=%s for the best JDK 25+ (exactly 25 preferred, GA over EA) and found none.\n", test_dirs);
+    } else {
+        char locations[1024];
+        size_t used = 0;
+        locations[0] = '\0';
+        for (size_t i = 0; i < sizeof k_jdk_locations / sizeof k_jdk_locations[0]; i++) {
+            const JdkLocation *loc = &k_jdk_locations[i];
+            if (strcmp(loc->os, "all") != 0 && strcmp(loc->os, jdk_host_os()) != 0) {
+                continue;
+            }
+            int n = snprintf(locations + used, sizeof locations - used, "%s%s", used ? ", " : "", loc->parent);
+            if (n < 0 || (size_t)n >= sizeof locations - used) {
+                break;
+            }
+            used += (size_t)n;
+        }
+        fprintf(stderr, "[kanama] searched the install locations (%s) for the best JDK 25+ (exactly 25 preferred, GA over EA) and found none.\n", locations);
+    }
     fprintf(stderr, "[kanama] fix: set JAVA_HOME to a JDK 25+ home directory, or set the 'kanama/build/jdk_path' editor setting and restart the editor.\n");
     fprintf(stderr, "[kanama] expected libjvm relative path: %s\n", jvm_relative_lib_path());
     fprintf(stderr, "[kanama] install hint: use Temurin 25+ or another JDK 25+ build that includes libjvm.\n");
@@ -688,8 +729,13 @@ static const char *find_jvm_lib(void) {
 #else
     g_jdk_rejected_count = 0;
     char hint[JDK_PATH_MAX];
-    if (jdk_read_plugin_hint(hint, sizeof hint) == 0 && jdk_try_home(hint, "the kanama/build/jdk_path editor setting")) {
-        return g_jvm_path;
+    if (jdk_read_plugin_hint(hint, sizeof hint) == 0) {
+        if (jdk_try_home(hint, "the kanama/build/jdk_path editor setting")) {
+            return g_jvm_path;
+        }
+        /* A stale hint (the JDK was removed or replaced) must not be silent: say so, then fall through. */
+        fprintf(stderr, "[kanama] ignoring .godot/kanama_jdk_home=%s: %s\n", hint,
+                g_jdk_rejected_count > 0 ? g_jdk_rejected[g_jdk_rejected_count - 1] : "not a usable JDK 25+");
     }
     const char *java_home = getenv("JAVA_HOME");
     if (java_home && *java_home && jdk_try_home(java_home, "JAVA_HOME")) {
@@ -700,7 +746,7 @@ static const char *find_jvm_lib(void) {
     jdk_scan_install_locations(&best);
     if (best.found) {
         snprintf(g_jvm_path, sizeof g_jvm_path, "%s", best.libjvm);
-        g_jvm_source = "the newest JDK 25+ in the install locations (exactly 25 preferred, GA over EA)";
+        g_jvm_source = "the best JDK 25+ in the install locations (exactly 25 preferred, GA over EA)";
         return g_jvm_path;
     }
     return NULL;
