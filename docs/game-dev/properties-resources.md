@@ -232,10 +232,16 @@ declare it non-null; its nil entries drop.
 
 ### iOS
 
-Typed-Dictionary property **delivery is deferred on iOS**: the codegen warn-skips
-`Map` properties on the Kotlin/Native backend, so they are not read/written on
-iOS yet (desktop and Android are fully supported). Shared game code still
-compiles for iOS — the property simply keeps its Kotlin default there.
+Typed-Dictionary property **delivery is deferred on iOS**: the Kotlin/Native
+backend cannot read or write `Map` properties yet (desktop and Android are fully
+supported). Because such a property would silently keep its Kotlin default on
+iOS — the scene and inspector value dropped — an iOS build with a `Map`
+`@ScriptProperty` **fails** and names the property. The same holds for every
+other `@ScriptProperty` the iOS backend cannot deliver (for example a
+`Vector2i` value). To accept the skip and build anyway, pass
+`-PkanamaIosAllowExportSkips=true` to the iOS build (or set it in
+`gradle.properties`); each skipped property is then a warning and keeps its
+Kotlin default on iOS.
 
 ## Inspector Buttons
 

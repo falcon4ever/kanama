@@ -67,6 +67,10 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     env.platforms.isEmpty() ||
       env.platforms.any { it.platformName.equals("JVM", ignoreCase = true) }
   private val emitWebCode: Boolean = WebScriptCodeEmitter.isWebTarget(env.options)
+
+  /** Task 131 item 9: iOS @ScriptProperty skips stay warnings only when the project opts in. */
+  private val allowIosExportSkips: Boolean =
+    env.options[ALLOW_EXPORT_SKIPS_OPTION]?.toBoolean() ?: false
   private val emitIosCode: Boolean = !emitJvmCode && !emitWebCode
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -823,9 +827,23 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           // A declaration error is the same build error on every target (task 128 B: a nullable
           // Godot enum is not a missing Kotlin/Native type and must not degrade to a warning).
           if (emitJvmCode || e is ScriptDeclarationError) throw e
-          env.logger.warn(
-            "[kanama:ksp] $simpleName.$kotlinName: ${e.message}; skipping on iOS (type not available on Kotlin/Native)"
-          )
+          // Task 131 item 9: a skipped iOS export is a build error unless the project opts in.
+          val skip =
+            "[kanama:ksp] $simpleName.$kotlinName: ${e.message}; skipping on iOS (type not " +
+              "available on Kotlin/Native)"
+          if (emitWebCode) {
+            // Web keeps its own export rules (WebScriptCodeEmitter); unchanged here.
+            env.logger.warn(skip)
+          } else if (allowIosExportSkips) {
+            env.logger.warn("$skip (allowed by $ALLOW_EXPORT_SKIPS_OPTION)")
+          } else {
+            env.logger.error(
+              "$skip. On iOS the scene and inspector value of this property would be dropped. " +
+                "Accept the skip with -P$ALLOW_EXPORT_SKIPS_OPTION=true (KSP option " +
+                "$ALLOW_EXPORT_SKIPS_OPTION).",
+              prop,
+            )
+          }
           continue
         }
       val hint = ann?.arguments?.firstOrNull { it.name?.asString() == "hint" }?.value as? Int ?: 0
@@ -1149,6 +1167,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         iosScripts,
         warn = { env.logger.warn("[kanama:ksp] $it") },
         error = { env.logger.error("[kanama:ksp] $it") },
+        allowExportSkips = allowIosExportSkips,
       )
     val deps = Dependencies(aggregating = true, *scriptAggregatorSources.toTypedArray())
 

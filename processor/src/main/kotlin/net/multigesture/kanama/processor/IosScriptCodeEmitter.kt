@@ -176,6 +176,13 @@ internal data class IosScript(
   val rpcConfigs: List<IosRpcConfig>,
 )
 
+/**
+ * KSP option (Gradle property `-PkanamaIosAllowExportSkips=true`) that turns the iOS
+ *
+ * @ScriptProperty skips back into warnings (task 131 item 9).
+ */
+internal const val ALLOW_EXPORT_SKIPS_OPTION = "kanamaIosAllowExportSkips"
+
 internal class IosScriptCodeEmitter(
   inputs: List<IosScriptInput>,
   private val warn: (String) -> Unit = {},
@@ -183,10 +190,35 @@ internal class IosScriptCodeEmitter(
   // @ScriptProperty the engine can set but not read back — the exact get/set asymmetry that shipped
   // write-only value types in the iOS backend and broke multiplayer replication on device.
   private val error: (String) -> Unit = {},
+  // Task 131 item 9 (F25): a @ScriptProperty iOS cannot deliver used to be a warning, and the
+  // property silently kept its Kotlin default on iOS (the inspector value vanished on a Supported
+  // platform). It is now a build error unless the project opts in with
+  // -PkanamaIosAllowExportSkips=true, which turns each one back into the warning.
+  private val allowExportSkips: Boolean = false,
 ) {
+  /** `<Class>.<kotlinName>` of every property already reported by [exportSkip]. */
+  private val reportedExportSkips = mutableSetOf<String>()
+
   // Sort by resourcePath to match the old task's `.sortedBy { it.resourcePath }`.
   private val scripts: List<IosScript> =
     inputs.sortedBy { it.resourcePath }.map { it.toIosScript() }
+
+  /**
+   * Reports a @ScriptProperty iOS does not deliver: a build error, or with the opt-in a warning.
+   * Each property is reported once (the specific reason first, the delivery guardrail after).
+   */
+  private fun exportSkip(className: String, kotlinName: String, reason: String) {
+    if (!reportedExportSkips.add("$className.$kotlinName")) return
+    if (allowExportSkips) {
+      warn("$reason (allowed by $ALLOW_EXPORT_SKIPS_OPTION)")
+    } else {
+      error(
+        "$reason. On iOS the scene and inspector value of this property would be dropped. " +
+          "Change the property type, or accept the skip with " +
+          "-P$ALLOW_EXPORT_SKIPS_OPTION=true (KSP option $ALLOW_EXPORT_SKIPS_OPTION)."
+      )
+    }
+  }
 
   /** The combined registry file: `registerKanamaIosProjectScripts()` + bridge classes. */
   fun registrySource(): String {
@@ -481,10 +513,12 @@ internal class IosScriptCodeEmitter(
       // here mirror the five blocks exactly so the warning fires only for genuine gaps.
       script.properties.forEach { property ->
         if (!hasIosPropertyDeliveryCase(property)) {
-          warn(
+          exportSkip(
+            script.className,
+            property.kotlinName,
             "[kanama-ios] ${script.className}.${property.kotlinName} — no iOS " +
-              "@ScriptProperty delivery case; the scene-stored value will be " +
-              "silently dropped (kept its Kotlin default)."
+              "@ScriptProperty delivery case; the scene-stored value would be " +
+              "dropped (keeps its Kotlin default)",
           )
         }
       }
@@ -842,9 +876,11 @@ internal class IosScriptCodeEmitter(
     // dictionary-property marshalling is a mobile follow-up. hint/hintString/usage are still
     // advertised so the inspector renders the same DICTIONARY control as the desktop registrar.
     if (type == TypeMapping.DICTIONARY) {
-      warn(
+      exportSkip(
+        className,
+        kotlinName,
         "[kanama-ios] $className.$kotlinName (Map) — no iOS @ScriptProperty dictionary path yet, " +
-          "will keep its Kotlin default"
+          "would keep its Kotlin default",
       )
       return IosProperty(
         godotName = godotName,
@@ -899,8 +935,11 @@ internal class IosScriptCodeEmitter(
             // Remaining value types (Vector2i/Vector3i/Quaternion/Basis/…) still lack a C
             // marshalling case: emit no setProperty case, keep the Kotlin default.
             else -> {
-              warn(
-                "[kanama-ios] $className.$kotlinName ($type) — no iOS @ScriptProperty path for this value type, will keep its Kotlin default"
+              exportSkip(
+                className,
+                kotlinName,
+                "[kanama-ios] $className.$kotlinName ($type) — no iOS @ScriptProperty path for " +
+                  "this value type, would keep its Kotlin default",
               )
               ""
             }
