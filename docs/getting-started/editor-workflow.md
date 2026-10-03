@@ -15,9 +15,11 @@ small edits; IntelliJ IDEA remains the recommended editor for Kotlin navigation,
 completion, refactoring, and debugging.
 
 The plugin also checks desktop Java setup when it loads. Kanama needs a JDK 25+
-distribution that contains `libjvm`; if `JAVA_HOME` is missing or points at a
-JDK without the expected `lib/server/libjvm.*` file, the plugin shows a Godot
-warning before you hit a harder runtime failure.
+distribution that contains `libjvm`. It uses the same JDK lookup as Build Scripts
+([Which JDK Build Scripts Uses](#which-jdk-build-scripts-uses)), so a Godot
+started without `JAVA_HOME` does not warn while a JDK 25+ can be found. If none
+can, or the JDK found has no `lib/server/libjvm.*` file, the plugin shows a Godot
+warning (naming `kanama/build/jdk_path`) before you hit a harder runtime failure.
 
 ```mermaid
 flowchart LR

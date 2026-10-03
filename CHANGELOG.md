@@ -16,7 +16,8 @@ versioning once public releases begin.
   JDK 25+ in the usual install locations (`/usr/lib/jvm`, `/Library/Java/JavaVirtualMachines`,
   `C:\Program Files\{Java,Eclipse Adoptium,...}`, `~/.jdks`, `~/.sdkman`), runs Gradle with that
   `JAVA_HOME`, prints which JDK it used, and stops with an error naming `kanama/build/jdk_path` when
-  none is 25+. See [The Editor Loop](docs/getting-started/editor-workflow.md#which-jdk-build-scripts-uses).
+  none is 25+. The editor's "libjvm not found" preflight uses the same lookup, so it no longer warns
+  on a launcher start without `JAVA_HOME` when a JDK 25+ is installed. See [The Editor Loop](docs/getting-started/editor-workflow.md#which-jdk-build-scripts-uses).
 - **The native bootstrap's CMake checks the JDK header on every OS.** Only macOS verified that `jni.h`
   has `JNI_VERSION_21`; Linux and Windows took whatever `find_package(JNI)` found. One resolution now
   serves all three (`-DKANAMA_JAVA_HOME`, which Gradle passes as its JDK 25 toolchain, then

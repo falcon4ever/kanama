@@ -23,9 +23,9 @@ func _init() -> void:
         printerr("[jdk_test] FAIL cannot load res://addons/kanama_tools/plugin.gd")
         quit(2)
         return
-    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "execute_with_java_home"]:
+    for required in ["resolve_build_jdk", "resolve_build_jdk_from_environment", "parse_java_version", "compare_version_parts", "execute_with_java_home", "detect_desktop_jvm"]:
         if not _plugin.has_method(required):
-            printerr("[jdk_test] FAIL the plugin has no %s(): Build Scripts does not resolve a JDK" % required)
+            printerr("[jdk_test] FAIL the plugin has no %s()" % required)
             quit(1)
             return
 
@@ -34,6 +34,7 @@ func _init() -> void:
     var jdk25 := _fake_jdk(tmp, "jdk-25", "25.0.4.1")
     var jdk25b := _fake_jdk(tmp, "jdk-25-newer-patch", "25.0.10")
     var jdk26 := _fake_jdk(tmp, "jdk-26", "26-ea")
+    var jdk25_no_libjvm := _fake_jdk(tmp, "jdk-25-no-libjvm", "25.0.4.1", false)
     var jdk8 := _fake_jdk(tmp, "jdk-8", "1.8.0_302")
     var not_a_jdk := tmp.path_join("not-a-jdk")
     DirAccess.make_dir_recursive_absolute(not_a_jdk)
@@ -87,6 +88,25 @@ func _init() -> void:
         _expect("nothing set: clear error", String(r["message"]).contains("kanama/build/jdk_path"))
         print("[jdk_test] nothing set, no JDK 25+ in the install locations of this host; error text:\n" + String(r["message"]))
 
+    # --- the libjvm preflight shares the resolution (no "libjvm not found" while a JDK 25+ resolves)
+    var os_name := OS.get_name()
+    r = _plugin.resolve_build_jdk("", "", [jdk17, jdk25])
+    var pf: Dictionary = _plugin.detect_desktop_jvm(r, os_name)
+    _expect("preflight: JAVA_HOME unset + resolvable install -> ok, no error", bool(pf["ok"]) and String(pf["path"]).begins_with(jdk25) and not pf.has("message"))
+    r = _plugin.resolve_build_jdk("", "", [jdk17, jdk21])
+    pf = _plugin.detect_desktop_jvm(r, os_name)
+    _expect("preflight: nothing >= 25 resolves -> error naming the setting", not bool(pf["ok"]) and String(pf["message"]).contains("kanama/build/jdk_path"))
+    r = _plugin.resolve_build_jdk("", "", [jdk25_no_libjvm])
+    pf = _plugin.detect_desktop_jvm(r, os_name)
+    _expect("preflight: JDK 25 without libjvm -> libjvm error", not bool(pf["ok"]) and String(pf["message"]).contains("libjvm") and String(pf["message"]).contains(jdk25_no_libjvm))
+    _expect("preflight: Android/Web are skipped", bool(_plugin.detect_desktop_jvm({"ok": false, "message": "x"}, "Android")["ok"]))
+    OS.unset_environment("JAVA_HOME")
+    ProjectSettings.set_setting("kanama/build/jdk_path", jdk25)
+    r = _plugin.resolve_build_jdk_from_environment()
+    pf = _plugin.detect_desktop_jvm(r, os_name)
+    _expect("preflight: setting set, JAVA_HOME unset -> ok", bool(pf["ok"]))
+    ProjectSettings.set_setting("kanama/build/jdk_path", "")
+
     # --- the process JAVA_HOME is set for the child and restored after
     _check_execute_restores_env(jdk25)
 
@@ -116,8 +136,8 @@ func _check_execute_restores_env(jdk_home: String) -> void:
     OS.unset_environment("JAVA_HOME")
 
 
-# A directory shaped like a JDK home: bin/java(.exe), and a release file with JAVA_VERSION.
-func _fake_jdk(root: String, name: String, version: String) -> String:
+# A directory shaped like a JDK home: bin/java(.exe), a release file with JAVA_VERSION, and libjvm.
+func _fake_jdk(root: String, name: String, version: String, with_libjvm: bool = true) -> String:
     var home := root.path_join(name)
     DirAccess.make_dir_recursive_absolute(home.path_join("bin"))
     var java_name := "java.exe" if OS.get_name() == "Windows" else "java"
@@ -127,6 +147,12 @@ func _fake_jdk(root: String, name: String, version: String) -> String:
     var release := FileAccess.open(home.path_join("release"), FileAccess.WRITE)
     release.store_string("IMPLEMENTOR=\"Kanama test\"\nJAVA_VERSION=\"%s\"\n" % version)
     release.close()
+    if with_libjvm:
+        var libjvm_rel := "bin/server/jvm.dll" if OS.get_name() == "Windows" else ("lib/server/libjvm.dylib" if OS.get_name() == "macOS" else "lib/server/libjvm.so")
+        DirAccess.make_dir_recursive_absolute(home.path_join(libjvm_rel).get_base_dir())
+        var libjvm := FileAccess.open(home.path_join(libjvm_rel), FileAccess.WRITE)
+        libjvm.store_string("x")
+        libjvm.close()
     return home
 
 

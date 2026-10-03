@@ -660,7 +660,7 @@ func _run_java_preflight(force_dialog: bool = false) -> bool:
         print("[kanama:tools] Java runtime preflight ok: %s" % String(result.get("path", "")))
         return true
 
-    var message := _java_preflight_message(result)
+    var message := String(result.get("message", ""))
     push_warning(message)
     if force_dialog or not _java_preflight_dialog_shown:
         _show_java_preflight_dialog(message)
@@ -669,81 +669,36 @@ func _run_java_preflight(force_dialog: bool = false) -> bool:
 
 
 func _detect_desktop_jvm() -> Dictionary:
-    var os_name := OS.get_name()
+    return detect_desktop_jvm(resolve_build_jdk_from_environment(), OS.get_name())
+
+
+## The preflight uses the same JDK resolution as Build Scripts (the 'kanama/build/jdk_path'
+## setting, then JAVA_HOME, then the install locations), so a desktop-launcher start without
+## JAVA_HOME does not warn while a JDK 25+ is resolvable. `resolution` is a resolve_build_jdk()
+## result. Returns {"ok", "path"} on success, {"ok": false, "message"} otherwise.
+static func detect_desktop_jvm(resolution: Dictionary, os_name: String) -> Dictionary:
     if os_name == "Android" or os_name == "Web":
         return {"ok": true, "path": ""}
-
-    var checked_paths: Array[String] = []
-    var java_home := OS.get_environment("JAVA_HOME").strip_edges()
-    var relative_path := _desktop_jvm_relative_path()
-    if not java_home.is_empty():
-        var java_home_candidate := java_home.path_join(relative_path)
-        checked_paths.append(java_home_candidate)
-        if FileAccess.file_exists(java_home_candidate):
-            return {"ok": true, "path": java_home_candidate}
-
-    for candidate in _desktop_jvm_fallback_paths():
-        checked_paths.append(candidate)
-        if FileAccess.file_exists(candidate):
-            return {"ok": true, "path": candidate}
-
+    if not bool(resolution.get("ok", false)):
+        return {"ok": false, "message": String(resolution.get("message", ""))}
+    var home := String(resolution["home"])
+    var libjvm := home.path_join(_desktop_jvm_relative_path(os_name))
+    if FileAccess.file_exists(libjvm):
+        return {"ok": true, "path": libjvm}
     return {
         "ok": false,
-        "java_home": java_home,
-        "relative_path": relative_path,
-        "checked_paths": checked_paths,
+        "message": "[kanama:tools] Kanama could not find libjvm for the desktop JVM.\nThe JDK %s (from %s) has no %s. Install a JDK %d+ distribution that includes libjvm (a full JDK, not a JRE), or point '%s' at one." % [home, String(resolution.get("source", "")), _desktop_jvm_relative_path(os_name), MIN_BUILD_JDK_MAJOR, SETTING_BUILD_JDK_PATH],
     }
 
 
-func _desktop_jvm_relative_path() -> String:
-    match OS.get_name():
+static func _desktop_jvm_relative_path(os_name: String) -> String:
+    match os_name:
         "Windows":
             return "bin/server/jvm.dll"
         "macOS":
             return "lib/server/libjvm.dylib"
         _:
             return "lib/server/libjvm.so"
-
-
-func _desktop_jvm_fallback_paths() -> Array[String]:
-    match OS.get_name():
-        "Windows":
-            return [
-                "C:/Program Files/Eclipse Adoptium/jdk-25/bin/server/jvm.dll",
-            ]
-        "macOS":
-            return [
-                "/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home/lib/server/libjvm.dylib",
-            ]
-        _:
-            return [
-                "/usr/lib/jvm/temurin-25-jdk-arm64/lib/server/libjvm.so",
-                "/usr/lib/jvm/temurin-25-jdk-amd64/lib/server/libjvm.so",
-                "/usr/lib/jvm/temurin-25-jdk/lib/server/libjvm.so",
-                "/usr/lib/jvm/java-25-openjdk-arm64/lib/server/libjvm.so",
-                "/usr/lib/jvm/java-25-openjdk-amd64/lib/server/libjvm.so",
-                "/usr/lib/jvm/java-25-openjdk/lib/server/libjvm.so",
-            ]
-
-
-func _java_preflight_message(result: Dictionary) -> String:
-    var java_home := String(result.get("java_home", ""))
-    var relative_path := String(result.get("relative_path", ""))
-    var lines: Array[String] = [
-        "Kanama could not find libjvm for the desktop JVM.",
-        "Install a JDK 25+ distribution that includes libjvm, then set JAVA_HOME to the JDK home directory.",
-        "Expected relative path: %s" % relative_path,
-    ]
-    if java_home.is_empty():
-        lines.append("JAVA_HOME is not set.")
-    else:
-        lines.append("JAVA_HOME is set to: %s" % java_home)
-    var checked_paths: Array = result.get("checked_paths", [])
-    if not checked_paths.is_empty():
-        lines.append("Checked paths:")
-        for path in checked_paths:
-            lines.append("- %s" % String(path))
-    return "\n".join(lines)
 
 
 func _show_java_preflight_dialog(message: String) -> void:
