@@ -20,9 +20,29 @@ RISKY_ANNOTATIONS = {
     "OnInput",
     "OnPhysicsProcess",
     "OnProcess",
-    "RegisterFunction",
+    "GodotName",
     "Rpc",
 }
+# Kanama 0.5 (task 133 B) registers every public function of a script class with Godot, so a
+# public member function is a Godot entry point like an annotated one. Visibility words that keep
+# a function Kotlin-only:
+# Functions wired by an annotation are not registered by name; only the RISKY_ANNOTATIONS among
+# them count.
+ROLE_ANNOTATIONS = {
+    "OnReady",
+    "OnEnterTree",
+    "OnExitTree",
+    "OnProcess",
+    "OnPhysicsProcess",
+    "OnInput",
+    "OnUnhandledInput",
+    "OnShortcutInput",
+    "OnUnhandledKeyInput",
+    "OverrideVirtual",
+    "Signal",
+    "ExportToolButton",
+}
+KOTLIN_ONLY_MODIFIERS = re.compile(r"\b(private|internal|protected|suspend|override)\b")
 RISKY_LAMBDA_MARKERS = (
     ".connect(",
     "kanamaScope.launch",
@@ -71,7 +91,15 @@ def audit_file(path: Path) -> list[Finding]:
 
         fun_match = FUN_RE.search(line)
         if fun_match:
-            risky = bool(RISKY_ANNOTATIONS.intersection(pending_annotations))
+            prefix = line[: fun_match.start()]
+            public_member = (
+                depth == 1
+                and not scopes
+                and KOTLIN_ONLY_MODIFIERS.search(prefix) is None
+                and "." not in fun_match.group(0)
+                and not ROLE_ANNOTATIONS.intersection(pending_annotations)
+            )
+            risky = bool(RISKY_ANNOTATIONS.intersection(pending_annotations)) or public_member
             if risky:
                 scopes.append(Scope("function", fun_match.group(1), line_no, depth))
             pending_annotations = []
