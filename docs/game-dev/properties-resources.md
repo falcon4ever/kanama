@@ -32,7 +32,8 @@ inspector behavior, but ordinary exported gameplay data should keep the
 default usage.
 
 Simple source-literal defaults are preserved in generated script registrars:
-numeric, boolean, string, enum entry, `NodePath("...")`, and
+numeric, boolean, string, enum entry (a Kotlin `enum class` entry or a Godot
+enum value such as `Node.ProcessMode.ALWAYS`), `NodePath("...")`, and
 `Math.toRadians(<number>)` initializers show up as inspector defaults.
 
 ## Export Hints
@@ -80,8 +81,8 @@ The `RANGE` hint string accepts Godot's suffix flags after `min,max[,step]`:
 `degrees`, and `suffix:<unit>`. The hint-string grammar is Godot's own, so a
 malformed string is accepted as-is and simply renders no special editor — the
 hint form is an escape hatch, not a validated builder. Enum-typed properties
-do not need a hint: a Kotlin `enum class` exports as a dropdown automatically
-(see below).
+do not need a hint: a Kotlin `enum class` or a Godot enum exports as a dropdown
+(a bitfield as flag checkboxes) automatically (see below).
 
 ## Exporting Enums
 
@@ -123,6 +124,60 @@ reordering trade-off as the scalar form. Defaults must be empty
 (`emptyList()` / `listOf()`); populate initial values in the scene or
 inspector. Enum-list delivery uses the same conversion and clamping semantics
 on desktop, Android, and iOS.
+
+### Godot enums and bitfields
+
+A property typed with one of Godot's own enums (every Godot enum is a typed
+value class in Kanama, see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields))
+exports as an inspector dropdown (a bitfield as flag checkboxes):
+
+```kotlin
+@ScriptProperty
+var mode: Node.ProcessMode = Node.ProcessMode.PAUSABLE
+
+@ScriptProperty // a bitfield: flag checkboxes
+var messages: Node.ProcessThreadMessages = Node.ProcessThreadMessages.MESSAGES
+
+@ScriptProperty
+var allowedModes: List<Node.ProcessMode> = emptyList()
+```
+
+- The inspector metadata follows Godot's **native-property style** — what the
+  engine's own `Node.process_mode` shows — not GDScript's: an `int` with
+  `PROPERTY_HINT_ENUM` (a bitfield with `PROPERTY_HINT_FLAGS`) and a hint
+  string of the Kanama value names as Godot capitalizes them, with the values
+  spelled out: `Inherit:0,Pausable:1,When Paused:2,Always:3,Disabled:4`,
+  `Messages:1,Messages Physics:2,Messages All:3`. Whether a type is a bitfield
+  is Godot's call: `BaseMaterial3D.Flags`, despite its name, is an enum of flag
+  indices and exports as a dropdown.
+- How that differs from GDScript's `@export var mode: Node.ProcessMode`:
+  GDScript's hint string uses the **full** Godot names (`Process Mode
+  Inherit:0,Process Mode Pausable:1,…`), and GDScript exports a **bitfield as
+  `PROPERTY_HINT_ENUM`** too (a dropdown of single flags, `Flag Process Thread
+  Messages:1,…`), where Kanama shows flag checkboxes. The stored value is the
+  same `int` either way, so scenes are interchangeable.
+- Like GDScript's export, the property also carries the enum's identity:
+  `class_name` is Godot's qualified name (`Node.ProcessMode`) and usage
+  includes `PROPERTY_USAGE_CLASS_IS_ENUM` (for a bitfield, Godot's native
+  `PROPERTY_USAGE_CLASS_IS_BITFIELD`, which GDScript types as a plain `int`, so
+  assigning a combination of flags does not warn), so typed GDScript sees
+  `$Node.mode` as a `Node.ProcessMode`. On Web the generated GDScript proxy
+  declares the property with `@export_custom(<hint>, "<hint string>")`, which
+  cannot set `class_name`, so a Web build reports the hint and hint string
+  only (no class marker).
+- Unlike a Kotlin `enum class`, the stored value is the **Godot value**, not an
+  ordinal, so a scene saved by a GDScript or C# version of the script loads
+  unchanged, and a value the inspector does not list (a newer Godot's, or an
+  extension's) is kept rather than clamped.
+- The default may be any value (`Node.ProcessMode.ALWAYS`), the raw form
+  (`Node.ProcessMode(3L)`) or, for a bitfield, an `or` of values; it is
+  constant-folded into the inspector default.
+- `List<Node.ProcessMode>` exports as a typed int array (`"2/2:<hint>"`) of
+  Godot values. Defaults must be empty, as for the other lists.
+- The type is non-null (`Node.ProcessMode?` is a build error: the slot is an
+  `int`).
+- Supported on desktop, Android and iOS; on Web the scalar form is supported
+  and the list form is a build error, like `List<enum class>`.
 
 ## Exporting Dictionaries
 

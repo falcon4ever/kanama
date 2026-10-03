@@ -404,7 +404,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         val name = p.name?.asString() ?: "arg"
         val type = p.type.resolve()
         val arg =
-          fqToArgModel(name, type)
+          fqToArgModel(name, type, "$ownerSimpleName.$kotlinName")
             ?: throw IllegalArgumentException(
               "$ownerSimpleName.$kotlinName: unsupported signal arg type '${type.declaration.qualifiedName?.asString()}' for '$name'"
             )
@@ -443,21 +443,25 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             "'$attachTo' or its ancestors. Check the name against extension_api.json."
         )
 
+    val resolvedReturn = fn.returnType?.resolve()
+    val returnFq = resolvedReturn?.declaration?.qualifiedName?.asString()
+    val returnEnum =
+      resolvedReturn?.let { godotEnumOf(it, "$ownerSimpleName.$kotlinName", "return") }
     val returnType =
-      fn.returnType?.resolve()?.let { type ->
-        val fq = type.declaration.qualifiedName?.asString()
-        if (fq == "kotlin.Unit") null
+      resolvedReturn?.let { type ->
+        if (returnFq == "kotlin.Unit") null
+        else if (returnEnum != null) TypeMapping.INT
         else
-          virtualReturnTypeMapping(type, fq)
+          virtualReturnTypeMapping(type, returnFq)
             ?: throw IllegalArgumentException(
-              "$ownerSimpleName.$kotlinName: unsupported @OverrideVirtual return type '$fq'"
+              "$ownerSimpleName.$kotlinName: unsupported @OverrideVirtual return type '$returnFq'"
             )
       }
     val args =
       fn.parameters.map { p ->
         val name = p.name?.asString() ?: "arg"
         val type = p.type.resolve()
-        fqToArgModel(name, type)
+        fqToArgModel(name, type, "$ownerSimpleName.$kotlinName")
           ?: throw IllegalArgumentException(
             "$ownerSimpleName.$kotlinName: unsupported @OverrideVirtual parameter type " +
               "'${type.declaration.qualifiedName?.asString()}' for '$name'"
@@ -481,12 +485,30 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       )
     }
 
+    // Task 128 B: a slot Godot types `enum::X` / `bitfield::X` takes the typed value class, and
+    // only there. An override still written against the pre-0.5 `Long` is a build error naming the
+    // type to use (rather than silently accepted: the value class is what every other wrapper
+    // signature of that enum uses, and a raw Long would let any number through unchecked).
+    val where = "$ownerSimpleName.$kotlinName: @OverrideVirtual(\"$virtualName\")"
+    args.forEachIndexed { i, arg ->
+      virtualEnumSlotError(where, "parameter '${arg.name}'", canonical.argTypes[i], arg.godotEnum)
+        ?.let { throw IllegalArgumentException(it) }
+    }
+    if (canonical.returnType != null) {
+      virtualEnumSlotError(where, "return", canonical.returnType, returnEnum?.ref)?.let {
+        throw IllegalArgumentException(it)
+      }
+    }
+    virtualRequiredReturnError(where, canonical, returnFq, resolvedReturn?.isMarkedNullable == true)
+      ?.let { throw IllegalArgumentException(it) }
+
     return VirtualModel(
       virtualName = virtualName,
       callFunctionName = kotlinName,
       kotlinMethodName = kotlinName,
       args = args,
       returnType = returnType,
+      returnGodotEnum = returnEnum?.ref,
     )
   }
 
@@ -499,10 +521,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     val nameOverride = ann.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? String
     val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
 
+    val resolvedReturn = fn.returnType?.resolve()
+    val returnEnum =
+      resolvedReturn?.let { godotEnumOf(it, "$ownerSimpleName.$kotlinName", "return") }
     val returnType =
-      fn.returnType?.resolve()?.let { type ->
+      resolvedReturn?.let { type ->
         val fq = type.declaration.qualifiedName?.asString()
         if (fq == "kotlin.Unit") null
+        else if (returnEnum != null) TypeMapping.INT
         else
           fqToTypeMapping(fq)
             ?: throw IllegalArgumentException(
@@ -515,7 +541,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         val name = p.name?.asString() ?: "arg"
         val type = p.type.resolve()
         val arg =
-          fqToArgModel(name, type)
+          fqToArgModel(name, type, "$ownerSimpleName.$kotlinName")
             ?: throw IllegalArgumentException(
               "$ownerSimpleName.$kotlinName: unsupported parameter type '${type.declaration.qualifiedName?.asString()}' for '$name'"
             )
@@ -535,6 +561,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       args = args,
       kind = MethodKind.REGULAR,
       rpc = buildRpcModel(fn),
+      returnGodotEnum = returnEnum?.ref,
     )
   }
 
@@ -793,7 +820,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         try {
           scriptPropertyTypeModel(resolvedType, simpleName, kotlinName, scriptClassTypes)
         } catch (e: IllegalArgumentException) {
-          if (emitJvmCode) throw e
+          // A declaration error is the same build error on every target (task 128 B: a nullable
+          // Godot enum is not a missing Kotlin/Native type and must not degrade to a warning).
+          if (emitJvmCode || e is ScriptDeclarationError) throw e
           env.logger.warn(
             "[kanama:ksp] $simpleName.$kotlinName: ${e.message}; skipping on iOS (type not available on Kotlin/Native)"
           )
@@ -802,7 +831,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       val hint = ann?.arguments?.firstOrNull { it.name?.asString() == "hint" }?.value as? Int ?: 0
       val hintString =
         ann?.arguments?.firstOrNull { it.name?.asString() == "hintString" }?.value as? String ?: ""
-      val usage = ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6
+      // Task 128 B: a Godot enum property carries GDScript's class marker too
+      // (PROPERTY_USAGE_CLASS_IS_ENUM / _CLASS_IS_BITFIELD, with class_name = the Godot enum).
+      val usage =
+        (ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6) or
+          (scriptType.godotEnum?.classUsageFlag ?: 0)
       val exportCategory =
         prop.annotations
           .firstOrNull { it.shortName.asString() == "ExportCategory" }
@@ -822,6 +855,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           scriptType.narrow,
           scriptType.enumFqName,
           scriptType.enumEntries,
+          scriptType.godotEnum?.let { GodotEnumTable.forKotlin(it.kotlinFqName) },
         )
       val exportGroup =
         prop.annotations
@@ -889,6 +923,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           scriptType.mapValueNullable,
           scriptType.isMutableMap,
           scriptType.isMutableList,
+          godotEnum = scriptType.godotEnum,
+          arrayElementGodotEnum = scriptType.arrayElementGodotEnum,
         )
     }
 
@@ -1271,6 +1307,74 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       }
     }
 
+    /**
+     * The Godot enum value class [type] names (task 128 B), or null for any other type. A nullable
+     * one is refused: the slot is a Godot INT, which has no null.
+     */
+    internal fun godotEnumOf(type: KSType, where: String, slot: String): GodotEnumTable.Entry? {
+      val entry =
+        GodotEnumTable.forKotlin(type.declaration.qualifiedName?.asString()) ?: return null
+      if (type.isMarkedNullable) {
+        val name = shortKotlinName(entry.kotlinFqName)
+        throw ScriptDeclarationError(
+          "$where: $slot is a nullable Godot enum ('$name?'); declare it '$name' — the Godot " +
+            "slot is an int, which cannot be null."
+        )
+      }
+      return entry
+    }
+
+    /**
+     * Task 128 B: an `@OverrideVirtual` slot is the typed enum exactly when Godot types it
+     * `enum::X` / `bitfield::X`. The build error for a mismatch, or null. An override still written
+     * against the pre-0.5 `Long` is refused naming the type to use, rather than accepted: the value
+     * class is what every other wrapper signature of that enum uses, and a raw `Long` would let any
+     * number through unchecked.
+     */
+    internal fun virtualEnumSlotError(
+      where: String,
+      slot: String,
+      godotType: String,
+      kotlinEnum: GodotEnumRef?,
+    ): String? {
+      val expected = GodotEnumTable.forGodotType(godotType)
+      if (expected != null && kotlinEnum?.kotlinFqName != expected.kotlinFqName) {
+        val name = shortKotlinName(expected.kotlinFqName)
+        val declared = kotlinEnum?.let { "`${shortKotlinName(it.kotlinFqName)}`" } ?: "`Long`"
+        return "$where $slot is Godot `$godotType`: declare it as `$name` (the typed value " +
+          "class; `$name(raw)` wraps a raw number, `.value` reads one), not $declared. Since " +
+          "Kanama 0.5 every Godot enum slot is its value class."
+      }
+      if (expected == null && kotlinEnum != null) {
+        return "$where $slot is Godot `$godotType`, not an enum: declare it with that type, not " +
+          "`${shortKotlinName(kotlinEnum.kotlinFqName)}`."
+      }
+      return null
+    }
+
+    /**
+     * Task 128 B: the two `_get_space_state` returns Godot marks `meta: "required"` must be
+     * declared non-null (the engine never accepts null there). The build error, or null.
+     */
+    internal fun virtualRequiredReturnError(
+      where: String,
+      canonical: VirtualSignatureTable.Sig,
+      returnFq: String?,
+      returnNullable: Boolean,
+    ): String? =
+      if (canonical.returnRequired && returnNullable) {
+        "$where returns '$returnFq?', but Godot marks this return required (meta " +
+          "\"required\": the engine never accepts null). Declare it non-null ('$returnFq')."
+      } else {
+        null
+      }
+
+    /** `net.multigesture.kanama.api.Node.ProcessMode` -> `Node.ProcessMode` for messages. */
+    internal fun shortKotlinName(kotlinFqName: String): String =
+      kotlinFqName
+        .removePrefix("net.multigesture.kanama.api.")
+        .removePrefix("net.multigesture.kanama.types.")
+
     internal fun fqToTypeMapping(fq: String?): TypeMapping? =
       when (fq) {
         "kotlin.Long" -> TypeMapping.INT
@@ -1288,9 +1392,12 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         else -> null
       }
 
-    internal fun fqToArgModel(name: String, type: KSType): ArgModel? {
+    internal fun fqToArgModel(name: String, type: KSType, where: String = ""): ArgModel? {
       val fq = type.declaration.qualifiedName?.asString()
       val nullable = type.nullability == Nullability.NULLABLE
+      godotEnumOf(type, where, "parameter '$name'")?.let { entry ->
+        return ArgModel(name, TypeMapping.INT, godotEnum = entry.ref)
+      }
       val objectWrapper = fq?.takeIf { it in SUPPORTED_OBJECT_WRAPPERS }
       return if (objectWrapper != null) {
         ArgModel(name, TypeMapping.OBJECT, objectWrapper, nullable = nullable)
@@ -1371,6 +1478,16 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         "kotlin.Float" ->
           return ScriptPropertyTypeModel(TypeMapping.FLOAT, narrow = NarrowScalar.FLOAT32)
         "kotlin.Int" -> return ScriptPropertyTypeModel(TypeMapping.INT, narrow = NarrowScalar.INT32)
+      }
+      // Godot enum value class (task 128 B): an INT Variant slot carrying the Godot value (not
+      // an ordinal), PROPERTY_HINT_ENUM / _FLAGS with the names-and-values hint string.
+      godotEnumOf(type, "$className.$propertyName", "the property")?.let { entry ->
+        return ScriptPropertyTypeModel(
+          type = TypeMapping.INT,
+          hint = entry.propertyHint,
+          hintString = entry.hintString,
+          godotEnum = entry.ref,
+        )
       }
       // Kotlin enum class (task 32, issue #37): C# export parity — an INT Variant
       // slot carrying the ordinal, registered with PROPERTY_HINT_ENUM and the entry
@@ -1469,6 +1586,20 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             hintString = "24/${customElement.propertyHint}:${customElement.simpleName}",
             arrayElementCustomScriptFqName = customElement.fqName,
             arrayElementCustomScriptIsResource = customElement.isExportableResource,
+            isMutableList = isMutable,
+          )
+        }
+        // task 128 B: List<Node.ProcessMode> — the array form of the Godot-enum export, a typed
+        // int Array whose elements carry the enum/flags hint ("2/2:<hint>", "2/6:<hint>") and the
+        // Godot values themselves.
+        val elementGodotEnum =
+          elementResolved?.let { godotEnumOf(it, "$className.$propertyName", "the list element") }
+        if (elementGodotEnum != null) {
+          return ScriptPropertyTypeModel(
+            type = TypeMapping.ARRAY,
+            hint = PROPERTY_HINT_TYPE_STRING,
+            hintString = "2/${elementGodotEnum.propertyHint}:${elementGodotEnum.hintString}",
+            arrayElementGodotEnum = elementGodotEnum.ref,
             isMutableList = isMutable,
           )
         }
@@ -1835,7 +1966,9 @@ internal val RESOURCE_WRAPPERS_WITH_FROM_HANDLE =
 // Extension functions (not members on ArgModel) so the model stays a pure, serializable
 // data holder; the iOS emitter re-derives its own marshalling from the arg's neutral type.
 internal fun ArgModel.readFromScratch(s: String): String =
-  if (objectWrapperFqName != null) {
+  if (godotEnum != null) {
+    godotEnum.wrap(type.readFromScratch(s))
+  } else if (objectWrapperFqName != null) {
     if (objectWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) {
       val value =
         "$objectWrapperFqName.fromHandle(net.multigesture.kanama.api.GodotHandle(${s}.get(ADDRESS, 0)))"
@@ -1851,7 +1984,9 @@ internal fun ArgModel.readFromScratch(s: String): String =
   }
 
 internal fun ArgModel.readPtrcallArg(ptr: String): String =
-  if (objectWrapperFqName != null) {
+  if (godotEnum != null) {
+    godotEnum.wrap(type.readPtrcallArg(ptr))
+  } else if (objectWrapperFqName != null) {
     if (objectWrapperFqName in RESOURCE_WRAPPERS_WITH_FROM_HANDLE) {
       val value =
         "$objectWrapperFqName.fromHandle(net.multigesture.kanama.api.GodotHandle($ptr.reinterpret(${type.ptrcallSizeBytesExpr}).get(ADDRESS, 0)))"
@@ -1867,7 +2002,11 @@ internal fun ArgModel.readPtrcallArg(ptr: String): String =
   }
 
 internal fun ArgModel.signalEmitValueExpr(): String =
-  if (type == TypeMapping.NODE_PATH) "$name.path" else name
+  when {
+    godotEnum != null -> "$name.value"
+    type == TypeMapping.NODE_PATH -> "$name.path"
+    else -> name
+  }
 
 private fun constantIdentifier(name: String): String {
   val parts = name.trim('_').split('_', '-', ' ', '.', ':', '/').filter { it.isNotEmpty() }
@@ -1933,6 +2072,7 @@ private fun signalArgumentValueExpr(arg: ArgModel, index: Int): String =
         }
       "((args.getOrNull($index) as? ${arg.objectWrapperFqName}) ?: $fromGodotObject ?: error(\"Signal argument '${arg.name}' was not ${arg.kotlinType}\"))"
     }
+    arg.godotEnum != null -> arg.godotEnum.wrap("(args.getOrNull($index) as? Long ?: 0L)")
     arg.type == TypeMapping.INT -> "(args.getOrNull($index) as? Long ?: 0L)"
     arg.type == TypeMapping.FLOAT -> "((args.getOrNull($index) as? Number)?.toDouble() ?: 0.0)"
     arg.type == TypeMapping.BOOL -> "(args.getOrNull($index) as? Boolean ?: false)"
@@ -1968,7 +2108,7 @@ private fun StringBuilder.appendMethodHelpers(simpleName: String, methods: List<
     val argNames = method.args.joinToString(", ") { it.name }
     val helperArgs = if (argNames.isNotEmpty()) ", $argNames" else ""
     val directArgs = argNames
-    val returnType = method.returnType?.kotlinType
+    val returnType = method.returnKotlinType
 
     if (returnType == null) {
       appendLine("    fun ${method.kotlinName}(instance: $simpleName$params) {")
@@ -2108,6 +2248,7 @@ private fun scriptPropertyDefaultLiteral(
   narrow: NarrowScalar? = null,
   enumFqName: String? = null,
   enumEntries: List<String> = emptyList(),
+  godotEnum: GodotEnumTable.Entry? = null,
 ): String? {
   val location = prop.location as? FileLocation ?: return null
   val sourceLines = runCatching { File(location.filePath).readLines() }.getOrNull() ?: return null
@@ -2120,6 +2261,11 @@ private fun scriptPropertyDefaultLiteral(
   val initializer = extractPropertyInitializer(declaration, propertyName) ?: return null
   enumFqName?.let {
     return normalizeEnumDefaultLiteral(initializer, it, enumEntries)
+  }
+  // Task 128 B: `Node.ProcessMode.ALWAYS` (or `ProcessMode(3L)`, or a bitfield `or`-chain)
+  // constant-folds to `net.multigesture.kanama.api.Node.ProcessMode(3L)`.
+  godotEnum?.let {
+    return GodotEnumTable.defaultLiteral(initializer, it)
   }
   narrow?.let {
     return normalizeNarrowDefaultLiteral(initializer, it)
@@ -2171,15 +2317,36 @@ private fun findPropertyDeclarationLine(
 internal fun collectPropertyDeclaration(lines: List<String>, start: Int): String {
   val parts = mutableListOf<String>()
   var parenDepth = 0
+  var sawEquals = false
   for (i in start..(start + 8).coerceAtMost(lines.lastIndex)) {
     val line = stripLineComment(lines[i]).trim()
     if (line.isEmpty()) continue
     parts += line
     parenDepth += line.count { it == '(' } - line.count { it == ')' }
-    if (line.contains("=") && parenDepth <= 0) break
+    if (parenDepth > 0) continue
+    if (!sawEquals) {
+      if (!line.contains("=")) continue
+      sawEquals = true
+    }
+    // The initializer continues on the next line when this one ENDS with the `=` or with a binary
+    // operator: ktfmt wraps a long `var mode: Node.ProcessMode =\n    Node.ProcessMode.ALWAYS`
+    // and a long bitfield `X.A or\n    X.B` that way (task 128 B).
+    if (line.endsWith("=") || INITIALIZER_CONTINUATION.containsMatchIn(line)) continue
+    break
   }
   return parts.joinToString(" ")
 }
+
+/** A line ending in a binary operator, so the expression continues on the next line. */
+private val INITIALIZER_CONTINUATION =
+  Regex("""(?:\b(?:or|and|xor|shl|shr|ushr)|[-+*/%]|&&|\|\||\?:)$""")
+
+/**
+ * A script declaration error that is a build error on every target. The iOS/Web model builder
+ * degrades an unresolvable `@ScriptProperty` type to a warning (a desktop-only wrapper is absent on
+ * Kotlin/Native); an error of this type is not that and is never degraded (task 128 B).
+ */
+internal class ScriptDeclarationError(message: String) : IllegalArgumentException(message)
 
 private fun stripLineComment(line: String): String {
   var inString = false
@@ -2535,7 +2702,7 @@ internal enum class TypeMapping(
       BASIS ->
         "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString($s, $v.path)"
-      OBJECT -> "$s.set(ADDRESS, 0, $v.handle)"
+      OBJECT -> "$s.set(ADDRESS, 0, $v.handle.segment)"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
       else -> "$s.set($valueLayout, 0, $v)"
     }
@@ -2590,7 +2757,7 @@ internal enum class TypeMapping(
       BASIS ->
         "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
-      OBJECT -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, $v.handle)"
+      OBJECT -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, $v.handle.segment)"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
       else -> "rRet.reinterpret($ptrcallSizeBytesExpr).set($valueLayout, 0, $v)"
     }
@@ -3197,7 +3364,9 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
         sb.appendLine(
           "            val retScratch = arena.allocate(${m.returnType.scratchAllocationExpr})"
         )
-        sb.appendLine("            ${m.returnType.writeToScratch("retScratch", "result")}")
+        sb.appendLine(
+          "            ${m.returnType.writeToScratch("retScratch", if (m.returnGodotEnum != null) "result.value" else "result")}"
+        )
         sb.appendLine(
           "            VariantConverters.variantFromType(VariantType.${m.returnType.variantTypeEnum}).invoke(rReturn, retScratch)"
         )
@@ -3237,7 +3406,9 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     val invocation = invocationExpr(m, argVars)
     if (m.returnType != null) {
       sb.appendLine("        val result = $invocation")
-      sb.appendLine("        ${m.returnType.writePtrcallReturn("result")}")
+      sb.appendLine(
+        "        ${m.returnType.writePtrcallReturn(if (m.returnGodotEnum != null) "result.value" else "result")}"
+      )
     } else {
       sb.appendLine("        $invocation")
     }
@@ -3738,7 +3909,11 @@ internal class ScriptCodeEmitter(
   // hints the hint string is exactly the class name (engine wrapper class or
   // @GlobalClass simple name), so reuse it.
   private fun scriptPropertyClassName(p: ScriptPropertyModel): String =
-    if (
+    // Task 128 B: a Godot enum property names its enum, as GDScript's `@export var mode:
+    // Node.ProcessMode` does (`Node.ProcessMode`, with PROPERTY_USAGE_CLASS_IS_ENUM in usage).
+    if (p.godotEnum != null) {
+      p.godotEnum.godotKey
+    } else if (
       p.type == TypeMapping.OBJECT &&
         (p.hint == PROPERTY_HINT_RESOURCE_TYPE || p.hint == PROPERTY_HINT_NODE_TYPE)
     ) {
@@ -3884,7 +4059,7 @@ internal class ScriptCodeEmitter(
         // Value-returning virtual (e.g. _get_minimum_size): marshal the
         // Kotlin result back into the engine's return Variant slot.
         sb.append(
-          "val vret = kt.${v.kotlinMethodName}($callArgs); ${variantWriteRetExpr(v.returnType, "vret")}"
+          "val vret = kt.${v.kotlinMethodName}($callArgs); ${variantWriteRetExpr(v.returnType, if (v.returnGodotEnum != null) "vret.value" else "vret")}"
         )
       } else {
         sb.append("kt.${v.kotlinMethodName}($callArgs)")
@@ -3935,7 +4110,9 @@ internal class ScriptCodeEmitter(
     val callArgs = (0 until argCount).joinToString(", ") { "marg$it" }
     if (m.returnType != null) {
       sb.appendLine("                                val r = kt.${m.kotlinName}($callArgs)")
-      sb.appendLine("                                ${variantWriteRetExpr(m.returnType, "r")}")
+      sb.appendLine(
+        "                                ${variantWriteRetExpr(m.returnType, if (m.returnGodotEnum != null) "r.value" else "r")}"
+      )
     } else {
       sb.appendLine("                                kt.${m.kotlinName}($callArgs)")
     }
@@ -4225,6 +4402,9 @@ internal class ScriptCodeEmitter(
         }
       property.arrayElementString ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantStringList($variantPtr, a) }"
+      // Task 128 B: List<Node.ProcessMode> — the elements are Godot values, wrapped as they are.
+      property.arrayElementGodotEnum != null ->
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantLongList($variantPtr, a).map { i -> ${property.arrayElementGodotEnum.wrap("i")} } }"
       // Stale stored ordinals (e.g. after entry removal) clamp into the entry
       // range instead of indexing raw — same policy as the scalar enum export.
       property.arrayElementEnumFqName != null -> {
@@ -4353,7 +4533,11 @@ internal class ScriptCodeEmitter(
     "(($varExpr as? Number)?.toInt()?.let { $enumFq.entries[it.coerceIn(0, $enumFq.entries.lastIndex)] })"
 
   private fun variantReadArgExpr(arg: ArgModel, variantPtr: String, localName: String): String =
-    if (arg.objectWrapperFqName != null) {
+    if (arg.godotEnum != null) {
+      // Task 128 B: the Godot enum arrives as INT; wrap the raw Long into its value class.
+      variantReadExpr(TypeMapping.INT, variantPtr, "${localName}Raw") +
+        "; val $localName = ${arg.godotEnum.wrap("${localName}Raw")}"
+    } else if (arg.objectWrapperFqName != null) {
       if (arg.objectWrapperFqName in RESOURCE_WRAPPER_FROM_HANDLE) {
         val value =
           "BuiltinTypes.readVariantObject($variantPtr, a) { handle -> ${arg.objectWrapperFqName}.fromHandle(net.multigesture.kanama.api.GodotHandle(handle)) }"
@@ -4403,8 +4587,11 @@ internal class ScriptCodeEmitter(
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       TypeMapping.BASIS ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
+      // `.handle.segment`: a GodotObject's handle is the backend-neutral GodotHandle since task
+      // 104; the raw address is its segment (task 128 B — the `_get_space_state` required-return
+      // probe is the first desktop object return that compiles this arm).
       TypeMapping.OBJECT ->
-        "Arena.ofConfined().use { a -> val s = a.allocate(ADDRESS); s.set(ADDRESS, 0, $valueExpr.handle); VariantConverters.variantFromType(VariantType.OBJECT).invoke(ret, s) }"
+        "Arena.ofConfined().use { a -> val s = a.allocate(ADDRESS); s.set(ADDRESS, 0, $valueExpr.handle.segment); VariantConverters.variantFromType(VariantType.OBJECT).invoke(ret, s) }"
       TypeMapping.ARRAY ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       // task 13 — non-POD virtual return: build a Godot PackedStringArray from the List<String>,
@@ -4474,6 +4661,8 @@ internal class ScriptCodeEmitter(
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       property.arrayElementEnumFqName != null ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr.map { it.ordinal.toLong() }, a) }"
+      property.arrayElementGodotEnum != null ->
+        "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr.map { it.value }, a) }"
       property.mapKeyKotlinType != null -> mapWritePropertyRetExpr(property, valueExpr)
       else -> variantWriteRetExpr(property.type, valueExpr)
     }
@@ -4511,7 +4700,10 @@ internal class ScriptCodeEmitter(
 
   /** Conversion appended when the property's Kotlin value flows out to its 64-bit Variant slot. */
   private fun scriptPropertyToWideSuffix(p: ScriptPropertyModel): String =
-    p.narrow?.toWide ?: p.enumFqName?.let { ".ordinal.toLong()" } ?: ""
+    p.narrow?.toWide
+      ?: p.enumFqName?.let { ".ordinal.toLong()" }
+      ?: p.godotEnum?.let { ".value" }
+      ?: ""
 
   /** Conversion appended when a 64-bit Variant slot value is assigned into the Kotlin field. */
   private fun scriptPropertyFromWideSuffix(p: ScriptPropertyModel): String =
@@ -4521,6 +4713,9 @@ internal class ScriptCodeEmitter(
       ?: p.enumFqName?.let { fq ->
         ".toInt().let { i -> $fq.entries[i.coerceIn(0, $fq.entries.lastIndex)] }"
       }
+      // Task 128 B: a Godot enum keeps whatever value the slot holds (an unknown value from a
+      // newer Godot or an extension is still a valid value class), so no clamp.
+      ?: p.godotEnum?.let { ".let { raw -> ${it.wrap("raw")} }" }
       ?: ""
 
   // The collection keyword / empty literal for a property, keyed on its declared mutability.
@@ -4549,9 +4744,12 @@ internal class ScriptCodeEmitter(
       property.arrayElementString -> "${property.listKeyword}<String>"
       property.arrayElementEnumFqName != null ->
         "${property.listKeyword}<${property.arrayElementEnumFqName}>"
+      property.arrayElementGodotEnum != null ->
+        "${property.listKeyword}<${property.arrayElementGodotEnum.kotlinFqName}>"
       property.mapKeyKotlinType != null ->
         "${property.mapKeyword}<${property.mapKeyKotlinType}, ${mapValueKotlinType(property)}>"
       property.enumFqName != null -> property.enumFqName
+      property.godotEnum != null -> property.godotEnum.kotlinFqName
       else -> property.narrow?.kotlinType ?: property.type.kotlinType
     }
 
@@ -4571,8 +4769,10 @@ internal class ScriptCodeEmitter(
       property.arrayElementCustomScriptFqName != null -> property.emptyListLiteral
       property.arrayElementString -> property.emptyListLiteral
       property.arrayElementEnumFqName != null -> property.emptyListLiteral
+      property.arrayElementGodotEnum != null -> property.emptyListLiteral
       property.mapKeyKotlinType != null -> property.emptyMapLiteral
       property.enumFqName != null -> "${property.enumFqName}.entries.first()"
+      property.godotEnum != null -> property.godotEnum.zeroLiteral
       else -> property.narrow?.zeroLiteral ?: property.type.kotlinLiteralZero
     }
 

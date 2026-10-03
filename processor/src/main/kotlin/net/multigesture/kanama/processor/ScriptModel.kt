@@ -43,7 +43,13 @@ internal data class MethodModel(
   val rpc: RpcModel? = null,
   /** For property accessors: the property's Kotlin name. */
   val propertyKotlinName: String? = null,
-)
+  /** Set when the return is a Godot enum value class (task 128 B); [returnType] is then INT. */
+  val returnGodotEnum: GodotEnumRef? = null,
+) {
+  /** Neutral: the Kotlin type the return surfaces as, or null for `Unit`. */
+  val returnKotlinType: String?
+    get() = returnGodotEnum?.kotlinFqName ?: returnType?.kotlinType
+}
 
 internal data class RpcModel(
   val mode: Int,
@@ -58,10 +64,17 @@ internal data class ArgModel(
   val objectWrapperFqName: String? = null,
   val nullable: Boolean = false,
   val hasDefault: Boolean = false,
+  /**
+   * Set when the arg is a Godot enum value class (`Node.ProcessMode`, task 128 B). [type] is then
+   * INT: the wire carries the raw `Long`, the emitters wrap it into the value class.
+   */
+  val godotEnum: GodotEnumRef? = null,
 ) {
-  /** Neutral: the Kotlin type the arg surfaces as (object wrapper FQN or mapped type). */
+  /** Neutral: the Kotlin type the arg surfaces as (object wrapper / enum FQN or mapped type). */
   val kotlinType: String
-    get() = (objectWrapperFqName ?: type.kotlinType) + if (nullable) "?" else ""
+    get() =
+      (objectWrapperFqName ?: godotEnum?.kotlinFqName ?: type.kotlinType) +
+        if (nullable) "?" else ""
 }
 
 // ArgModel's JVM-emit codegen (readFromScratch/readPtrcallArg/signalEmitValueExpr) lives
@@ -92,6 +105,8 @@ internal data class VirtualModel(
    * return marshalling in `dispatchCall` and the reported `return_type` in the method list.
    */
   val returnType: TypeMapping? = null,
+  /** Set when the return is a Godot enum value class (task 128 B); [returnType] is then INT. */
+  val returnGodotEnum: GodotEnumRef? = null,
 )
 
 // ---------- @ScriptClass models ----------
@@ -226,6 +241,17 @@ internal data class ScriptPropertyModel(
   val isMutableMap: Boolean = false,
   /** True when the original property is `MutableList` instead of immutable `List`. */
   val isMutableList: Boolean = false,
+  /**
+   * Set for a Godot enum value-class property (`var mode: Node.ProcessMode`, task 128 B). The
+   * Variant slot is INT carrying the Godot value (not an ordinal), registered with
+   * `PROPERTY_HINT_ENUM` / `PROPERTY_HINT_FLAGS` and the names-with-values hint string.
+   */
+  val godotEnum: GodotEnumRef? = null,
+  /**
+   * Set for `List<Node.ProcessMode>` (task 128 B): a typed int Array (`"2/2:<hint>"`, or
+   * `"2/6:<hint>"` for a bitfield) whose elements are the Godot values.
+   */
+  val arrayElementGodotEnum: GodotEnumRef? = null,
 )
 
 internal data class ScriptPropertyGroupModel(val name: String, val prefix: String, val usage: Int)
@@ -266,6 +292,8 @@ internal data class ScriptPropertyTypeModel(
   val mapValueNullable: Boolean = false,
   val isMutableMap: Boolean = false,
   val isMutableList: Boolean = false,
+  val godotEnum: GodotEnumRef? = null,
+  val arrayElementGodotEnum: GodotEnumRef? = null,
 )
 
 internal data class ScriptClassTypeInfo(

@@ -32,6 +32,7 @@ minor releases — the runbook below is identical, only smaller.
 | Virtual-method signature table (`processor/.../virtual-signatures.tsv`) | `scripts/generate_virtual_signature_table.py` |
 | Engine-wide `MethodName`/`PropertyName`/`SignalName` constants | `scripts/generate_name_constants.py` |
 | Generated wrappers, all platform trees (desktop/Android via one tree, iOS island + the iOS `ObjectCalls.kt` `GENERATED MEMBERS` region) | `scripts/generate_api_wrapper.py` re-adopt |
+| Typed-enum prefix lock (`scripts/enum_prefix_lock.json`) and the processor's enum table (`processor/.../godot-enums.tsv`) | `scripts/generate_api_wrapper.py` re-adopt (same `--write-tree`) |
 | Wrapper KDoc | `scripts/sync_kdoc_from_godot_docs.py --write` |
 | Coverage + generator reports | `scripts/api_wrapper_coverage.py`, `scripts/api_wrapper_generator_report.py` |
 

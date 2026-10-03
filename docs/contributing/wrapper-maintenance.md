@@ -293,6 +293,13 @@ gate all import it.
   iOS `packVariantDesc` / `encodeVariantArgs` / container `taggedValue` / script-return
   `encodeIosReturn`) map a boxed one to INT, so `set("process_mode", Node.ProcessMode.ALWAYS)` works;
   dynamic paths (`call`/`get`, Variant returns) still RETURN `Long`.
+- **The KSP processor's copy** (task 128 B) is
+  `processor/src/main/resources/net/multigesture/kanama/processor/godot-enums.tsv`: one row per enum
+  (Godot key, Kotlin FQN, enum/bitfield, `NAME=value` pairs through the same naming function and
+  lock), written by `--write-tree` beside the lock and compared by the drift gate. The processor
+  needs the values, not just the names (property hint strings, constant-folded `@ScriptProperty`
+  defaults, the `@OverrideVirtual` typed-signature check), and a compiled API library gives KSP the
+  companion getters' names only.
 - **Companion values are getters** (`val ALWAYS: ProcessMode get() = ProcessMode(3L)`): no backing
   field and no companion static initialiser, the smallest JVM shape that keeps them typed (measured in
   task 128: 1.70 MB of class files for the 786 enums vs 1.98 MB with backing fields).
@@ -646,9 +653,11 @@ set, `String`, `PackedStringArray` (`List<String>`), all remaining fixed-element
 typed Arrays (`List<Any?>` — also the shape for the engine's `typedarray::*`
 returns), `RID`, `Rect2`, `AABB`, `Transform2D`, `Transform3D`, `Projection`,
 and `Variant` (`Any?`). Two families additionally ride existing ones by
-Variant conversion: `StringName` returns are declared as `String` and
-enum/bitfield returns as `Long` (the engine casts the returned Variant at the
-call site, exactly as it does for GDScript).
+Variant conversion: `StringName` returns are declared as `String` (the engine
+casts the returned Variant at the call site, exactly as it does for GDScript),
+and enum/bitfield parameters and returns are the typed value class (task 128 B:
+INT on the wire, `X(raw)` in and `.value` out; a `Long` there fails the build,
+and the two `meta: "required"` `_get_space_state` returns must be non-null).
 
 **By-design excluded returns (6 virtuals):** `void*` (3) and `const Glyph*`
 (3, TextServerExtension glyph buffers). Raw-pointer returns are not

@@ -317,7 +317,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       args.forEach { arg ->
         when (arg.type) {
           TypeMapping.FLOAT -> add(next())
-          TypeMapping.INT -> add("${next()}.toLong()")
+          TypeMapping.INT -> add(webLongArg(arg, "${next()}.toLong()"))
           TypeMapping.BOOL -> add("${next()} != 0.0")
           TypeMapping.VECTOR2 -> add("net.multigesture.kanama.types.Vector2(${next()}, ${next()})")
           TypeMapping.VECTOR2I -> add("Vector2i(${next()}.toInt(), ${next()}.toInt())")
@@ -327,6 +327,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         }
       }
     }
+
+    /**
+     * Task 128 B: a Godot enum argument rides the INT channel as its raw value; [raw] is the
+     * decoded `Long` expression, wrapped into the value class when [arg] is one.
+     */
+    fun webLongArg(arg: ArgModel, raw: String): String = arg.godotEnum?.wrap(raw) ?: raw
+
+    /** The raw `Long` behind a returned / pulled value: `.value` of a Godot enum, else as-is. */
+    fun webLongValue(access: String, godotEnum: GodotEnumRef?): String =
+      if (godotEnum != null) "$access.value" else access
 
     /**
      * The Kotlin expression packing a returned value of [type] into the transport string. Same
@@ -419,7 +429,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         when (arg.type) {
           TypeMapping.STRING -> text
           TypeMapping.NODE_PATH -> "net.multigesture.kanama.types.NodePath($text)"
-          TypeMapping.INT -> "$part.toLong()"
+          TypeMapping.INT -> webLongArg(arg, "$part.toLong()")
           TypeMapping.BOOL -> "($part == \"1\")"
           TypeMapping.OBJECT -> {
             val wrapper =
@@ -583,6 +593,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
 
     private val RANGE_HINT_NUMBER = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?""")
 
+    /** A folded Godot enum default literal (`<fq>(3L)`, task 128 B); group 1 is the number. */
+    private val GODOT_ENUM_DEFAULT = Regex("""\((-?\d+)L\)$""")
+
     /** The normalized NodePath default literal shape produced by the processor. */
     private val NODE_PATH_DEFAULT =
       Regex("""net\.multigesture\.kanama\.types\.NodePath\((".*")\)""")
@@ -683,6 +696,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         val supported =
           when {
             property.enumFqName != null || property.narrow != null -> false
+            // Task 128 B: `List<Node.ProcessMode>` has no Web array arm, like `List<enum class>`.
+            property.arrayElementGodotEnum != null -> false
             else ->
               when (property.type) {
                 TypeMapping.STRING,
@@ -706,6 +721,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           val declared =
             when {
               property.enumFqName != null -> property.enumFqName
+              property.arrayElementGodotEnum != null ->
+                "List<${property.arrayElementGodotEnum.kotlinFqName}>"
               property.narrow != null -> "narrow ${property.narrow}"
               else -> property.type.toString()
             }
@@ -737,6 +754,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         }
         when (property.hint) {
           0 -> Unit
+          // Task 128 B: a Godot enum's own enum/flags hint is emitted verbatim (`@export_custom`).
+          GodotEnumTable.PROPERTY_HINT_ENUM,
+          GodotEnumTable.PROPERTY_HINT_FLAGS ->
+            if (property.godotEnum == null) {
+              errors +=
+                "$where: property hint ${property.hint} (hintString '${property.hintString}') " +
+                  "has no Kanama Web proxy emission except on a Godot enum property " +
+                  "(`var mode: Node.ProcessMode`); it would be silently dropped from the " +
+                  "generated .gd."
+            }
           PROPERTY_HINT_RANGE -> {
             val rangeType = property.type == TypeMapping.INT || property.type == TypeMapping.FLOAT
             if (!rangeType) {
@@ -967,7 +994,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       val params = if (kotlinParams.isNotEmpty()) ", $kotlinParams" else ""
       val argNames = method.args.joinToString(", ") { it.name }
       val helperArgs = if (argNames.isNotEmpty()) ", $argNames" else ""
-      val returnType = method.returnType?.kotlinType
+      val returnType = method.returnKotlinType
       if (returnType == null) {
         appendLine("  fun ${method.kotlinName}(instance: $fq$params) {")
         appendLine("    instance.${method.kotlinName}($argNames)")
@@ -1481,9 +1508,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             method.args.size == 1 &&
             method.args.single().type == TypeMapping.INT
         ) {
-          appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(value)"
-          )
+          val call =
+            "(script as ${input.model.simpleName}).${method.kotlinName}(${webLongArg(method.args.single(), "value")})"
+          appendLine("        ${methodIndex + 1} -> ${webLongValue(call, method.returnGodotEnum)}")
         }
       }
       appendLine("        else -> unknown(\"method\", methodId)")
@@ -1544,7 +1571,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             method.args.single().type == TypeMapping.INT
         ) {
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(value)"
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}(${webLongArg(method.args.single(), "value")})"
           )
         }
       }
@@ -1632,7 +1659,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             secondWrapper != null
         ) {
           appendLine(
-            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($firstWrapper(GodotHandle.fromBackendToken(firstHandle.toLong())), $secondWrapper(GodotHandle.fromBackendToken(secondHandle.toLong())), value)"
+            "        ${methodIndex + 1} -> (script as ${input.model.simpleName}).${method.kotlinName}($firstWrapper(GodotHandle.fromBackendToken(firstHandle.toLong())), $secondWrapper(GodotHandle.fromBackendToken(secondHandle.toLong())), ${webLongArg(third, "value")})"
           )
         }
       }
@@ -1683,7 +1710,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("      ${scriptIndex + 1} -> when (methodId) {")
       input.model.methods.forEachIndexed { methodIndex, method ->
         if (methodArm(method) == WebMethodArm.PACKED_RETURN) {
-          val access = "(script as ${input.model.simpleName}).${method.kotlinName}()"
+          val access =
+            webLongValue(
+              "(script as ${input.model.simpleName}).${method.kotlinName}()",
+              method.returnGodotEnum,
+            )
           val returnType = checkNotNull(method.returnType) { "PACKED_RETURN needs a return type" }
           appendLine("        ${methodIndex + 1} -> ${packedReturnExpression(access, returnType)}")
         }
@@ -1705,8 +1736,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
       input.model.properties.forEachIndexed { propertyIndex, property ->
         if (property.type == TypeMapping.INT && property.isMutable) {
+          val assigned = property.godotEnum?.wrap("value") ?: "value"
           appendLine(
-            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = value"
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = $assigned"
           )
         }
         // The proxy pushes exported bools through the long channel (1/0).
@@ -1812,7 +1844,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           when {
             property.type == TypeMapping.STRING -> access
             property.type == TypeMapping.NODE_PATH -> "$access.path"
-            property.type == TypeMapping.INT -> "$access.toString()"
+            property.type == TypeMapping.INT ->
+              "${webLongValue(access, property.godotEnum)}.toString()"
             property.type == TypeMapping.FLOAT -> "$access.toString()"
             property.type == TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
             property.type == TypeMapping.VECTOR2 -> "$access.let { \"\${it.x},\${it.y}\" }"
@@ -5053,6 +5086,16 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
    * emission, so nothing is ever silently dropped here.
    */
   private fun exportAnnotation(property: ScriptPropertyModel): String {
+    // Task 128 B: a Godot enum property keeps the exact hint + hint string the desktop and iOS
+    // registrars report. `@export_custom` sets both verbatim; `@export_flags` would reject a
+    // Godot bitfield's zero-valued entry (`NONE:0`), which the inspector simply skips.
+    if (
+      property.godotEnum != null &&
+        (property.hint == GodotEnumTable.PROPERTY_HINT_ENUM ||
+          property.hint == GodotEnumTable.PROPERTY_HINT_FLAGS)
+    ) {
+      return "@export_custom(${property.hint}, ${quote(property.hintString)})"
+    }
     if (property.hint != PROPERTY_HINT_RANGE) return "@export"
     val arguments =
       rangeExportArguments(property.hintString)
@@ -5211,7 +5254,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
   private fun gdDefault(property: ScriptPropertyModel): String =
     when (property.type) {
       TypeMapping.STRING -> property.defaultLiteral ?: "\"\""
-      TypeMapping.INT -> property.defaultLiteral?.removeSuffix("L") ?: "0"
+      TypeMapping.INT ->
+        if (property.godotEnum != null) godotEnumGdDefault(property.defaultLiteral)
+        else property.defaultLiteral?.removeSuffix("L") ?: "0"
       TypeMapping.FLOAT -> property.defaultLiteral?.removeSuffix("f")?.removeSuffix("F") ?: "0.0"
       TypeMapping.BOOL -> property.defaultLiteral ?: "false"
       TypeMapping.NODE_PATH -> "NodePath(${nodePathDefaultString(property.defaultLiteral)})"
@@ -5221,6 +5266,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.ARRAY -> "[]"
       else -> "null"
     }
+
+  /**
+   * The raw number of a folded Godot enum default (`net.….Node.ProcessMode(3L)` -> `3`), the int
+   * the proxy declares and hydrates; `0` when there is none (the Web guard already refuses that).
+   */
+  private fun godotEnumGdDefault(defaultLiteral: String?): String =
+    defaultLiteral?.let { GODOT_ENUM_DEFAULT.find(it)?.groupValues?.get(1) } ?: "0"
 
   /**
    * The quoted path from a normalized NodePath default literal

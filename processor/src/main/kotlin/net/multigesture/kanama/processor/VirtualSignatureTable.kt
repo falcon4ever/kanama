@@ -18,6 +18,11 @@ internal object VirtualSignatureTable {
     val argTypes: List<String>,
     /** Godot return type string, or `null` for `void` virtuals. */
     val returnType: String?,
+    /**
+     * True when Godot marks the return `meta: "required"` (the two `_get_space_state` object
+     * returns, task 128 B): the engine never accepts null there, so the override must be non-null.
+     */
+    val returnRequired: Boolean = false,
   )
 
   private const val RESOURCE = "/net/multigesture/kanama/processor/virtual-signatures.tsv"
@@ -45,7 +50,8 @@ internal object VirtualSignatureTable {
               val name = f[2]
               val argTypes = if (f.size >= 4 && f[3].isNotEmpty()) f[3].split(',') else emptyList()
               val ret = if (f.size >= 5 && f[4].isNotEmpty()) f[4] else null
-              virt.getOrPut(owner) { HashMap() }[name] = Sig(owner, name, argTypes, ret)
+              val required = f.size >= 6 && f[5] == "required"
+              virt.getOrPut(owner) { HashMap() }[name] = Sig(owner, name, argTypes, ret, required)
             }
         }
       }

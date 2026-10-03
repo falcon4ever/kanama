@@ -60,6 +60,39 @@ class PropertyInitializerParsingTest {
   }
 
   @Test
+  fun initializerWrappedAfterTheEqualsSignParses() {
+    // Task 128 B: ktfmt wraps a long Godot-enum default after the `=`.
+    assertEquals(
+      "Node.ProcessThreadMessages.MESSAGES or Node.ProcessThreadMessages.MESSAGES_PHYSICS",
+      initializerOf(
+        "messages",
+        "var messages: Node.ProcessThreadMessages =",
+        "  Node.ProcessThreadMessages.MESSAGES or Node.ProcessThreadMessages.MESSAGES_PHYSICS",
+        "",
+        "@Signal fun modeChanged(mode: Node.ProcessMode) = Unit",
+      ),
+    )
+  }
+
+  @Test
+  fun initializerWrappedAfterABinaryOperatorParses() {
+    // Task 128 B review: a long bitfield `or`-chain ktfmt wraps after the `or`.
+    assertEquals(
+      "Node.ProcessThreadMessages.MESSAGES or Node.ProcessThreadMessages.MESSAGES_PHYSICS",
+      initializerOf(
+        "messages",
+        "var messages: Node.ProcessThreadMessages = Node.ProcessThreadMessages.MESSAGES or",
+        "  Node.ProcessThreadMessages.MESSAGES_PHYSICS",
+        "@Signal fun modeChanged(mode: Node.ProcessMode) = Unit",
+      ),
+    )
+    assertEquals(
+      "X.A or X.B or X.C",
+      initializerOf("flags", "var flags: X =", "  X.A or", "    X.B or", "    X.C", "val other = 1"),
+    )
+  }
+
+  @Test
   fun declarationsWithoutInitializersYieldNull() {
     assertEquals(null, initializerOf("node", "lateinit var node: Node3D"))
     assertEquals(null, initializerOf("other", "var mismatchedName = 1"))

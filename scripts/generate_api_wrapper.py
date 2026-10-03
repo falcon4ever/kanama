@@ -30,6 +30,7 @@ from godot_enum_model import (
     API_PACKAGE,
     LOCK_PATH,
     MARKER_INTERFACE,
+    PROCESSOR_ENUM_TABLE_PATH,
     EnumSpec,
     constant_for_value,
     enum_key_of_type,
@@ -38,6 +39,7 @@ from godot_enum_model import (
     read_lock,
     render_enum_class,
     render_lock,
+    render_processor_enum_table,
 )
 
 
@@ -4693,6 +4695,7 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
         files[_rel(SHARED_API_DIR / f"{_kotlin_owner_name(owner)}.expect.kt")] = render_enum_expect(owner)
     files[_rel(GLOBAL_ENUMS_PATH)] = render_global_enums()
     files[_rel(LOCK_PATH)] = render_lock(lock)
+    files[_rel(PROCESSOR_ENUM_TABLE_PATH)] = render_processor_enum_table(_enum_state()[0], lock)
     region_files: dict[Path, str] = {}
     for owner, path, target in enum_region_hosts(api_classes):
         mode = "actual" if owner in EXPECT_ENUM_OWNERS else "plain"

@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://ProcessDisableSmoke.kt" id="5"]
 [ext_resource type="Script" path="res://ResourceForgeSmoke.kt" id="6"]
 [ext_resource type="Script" path="res://MaterialHandoffSmoke.kt" id="7"]
+[ext_resource type="Script" path="res://GodotEnumExportSmoke.kt" id="8"]
 
 [node name="Node" type="Node" unique_id=1909033900]
 script = ExtResource("1")
@@ -102,3 +103,9 @@ script = ExtResource("6")
 
 [node name="MaterialHandoffSmokeNode" type="Node" parent="." unique_id=771122335]
 script = ExtResource("7")
+
+[node name="GodotEnumNode" type="Node" parent="."]
+script = ExtResource("8")
+mode = 3
+messages = 3
+modes = [1, 4]
