@@ -5,7 +5,41 @@ All notable user-facing changes will be recorded here.
 This project uses a Keep a Changelog-style format and follows semantic
 versioning once public releases begin.
 
+## How source breaks are announced
+
+The generated Godot API follows the rules in
+[Generated API Conventions](docs/reference/wrapper-conventions.md). Before 1.0 those rules are the
+direction for long-term stability, not a hard freeze: a change that can stop a script from
+compiling (a removed or renamed member or parameter, a changed type or nullability, a removed
+default) is allowed when it serves the API's long-term shape, but never silently. Its entry under
+`## Unreleased` says what changed and how to migrate, and carries a line that starts exactly with
+`- **Source break:**` (the marker the gate below looks for).
+
+`scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares every public
+declaration of the shared native API tree and of the generated Web surface with the snapshot in
+`docs/reference/generated/public-api-signatures-*.txt`. It fails when a signature was removed or
+changed and `## Unreleased` has no marker line; once the line is there it fails until the snapshot
+is regenerated with `--write`, so the pull request shows every changed signature. Additions need
+only `--write`.
+
 ## Unreleased
+
+### Added — the generated API conventions page and the public-signature gate (task 126)
+
+- **[Generated API Conventions](docs/reference/wrapper-conventions.md)** states what a script
+  author can rely on in the generated Godot API, rule by rule, each with the generator code that
+  produces it and the gate that keeps it: names, properties, integers, decimals (with task 134's
+  planned move to `Double`), typed enums and bitfields, nullability, ownership (with task 132's
+  planned GC fallback), statics and singletons, defaults and overloads, collections, handles and
+  factories, name constants, and platform parity, including where the Web surface differs today.
+  Linked from [Calling Godot APIs](docs/game-dev/godot-api.md).
+- **`scripts/check_public_signature_changes.py`**, a new `local_ci.sh` stage, holds the public
+  surface to a checked-in snapshot (one line per declaration, read from the Kotlin sources in about
+  two seconds): `docs/reference/generated/public-api-signatures-common.txt` for the API tree
+  desktop, Android and iOS share, `public-api-signatures-web.txt` for the generated Web wrappers.
+  A removed or changed signature fails the gate until this file announces it (see "How source
+  breaks are announced" above) and the snapshot is regenerated; `--write` refuses to record an
+  unannounced one.
 
 ### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers (#277)
 

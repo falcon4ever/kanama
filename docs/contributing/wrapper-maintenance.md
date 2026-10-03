@@ -19,6 +19,13 @@ Refreshing generated Panama bindings from a new Godot API/header set requires
 `jextract` 25+. Normal game projects do not run `jextract`; it is only part of
 Kanama's API/header refresh workflow.
 
+What the generated API promises script authors (names, types, nullability, enums, defaults,
+platform parity) is stated rule by rule in
+[Generated API Conventions](../reference/wrapper-conventions.md). A generator change that alters
+a public signature is a source break: `scripts/check_public_signature_changes.py` fails until
+`CHANGELOG.md` announces it and the signature snapshot is regenerated with `--write` (see
+[Source breaks](../reference/wrapper-conventions.md#source-breaks)). Additions only need `--write`.
+
 ## Wrapper Guardrails
 
 Kanama's conservative wrapper generator is intentionally fail-loud. CI checks
