@@ -5862,6 +5862,13 @@ int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id) {
 // id still resolves to `object` (ObjectDB lookup: never dereferences the possibly-freed pointer),
 // 0 when the object was freed. An unresolved entry point is reported and answers 1 (unchecked, the
 // behaviour before task 131) so it cannot turn every wrapper call into a freed-object error.
+// Task 131 item 2: whether the freed-object check can run (object_get_instance_from_id resolved).
+// Asked once when the runtime configures the check, so an unresolved entry turns the check off with
+// one log line instead of reporting a fault on every wrapper call.
+int32_t kanama_ios_godot_instance_lookup_available(void) {
+    return g_object_get_instance_from_id != NULL ? 1 : 0;
+}
+
 int32_t kanama_ios_godot_object_is_live(int64_t object, int64_t instance_id) {
     if (g_object_get_instance_from_id == NULL) {
         kanama_ios_fault(__func__, "api-unresolved", "g_object_get_instance_from_id");
@@ -10752,10 +10759,10 @@ int64_t kanama_ios_godot_ptrcall_ret_object_array(
 // getters — Noise.get_image_3d or RenderingServer.bake_render_uv2 must not run twice). The element
 // handles are written into out_handles when they fit cap (an ELEMENT count), otherwise into a
 // malloc'd single pending slot that kanama_ios_godot_take_pending_object_handles drains. Handles
-// are BORROWED, exactly like the two-call entry and desktop's BuiltinTypes.readArrayObjects: the
-// returned Array is destroyed here, so a RefCounted element whose only holder was that Array is
-// gone by the time Kotlin wraps it (a cross-backend convention, not an iOS choice). Non-Object
-// elements yield a 0 handle. Returns the full element count, or -1 on a null method/instance,
+// of a RefCounted element are RETAINED (+1, task 131 S5) before the returned Array is destroyed
+// here, so an element whose only holder was that Array survives; the Kotlin wrapper owns that
+// reference, like desktop's BuiltinTypes.readArrayObjectsOwned. Other handles are borrowed.
+// Non-Object elements yield a 0 handle. Returns the full element count, or -1 on a null method/instance,
 // an unavailable API or an allocation failure.
 static int64_t *g_pending_object_handles = NULL;
 static int64_t g_pending_object_handle_count = 0;
@@ -10833,6 +10840,13 @@ static int64_t kanama_ios_godot_ptrcall_ret_object_handles_dispatch(
                 GDExtensionObjectPtr obj_ptr = NULL;
                 g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
                 handle = (int64_t)(intptr_t)obj_ptr;
+                // Task 131 S5: the Array may hold the only reference to a RefCounted element
+                // (Engine.capture_script_backtraces), and it is destroyed below; take a +1 first.
+                // The Kotlin wrapper owns it (close() releases), like desktop's
+                // BuiltinTypes.readArrayObjectsOwned.
+                if (obj_ptr != NULL) {
+                    kanama_ios_retain_refcounted_object(obj_ptr);
+                }
             }
             if (g_variant_destroy != NULL) {
                 g_variant_destroy((GDExtensionVariantPtr)ret_variant);

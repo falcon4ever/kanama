@@ -286,7 +286,12 @@ object BuiltinTypes {
       is ByteArray -> variantFromPackedByteArrayInto(value, variantOut, arena)
       is List<*> -> variantFromArrayInto(value, variantOut, arena)
       is Map<*, *> -> variantFromDictionaryInto(value, variantOut, arena)
-      is GodotObject -> variantFromObjectInto(value.segment, variantOut, arena)
+      // A wrapper of a freed object encodes as nil, silently (task 131 item 2, GDScript semantics).
+      is GodotObject -> {
+        val segment = FreedObjectChecks.valueSegment(value)
+        if (segment.address() == 0L) initNilVariant(variantOut)
+        else variantFromObjectInto(segment, variantOut, arena)
+      }
       // Variant(Object*) already refs RefCounted values; adding an extra
       // retain here leaks whenever the temporary Variant is destroyed.
       is Resource -> variantFromObjectInto(value.requireOpenHandle(), variantOut, arena)
@@ -1283,6 +1288,50 @@ object BuiltinTypes {
   fun readArrayObjects(src: MemorySegment): List<GodotObject> =
     readArrayObjects(src) { handle -> GodotObject(GodotHandle(handle)) }
 
+  /**
+   * [readArrayObjects] for an Array the caller destroys right after (a ptrcall return): the Array
+   * may hold the only reference to a RefCounted element (`Engine.captureScriptBacktraces()`), so
+   * each RefCounted element is retained before the destroy and its wrapper owns that `+1` --
+   * `close()` it, as every RefCounted-typed return (task 131 S5; the ownership class "owned element
+   * of a returned typed Array" for task 132 D1). A RefCounted element of an untyped `Array[Object]`
+   * comes back as a [RefCounted] wrapper so it can be closed.
+   */
+  fun readArrayObjectsOwned(src: MemorySegment): List<GodotObject> =
+    readArrayObjectsOwned(src) { handle -> GodotObject(GodotHandle(handle)) }
+
+  fun <T : Any> readArrayObjectsOwned(src: MemorySegment, wrapper: (MemorySegment) -> T?): List<T> =
+    readArrayObjects(src) { handle ->
+      when (val value = wrapper(handle)) {
+        is RefCounted -> value.also { it.retainForKotlinWrapper() }
+        // Untyped Object element: ask the engine once whether it is RefCounted.
+        is GodotObject ->
+          if (value::class == GodotObject::class && value.isClass("RefCounted")) {
+            @Suppress("UNCHECKED_CAST")
+            (RefCounted(value.handle).also { it.retainForKotlinWrapper() } as T)
+          } else value
+        else -> value
+      }
+    }
+
+  /**
+   * The pointer KSP-generated glue writes when it hands [value] to Godot as a value (a
+   * `@RegisterFunction` / virtual return or argument): NULL, which Godot reads as nil, for a
+   * wrapper whose object was freed (task 131 item 2, GDScript semantics). Public because the
+   * generated registrars live in the game's module; game code does not call it.
+   */
+  @JvmStatic
+  fun objectValueSegment(value: GodotObject): MemorySegment = FreedObjectChecks.valueSegment(value)
+
+  /**
+   * Writes [value] into the return Variant [ret] as KSP-generated glue does for an Object-typed
+   * script method / virtual return: an Object Variant, or a nil Variant for a wrapper whose object
+   * was freed (task 131 item 2). Public for the generated registrars only.
+   */
+  @JvmStatic
+  fun initObjectValueVariant(ret: MemorySegment, value: GodotObject) {
+    Arena.ofConfined().use { arena -> initVariantFromAny(ret, value, arena) }
+  }
+
   fun <T : Any> readArrayObjects(src: MemorySegment, wrapper: (MemorySegment) -> T?): List<T> {
     val sizeHash = 3173160232L
     val getHash = 708700221L
@@ -1930,7 +1979,8 @@ object BuiltinTypes {
         val objectHandle =
           when (value) {
             is Resource -> value.requireOpenHandle()
-            is GodotObject -> value.segment
+            // A freed element is a null Object element, silently (task 131 item 2).
+            is GodotObject -> FreedObjectChecks.valueSegment(value)
             else ->
               error(
                 "Unsupported Object array value type: ${value?.let { it::class.qualifiedName } ?: "null"}"

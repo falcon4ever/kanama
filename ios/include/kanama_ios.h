@@ -856,8 +856,9 @@ int64_t kanama_ios_godot_ptrcall_ret_object_array(
  * task 100 (parcel 9) — typed-object-array (Array[Object]) return on every audited arg shape: the
  * method runs ONCE; the element object handles land in out_handles when they fit cap (an ELEMENT
  * count), otherwise in a single pending slot the caller drains with
- * kanama_ios_godot_take_pending_object_handles. Handles are BORROWED (the returned Array is
- * destroyed inside the call). Returns the full element count, or -1 on a null method/instance,
+ * kanama_ios_godot_take_pending_object_handles. The returned Array is destroyed inside the call, so
+ * each RefCounted element is RETAINED (+1, owned by the caller's wrapper; task 131 S5); other
+ * handles are borrowed. Returns the full element count, or -1 on a null method/instance,
  * an unavailable API or an allocation failure. Supersedes the two-call protocol of
  * kanama_ios_godot_ptrcall_ret_object_array for every typed-object-list return.
  */
@@ -925,6 +926,9 @@ int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id);
 // 1 while `instance_id` (captured at wrapper construction) still resolves to `object`, 0 once that
 // object was freed: the freed-object check before a wrapper call (task 131 item 2).
 int32_t kanama_ios_godot_object_is_live(int64_t object, int64_t instance_id);
+
+// 1 when object_get_instance_from_id resolved, so the freed-object check can run (task 131).
+int32_t kanama_ios_godot_instance_lookup_available(void);
 
 int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name);
 

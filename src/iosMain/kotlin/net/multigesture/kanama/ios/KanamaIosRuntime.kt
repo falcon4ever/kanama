@@ -183,12 +183,19 @@ internal object KanamaIosRuntime {
     return 1
   }
 
+  @OptIn(ExperimentalForeignApi::class)
   fun initialize(level: Int) {
     log("initialize: level=$level")
     if (level == 2) {
       // The freed-object check before every wrapper call (task 131 item 2): on in debug builds.
-      FreedObjectChecks.configure()
-      log("freed-object checks: ${if (FreedObjectChecks.enabled) "on" else "off"}")
+      // Logged on every start (the device check reads it); a detection problem is named, never a
+      // silent fallback.
+      val status =
+        FreedObjectChecks.configure(
+          lookupAvailable =
+            net.multigesture.kanama.ios.cinterop.kanama_ios_godot_instance_lookup_available() != 0
+        )
+      log("freed-object checks: $status")
     }
   }
 
@@ -654,6 +661,9 @@ internal object KanamaIosRuntime {
 
     override fun setPropertyString(propertyIndex: Int, value: String): Boolean =
       throw IllegalStateException("kanama self-test: deliberate property setter failure")
+
+    override fun getProperty(propertyIndex: Int): Any? =
+      throw IllegalStateException("kanama self-test: deliberate property getter failure")
   }
 
   private class BuiltInProbeScript(private val ownerObject: Long) : KanamaIosScriptBridge {
@@ -952,10 +962,25 @@ fun kanamaIosRuntimeScriptInstanceGetProperty(
   retBuf: CPointer<ByteVar>?,
 ): Int {
   retTag?.set(0, IOS_PT_VOID)
-  val value = KanamaIosRuntime.getScriptInstanceProperty(instanceHandle, propertyIndex)
-  if (value === KanamaIosNoProperty) return 0
-  encodeIosReturn(value, retTag, retBuf)
-  return if (retTag != null && retTag[0] != IOS_PT_VOID) 1 else 0
+  // The read AND the encode run inside this containment (task 131 B1): an exception crossing a
+  // @CName export terminates the app. Like desktop's ScriptBridge.siGet, a failure is reported and
+  // the property reads as nil (a 0 handle PT_OBJECT-tagged, which the C side boxes as nil).
+  return try {
+    val value = KanamaIosRuntime.getScriptInstanceProperty(instanceHandle, propertyIndex)
+    if (value === KanamaIosNoProperty) return 0
+    encodeIosReturn(value, retTag, retBuf)
+    if (retTag != null && retTag[0] != IOS_PT_VOID) 1 else 0
+  } catch (t: Throwable) {
+    IosScriptErrors.report(
+      t,
+      KanamaIosRuntime.scriptPropertyLabel(instanceHandle, propertyIndex, "get"),
+    )
+    if (retTag != null && retBuf != null) {
+      retBuf.reinterpret<LongVar>()[0] = 0L
+      retTag[0] = IOS_PT_OBJECT
+      1
+    } else 0
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -1228,12 +1253,15 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       retTag[0] = IOS_PT_FLOAT64
     }
     // Engine wrapper (task 115): ship the object handle; the C side boxes it as an Object
-    // Variant (g_variant_from_object, which takes a reference for RefCounted). requireOpenHandle
-    // throws for a closed RefCounted (the getter's try/catch turns that into nil) instead of
-    // shipping a freed pointer. Used by getProperty of Object-typed @ScriptProperty
-    // (`Object.get("shooter")`) and by Object-returning methods/virtuals.
+    // Variant (g_variant_from_object, which takes a reference for RefCounted). A wrapper whose
+    // object was freed ships 0, which the C side boxes as nil -- silently, as GDScript reads a
+    // freed
+    // object as null (task 131 item 2). A closed RefCounted throws its closed-handle error; every
+    // @CName export that encodes catches it and answers nil instead. Used by getProperty of
+    // Object-typed @ScriptProperty (`Object.get("shooter")`) and by Object-returning
+    // methods/virtuals.
     is GodotObject -> {
-      retBuf.reinterpret<LongVar>()[0] = value.requireOpenHandle().address()
+      retBuf.reinterpret<LongVar>()[0] = FreedObjectChecks.valueSegment(value).address()
       retTag[0] = IOS_PT_OBJECT
     }
     // A @ScriptClass instance answers as its owner object (node_paths-exported script refs), the
@@ -1678,7 +1706,9 @@ internal object IosReturnContainerScratch {
       is RID -> Pair(IOS_PT_RID, int64Bytes(value.value))
       // Wrapper / @ScriptClass elements ship their owner handle; the C array/dictionary builders
       // box PT_OBJECT elements as Object Variants (task 115; `List<Node>` returns were nil before).
-      is GodotObject -> Pair(IOS_PT_OBJECT, int64Bytes(value.requireOpenHandle().address()))
+      // A freed element ships 0 (nil), silently (task 131 item 2).
+      is GodotObject ->
+        Pair(IOS_PT_OBJECT, int64Bytes(FreedObjectChecks.valueSegment(value).address()))
       is KanamaScript<*> -> Pair(IOS_PT_OBJECT, int64Bytes(value.godotObject.segment.address()))
       // task 100 parcel 10: a PackedByteArray value (OggPacketSequence packet data inside an
       // Array[Array]) travels as its raw bytes; the C boxer rebuilds the packed array.

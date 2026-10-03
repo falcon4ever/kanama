@@ -70,7 +70,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
   /** Task 131 item 9: iOS @ScriptProperty skips stay warnings only when the project opts in. */
   private val allowIosExportSkips: Boolean =
-    env.options[ALLOW_EXPORT_SKIPS_OPTION]?.toBoolean() ?: false
+    env.options[ALLOW_EXPORT_SKIPS_OPTION]?.trim()?.lowercase().let { it == "true" || it == "1" }
   private val emitIosCode: Boolean = !emitJvmCode && !emitWebCode
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -1061,12 +1061,15 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
       val selfType = superType.arguments.firstOrNull()?.type?.resolve() ?: continue
       val selfName = selfType.declaration.simpleName.asString()
-      if (selfName == attachTo) return
+      // Godot's `Object` is Kanama's `GodotObject` (task 131 item 5: the New Script template's
+      // Object base must not trip this lint).
+      val wrapperName = if (attachTo == "Object") "GodotObject" else attachTo
+      if (selfName == wrapperName) return
 
       env.logger.warn(
         "[kanama:ksp] ${cls.simpleName.asString()} extends KanamaScript<$selfName> " +
           "but @ScriptClass attaches to $attachTo. Prefer " +
-          "KanamaScript<$attachTo>(godotObject, ::$attachTo) when `self` should match " +
+          "KanamaScript<$wrapperName>(godotObject, ::$wrapperName) when `self` should match " +
           "the Godot base class.",
         cls,
       )
@@ -2721,7 +2724,9 @@ internal enum class TypeMapping(
       BASIS ->
         "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString($s, $v.path)"
-      OBJECT -> "$s.set(ADDRESS, 0, $v.handle.segment)"
+      // Task 131 item 2: a freed wrapper is written as NULL (nil), never as its dangling pointer.
+      OBJECT ->
+        "$s.set(ADDRESS, 0, net.multigesture.kanama.binding.runtime.BuiltinTypes.objectValueSegment($v))"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
       else -> "$s.set($valueLayout, 0, $v)"
     }
@@ -2776,7 +2781,9 @@ internal enum class TypeMapping(
       BASIS ->
         "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
-      OBJECT -> "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, $v.handle.segment)"
+      // Task 131 item 2: a freed wrapper returns NULL (nil), never its dangling pointer.
+      OBJECT ->
+        "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, net.multigesture.kanama.binding.runtime.BuiltinTypes.objectValueSegment($v))"
       in VARIANT_ONLY_RETURN_SHAPES -> "{}"
       else -> "rRet.reinterpret($ptrcallSizeBytesExpr).set($valueLayout, 0, $v)"
     }
@@ -4606,11 +4613,11 @@ internal class ScriptCodeEmitter(
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       TypeMapping.BASIS ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
-      // `.handle.segment`: a GodotObject's handle is the backend-neutral GodotHandle since task
-      // 104; the raw address is its segment (task 128 B — the `_get_space_state` required-return
-      // probe is the first desktop object return that compiles this arm).
+      // An Object Variant, or nil for a wrapper whose object was freed (task 131 item 2), never
+      // the dangling pointer (task 128 B — the `_get_space_state` required-return probe is the
+      // first desktop object return that compiles this arm).
       TypeMapping.OBJECT ->
-        "Arena.ofConfined().use { a -> val s = a.allocate(ADDRESS); s.set(ADDRESS, 0, $valueExpr.handle.segment); VariantConverters.variantFromType(VariantType.OBJECT).invoke(ret, s) }"
+        "net.multigesture.kanama.binding.runtime.BuiltinTypes.initObjectValueVariant(ret, $valueExpr)"
       TypeMapping.ARRAY ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       // task 13 — non-POD virtual return: build a Godot PackedStringArray from the List<String>,

@@ -30,6 +30,15 @@ internal actual object ObjectRuntime {
     GodotFFI.lookup("object_get_instance_from_id", FunctionDescriptor.of(ADDRESS, JAVA_LONG))
   }
 
+  /**
+   * Resolves `object_get_instance_from_id` once, when the freed-object check is configured (task
+   * 131): false turns the check off with one log line instead of failing every wrapper call.
+   */
+  internal fun instanceLookupAvailable(): Boolean =
+    runCatching { objectGetInstanceFromId }
+      .onFailure { System.err.println("[kanama:kt] object_get_instance_from_id: ${it.message}") }
+      .isSuccess
+
   /** Test seam: answers [isLive] in JVM unit tests, which have no engine to ask. */
   @Volatile internal var isLiveOverride: ((RawSegment, Long) -> Boolean)? = null
 

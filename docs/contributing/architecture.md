@@ -388,6 +388,11 @@ whether the captured id still resolves to that pointer and throws
 `IllegalStateException("Invalid access to previously freed instance ...")` when
 it does not — contained and reported as a script error like GDScript's error of
 the same name (task 131 item 2; `FreedObjectChecks`, `ObjectRuntime.isLive`).
+Holding a stale wrapper stays silent, as in GDScript: every place that encodes a
+wrapper as a value (Variant boxing, a script property read, a method or virtual
+return, an Array element; generated glue goes through
+`BuiltinTypes.objectValueSegment`) uses `FreedObjectChecks.valueSegment`, which
+answers NULL — nil — for a freed object.
 A release build skips the check, so there a wrapper kept past its object's death
 is still a dangling pointer for those members — see the script model below.
 

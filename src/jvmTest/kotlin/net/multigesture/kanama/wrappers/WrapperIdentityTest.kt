@@ -13,6 +13,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node3D
+import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.ObjectRuntime
 import net.multigesture.kanama.binding.runtime.ScriptErrors
@@ -94,6 +95,40 @@ class WrapperIdentityTest {
       thrown.message,
     )
     assertEquals("<Freed Object>", node.toString())
+  }
+
+  @Test
+  fun aFreedWrapperEncodesAsNilSilently() {
+    val node = Node3D(handle(0x1000))
+    FreedObjectChecks.enabled = true
+    assertEquals(0x1000L, FreedObjectChecks.valueSegment(node).address())
+
+    freed += 0x1000
+    // GDScript semantics: holding / returning a freed object is nil, not an error.
+    assertEquals(0L, FreedObjectChecks.valueSegment(node).address())
+    assertEquals(0L, BuiltinTypes.objectValueSegment(node).address())
+  }
+
+  @Test
+  fun isSameInstanceAgreesWithEquals() {
+    val node = Node(handle(0x1000))
+    val view = Node3D(handle(0x1000))
+    val other = Node(handle(0x2000))
+
+    assertTrue(node.isSameInstance(view))
+    assertFalse(node.isSameInstance(other))
+    freed += 0x1000
+    assertTrue(node.isSameInstance(view), "identity survives the free, like equals")
+  }
+
+  @Test
+  fun instanceIdsArePrintedUnsignedLikeGodot() {
+    val thrown = FreedObjectChecks.freedInstance("ScriptBacktrace", -9223372002478258583L)
+    assertEquals(
+      "Invalid access to previously freed instance (ScriptBacktrace, instance id " +
+        "9223372071231293033)",
+      thrown.message,
+    )
   }
 
   @Test

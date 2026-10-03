@@ -296,7 +296,9 @@ check_absent "Invalid call\. Nonexistent function"
 # after the object is freed. Before task 131 equal=false and set_size=3.
 # task 131 item 2 (F2) -- the editor binary is a debug build, so the freed-object check is on.
 check "\[kanama:kt\] freed-object checks: on"
-check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> survived=true result_null=true"
+# Holding a freed wrapper is silent, as in GDScript: two exported-property reads and a script
+# method return of it give Godot null (no error; counted below).
+check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true"
 # A call through the freed wrapper throws IllegalStateException instead of dereferencing the dead
 # pointer (before task 131: a use-after-free, typically a native crash and no line below at all).
 check "FreedObjectSmoke caught=Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$"
@@ -305,6 +307,16 @@ check "FreedObjectSmoke caught=Invalid access to previously freed instance \(Nod
 freed_call_line="$(grep -n 'fun callFreed' "$PROJECT_DIR/FreedObjectSmoke.kt" | cut -d: -f1)"
 check "^SCRIPT ERROR: java\.lang\.IllegalStateException: Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$"
 check "^ +at: FreedObjectSmoke\.callFreed \(res://FreedObjectSmoke\.kt:${freed_call_line}\)$"
+# Exactly one: the call. The property reads and the method return of the freed wrapper reported
+# nothing.
+freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" || true)"
+if [[ "$freed_errors" != "1" ]]; then
+  smoke_fail "freed-object script errors (want exactly 1)" "$freed_errors"
+fi
+# task 131 S5 -- the RefCounted elements of a returned typed Array (Engine.captureScriptBacktraces)
+# are retained before the Array is destroyed: alive, usable, then closed. Before, each was already
+# freed (valid=false), and closing it was a use-after-free.
+check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.

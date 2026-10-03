@@ -377,10 +377,13 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
                     f"{typed_helper} does not map through nullable typed wrappers",
                 )
         else:
-            if "BuiltinTypes.readArrayObjects(" not in typed_text or ", wrapper)" not in typed_text:
+            # Task 131 S5: the returned Array is destroyed right after, so the decode must be the
+            # owning one (RefCounted elements retained before the destroy).
+            if "BuiltinTypes.readArrayObjectsOwned(" not in typed_text or ", wrapper)" not in typed_text:
                 errors.append(
                     f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
-                    f"{typed_helper} does not decode directly through nullable typed wrappers",
+                    f"{typed_helper} does not decode directly through nullable typed wrappers "
+                    f"with BuiltinTypes.readArrayObjectsOwned",
                 )
             if "callArrayReturn(" not in typed_text and "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in typed_text:
                 errors.append(

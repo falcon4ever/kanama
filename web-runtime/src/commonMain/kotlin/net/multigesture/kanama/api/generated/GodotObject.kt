@@ -244,8 +244,10 @@ open class GodotObject(godotObject: GodotHandle) {
     backendHandle.backendToken() == other.backendHandle.backendToken()
 
   /**
-   * Two wrappers of one Godot object are equal, whatever their class (task 131 item 6), as on the
-   * desktop/Android and iOS backends: `List.contains`, `Set` and `Map` keys follow.
+   * Token identity (task 131 item 6), the same test as [isSameInstance]: wrappers that carry the
+   * same Web handle token are equal, whatever their class. The Web bridge mints a token per
+   * crossing site, not per Godot object, and does not expose the engine instance id cheaply, so two
+   * tokens for one object are NOT equal here (desktop/Android/iOS compare the instance id).
    */
   override fun equals(other: Any?): Boolean =
     this === other || (other is GodotObject && isSameInstance(other))

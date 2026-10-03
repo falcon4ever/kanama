@@ -1306,7 +1306,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(8L, 8L)
       objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
       return try {
-        BuiltinTypes.readArrayObjects(ret)
+        BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
       }
@@ -1319,7 +1319,7 @@ actual object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, wrapper)
+      BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
     }
 
   /**
@@ -1407,7 +1407,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Node> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, Node::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, Node::wrap)
     }
 
   fun ptrcallNoArgsRetTypedNode2DList(
@@ -1415,7 +1415,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Node2D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, Node2D::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, Node2D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedNode3DList(
@@ -1423,7 +1423,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Node3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, Node3D::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, Node3D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedMaterialList(
@@ -1431,7 +1431,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Material> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, Material::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, Material::wrap)
     }
 
   fun ptrcallNoArgsRetTypedArea2DList(
@@ -1439,7 +1439,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Area2D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, Area2D::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, Area2D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedArea3DList(
@@ -1447,7 +1447,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Area3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, Area3D::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, Area3D::wrap)
     }
 
   fun ptrcallNoArgsRetTypedBaseButtonList(
@@ -1455,7 +1455,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<BaseButton> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, BaseButton::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, BaseButton::wrap)
     }
 
   fun ptrcallNoArgsRetTypedPhysicsBody3DList(
@@ -1463,7 +1463,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<PhysicsBody3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjects(ret, PhysicsBody3D::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, PhysicsBody3D::wrap)
     }
 
   actual fun ptrcallNoArgsRetVector2iList(
@@ -1581,7 +1581,7 @@ actual object ObjectCalls {
       scratch.arrayRet,
     )
     return try {
-      BuiltinTypes.readArrayObjects(scratch.arrayRet)
+      BuiltinTypes.readArrayObjectsOwned(scratch.arrayRet)
     } finally {
       BuiltinTypes.destroyTyped(VariantType.ARRAY, scratch.arrayRet)
     }
@@ -1601,7 +1601,7 @@ actual object ObjectCalls {
       scratch.arrayRet,
     )
     return try {
-      BuiltinTypes.readArrayObjects(scratch.arrayRet, wrapper)
+      BuiltinTypes.readArrayObjectsOwned(scratch.arrayRet, wrapper)
     } finally {
       BuiltinTypes.destroyTyped(VariantType.ARRAY, scratch.arrayRet)
     }
@@ -1630,7 +1630,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
         objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-        return BuiltinTypes.readArrayObjects(ret)
+        return BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
         GodotStrings.destroyString(stringCell)
@@ -1655,7 +1655,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
         return callArrayReturn(methodBind, instance, args) { ret ->
-          BuiltinTypes.readArrayObjects(ret, wrapper)
+          BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
         }
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -1684,7 +1684,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
         objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
-        return BuiltinTypes.readArrayObjects(ret)
+        return BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
         GodotStrings.destroyString(stringCell)
@@ -1733,7 +1733,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, secondBoolCell)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return try {
-        BuiltinTypes.readArrayObjects(ret)
+        BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
       }
@@ -1794,7 +1794,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, secondBoolCell)
       objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
       return try {
-        BuiltinTypes.readArrayObjects(ret)
+        BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
       }
@@ -1849,7 +1849,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, arg2)
         args.setAtIndex(ADDRESS, 3, arg3)
         return callArrayReturn(methodBind, instance, args) { ret ->
-          BuiltinTypes.readArrayObjects(ret, wrapper)
+          BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
         }
       } finally {
         GodotStrings.destroyString(arg0)
@@ -3909,7 +3909,7 @@ actual object ObjectCalls {
       ridCell.set(JAVA_LONG, 0, value.value)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
-      return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjects)
+      return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjectsOwned)
     }
   }
 
@@ -11195,7 +11195,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, argArray)
         args.setAtIndex(ADDRESS, 1, sizeCell)
-        return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjects)
+        return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjectsOwned)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -19897,7 +19897,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(8L, 8L)
       objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
       return try {
-        BuiltinTypes.readArrayObjects(ret)
+        BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
       }
@@ -37516,7 +37516,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, valuesCell)
         args.setAtIndex(ADDRESS, 2, sizeCell)
-        return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjects)
+        return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayObjectsOwned)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, valuesCell)
       }

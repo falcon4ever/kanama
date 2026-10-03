@@ -16,13 +16,16 @@ import net.multigesture.kanama.types.NodePath
  * lifetime is owned by Godot, such as the object passed into a script instance.
  *
  * The object must be alive when the wrapper is constructed: construction reads its
- * instance id once (see [instanceId]). After the object is freed, [instanceId], [equals],
- * [hashCode] and `GD.isInstanceValid` stay safe. In debug builds (the editor and debug
- * export templates) every other member throws `IllegalStateException("Invalid access to
- * previously freed instance ...")`, which Kanama contains and reports as a script error
- * like GDScript's error of the same name (task 131 item 2); [toString] answers
- * `<Freed Object>`. A release build does not check: there a freed wrapper is a dangling
- * pointer, so test `GD.isInstanceValid` before calling an object that may have been freed.
+ * instance id once (see [instanceId]). After the object is freed, GDScript's rules apply in
+ * debug builds (the editor and debug export templates; task 131 item 2):
+ * - holding the wrapper is fine: [instanceId], [equals], [hashCode], [isSameInstance] and
+ *   `GD.isInstanceValid` never touch the object, [toString] answers `<Freed Object>`, and
+ *   handing the wrapper back to Godot as a value (a script property, a script method's return,
+ *   a Variant argument, an Array element) passes nil;
+ * - calling a method through it throws `IllegalStateException("Invalid access to previously
+ *   freed instance ...")`, which Kanama contains and reports as a script error.
+ * A release build does not check: there a freed wrapper is a dangling pointer, so test
+ * `GD.isInstanceValid` before using an object that may have been freed.
  *
  * Two wrappers are [equals] when they view the same Godot object (the same instance id),
  * as GDScript's `==` compares objects; `List.contains`, `Set` and `Map` keys follow.
@@ -62,9 +65,11 @@ open class GodotObject(val handle: GodotHandle) {
 
     /**
      * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam, read by every wrapper
-     * call (receiver and object arguments). Internal: game code passes [handle] around and never
-     * unwraps it. While `FreedObjectChecks.enabled` (debug builds) it first checks that the object
-     * is still alive and throws `IllegalStateException` if it was freed (task 131 item 2).
+     * call (receiver and typed object arguments). Internal: game code passes [handle] around and
+     * never unwraps it. While `FreedObjectChecks.enabled` (debug builds) it first checks that the
+     * object is still alive and throws `IllegalStateException` if it was freed (task 131 item 2).
+     * Value encodings (Variant, property, return) use `FreedObjectChecks.valueSegment` instead,
+     * which turns a freed object into nil without an error.
      */
     internal val segment: RawSegment
         get() {
@@ -75,9 +80,11 @@ open class GodotObject(val handle: GodotHandle) {
             return raw
         }
 
-    /** Returns true when both wrappers refer to the same Godot object instance. */
-    fun isSameInstance(other: GodotObject): Boolean =
-        handle.segment.address() == other.handle.segment.address()
+    /**
+     * Returns true when both wrappers refer to the same Godot object instance: the same
+     * [instanceId], exactly what [equals] compares.
+     */
+    fun isSameInstance(other: GodotObject): Boolean = instanceId == other.instanceId
 
     init {
         require(handle.segment.address() != 0L) { "GodotObject handle must not be NULL" }
@@ -98,13 +105,14 @@ open class GodotObject(val handle: GodotHandle) {
     /**
      * True when [other] is a wrapper of the same Godot object: the same [instanceId] (task 131
      * item 6), whatever the wrapper class (`Node` and `Node3D` views of one node are equal). Never
-     * dereferences the object, so it stays safe after the object was freed.
+     * dereferences the object, so it stays safe after the object was freed. Final, so every
+     * wrapper class keeps this one notion of identity.
      */
-    override fun equals(other: Any?): Boolean =
+    final override fun equals(other: Any?): Boolean =
         this === other || (other is GodotObject && instanceId == other.instanceId)
 
     /** Hashes [instanceId], consistently with [equals]. */
-    override fun hashCode(): Int = instanceId.hashCode()
+    final override fun hashCode(): Int = instanceId.hashCode()
 
     /**
      * Argument-position handle check. A non-owning wrapper has nothing to refuse; [RefCounted]

@@ -141,6 +141,23 @@ project's `.godot/exported/` directory before exporting again — Godot caches
 each converted scene there keyed by the source file's md5 and mtime and reuses
 a stripped conversion until the `.tscn` itself changes.
 
+An exported property (`@ScriptProperty`) that the iOS backend cannot deliver —
+a typed `Map`, or a value type without an iOS path such as `Vector2i` — fails
+this build and names the property:
+
+```text
+e: [ksp] [kanama:ksp] [kanama-ios] DataStructure.position (VECTOR2I) — no iOS @ScriptProperty
+path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
+this property would be dropped. ...
+```
+
+Before task 131 this was a warning and the property silently kept its Kotlin
+default on the phone. Change the property's type, or accept the skip by adding
+`-PkanamaIosAllowExportSkips=true` (`1` also works) to the `installIosAddon`
+command; each skipped property is then a warning again. The
+Starter-Kit-City-Builder demo needs that flag for an iOS build until `Vector2i`
+exports reach iOS.
+
 To verify an export directly, run the parity check from the exported project
 (it needs the Kanama addon loaded, so run it where the export ran):
 

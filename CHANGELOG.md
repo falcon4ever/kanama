@@ -63,33 +63,42 @@ only `--write`.
 ### Fixed — freed objects, wrapper equality, coroutine errors, the New Script template (task 131)
 
 - **Calling a freed object is a script error, not a crash** (F2), on desktop, Android and iOS debug
-  builds (the editor and debug export templates). Every wrapper call first asks Godot
-  (`object_get_instance_from_id`) whether the instance id the wrapper captured still names its object;
-  if the object was freed the call throws
-  `IllegalStateException: Invalid access to previously freed instance (Node3D, instance id …)`,
-  which is contained and reported like any script error, as GDScript reports the same mistake. Before,
-  the call read freed memory: wrong values at best, a native crash of the game (or of the editor for
-  `@Tool` scripts) at worst. `toString()` of a freed wrapper answers `<Freed Object>`. Release export
-  templates skip the check (it costs one engine call per wrapper call, about 11-20 ns), so keep
-  `GD.isInstanceValid` before using an object that may be gone. It also exposed a use-after-free in the
-  example project, which closed the elements of a typed `Array<ScriptBacktrace>` return after the
-  Array had already freed them.
-- **Two wrappers of one Godot object are equal** (F23): `equals`/`hashCode` compare the instance id,
-  not the JVM wrapper, on every backend (Web included), so `node == other`, `List.contains`, `Set`
-  and `Map` keys behave like GDScript's `==`, whatever the wrapper class (`Node` vs `Node3D`).
+  builds (the editor and debug export templates), with GDScript's semantics. A method called through
+  a wrapper whose object was freed throws
+  `IllegalStateException: Invalid access to previously freed instance (Node3D, instance id …)`, which
+  is contained and reported like any script error. Holding such a wrapper is silent: comparing it,
+  `GD.isInstanceValid`, `toString()` (`<Freed Object>`) and handing it back to Godot as a value (an
+  exported property read, a method or virtual return, a Variant argument, an Array element) pass
+  `null` without an error. Before, every use read freed memory: wrong values at best, a native crash
+  of the game (or of the editor for `@Tool` scripts) at worst. Release export templates skip the
+  check (it costs one engine call per wrapper call, about 11-20 ns), so keep `GD.isInstanceValid`
+  before using an object that may be gone.
+- **RefCounted elements of a returned typed Array are owned** (desktop, Android, iOS). A method
+  returning `Array[SomeRefCounted]` (`Engine.captureScriptBacktraces()`, …) used to hand back
+  wrappers of objects the destroyed Array had already freed. Each RefCounted element is now retained
+  before the Array is destroyed, and its wrapper owns that `+1`: `close()` it like any
+  RefCounted-typed return. (Ownership class for task 132 D1: "element of a returned typed Array" is
+  owned, like the return itself; Array/Dictionary elements decoded from a Variant stay borrowed.)
+- **Two wrappers of one Godot object are equal** (F23): `equals`/`hashCode` (now final) and
+  `isSameInstance` compare the instance id, not the JVM wrapper, on desktop, Android and iOS, so
+  `node == other`, `List.contains`, `Set` and `Map` keys behave like GDScript's `==`, whatever the
+  wrapper class (`Node` vs `Node3D`). Web: same token only (two wrappers carrying the same Web handle
+  are equal; the Web bridge mints handles per crossing, so two handles of one object are not).
 - **Exceptions in `KanamaScope` coroutines are script errors** with the game file and line, like other
   contained exceptions, instead of a stderr trace from the default coroutine handler (desktop/Android)
   or an app termination (iOS).
-- **iOS: a throwing property setter is contained** (reported as a script error, the write rejected),
-  like on desktop; before, it crossed the `@CName` export and terminated the app. A throwing getter
-  is now reported too.
+- **iOS: a throwing property accessor is contained.** A throwing setter is reported as a script error
+  and the write rejected, like on desktop; before, it crossed the `@CName` export and terminated the
+  app. A throwing getter, or a value that cannot be encoded, is reported and reads as `null`.
 - **iOS: an exported property iOS cannot deliver is a build error** (F25), for example a typed `Map`
   or a `Vector2i` `@ScriptProperty`. It used to be a warning, and the property silently kept its
   Kotlin default on iOS. Build with `-PkanamaIosAllowExportSkips=true` to accept the skip (it is then a
-  warning again). See [Exporting Dictionaries — iOS](docs/game-dev/properties-resources.md#ios).
-- **The editor's New Script template has the documented shape** (F15): a `package` (the one the
-  scripts in the target folder use, else derived from the folder), a `KanamaScript<Base>` subclass and
-  an `@OnReady` stub. It no longer adds `@GlobalClass` unless the template asks for it.
+  warning again). See [Exporting to iOS](docs/exporting/ios.md) and
+  [Exporting Dictionaries — iOS](docs/game-dev/properties-resources.md#ios).
+- **The editor's New Script template has the documented shape** (F15): a `package` (the one most
+  scripts in the target folder use, else derived from the folder, else `game`), a
+  `KanamaScript<Base>` subclass and, for a Node base, an `@OnReady` stub. It no longer adds
+  `@GlobalClass` unless the template asks for it.
 
 ### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers (#277)
 

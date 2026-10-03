@@ -30,6 +30,7 @@ import kotlinx.cinterop.set
 import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
+import kotlinx.coroutines.launch
 import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
@@ -114,6 +115,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceCallV
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceGetProperty
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceSetProperty
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceSetPropertyString
 import net.multigesture.kanama.types.AABB
@@ -2069,7 +2071,8 @@ actual object ObjectCalls {
       }
       is GodotObject -> {
         val c = alloc<LongVar>()
-        c.value = value.segment.address()
+        // A Variant value: a freed wrapper is nil, silently (task 131 item 2).
+        c.value = FreedObjectChecks.valueSegment(value).address()
         desc.tag = PT_OBJECT
         desc.ptr = c.ptr
       }
@@ -2792,7 +2795,8 @@ actual object ObjectCalls {
           checkNotNull(value as? GodotObject) {
             "typed object array element is not a GodotObject wrapper: $value"
           }
-        Pair(PT_OBJECT, int64Bytes(element.segment.address()))
+        // An Array element is a value: a freed wrapper is a null element (task 131 item 2).
+        Pair(PT_OBJECT, int64Bytes(FreedObjectChecks.valueSegment(element).address()))
       },
     )
 
@@ -3034,10 +3038,13 @@ actual object ObjectCalls {
   // the Array size/get builtins and fills an int64 buffer. task 100 (parcel 9): the method runs
   // ONCE — the handles land in the inline buffer when they fit, otherwise the C side parks them in
   // a pending slot that is drained into a right-sized buffer (the old two-call length protocol
-  // re-ran the method, which is only safe for pure getters). Handles are BORROWED, as on desktop
-  // (BuiltinTypes.readArrayObjects): the returned Array is destroyed inside the call. Each handle
-  // -> MemorySegment -> fromHandle; nulls (non-Object or freed) are dropped. `internal` so the
-  // GENERATED helpers (every audited arg shape) share this one body.
+  // re-ran the method, which is only safe for pure getters). The returned Array is destroyed inside
+  // the call, so the C side RETAINS each RefCounted element first (task 131 S5) and the wrapper
+  // owns that +1 (close() releases), as desktop's BuiltinTypes.readArrayObjectsOwned; other
+  // handles are borrowed. Each handle -> MemorySegment -> fromHandle; a RefCounted element of an
+  // untyped Array[Object] comes back as a RefCounted wrapper so it can be closed; nulls
+  // (non-Object or freed) are dropped. `internal` so the GENERATED helpers (every audited arg
+  // shape) share this one body.
   internal inline fun <T> retTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -3069,12 +3076,27 @@ actual object ObjectCalls {
         }
       val out = ArrayList<T>(count.toInt())
       for (i in 0 until count.toInt()) {
-        val obj = fromHandle(MemorySegment.ofAddress(buf[i]))
+        val obj = ownedListElement(fromHandle(MemorySegment.ofAddress(buf[i])))
         if (obj != null) out.add(obj)
       }
       out
     }
   }
+
+  /**
+   * An untyped (`GodotObject`) wrapper of a RefCounted element the C side retained becomes a
+   * [RefCounted] wrapper, so the owned +1 can be closed (task 131 S5). Typed wrappers pass through.
+   */
+  @Suppress("UNCHECKED_CAST")
+  internal fun <T> ownedListElement(obj: T?): T? =
+    if (
+      obj is GodotObject &&
+        obj !is RefCounted &&
+        obj::class == GodotObject::class &&
+        obj.isClass("RefCounted")
+    ) {
+      RefCounted(obj.handle) as T
+    } else obj
 
   // Inline handle capacity of retTypedObjectList (longer lists drain from the C pending slot).
   internal const val TYPED_OBJECT_LIST_INLINE_CAP = 64
@@ -3653,7 +3675,8 @@ actual object ObjectCalls {
         }
         is GodotObject -> {
           val c = alloc<LongVar>()
-          c.value = a.segment.address()
+          // A Variant argument: a freed wrapper is nil, silently (task 131 item 2).
+          c.value = FreedObjectChecks.valueSegment(a).address()
           tags[i] = PT_OBJECT
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
@@ -41250,19 +41273,50 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       val stringResult =
         if (instance != 0L) kanamaIosRuntimeScriptInstanceSetPropertyString(instance, 0, null)
         else -1
+      // Task 131 B1: a throwing getter reached through the get @CName export reads as nil (a 0
+      // handle PT_OBJECT-tagged) and is reported, like desktop's siGet.
+      val (getResult, getTag, getHandle) =
+        memScoped {
+          val tag = alloc<IntVar>()
+          val buf = allocArray<ByteVar>(32)
+          val r =
+            if (instance != 0L) {
+              kanamaIosRuntimeScriptInstanceGetProperty(instance, 0, tag.ptr, buf)
+            } else -1
+          Triple(r, tag.value, buf.reinterpret<LongVar>()[0])
+        }
       val reported = IosScriptErrors.reportCount - reportsBefore
       println(
         "[kanama][ios][kn] OBJECTCALLS SELFTEST property-set containment long=$longResult " +
-          "string=$stringResult reported=$reported"
+          "string=$stringResult get=$getResult/$getTag/$getHandle reported=$reported"
       )
       check(
         "script-error(throwing property setter contained, set ok, reported)",
-        instance != 0L && longResult == 1 && stringResult == 1 && reported == 2,
+        instance != 0L && longResult == 1 && stringResult == 1,
+      )
+      check(
+        "script-error(throwing property getter contained, reads nil, reported)",
+        getResult == 1 && getTag == 13 && getHandle == 0L && reported == 3,
       )
       if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
       KanamaIosRuntime.freeScriptResource(script)
       ObjectCalls.destroyObject(setterOwner)
     } else check("script-error(throwing property setter contained) (instance absent)", false)
+  }
+
+  // Task 131 item 10: an exception escaping a KanamaScope coroutine is reported as a script error
+  // (one report; the self-test survives). Unconfined runs the coroutine inline, so the row can
+  // count.
+  run {
+    val reportsBefore = IosScriptErrors.reportCount
+    val scope = net.multigesture.kanama.api.KanamaScope()
+    scope.launch(kotlinx.coroutines.Dispatchers.Unconfined) {
+      throw IllegalStateException("kanama self-test: deliberate coroutine failure")
+    }
+    scope.cancel()
+    val reported = IosScriptErrors.reportCount - reportsBefore
+    println("[kanama][ios][kn] OBJECTCALLS SELFTEST coroutine-error reported=$reported")
+    check("script-error(KanamaScope coroutine exception reported once)", reported == 1)
   }
 
   // Task 131 item 6: two wrappers of one object are equal (instance id), hash alike and collapse in
@@ -41303,6 +41357,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
           asNode3D == asNode &&
             asNode3D.toString() == "<Freed Object>" &&
             !IosGodot.isInstanceIdValid(asNode3D.instanceId),
+        )
+        // Holding is silent (GDScript semantics): encoded as a value -- a property read, a return,
+        // a Variant argument -- the freed wrapper is a 0 handle (nil), with no exception.
+        check(
+          "freed-object(value encoding is nil, no error)",
+          runCatching { FreedObjectChecks.valueSegment(asNode3D).address() }.getOrNull() == 0L,
         )
       } finally {
         FreedObjectChecks.enabled = checksBefore
