@@ -15,9 +15,11 @@ small edits; IntelliJ IDEA remains the recommended editor for Kotlin navigation,
 completion, refactoring, and debugging.
 
 The plugin also checks desktop Java setup when it loads. Kanama needs a JDK 25+
-distribution that contains `libjvm`; if `JAVA_HOME` is missing or points at a
-JDK without the expected `lib/server/libjvm.*` file, the plugin shows a Godot
-warning before you hit a harder runtime failure.
+distribution that contains `libjvm`. The check mirrors exactly what the native
+runtime does to find it (same order, same install locations, same version rule;
+see [Which JDK Kanama Uses](#which-jdk-kanama-uses)), so a Godot started without
+`JAVA_HOME` does not warn while the runtime can find a JDK 25+, and warns when it
+cannot. The warning names the `kanama/build/jdk_path` editor setting.
 
 ```mermaid
 flowchart LR
@@ -60,6 +62,69 @@ For the checked-in Kanama example project, the equivalent local command is:
 ./gradlew syncExampleAddonJar
 ```
 
+## Which JDK Kanama Uses
+
+Kanama uses a JDK in two places: **Build Scripts** runs Gradle (and, through it,
+the CMake step that compiles the native bootstrap against the JDK's `jni.h`), and
+the **runtime** loads that JDK's `libjvm` into Godot. Both need JDK 25 or newer.
+On Linux and Windows, Godot started from a desktop launcher (an application menu
+entry, a desktop shortcut, a file manager) does **not** inherit the `JAVA_HOME`
+from your shell profile, so without help the system's default JDK, often an older
+one, would be used. Both therefore pick the JDK the same way, in this order:
+
+1. The **`kanama/build/jdk_path`** editor setting (empty means automatic). It is
+   an *Editor Setting* (**Editor > Editor Settings > Kanama > Build**), stored
+   per machine rather than in the project, so an absolute path is not committed
+   with it. It must be an absolute path (`~/` is expanded), to the JDK's home
+   directory: the folder that contains `bin/` and `lib/`. A wrong value is an
+   error; it is never silently replaced by another JDK.
+2. `JAVA_HOME` from the environment Godot was started with. One that points at a
+   JDK older than 25 is skipped, not an error.
+3. The best JDK found in the usual install locations. A JDK counts when its
+   `release` file says 25 or newer. Among those, a GA release beats an
+   early-access one, exactly 25 beats a newer major, then the newer version wins.
+
+   | OS | Searched |
+   | --- | --- |
+   | Linux | `/usr/lib/jvm`, `/usr/lib64/jvm`, `/usr/java`, `/usr/local/java`, `/opt/java`, `/opt/jdk` |
+   | macOS | `/Library/Java/JavaVirtualMachines/*/Contents/Home`, `~/Library/Java/JavaVirtualMachines/*/Contents/Home`, Homebrew `openjdk*` under `/opt/homebrew/opt` and `/usr/local/opt` |
+   | Windows | `%ProgramFiles%\{Java, Eclipse Adoptium, Microsoft, Zulu, BellSoft, Amazon Corretto, Semeru, Temurin}`, Scoop `~\scoop\apps\*\current` |
+   | All | `~/.jdks` (IntelliJ), `~/.sdkman/candidates/java` |
+
+For **Build Scripts** the JDK must be a full JDK (it needs `include/jni.h`; a JRE
+cannot compile the native bootstrap). The output panel names the JDK used
+(`[kanama:tools] Build JDK: ... from ...`). If none qualifies, Build Scripts stops
+with an error that names `kanama/build/jdk_path` and `JAVA_HOME` instead of
+starting a build that fails inside the native compile.
+
+The native **runtime** cannot read editor settings at load time, so the plugin
+writes a valid `kanama/build/jdk_path` to `.godot/kanama_jdk_home` in the project
+(and removes the file when the setting is empty or invalid), which the runtime
+reads first. If that JDK has since been removed or is older than 25, the runtime
+logs `[kanama] ignoring .godot/kanama_jdk_home=...` with the reason and continues
+with `JAVA_HOME` and the install locations. The runtime reads the file once, when
+Godot loads the extension, which is before the plugin can write it: on the first
+open of a project (a fresh clone, or a deleted `.godot`) and after you change the
+setting, the plugin warns **"Restart the editor to use JDK ..."** instead of
+reporting OK. A game exported with a bundled runtime ignores all of this and uses
+its own `runtime/` folder.
+
+**Gradle itself** can run on any JDK 25+. The build pins its toolchain to JDK 25;
+if only another JDK (a JDK 26-only machine, say) is installed, Gradle downloads a
+JDK 25 once into `~/.gradle/jdks` and reuses it (the foojay toolchain resolver in
+`settings.gradle.kts`, and in the release kit's `settings.gradle.kts`). That needs
+network access the first time; install a JDK 25 to avoid the download. The
+native bootstrap is compiled against that JDK 25 when Gradle runs the build.
+
+Editors installed as a **Flatpak or Snap** run in a sandbox that cannot see
+`/usr/lib/jvm` or your shell's `JAVA_HOME`. Grant the sandbox access to the JDK
+folder (for Flatpak, `flatpak override --user --filesystem=<jdk dir>:ro`), point
+`kanama/build/jdk_path` at a JDK inside a path the sandbox can read, or use the
+unsandboxed Godot build. A shell build (`./gradlew ...`) is not affected: it
+uses the shell's `JAVA_HOME`. The native bootstrap's CMake step checks, on every
+OS, that the JDK it found has a `jni.h` that defines `JNI_VERSION_21` (a JDK 21
+or newer header) and names the JDK when it does not.
+
 ## Project Settings
 
 External projects may need to tell the plugin where the Kanama source checkout
@@ -84,6 +149,7 @@ Useful editor settings:
 | `kanama/tools/auto_build_on_save` | Watches `.kt` files and runs a debounced script build. |
 | `kanama/tools/reload_scene_after_sync` | Reloads the current scene after a successful sync. |
 | `kanama/tools/developer_mode` | Shows runtime build actions intended for Kanama maintainers. |
+| `kanama/build/jdk_path` (Editor Setting) | JDK 25+ home directory (absolute) used by Build Scripts and the runtime. Empty tries `JAVA_HOME`, then the usual install locations. See [Which JDK Kanama Uses](#which-jdk-kanama-uses). |
 | `kanama/tools/java_preflight_enabled` | Shows editor warnings when desktop `libjvm` cannot be found. |
 
 `Build Runtime` is hidden unless `developer_mode` is enabled. Normal game
