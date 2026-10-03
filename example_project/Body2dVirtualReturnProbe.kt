@@ -3,6 +3,7 @@ package net.multigesture.kanama.example
 import net.multigesture.kanama.annotations.OverrideVirtual
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.types.Transform2D
 
 /**
@@ -21,4 +22,8 @@ class Body2dVirtualReturnProbe(val godotObject: GodotHandle) {
       net.multigesture.kanama.types.Vector2(3.0f, 4.0f),
       net.multigesture.kanama.types.Vector2(5.0f, 6.0f),
     )
+
+  // Task 128 B: Godot marks this return `meta: "required"`, so the override must be non-null
+  // (`GodotObject?` fails the build). The probe answers with its own host object.
+  @OverrideVirtual fun _get_space_state(): GodotObject = GodotObject(godotObject)
 }

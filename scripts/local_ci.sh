@@ -384,6 +384,12 @@ stage "typed Godot enums and required returns (task 128 A)"
 # is the naming function under the frozen prefix lock.
 python3 "$ROOT_DIR/scripts/check_typed_enums.py"
 
+stage "virtual-method signature table drift (task 128 B)"
+# processor/.../virtual-signatures.tsv is generated from extension_api.json (every engine virtual's
+# Godot types, the `required` return marker); the processor validates @OverrideVirtual against it,
+# including the typed enum slots. A hand edit or an un-regenerated API bump fails here.
+python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
+
 stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, task 117 P2')"
 # A zero instance is the generator's static-method marker (NULL_SEGMENT for an `is_static`
 # method) and over twenty kanama_ios_godot_* entry points early-return on it, so a static routed

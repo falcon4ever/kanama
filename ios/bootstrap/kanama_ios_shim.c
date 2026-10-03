@@ -1525,7 +1525,8 @@ static void kanama_ios_script_resource_init_metadata(KanamaIosExtensionInstance 
                 instance->script_handle, i);
             kanama_ios_init_string(&instance->script_property_hint_strings[i], property_hint_string);
             /* task 64 iOS mirror — non-empty only for object-typed exports
-             * (RESOURCE_TYPE/NODE_TYPE hints); StringName, unlike hint_string. */
+             * (RESOURCE_TYPE/NODE_TYPE hints) and, since task 128 B, Godot-enum
+             * exports (the enum's qualified name); StringName, unlike hint_string. */
             char property_class_name[512];
             property_class_name[0] = '\0';
             kanama_ios_runtime_script_resource_property_class_name(

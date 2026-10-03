@@ -37,6 +37,13 @@ of leaving a project-specific workaround.
 - Keep `GodotObject.call(...)` at true mixed-language boundaries, such as a
   GDScript autoload kept during an incremental port. Use typed wrappers and
   direct Kotlin calls for known Kanama scripts.
+- Godot enum constants become typed values: `Node.PROCESS_MODE_ALWAYS` is
+  `Node.ProcessMode.ALWAYS`, `KEY_ESCAPE` is `Key.ESCAPE`, a bitfield combines
+  with `or` and tests with `in`. An `@export var mode: Node.ProcessMode` ports to
+  `@ScriptProperty var mode: Node.ProcessMode = Node.ProcessMode.INHERIT`; it
+  stores the same Godot values, so the scene's `mode = 3` keeps working. A
+  GDScript `int` that really holds an enum (`var mode := 3`) is worth typing
+  during the port. See [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields).
 - For `@Rpc` methods on Kanama scripts, use generated `*Rpcs` sender helpers
   instead of raw `rpc("method_name")` strings.
 - For scenes with `MultiplayerSynchronizer`, verify every replicated custom

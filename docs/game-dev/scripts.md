@@ -66,6 +66,7 @@ specifically, see
 | GDScript | Kanama | Note |
 |---|---|---|
 | `int` | `Long` | Use `Long` at all GDExtension boundaries |
+| `Node.ProcessMode` (any Godot enum / bitfield) | `Node.ProcessMode` | A typed value class over the `int`; see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields) |
 | `float` (method args/returns) | `Double` | Godot's ABI uses 64-bit slots for scalar float |
 | `bool` | `Boolean` | |
 | `Vector3.x/y/z` | `Float` (`real_t`) | Matches Godot's default single-precision storage |
@@ -129,12 +130,36 @@ class ProceduralMesh(val godotObject: GodotHandle) {
 ```
 
 Return types map GDScript-style: Godot `Array` is `List<Any?>`, `Dictionary`
-is `Map<String, Any?>` (String keys), `StringName` returns are declared as
-`String`, and enum returns as `Long`. Every Variant-expressible return family
+is `Map<String, Any?>` (String keys), and `StringName` returns are declared as
+`String`. Every Variant-expressible return family
 works on desktop and Android; a handful of value-type returns are not yet
 mirrored on iOS (see the coverage notes in
 [Wrapper Maintenance](../contributing/wrapper-maintenance.md) if you target
 iOS).
+
+A parameter or return Godot types as an enum or bitfield (`enum::Shader.Mode`,
+`bitfield::TextServer.FontStyle`) is declared with its typed value class, like
+every other Kanama signature of that enum:
+
+```kotlin
+@ScriptClass(attachTo = "Material")
+class FogMaterial(val godotObject: GodotHandle) {
+    @OverrideVirtual
+    fun _get_shader_mode(): Shader.Mode = Shader.Mode.FOG
+}
+
+@ScriptClass(attachTo = "TextServerExtension")
+class MyTextServer(val godotObject: GodotHandle) {
+    @OverrideVirtual
+    fun _has_feature(feature: TextServer.Feature): Boolean = feature == TextServer.Feature.SHAPING
+}
+```
+
+An override still written with `Long` (the pre-0.5 spelling) fails the build
+and names the type to use (`declare it as Shader.Mode ... not Long`); wrap a raw
+number with `Shader.Mode(raw)` and read one with `.value`. The two
+`_get_space_state` returns Godot marks required must be declared non-null
+(`GodotObject`, not `GodotObject?`).
 
 ## Exports
 
@@ -235,6 +260,18 @@ PlayerSignals.hitEnemy(this, 10L)
 
 For multiplayer RPC methods, KSP also generates typed `*Rpcs` helpers from
 `@Rpc` declarations. See [Multiplayer](multiplayer.md).
+
+A Godot enum works as a `@RegisterFunction` parameter or return, a `@Signal`
+argument and an `@Rpc` argument: it crosses into Godot as the `int` it stands
+for (so GDScript callers pass and receive `Node.PROCESS_MODE_ALWAYS`), and
+Kotlin sees the value class:
+
+```kotlin
+@RegisterFunction
+fun nextMode(mode: Node.ProcessMode): Node.ProcessMode = Node.ProcessMode(mode.value + 1)
+
+@Signal fun modeChanged(mode: Node.ProcessMode) = Unit
+```
 
 ## Registered Method Helpers
 

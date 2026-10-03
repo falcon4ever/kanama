@@ -39556,6 +39556,16 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "virtual-variant-ret(List<String>->PACKED_STRING_ARRAY)",
     net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(listOf("a", "bb")) == 28,
   )
+  // Task 128 B: a Godot enum value class reaching the script-return encoder boxed (an `Any?`
+  // Variant return holding one; the generated bridge unwraps `.value` itself for enum-typed
+  // @ScriptProperty / @RegisterFunction / @OverrideVirtual slots) leaves as the INT64 it stands
+  // for.
+  check(
+    "virtual-variant-ret(Node.ProcessMode->INT64)",
+    net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(
+      net.multigesture.kanama.api.Node.ProcessMode.ALWAYS
+    ) == 3,
+  )
 
   // Virtual packed/container-RETURN encoders (task 29). Each row encodes through the live
   // return scratch and parses the buffer back the way the C side reads it — width-sensitive

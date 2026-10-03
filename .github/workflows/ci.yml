@@ -237,9 +237,14 @@ jobs:
         # PRs build the debug device xcframework only (~half the compile, which
         # is the dominant cost); the release xcframework is validated on push to
         # main. Static libs, so no code signing is needed either way.
+        # The in-repo script fixtures (src/iosScriptFixtures/kotlin-src: the task 128 B Godot-enum
+        # script members, enum-typed virtuals, the required `_get_space_state` return) compile into
+        # the same build, so the iOS KSP emitter's output is compiled on every mobile PR. This job
+        # uploads nothing, so the fixtures never ship.
         run: |
+          fixtures="-PkanamaIosProjectScriptsDir=src/iosScriptFixtures/kotlin-src"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            ./gradlew createIosDeviceDebugXcframework
+            ./gradlew createIosDeviceDebugXcframework "$fixtures"
           else
-            ./gradlew assembleIosDeviceKanamaXcframework
+            ./gradlew assembleIosDeviceKanamaXcframework "$fixtures"
           fi

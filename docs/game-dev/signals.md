@@ -52,6 +52,26 @@ awaits. For a `coinCollected(value: Long)` signal, KSP emits
 The string-based `signal(PlayerNames.Signals.coinCollected)` style remains
 available when you need lower-level Godot API behavior.
 
+A signal argument can be one of Godot's enums (`Node.ProcessMode`,
+`BaseMaterial3D.Flags`, see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields)).
+It is emitted as the `int` it stands for, which is what a GDScript handler
+connected to the signal receives. The generated `connect*` helper hands its
+Kotlin callback every argument typed, and `await*` returns the typed value for
+a one-argument signal (for two or more arguments `await*` returns the raw
+`List<Any?>`, where an enum is its `Long`):
+
+```kotlin
+@Signal
+fun modeChanged(mode: Node.ProcessMode) = Unit
+
+val connection =
+    PlayerSignals.connectModeChanged(this, self) { mode -> if (mode == Node.ProcessMode.DISABLED) pause() }
+PlayerSignals.modeChanged(this, Node.ProcessMode.DISABLED)
+```
+
+A lambda connected with the lower-level `signal(...).connect { args -> }` sees
+the raw `Long` (as any dynamic call does); wrap it with `Node.ProcessMode(raw)`.
+
 RPC methods follow the same generated-helper pattern. See
 [Multiplayer](multiplayer.md#rpc-methods) for `@Rpc` sender helpers such as
 `PlayerRpcs.rpcJump(...)` and `PlayerRpcs.callLocalJump(...)`.
@@ -195,6 +215,8 @@ Godot drops the connection (the target or the emitting object is freed, or a
 `ConnectFlags.ONE_SHOT` connection fires), Kanama releases the lambda and
 everything it captured. This holds on desktop, Android and iOS; the Web backend
 does not release them yet.
+A one-off connection can also be scoped with `use { }`, which closes it as soon
+as the block ends.
 
 `connect(target, argumentCount) { args -> ... }` supports zero to three emitted
 arguments today. `connectObject` is the common one-argument shortcut for signals

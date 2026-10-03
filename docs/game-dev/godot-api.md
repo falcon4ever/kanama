@@ -129,6 +129,14 @@ if (err != GodotError.OK) GD.printErr("save failed: ${err.value}")
   Node.ProcessMode.ALWAYS)` works. What comes BACK from a dynamic path (`get`, `call`,
   `ConfigFile.getValue`, Variant returns) is a `Long`; wrap it with `ProcessMode(raw as Long)` when
   you need the type.
+- **Script members.** A Godot enum is a valid `@ScriptProperty` type (an `int` export with
+  Godot's enum or flags hint, storing the Godot value), `List<...>` of one, a `@RegisterFunction`
+  parameter or return, a `@Signal` argument and an `@Rpc` argument; GDScript callers see the
+  `int`. See [Exports and Resources](properties-resources.md#godot-enums-and-bitfields) and
+  [Signals](signals.md#custom-signals).
+- **Engine virtuals** whose parameters or return Godot types as an enum take the value class:
+  `@OverrideVirtual fun _get_shader_mode(): Shader.Mode`. A `Long` there fails the build and names
+  the type (see [Overriding Engine Virtuals](scripts.md#overriding-engine-virtuals)).
 - **Required returns.** An object return Godot marks `meta: "required"` (`Node.createTween()`,
   `SceneTree.getRoot()`, the `Tween`/`Tweener` fluent setters, `CanvasItem.makeInputLocal`, ...)
   is non-null, so chains use `.` rather than `?.`. A null from the engine there is an engine bug
