@@ -16,7 +16,7 @@
 // releases the scene caches and frees the root, draining every live handle to zero.
 //
 // Method ids are resolved from the export's own manifest by NAME, never hardcoded: ids are
-// positional, so appending one @RegisterFunction above another renumbers it and a pinned id
+// positional, so appending one registered function above another renumbers it and a pinned id
 // then dispatches a DIFFERENT method while still "working" (task 80 slice 4/6).
 //
 // Falsification (task 81 requires every gate provably able to fail): set

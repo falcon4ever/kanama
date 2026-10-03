@@ -39558,7 +39558,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   )
   // Task 128 B: a Godot enum value class reaching the script-return encoder boxed (an `Any?`
   // Variant return holding one; the generated bridge unwraps `.value` itself for enum-typed
-  // @ScriptProperty / @RegisterFunction / @OverrideVirtual slots) leaves as the INT64 it stands
+  // @Export / registered-function / @OverrideVirtual slots) leaves as the INT64 it stands
   // for.
   check(
     "virtual-variant-ret(Node.ProcessMode->INT64)",
@@ -41930,7 +41930,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     Vector3(1.0, 5.0, 2.0).maxAxisIndex() == 1 && Vector3(1.0, 2.0, 9.0).maxAxisIndex() == 2,
   )
 
-  // Value-type @ScriptProperty decode (Phase 3.2 Step 5 / 2.6): exercise decodeIosPropertyValue's
+  // Value-type @Export decode (Phase 3.2 Step 5 / 2.6): exercise decodeIosPropertyValue's
   // tag dispatch — the Kotlin side of the set-property value path. The C side ships float32
   // component buffers (Vector2/Vector3) and utf8 path bytes (NodePath) with PT_* tags; this
   // reproduces those exact buffers and asserts the decoded value. Components compared numerically

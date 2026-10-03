@@ -5,9 +5,10 @@ This catches a common GDScript-to-Kanama porting error:
 
     [connection ... to="HUD" method="_on_coin_collected"]
 
-while the Kotlin script exposes only `on_coin_collected` because the method was
-annotated as `@RegisterFunction` instead of
-`@RegisterFunction("_on_coin_collected")`.
+while the Kotlin script exposes only `on_coin_collected`: every public function of a
+script is registered under its snake_case name (`fun onCoinCollected()` is
+`on_coin_collected`), so a connection the editor saved as `_on_coin_collected` needs
+`@GodotName("_on_coin_collected")` on the function (Kanama 0.5, task 133).
 """
 
 from __future__ import annotations
@@ -23,8 +24,27 @@ EXT_RESOURCE_RE = re.compile(r'^\[ext_resource\b(?P<body>.*)\]$')
 NODE_RE = re.compile(r'^\[node\b(?P<body>.*)\]$')
 CONNECTION_RE = re.compile(r'^\[connection\b(?P<body>.*)\]$')
 EXT_RESOURCE_REF_RE = re.compile(r'^ExtResource\("(?P<id>[^"]+)"\)$')
-REGISTER_RE = re.compile(r"@(?:RegisterFunction|Method)(?:\((?P<args>[^)]*)\))?")
-FUN_RE = re.compile(r"\bfun\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(")
+GODOT_NAME_RE = re.compile(r'@GodotName\(\s*(?:name\s*=\s*)?"(?P<name>[^"]+)"\s*\)')
+ANNOTATION_RE = re.compile(r"@(?P<name>[A-Za-z_][A-Za-z0-9_.]*)(?:\([^)]*\))?")
+FUN_RE = re.compile(
+    r"^(?P<prefix>[^/\"]*?)\bfun\s+(?:<[^>]*>\s*)?(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*\("
+)
+NOT_REGISTERED_MODIFIERS = {"private", "internal", "protected", "suspend"}
+# Functions wired to Godot some other way than as a registered method by their own name.
+ROLE_ANNOTATIONS = {
+    "OnReady",
+    "OnEnterTree",
+    "OnExitTree",
+    "OnProcess",
+    "OnPhysicsProcess",
+    "OnInput",
+    "OnUnhandledInput",
+    "OnShortcutInput",
+    "OnUnhandledKeyInput",
+    "OverrideVirtual",
+    "Signal",
+    "ExportToolButton",
+}
 
 
 @dataclass(frozen=True)
@@ -65,50 +85,52 @@ def normalize_node_path(parent: str | None, name: str | None) -> str:
 
 
 def camel_to_snake(name: str) -> str:
+    """The processor's rule (KanamaProcessor.camelToSnake)."""
     out = []
     for index, char in enumerate(name):
-        if char.isupper():
-            if index > 0 and (not out or out[-1] != "_"):
-                out.append("_")
-            out.append(char.lower())
-        else:
-            out.append(char)
+        if index > 0 and char.isupper():
+            out.append("_")
+        out.append(char.lower())
     return "".join(out)
 
 
-def explicit_register_name(args: str | None) -> str | None:
-    if not args:
-        return None
-    text = args.strip()
-    if not text:
-        return None
-    match = re.search(r'"([^"]+)"', text)
-    if match:
-        return match.group(1)
-    return None
-
-
 def script_methods(script_path: Path) -> set[str]:
+    """Godot names of the functions the script registers: every public function (task 133 B),
+    under `@GodotName("...")` when it has one, else its snake_case name. A source heuristic,
+    good enough for a lint: it reads annotations on the declaration line and the lines above."""
     try:
         lines = script_path.read_text(encoding="utf-8").splitlines()
     except OSError:
         return set()
 
     methods: set[str] = set()
-    pending: str | None = None
+    pending_annotations: list[str] = []
+    pending_godot_name: str | None = None
     for line in lines:
-        register = REGISTER_RE.search(line)
-        if register:
-            pending = explicit_register_name(register.group("args")) or ""
-            continue
-        if pending is None:
-            continue
+        stripped = line.strip()
         fun = FUN_RE.search(line)
-        if not fun:
+        if fun is None:
+            if stripped.startswith("@"):
+                pending_annotations += [m.group("name").rsplit(".", 1)[-1] for m in ANNOTATION_RE.finditer(stripped)]
+                named = GODOT_NAME_RE.search(stripped)
+                if named:
+                    pending_godot_name = named.group("name")
+            elif stripped and not stripped.startswith("//"):
+                pending_annotations = []
+                pending_godot_name = None
             continue
-        kotlin_name = fun.group(1)
-        methods.add(pending if pending else camel_to_snake(kotlin_name))
-        pending = None
+        prefix = fun.group("prefix")
+        annotations = pending_annotations + [
+            m.group("name").rsplit(".", 1)[-1] for m in ANNOTATION_RE.finditer(prefix)
+        ]
+        named = GODOT_NAME_RE.search(prefix)
+        godot_name = named.group("name") if named else pending_godot_name
+        words = set(ANNOTATION_RE.sub(" ", prefix).split())
+        pending_annotations = []
+        pending_godot_name = None
+        if words & NOT_REGISTERED_MODIFIERS or set(annotations) & ROLE_ANNOTATIONS:
+            continue
+        methods.add(godot_name or camel_to_snake(fun.group("name")))
     return methods
 
 
@@ -202,7 +224,7 @@ def main() -> int:
                 failures.append(
                     f"{connection.scene.relative_to(project_dir)}:{connection.line}: "
                     f"connection '{connection.signal}' targets {connection.target}.{connection.method}, "
-                    f"but {script.relative_to(project_dir)} exposes {sorted(methods) or 'no @RegisterFunction methods'}"
+                    f"but {script.relative_to(project_dir)} exposes {sorted(methods) or 'no public functions'}"
                 )
 
     if failures:

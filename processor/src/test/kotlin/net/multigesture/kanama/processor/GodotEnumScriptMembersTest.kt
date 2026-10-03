@@ -279,7 +279,7 @@ class GodotEnumScriptMembersTest {
     has("s.set(JAVA_LONG, 0, kt.mode.value)")
     has("BuiltinTypes.readVariantLongList(value, a).map { i -> $modeFq(i) }")
     has("BuiltinTypes.initVariantFromAny(ret, kt.modes.map { it.value }, a)")
-    // @RegisterFunction: INT arg wrapped, enum return unwrapped.
+    // Registered function: INT arg wrapped, enum return unwrapped.
     has("val marg0 = $modeFq(marg0Raw)")
     has("s.set(JAVA_LONG, 0, r.value)")
     // Enum-returning virtual.

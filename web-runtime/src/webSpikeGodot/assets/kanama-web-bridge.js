@@ -327,7 +327,7 @@
     // Task 81 (census-as-gate): which registered script members actually DISPATCHED across the
     // JS<->Kotlin boundary, per script class: script class name -> { memberKey: dispatchCount }.
     // memberKey is the virtual's name for virtual dispatches, "method#<id>" for registered
-    // @RegisterFunction dispatches (the engine drivers resolve the id to the manifest name from
+    // registered-function dispatches (the engine drivers resolve the id to the manifest name from
     // the export's kanama-web/KanamaWebProtocol.generated.json), and "~kotlinSignalCallback" as
     // one aggregate for anonymous Kotlin-lambda signal subscriptions (they have no member name;
     // per-id keys would be runtime-assigned noise). Recorded at the `invoke` chokepoint, which
@@ -527,7 +527,7 @@
     /**
      * Task 81 (census-as-gate): record one boundary dispatch into the exercised-member census.
      *
-     * Categories: registered @RegisterFunction dispatches (all nine call* funnels pass
+     * Categories: registered-function dispatches (all nine call* funnels pass
      * callback === "registered_function" and member === "method#<id>"), the dispatched
      * virtuals (callback is the virtual's own name), and the Kotlin-lambda signal dispatch
      * path (callback === "_kanama_web_signal_dispatch0/1/_object"), which is recorded as ONE
@@ -931,7 +931,7 @@
       return false;
     },
     // Task 88: the _ready echo probe is SPIKE SCAFFOLDING and must not ride the default
-    // path. Every generated proxy used to call its first Int->Int @RegisterFunction with
+    // path. Every generated proxy used to call its first Int->Int registered function with
     // the literal 47 at scene entry -- harmless for WebSpikeScript.echo (whose round trip
     // `finish()` asserts below), but a user script declaring `fun addScore(points: Long):
     // Long` got a phantom +47 per instance, on Web only, silently. Same accident shape as
@@ -1057,7 +1057,7 @@
       throw new Error(`Unknown Bunnymark method=${method}`);
     },
     dodgeMethodId(method) {
-      // Ordinals follow the @RegisterFunction order in dodge's Main.kt (mirrored by
+      // Ordinals follow the registered-function order in dodge's Main.kt (mirrored by
       // the generated Main.gd proxy: game_over=1, new_game=2, timer callbacks 3-5).
       if (method === "game_over") return 1;
       if (method === "new_game") return 2;

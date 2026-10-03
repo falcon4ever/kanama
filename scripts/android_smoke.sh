@@ -267,11 +267,11 @@ if ! "$GODOT_BIN" --headless \
   exit 1
 fi
 # The desktop runtime logs every .kt it loads with the class it bound; an empty class or a missing
-# loader means the exported scenes carry none of that script's @ScriptProperty values (task 106).
+# loader means the exported scenes carry none of that script's @Export values (task 106).
 if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG"; then
   echo "[android_smoke] the export-time editor could not bind the project's .kt scripts:" >&2
   grep -E 'No loader found for resource: res://.*\.kt|_load path=' "$EXPORT_LOG" | head -5 >&2 || true
-  echo "[android_smoke] scene-stored @ScriptProperty values would be missing from this APK; refusing to install it." >&2
+  echo "[android_smoke] scene-stored @Export values would be missing from this APK; refusing to install it." >&2
   exit 1
 fi
 # Task 112: every converted scene keeps its script-declared properties.

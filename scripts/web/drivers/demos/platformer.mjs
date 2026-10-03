@@ -375,7 +375,7 @@ export async function runPlatformer({ url, evaluate, navigate, deadline }) {
   mergeSnap(peak, await snapshot(evaluate));
   atPeak = (await snapshot(evaluate)) ?? atPeak;
 
-  // Full teardown: SmokeQuit.smoke_teardown (its only @RegisterFunction, method#1) frees
+  // Full teardown: SmokeQuit.smoke_teardown (its only registered function, method#1) frees
   // the scene root; every node exits the tree and releases its handles.
   trace("smoke_teardown");
   await evaluate(

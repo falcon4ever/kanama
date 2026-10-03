@@ -8,15 +8,15 @@ import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.OnShortcutInput
 import net.multigesture.kanama.annotations.OnUnhandledInput
 import net.multigesture.kanama.annotations.OnUnhandledKeyInput
-import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.Rpc
 import net.multigesture.kanama.annotations.RpcMode
 import net.multigesture.kanama.annotations.RpcTransferMode
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.InputEvent
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.types.NodePath
@@ -26,28 +26,28 @@ import net.multigesture.kanama.types.Vector3
 // Parallel-run gate fixture (Phase 3.2). Exercises the common iOS bridge shapes so the
 // `checkIosScriptRegistryParity` task can prove the KSP processor emits the same registry as
 // the legacy regex parser: ZERO/DOUBLE/OBJECT/LONG bridge kinds, a zero-arg helper method, a
-// scalar Long + String + List<String> @ScriptProperty, and a @Signal. Uses only iOS-available
+// scalar Long + String + List<String> @Export, and a @Signal. Uses only iOS-available
 // wrappers.
 @ScriptClass(attachTo = "Label")
 class GateFixtureScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label) {
-    @ScriptProperty
+    @Export
     var score: Long = 0L
 
-    @ScriptProperty
+    @Export
     var title: String = ""
 
-    @ScriptProperty
+    @Export
     var forceLoop: List<String> = emptyList()
 
-    // Value-type @ScriptProperty delivery (Phase 3.2 Step 5 / 2.6). The motivating case is the
+    // Value-type @Export delivery (Phase 3.2 Step 5 / 2.6). The motivating case is the
     // platformer `view: NodePath`; offset/aim exercise the Vector2/Vector3 set-property paths.
-    @ScriptProperty
+    @Export
     var view: NodePath = NodePath.EMPTY
 
-    @ScriptProperty
+    @Export
     var offset: Vector2 = Vector2(0f, 0f)
 
-    @ScriptProperty
+    @Export
     var aim: Vector3 = Vector3(0f, 0f, 0f)
 
     @OnReady
@@ -61,7 +61,7 @@ class GateFixtureScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObj
     }
 
     @OnInput
-    fun input(event: GodotObject) {
+    fun input(event: InputEvent) {
         score += 1L
     }
 
@@ -79,63 +79,55 @@ class GateFixtureScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObj
     }
 
     @OnUnhandledInput
-    fun unhandledInput(event: GodotObject) {
+    fun unhandledInput(event: InputEvent) {
         score += 2L
     }
 
     @OnShortcutInput
-    fun shortcutInput(event: GodotObject) {
+    fun shortcutInput(event: InputEvent) {
         score += 3L
     }
 
     @OnUnhandledKeyInput
-    fun unhandledKeyInput(event: GodotObject) {
+    fun unhandledKeyInput(event: InputEvent) {
         score += 4L
     }
 
-    @RegisterFunction("add_points")
     fun addPoints(amount: Long) {
         score += amount
     }
 
-    @RegisterFunction
     fun resetScore() {
         score = 0L
     }
 
     // Phase 3.3: arg signatures the old enumerated bridge dropped as UNSUPPORTED. The generated
     // callV must dispatch each — (Long, Double), String, Vector3, NodePath, (Object, Object).
-    @RegisterFunction
     fun configure(count: Long, weight: Double) {
         score += count + weight.toLong()
     }
 
-    @RegisterFunction
     fun setLabel(text: String) {
         title = text
     }
 
-    @RegisterFunction
     fun aimAt(target: Vector3) {
         aim = target
     }
 
-    @RegisterFunction
     fun bindView(path: NodePath) {
         view = path
     }
 
-    @RegisterFunction
     fun linkNodes(first: GodotObject, second: GodotObject) {
         score += 1L
     }
 
-    // @Rpc rides on a @RegisterFunction method; the processor captures its RpcModel, keeps the
+    // @Rpc rides on a registered (public) function; the processor captures its RpcModel, keeps the
     // method dispatchable on iOS via generic callV, and delivers _get_rpc_config to Godot. Explicit,
     // mutually-distinct mode/transferMode/channel values (rather than all-default) make this an
     // honest delivery example whose fields are individually observable.
     @Rpc(mode = RpcMode.ANY_PEER, callLocal = true, transferMode = RpcTransferMode.UNRELIABLE, channel = 4)
-    @RegisterFunction("net_score")
     fun netScore(points: Long) {
         score += points
     }

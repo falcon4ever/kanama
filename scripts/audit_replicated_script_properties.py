@@ -32,7 +32,7 @@ NODE_RE = re.compile(r'^\[node name="([^"]+)"(?: [^\]]*parent="([^"]+)")?')
 SCRIPT_RE = re.compile(r'^script = ExtResource\("([^"]+)"\)')
 REPLICATION_RE = re.compile(r'^replication_config = SubResource\("([^"]+)"\)')
 ROOT_REPLICATION_PATH_RE = re.compile(r'NodePath\("\.:([^"]+)"\)')
-SCRIPT_PROPERTY_RE = re.compile(r'^\s*@ScriptProperty(?:\(\s*name\s*=\s*"([^"]+)"\s*\))?')
+SCRIPT_PROPERTY_RE = re.compile(r'^\s*@Export(?![A-Za-z0-9_])(?:\(\s*name\s*=\s*"([^"]+)"\s*\))?')
 VAR_RE = re.compile(r"\bvar\s+([A-Za-z_][A-Za-z0-9_]*)\b")
 
 

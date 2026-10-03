@@ -4,7 +4,7 @@ extends SceneTree
 ## Godot's export instantiates and re-packs every scene when it converts text resources to
 ## binary (editor/export: convert_text_resources_to_binary) and keeps only the properties the
 ## node's script instance reports. A project whose desktop kanama-scripts.jar does not match its
-## .kt scripts therefore loses every scene-stored @ScriptProperty value silently (task 106). This
+## .kt scripts therefore loses every scene-stored @Export value silently (task 106). This
 ## script runs headless in the exported project AFTER the export, reads the conversion cache
 ## (.godot/exported/<hash>/file_cache: "source::md5::mtime::saved"), loads every source .tscn and
 ## its converted .scn, and fails when a script-declared property present in the source is
