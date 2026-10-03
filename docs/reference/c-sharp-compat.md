@@ -27,7 +27,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Lifecycle callbacks | SUPPORTED | `@OnReady`, `@OnProcess`, `@OnPhysicsProcess`, `@OnEnterTree`, `@OnExitTree`. |
 | Tool scripts | SUPPORTED | `@Tool` works for both `@ScriptClass` and `@RegisterClass`. |
 | Global classes | SUPPORTED | `@GlobalClass`/`@ClassName` register in the editor's global class list: the class appears in the Create New Resource dialog and its `.tres` instances match typed export slots (GUI-validated, [#39](https://github.com/falcon4ever/kanama/issues/39)). One constraint: the file must be named after the class. |
-| Hot reload | PARTIAL | Build + scene reload is the reliable workflow; in-place live-node replacement still has edge cases. |
+| Hot reload | PARTIAL | Desktop only (no mobile or Web reload, see [Version Support](version-support.md)). Build + scene reload is the reliable workflow; in-place live-node replacement still has edge cases, and `@RegisterClass` types need an editor restart. |
 
 ## Editor And Build Workflow
 
@@ -37,7 +37,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Editor build button | SUPPORTED | Optional Kanama Tools plugin adds `Build Scripts`. |
 | Auto build on save | SUPPORTED | Debounced and opt-in through project settings. |
 | Scene reload after script sync | SUPPORTED | Enabled through the Kanama Tools plugin. |
-| IntelliJ debugging | SUPPORTED | Enable JDWP, restart the game process, attach a Remote JVM Debug configuration. |
+| IntelliJ debugging | PARTIAL | Desktop only. Enable JDWP, restart the game process, attach a Remote JVM Debug configuration. Verified by hand on 2026-10-03 by attaching a JDWP client (`jdb`, the JDK's debugger) to a headless starter project started with `KANAMA_JDWP_PORT`; IntelliJ itself is not driven by any automated check, and the CI stage only greps that the settings are wired through `bootstrap.c` and the editor plugins. |
 | Rider support | MISSING | Rider does not support Kotlin/JVM project editing the way IntelliJ IDEA does. |
 
 ## API Surface
@@ -49,7 +49,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Core singletons and utilities | SUPPORTED | `GD`, `Mathf`, `Input`, `OS`, `Engine`, `Time`, `ProjectSettings`, `DisplayServer`, and related helpers are available. |
 | 2D/3D gameplay APIs | PARTIAL | Broad promoted coverage exists, and real demo ports exercise common movement, physics, animation, particles, UI, audio, files, scenes, resources, and tween use cases. Use the coverage reports for exact wrapper availability. |
 | Dynamic fallback | PARTIAL | `GodotObject.call(...)`, `signal(...)`, and typed object wrappers cover mixed GDScript/Kanama edges. Prefer typed wrappers when available. |
-| Networking/multiplayer parity | SUPPORTED | The core multiplayer workflow — `ENetMultiplayerPeer` host/join, `@Rpc` calls, and `MultiplayerSynchronizer` `@ScriptProperty` replication — is validated end-to-end in the TPS demo across desktop, Android, and iOS, with each platform in the host role (clients see each other move/shoot over LAN and control only their own player). Less-common multiplayer APIs follow the general wrapper-coverage path. |
+| Networking/multiplayer parity | PARTIAL | `ENetMultiplayerPeer` host/join, `@Rpc` registration and dispatch, and `MultiplayerSynchronizer` `@ScriptProperty` replication are implemented, and the TPS demo's lobby RPCs (`Menu.kt`) go through the generated `*Rpcs` senders. No automated gate runs two peers and observes an effect on the remote one, and the TPS port's gameplay effects (`jump()`, `shoot()`, `hit()`, `explode()`) are called as plain local functions rather than through the generated `*Rpcs` senders (`kanama-demos` `tps-demo-kanama/kotlin-src/Player.kt`, `Bullet.kt`, `RedRobot.kt`), so the demo does not show a client seeing another player jump or shoot. Web has no multiplayer. Less-common multiplayer APIs follow the general wrapper-coverage path. |
 
 ## Data And Marshalling
 
@@ -72,7 +72,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Godot signal connections | SUPPORTED | Use `object.signal(Name.Signals.foo).connect(...)` and generated method-name constants. |
 | Lambda signal callbacks | PARTIAL | Zero to three emitted arguments are supported. A lambda connection is a Godot custom Callable bound to its target and is released when Godot drops the connection (desktop, Android, iOS). |
 | Runtime custom resources | SUPPORTED | `newScriptInstance<T>()` creates a script-backed `Resource` from Kotlin (GDScript `.new()` parity); or create a Godot `Resource`, attach a loaded Kanama script, then resolve `kotlinScriptInstance<T>()`. `newScriptInstance` is desktop/Android only (deferred on iOS; use the attach-then-resolve path there). |
-| Inspector exports | PARTIAL | Scalars (including `Int`/`Float` narrow slots), strings, enums, enum lists, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported across desktop, Android, and iOS. Flags and broader resource arrays remain intentionally conservative. |
+| Inspector exports | PARTIAL | Scalars (including `Int`/`Float` narrow slots), strings, enums, enum lists, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported across desktop, Android, and iOS, except typed `Map` (Dictionary) exports, which iOS does not deliver (the property keeps its Kotlin default there; see Typed exported dictionaries above). Flags and broader resource arrays remain intentionally conservative. |
 | Coroutines | SUPPORTED | `KanamaScope`, Godot main-thread dispatch, `awaitNextFrame`, `SceneTree.delaySeconds`, and signal awaits are available. |
 
 ## Intentional Differences From C#

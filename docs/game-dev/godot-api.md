@@ -59,11 +59,26 @@ Interop with GDScript autoloads: `GodotObject.call(method, vararg args)` —
 see the GDScript interop section below.
 
 `GodotObject.call(method, vararg args)` is available as a mixed-project
-interop path for scalar Variant arguments/returns, `Vector2`/`Vector3`,
-`Color`, `GodotObject`, and `Resource` arguments. Vector and color returns
-decode to Kotlin value types; object returns decode as non-owning
-`GodotObject` wrappers. This is intended for cases such as calling a GDScript
-autoload while porting a project incrementally:
+interop path. The supported argument and return types differ by backend:
+
+- **Desktop and Android** accept `null`, `Boolean`, `Int`/`Long`,
+  `Float`/`Double`, `String`, a typed Godot enum value, every builtin value type
+  (`Vector2`/`Vector3`/`Vector4`, their `i` variants, `Rect2`, `Rect2i`, `AABB`,
+  `Plane`, `Quaternion`, `Basis`, `Transform2D`, `Transform3D`, `Projection`,
+  `Color`), `NodePath`, `RID`, `ByteArray` (`PackedByteArray`), `List`
+  (`Array`), `Map` (`Dictionary`, string keys) and `GodotObject`/`Resource`
+  arguments. Returns decode `null`, scalars, `String`, the same value types,
+  `NodePath`, `RID`, every `Packed*Array`, `Array` (as `List`), `Dictionary`
+  (as `Map`) and objects; an object return is a non-owning `GodotObject` wrapper.
+- **iOS** is narrower: arguments are `null`, scalars, `String`, a typed enum
+  value, `Vector2`, `Vector2i`, `Vector3`, `Color`, `NodePath`, `RID`, `List`,
+  `Map` and `GodotObject`; returns decode `Boolean`, `Long`, `Double`,
+  `NodePath`, objects, `PackedStringArray`, `Vector2`, `Vector2i`, `Vector3`
+  and `Color`, and any other return type comes back as `null`. An unsupported
+  argument type throws.
+
+This is intended for cases such as calling a GDScript autoload while porting a
+project incrementally:
 
 ```kotlin
 val audio = self.getNodeOrNull("/root/Audio")
@@ -99,7 +114,7 @@ constants on the type:
 self.setProcessMode(Node.ProcessMode.ALWAYS)
 Input.setMouseMode(Input.MouseMode.CAPTURED)
 if (key.getKeycode() == Key.ESCAPE) { /* ... */ }
-tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2).setTrans(Tween.TransitionType.SINE)
+tween.tweenProperty(icon, "modulate", Color.WHITE, 0.2).setTrans(Tween.TransitionType.SINE).close()
 val err: GodotError = ResourceSaver.save(scene, path)
 if (err != GodotError.OK) GD.printErr("save failed: ${err.value}")
 ```

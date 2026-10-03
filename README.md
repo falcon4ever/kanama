@@ -51,9 +51,16 @@ builds — see [Desktop and Packaging](docs/exporting/desktop.md).
 - iOS runtime through a Kotlin/Native `.xcframework`, no on-device JVM
 - Kotlin/Wasm Web backend through a generated proxy and a versioned JavaScript
   bridge, no on-device JVM
-- Hot reload and editor build tools for a fast iteration loop
-- Full Godot 4.7 class coverage (1036/1036 wrapped classes, generated KDoc from
-  Godot docs; engine virtuals overridable via `@OverrideVirtual`)
+- Desktop script reload and editor build tools: **Build Scripts** rebuilds the
+  Kotlin jar and rebinds attached scripts without restarting Godot (reloading
+  the scene is the reliable path; `@RegisterClass` types need an editor restart;
+  no reload on mobile or Web, see
+  [The Editor Loop](docs/getting-started/editor-workflow.md#script-reload))
+- Every Godot 4.7 class has a Kotlin wrapper (1036/1036, generated KDoc from
+  Godot docs; engine virtuals overridable via `@OverrideVirtual`). The builtin
+  value types (`Vector3`, `Transform3D`, `Color`, ...) are thinner than
+  GDScript's: only a subset of Godot's builtin methods and operators exist; see
+  [API Coverage](docs/reference/generated/api-coverage.md)
 
 ## Requirements
 
@@ -75,9 +82,13 @@ cd kanama
   -PkanamaProjectScriptsDir=/path/to/kanama-starter
 ```
 
-Open `kanama-starter/project.godot` in Godot and press **Play**. After editing
-`kotlin-src/HelloScript.kt`, press **Build Scripts** in Godot or rerun
-`./gradlew buildScripts`.
+Open `kanama-starter/project.godot` in Godot and press **Play**. The starter
+script is `kanama-starter/HelloScript.kt` (at the project root). After editing it,
+press **Build Scripts** in Godot, or rerun the `installAddonJar` command above
+from the Kanama checkout. The starter project has no Gradle wrapper of its own, so
+`./gradlew buildScripts` does not exist there; **Build Scripts** finds the
+checkout when it is a sibling folder named `kanama` (otherwise set the
+`kanama/tools/repo_dir` project setting, see [The Editor Loop](docs/getting-started/editor-workflow.md#project-settings)).
 
 Package tasks can also build local desktop kit and store-addon zips for smoke
 testing:

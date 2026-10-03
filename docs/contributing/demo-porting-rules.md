@@ -401,6 +401,46 @@ node check unless the original code used that broader rule. When Kanama cannot
 express a script class check directly yet, centralize the closest equivalent in
 a small helper and document why it matches the original scene's intent.
 
+## Where The Reference Ports Still Deviate
+
+The rules above are the target, and the current ports do not all meet them. Each
+deviation below is a gap in Kanama that a port worked around, not a licence to
+copy the workaround (as of `kanama-demos` main `556051c`):
+
+- **Local value-type math.** `Basis * Basis` and `Transform3D * Transform3D` do
+  not exist on the value types (only `Transform3D * Vector3`, `Basis * Vector3`
+  and `Quaternion * Quaternion` have operators), so `tps-demo-kanama` writes
+  `composeTransforms`/`composeBases` in both `Player.kt` and `RedRobot.kt`.
+  Add the operator to Kanama instead of copying the helper.
+- **Type checks.** GDScript's `is Player` has no one-line Kotlin spelling yet.
+  `tps-demo-kanama` centralizes the closest equivalent in `Node.isPlayerNode()`
+  (`TpsScenes.kt`), which also matches a node by name (`"Player"` or a numeric
+  name). That is a name heuristic, not the original type check.
+- **Multiplayer effects.** The TPS port calls the `@Rpc(callLocal = true)`
+  functions for jump, shoot, hit and explode as plain local functions rather than
+  through the generated `*Rpcs` senders, so those effects do not reach other
+  peers. Use the generated `*Rpcs` senders (see [Multiplayer](../game-dev/multiplayer.md)).
+
+## Parity Audit Against The Original
+
+The side-by-side audit needs the original GDScript, and the demo repository does
+not carry it: the ports replace the GDScript in place. Clone the upstream project
+listed in the `kanama-demos` README under "Sources And Licenses" and compare
+against it. Nothing in the repository pins the upstream commit a port is based on
+(the `kanama-demos` README table and
+`godot-4-3d-character-controller-tutorial/UPSTREAM_ATTRIBUTION.md` record the
+upstream repository and license, not a commit), so name the
+upstream commit you audited against in the pull request.
+
+Some `.gd` files legitimately remain after a port. They are not gameplay
+scripts to port, and they are the exceptions to "remove stale gameplay `.gd`
+files": the touch-control glue the demos add for mobile (`mobile_controls.gd`,
+`mobile_dpad.gd`, `responsive_background.gd`, none of which exist upstream), the
+Bunnymark GDScript baselines, and the character-controller `lesson_reference/`
+scripts. `Starter-Kit-3D-Platformer` also keeps `scripts/audio.gd` (the `Audio`
+autoload) and `scripts/main.gd` in GDScript on desktop; its Web build overrides
+`Main` with `web/kotlin-src/Main.kt`.
+
 ## Build And Smoke Checklist
 
 For a Kanama demo checked out beside the Kanama repo, build scripts with:
