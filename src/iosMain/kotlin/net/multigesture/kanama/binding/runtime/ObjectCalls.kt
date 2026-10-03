@@ -113,6 +113,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceCallV
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
@@ -41117,6 +41118,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   var lamFreeFires = 0
   val lamFreeReceiver = requireObject("Node")
   if (lamFreeReceiver.address() != 0L) {
+    val lamFreeBefore = IosCallableRegistry.size
     val lamFreeId = IosCallableRegistry.register { lamFreeFires++ }
     ObjectCalls.callWithVariantArgs(
       ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
@@ -41139,7 +41141,87 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       listOf("kanamaLambdaFree"),
     )
     check("lambda-callable(auto-disconnect on receiver free)", lamFreeFires == 0)
+    // Task 131 (F9): the dropped connection's free_func releases the closure, so the registry is
+    // back to its size before the connect (desktop needed ScriptBridge.siFree for this).
+    check(
+      "lambda-callable(receiver free releases the registry entry)",
+      IosCallableRegistry.size == lamFreeBefore,
+    )
   } else check("lambda-callable(auto-disconnect on receiver free) (instance absent)", false)
+
+  // Task 131 (F9): a CONNECT_ONE_SHOT lambda fires once, and Godot's one-shot disconnect frees the
+  // Callable, whose free_func releases the closure: the registry returns to its size before.
+  var lamOneShotFires = 0
+  val lamOneShotBefore = IosCallableRegistry.size
+  val lamOneShotId = IosCallableRegistry.register { lamOneShotFires++ }
+  ObjectCalls.callWithVariantArgs(
+    ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+    lamEmitter,
+    listOf("kanamaLambdaOneShot"),
+  )
+  IosGodot.objectConnectCallable(
+    lamEmitter.address(),
+    "kanamaLambdaOneShot",
+    lamEmitter.address(),
+    lamOneShotId,
+    4L, // CONNECT_ONE_SHOT
+  )
+  repeat(2) {
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("Object", "emit_signal", 4047867050L),
+      lamEmitter,
+      listOf("kanamaLambdaOneShot"),
+    )
+  }
+  check(
+    "lambda-callable(one-shot fires once and releases its entry)",
+    lamOneShotFires == 1 && IosCallableRegistry.size == lamOneShotBefore,
+  )
+
+  // Task 131 (F4): the report a contained script exception sends to Godot. Built, not sent -- a
+  // sent one prints `SCRIPT ERROR`, which the visual smoke treats as a failure; delivery is the
+  // documented device check (a throwing _ready shows `SCRIPT ERROR:` in the device log). The
+  // function/file/line are logged for that check: file:line need a binary with source info.
+  val scriptErrorReport =
+    runCatching { error("kanama self-test: deliberate script error") }
+      .exceptionOrNull()
+      ?.let { IosScriptErrors.reportFor(it, "selfTest") }
+  println("[kanama][ios][kn] OBJECTCALLS SELFTEST script-error report=$scriptErrorReport")
+  // Task 131 (F4) through the REAL containment path: a built-in script whose method throws is
+  // called via the call_v @CName export the shim uses. Contained (the self-test survives), the call
+  // reports success with a nil return (as GDScript does for a runtime error in a called function),
+  // and one script error reached Godot -- the device log shows its SCRIPT ERROR line.
+  run {
+    val throwingOwner = requireObject("Node")
+    if (throwingOwner.address() != 0L) {
+      val script =
+        KanamaIosRuntime.createScriptResource(KanamaIosRuntime.THROWING_PROBE_SCRIPT_PATH)
+      val instance = KanamaIosRuntime.createScriptInstance(script, throwingOwner.address())
+      val reportsBefore = IosScriptErrors.reportCount
+      val callResult =
+        if (instance != 0L) {
+          kanamaIosRuntimeScriptInstanceCallV(instance, 0, null, null, 0, null, null)
+        } else -1
+      val reported = IosScriptErrors.reportCount - reportsBefore
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST script-error containment call=$callResult " +
+          "reported=$reported"
+      )
+      check(
+        "script-error(throwing script method contained, call ok, one report)",
+        instance != 0L && callResult == 1 && reported == 1,
+      )
+      if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
+      KanamaIosRuntime.freeScriptResource(script)
+      ObjectCalls.destroyObject(throwingOwner)
+    } else check("script-error(throwing script method contained) (instance absent)", false)
+  }
+  check(
+    "script-error(report carries class and message)",
+    scriptErrorReport?.description == "kotlin.IllegalStateException" &&
+      scriptErrorReport.message ==
+        "kotlin.IllegalStateException: kanama self-test: deliberate script error",
+  )
 
   // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect
   // erases the receiver-side connection entry only via the receiver it finds on the Callable it is

@@ -15,6 +15,7 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.GodotStructs
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.ScriptErrors
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.binding.runtime.VariantConverters
@@ -482,16 +483,27 @@ object ScriptBridge {
         instance?.dispatchDirectProcess(methodLong, args, argCount) == true ||
           instance?.dispatchCall?.invoke(methodLong, args, argCount, rRet, rError) == true
       } catch (t: Throwable) {
-        System.err.println(
-          "[kanama:kt] script method failed ${formatScriptCallContext(instance, data, methodLong, argCount)}: " +
-            "${t::class.qualifiedName}: ${t.message}"
-        )
-        t.printStackTrace(System.err)
+        // Report first (task 131): the Godot script error with the throwing Kotlin file:line is
+        // what reaches the editor, and nothing below may cost it. ScriptErrors.report never throws;
+        // the stderr lines are guarded because their Kotlin reflection can fail under R8.
+        val methodName =
+          runCatching { GodotStrings.readStringName(method) }.getOrDefault("<method>")
+        ScriptErrors.report(t, "${scriptLabel(instance)}.$methodName")
+        runCatching {
+          System.err.println(
+            "[kanama:kt] script method failed ${formatScriptCallContext(instance, data, methodLong, argCount)}: " +
+              "${t.javaClass.name}: ${t.message}"
+          )
+          t.printStackTrace(System.err)
+        }
         if (rError.address() != 0L) {
-          // GDEXTENSION_CALL_ERROR_INVALID_METHOD = 1. GDExtension has no
-          // script-exception error type, but returning a call error keeps
-          // the exception from escaping the Panama upcall boundary.
-          rError.reinterpret(12).set(JAVA_INT, 0, 1)
+          // GDEXTENSION_CALL_OK, as GDScript does for a runtime error in a called function
+          // (gdscript_vm.cpp: the error is printed, r_err stays CALL_OK, the caller gets the
+          // default return). [rRet] is the engine's nil-constructed Variant, untouched because the
+          // generated dispatch writes it only after the Kotlin method returns. Returning
+          // INVALID_METHOD instead made Godot add a misleading "method not found" for a method
+          // that exists and was already reported.
+          rError.reinterpret(12).set(JAVA_INT, 0, 0)
         }
         return
       }
@@ -534,6 +546,9 @@ object ScriptBridge {
         "[kanama:kt] script property $op failed (property=0x${nameLong.toString(16)})"
       )
     }
+    // The Godot-side script error (task 131): reaches the editor's Output panel and Errors tab,
+    // which the stderr lines do not. ScriptErrors.report never throws.
+    ScriptErrors.report(t, "${scriptLabel(instance)} property $op")
     runCatching {
         val script = instance?.script
         val scriptName =
@@ -559,6 +574,15 @@ object ScriptBridge {
         }
       }
   }
+
+  private fun scriptLabel(instance: KanamaScriptInstance?): String =
+    runCatching {
+        val script = instance?.script
+        script?.globalName?.takeIf { it.isNotEmpty() }
+          ?: script?.kotlinClassName?.takeIf { it.isNotEmpty() }?.substringAfterLast('.')
+          ?: instance?.kotlinObject?.javaClass?.simpleName
+      }
+      .getOrNull() ?: "<script>"
 
   private fun formatScriptCallContext(
     instance: KanamaScriptInstance?,

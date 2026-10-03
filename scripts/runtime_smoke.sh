@@ -44,6 +44,10 @@ fi
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit --verbose >"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://resource_owner_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://self_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 131 -- a throwing _ready (script_error_smoke.tscn) and lambda-connection release
+# (signal_leak_smoke.tscn), each in its own process so nothing else touches their state.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_error_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
@@ -258,6 +262,24 @@ check_absent "Leaked instance: Image"
 # before the survived= line is printed.
 check "\[kanama\] upcall [A-Za-z0-9_]+\.call_smoke_throw threw: java\.lang\.IllegalStateException: kanama smoke: deliberate upcall failure"
 check "upcall containment survived=true result_null=true"
+# task 131 (F4) -- a Kotlin exception is a Godot script error, not only a stderr trace (the editor's
+# Play does not capture stderr). ScriptErrorSmoke's _ready throws; Godot itself must print the
+# SCRIPT ERROR with the exception and the Kotlin file:line of the throw. Before task 131 neither
+# line appeared: the trace went to stderr and the failed _ready was silent in Godot's output.
+script_error_line="$(grep -n 'deliberate _ready failure' "$PROJECT_DIR/ScriptErrorSmoke.kt" | cut -d: -f1)"
+check "^SCRIPT ERROR: java\.lang\.IllegalStateException: kanama smoke: deliberate _ready failure$"
+# The file is reported as its res:// path (the editor's Errors tab can open it).
+check "^ +at: ScriptErrorSmoke\.ready \(res://ScriptErrorSmoke\.kt:${script_error_line}\)$"
+# The stderr trace is kept beside it.
+check "\[kanama:kt\] script method failed script=net\.multigesture\.kanama\.example\.ScriptErrorSmoke "
+# task 131 (F9) -- a lambda connection's closure is released whenever Godot drops the connection's
+# custom Callable: the receiver freed, the emitter freed, a ONE_SHOT connection fired. The registry
+# returns to its size before the connect. Before task 131 every *_released was false (only
+# SignalConnection.close() released an entry).
+check "SignalLeakSmoke connected=1 fired=1 free_released=true after_free_fired=0 emitter_connected=1 emitter_released=true one_shot_connected=1 one_shot_fired=1 one_shot_released=true"
+# A contained Kotlin error returns CALL_OK with a nil return, as a GDScript runtime error does, so
+# Godot adds no "method not found" style follow-up for a method that exists.
+check_absent "Invalid call\. Nonexistent function"
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.

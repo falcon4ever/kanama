@@ -158,7 +158,7 @@ Key points:
   adapters that already exist.
 
   `Linker` caches per descriptor, not per symbol, so the whole backend collapses
-  onto 18 shapes — binding an engine function pointer to an already-linked shape
+  onto 20 shapes — binding an engine function pointer to an already-linked shape
   generates nothing. `scripts/check_native_call_surface.py` fails the build if a
   source change introduces a shape that is not prewarmed, and
   `KANAMA_TRACE_NATIVE_ADAPTERS=1` prints each adapter with a timestamp plus the
@@ -206,10 +206,13 @@ flowchart LR
   per-instance virtual dispatch (`_ready`, `_process`), and class create/free
   hooks. Every stub goes through `Upcalls.stub`, which wraps the target in
   `MethodHandles.catchException`: a Throwable that escapes a callback is logged
-  (`[kanama] upcall <site> threw: …`) and replaced by the zero of the return
-  type instead of unwinding through native frames and aborting the process
-  (task 98). Handlers whose return value carries meaning (`siCall`'s call error,
-  the property accessors' "owned, write rejected") keep their own catch on top.
+  (`[kanama] upcall <site> threw: …`), reported to Godot as a script error
+  (`ScriptErrors`, task 131: `print_script_error_with_message` with the Kotlin
+  file:line of the top game frame, so it reaches the editor's Errors tab and not
+  only stderr), and replaced by the zero of the return type instead of unwinding
+  through native frames and aborting the process (task 98). Handlers whose
+  return value carries meaning (`siCall`'s call error, the property accessors'
+  "owned, write rejected") keep their own catch on top, and report the same way.
 
 Hot runtime paths keep the same ABI but avoid unnecessary JVM-side work:
 

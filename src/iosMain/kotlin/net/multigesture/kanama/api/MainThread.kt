@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.coroutines.resume
+import net.multigesture.kanama.binding.runtime.IosScriptErrors
 import kotlin.jvm.JvmStatic
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -64,13 +65,25 @@ actual object MainThread {
         if (nextFrameTasks.isNotEmpty()) {
             val tasks = nextFrameTasks.toList()
             nextFrameTasks.clear()
-            for (task in tasks) task()
+            // Contained and reported (task 131): this runs under the frame @CName export, which a
+            // throwing task would otherwise unwind through and terminate the app.
+            for (task in tasks) {
+                try {
+                    task()
+                } catch (t: Throwable) {
+                    IosScriptErrors.report(t, "MainThread task")
+                }
+            }
         }
         if (nextFrameContinuations.isEmpty()) return
         val pending = nextFrameContinuations.toList()
         nextFrameContinuations.clear()
         for (continuation in pending) {
-            if (continuation.isActive) continuation.resume(Unit)
+            try {
+                if (continuation.isActive) continuation.resume(Unit)
+            } catch (t: Throwable) {
+                IosScriptErrors.report(t, "MainThread continuation")
+            }
         }
     }
 }

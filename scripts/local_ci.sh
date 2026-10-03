@@ -364,6 +364,12 @@ stage "no default argument on an expect declaration (task 117 D24)"
 # omit the argument compile on desktop and iOS and fail on Android. Overloads instead.
 python3 "$ROOT_DIR/scripts/check_expect_no_defaults.py"
 
+stage "runtime sources survive the Android source remap (task 131)"
+# Android compiles a textual copy of src/jvmMain + src/commonMain with `.invoke(` rewritten to
+# `.invokeWithArguments(` for MethodHandles; a Kotlin function value called with `.invoke(` breaks
+# that build, and only an Android build ran the audit that sees it. This replays the remap here.
+python3 "$ROOT_DIR/scripts/check_android_remap_sources.py"
+
 stage "no public member an expect lacks on an actual (task 117 D1)"
 # The compiler forces every expect member to have an actual, but lets an actual class/object carry
 # extra PUBLIC members silently: API on one platform only. This is the one-sided-member check of the
