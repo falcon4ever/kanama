@@ -1,10 +1,10 @@
 package net.multigesture.kanama.web
 
+import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.GodotName
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
-import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.Node2D
@@ -16,7 +16,7 @@ import net.multigesture.kanama.types.Vector2
 /** Real KSP input used to prove that the existing ScriptModel can be produced for wasmJs. */
 @ScriptClass(attachTo = "Node2D")
 class WebSpikeScript(objectId: GodotHandle) : KanamaWebScript(objectId) {
-  @ScriptProperty var greeting: String = "Hello from Kotlin/Wasm"
+  @Export var greeting: String = "Hello from Kotlin/Wasm"
 
   var readyCount: Int = 0
     private set
@@ -38,13 +38,13 @@ class WebSpikeScript(objectId: GodotHandle) : KanamaWebScript(objectId) {
     elapsedSeconds += delta
   }
 
-  @RegisterFunction("_draw")
+  @GodotName("_draw")
   fun draw() {
     val texture = drawTexture ?: return
     self().drawTexture(texture, Vector2(32.0, 32.0), Color(1.0f, 1.0f, 1.0f, 1.0f))
   }
 
-  @RegisterFunction fun echo(value: Long): Long = value
+  fun echo(value: Long): Long = value
 
   @Signal fun changed(value: Long) = Unit
 

@@ -72,15 +72,17 @@ import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
+// The probes are `internal`: they only prove the wrapper calls compile, Godot never calls them, and
+// every public function of a script class is registered with Godot (task 133 B).
 @Suppress("unused")
 @ScriptClass(attachTo = "Node")
 class WrapperConvenienceProbe(val godotObject: GodotHandle) {
-  fun node3dConveniences(node: Node3D) {
+  internal fun node3dConveniences(node: Node3D) {
     node.lookAt(Vector3.ZERO)
     node.lookAtFromPosition(Vector3.ZERO, Vector3.UP)
   }
 
-  fun inputEventConveniences(value: GodotObject) {
+  internal fun inputEventConveniences(value: GodotObject) {
     val key: InputEventKey = InputEventKey.create()
     val maybeKey: InputEventKey? = InputEventKey.from(value)
     val maybeButton: InputEventMouseButton? = InputEventMouseButton.from(value)
@@ -93,7 +95,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     key.close() // close what you create (task 61) — this probe otherwise models a leak
   }
 
-  fun resourceFactoryConveniences(resource: Resource, mesh: Mesh) {
+  internal fun resourceFactoryConveniences(resource: Resource, mesh: Mesh) {
     val arrayMesh: ArrayMesh? = ArrayMesh.fromResource(resource)
     val meshLibrary: MeshLibrary = MeshLibrary.create()
     val meshDataTool: MeshDataTool = MeshDataTool.create()
@@ -108,7 +110,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     surfaceTool.close()
   }
 
-  fun animationConveniences(
+  internal fun animationConveniences(
     animationPlayer: AnimationPlayer,
     animatedSprite2D: AnimatedSprite2D,
     animatedSprite3D: AnimatedSprite3D,
@@ -122,7 +124,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     animationMixer.getStateMachinePlayback("parameters/playback")
   }
 
-  fun promotedBaseWrapperConveniences(
+  internal fun promotedBaseWrapperConveniences(
     styleBox: StyleBox,
     audioStream: AudioStream,
     playback: AudioStreamPlayback,
@@ -156,7 +158,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     animationNode.getParameter("speed")
   }
 
-  fun promotedOpenXRConveniences(
+  internal fun promotedOpenXRConveniences(
     structure: OpenXRStructureBase,
     extensionWrapper: OpenXRExtensionWrapper,
     componentData: OpenXRSpatialComponentData,
@@ -172,13 +174,15 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     MovieWriter.addWriter(movieWriter)
   }
 
-  fun promotedPhysicsServerHandlerConveniences(handler: PhysicsServer3DRenderingServerHandler) {
+  internal fun promotedPhysicsServerHandlerConveniences(
+    handler: PhysicsServer3DRenderingServerHandler
+  ) {
     handler.setVertex(0, Vector3.ZERO)
     handler.setNormal(0, Vector3.UP)
     handler.setAabb(AABB.ZERO)
   }
 
-  fun promotedSkeletonModificationConveniences(modification: SkeletonModification2D) {
+  internal fun promotedSkeletonModificationConveniences(modification: SkeletonModification2D) {
     modification.enabled = modification.enabled
     modification.executionMode = modification.executionMode
     modification.getModificationStack()
@@ -187,7 +191,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     modification.setEditorDrawGizmo(modification.getEditorDrawGizmo())
   }
 
-  fun promotedEditorExtensionConveniences(
+  internal fun promotedEditorExtensionConveniences(
     exportPlugin: EditorExportPlugin,
     debuggerPlugin: EditorDebuggerPlugin,
     scenePostImportPlugin: EditorScenePostImportPlugin,
@@ -237,7 +241,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     material.metallicTexture = material.metallicTexture
   }
 
-  fun promotedExtensionBaseConveniences(
+  internal fun promotedExtensionBaseConveniences(
     animationNodeExtension: AnimationNodeExtension,
     editorScenePostImport: EditorScenePostImport,
     imageFormatLoaderExtension: ImageFormatLoaderExtension,
@@ -298,7 +302,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     physicsServer3DExtension.bodyTestMotionIsExcludingObject(0L)
   }
 
-  fun objectAndSceneConveniences(
+  internal fun objectAndSceneConveniences(
     value: GodotObject,
     viewport: Viewport,
     material: Material,
@@ -335,7 +339,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     light.lightEnergy = light.lightEnergy
   }
 
-  fun constantsAndFactories(): Camera3D {
+  internal fun constantsAndFactories(): Camera3D {
     val invalidCellItem: Long = GridMap.INVALID_CELL_ITEM
     val bodyAxis: PhysicsServer3D.BodyAxis = PhysicsServer3D.BodyAxis.ANGULAR_X
 

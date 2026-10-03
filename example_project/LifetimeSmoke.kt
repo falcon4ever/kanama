@@ -1,6 +1,5 @@
 package net.multigesture.kanama.example
 
-import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
@@ -28,7 +27,6 @@ class LifetimeSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, 
   private fun describe(t: Throwable?): String =
     if (t == null) "none" else "${t::class.simpleName}:${t.message}"
 
-  @RegisterFunction
   fun runLifetimeSmoke() {
     // --- isInstanceValid across free() ---
     val probe = Node.fromHandle(GodotHandle(ObjectCalls.constructObject("Node")))!!

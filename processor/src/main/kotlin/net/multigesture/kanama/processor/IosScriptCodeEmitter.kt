@@ -109,7 +109,7 @@ internal data class IosProperty(
   // set-property value path (PT-tagged bytes -> setPropertyValue). Empty for non-value types.
   val valueTypeClassName: String = "",
   // Godot Variant::Type, so the iOS script instance can advertise this property to the engine
-  // (get_property_list) — required for scene-stored @ScriptProperty values to be delivered.
+  // (get_property_list) — required for scene-stored @Export values to be delivered.
   val godotVariantType: Int = 0,
   // PropertyInfo metadata advertised by the iOS ScriptInstance. Enum and enum-list exports
   // depend on these matching the desktop registrar so the inspector renders the same controls.
@@ -180,7 +180,7 @@ internal class IosScriptCodeEmitter(
   inputs: List<IosScriptInput>,
   private val warn: (String) -> Unit = {},
   // Fails the KSP round (build error). Used for defects that must not ship, e.g. a data-type
-  // @ScriptProperty the engine can set but not read back — the exact get/set asymmetry that shipped
+  // @Export the engine can set but not read back — the exact get/set asymmetry that shipped
   // write-only value types in the iOS backend and broke multiplayer replication on device.
   private val error: (String) -> Unit = {},
 ) {
@@ -308,7 +308,7 @@ internal class IosScriptCodeEmitter(
             property.arrayElementGodotEnum != null ->
               builder.appendLine("        $index -> script.${property.kotlinName}.map { it.value }")
             // List<String>: encodeIosReturn ships it as a PackedStringArray; without this
-            // branch a String-list @ScriptProperty is read back as nil (write-only).
+            // branch a String-list @Export is read back as nil (write-only).
             property.listElementIsString ->
               builder.appendLine("        $index -> script.${property.kotlinName}")
             property.scalarGetExpression.isNotEmpty() ->
@@ -474,7 +474,7 @@ internal class IosScriptCodeEmitter(
         builder.appendLine("        else -> false")
         builder.appendLine("    }")
       }
-      // Guardrail: warn on any @ScriptProperty that gets NO iOS delivery case across the
+      // Guardrail: warn on any @Export that gets NO iOS delivery case across the
       // set-property blocks above. Such a property silently keeps its Kotlin default (the
       // scene-stored value is dropped) — the class of bug that hid the third-person
       // BeetlebotSkin._force_loop (List<String>) and FPS List<Weapon> drops. The conditions
@@ -483,7 +483,7 @@ internal class IosScriptCodeEmitter(
         if (!hasIosPropertyDeliveryCase(property)) {
           warn(
             "[kanama-ios] ${script.className}.${property.kotlinName} — no iOS " +
-              "@ScriptProperty delivery case; the scene-stored value will be " +
+              "@Export delivery case; the scene-stored value will be " +
               "silently dropped (kept its Kotlin default)."
           )
         }
@@ -843,7 +843,7 @@ internal class IosScriptCodeEmitter(
     // advertised so the inspector renders the same DICTIONARY control as the desktop registrar.
     if (type == TypeMapping.DICTIONARY) {
       warn(
-        "[kanama-ios] $className.$kotlinName (Map) — no iOS @ScriptProperty dictionary path yet, " +
+        "[kanama-ios] $className.$kotlinName (Map) — no iOS @Export dictionary path yet, " +
           "will keep its Kotlin default"
       )
       return IosProperty(
@@ -900,7 +900,7 @@ internal class IosScriptCodeEmitter(
             // marshalling case: emit no setProperty case, keep the Kotlin default.
             else -> {
               warn(
-                "[kanama-ios] $className.$kotlinName ($type) — no iOS @ScriptProperty path for this value type, will keep its Kotlin default"
+                "[kanama-ios] $className.$kotlinName ($type) — no iOS @Export path for this value type, will keep its Kotlin default"
               )
               ""
             }
@@ -937,7 +937,7 @@ internal class IosScriptCodeEmitter(
         // setPropertyValue, String via setPropertyString) have an empty scalarSetExpression — but
         // they are still *readable*: encodeIosReturn and the C pt_return_to_variant path handle
         // all of them. Without a getProperty branch the engine reads them back as nil, which
-        // silently breaks MultiplayerSynchronizer replication of value-type @ScriptProperty (e.g.
+        // silently breaks MultiplayerSynchronizer replication of value-type @Export (e.g.
         // a Vector2 `motion` or Vector3 `shoot_target`) on the authority peer — the value never
         // leaves the sending device. (String/NodePath have the identical defect; folded in here.)
         type == TypeMapping.VECTOR2 ||
@@ -946,7 +946,7 @@ internal class IosScriptCodeEmitter(
           type == TypeMapping.STRING -> "script.$kotlinName"
         else -> ""
       }
-    // Get/set parity guard: a *data* @ScriptProperty the engine can set but not read back is
+    // Get/set parity guard: a *data* @Export the engine can set but not read back is
     // write-only on iOS — the engine gets nil, silently breaking MultiplayerSynchronizer
     // replication and inspector reads (exactly how the Vector2 `motion` / Vector3 `shoot_target`
     // bug hid). Object and custom-script refs are covered too since task 115: `Object.get` of a
@@ -966,7 +966,7 @@ internal class IosScriptCodeEmitter(
         (isList && arrayElementString)
     if (engineSettableDataType && !engineReadableData) {
       error(
-        "[kanama-ios] $className.$kotlinName ($type) — data @ScriptProperty is write-only on " +
+        "[kanama-ios] $className.$kotlinName ($type) — data @Export is write-only on " +
           "iOS: settable from scene data / Object.set, but the engine reads it back as nil " +
           "(no getProperty path). MultiplayerSynchronizer replication and the inspector cannot " +
           "get() this property. Add an encodeIosReturn case + a getProperty branch to fix."
@@ -1022,7 +1022,7 @@ internal class IosScriptCodeEmitter(
       TypeMapping.ARRAY -> 28
       TypeMapping.PACKED_STRING_ARRAY -> 34
       TypeMapping.VARIANT -> 0 // NIL — a Variant/"any" property advertises no fixed type
-      // task 29 return-only shapes (never @ScriptProperty types, but the when must be
+      // task 29 return-only shapes (never @Export types, but the when must be
       // exhaustive) — the engine Variant::Type values, matching VariantType.kt.
       TypeMapping.RECT2 -> 7
       TypeMapping.TRANSFORM2D -> 11

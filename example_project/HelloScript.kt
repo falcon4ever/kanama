@@ -4,22 +4,21 @@ package net.multigesture.kanama.example
 // package import makes them resolve alongside the explicit class imports below.
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
+import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.ExportCategory
 import net.multigesture.kanama.annotations.ExportGroup
 import net.multigesture.kanama.annotations.ExportSubgroup
+import net.multigesture.kanama.annotations.ExportToolButton
 import net.multigesture.kanama.annotations.GlobalClass
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnExitTree
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.PropertyHint
-import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.Rpc
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.annotations.Tool
-import net.multigesture.kanama.annotations.ToolButton
 import net.multigesture.kanama.api.*
 import net.multigesture.kanama.api.AnimationMixer
 import net.multigesture.kanama.api.AnimationPlayer
@@ -113,34 +112,34 @@ class HelloScript(godotObject: GodotHandle) :
 
   @ExportCategory("Inspector Metadata")
   @ExportGroup("Smoke Properties")
-  @ScriptProperty(hint = PropertyHint.RANGE, hintString = "0,100,1")
+  @Export(hint = PropertyHint.RANGE, hintString = "0,100,1")
   var health: Long = 99
 
-  @ExportSubgroup("Runtime") @ScriptProperty var speed: Double = 5.1
+  @ExportSubgroup("Runtime") @Export var speed: Double = 5.1
 
-  @ScriptProperty(hint = PropertyHint.ENUM, hintString = "Easy,Normal,Hard")
+  @Export(hint = PropertyHint.ENUM, hintString = "Easy,Normal,Hard")
   var metadataMode: String = "Normal"
 
   // task 32 — custom enum export: registers as INT + PROPERTY_HINT_ENUM
   // ("EASY,NORMAL,HARD"), stored as the ordinal; main.tscn overrides it to 2 (HARD).
-  @ScriptProperty var smokeDifficulty = SmokeDifficulty.NORMAL
+  @Export var smokeDifficulty = SmokeDifficulty.NORMAL
 
   // task 38 (issue #40) — enum-list export: registers as a typed int Array whose
   // elements carry PROPERTY_HINT_ENUM ("2/2:EASY,NORMAL,HARD"), stored as ordinals;
   // main.tscn overrides it to [HARD, EASY].
-  @ScriptProperty var smokeJoints: List<SmokeDifficulty> = emptyList()
+  @Export var smokeJoints: List<SmokeDifficulty> = emptyList()
 
-  @ScriptProperty var label: String = "hello"
+  @Export var label: String = "hello"
 
-  @ScriptProperty var targetPath: NodePath = NodePath("../Body3D")
+  @Export var targetPath: NodePath = NodePath("../Body3D")
 
-  @ScriptProperty var smokeScene: PackedScene? = null
+  @Export var smokeScene: PackedScene? = null
 
-  @ScriptProperty var smokeTextures: List<Texture2D> = emptyList()
+  @Export var smokeTextures: List<Texture2D> = emptyList()
 
-  @ScriptProperty var smokeResource: SmokeResource? = null
+  @Export var smokeResource: SmokeResource? = null
 
-  @ScriptProperty var smokeResources: List<SmokeResource> = emptyList()
+  @Export var smokeResources: List<SmokeResource> = emptyList()
 
   // task 50 — user accessors that throw. Without containment in ScriptBridge's
   // siSet/siGet these exceptions escape an FFM upcall stub and abort the whole
@@ -149,7 +148,7 @@ class HelloScript(godotObject: GodotHandle) :
   // reads the *old* value (for owned-resource cleanup) before assigning, so a
   // property whose getter throws also becomes unwritable — combining both throws on
   // one property wedges it permanently and tests nothing useful.
-  @ScriptProperty
+  @Export
   var smokeThrowingSetter: Long = 0
     set(value) {
       check(value != 666L) { "kanama smoke: deliberate property-set failure" }
@@ -160,46 +159,45 @@ class HelloScript(godotObject: GodotHandle) :
   // disarmed without a write (a write would trip the same throwing getter — see above).
   private var smokeGetterThrowArmed: Boolean = false
 
-  @ScriptProperty
+  @Export
   var smokeThrowingGetter: Long = 5
     get() {
       check(!smokeGetterThrowArmed) { "kanama smoke: deliberate property-get failure" }
       return field
     }
 
-  @RegisterFunction
   fun smokeArmGetterThrow(armed: Boolean) {
     smokeGetterThrowArmed = armed
   }
 
   // MutableList export (preserves mutability through the setter).
-  @ScriptProperty var smokeMutableTextures: MutableList<Texture2D> = mutableListOf()
+  @Export var smokeMutableTextures: MutableList<Texture2D> = mutableListOf()
 
   // issue #40 — typed Map exports (Dictionary + PROPERTY_HINT_DICTIONARY_TYPE):
   // a String-keyed scalar dictionary, the reporter's non-String-keyed custom-resource
   // dictionary (Map<Long, SmokeResource>), and an enum-valued dictionary (ordinals).
-  @ScriptProperty var smokeScalarMap: Map<String, Long> = emptyMap()
+  @Export var smokeScalarMap: Map<String, Long> = emptyMap()
 
-  @ScriptProperty var smokeRegionMap: Map<Long, SmokeResource> = emptyMap()
+  @Export var smokeRegionMap: Map<Long, SmokeResource> = emptyMap()
 
-  @ScriptProperty var smokeEnumMap: Map<String, SmokeDifficulty> = emptyMap()
+  @Export var smokeEnumMap: Map<String, SmokeDifficulty> = emptyMap()
 
   // issue #40 — value-type key (Vector2i) with a scalar value.
-  @ScriptProperty var smokeVectorKeyMap: Map<Vector2i, Long> = emptyMap()
+  @Export var smokeVectorKeyMap: Map<Vector2i, Long> = emptyMap()
 
   // issue #40 — value-type key (Vector2i) with a custom resource value (combines
   // two features: value-type keys and custom-resource values).
-  @ScriptProperty var smokeVectorResourceMap: Map<Vector2i, SmokeResource> = emptyMap()
+  @Export var smokeVectorResourceMap: Map<Vector2i, SmokeResource> = emptyMap()
 
   // issue #40 — MutableMap export (preserves mutability through the setter).
-  @ScriptProperty var smokeMutableMap: MutableMap<String, Long> = mutableMapOf()
+  @Export var smokeMutableMap: MutableMap<String, Long> = mutableMapOf()
 
   // issue #40 review — nullable scalar value (Map<String, Long?>): mirrors C#'s nil-preserving
   // Dictionary. A null (or wrong-typed) value keeps its key with a null value rather than dropping
   // it. Non-null value maps above cannot hold null, so they drop — the type-forced difference.
-  @ScriptProperty var smokeNullableScalarMap: Map<String, Long?> = emptyMap()
+  @Export var smokeNullableScalarMap: Map<String, Long?> = emptyMap()
 
-  @ToolButton(text = "Reset Health", icon = "Reload")
+  @ExportToolButton(text = "Reset Health", icon = "Reload")
   fun resetHealth() {
     health = 99
     notifyInspectorChanged()
@@ -507,7 +505,7 @@ class HelloScript(godotObject: GodotHandle) :
     // (ObjectCalls.ptrcallWithObjectStringLongArgsRetLong) removed, this probe aborts the process
     // (exit 134); with it, the scene stays live and close() frees it. A fresh, non-scripted node is
     // packed so save serializes only trivial engine state (never re-enters this script's
-    // @ScriptProperty getters). ──────────────────────────────────────────────────────────────────
+    // @Export getters). ──────────────────────────────────────────────────────────────────
     val issue81Node = Node(GodotHandle(ObjectCalls.constructObject("Node")))
     val issue81Scene = PackedScene.create()
     val issue81PackError = issue81Scene.pack(issue81Node)
@@ -2065,24 +2063,20 @@ class HelloScript(godotObject: GodotHandle) :
     // Intentionally quiet: per-frame logs flood the editor output.
   }
 
-  @RegisterFunction
   fun greet(name: String): String {
     val msg = "Hello from script file, $name! health=$health"
     System.err.println("[kanama:kt] HelloScript(file).greet(\"$name\") -> \"$msg\"")
     return msg
   }
 
-  @RegisterFunction
   fun onSmokeBodyEntered(body: Node) {
     smokeSignalBodyClass = body.getClassName()
   }
 
-  @RegisterFunction
   fun onSmokeChecked(message: String) {
     smokeScriptSignalMessage = message
   }
 
-  @RegisterFunction
   @Rpc(callLocal = true)
   fun replaceSmokeScene(): Boolean {
     smokeScene = PackedScene.create()
