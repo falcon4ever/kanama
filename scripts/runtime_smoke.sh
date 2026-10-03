@@ -123,13 +123,13 @@ check "kt script enum list export type=true hint=true hint_string=true tscn=true
 # task 128 B — Godot enum value classes (`var mode: Node.ProcessMode`) as script members: INT +
 # PROPERTY_HINT_ENUM / _FLAGS with Godot's names-with-values hint, GDScript's class marker
 # (PROPERTY_USAGE_CLASS_IS_ENUM / _CLASS_IS_BITFIELD + class_name), the Godot values (not ordinals)
-# through the scene, Object.set/get, a @RegisterFunction and a signal, read back typed in Kotlin;
+# through the scene, Object.set/get, a registered function and a signal, read back typed in Kotlin;
 # engine virtuals with an enum parameter / return and the required `_get_space_state` object return;
 # a @RegisterClass object return (HelloKanama.self_object) through varcall and ptrcall.
 check "GodotEnumExportSmoke typed mode=true flags=true list=true default=true signal=true"
 check "godot enum export mode_meta=true flags_meta=true class_meta=true list_meta=true default=true tscn=true roundtrip=true function=true"
 check "godot enum virtuals enum_arg=true enum_return=true required_object_return=true register_class_object_return=true"
-# task 50 — a throwing user @ScriptProperty accessor must be contained by ScriptBridge's
+# task 50 — a throwing user @Export accessor must be contained by ScriptBridge's
 # siSet/siGet rather than escaping the FFM upcall and aborting the process. A failed set is
 # rejected (previous value survives), a failed get yields null, and the property recovers.
 # Removing the containment makes Godot exit 134 before printing this line at all.
@@ -155,7 +155,7 @@ check "kt script dictionary export scalar_type=true tscn_scalar_map=true scalar_
 # makes Godot exit before printing it.
 check "kt script dictionary malformed survived=true wrong_key_empty=true wrong_value_dropped=true wrong_vector_key_dropped=true"
 # task 50 — the standing malformed-input matrix: a wrong-typed value is fed to a representative
-# @ScriptProperty of every exported shape (scalar/Double/String/NodePath/enum/enum-list/wrapper-
+# @Export of every exported shape (scalar/Double/String/NodePath/enum/enum-list/wrapper-
 # list/resource/PackedScene/@ScriptClass-list). Reaching this line proves the process survived
 # (an uncontained cast in a generated setter/getter aborts the JVM before it prints); all_readable
 # proves each getter still returns a defined value. Removing siSet/siGet containment fails here.
@@ -265,7 +265,7 @@ check "vret control rid_type=true"
 check "LifetimeSmoke instance_valid_alive=true instance_valid_after_free=false id_after_free_valid=false id_matches_ptrcall=true closed_receiver=IllegalStateException:RefCounted handle is closed closed_inherited=IllegalStateException:RefCounted handle is closed closed_generated=IllegalStateException:RefCounted handle is closed closed_argument=IllegalStateException:RefCounted handle is closed"
 check_absent "Leaked instance: Image"
 # task 98 — structural upcall containment (Upcalls.stub wraps every stub in
-# MethodHandles.catchException). A @RegisterFunction that throws is logged with the site label
+# MethodHandles.catchException). A registered function that throws is logged with the site label
 # and the engine receives the zero default; GDScript sees null and keeps running. Removing the
 # containment makes the exception unwind through native frames and abort Godot (exit 134)
 # before the survived= line is printed.

@@ -13,7 +13,6 @@ for each `@RegisterClass` and `@ScriptClass` declaration:
 @Signal
 fun pinged(value: Long) = Unit
 
-@RegisterFunction
 fun ping(): Long {
     HelloScriptSignals.pinged(this, counter)
     return counter
@@ -83,24 +82,23 @@ For existing Godot signals, use `signal(name)` when you want a small handle:
 ```kotlin
 import net.multigesture.kanama.generated.PlayerNames
 
-@RegisterFunction
 fun onBodyEntered(body: GodotObject) {
     if (body.isClass("CharacterBody3D")) {
         collectCoin()
     }
 }
 
-// PlayerNames.Methods.onBodyEntered is generated from the
-// @RegisterFunction above. It is the Godot-facing name "on_body_entered".
+// PlayerNames.Methods.onBodyEntered is generated for the public function
+// above. It is the Godot-facing name "on_body_entered".
 area.signal(Area3D.Signals.bodyEntered)
     .connect(self, PlayerNames.Methods.onBodyEntered)
 ```
 
 The connection layer mirrors Godot's Callable model. The target is a Godot
 object or Kanama script instance, and the method name is the Godot-facing method
-name. For `@RegisterFunction fun onBodyEntered(...)`, that default name is
-`on_body_entered`; if you use `@RegisterFunction(name = "...")`, connect to the
-explicit name.
+name. Every public function is registered: for `fun onBodyEntered(...)` that
+name is `on_body_entered`; if you give it `@GodotName("...")`, connect to that
+name.
 
 KSP generates `*Names` sidecar objects for Kanama classes, including `Methods`,
 `Properties`, and `Signals` constants. Use those constants when referring to
@@ -131,7 +129,7 @@ Saved scene connections are strict because the method name is stored in the
 `_on_body_entered`, the Kotlin method must expose that exact Godot-facing name:
 
 ```kotlin
-@RegisterFunction("_on_body_entered")
+@GodotName("_on_body_entered")
 fun onBodyEntered(body: Node) {
     collect()
 }
@@ -148,10 +146,8 @@ python3 /path/to/kanama/scripts/scene_connection_lint.py /path/to/godot_project
 ```
 
 The lint walks `.tscn` connections, resolves target nodes with attached Kotlin
-scripts, and verifies the target method is exposed by `@RegisterFunction` or
-`@Method`. KSP also warns when a public `onSomething` method in a
-`@ScriptClass` is not registered, since that often means a scene signal
-callback was missed.
+scripts, and verifies the target script registers the method: a public
+function under its snake_case name or its `@GodotName`.
 
 ## Dynamic Scene Instances
 
@@ -236,7 +232,6 @@ Generated method dispatch accepts common object wrappers directly, so a method
 connected to `body_entered` can take a typed wrapper:
 
 ```kotlin
-@RegisterFunction
 fun onBodyEntered(body: Node3D) {
     body.hide()
 }

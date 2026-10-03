@@ -228,7 +228,7 @@ ensure_gdextension_header "${godot_bins[0]}"
 # (also KMP) -- which is how GodotBackendContractTest (1,100 lines) and the
 # checkPlatformBackendContract descriptor check had never run in CI (task 99, review R16). `test`
 # stays in the list for the JVM modules (:processor, :annotations, :project-scripts). The iOS
-# @ScriptProperty get/set parity contract (task 46) lives in src/jvmTest with the type tests.
+# @Export get/set parity contract (task 46) lives in src/jvmTest with the type tests.
 stage "JVM unit tests + kanama-common-api contract"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" jvmTest test \
   :kanama-common-api:jvmTest :kanama-common-api:checkPlatformBackendContract

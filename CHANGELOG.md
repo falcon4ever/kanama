@@ -38,6 +38,50 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — one annotation set, public functions registered automatically, typed input handlers (task 133 B) — BREAKING
+
+- **One GDScript-shaped annotation per concept.** The aliases are removed in this release (no
+  deprecation period); the compiler rejects every leftover, and the KSP processor reports each one
+  at its declaration naming the replacement:
+
+  | Removed | Use |
+  |---|---|
+  | `@RegisterFunction`, `@Method` | nothing: public functions are registered automatically; `@GodotName("...")` for another Godot name |
+  | `@ScriptProperty`, `@RegisterProperty` | `@Export` (same parameters: `name`, `hint`, `hintString`, `usage`) |
+  | `@ClassName` | `@GlobalClass` |
+  | `@ToolButton` | `@ExportToolButton` (same parameters) |
+  | `@Ready`, `@EnterTree`, `@ExitTree` | `@OnReady`, `@OnEnterTree`, `@OnExitTree` |
+  | `@Process`, `@PhysicsProcess` | `@OnProcess`, `@OnPhysicsProcess` |
+  | `@Input`, `@UnhandledInput`, `@ShortcutInput`, `@UnhandledKeyInput` | `@OnInput`, `@OnUnhandledInput`, `@OnShortcutInput`, `@OnUnhandledKeyInput` |
+
+  The set is now `@ScriptClass`, `@RegisterClass` (a new ClassDB class, as opposed to a script
+  attached to a node), `@Tool`, `@GlobalClass`, `@Export`, `@ExportCategory` / `@ExportGroup` /
+  `@ExportSubgroup`, `@ExportToolButton`, `@Signal`, `@Rpc`, `@GodotName`, `@OverrideVirtual` and
+  the nine lifecycle `@On…` annotations. The iOS copy of the annotations carries the same set.
+- **Every public function of a script class is registered with Godot**, as GDScript exposes every
+  `func`, under its snake_case name (`fun showMessage()` is `show_message`); `@RegisterClass` types
+  follow the same rule. `private`, `protected` and `internal` functions stay Kotlin-only, and so do
+  `suspend`, extension and generic functions and an `override` of a non-script member
+  (`toString()`). `@GodotName("_on_start_button_pressed")` keeps a name a `.tscn` connection saved.
+  New build errors, each naming the fix: a public function whose parameter or return type Godot
+  cannot carry (make it `internal` or `private`), two functions on one Godot name, a Kanama
+  annotation on a non-public function (it used to be ignored silently), and a function named like
+  an engine virtual without an annotation (`fun _process(delta: Double)` never ran; the error
+  names `@OnProcess`, or `@OverrideVirtual` for other virtuals). The KSP warning about
+  unregistered `onXxx` functions is gone with the cause.
+- **Input handlers take `InputEvent`.** `@OnInput` / `@OnUnhandledInput` / `@OnShortcutInput` /
+  `@OnUnhandledKeyInput` functions are `fun input(event: InputEvent)` on desktop, Android, iOS and
+  Web, so `InputEvent(event.handle)` rewraps go; a handler still taking `GodotObject` is a build
+  error naming the fix.
+- **Migration:** `python3 scripts/migrate_script_annotations.py <kotlin-src>...` renames the removed
+  annotations and their imports, deletes `@RegisterFunction` / `@Method` (turning a custom name
+  into `@GodotName`), retypes input handlers and drops their rewraps, then lists what needs a human
+  (each public function that was not registered before and now is). `scene_connection_lint.py`,
+  `check_unapplied_annotations.py` and `audit_replicated_script_properties.py` follow the new names.
+  - **Source break:** script annotations (`net.multigesture.kanama.annotations`: the removed names
+    above) and lifecycle input handlers (`GodotObject` → `InputEvent`). No generated API signature
+    changes.
+
 ### Added — the generated API conventions page and the public-signature gate (task 126)
 
 - **[Generated API Conventions](docs/reference/wrapper-conventions.md)** states what a script

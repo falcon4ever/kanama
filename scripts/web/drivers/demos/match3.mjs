@@ -270,7 +270,7 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
   // after teardown it returns null -- the bridge zeroes match3MainHandle when Main frees,
   // and a null payload would look like "the probe is broken" rather than "asked too late".
   // Ids are resolved from the export manifest, never hardcoded: adding a
-  // @RegisterFunction renumbers the rest (this probe took id 1 and pushed the existing
+  // registered function renumbers the rest (this probe took id 1 and pushed the existing
   // two down), so a hardcoded call would dispatch a different method and still "work".
   const probeId = resolveMethodId(exportDir, "match3.Main", "differential_probe");
   const differentialPayload =
@@ -354,7 +354,7 @@ export async function runMatch3({ url, evaluate, navigate, pointer, exportDir })
   // desktop, which prints it to stdout under the smoke env var, so the two payloads must
   // be byte-identical; differential_diff.py compares them. The method id is resolved from
   // the export manifest rather than hardcoded -- ids are positional, so adding a
-  // @RegisterFunction above this one would silently renumber it and a hardcoded call
+  // registered function above this one would silently renumber it and a hardcoded call
   // would dispatch a different method while still appearing to work.
   return {
     differential:

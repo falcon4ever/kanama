@@ -306,7 +306,7 @@ gate all import it.
   `processor/src/main/resources/net/multigesture/kanama/processor/godot-enums.tsv`: one row per enum
   (Godot key, Kotlin FQN, enum/bitfield, `NAME=value` pairs through the same naming function and
   lock), written by `--write-tree` beside the lock and compared by the drift gate. The processor
-  needs the values, not just the names (property hint strings, constant-folded `@ScriptProperty`
+  needs the values, not just the names (property hint strings, constant-folded `@Export`
   defaults, the `@OverrideVirtual` typed-signature check), and a compiled API library gives KSP the
   companion getters' names only.
 - **Companion values are getters** (`val ALWAYS: ProcessMode get() = ProcessMode(3L)`): no backing
@@ -694,7 +694,7 @@ full-range bytes); the iOS families have Kotlin encode round-trips plus C
 build/box round-trips in the on-device self-test matrix (the
 `virtual-packed-*-ret` / `virtual-dictionary-ret` / `virtual-array-ret` rows).
 
-**iOS `@ScriptProperty` conversion parity:** narrow scalars
+**iOS `@Export` conversion parity:** narrow scalars
 (`kotlin.Float`/`kotlin.Int` widened to the 64-bit FLOAT/INT slots), Kotlin
 `enum class` exports (INT slot carrying the ordinal), and enum-list exports
 (typed int Array of ordinals) use the same conversions on iOS as on

@@ -148,8 +148,8 @@ if (err != GodotError.OK) GD.printErr("save failed: ${err.value}")
   Node.ProcessMode.ALWAYS)` works. What comes BACK from a dynamic path (`get`, `call`,
   `ConfigFile.getValue`, Variant returns) is a `Long`; wrap it with `ProcessMode(raw as Long)` when
   you need the type.
-- **Script members.** A Godot enum is a valid `@ScriptProperty` type (an `int` export with
-  Godot's enum or flags hint, storing the Godot value), `List<...>` of one, a `@RegisterFunction`
+- **Script members.** A Godot enum is a valid `@Export` type (an `int` export with
+  Godot's enum or flags hint, storing the Godot value), `List<...>` of one, a registered function's
   parameter or return, a `@Signal` argument and an `@Rpc` argument; GDScript callers see the
   `int`. See [Exports and Resources](properties-resources.md#godot-enums-and-bitfields) and
   [Signals](signals.md#custom-signals).
@@ -177,13 +177,13 @@ Current Kanama collection support is intentionally narrow:
   `DirAccess.getFilesAt`, `ResourceLoader.listDirectory`, and
   `ProjectSettings.getChangedSettings`. Scene-authored `PackedStringArray` and
   `Array[String]` values also decode to `List<String>` when they pass through
-  generic Variant paths such as `@ScriptProperty` setters.
+  generic Variant paths such as `@Export` setters.
 - `PackedByteArray` is exposed as `ByteArray` in `FileAccess` byte helpers.
 - Selected object arrays are exposed as non-owning Kotlin wrapper lists, such
   as `Area3D.getOverlappingBodies()` and `Area3D.getOverlappingAreas()`.
 - Scalar `Dictionary` values are exposed as `Map<String, Any?>` where the
   wrapper knows the dictionary shape, such as `ProjectSettings` and selected
-  singleton metadata calls. Exported `@ScriptProperty` maps additionally
+  singleton metadata calls. Exported `@Export` maps additionally
   register as typed `Dictionary` slots — see
   [Exporting Dictionaries](properties-resources.md#exporting-dictionaries).
 - `Vector2` and `Vector3` include Kotlin-side arithmetic and common gameplay
@@ -246,7 +246,7 @@ Same call, different outcome, because the number of other owners differs.
 
 | Category | What it covers | What to do |
 |---|---|---|
-| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, and `@ScriptProperty` reads of resource-typed fields and collections | `close()` it, or `use { }` |
+| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }` |
 | **Borrowed view** | A wrapper *you* mint around a handle you already have: `Resource.fromHandle(...)`, `Resource.fromObject(...)`, a script-class constructor wrapping an existing handle | **Never** `close()` — it releases a reference you never took |
 | **Engine-owned, live** | A `createTween()` still running, anything living in the scene tree | Use the Godot lifecycle (`kill()`, `queueFree()`), not `close()` |
 | **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
@@ -260,7 +260,7 @@ still yours to close. In the demos corpus this table is what
 view or a live tween and never flags closing an owned return; the audit
 conforms to this page, not the other way round.
 
-`@ScriptProperty` reads are **owned**: the generated registrar takes its own
+`@Export` reads are **owned**: the generated registrar takes its own
 reference when it reads a resource out of a property, an `Array`, or a
 `Dictionary`, and releases it when Godot frees the script instance. You do not
 need to close a property field you keep; you do close a temporary you read out
@@ -351,7 +351,7 @@ net.multigesture.kanama.api.createTween` — on every platform; `node.createTwee
 resolves on desktop, Android and iOS, while `SceneTree.createTween()` and
 `SceneTree.getProcessedTweens()` exist on desktop/Android only.
 
-For `@ScriptProperty` fields, Kanama-generated registrars release closeable
+For `@Export` fields, Kanama-generated registrars release closeable
 property wrappers when Godot frees the script instance. Mutable script
 properties also release the previous closeable wrapper before accepting a new
 value from Godot. This covers retained exported resources such as
@@ -368,7 +368,7 @@ signals, scene connections, and lambda callbacks, see
 
 ## Global Classes
 
-Kanama supports globally named classes with `@GlobalClass` or `@ClassName`.
+Kanama supports globally named classes with `@GlobalClass` (GDScript `class_name`).
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
