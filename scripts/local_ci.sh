@@ -384,6 +384,13 @@ stage "typed Godot enums and required returns (task 128 A)"
 # is the naming function under the frozen prefix lock.
 python3 "$ROOT_DIR/scripts/check_typed_enums.py"
 
+stage "public API signatures vs snapshot (task 126)"
+# Every public declaration of the shared native API tree and of the generated Web wrappers is held to
+# docs/reference/generated/public-api-signatures-{common,web}.txt. A removed or changed signature is a
+# source break: it fails here until CHANGELOG.md `## Unreleased` carries a `- **Source break:**` line
+# and the snapshot is regenerated with --write (additions only need --write).
+python3 "$ROOT_DIR/scripts/check_public_signature_changes.py"
+
 stage "virtual-method signature table drift (task 128 B)"
 # processor/.../virtual-signatures.tsv is generated from extension_api.json (every engine virtual's
 # Godot types, the `required` return marker); the processor validates @OverrideVirtual against it,
