@@ -669,6 +669,9 @@ done
 
 if [[ $skip_bootstrap -eq 0 ]]; then
   if command -v cmake >/dev/null 2>&1; then
+    stage "bootstrap JDK resolution (kanama#277)"
+    "$ROOT_DIR/scripts/check_bootstrap_jdk_resolution.sh"
+
     stage "bootstrap cmake build"
     bootstrap_build_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_bootstrap_build.XXXXXX")"
     cmake -S "$ROOT_DIR/bootstrap" -B "$bootstrap_build_dir" -DCMAKE_BUILD_TYPE=Release

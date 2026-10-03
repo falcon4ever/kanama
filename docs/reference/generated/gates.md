@@ -10,7 +10,7 @@ Every check that decides whether Kanama is green, in one place: what each one pr
 
 A green PR means the first two tiers passed. It does not mean the third tier was run — that is what the ledger is for.
 
-## Local CI stages (66)
+## Local CI stages (67)
 
 In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the script's docstring or header where a script exists, otherwise the stage's own comment.
 
@@ -69,19 +69,20 @@ In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the sc
 | 51 | `Linux native bootstrap preflight: readelf` | The installed Linux bootstrap's dynamic section carries no build-machine absolute paths. | PR + push to main (Linux runner); Linux hosts only | `readelf -d "$linux_native" >/dev/null` | — |
 | 52 | `publish to mavenLocal` | `publishKanamaToMavenLocal` succeeds. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" publishKanamaToMavenLocal` | — |
 | 53 | `mavenLocal publication` | The kanama, annotations and processor jars and sources jars exist at the published version in mavenLocal. | PR + push to main (ci.yml `local-ci`); local | `maven_local="${KANAMA_MAVEN_LOCAL_REPO:-${HOME}/.m2/repository}/net/multigestur…` | — |
-| 54 | `bootstrap cmake build` | The native bootstrap configures and builds in Release with CMake. | PR + push to main; local when cmake is installed (`--skip-bootstrap` skips) | `bootstrap_build_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_bootstrap_build.XXXXXX…` | — |
-| 55 | `mkdocs strict build` | `mkdocs build --strict` passes (a broken link or a page missing from the nav fails). | PR + push to main via the `docs (mkdocs strict)` job (`local-ci` passes `--skip-docs`); local when mkdocs is installed | `(cd "$ROOT_DIR" && mkdocs build --strict)` | — |
-| 56 | `web bridge + driver syntax` | `node --check` parses the JS bridge and every Web driver. | PR + push to main; local when node is installed (`--skip-web` skips) | `node --check "$ROOT_DIR/web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.…` | — |
-| 57 | `web driver lint (eslint)` | Correctness lint over the same drivers (task 86: an unused variable held the Safari envelope's performance section back for two weeks). | PR + push to main; local when node is installed (`--skip-web` skips) | `(` | — |
-| 58 | `web export-smoke scaffold self-test` | exercises web_export_smoke.sh against a static fake fixture (Task 57f1 scaffold validation). | PR + push to main (ci.yml `local-ci`); local | `scripts/web/scaffold_selftest.sh` | 2026-07-23 |
-| 59 | `web backend dispatch drift gate` | Generate the Kotlin/Wasm Web backend dispatch from the Web backend call contract. | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_backend.py` | 2026-07-23 |
-| 60 | `web wrapper tree drift gate` | Generate the Kotlin/Wasm Web wrapper tree from the Web call contract (task 96). | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_wrappers.py` | 2026-09-09 |
-| 61 | `web typed Godot enums and required returns (task 128 C)` | Gate: the Web wrappers surface Godot enums as their value classes and keep Godot's `required` returns non-null (task 128 C) -- the Kotlin/Wasm twin of `scripts/check_typed_enums.py`. | PR + push to main (ci.yml `local-ci`); local | `scripts/check_web_typed_enums.py` | 2026-10-02 |
-| 62 | `web Wasm compile + coverage gate` | Kotlin/Wasm compile + the fail-loud gameplay coverage gate. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -Pkotlin.compiler.execution.stra…` | — |
-| 63 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
-| 64 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
-| 65 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
-| 66 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
+| 54 | `bootstrap JDK resolution (kanama#277)` | The native bootstrap's CMake configure picks the right JDK and refuses a stale jni.h on every OS. | PR + push to main (ci.yml `local-ci`); local | `scripts/check_bootstrap_jdk_resolution.sh` | 2026-10-02 |
+| 55 | `bootstrap cmake build` | The native bootstrap configures and builds in Release with CMake. | PR + push to main; local when cmake is installed (`--skip-bootstrap` skips) | `bootstrap_build_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_bootstrap_build.XXXXXX…` | — |
+| 56 | `mkdocs strict build` | `mkdocs build --strict` passes (a broken link or a page missing from the nav fails). | PR + push to main via the `docs (mkdocs strict)` job (`local-ci` passes `--skip-docs`); local when mkdocs is installed | `(cd "$ROOT_DIR" && mkdocs build --strict)` | — |
+| 57 | `web bridge + driver syntax` | `node --check` parses the JS bridge and every Web driver. | PR + push to main; local when node is installed (`--skip-web` skips) | `node --check "$ROOT_DIR/web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.…` | — |
+| 58 | `web driver lint (eslint)` | Correctness lint over the same drivers (task 86: an unused variable held the Safari envelope's performance section back for two weeks). | PR + push to main; local when node is installed (`--skip-web` skips) | `(` | — |
+| 59 | `web export-smoke scaffold self-test` | exercises web_export_smoke.sh against a static fake fixture (Task 57f1 scaffold validation). | PR + push to main (ci.yml `local-ci`); local | `scripts/web/scaffold_selftest.sh` | 2026-07-23 |
+| 60 | `web backend dispatch drift gate` | Generate the Kotlin/Wasm Web backend dispatch from the Web backend call contract. | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_backend.py` | 2026-07-23 |
+| 61 | `web wrapper tree drift gate` | Generate the Kotlin/Wasm Web wrapper tree from the Web call contract (task 96). | PR + push to main (ci.yml `local-ci`); local | `scripts/generate_web_wrappers.py` | 2026-09-09 |
+| 62 | `web typed Godot enums and required returns (task 128 C)` | Gate: the Web wrappers surface Godot enums as their value classes and keep Godot's `required` returns non-null (task 128 C) -- the Kotlin/Wasm twin of `scripts/check_typed_enums.py`. | PR + push to main (ci.yml `local-ci`); local | `scripts/check_web_typed_enums.py` | 2026-10-02 |
+| 63 | `web Wasm compile + coverage gate` | Kotlin/Wasm compile + the fail-loud gameplay coverage gate. | PR + push to main (ci.yml `local-ci`); local | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" --no-daemon -Pkotlin.compiler.execution.stra…` | — |
+| 64 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
+| 65 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
+| 66 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
+| 67 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
 
 ## CI workflow jobs
 

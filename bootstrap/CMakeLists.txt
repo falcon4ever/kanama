@@ -9,35 +9,114 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
 # nothing to link against. CMake's FindJNI insists on locating AWT, which
 # Temurin doesn't ship on macOS, so we resolve the include dirs directly.
 #
-# Prefer an explicit JAVA_HOME (what setup-java in CI and the docs tell users to
-# set); fall back to the macOS JDK registry. `/usr/libexec/java_home -v 25` is NOT
-# a hard match: with no JDK 25 registered it prints the default JVM and exits 0,
-# which once compiled bootstrap.c against a JDK 8 jni.h and failed on
-# JNI_VERSION_21 with nothing naming the real cause. So verify the header.
+# One resolution for macOS, Linux and Windows, first match wins (a candidate counts
+# when its include/jni.h exists):
+#   1. -DKANAMA_JAVA_HOME=<jdk>  what Gradle passes (configureNativeBootstrap): the JDK 25
+#                                toolchain the rest of the build compiles with, so the native
+#                                library and the Kotlin it loads agree.
+#   2. $ENV{JAVA_HOME}           what setup-java in CI and the docs tell users to set.
+#   3. /usr/libexec/java_home -v 25   (macOS only).
+#   4. find_package(JNI)         last resort, the system default JDK. Linux/Windows used to
+#                                stop here, so a launcher-started editor without JAVA_HOME
+#                                compiled bootstrap.c against whatever /usr/lib/jvm default
+#                                exists (kanama#277: Java 26 box, JNI_VERSION_21 undeclared).
+# Then ONE header check for every OS: `/usr/libexec/java_home -v 25` is NOT a hard match
+# (with no JDK 25 registered it prints the default JVM and exits 0, which once compiled
+# bootstrap.c against a JDK 8 jni.h), and a Linux system default can be as old. A jni.h
+# without JNI_VERSION_21 stops the configure with a message naming the JDK it came from.
+# Plain variables, not cache entries, so a changed JAVA_HOME is re-read on re-configure.
 if(APPLE)
-    set(JAVA_HOME_DIR "$ENV{JAVA_HOME}")
-    if(NOT JAVA_HOME_DIR OR NOT EXISTS "${JAVA_HOME_DIR}/include/jni.h")
-        execute_process(
-            COMMAND /usr/libexec/java_home -v 25
-            OUTPUT_VARIABLE JAVA_HOME_DIR
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-            RESULT_VARIABLE JAVA_HOME_RC
-        )
-        if(NOT JAVA_HOME_RC EQUAL 0 OR NOT JAVA_HOME_DIR)
-            message(FATAL_ERROR "Could not locate a JDK: set JAVA_HOME to a JDK 25+ (or register one so /usr/libexec/java_home -v 25 finds it)")
+    set(KANAMA_JNI_PLATFORM_DIR darwin)
+elseif(WIN32)
+    set(KANAMA_JNI_PLATFORM_DIR win32)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(KANAMA_JNI_PLATFORM_DIR linux)
+else()
+    set(KANAMA_JNI_PLATFORM_DIR "")
+endif()
+
+set(KANAMA_JDK_HOME "")
+set(KANAMA_JDK_ORIGIN "")
+set(KANAMA_JDK_TRIED "")
+set(KANAMA_JNI_INCLUDE_DIRS "")
+
+set(KANAMA_JDK_CANDIDATES "")
+set(KANAMA_JDK_CANDIDATE_ORIGINS "")
+if(KANAMA_JAVA_HOME)
+    list(APPEND KANAMA_JDK_CANDIDATES "${KANAMA_JAVA_HOME}")
+    list(APPEND KANAMA_JDK_CANDIDATE_ORIGINS "-DKANAMA_JAVA_HOME (the JDK Gradle builds with)")
+endif()
+if(DEFINED ENV{JAVA_HOME} AND NOT "$ENV{JAVA_HOME}" STREQUAL "")
+    list(APPEND KANAMA_JDK_CANDIDATES "$ENV{JAVA_HOME}")
+    list(APPEND KANAMA_JDK_CANDIDATE_ORIGINS "JAVA_HOME")
+endif()
+if(APPLE)
+    execute_process(
+        COMMAND /usr/libexec/java_home -v 25
+        OUTPUT_VARIABLE KANAMA_MAC_JAVA_HOME
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE KANAMA_MAC_JAVA_HOME_RC
+        ERROR_QUIET
+    )
+    if(KANAMA_MAC_JAVA_HOME_RC EQUAL 0 AND KANAMA_MAC_JAVA_HOME)
+        list(APPEND KANAMA_JDK_CANDIDATES "${KANAMA_MAC_JAVA_HOME}")
+        list(APPEND KANAMA_JDK_CANDIDATE_ORIGINS "/usr/libexec/java_home -v 25")
+    endif()
+endif()
+
+set(KANAMA_JDK_INDEX 0)
+foreach(KANAMA_CANDIDATE IN LISTS KANAMA_JDK_CANDIDATES)
+    list(GET KANAMA_JDK_CANDIDATE_ORIGINS ${KANAMA_JDK_INDEX} KANAMA_CANDIDATE_ORIGIN)
+    math(EXPR KANAMA_JDK_INDEX "${KANAMA_JDK_INDEX} + 1")
+    file(TO_CMAKE_PATH "${KANAMA_CANDIDATE}" KANAMA_CANDIDATE)
+    if(EXISTS "${KANAMA_CANDIDATE}/include/jni.h")
+        set(KANAMA_JDK_HOME "${KANAMA_CANDIDATE}")
+        set(KANAMA_JDK_ORIGIN "${KANAMA_CANDIDATE_ORIGIN}")
+        set(KANAMA_JNI_HEADER "${KANAMA_CANDIDATE}/include/jni.h")
+        set(KANAMA_JNI_INCLUDE_DIRS "${KANAMA_CANDIDATE}/include")
+        if(KANAMA_JNI_PLATFORM_DIR)
+            list(APPEND KANAMA_JNI_INCLUDE_DIRS "${KANAMA_CANDIDATE}/include/${KANAMA_JNI_PLATFORM_DIR}")
+        endif()
+        break()
+    endif()
+    string(APPEND KANAMA_JDK_TRIED "\n  - ${KANAMA_CANDIDATE} (${KANAMA_CANDIDATE_ORIGIN}): no include/jni.h (a JRE, or not a JDK)")
+endforeach()
+
+if(NOT KANAMA_JDK_HOME)
+    # Last resort. No REQUIRED and no AWT component: we only need the headers, and
+    # FindJNI's default demands libjawt, which a headless JDK does not ship.
+    find_package(JNI QUIET)
+    if(JAVA_INCLUDE_PATH AND EXISTS "${JAVA_INCLUDE_PATH}/jni.h")
+        set(KANAMA_JDK_HOME "${JAVA_INCLUDE_PATH}/..")
+        get_filename_component(KANAMA_JDK_HOME "${KANAMA_JDK_HOME}" ABSOLUTE)
+        set(KANAMA_JDK_ORIGIN "find_package(JNI), the system default JDK")
+        set(KANAMA_JNI_HEADER "${JAVA_INCLUDE_PATH}/jni.h")
+        set(KANAMA_JNI_INCLUDE_DIRS "${JAVA_INCLUDE_PATH}")
+        if(JAVA_INCLUDE_PATH2)
+            list(APPEND KANAMA_JNI_INCLUDE_DIRS "${JAVA_INCLUDE_PATH2}")
         endif()
     endif()
-    if(NOT EXISTS "${JAVA_HOME_DIR}/include/jni.h")
-        message(FATAL_ERROR "No include/jni.h under ${JAVA_HOME_DIR}; set JAVA_HOME to a JDK 25+")
-    endif()
-    file(STRINGS "${JAVA_HOME_DIR}/include/jni.h" JNI_HAS_VERSION_21 REGEX "JNI_VERSION_21")
-    if(NOT JNI_HAS_VERSION_21)
-        message(FATAL_ERROR "jni.h under ${JAVA_HOME_DIR} predates JDK 21 (no JNI_VERSION_21). Kanama needs a JDK 25+ header: set JAVA_HOME to one, or register it so /usr/libexec/java_home -v 25 resolves to it (it returns the default JVM when no JDK 25 is registered).")
-    endif()
-    set(JNI_INCLUDE_DIRS "${JAVA_HOME_DIR}/include" "${JAVA_HOME_DIR}/include/darwin")
-else()
-    find_package(JNI REQUIRED)
 endif()
+
+if(NOT KANAMA_JDK_HOME)
+    message(FATAL_ERROR "Could not locate a JDK with include/jni.h. Install a JDK 25+ and set JAVA_HOME to its home directory (or run the build through Gradle on JDK 25, which passes it as -DKANAMA_JAVA_HOME).${KANAMA_JDK_TRIED}")
+endif()
+file(STRINGS "${KANAMA_JNI_HEADER}" JNI_HAS_VERSION_21 REGEX "JNI_VERSION_21")
+if(NOT JNI_HAS_VERSION_21)
+    message(FATAL_ERROR "jni.h under ${KANAMA_JDK_HOME} (found via ${KANAMA_JDK_ORIGIN}) predates JDK 21 (no JNI_VERSION_21). Kanama needs a JDK 25+ header: set JAVA_HOME to a JDK 25+ home directory (a desktop launcher does not inherit your shell's JAVA_HOME; in the Godot editor set the project setting kanama/build/jdk_path), or run the build through Gradle on JDK 25.")
+endif()
+# jni.h includes jni_md.h from the per-OS dir (include/darwin, include/linux, include/win32).
+set(KANAMA_JNI_MD_FOUND FALSE)
+foreach(KANAMA_JNI_DIR IN LISTS KANAMA_JNI_INCLUDE_DIRS)
+    if(EXISTS "${KANAMA_JNI_DIR}/jni_md.h")
+        set(KANAMA_JNI_MD_FOUND TRUE)
+    endif()
+endforeach()
+if(NOT KANAMA_JNI_MD_FOUND)
+    message(FATAL_ERROR "No jni_md.h under ${KANAMA_JDK_HOME}/include/${KANAMA_JNI_PLATFORM_DIR} (found via ${KANAMA_JDK_ORIGIN}); set JAVA_HOME to a full JDK 25+ for this host (${CMAKE_SYSTEM_NAME})")
+endif()
+message(STATUS "Kanama bootstrap JDK: ${KANAMA_JDK_HOME} (via ${KANAMA_JDK_ORIGIN})")
+set(JNI_INCLUDE_DIRS ${KANAMA_JNI_INCLUDE_DIRS})
 
 add_library(kanama_bootstrap SHARED bootstrap.c)
 target_include_directories(kanama_bootstrap PRIVATE

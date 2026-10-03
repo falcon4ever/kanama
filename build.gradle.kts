@@ -415,6 +415,28 @@ fun nativeBootstrapLinkOutputs(): List<File> =
 fun nativeBootstrapArtifactCopies(): List<File> =
   nativeBootstrapLinkOutputs() + nativeBootstrapArtifact.asFile
 
+// The JDK the native bootstrap's jni.h comes from: the JDK 25 toolchain the Kotlin build compiles
+// with (the same `launcherFor` the jlink tasks use), so the C side and the Kotlin it loads agree
+// whatever default JDK or JAVA_HOME the machine has (kanama#277). CMake takes it as
+// -DKANAMA_JAVA_HOME and checks its header like every other candidate. Resolved lazily, at execution.
+val nativeBootstrapJdkHome: Provider<String> =
+  providers.provider {
+    val toolchains = project.extensions.getByType<JavaToolchainService>()
+    try {
+      toolchains
+        .launcherFor { languageVersion.set(JavaLanguageVersion.of(25)) }
+        .get()
+        .metadata
+        .installationPath
+        .asFile
+        .absolutePath
+    } catch (e: Exception) {
+      // No JDK 25 toolchain resolvable: CMake falls back to JAVA_HOME / the system JDK.
+      logger.info("No JDK 25 toolchain for the native bootstrap: ${e.message}")
+      null
+    }
+  }
+
 val configureNativeBootstrap by
   tasks.registering(Exec::class) {
     group = "build"
@@ -423,6 +445,8 @@ val configureNativeBootstrap by
     inputs.file(layout.projectDirectory.file("bootstrap/CMakeLists.txt"))
     inputs.file(layout.projectDirectory.file("bootstrap/bootstrap.c"))
     inputs.dir(layout.projectDirectory.dir("gdextension"))
+    // A different toolchain JDK must reconfigure; the build dir alone would stay "up to date".
+    inputs.property("nativeBootstrapJdkHome", nativeBootstrapJdkHome.orElse(""))
     outputs.dir(nativeBootstrapBuildDir)
 
     onlyIf { shouldBuildNativeBootstrap.get() }
@@ -435,6 +459,14 @@ val configureNativeBootstrap by
       nativeBootstrapBuildDir.get().asFile.absolutePath,
       "-DCMAKE_BUILD_TYPE=Release",
     )
+    doFirst {
+      // No toolchain JDK (not provisioned): leave KANAMA_JAVA_HOME off and let CMake fall back to
+      // JAVA_HOME / the system JDK, which still gets the same header check.
+      val jdkHome = nativeBootstrapJdkHome.orNull
+      if (jdkHome != null) {
+        commandLine(commandLine + "-DKANAMA_JAVA_HOME=$jdkHome")
+      }
+    }
   }
 
 val buildNativeBootstrap by
