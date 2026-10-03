@@ -48,6 +48,8 @@ KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BI
 # (signal_leak_smoke.tscn), each in its own process so nothing else touches their state.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_error_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
@@ -289,6 +291,20 @@ check "SignalLeakSmoke connected=1 fired=1 free_released=true after_free_fired=0
 # A contained Kotlin error returns CALL_OK with a nil return, as a GDScript runtime error does, so
 # Godot adds no "method not found" style follow-up for a method that exists.
 check_absent "Invalid call\. Nonexistent function"
+# task 131 item 6 (F23) -- wrapper equality is object identity (the instance id), not JVM identity:
+# a Node and a Node3D wrapper of one object are ==, hash alike and collapse in a Set; it still holds
+# after the object is freed. Before task 131 equal=false and set_size=3.
+# task 131 item 2 (F2) -- the editor binary is a debug build, so the freed-object check is on.
+check "\[kanama:kt\] freed-object checks: on"
+check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> survived=true result_null=true"
+# A call through the freed wrapper throws IllegalStateException instead of dereferencing the dead
+# pointer (before task 131: a use-after-free, typically a native crash and no line below at all).
+check "FreedObjectSmoke caught=Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$"
+# Uncaught in a script method Godot calls, it is a Godot script error at the game line, and the
+# caller (ready) carries on with a nil result (survived=true above).
+freed_call_line="$(grep -n 'fun callFreed' "$PROJECT_DIR/FreedObjectSmoke.kt" | cut -d: -f1)"
+check "^SCRIPT ERROR: java\.lang\.IllegalStateException: Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$"
+check "^ +at: FreedObjectSmoke\.callFreed \(res://FreedObjectSmoke\.kt:${freed_call_line}\)$"
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.

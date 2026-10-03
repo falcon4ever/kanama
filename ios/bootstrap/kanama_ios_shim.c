@@ -5858,6 +5858,19 @@ int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id) {
     return g_object_get_instance_from_id((GDObjectInstanceID)instance_id) != NULL ? 1 : 0;
 }
 
+// Task 131 item 2 (F2): the freed-object check before a wrapper call. 1 when the captured instance
+// id still resolves to `object` (ObjectDB lookup: never dereferences the possibly-freed pointer),
+// 0 when the object was freed. An unresolved entry point is reported and answers 1 (unchecked, the
+// behaviour before task 131) so it cannot turn every wrapper call into a freed-object error.
+int32_t kanama_ios_godot_object_is_live(int64_t object, int64_t instance_id) {
+    if (g_object_get_instance_from_id == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "g_object_get_instance_from_id");
+        return 1;
+    }
+    GDExtensionObjectPtr live = g_object_get_instance_from_id((GDObjectInstanceID)instance_id);
+    return (int64_t)(intptr_t)live == object ? 1 : 0;
+}
+
 int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name) {
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_object_is_class_bind,

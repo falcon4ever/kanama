@@ -1416,7 +1416,9 @@ class HelloScript(godotObject: GodotHandle) :
     val engineCopyrightInfo = Engine.getCopyrightInfo()
     val engineBacktraces = Engine.captureScriptBacktraces()
     val engineBacktraceCount = engineBacktraces.size
-    engineBacktraces.forEach { it.close() }
+    // No close(): typed-Array elements decode as borrowed views, and the returned Array held the
+    // only references, so these ScriptBacktrace objects are already freed. Closing them was a
+    // use-after-free that the debug-build freed-object check (task 131 item 2) reports.
     val connectedJoypads = Input.getConnectedJoypads()
     val joyInfo = Input.getJoyInfo(connectedJoypads.firstOrNull()?.toInt() ?: 0)
     val nowUnix = Time.getUnixTimeFromSystem().toLong()

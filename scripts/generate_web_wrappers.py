@@ -810,6 +810,15 @@ CLASS_POLICY: dict[str, dict] = {
   fun isSameInstance(other: GodotObject): Boolean =
     backendHandle.backendToken() == other.backendHandle.backendToken()
 
+  /**
+   * Two wrappers of one Godot object are equal, whatever their class (task 131 item 6), as on the
+   * desktop/Android and iOS backends: `List.contains`, `Set` and `Map` keys follow.
+   */
+  override fun equals(other: Any?): Boolean =
+    this === other || (other is GodotObject && isSameInstance(other))
+
+  override fun hashCode(): Int = backendHandle.backendToken().hashCode()
+
   fun signal(name: String): GodotSignal = GodotSignal(this, name)
 
   /**

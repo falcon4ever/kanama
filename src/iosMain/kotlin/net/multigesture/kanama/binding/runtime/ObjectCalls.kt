@@ -114,6 +114,8 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceCallV
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceSetProperty
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceSetPropertyString
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
@@ -41232,6 +41234,81 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       scriptErrorReport.message ==
         "kotlin.IllegalStateException: kanama self-test: deliberate script error",
   )
+
+  // Task 131 item 11: a throwing property setter reached through the property-set @CName exports
+  // (Long and String paths) is contained -- before, it crossed the export and terminated the app --
+  // answers 1 (the property is the script's, the write was rejected) and is reported once each.
+  run {
+    val setterOwner = requireObject("Node")
+    if (setterOwner.address() != 0L) {
+      val script =
+        KanamaIosRuntime.createScriptResource(KanamaIosRuntime.THROWING_PROBE_SCRIPT_PATH)
+      val instance = KanamaIosRuntime.createScriptInstance(script, setterOwner.address())
+      val reportsBefore = IosScriptErrors.reportCount
+      val longResult =
+        if (instance != 0L) kanamaIosRuntimeScriptInstanceSetProperty(instance, 0, 7L) else -1
+      val stringResult =
+        if (instance != 0L) kanamaIosRuntimeScriptInstanceSetPropertyString(instance, 0, null)
+        else -1
+      val reported = IosScriptErrors.reportCount - reportsBefore
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST property-set containment long=$longResult " +
+          "string=$stringResult reported=$reported"
+      )
+      check(
+        "script-error(throwing property setter contained, set ok, reported)",
+        instance != 0L && longResult == 1 && stringResult == 1 && reported == 2,
+      )
+      if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
+      KanamaIosRuntime.freeScriptResource(script)
+      ObjectCalls.destroyObject(setterOwner)
+    } else check("script-error(throwing property setter contained) (instance absent)", false)
+  }
+
+  // Task 131 item 6: two wrappers of one object are equal (instance id), hash alike and collapse in
+  // a Set, whatever their class; a wrapper of another object is not equal.
+  // Task 131 item 2: after the object is freed, a call through the wrapper throws
+  // IllegalStateException (the freed-object check; forced on here so the row does not depend on
+  // the build type) instead of dereferencing the dead pointer; equality, toString and
+  // isInstanceValid stay safe.
+  run {
+    val first = requireObject("Node3D")
+    val second = requireObject("Node")
+    if (first.address() != 0L && second.address() != 0L) {
+      val asNode3D = net.multigesture.kanama.api.Node3D(GodotHandle(first))
+      val asNode = net.multigesture.kanama.api.Node(GodotHandle(first))
+      val other = net.multigesture.kanama.api.Node(GodotHandle(second))
+      check(
+        "wrapper-equality(two wrappers of one object are equal, hash alike, one Set entry)",
+        asNode3D == asNode &&
+          asNode == asNode3D &&
+          asNode3D.hashCode() == asNode.hashCode() &&
+          setOf(asNode3D, asNode, other).size == 2,
+      )
+      check("wrapper-equality(wrappers of two objects differ)", asNode != other)
+      ObjectCalls.destroyObject(first)
+      ObjectCalls.destroyObject(second)
+      val checksBefore = FreedObjectChecks.enabled
+      FreedObjectChecks.enabled = true
+      try {
+        val thrown = runCatching { asNode3D.getName() }.exceptionOrNull()
+        println("[kanama][ios][kn] OBJECTCALLS SELFTEST freed-object call threw=$thrown")
+        check(
+          "freed-object(call through a freed wrapper throws IllegalStateException)",
+          thrown is IllegalStateException &&
+            thrown.message.orEmpty().startsWith("Invalid access to previously freed instance"),
+        )
+        check(
+          "freed-object(equality, toString and isInstanceValid stay safe)",
+          asNode3D == asNode &&
+            asNode3D.toString() == "<Freed Object>" &&
+            !IosGodot.isInstanceIdValid(asNode3D.instanceId),
+        )
+      } finally {
+        FreedObjectChecks.enabled = checksBefore
+      }
+    } else check("wrapper-equality(two objects constructed)", false)
+  }
 
   // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect
   // erases the receiver-side connection entry only via the receiver it finds on the Callable it is

@@ -191,8 +191,8 @@ started from the Dock or Finder shows them nowhere.
 
 On desktop, Android and iOS, an exception that escapes your code at an engine
 boundary (a script method, a lifecycle callback such as `_ready` or `_process`,
-a signal lambda, a property accessor, a `MainThread` task) does not crash the
-game. Kanama catches it, prints the full stack trace to stderr, and reports it to
+a signal lambda, a property accessor, a `MainThread` task, a `KanamaScope`
+coroutine) does not crash the game. Kanama catches it, prints the full stack trace to stderr, and reports it to
 Godot as a script error, the way a GDScript runtime error is reported. Godot's
 log shows (desktop console output):
 
@@ -213,6 +213,14 @@ build names the class and method with line 0). In an R8-minified Android release
 build a frame without source info is not attributed, and the error names the
 callback that failed instead. The Web backend does not report Kotlin exceptions
 to Godot yet.
+
+Calling a wrapper whose object was freed (a node after `queueFree()` took
+effect) is such an error in debug builds — the editor and debug exports:
+`IllegalStateException: Invalid access to previously freed instance (Node3D,
+instance id …)`, as GDScript reports it. A release export does not check, and
+the call is undefined behaviour, so ask `GD.isInstanceValid(node)` before
+using an object that may be gone. Two wrappers of one object are `==` (and
+equal as `Set`/`Map` keys) whatever their class.
 
 ## Rebuild Required
 

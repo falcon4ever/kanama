@@ -378,12 +378,18 @@ Godot frees the instance
 Wrappers around engine-owned objects (`Node`, `GodotObject`, …) are non-owning
 views over a raw pointer plus the instance id captured at construction
 (`GodotObject.instanceId`, one `object_get_instance_id` downcall per mint).
-A wrapper kept past its object's death is a dangling pointer for every member
-except that id: `GD.isInstanceValid` asks `is_instance_id_valid` about the
-captured id and never touches the pointer, so it is the one safe question left
-(task 98; before that it built an OBJECT Variant from the pointer and read the
-freed header). Nothing invalidates such a wrapper for you — see the script
-model below.
+`GD.isInstanceValid` asks `is_instance_id_valid` about the captured id and
+never touches the pointer (task 98; before that it built an OBJECT Variant from
+the pointer and read the freed header), and `equals`/`hashCode` compare that id
+(two wrappers of one object are equal, task 131). Every other member reads the
+pointer through `GodotObject.segment`, which in debug builds (the editor, debug
+export templates: `OS.is_debug_build()`) first asks `object_get_instance_from_id`
+whether the captured id still resolves to that pointer and throws
+`IllegalStateException("Invalid access to previously freed instance ...")` when
+it does not — contained and reported as a script error like GDScript's error of
+the same name (task 131 item 2; `FreedObjectChecks`, `ObjectRuntime.isLive`).
+A release build skips the check, so there a wrapper kept past its object's death
+is still a dangling pointer for those members — see the script model below.
 
 `RefCounted` wrappers are the exception — they own the `+1` reference their
 factory or getter transferred and `close()` releases it. Every RefCounted-derived
@@ -410,7 +416,8 @@ This is intentional for the current architecture. Godot owns the native node;
 Kanama owns the JVM script instance. When Godot frees the node, the
 `free_instance` upcall (`siFree`) unregisters the script's registry token — it
 does **not** invalidate the `self` wrapper or any other wrapper over that node,
-which become dangling pointers answerable only by `GD.isInstanceValid`. Making
+which become stale views: a call through one is the freed-object error in a
+debug build and a dangling pointer in a release build. Making
 `class Player : CharacterBody3D` would
 blur those two lifetimes and make hot reload harder, because the JVM object
 would appear to be the native wrapper while still being a reloadable script

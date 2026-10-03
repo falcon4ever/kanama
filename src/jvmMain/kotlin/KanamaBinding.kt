@@ -15,6 +15,7 @@ import net.multigesture.kanama.binding.KanamaResourceFormatSaver
 import net.multigesture.kanama.binding.KanamaScript
 import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
+import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.ScriptErrors
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
@@ -172,6 +173,11 @@ object KanamaBinding {
     ThreadDiagnostics.noteInitializeThread()
     if (level == INITIALIZATION_SCENE) {
       try {
+        // The freed-object check before every wrapper call (task 131 item 2): on in debug builds.
+        FreedObjectChecks.configure()
+        System.err.println(
+          "[kanama:kt] freed-object checks: ${if (FreedObjectChecks.enabled) "on" else "off"}"
+        )
         // Register Script resource class before the language (language creates scripts).
         KanamaScript.register(library)
         // Register and add the Kanama script language to the engine.

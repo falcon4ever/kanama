@@ -922,6 +922,10 @@ int64_t kanama_ios_godot_object_get_instance_id(int64_t object);
 
 int32_t kanama_ios_godot_is_instance_id_valid(int64_t instance_id);
 
+// 1 while `instance_id` (captured at wrapper construction) still resolves to `object`, 0 once that
+// object was freed: the freed-object check before a wrapper call (task 131 item 2).
+int32_t kanama_ios_godot_object_is_live(int64_t object, int64_t instance_id);
+
 int32_t kanama_ios_godot_object_is_class(int64_t object, const char *class_name);
 
 int32_t kanama_ios_godot_node_is_in_group(int64_t node, const char *group_name);

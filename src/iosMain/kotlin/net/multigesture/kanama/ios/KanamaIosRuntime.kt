@@ -28,6 +28,7 @@ import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
+import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.IosScriptErrors
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
@@ -184,6 +185,11 @@ internal object KanamaIosRuntime {
 
   fun initialize(level: Int) {
     log("initialize: level=$level")
+    if (level == 2) {
+      // The freed-object check before every wrapper call (task 131 item 2): on in debug builds.
+      FreedObjectChecks.configure()
+      log("freed-object checks: ${if (FreedObjectChecks.enabled) "on" else "off"}")
+    }
   }
 
   fun deinitialize(level: Int) {
@@ -368,6 +374,19 @@ internal object KanamaIosRuntime {
     return "${path.substringAfterLast('/').removeSuffix(".kt")}.$methodName"
   }
 
+  /**
+   * `<script> property <name> <op>` for a contained property-accessor error (task 131 item 11), the
+   * label desktop's ScriptBridge reports for the same failure.
+   */
+  fun scriptPropertyLabel(handle: Long, propertyIndex: Int, op: String): String {
+    val instance = scriptInstances[handle]
+    val path = instance?.resource?.path ?: "<script>"
+    val name =
+      instance?.resource?.descriptor?.properties?.getOrNull(propertyIndex)?.name
+        ?: "<property $propertyIndex>"
+    return "${path.substringAfterLast('/').removeSuffix(".kt")} property $name $op"
+  }
+
   fun readyScriptInstance(handle: Long) {
     val instance = scriptInstances[handle]
     if (instance == null) {
@@ -453,6 +472,9 @@ internal object KanamaIosRuntime {
         log(
           "property get threw handle=$handle index=$propertyIndex path=${instance.resource.path}: $t"
         )
+        // Reported like desktop's siGet failure (task 131 item 11): a Godot script error with the
+        // game file:line, not only this log line.
+        IosScriptErrors.report(t, scriptPropertyLabel(handle, propertyIndex, "get"))
         null
       }
     if (value !== KanamaIosNoProperty) {
@@ -625,6 +647,13 @@ internal object KanamaIosRuntime {
   private class ThrowingProbeScript : KanamaIosScriptBridge {
     override fun callV(methodName: String, args: List<Any?>): Boolean =
       throw IllegalStateException("kanama self-test: deliberate script method failure")
+
+    // Task 131 item 11: the self-test drives the property-set @CName exports with these.
+    override fun setProperty(propertyIndex: Int, value: Long): Boolean =
+      throw IllegalStateException("kanama self-test: deliberate property setter failure")
+
+    override fun setPropertyString(propertyIndex: Int, value: String): Boolean =
+      throw IllegalStateException("kanama self-test: deliberate property setter failure")
   }
 
   private class BuiltInProbeScript(private val ownerObject: Long) : KanamaIosScriptBridge {
@@ -881,6 +910,28 @@ fun kanamaIosRuntimeScriptInstanceReady(instanceHandle: Long) {
   }
 }
 
+/**
+ * Runs one property-set @CName export's body (task 131 item 11): an exception crossing a @CName
+ * export terminates the app, so a throwing setter (or decode) is contained, printed and reported as
+ * a Godot script error with the Kotlin file:line instead. Like desktop's ScriptBridge.siSet it then
+ * answers 1 -- the property is the script's, the write was rejected and the old value kept --
+ * because 0 would tell Godot the script has no such property.
+ */
+private inline fun containPropertySet(
+  instanceHandle: Long,
+  propertyIndex: Int,
+  set: () -> Boolean,
+): Int =
+  try {
+    if (set()) 1 else 0
+  } catch (t: Throwable) {
+    IosScriptErrors.report(
+      t,
+      KanamaIosRuntime.scriptPropertyLabel(instanceHandle, propertyIndex, "set"),
+    )
+    1
+  }
+
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_set_property")
 fun kanamaIosRuntimeScriptInstanceSetProperty(
@@ -888,7 +939,9 @@ fun kanamaIosRuntimeScriptInstanceSetProperty(
   propertyIndex: Int,
   value: Long,
 ): Int =
-  if (KanamaIosRuntime.setScriptInstanceProperty(instanceHandle, propertyIndex, value)) 1 else 0
+  containPropertySet(instanceHandle, propertyIndex) {
+    KanamaIosRuntime.setScriptInstanceProperty(instanceHandle, propertyIndex, value)
+  }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_get_property")
@@ -912,9 +965,10 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyString(
   propertyIndex: Int,
   value: CPointer<ByteVar>?,
 ): Int {
-  val str = value?.toKString() ?: ""
-  return if (KanamaIosRuntime.setScriptInstancePropertyString(instanceHandle, propertyIndex, str)) 1
-  else 0
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val str = value?.toKString() ?: ""
+    KanamaIosRuntime.setScriptInstancePropertyString(instanceHandle, propertyIndex, str)
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -925,15 +979,15 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyArray(
   objects: CPointer<LongVar>?,
   count: Int,
 ): Int {
-  val values =
-    if (objects == null || count <= 0) {
-      LongArray(0)
-    } else {
-      LongArray(count) { i -> objects[i] }
-    }
-  return if (KanamaIosRuntime.setScriptInstancePropertyArray(instanceHandle, propertyIndex, values))
-    1
-  else 0
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val values =
+      if (objects == null || count <= 0) {
+        LongArray(0)
+      } else {
+        LongArray(count) { i -> objects[i] }
+      }
+    KanamaIosRuntime.setScriptInstancePropertyArray(instanceHandle, propertyIndex, values)
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -944,17 +998,15 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyIntArray(
   values: CPointer<LongVar>?,
   count: Int,
 ): Int {
-  val ordinals =
-    if (values == null || count <= 0) {
-      LongArray(0)
-    } else {
-      LongArray(count) { i -> values[i] }
-    }
-  return if (
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val ordinals =
+      if (values == null || count <= 0) {
+        LongArray(0)
+      } else {
+        LongArray(count) { i -> values[i] }
+      }
     KanamaIosRuntime.setScriptInstancePropertyIntArray(instanceHandle, propertyIndex, ordinals)
-  )
-    1
-  else 0
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -965,17 +1017,15 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyStringArray(
   strings: CPointer<CPointerVar<ByteVar>>?,
   count: Int,
 ): Int {
-  val values: List<String> =
-    if (strings == null || count <= 0) {
-      emptyList()
-    } else {
-      List(count) { i -> strings[i]?.toKString() ?: "" }
-    }
-  return if (
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val values: List<String> =
+      if (strings == null || count <= 0) {
+        emptyList()
+      } else {
+        List(count) { i -> strings[i]?.toKString() ?: "" }
+      }
     KanamaIosRuntime.setScriptInstancePropertyStringArray(instanceHandle, propertyIndex, values)
-  )
-    1
-  else 0
+  }
 }
 
 // PT_* tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c. NODE_PATH/STRING ship a
@@ -1091,10 +1141,10 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyValue(
   bytes: CPointer<ByteVar>?,
   length: Int,
 ): Int {
-  val value = decodeIosPropertyValue(ptTag, bytes, length) ?: return 0
-  return if (KanamaIosRuntime.setScriptInstancePropertyValue(instanceHandle, propertyIndex, value))
-    1
-  else 0
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val value = decodeIosPropertyValue(ptTag, bytes, length) ?: return 0
+    KanamaIosRuntime.setScriptInstancePropertyValue(instanceHandle, propertyIndex, value)
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
