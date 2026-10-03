@@ -202,6 +202,8 @@ internal object KanamaIosRuntime {
   fun deinitialize(level: Int) {
     log("deinitialize: level=$level")
     if (level == 2) {
+      // The preload cache's references (task 133) go before the engine's leak check.
+      runCatching { net.multigesture.kanama.api.Preloads.releaseAll() }
       val instances = scriptInstances.size
       val resources = scriptResources.size
       scriptInstances.clear()
@@ -573,6 +575,12 @@ internal object KanamaIosRuntime {
     val instance = scriptInstances[handle]
     if (instance != null) {
       ownerObjectToInstance.remove(instance.ownerObject)
+      // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
+      (instance.bridge.scriptInstance as? net.multigesture.kanama.api.KanamaScript<*>)?.let { script
+        ->
+        runCatching { script.disposeScriptScope() }
+          .onFailure { log("failed to cancel the script scope of handle=$handle: ${it.message}") }
+      }
     }
     scriptInstances.remove(handle)
     log("freed script instance handle=$handle")

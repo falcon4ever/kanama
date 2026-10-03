@@ -105,19 +105,13 @@ import kotlin.random.Random
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 annotation class ManualGodotLifetimeApi
 
-abstract class KanamaScript<Self : Any>(
-    val godotObject: GodotHandle,
-    selfFactory: (GodotHandle) -> Self,
-) {
-    val self: Self = selfFactory(godotObject)
-
-    inline fun <T> selfAs(ctor: (GodotHandle) -> T): T = ctor(godotObject)
-}
+// KanamaScript is common code since task 133 (src/commonMain/.../api/KanamaScript.kt).
 
 // KANAMA-IOS-HANDWRITTEN: [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json.
 // An exception escaping a coroutine is reported as a Godot script error with the game's file:line
 // (task 131 item 10), like desktop; before, the default handler terminated the app.
-class KanamaScope : CoroutineScope {
+// Internal since task 133: it backs KanamaScript.scriptScope (ScriptRuntime.newScriptScope).
+internal class KanamaScope : CoroutineScope {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext =
         Dispatchers.Main + job + kotlinx.coroutines.CoroutineExceptionHandler { context, throwable ->
@@ -131,10 +125,6 @@ class KanamaScope : CoroutineScope {
     fun cancel() {
         job.cancel()
     }
-}
-
-interface KanamaCoroutineOwner {
-    val kanamaScope: KanamaScope
 }
 
 class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {

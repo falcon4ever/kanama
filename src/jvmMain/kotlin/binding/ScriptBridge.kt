@@ -10,7 +10,6 @@ import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodType
 import java.util.concurrent.ConcurrentHashMap
-import net.multigesture.kanama.api.KanamaCoroutineOwner
 import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.GodotStructs
@@ -822,11 +821,12 @@ object ScriptBridge {
   fun siFree(data: MemorySegment) {
     val handle = data.address()
     val scriptInstance = si(data)
-    (scriptInstance?.kotlinObject as? KanamaCoroutineOwner)?.let { owner ->
-      runCatching { owner.kanamaScope.cancel() }
+    // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
+    (scriptInstance?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*>)?.let { script ->
+      runCatching { script.disposeScriptScope() }
         .onFailure { error ->
           System.err.println(
-            "[kanama:kt] failed to cancel KanamaScope during siFree: ${error.message}"
+            "[kanama:kt] failed to cancel the script scope during siFree: ${error.message}"
           )
         }
     }

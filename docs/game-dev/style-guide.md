@@ -226,48 +226,45 @@ caught before export.
 
 ## Coroutines
 
-Use `KanamaCoroutineOwner` for scripts that need coroutines. Prefer
-`MainThread.awaitNextFrame()` and `SceneTree.delaySeconds(...)` over manual
-delay loops.
+Every `KanamaScript` has its own coroutine scope. Start a coroutine with
+`launch { }` and suspend in it with `wait(seconds)`, `nextFrame()` or a signal
+`await`, the way a GDScript function uses `await`. Prefer them over manual delay
+loops.
 
-Treat `kanamaScope` as owned by the script instance. Work launched in that
-scope should be work that is allowed to stop when the script's Godot object is
-freed: gameplay loops, delayed effects, scene-local warmup, polling, and
-node-owned animation or cleanup. Do not use a script-owned coroutine for
-process-level work that must survive freeing the node that started it.
+The scope belongs to the script instance: Kanama cancels it when the script's
+Godot object is freed. Work launched there should be work that is allowed to
+stop then: gameplay loops, delayed effects, scene-local warmup, polling, and
+node-owned animation or cleanup. Do not use it for process-level work that must
+survive freeing the node that started it.
 
-Use `kanamaScope` when the delayed work touches this script, `self`, child
-nodes, or resources owned by the current scene:
+Use `launch` when the delayed work touches this script, `self`, child nodes, or
+resources owned by the current scene:
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
-class Door(godotObject: GodotHandle) :
-    KanamaScript<Node>(godotObject, ::Node),
-    KanamaCoroutineOwner {
-
-    override val kanamaScope = KanamaScope()
-
+class Door(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
     fun openBriefly() {
-        kanamaScope.launch {
+        launch {
             self.show()
-            SceneTree.delaySeconds(0.4)
+            wait(0.4)
             self.hide()
         }
     }
 }
 ```
 
-That coroutine should stop if the door node is freed. This is the normal,
-safe behavior for scene-owned work.
+That coroutine stops if the door node is freed. This is the normal, safe
+behavior for scene-owned work. Leaving the tree does not stop it, as in GDScript;
+call `cancelCoroutines()` (for example in `@OnExitTree`) when it should.
 
-Store the returned `Job` when a later event should cancel scene-owned work:
+Store the returned `Job` when a later event should cancel one piece of work:
 
 ```kotlin
 private var warmupJob: Job? = null
 
 fun startWarmup() {
-    warmupJob = kanamaScope.launch {
-        MainThread.awaitNextFrame()
+    warmupJob = launch {
+        nextFrame()
         warmUpSceneResources(self)
     }
 }
@@ -278,10 +275,14 @@ fun cancelWarmup() {
 }
 ```
 
+`scriptScope` is the scope itself, for the `kotlinx.coroutines` builders that
+`launch` does not cover (`scriptScope.launch(start = CoroutineStart.UNDISPATCHED)`,
+`scriptScope.async { }`).
+
 Use `MainThread.post` or `MainThread.postAfterFrames` when the work is a
 process-level handoff and must outlive the node that requested it. For example,
 after unloading the current scene, do not put the quit call in the scene's
-`kanamaScope`:
+script scope:
 
 ```kotlin
 SceneTree.unloadCurrentScene()
@@ -291,7 +292,7 @@ MainThread.postAfterFrames(2) {
 ```
 
 The rule of thumb is ownership: if the delayed code uses scene-local state,
-keep it in `kanamaScope`; if it only touches global engine state such as
+`launch` it from the script; if it only touches global engine state such as
 `SceneTree.quit()`, use `MainThread`.
 
 ## Godot-Owned Resources

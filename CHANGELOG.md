@@ -38,6 +38,72 @@ only `--write`.
 
 ## Unreleased
 
+### Added — script authoring like GDScript: node access, checked casts, await, preload (task 133 A)
+
+Desktop, Android and iOS; Web gets the coroutine members, `isScript`/`asScript` and the tree
+accessors now and the rest in a follow-up (see "Web" below).
+
+- **`KanamaScript` is common code**, one class for desktop, Android and iOS (it was a desktop class
+  plus a smaller iOS copy), so every member below exists on all three. iOS scripts gain
+  `notifyInspectorChanged()` and `isEditorHint()`.
+- **Node and script delegates** (GDScript `@onready var timer: Timer = $ScoreTimer`):
+  `private val scoreTimer by node<Timer>("ScoreTimer")` and
+  `private val player by script<Player>("Player")`. Looked up on the first read after ready and
+  cached; a read before ready, a missing node, a node of another class or a node without that Kotlin
+  script throws an `IllegalStateException` naming the property, the path and what was found.
+- **Checked casts**: `x.castOrNull<Camera3D>()` (GDScript `x as Camera3D`), `x.cast<Camera3D>()`
+  (throws `ClassCastException`), `node.requireAs<Timer>(path)` and `node.getNodeAs<Timer>(path)`.
+  One `Object.is_class` call; the result is a non-owning view of the same object. They are backed by
+  generated class-token tables (`GodotClasses.kt`, `PlatformGodotClasses.kt`, from
+  `scripts/generate_api_wrapper.py --write-tree`) built from class literals and constructor calls,
+  so they need no reflection and survive R8. Size: the two desktop table classes are 54.6 KB of
+  `kanama.jar` compressed (136.9 KB uncompressed; the whole parcel adds 80.0 KB to the jar);
+  on iOS the release static library `libkanama_ios_runtime.a` grows by 0.82 MB (123.54 MB with the
+  tables, 122.72 MB with them emptied). On an R8-minified Android build the table keeps every
+  wrapper class's constructor reachable, so R8 can no longer drop unused wrapper classes.
+- **Script checks** (GDScript `body is Player` / `body as Player`): `body.isScript<Player>()`,
+  `body.asScript<Player>()`.
+- **Await**: every `KanamaScript` has a coroutine scope on the main thread that the free path
+  cancels: `launch { wait(1.0); nextFrame(); ... }`, `scriptScope` for other builders,
+  `cancelCoroutines()`. `wait(seconds)` is a `SceneTree` timer (GDScript
+  `await get_tree().create_timer(seconds).timeout`), `nextFrame()` is
+  `await get_tree().process_frame`.
+- **Preload**: `private val bullet by preload<PackedScene>("res://bullet.tscn")` loads once per
+  process and keeps the resource until shutdown (GDScript `preload` constant semantics);
+  `scene.instantiateAs<RigidBody2D>()` and `scene.instantiateScript<Coin>()` check the root and free
+  it on a mismatch.
+- **Tree accessors**: `self.tree`, `self.viewport` and `self.parentNode` are non-null and throw when
+  the node is not inside the tree (or has no parent), as GDScript's `get_tree()` fails.
+- Proof: `ClassTokenTableTest`, `KanamaScriptScopeTest`, `ScriptScopeFreePathTest`, the
+  `script_access_smoke.tscn` rows of `scripts/runtime_smoke.sh` and iOS self-test rows.
+- **Web**: `launch`, `wait` (the frame scheduler's delay), `nextFrame`, `cancelCoroutines`,
+  `scriptScope`, `isScript`, `asScript`, `tree`, `viewport` and `parentNode`. The delegates, checked
+  casts and `instantiate*` helpers need a Web class-token table and `get_class` / `is_node_ready` in
+  the Web call contract, and follow separately.
+
+### Removed — `KanamaCoroutineOwner` (task 133 A)
+
+- **Source break:** `KanamaCoroutineOwner` is removed and `KanamaScope` is internal, on desktop,
+  Android, iOS and Web: a script's coroutines live on its `KanamaScript` scope, which the free path
+  cancels. Migrate:
+  ```kotlin
+  // before
+  class Hud(godotObject: GodotHandle) : KanamaScript<CanvasLayer>(godotObject, ::CanvasLayer), KanamaCoroutineOwner {
+      override val kanamaScope = KanamaScope()
+      fun flash() { kanamaScope.launch { SceneTree.delaySeconds(1.0); ... } }
+  }
+  // after
+  class Hud(godotObject: GodotHandle) : KanamaScript<CanvasLayer>(godotObject, ::CanvasLayer) {
+      fun flash() { launch { wait(1.0); ... } }
+  }
+  ```
+  `kanamaScope.launch(...)` with arguments is `scriptScope.launch(...)`, and `kanamaScope.cancel()`
+  is `cancelCoroutines()` (the scope stays usable). The generated registrar no longer cancels the
+  scope on `_exit_tree`; leaving the tree does not stop a coroutine (as in GDScript), freeing does.
+- **Source break:** `KanamaScript` moved from the desktop and iOS sources to common code
+  (`src/commonMain/.../api/KanamaScript.kt`); its members are unchanged, so a script does not
+  notice, but the per-platform snapshots record the move as a removal.
+
 ### Changed — one annotation set, public functions registered automatically, typed input handlers (task 133 B) — BREAKING
 
 - **One GDScript-shaped annotation per concept.** The aliases are removed in this release (no

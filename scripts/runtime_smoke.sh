@@ -50,6 +50,9 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 133 -- node/script delegates, checked casts, preload, tree accessors and the script coroutine
+# scope; the scene quits itself once its async rows (wait, nextFrame, cancel on free) have printed.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_access_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
 
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
@@ -388,6 +391,10 @@ check "script property cleanup smoke_scene type=PackedScene"
 check "script property cleanup RefCounted handle=0x[0-9a-f]+ destroy=true"
 check "destroyed [0-9]+/[0-9]+ tracked KanamaScript object\\(s\\)"
 check "unregistered [0-9]+ extension class\\(es\\)"
+# task 133 -- script authoring like GDScript (script_access_smoke.tscn)
+check "ScriptAccessSmoke sync before_ready=true node=true wrong_type=true missing=true script=true no_script=true is_script=true as_script=true cast=true require_as=true preload=true preload_wrong=true instantiate=true tree=true orphan_tree=true"
+check "ScriptAccessSmoke async wait=true next_frame=true freed_cancelled=true"
+check_absent "Resource still in use: res://script_access_child\\.tscn"
 check_absent "Orphan StringName"
 check_absent "unclaimed string names"
 check_absent "Cannot ptrcall nil constructor"

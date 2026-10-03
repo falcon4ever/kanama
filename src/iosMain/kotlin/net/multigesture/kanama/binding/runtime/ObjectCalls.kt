@@ -42817,6 +42817,9 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     check("ret-callable(NativeMenu.get_popup_open_callback invalid RID -> null)", noPopup == null)
   } else check("ret-callable(NativeMenu.get_popup_open_callback) (singleton absent)", false)
 
+  // Task 133: class tokens, checked casts, script checks, tree accessors, preload, script scope.
+  net.multigesture.kanama.api.scriptAccessSelfTestRows(::check)
+
   // The fault counter is process-wide and never reset, so by frame 1 it still holds exactly the
   // seven deliberate probes from the level-2 phase — unless something in between failed quietly,
   // which is precisely what this line exists to show.

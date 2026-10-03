@@ -1,0 +1,186 @@
+package net.multigesture.kanama.api
+
+import kotlin.properties.ReadOnlyProperty
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+
+/**
+ * Base class for attachable scripts that want a typed wrapper for their own Godot object.
+ *
+ * Kotlin's `this` is the script object, not the Godot node or resource the script is attached to.
+ * [self] is a non-owning wrapper around that Godot object, typed to the script's primary `attachTo`
+ * class:
+ * ```kotlin
+ * @ScriptClass(attachTo = "Node")
+ * class Main(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
+ *     private val scoreTimer by node<Timer>("ScoreTimer")   // GDScript: @onready var score_timer: Timer = $ScoreTimer
+ *     private val hud by script<Hud>("HUD")                  // the Kotlin script on the HUD node
+ *     private val mobScene by preload<PackedScene>("res://mob.tscn")
+ *
+ *     @OnReady
+ *     fun ready() {
+ *         scoreTimer.start()
+ *         launch {                                           // GDScript: await get_tree().create_timer(1.0).timeout
+ *             wait(1.0)
+ *             hud.showMessage("Go")
+ *         }
+ *     }
+ * }
+ * ```
+ *
+ * Written once for desktop, Android and iOS (task 133); the platform-bound parts go through the
+ * internal `ScriptRuntime` seam. [self] and [selfAs] do not own the native object and must not free
+ * it.
+ */
+abstract class KanamaScript<Self : Any>(
+  val godotObject: GodotHandle,
+  selfFactory: (GodotHandle) -> Self,
+) {
+  val self: Self = selfFactory(godotObject)
+
+  /** Wrap this script's Godot object as another compatible Kanama wrapper type. */
+  inline fun <T> selfAs(ctor: (GodotHandle) -> T): T = ctor(godotObject)
+
+  /**
+   * Refresh the Godot inspector after exported property metadata changes.
+   *
+   * This is mainly useful from `@Tool` scripts whose visible properties, groups, or usage flags
+   * depend on editor-time state.
+   */
+  fun notifyInspectorChanged() {
+    GodotObject(godotObject).notifyPropertyListChanged()
+  }
+
+  /** True when the script is running inside the Godot editor. */
+  fun isEditorHint(): Boolean = ScriptRuntime.isEditorHint()
+
+  // ── Coroutines ──────────────────────────────────────────────────────────────────────────────
+
+  private var scopeOrNull: CoroutineScope? = null
+  private var scopeDisposed = false
+
+  /**
+   * This script's coroutine scope: it runs on the engine main thread, is created on first use, and
+   * is cancelled when Godot frees the script instance (the object is freed or the script is
+   * detached). An exception that escapes one of its coroutines is reported as a Godot script error
+   * and does not cancel the others. [launch] is the short form of `scriptScope.launch`.
+   */
+  val scriptScope: CoroutineScope
+    get() {
+      scopeOrNull?.let {
+        return it
+      }
+      val scope = ScriptRuntime.newScriptScope()
+      if (scopeDisposed) scope.cancel()
+      scopeOrNull = scope
+      return scope
+    }
+
+  /**
+   * Starts [block] as a coroutine of this script, the way a GDScript function that `await`s runs
+   * on: it suspends at [wait], [nextFrame] or a signal `await`, and the rest runs on a later frame.
+   * It stops when the script instance is freed.
+   */
+  fun launch(block: suspend CoroutineScope.() -> Unit): Job = scriptScope.launch(block = block)
+
+  /**
+   * Suspends for [seconds] of scene-tree time: a `SceneTree` timer, as GDScript's
+   * `await get_tree().create_timer(seconds).timeout` (it pauses with the tree and follows
+   * `Engine.time_scale`). The script's node must be inside the tree.
+   */
+  suspend fun wait(seconds: Double) {
+    val node = ownerNode("wait")
+    node.tree.createTimer(seconds).use { timer ->
+      timer.signal(SceneTreeTimer.Signals.timeout).await(node)
+    }
+  }
+
+  /** Suspends until the next engine frame (GDScript: `await get_tree().process_frame`). */
+  suspend fun nextFrame() {
+    MainThread.awaitNextFrame()
+  }
+
+  /**
+   * Cancels every coroutine this script has running; the scope stays usable, so a later [launch]
+   * starts fresh (for example after the node re-enters the tree).
+   */
+  fun cancelCoroutines() {
+    scopeOrNull?.coroutineContext?.cancelChildren()
+  }
+
+  /** The free path (desktop `ScriptBridge.siFree`, iOS `freeScriptInstance`): ends the scope. */
+  internal fun disposeScriptScope() {
+    scopeDisposed = true
+    scopeOrNull?.cancel()
+  }
+
+  // ── Node, script and resource access ────────────────────────────────────────────────────────
+
+  /**
+   * The node at [path] relative to this script's node, as a `T`: GDScript's
+   * `@onready var timer: Timer = $ScoreTimer`.
+   *
+   * Resolved on first read, which must come once the node is ready (in `@OnReady` or later), then
+   * cached. A read before ready, a missing node or a node of another class throws an
+   * `IllegalStateException` naming the property, the path and the class found.
+   */
+  inline fun <reified T : Node> node(path: String): ReadOnlyProperty<Any?, T> =
+    nodeDelegate(path, GodotClasses.token(T::class))
+
+  /**
+   * The Kotlin script of type [T] attached to the node at [path] (GDScript:
+   * `@onready var player: Player = $Player`, where `Player` is a script class). Resolved like
+   * [node]; a node without a Kotlin script, or with another one, throws.
+   */
+  inline fun <reified T : Any> script(path: String): ReadOnlyProperty<Any?, T> =
+    scriptDelegate(path, T::class)
+
+  /**
+   * The resource at [path] as a `T`, loaded once per process and shared by every script that
+   * preloads it, as GDScript's `const BULLET = preload("res://bullet.tscn")`. Loaded on first read;
+   * a missing file or another resource class throws. The resource stays loaded until the engine
+   * shuts down: do not `close()` it.
+   */
+  inline fun <reified T : Resource> preload(path: String): ReadOnlyProperty<Any?, T> =
+    preloadDelegate(path, GodotClasses.token(T::class))
+
+  @PublishedApi
+  internal fun <T : Node> nodeDelegate(path: String, token: GodotClassToken): ReadOnlyProperty<Any?, T> =
+    NodeDelegate(this, path, token)
+
+  @PublishedApi
+  internal fun <T : Any> scriptDelegate(
+    path: String,
+    type: kotlin.reflect.KClass<T>,
+  ): ReadOnlyProperty<Any?, T> = ScriptDelegate(this, path, type)
+
+  @PublishedApi
+  internal fun <T : Resource> preloadDelegate(
+    path: String,
+    token: GodotClassToken,
+  ): ReadOnlyProperty<Any?, T> = PreloadDelegate(path, token)
+
+  private var ownerNodeOrNull: Node? = null
+
+  /** This script's object as a [Node]; [use] names the caller in the error when it is not one. */
+  internal fun ownerNode(use: String): Node {
+    ownerNodeOrNull?.let {
+      return it
+    }
+    val node =
+      (self as? Node)
+        ?: GodotObject(godotObject).let { owner ->
+          check(owner.isClass("Node")) {
+            "${scriptName()}.$use needs a Node, but the script is attached to a ${owner.getClassName()}"
+          }
+          Node(godotObject)
+        }
+    ownerNodeOrNull = node
+    return node
+  }
+
+  internal fun scriptName(): String = this::class.simpleName ?: "KanamaScript"
+}

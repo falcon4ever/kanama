@@ -323,18 +323,19 @@ as named constants close to the original GDScript, but do not leak raw
 `Object.get`/`Object.set` calls into demo scripts.
 
 For known Kanama scripts attached to nodes, resolve the script instance with
-`kotlinScriptInstance<T>()` and call the Kotlin method directly. Do not call
+`script<T>(path)` (a delegate), `asScript<T>()` or `kotlinScriptInstance<T>()` and call the Kotlin
+method directly; test GDScript's `body is Player` with `body.isScript<Player>()`. Do not call
 script methods through `GodotObject.call("method_name")` unless the original is
 intentionally duck typed.
 
-For GDScript `await get_tree().process_frame`, use
-`MainThread.awaitNextFrame()` inside a `KanamaScope` coroutine. That helper is
-the Kanama equivalent of yielding until Godot's next process frame while
-continuing on the main thread.
+For GDScript `await get_tree().process_frame`, use `nextFrame()` inside the
+script's `launch { }`; for `await get_tree().create_timer(t).timeout`, `wait(t)`.
+They are the Kanama equivalents of yielding until a later frame while continuing
+on the main thread.
 
 Do not schedule engine-wide follow-up work in a coroutine owned by the scene
 being destroyed. In particular, after `SceneTree.unloadCurrentScene()`, do not
-launch `kanamaScope.launch { ... SceneTree.quit() ... }` from a script attached
+`launch { ... SceneTree.quit() ... }` from a script attached
 to that scene. The scene unload can free the script and cancel the coroutine
 before the quit runs. Use `MainThread.postAfterFrames(...)` for this kind of
 process-level handoff.
