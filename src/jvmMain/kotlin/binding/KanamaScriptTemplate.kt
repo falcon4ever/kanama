@@ -28,29 +28,44 @@ internal object KanamaScriptTemplate {
 
   /**
    * The New Script source for [className] attached to [baseClass] in [packageName]. [globalClass]
-   * adds `@GlobalClass`. Godot's `Object` is Kanama's `GodotObject`; a base that is not an engine
-   * class name (Godot passes a quoted script path for a custom type) falls back to `Node`.
+   * adds `@GlobalClass`. [nodeDerived] (the base is `Node` or inherits it) adds the `@OnReady`
+   * stub; other bases (`Resource`, `RefCounted`, `Object`) never enter a scene tree. Godot's
+   * `Object` is Kanama's `GodotObject`; a base that is not an engine class name (Godot passes a
+   * quoted script path for a custom type) falls back to `Node`. A wrapper whose constructor is not
+   * public ([FACTORY_BASES], e.g. `RefCounted`, whose wrapper ownership is explicit) is built
+   * through its borrowed-view factory `fromHandle`.
    */
   fun source(
     className: String,
     baseClass: String,
     packageName: String = PACKAGE_PLACEHOLDER,
     globalClass: Boolean = false,
+    nodeDerived: Boolean = true,
   ): String {
     val name = identifier(className.ifBlank { "NewScript" })
-    val attachTo = baseClass.takeIf { IDENTIFIER.matches(it) } ?: "Node"
+    val validBase = IDENTIFIER.matches(baseClass)
+    val attachTo = if (validBase) baseClass else "Node"
+    val stub = nodeDerived || !validBase
     val wrapper = if (attachTo == "Object") "GodotObject" else attachTo
-    val header =
-      "class $name(godotObject: GodotHandle) : KanamaScript<$wrapper>(godotObject, ::$wrapper) {"
+    val construct = if (wrapper in FACTORY_BASES) "{ $wrapper.fromHandle(it)!! }" else "::$wrapper"
+    val supertype = "KanamaScript<$wrapper>(godotObject, $construct)"
+    val body = if (stub) " {" else ""
+    val header = "class $name(godotObject: GodotHandle) : $supertype$body"
     return buildString {
       appendLine("package $packageName")
       appendLine()
-      if (globalClass) appendLine("import net.multigesture.kanama.annotations.GlobalClass")
-      appendLine("import net.multigesture.kanama.annotations.OnReady")
-      appendLine("import net.multigesture.kanama.annotations.ScriptClass")
-      appendLine("import net.multigesture.kanama.api.GodotHandle")
-      appendLine("import net.multigesture.kanama.api.KanamaScript")
-      appendLine("import net.multigesture.kanama.api.$wrapper")
+      // Sorted, as ktfmt keeps them.
+      listOfNotNull(
+          "net.multigesture.kanama.annotations.GlobalClass".takeIf { globalClass },
+          "net.multigesture.kanama.annotations.OnReady".takeIf { stub },
+          "net.multigesture.kanama.annotations.ScriptClass",
+          "net.multigesture.kanama.api.GodotHandle",
+          "net.multigesture.kanama.api.KanamaScript",
+          "net.multigesture.kanama.api.$wrapper",
+        )
+        .distinct()
+        .sorted()
+        .forEach { appendLine("import $it") }
       appendLine()
       appendLine("@ScriptClass(attachTo = \"$attachTo\")")
       if (globalClass) appendLine("@GlobalClass")
@@ -58,15 +73,23 @@ internal object KanamaScriptTemplate {
         appendLine(header)
       } else {
         appendLine("class $name(godotObject: GodotHandle) :")
-        appendLine("  KanamaScript<$wrapper>(godotObject, ::$wrapper) {")
+        appendLine("  $supertype$body")
       }
-      appendLine("  @OnReady")
-      appendLine("  fun ready() {")
-      appendLine("    // Called when the node enters the scene tree for the first time.")
-      appendLine("  }")
-      appendLine("}")
+      if (stub) {
+        appendLine("  @OnReady")
+        appendLine("  fun ready() {")
+        appendLine("    // Called when the node enters the scene tree for the first time.")
+        appendLine("  }")
+        appendLine("}")
+      }
     }
   }
+
+  /**
+   * Engine bases whose Kotlin wrapper constructor is internal: the script's `self` is built with
+   * the wrapper's public `fromHandle` (a borrowed view, never closed) instead of `::Wrapper`.
+   */
+  val FACTORY_BASES: Set<String> = setOf("RefCounted", "ShaderMaterial", "NoiseTexture2D")
 
   /** True when [template] (the text Godot passes to `_make_template`) asks for `@GlobalClass`. */
   fun wantsGlobalClass(template: String): Boolean = template.contains("@GlobalClass")
@@ -83,13 +106,23 @@ internal object KanamaScriptTemplate {
         source.substring(source.indexOf('\n').let { if (it < 0) source.length else it })
 
   /**
-   * The package for a new script saved at [resPath]: the package [siblingPackage] already used by
-   * the scripts in that directory (Kanama projects keep a flat `kotlin-src/` with one package);
-   * else the directory below `res://kotlin-src/` (or below `res://`) as a dotted package; else
-   * [DEFAULT_PACKAGE].
+   * The package for a new script saved at [resPath]: the package most of the scripts already in
+   * that directory declare ([siblingPackages]; a tie goes to the alphabetically first), since
+   * Kanama projects keep a flat `kotlin-src/` with one package; else the directory below
+   * `res://kotlin-src/` (or below `res://`) as a dotted package; else [DEFAULT_PACKAGE]. A package
+   * with a `kotlin` or `java` segment is never chosen (those namespaces are reserved).
    */
-  fun packageFor(resPath: String, siblingPackage: String?): String {
-    if (!siblingPackage.isNullOrBlank()) return siblingPackage
+  fun packageFor(resPath: String, siblingPackages: List<String>): String {
+    val sibling =
+      siblingPackages
+        .filter { usable(it) }
+        .groupingBy { it }
+        .eachCount()
+        .entries
+        .sortedWith(compareByDescending<Map.Entry<String, Int>> { it.value }.thenBy { it.key })
+        .firstOrNull()
+        ?.key
+    if (sibling != null) return sibling
     val relative = resPath.removePrefix("res://").removePrefix(SCRIPT_ROOT)
     val segments =
       relative
@@ -97,8 +130,12 @@ internal object KanamaScriptTemplate {
         .split('/')
         .filter { it.isNotEmpty() }
         .map { identifier(it) }
-    return if (segments.isEmpty()) DEFAULT_PACKAGE else segments.joinToString(".")
+    val derived = segments.joinToString(".")
+    return if (segments.isEmpty() || !usable(derived)) DEFAULT_PACKAGE else derived
   }
+
+  private fun usable(packageName: String): Boolean =
+    packageName.isNotBlank() && packageName.split('.').none { it == "kotlin" || it == "java" }
 
   /** The `package` a Kotlin source declares, or null. */
   fun declaredPackage(source: String): String? =

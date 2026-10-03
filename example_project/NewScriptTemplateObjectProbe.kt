@@ -1,0 +1,13 @@
+// Task 131 item 5 (F15): exactly what the editor's New Script dialog writes for this script,
+// which extends Object (KanamaScriptTemplateTest holds the template to this file, below this
+// comment). Here so the example build compiles that base's template through the KSP processor.
+package net.multigesture.kanama.example
+
+import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.KanamaScript
+
+@ScriptClass(attachTo = "Object")
+class NewScriptTemplateObjectProbe(godotObject: GodotHandle) :
+  KanamaScript<GodotObject>(godotObject, ::GodotObject)

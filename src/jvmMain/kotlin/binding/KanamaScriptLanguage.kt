@@ -651,6 +651,11 @@ object KanamaScriptLanguage {
         className = className,
         baseClass = attachTo,
         globalClass = KanamaScriptTemplate.wantsGlobalClass(templateArg),
+        // The @OnReady stub only for a Node base: ClassDB answers for engine classes.
+        nodeDerived =
+          attachTo == "Node" ||
+            runCatching { net.multigesture.kanama.api.ClassDB.isParentClass(attachTo, "Node") }
+              .getOrDefault(true),
       )
 
     val scriptObj = KanamaScript.constructUnbound()

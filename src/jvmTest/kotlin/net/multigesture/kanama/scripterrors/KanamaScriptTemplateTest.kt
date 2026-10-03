@@ -17,19 +17,56 @@ import net.multigesture.kanama.binding.KanamaScriptTemplate
  * identical.
  */
 class KanamaScriptTemplateTest {
-  @Test
-  fun theExampleFixtureIsTheTemplateOutput() {
-    val fixture = File("example_project/NewScriptTemplateProbe.kt").readText()
-    val body = fixture.substring(fixture.indexOf("package "))
+  /** `example_project/<file>` below its leading comment. */
+  private fun fixture(file: String): String =
+    File("example_project/$file").readText().let { it.substring(it.indexOf("package ")) }
 
-    assertEquals(
-      KanamaScriptTemplate.source(
-        className = "NewScriptTemplateProbe",
-        baseClass = "Node3D",
-        packageName = "net.multigesture.kanama.example",
-      ),
-      body,
+  @Test
+  fun theExampleFixturesAreTheTemplateOutput() {
+    // One per construction path: `::Wrapper` with the @OnReady stub (Node3D), `::Wrapper` without
+    // it (Resource), GodotObject for Godot's Object, and the fromHandle factory (RefCounted).
+    val cases =
+      listOf(
+        Triple("NewScriptTemplateProbe", "Node3D", true),
+        Triple("NewScriptTemplateResourceProbe", "Resource", false),
+        Triple("NewScriptTemplateObjectProbe", "Object", false),
+        Triple("NewScriptTemplateRefCountedProbe", "RefCounted", false),
+      )
+    for ((name, base, nodeDerived) in cases) {
+      assertEquals(
+        KanamaScriptTemplate.source(
+          className = name,
+          baseClass = base,
+          packageName = "net.multigesture.kanama.example",
+          nodeDerived = nodeDerived,
+        ),
+        fixture("$name.kt"),
+        name,
+      )
+    }
+  }
+
+  @Test
+  fun everyBaseGetsItsConstructionPathAndTheStubOnlyForNodes() {
+    val node = KanamaScriptTemplate.source("A", "Node", "game", nodeDerived = true)
+    assertTrue(node.contains("KanamaScript<Node>(godotObject, ::Node) {\n  @OnReady\n"))
+    val node3d = KanamaScriptTemplate.source("A", "Node3D", "game", nodeDerived = true)
+    assertTrue(node3d.contains("KanamaScript<Node3D>(godotObject, ::Node3D) {\n  @OnReady\n"))
+    val resource = KanamaScriptTemplate.source("A", "Resource", "game", nodeDerived = false)
+    assertTrue(resource.contains("KanamaScript<Resource>(godotObject, ::Resource)\n"))
+    val refCounted = KanamaScriptTemplate.source("A", "RefCounted", "game", nodeDerived = false)
+    assertTrue(
+      refCounted.contains(
+        "KanamaScript<RefCounted>(godotObject, { RefCounted.fromHandle(it)!! })\n"
+      )
     )
+    val obj = KanamaScriptTemplate.source("A", "Object", "game", nodeDerived = false)
+    assertTrue(obj.contains("@ScriptClass(attachTo = \"Object\")\n"))
+    assertTrue(obj.contains("KanamaScript<GodotObject>(godotObject, ::GodotObject)\n"))
+    for (source in listOf(resource, refCounted, obj)) {
+      assertFalse(source.contains("OnReady"), source)
+      assertFalse(source.contains("{\n"), source)
+    }
   }
 
   @Test
@@ -80,17 +117,49 @@ class KanamaScriptTemplateTest {
 
   @Test
   fun thePackageComesFromTheDirectory() {
-    // The scripts already in the directory decide (Kanama projects keep one package per folder).
-    assertEquals("tps", KanamaScriptTemplate.packageFor("res://kotlin-src/Player.kt", "tps"))
+    // The package most scripts in the directory declare (Kanama projects keep one per folder).
+    assertEquals(
+      "tps",
+      KanamaScriptTemplate.packageFor("res://kotlin-src/Player.kt", listOf("tps")),
+    )
+    assertEquals(
+      "b.game",
+      KanamaScriptTemplate.packageFor("res://kotlin-src/P.kt", listOf("a.x", "b.game", "b.game")),
+    )
+    // A tie goes to the alphabetically first.
+    assertEquals(
+      "a.game",
+      KanamaScriptTemplate.packageFor("res://kotlin-src/P.kt", listOf("b.game", "a.game")),
+    )
     // Else the directory below kotlin-src/ (or res://).
     assertEquals(
       "com.example.enemies",
-      KanamaScriptTemplate.packageFor("res://kotlin-src/com/example/enemies/Bat.kt", null),
+      KanamaScriptTemplate.packageFor("res://kotlin-src/com/example/enemies/Bat.kt", emptyList()),
     )
-    assertEquals("scripts.ai", KanamaScriptTemplate.packageFor("res://scripts/ai/Brain.kt", null))
-    assertEquals("_3d.`object`", KanamaScriptTemplate.packageFor("res://3d/object/Crate.kt", null))
+    assertEquals(
+      "scripts.ai",
+      KanamaScriptTemplate.packageFor("res://scripts/ai/Brain.kt", emptyList()),
+    )
+    assertEquals(
+      "_3d.`object`",
+      KanamaScriptTemplate.packageFor("res://3d/object/Crate.kt", emptyList()),
+    )
     // Else a default.
-    assertEquals("game", KanamaScriptTemplate.packageFor("res://Player.kt", null))
+    assertEquals("game", KanamaScriptTemplate.packageFor("res://Player.kt", emptyList()))
+  }
+
+  @Test
+  fun reservedKotlinAndJavaPackagesAreNeverChosen() {
+    assertEquals(
+      "game",
+      KanamaScriptTemplate.packageFor("res://kotlin-src/P.kt", listOf("kotlin.collections")),
+    )
+    assertEquals(
+      "tps",
+      KanamaScriptTemplate.packageFor("res://kotlin-src/P.kt", listOf("java.util", "tps")),
+    )
+    assertEquals("game", KanamaScriptTemplate.packageFor("res://kotlin/Foo.kt", emptyList()))
+    assertEquals("game", KanamaScriptTemplate.packageFor("res://a/java/Foo.kt", emptyList()))
   }
 
   @Test

@@ -282,7 +282,7 @@ object KanamaResourceFormatSaver {
 
   /**
    * A New Script template (task 131 item 5) is saved for the first time: replace its package
-   * placeholder with the package of the scripts already in [target]'s directory, else one derived
+   * placeholder with the package most scripts in [target]'s directory declare, else one derived
    * from [resPath] ([KanamaScriptTemplate.packageFor]), and give the script that source too, so the
    * script editor opens what the file holds. Any other source is returned unchanged.
    */
@@ -293,7 +293,7 @@ object KanamaResourceFormatSaver {
     target: java.nio.file.Path,
   ): String {
     if (!KanamaScriptTemplate.hasPackagePlaceholder(source)) return source
-    val siblingPackage =
+    val siblingPackages =
       runCatching {
           target
             .toFile()
@@ -301,14 +301,13 @@ object KanamaResourceFormatSaver {
             ?.listFiles()
             .orEmpty()
             .filter { it.name.endsWith(".kt") && it != target.toFile() }
-            .sortedBy { it.name }
-            .firstNotNullOfOrNull { KanamaScriptTemplate.declaredPackage(it.readText()) }
+            .mapNotNull { KanamaScriptTemplate.declaredPackage(it.readText()) }
         }
-        .getOrNull()
+        .getOrDefault(emptyList())
     val filled =
       KanamaScriptTemplate.withPackage(
         source,
-        KanamaScriptTemplate.packageFor(resPath, siblingPackage),
+        KanamaScriptTemplate.packageFor(resPath, siblingPackages),
       )
     KanamaScript.byObjectAddress(resourceObj.address())?.sourceCode = filled
     return filled
