@@ -385,11 +385,12 @@ stage "typed Godot enums and required returns (task 128 A)"
 python3 "$ROOT_DIR/scripts/check_typed_enums.py"
 
 stage "public API signatures vs snapshot (task 126)"
-# Every public declaration of the API (shared native tree, value types, the jvm/ios per-platform api
-# files, Web wrappers + facades) is held to docs/reference/generated/public-api-signatures-*.txt
-# (common, types, jvm, ios, web). A removed or changed signature is a
-# source break: it fails here until CHANGELOG.md `## Unreleased` carries a `- **Source break:**` line
-# and the snapshot is regenerated with --write (additions only need --write).
+# Every public declaration of the API (shared native tree, native + Web value types, the jvm/ios
+# per-platform api files, Web wrappers + facades) is held to api-snapshots/*.txt. A removed or
+# changed signature is a source break: it fails here until a `- **Source break:**` line in
+# CHANGELOG.md `## Unreleased` names its owner and the snapshots are regenerated with --write
+# (additions and source-compatible changes only need --write); a public declaration without a
+# visible type fails too.
 python3 "$ROOT_DIR/scripts/check_public_signature_changes.py"
 
 stage "virtual-method signature table drift (task 128 B)"

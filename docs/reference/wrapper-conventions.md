@@ -112,8 +112,8 @@ Kept by: `scripts/audit_wrapper_signatures.py` and `scripts/audit_wrapper_abi_po
 
 Current rule:
 
-- A scalar `float` argument, return or property is `Double` (`SCALAR_KOTLIN_TYPES`,
-  `FLOAT_POLICIES` in `scripts/wrapper_model.py`): Godot passes it as a 64-bit double.
+- A scalar `float` argument, return or property is `Double` (`SCALAR_KOTLIN_TYPES` in
+  `scripts/generate_api_wrapper.py`, `FLOAT_POLICIES` in `scripts/wrapper_model.py`): Godot passes it as a 64-bit double.
 - The components of the native value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`, ...) are
   `real_t`, Godot's build precision: `Float` in the single-precision builds Kanama ships. `Color`
   components are `Float`.
@@ -288,8 +288,8 @@ Kept by: `scripts/check_expect_no_defaults.py` (expect declarations) and the dri
 | `Signal` | `GodotSignal` |
 | `Variant` | `Any?` |
 
-The table is `SCALAR_KOTLIN_TYPES`; a method whose types have no audited helper shape is not
-generated rather than generated with a wider type (`CALL_SHAPES` in
+The table is `SCALAR_KOTLIN_TYPES` in `scripts/generate_api_wrapper.py`; a method whose types
+have no audited helper shape is not generated rather than generated with a wider type (`CALL_SHAPES` in
 `scripts/api_wrapper_candidates.py`; the skips are listed in the
 [Wrapper Generator Report](generated/wrapper-generator-report.md)).
 
@@ -353,7 +353,9 @@ names are `expect` declarations (`GodotSignal`, `SignalConnection`, `MainThread`
 under `web-runtime/.../api/generated/`): it carries the members the Web call contract supports,
 not every Godot method. Since task 128 it uses the same enum types, value names and prefix lock as
 native, the same `meta: "required"` rule for returns, and `Double` for decimals including
-value-type components. Where it differs from the native tree today:
+value-type components. Where it differs from the native tree today, for example (the list
+names examples; the `web` and `common` snapshots in `api-snapshots/` are the authoritative record
+of both surfaces):
 
 - a parameter named like a Kotlin keyword is renamed by a table, not suffixed (`KEYWORD_RENAMES`:
   `internal` is `internalMode` on Web, `internalValue` natively);
@@ -369,53 +371,50 @@ and should treat `getTree()` as nullable.
 
 A source break is any change that can stop a script from compiling: a removed or renamed
 member, class or parameter, a changed type or nullability, a removed default argument, a member
-that is no longer `open`. Additions are not breaks.
+that is no longer `open`. Additions are not breaks, and neither are the source-compatible changes
+the gate recognises: a parameter that gains a default, a declaration that becomes `open`, a class
+that gains a supertype.
 
 **Policy.** Before 1.0 a break is allowed when it serves the long-term shape of the API, but never
 silently: every break gets an entry in `CHANGELOG.md` under `## Unreleased` that says what changed
-and how to migrate, and that entry carries a line starting exactly with
+and how to migrate, with a line that starts with the marker below (it may be indented, as a nested
+bullet) and **names the owner of every declaration it breaks**: the class or object (`Node`, or
+`Node.removeChild`), or `top-level` for a top-level declaration (an extension may name its receiver
+class instead). Names match as whole words, so `Node` does not announce `Node3D`.
 
 ```text
-- **Source break:**
+- **Source break:** `Node.removeChild` takes a nullable `Node?` ...
 ```
 
+Keep a `## Unreleased` section, even an empty one: with none, the gate sees no announcement.
+
 **The gate.** `scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares the
-public surface with checked-in snapshots, one line per declaration:
+public surface with checked-in snapshots in the repository's `api-snapshots/` directory, one line
+per declaration, one file per surface (every source directory is read recursively):
 
-- [`public-api-signatures-common.txt`](generated/public-api-signatures-common.txt): the shared
-  native tree (generated classes, `GlobalEnums.kt`, the hand roots `GodotObject`, `RefCounted`,
-  `GodotCallable`, `GodotHandle`, and the `expect` declarations in that directory);
-- [`public-api-signatures-types.txt`](generated/public-api-signatures-types.txt): the builtin
-  value types (`Vector3`, `Color`, `Basis`, ...), which task 134 will change;
-- [`public-api-signatures-jvm.txt`](generated/public-api-signatures-jvm.txt) and
-  [`public-api-signatures-ios.txt`](generated/public-api-signatures-ios.txt): what each native
-  platform declares on its own (the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt`
-  companions, the `actual`s, `GD`, and on desktop the name constants);
-- [`public-api-signatures-web.txt`](generated/public-api-signatures-web.txt): the Web surface,
-  generated wrappers and the hand-written facades beside them.
+| Snapshot | Sources | What |
+|---|---|---|
+| `common.txt` | `src/commonMain/.../api` | the shared native tree: generated classes, `GlobalEnums.kt`, the hand roots `GodotObject`, `RefCounted`, `GodotCallable`, `GodotHandle`, the `expect` declarations |
+| `types.txt` | `src/commonMain/.../types` | the builtin value types (`Vector3`, `Color`, `Basis`, ...), which task 134 will change |
+| `jvm.txt`, `ios.txt` | `src/jvmMain/.../api`, `src/iosMain/.../api` | what each native platform declares on its own: the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the `actual`s, `GD`, and on desktop the name constants |
+| `web.txt` | `web-runtime/.../api` | the Web wrappers, generated and hand-written |
+| `web-types.txt` | `web-runtime/.../types` | the Web value types |
 
-A line records the owner, kind, name, receiver, type parameters, parameter names and types,
-whether each parameter has a default (not the default's value), the return or property type,
-supertypes and source modifiers; annotations, constant values and bodies are not part of it.
-`private` and `internal` declarations are skipped. The snapshot is read from the Kotlin sources,
-not from a build, and takes a couple of seconds.
+A line records the owner, kind, name, receiver, type parameters and `where` clauses, parameter
+names and types, whether each parameter has a default (not the default's value), the return or
+property type, supertypes and source modifiers (`open`, `final`, `override`, ...); annotations,
+constant values and bodies are not part of it. Modifiers count whether they stand on the
+declaration's own line or on the lines just above it. `private` and `internal` declarations, and
+those marked `@Deprecated(level = DeprecationLevel.HIDDEN)`, are skipped, so hiding a declaration
+reads as removing it. The snapshots are read from the Kotlin sources, not from a build, in a few
+seconds.
 
-A declaration whose type is not written out (an expression body such as `fun seed(value: Long) =
-...`) is recorded as `<inferred>`, so a change of that inferred type is not seen, unless the type is
-certain from the source: `= Unit`, a literal, a companion constant built with its own class's
-constructor (`val ZERO = Vector3(...)`), or a Web import-compatibility extension that forwards to
-the same-named member, whose type the gate takes over. Generated code writes every other type
-out. Each run prints how many `<inferred>` lines remain; today they are all in hand-written
-platform files, not covered for their return type:
-
-| Snapshot | Declarations |
-|---|---|
-| `jvm` | `GD.print`, `printErr`, `printRaw`, `printRich`, `printS`, `printVerbose`, `pushError`, `pushWarning`, `randomize`, `seed`; `Engine.setMaxFps`; `OwnedScriptResource.close` |
-| `ios` | `GD.print`, `printErr`, `printRaw`, `printRich`, `printS`, `printT`, `printVerbose`, `pushError`, `pushWarning` |
-| `web` | `KanamaScope.coroutineContext`, `MainThread.postNextFrame` |
-
-Writing their types out moves them under the gate; a line that changes from `<inferred>` to a
-written type is not a break and needs only `--write`.
+**Every public declaration states its type.** A declaration whose type is not written out fails the
+gate with its file and line (`fun seed(value: Long) = ...` must be `fun seed(value: Long): Unit =
+...`), except where the type is certain from the source: `= Unit`, a literal, a companion constant
+built with its own class's constructor (`val ZERO = Vector3(...)`), or a Web import-compatibility
+extension whose whole body calls the same-named member, whose type the gate takes over. Today no
+declaration is left without a visible type.
 
 The gate compares lines, so it also stops changes that still compile, such as a return that
 becomes non-null or a parameter that becomes nullable: those are announced the same way.
@@ -423,12 +422,13 @@ becomes non-null or a parameter that becomes nullable: those are announced the s
 | What changed | Gate result | What to do |
 |---|---|---|
 | nothing | PASS | — |
-| signatures added only | FAIL: snapshot out of date | `python3 scripts/check_public_signature_changes.py --write`, commit the snapshot |
-| a signature removed or changed, no `Source break` line | FAIL naming each change (`was` / `now`) | fix the generator, or announce the break in the CHANGELOG |
-| a signature removed or changed, `Source break` line present | FAIL: snapshot out of date | `--write`, commit the snapshot with the change |
+| signatures added, or a source-compatible change | FAIL: snapshots out of date | `python3 scripts/check_public_signature_changes.py --write`, commit the snapshots |
+| a signature removed or changed, its owner not named by a `Source break` line | FAIL naming each change (`was` / `now`) and each unannounced owner | fix the generator, or announce the break in the CHANGELOG |
+| a signature removed or changed, its owner named | FAIL: snapshots out of date | `--write`, commit the snapshots with the change |
+| a public declaration without a visible type | FAIL naming file and line | write the type |
 
-`--write` refuses to record a removal or change while `## Unreleased` has no `Source break` line.
-The snapshot diff then shows every changed signature in the pull request that changes it.
+`--write` refuses to record a removal or change whose owner no `Source break` line names. The
+snapshot diff then shows every changed signature in the pull request that changes it.
 
 Generator code and its tables are described in
 [Wrapper Maintenance](../contributing/wrapper-maintenance.md).

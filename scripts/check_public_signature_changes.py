@@ -6,54 +6,59 @@ twelve renamed properties, `Long` -> `Int` on desktop) and task 128 retyped ever
 deliberate and announced, but nothing would have noticed an UNANNOUNCED one: a generator change that
 retypes one parameter compiles, regenerates the whole tree, and passes the drift gate, because the
 drift gate only proves that the committed tree is what the generator writes. This gate holds the
-surface itself to a checked-in snapshot, one file per surface under `docs/reference/generated/`
-(`SURFACES` below):
+surface itself to checked-in snapshots, one file per surface under `api-snapshots/` (`SURFACES`):
 
-  * `public-api-signatures-common.txt` -- the API tree all native backends compile
-    (`src/commonMain/.../api`: the generated classes, `GlobalEnums.kt`, the hand roots
-    `GodotObject` / `RefCounted` / `GodotCallable` / `GodotHandle`, the `*.expect.kt` declarations);
-  * `public-api-signatures-types.txt` -- the builtin value types (`src/commonMain/.../types`);
-  * `public-api-signatures-jvm.txt` / `-ios.txt` -- each platform's own api classes
-    (`src/jvmMain/.../api`, `src/iosMain/.../api`: per-platform wrappers, `<Class>.jvm.kt` /
-    `<Class>.ios.kt` companions, the actuals, GD, the desktop name constants);
-  * `public-api-signatures-web.txt` -- the Web wrappers, generated (`web-runtime/.../api/generated`)
-    and the hand facades beside them (`web-runtime/.../api/*.kt`).
+  * `common.txt` -- the API tree all native backends compile (`src/commonMain/.../api`: the generated
+    classes, `GlobalEnums.kt`, the hand roots, the `*.expect.kt` declarations);
+  * `types.txt` -- the builtin value types (`src/commonMain/.../types`);
+  * `jvm.txt` / `ios.txt` -- each platform's own api files (`src/jvmMain/.../api`,
+    `src/iosMain/.../api`: per-platform wrappers, `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the
+    actuals, GD, the desktop name constants);
+  * `web.txt` -- the Web wrappers, generated and hand-written (`web-runtime/.../api`, recursively);
+  * `web-types.txt` -- the Web value types (`web-runtime/.../types`).
 
-One line per declaration: `<owner>: <declaration>`, sorted by owner then declaration, for example
+Every source directory is read recursively.
+
+One line per declaration: `<owner>: <declaration>`, sorted by owner, for example
 `Node: fun addChild(node: Node, forceReadableName: Boolean = ..., internalValue: Node.InternalMode = ...)`.
-The snapshot is derived from the Kotlin SOURCES (no Gradle build, no compiled metadata), by a parser
-written for the generator's regular output that also reads the hand roots: comments and string
-contents are dropped, brackets are matched, and every `fun` / `val` / `var` / `constructor` /
-`class` / `object` / `interface` / `typealias` at a class-body level is a declaration. Recorded per
-declaration: kind, name, extension receiver, type parameters, parameter names and types (a parameter
-name is source API: Kotlin callers may name arguments), whether a parameter HAS a default (its value
-is behaviour, not source: shown as `= ...`), the return / property type, supertypes, and the source
-modifiers (`open`, `abstract`, `override`, `const`, `operator`, `infix`, `vararg`, `data`, `value`,
-`companion`, ...). Not recorded: annotations (`@JvmStatic`, `@JvmName` are JVM interop, not Kotlin
-source), constant values, bodies. `private` / `internal` declarations and everything inside them are
-skipped; a `var` with a non-public setter is recorded as a `val`. A construct the parser does not
-understand is an error naming file:line, never a silently skipped declaration.
+The snapshot is derived from the Kotlin SOURCES (no Gradle build, no compiled metadata) by a parser
+written for the generator's regular output that also reads the hand-written files: comments and
+string contents are dropped, brackets are matched, and every `fun` / `val` / `var` / `constructor` /
+`class` / `object` / `interface` / `typealias` at a class-body level is a declaration. Its modifiers
+and annotations are the ones on its own line plus those on the lines directly above it that hold
+nothing else (`private` on the line before `fun x()` makes `x` private). Recorded per declaration:
+kind, name, extension receiver, type parameters and `where` clauses, parameter names and types (a
+parameter name is source API: Kotlin callers may name arguments), whether a parameter HAS a default
+(its value is behaviour, not source: shown as `= ...`), the return / property type, supertypes, and
+the source modifiers (`open`, `final`, `abstract`, `override`, `const`, `operator`, `infix`, `vararg`,
+`data`, `value`, `companion`, ...). Not recorded: annotations (`@JvmStatic`, `@JvmName` are JVM
+interop, not Kotlin source), constant values, bodies. `private` / `internal` declarations, those
+marked `@Deprecated(level = DeprecationLevel.HIDDEN)` (invisible to callers), and everything inside
+them are skipped; a `var` with a non-public setter is recorded as a `val`. A construct the parser does
+not understand is an error naming file:line, never a silently skipped declaration.
 
-A declaration without a written type is recorded as `<inferred>` unless its type is certain from the
-source: `= Unit`, a literal (`= 0L`), a constructor call of its own class on the companion
-(`val ZERO = Vector3(...)`), or a forwarding extension whose body calls the same-named member with the
-same parameters (the Web import-compatibility aliases, `resolve_forwarders`). Every run prints how
-many `<inferred>` lines remain; their type changes are not seen. A line that was `<inferred>` and now
-states its type is not a break (the type did not change; the gate sees it now): it needs only
-`--write`.
+Every public declaration must have a type the gate can see. A type not written out is accepted only
+where it is certain from the source: `= Unit`, a literal (`= 0L`), a constructor call of its own class
+on the companion (`val ZERO = Vector3(...)`), or a forwarding extension whose whole body is a call to
+the same-named member with the same parameters (the Web import-compatibility aliases,
+`resolve_forwarders`). Any other declaration without a written type FAILS the gate, naming file:line:
+write the type.
 
-The gate fails whenever the surface differs from the snapshot; the message says what to do:
+Comparison with the snapshot:
 
-  * a signature REMOVED or CHANGED and no announcement -> FAIL, naming each one (`was` / `now`).
-    A change is a source break: announce it with a line in `CHANGELOG.md`'s `## Unreleased` section
-    that starts exactly with the marker `- **Source break:**`, then record it with `--write`;
-  * a removal/change that IS announced -> FAIL asking for `--write` (the snapshot diff is then part
-    of the change under review);
-  * only ADDITIONS -> FAIL asking for `--write` (no CHANGELOG line needed: an addition breaks no
-    caller, but an unrecorded one would hide its own later removal).
+  * a signature REMOVED or CHANGED is a source break. Every break must be announced: its owner (the
+    outermost class or object, or `top-level` / the receiver class for a top-level declaration) must
+    be named, as a whole word, in a line of `CHANGELOG.md`'s `## Unreleased` section that starts with
+    the marker `- **Source break:**` (indented, as a nested bullet, is fine). An unannounced break
+    FAILS, naming each one (`was` / `now`); an announced one FAILS until the snapshot is rewritten
+    with `--write` (so the snapshot diff is part of the change under review);
+  * a source-compatible change -- a parameter gains a default, a declaration becomes `open`, a class
+    gains a supertype -- and an ADDITION are not breaks: they FAIL only until `--write` (no CHANGELOG
+    line needed: an addition breaks no caller, but an unrecorded one would hide its own later
+    removal). Removing a default is a break.
 
-`--write` rewrites the snapshot and refuses to record a removal/change the CHANGELOG does not
-announce.
+`--write` rewrites the snapshots and refuses to record an unannounced break. A missing
+`## Unreleased` section counts as one with no markers.
 
     python3 scripts/check_public_signature_changes.py
     python3 scripts/check_public_signature_changes.py --write
@@ -68,71 +73,74 @@ import re
 import sys
 import time
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TAG = "[public_signatures]"
 API_PACKAGE = "net.multigesture.kanama.api"
+TYPES_PACKAGE = "net.multigesture.kanama.types"
 CHANGELOG = "CHANGELOG.md"
-# The exact announcement marker: a bullet in `## Unreleased` starting with these characters.
+# The announcement marker: a bullet in `## Unreleased` starting with these characters (it may be
+# indented, as a nested bullet). The line must name the owner of every break it announces.
 MARKER = "- **Source break:**"
-MARKER_RE = re.compile(r"^- \*\*Source break:\*\*\s+\S")
+MARKER_RE = re.compile(r"^\s*[-*] \*\*Source break:\*\*\s+\S")
+SNAPSHOT_DIR = "api-snapshots"
 SNAPSHOT_HEADER = (
     "# Public API signatures: {surface} -- GENERATED by scripts/check_public_signature_changes.py --write.\n"
-    "# Do not edit by hand. A removed or changed line is a source break and needs a `{marker}` line in\n"
-    "# CHANGELOG.md `## Unreleased` (see docs/reference/wrapper-conventions.md, \"Source breaks\").\n"
+    "# Do not edit by hand. A removed or changed line is a source break: name its owner in a `{marker}`\n"
+    "# line of CHANGELOG.md `## Unreleased` (see docs/reference/wrapper-conventions.md, \"Source breaks\").\n"
     "# {count} declarations from {files} files: {what}.\n"
-    "# Sources: {sources}\n"
+    "# Sources (recursive): {sources}\n"
 )
 
 
 @dataclass(frozen=True)
 class Surface:
     name: str
-    sources: tuple[str, ...]  # directories relative to the root; `*.kt` directly inside each
-    snapshot: str  # relative to the root
+    sources: tuple[str, ...]  # directories relative to the root, read recursively
     what: str  # one line for the snapshot header
     package: str = API_PACKAGE  # declarations in this package are named without it
 
+    @property
+    def snapshot(self) -> str:
+        return f"{SNAPSHOT_DIR}/{self.name}.txt"
 
-GENERATED = "docs/reference/generated"
+
 SURFACES = (
     Surface(
         "common",
         ("src/commonMain/kotlin/net/multigesture/kanama/api",),
-        f"{GENERATED}/public-api-signatures-common.txt",
         "the API tree desktop, Android and iOS compile from one source (generated classes, "
         "GlobalEnums, the hand roots, the expect declarations)",
     ),
     Surface(
         "types",
         ("src/commonMain/kotlin/net/multigesture/kanama/types",),
-        f"{GENERATED}/public-api-signatures-types.txt",
         "the builtin value types every native backend shares (Vector2/3/4, Color, Basis, Transform3D, ...)",
-        "net.multigesture.kanama.types",
+        TYPES_PACKAGE,
     ),
     Surface(
         "jvm",
         ("src/jvmMain/kotlin/net/multigesture/kanama/api",),
-        f"{GENERATED}/public-api-signatures-jvm.txt",
         "desktop/Android only: the per-platform classes, the <Class>.jvm.kt companions, the actuals, "
         "GD/Mathf and the name constants",
     ),
     Surface(
         "ios",
         ("src/iosMain/kotlin/net/multigesture/kanama/api",),
-        f"{GENERATED}/public-api-signatures-ios.txt",
         "iOS only: the per-platform classes, the <Class>.ios.kt companions and the actuals",
     ),
     Surface(
         "web",
-        (
-            "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated",
-            "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api",
-        ),
-        f"{GENERATED}/public-api-signatures-web.txt",
-        "the Web wrappers: the generated classes and the hand-written facades beside them",
+        ("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api",),
+        "the Web wrappers: the generated classes (api/generated) and the hand-written facades",
+    ),
+    Surface(
+        "web-types",
+        ("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/types",),
+        "the Web value types (Vector2/3, Color, NodePath, ...)",
+        TYPES_PACKAGE,
     ),
 )
 
@@ -263,13 +271,16 @@ def compact(src: str) -> str:
 # --------------------------------------------------------------------------------------------------
 
 KEYWORD_RE = re.compile(r"(?<![\w.$:@`])(fun|val|var|constructor|class|object|interface|typealias)\b")
-ANNOTATION_RE = re.compile(r"@[\w.:]+(?:\s*\([^()]*\))?")
+# An annotation: `@Name`, `@get:Name`, `@Name(args)` with the arguments directly after the name (one
+# nesting level). No whitespace before `(`, so `@Composable (Int) -> Unit` keeps its function type.
+ANNOTATION_RE = re.compile(r"@[\w.:]+(?:\((?:[^()]|\([^()]*\))*\))?")
 VISIBILITY = {"public", "private", "internal", "protected"}
 HIDDEN = {"private", "internal"}
-# Kept in the rendered line, in this order; `public`, `final`, `expect`, `actual` are dropped
-# (they change nothing a caller writes).
+# Kept in the rendered line, in this order; `public`, `expect`, `actual` are dropped (they change
+# nothing a caller writes).
 KEPT_MODIFIERS = (
     "protected",
+    "final",
     "abstract",
     "open",
     "sealed",
@@ -290,10 +301,11 @@ KEPT_MODIFIERS = (
     "fun",
     "companion",
 )
-MODIFIERS = set(KEPT_MODIFIERS) | VISIBILITY | {"final", "expect", "actual", "noinline", "crossinline"}
+MODIFIERS = set(KEPT_MODIFIERS) | VISIBILITY | {"expect", "actual", "noinline", "crossinline"}
 TYPE_STOP_WORDS = ("get", "set", "by", "where")
 PROPERTY_NAME_RE = re.compile(r"[^:=\n;{]*")
 INFERRED = "<inferred>"
+HIDDEN_DEPRECATION_RE = re.compile(r"\bDeprecationLevel\.HIDDEN\b")
 
 
 class Source:
@@ -304,6 +316,7 @@ class Source:
         self.positions: list[int] = []
         self.depths: list[int] = []
         self.closers: dict[int, int] = {}
+        self.openers: dict[int, int] = {}
         stack: list[tuple[int, str]] = []
         pairs = {")": "(", "]": "[", "}": "{"}
         for m in re.finditer(r"[()\[\]{}]", text):
@@ -315,6 +328,7 @@ class Source:
                     raise ParseError(f"{rel}:{self.line(pos)}: unbalanced '{ch}'")
                 opener, _ = stack.pop()
                 self.closers[opener] = pos
+                self.openers[pos] = opener
             self.positions.append(pos)
             self.depths.append(len(stack))
         if stack:
@@ -414,9 +428,31 @@ class Decl:
     scope: str
     text: str
     pos: int
-    # For a `fun` whose return type is not written: the function its expression body calls, when
-    # the body is a plain call (`= play(name, customSpeed)`); see resolve_forwarders.
+    origin: str = ""  # file:line, filled for a declaration whose type is `<inferred>`
+    # For a `fun` whose return type is not written: the function its expression body calls, when the
+    # WHOLE body is that one call (`= play(name, customSpeed)`); see resolve_forwarders.
     forward: str | None = None
+
+
+WORD_CHARS = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.:")
+
+
+def word_start(text: str, j: int, floor: int) -> int:
+    """Start of the `@?[\\w.:]+` run that ends just before [j] (== j when there is none)."""
+    k = j
+    while k > floor and text[k - 1] in WORD_CHARS:
+        k -= 1
+    if k > floor and text[k - 1] == "@" and k < j:
+        k -= 1
+    return k
+
+
+@dataclass
+class Leading:
+    """What stands before a declaration keyword: modifiers and annotation texts."""
+
+    mods: list[str] = field(default_factory=list)
+    annotations: list[str] = field(default_factory=list)
 
 
 class Parser:
@@ -447,7 +483,7 @@ class Parser:
                 depth -= 1
                 if depth == 0:
                     return i + 1
-            elif ch in "{};=\n" and depth > 0 and ch != "\n":
+            elif ch in "{};=" and depth > 0:
                 break
             i += 1
         raise ParseError(f"{self.src.where(i)}: unbalanced '<'")
@@ -480,18 +516,73 @@ class Parser:
             i += 1
         return norm(text[start:i]), i
 
-    def line_modifiers(self, pos: int, floor: int) -> list[str]:
-        """Modifiers written on the keyword's own line, before it. Anything else there is an error."""
-        line_start = self.text.rfind("\n", floor, pos) + 1
-        line_start = max(line_start, floor)
-        prefix = ANNOTATION_RE.sub(" ", self.text[line_start:pos])
-        words = prefix.split()
-        for word in words:
-            if word not in MODIFIERS:
+    def read_where(self, k: int, end: int) -> tuple[str, int]:
+        """A `where T : A, T : B` clause at [k] (if any), up to the body or the end of the line."""
+        text = self.text
+        if not re.compile(r"where\b").match(text, k):
+            return "", k
+        i = k
+        while i < end:
+            ch = text[i]
+            if ch in "([":
+                i = self.src.closers[i] + 1
+                continue
+            if ch in "{=;}\n":
+                break
+            i += 1
+        return " " + norm(text[k:i]), self.skip_ws(i, newlines=False)
+
+    def leading(self, pos: int, floor: int) -> Leading:
+        """Modifiers and annotations of the declaration whose keyword is at [pos].
+
+        They are the tokens directly before the keyword on its own line, plus those on the lines
+        directly above that hold nothing but modifiers and annotations (`private` on the line before
+        `fun x()`, `@JvmStatic` above a `fun`). Anything else before the keyword on its own line is an
+        error; a line above that holds anything else ends the search (it belongs to other code)."""
+        text = self.text
+        src = self.src
+        keyword_line = max(text.rfind("\n", floor, pos) + 1, floor)
+        tokens: list[tuple[int, str]] = []  # (line start, token)
+        stop = -1  # where the tokens end: the last character of the code before them, if any
+        i = pos
+        while True:
+            j = i
+            while j > floor and text[j - 1] in " \t\r\n":
+                j -= 1
+            if j <= floor:
+                break
+            if text[j - 1] == ")":
+                opener = src.openers.get(j - 1)
+                start = word_start(text, opener, floor) if opener is not None else -1
+                if start < 0 or start == opener or text[start] != "@":
+                    stop = j - 1
+                    break
+                tokens.append((max(text.rfind("\n", floor, start) + 1, floor), text[start:j]))
+                i = start
+                continue
+            start = word_start(text, j, floor)
+            if start == j:
+                stop = j - 1
+                break
+            token = text[start:j]
+            if token.startswith("@") or token in MODIFIERS:
+                tokens.append((max(text.rfind("\n", floor, start) + 1, floor), token))
+                i = start
+                continue
+            stop = start
+            break
+        if stop >= 0:
+            stop_line = max(text.rfind("\n", floor, stop) + 1, floor)
+            if stop_line == keyword_line:
                 raise ParseError(
-                    f"{self.src.where(pos)}: unexpected {word!r} before a declaration keyword on the same line"
+                    f"{src.where(pos)}: unexpected {text[stop_line:pos].strip()!r} before a declaration keyword "
+                    "on the same line"
                 )
-        return words
+            tokens = [(line, token) for line, token in tokens if line != stop_line]
+        result = Leading()
+        for _, token in reversed(tokens):
+            (result.annotations if token.startswith("@") else result.mods).append(token)
+        return result
 
     # -- the walk -----------------------------------------------------------------------------
     def parse_body(self, start: int, end: int, scope: str, enum_body: bool = False) -> None:
@@ -517,9 +608,10 @@ class Parser:
                 line_start = max(text.rfind("\n", start, pos) + 1, start)
                 if not re.search(r"\bcompanion\s+$", text[line_start:pos]):
                     continue  # an object expression: `= object : Foo() { ... }`
-            mods = self.line_modifiers(pos, start)
+            lead = self.leading(pos, start)
+            mods = lead.mods
             keyword_positions.append(pos)
-            hidden = any(m in HIDDEN for m in mods)
+            hidden = any(m in HIDDEN for m in mods) or any(HIDDEN_DEPRECATION_RE.search(a) for a in lead.annotations)
             if kind == "fun":
                 resume = self.parse_fun(pos, after, end, mods, scope, hidden)
             elif kind in ("val", "var"):
@@ -566,8 +658,24 @@ class Parser:
     def kept(self, mods: list[str]) -> list[str]:
         return [m for m in KEPT_MODIFIERS if m in mods]
 
-    def emit(self, scope: str, text: str, pos: int) -> None:
-        self.decls.append(Decl(scope, text, pos))
+    def emit(self, scope: str, text: str, pos: int, forward: str | None = None) -> None:
+        origin = self.src.where(pos) if INFERRED in text else ""
+        self.decls.append(Decl(scope, text, pos, origin, forward))
+
+    def whole_body_call(self, k: int) -> str | None:
+        """The function name if the expression body at [k] (`=`) is exactly one call `name(...)`."""
+        text = self.text
+        call = re.compile(r"=\s*(\w+)\s*\(").match(text, k)
+        if not call:
+            return None
+        close = self.src.closers[call.end() - 1]
+        rest = re.compile(r"[ \t\r]*(?:\n\s*|;|$)").match(text, close + 1)
+        if not rest:
+            return None  # something follows the call on its line: `= f(x).g()`, `= f(x) { ... }`
+        nxt = rest.end()
+        if nxt < len(text) and text[nxt] in ".?:+-*/%|&^<>=":
+            return None  # a continuation on the next line
+        return call.group(1)
 
     def parse_fun(self, pos: int, after: int, end: int, mods: list[str], scope: str, hidden: bool) -> int:
         text = self.text
@@ -600,17 +708,19 @@ class Parser:
         if text[j] == ":":
             ret, j = self.read_type(self.skip_ws(j + 1), end)
         k = self.skip_ws(j, newlines=False)
+        where, k = self.read_where(k, end)
         forward = None
         if not ret and text.startswith("=", k) and not text.startswith("==", k):
-            ret = "Unit" if re.compile(r"=\s*Unit\s*(?:\n|;|$)").match(text, k) else INFERRED
-            call = re.compile(r"\s*(\w+)\s*\(").match(text, k + 1)
-            forward = call.group(1) if call and ret == INFERRED else None
+            if re.compile(r"=\s*Unit\s*(?:\n|;|$)").match(text, k):
+                ret = "Unit"
+            else:
+                ret = INFERRED
+                forward = self.whole_body_call(k)
         if not hidden:
             rendered = " ".join([*self.kept(mods), f"fun {type_params}{name}{params}"])
             if ret and ret != "Unit":
                 rendered += f": {ret}"
-            self.emit(scope, rendered, pos)
-            self.decls[-1].forward = forward
+            self.emit(scope, rendered + where, pos, forward)
         if text.startswith("{", k):
             return self.src.closers[k] + 1
         return k
@@ -682,7 +792,10 @@ class Parser:
             type_params = norm(text[i:j])
             i = self.skip_ws(j, newlines=False)
         ctor_line = None
-        ctor = re.compile(r"((?:@[\w.:]+(?:\s*\([^()]*\))?\s+|(?:public|private|internal|protected)\s+)*)(constructor\s*)?\(").match(text, i)
+        ctor_props: list[str] = []
+        ctor = re.compile(
+            r"((?:@[\w.:]+(?:\((?:[^()]|\([^()]*\))*\))?\s+|(?:public|private|internal|protected)\s+)*)(constructor\s*)?\("
+        ).match(text, i)
         if ctor:
             open_paren = ctor.end() - 1
             close = src.closers[open_paren]
@@ -690,7 +803,6 @@ class Parser:
             raw = text[open_paren + 1 : close]
             if not any(m in HIDDEN for m in ctor_mods):
                 ctor_line = " ".join([*self.kept(ctor_mods), "constructor" + render_params(raw, strip_property=True)])
-            ctor_props = []
             for param in split_top_level(raw):
                 p = ANNOTATION_RE.sub("", param).strip()
                 pm = re.match(r"((?:\w+\s+)*?)(val|var)\s+`?(\w+)`?\s*:\s*(.*)$", p, re.S)
@@ -704,8 +816,6 @@ class Parser:
                         ptype = ptype[:eq]
                     ctor_props.append(" ".join([*self.kept(pmods), f"{pm.group(2)} {pm.group(3)}: {norm(ptype)}"]))
             i = close + 1
-        else:
-            ctor_props = []
         # Supertypes, up to the body or the end of the header.
         supertypes: list[str] = []
         j = self.skip_ws(i, newlines=False)
@@ -754,6 +864,7 @@ def package_prefix(text: str, home: str) -> str:
 
 
 SUPERTYPES_RE = re.compile(r"^(?:\w+ )*(?:class|object|interface)\b[^:]*:\s*(.*)$")
+FUN_LINE_RE = re.compile(r"^(?:\w+ )*fun ")
 
 
 def resolve_forwarders(decls: list[Decl]) -> None:
@@ -761,16 +872,16 @@ def resolve_forwarders(decls: list[Decl]) -> None:
 
     The Web wrappers carry import-compatibility extensions next to each member,
     `fun AnimatedSprite2D.play(name: String = "") = play(name)`, whose return type Kotlin infers from
-    the member. When an extension's body is a call to the member of the same name with the same
+    the member. When an extension's whole body is a call to the member of the same name with the same
     parameter list, on its receiver class or a supertype in the same surface, the line takes that
-    member's return type. Anything else keeps `<inferred>`, which the gate counts and prints."""
+    member's return type. Anything else stays `<inferred>`, which fails the gate."""
     members: dict[str, dict[str, str]] = {}
     supertypes: dict[str, list[str]] = {}
     for decl in decls:
         if not decl.scope:
             continue
-        if decl.text.startswith(("fun ", "suspend fun ", "override fun ", "open fun ")) and INFERRED not in decl.text:
-            key = re.sub(r"^.*?\bfun ", "fun ", decl.text)
+        if FUN_LINE_RE.match(decl.text) and INFERRED not in decl.text:
+            key = FUN_LINE_RE.sub("fun ", decl.text)
             head, _, ret = key.rpartition("): ")
             signature, ret = (head + ")", ret) if head and "(" in head else (key, "")
             members.setdefault(decl.scope, {})[signature] = ret
@@ -795,6 +906,7 @@ def resolve_forwarders(decls: list[Decl]) -> None:
                 ret = members[cls][wanted]
                 prefix = decl.text[: -len(f": {INFERRED}")]
                 decl.text = f"{prefix}: {ret}" if ret else prefix
+                decl.origin = ""
                 break
             queue += supertypes.get(cls, [])
 
@@ -802,15 +914,21 @@ def resolve_forwarders(decls: list[Decl]) -> None:
 def surface_files(root: Path, surface: Surface) -> list[Path]:
     files: list[Path] = []
     for source in surface.sources:
-        found = sorted((root / source).glob("*.kt"))
+        found = sorted((root / source).rglob("*.kt"))
         if not found:
             raise ParseError(f"{source}: no Kotlin sources (wrong --root, or the tree moved)")
         files += found
-    return files
+    return sorted(set(files))
 
 
-def surface_lines(root: Path, surface: Surface) -> tuple[list[str], int, int]:
-    """(sorted lines, file count, `<inferred>` lines left after forwarding resolution)."""
+@dataclass
+class SurfaceResult:
+    lines: list[str]
+    files: int
+    inferred: list[str]  # "file:line: line" of every declaration whose type the gate cannot see
+
+
+def surface_lines(root: Path, surface: Surface) -> SurfaceResult:
     files = surface_files(root, surface)
     decls: list[Decl] = []
     for path in files:
@@ -825,8 +943,8 @@ def surface_lines(root: Path, surface: Surface) -> tuple[list[str], int, int]:
         decls += parser.decls
     resolve_forwarders(decls)
     lines = [f"{decl.scope or '<top-level>'}: {decl.text}" for decl in decls]
-    inferred = sum(1 for line in lines if INFERRED in line)
-    return sort_lines(lines), len(files), inferred
+    inferred = [f"{decl.origin}: {line}" for decl, line in zip(decls, lines) if INFERRED in decl.text]
+    return SurfaceResult(sort_lines(lines), len(files), inferred)
 
 
 CLASSIFIER_LINE_RE = re.compile(r"^(?:\w+ )*(?:class|object|interface)\b")
@@ -849,31 +967,40 @@ def read_snapshot(path: Path) -> list[str] | None:
     return [line for line in path.read_text(encoding="utf-8").splitlines() if line and not line.startswith("#")]
 
 
-def write_snapshot(path: Path, surface: Surface, lines: list[str], files: int) -> None:
+def write_snapshot(path: Path, surface: Surface, result: SurfaceResult) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     header = SNAPSHOT_HEADER.format(
-        surface=surface.name, marker=MARKER, count=len(lines), files=files, what=surface.what,
-        sources=", ".join(surface.sources)
+        surface=surface.name,
+        marker=MARKER,
+        count=len(result.lines),
+        files=result.files,
+        what=surface.what,
+        sources=", ".join(surface.sources),
     )
-    path.write_text(header + "\n".join(lines) + "\n", encoding="utf-8")
+    path.write_text(header + "\n".join(result.lines) + "\n", encoding="utf-8")
 
 
-def unreleased_markers(changelog: Path) -> list[tuple[int, str]]:
+def unreleased_markers(changelog: Path) -> tuple[list[tuple[int, str]], bool]:
+    """The marker lines of `## Unreleased` as (line number, text), and whether the section exists.
+    No section (or no CHANGELOG): no markers."""
     if not changelog.is_file():
-        raise ParseError(f"{changelog}: missing")
+        return [], False
     found: list[tuple[int, str]] = []
     inside = False
-    seen_unreleased = False
+    seen = False
     for number, line in enumerate(changelog.read_text(encoding="utf-8").splitlines(), 1):
         if line.startswith("## "):
             inside = line.strip() == "## Unreleased"
-            seen_unreleased = seen_unreleased or inside
+            seen = seen or inside
             continue
         if inside and MARKER_RE.match(line):
             found.append((number, line.strip()))
-    if not seen_unreleased:
-        raise ParseError(f"{changelog}: no `## Unreleased` section; the gate cannot tell whether a break is announced")
-    return found
+    return found, seen
+
+
+# --------------------------------------------------------------------------------------------------
+# Comparison
+# --------------------------------------------------------------------------------------------------
 
 
 def member_key(line: str) -> str:
@@ -890,7 +1017,90 @@ def member_key(line: str) -> str:
     return line
 
 
-def describe_changes(removed: Counter, added: Counter, limit: int) -> list[str]:
+def owners_of(line: str) -> list[str]:
+    """The names an announcement may use for the owner of [line]: the outermost class or object of
+    its owner path, or for a top-level declaration `top-level` and the receiver of an extension."""
+    scope, _, decl = line.partition(": ")
+    if scope == "<top-level>":
+        names = ["top-level"]
+        receiver = re.match(r"^(?:\w+ )*(?:fun|val|var) (?:<[^>]*> )?([A-Z]\w*)[\w.<>?, ]*\.\w+", decl)
+        if receiver:
+            names.append(receiver.group(1))
+        return names
+    parts = scope.split(".")
+    outer = next((p for p in parts if p[:1].isupper()), scope)
+    return [outer]
+
+
+def announced(line: str, marker_text: str) -> bool:
+    return any(re.search(rf"(?<![\w-]){re.escape(name)}(?![\w-])", marker_text) for name in owners_of(line))
+
+
+DEFAULT = " = ..."
+
+
+def _decl_parts(line: str) -> tuple[str, list[str], str, list[str], list[str]]:
+    """(scope, modifiers, rest of the declaration, parameters, supertypes) of a snapshot line."""
+    scope, _, decl = line.partition(": ")
+    words = decl.split(" ")
+    mods: list[str] = []
+    while len(words) > 1 and words[0] in KEPT_MODIFIERS:
+        if (words[0] == "fun" and words[1] != "interface") or (words[0] == "enum" and words[1] == "entry"):
+            break  # the `fun` keyword itself, an enum entry
+        mods.append(words.pop(0))
+    rest = " ".join(words)
+    params: list[str] = []
+    supers: list[str] = []
+    if CLASSIFIER_LINE_RE.match(rest) and " : " in rest:
+        rest, _, tail = rest.partition(" : ")
+        supers = split_top_level(tail)
+    elif "(" in rest:
+        start = rest.index("(")
+        depth = 0
+        for i in range(start, len(rest)):
+            depth += {"(": 1, ")": -1}.get(rest[i], 0)
+            if depth == 0:
+                params = split_top_level(rest[start + 1 : i])
+                rest = rest[:start] + "(" + ", ".join(p.removesuffix(DEFAULT) for p in params) + ")" + rest[i + 1 :]
+                break
+    return scope, mods, rest, params, supers
+
+
+def compatible(old: str, new: str) -> bool:
+    """Whether [new] only adds to [old] in a way no caller notices: a parameter gains a default, the
+    declaration becomes `open`, a class gains a supertype. Removing any of them is a break."""
+    o_scope, o_mods, o_rest, o_params, o_supers = _decl_parts(old)
+    n_scope, n_mods, n_rest, n_params, n_supers = _decl_parts(new)
+    if o_scope != n_scope or o_rest != n_rest or len(o_params) != len(n_params):
+        return False
+    if [m for m in o_mods if m != "open"] != [m for m in n_mods if m != "open"]:
+        return False
+    if "open" in o_mods and "open" not in n_mods:
+        return False
+    if any(o.endswith(DEFAULT) and not n.endswith(DEFAULT) for o, n in zip(o_params, n_params)):
+        return False
+    if not set(o_supers) <= set(n_supers):
+        return False
+    return old != new
+
+
+def pair_compatible(removed: Counter, added: Counter) -> Counter:
+    """The removed lines whose replacement among [added] is a source-compatible change."""
+    by_key: dict[str, list[str]] = {}
+    for line in added.elements():
+        by_key.setdefault(member_key(line), []).append(line)
+    result: Counter = Counter()
+    for line in sorted(removed.elements()):
+        candidates = by_key.get(member_key(line), [])
+        for candidate in candidates:
+            if compatible(line, candidate):
+                candidates.remove(candidate)
+                result[line] += 1
+                break
+    return result
+
+
+def describe_changes(removed: Counter, added: Counter, compat: Counter, limit: int) -> list[str]:
     removed_by_key: dict[str, list[str]] = {}
     for line in sorted(removed.elements(), key=sort_key):
         removed_by_key.setdefault(member_key(line), []).append(line)
@@ -902,7 +1112,8 @@ def describe_changes(removed: Counter, added: Counter, limit: int) -> list[str]:
         was = removed_by_key.get(key, [])
         now = added_by_key.get(key, [])
         if was and now:
-            out.append(f"CHANGED  {key}")
+            label = "COMPATIBLE" if all(compat[line] for line in was) else "CHANGED"
+            out.append(f"{label}  {key}")
             out += [f"           was: {line}" for line in was]
             out += [f"           now: {line}" for line in now]
         elif was:
@@ -914,20 +1125,10 @@ def describe_changes(removed: Counter, added: Counter, limit: int) -> list[str]:
     return out
 
 
-def refines(removed_line: str, added: Counter) -> bool:
-    """Whether [removed_line] ends in `<inferred>` and an added line is the same declaration with its
-    type written out (`: X`, or nothing for `Unit`)."""
-    suffix = f": {INFERRED}"
-    if not removed_line.endswith(suffix):
-        return False
-    prefix = removed_line[: -len(suffix)]
-    return any(line == prefix or line.startswith(prefix + ": ") for line in added)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--root", type=Path, default=ROOT, help="repository root (a scratch copy for red runs)")
-    parser.add_argument("--write", action="store_true", help="rewrite the snapshot (refuses an unannounced break)")
+    parser.add_argument("--write", action="store_true", help="rewrite the snapshots (refuses an unannounced break)")
     parser.add_argument("--limit", type=int, default=60, help="max change lines to print (0 = all)")
     args = parser.parse_args()
     root = args.root.resolve()
@@ -936,54 +1137,74 @@ def main() -> int:
 
     try:
         current = {surface.name: surface_lines(root, surface) for surface in SURFACES}
-        markers = unreleased_markers(root / CHANGELOG)
     except ParseError as error:
         print(f"{TAG} FAIL cannot read the surface: {error}", file=sys.stderr)
         return 1
+    markers, has_unreleased = unreleased_markers(root / CHANGELOG)
+    marker_text = "\n".join(text for _, text in markers)
 
-    removed_total: Counter = Counter()
-    added_total: Counter = Counter()
-    refined_total: Counter = Counter()
+    inferred = [line for result in current.values() for line in result.inferred]
+    if inferred:
+        print(f"{TAG} FAIL {len(inferred)} public declaration(s) without a type the gate can see; write the "
+              "type out (`fun x(): Unit = ...`, `val y: Foo = ...`):", file=sys.stderr)
+        for line in inferred[:limit]:
+            print(f"    {line}", file=sys.stderr)
+        return 1
+
+    breaks: Counter = Counter()
+    unannounced: Counter = Counter()
+    added_total = 0
+    compatible_total = 0
     report: list[str] = []
     missing: list[str] = []
     for surface in SURFACES:
-        lines, _, _ = current[surface.name]
+        lines = current[surface.name].lines
         snapshot = read_snapshot(root / surface.snapshot)
         if snapshot is None:
             missing.append(surface.snapshot)
             continue
         removed = Counter(snapshot) - Counter(lines)
         added = Counter(lines) - Counter(snapshot)
-        # A line that was `<inferred>` and now states its type is not a break: the type did not
-        # change, the gate just sees it now. It still needs --write, like an addition.
-        refined = Counter({line: n for line, n in removed.items() if refines(line, added)})
+        compat = pair_compatible(removed, added)
+        surface_breaks = removed - compat
+        surface_unannounced = Counter({line: n for line, n in surface_breaks.items() if not announced(line, marker_text)})
         if removed or added:
-            report.append(f"  {surface.name} ({surface.snapshot}): {sum((removed - refined).values())} "
-                          f"removed/changed, {sum(refined.values())} inferred type(s) now written, "
-                          f"{sum(added.values())} added")
-            report += [f"    {line}" for line in describe_changes(removed, added, limit)]
-        removed_total += removed - refined
-        added_total += added
-        refined_total += refined
+            report.append(
+                f"  {surface.name} ({surface.snapshot}): {sum(surface_breaks.values())} removed/changed "
+                f"({sum(surface_unannounced.values())} unannounced), {sum(compat.values())} compatible change(s), "
+                f"{sum(added.values()) - sum(compat.values())} added"
+            )
+            report += [f"    {line}" for line in describe_changes(removed, added, compat, limit)]
+        breaks += surface_breaks
+        unannounced += surface_unannounced
+        added_total += sum(added.values()) - sum(compat.values())
+        compatible_total += sum(compat.values())
 
-    counts = ", ".join(f"{name} {len(lines)}" for name, (lines, _, _) in current.items())
-    inferred = sum(n for _, _, n in current.values())
-    if inferred:
-        counts += (f"; {inferred} recorded as {INFERRED}, whose inferred type the gate cannot see")
+    counts = ", ".join(f"{name} {len(result.lines)}" for name, result in current.items())
     elapsed = f"{time.monotonic() - started:.1f}s"
-    announced = "; ".join(f"{CHANGELOG}:{n}: {text[:100]}" for n, text in markers)
+    announced_by = "; ".join(f"{CHANGELOG}:{n}: {text[:100]}" for n, text in markers)
+    unannounced_owners = sorted({owners_of(line)[0] for line in unannounced.elements()})
+    unannounced_message = (
+        f"{sum(unannounced.values())} public signature(s) removed or changed and not announced: no "
+        f"`{MARKER}` line in {CHANGELOG} `## Unreleased` names {', '.join(unannounced_owners)}"
+        + (
+            f" (marker lines found: {announced_by})"
+            if markers
+            else " (no marker lines found)"
+            if has_unreleased
+            else f" ({CHANGELOG} has no `## Unreleased` section: keep one, even an empty one)"
+        )
+    )
 
     if args.write:
-        if removed_total and not markers:
-            print(f"{TAG} FAIL refusing to record {sum(removed_total.values())} removed/changed signature(s): "
-                  f"{CHANGELOG} `## Unreleased` has no `{MARKER}` line.", file=sys.stderr)
+        if unannounced:
+            print(f"{TAG} FAIL refusing to record {unannounced_message}.", file=sys.stderr)
             print("\n".join(report), file=sys.stderr)
             return 1
         for surface in SURFACES:
-            lines, files, _ = current[surface.name]
-            write_snapshot(root / surface.snapshot, surface, lines, files)
-        print(f"{TAG} wrote the snapshot (declarations: {counts}; {elapsed})"
-              + (f"; break announced by {announced}" if removed_total else ""))
+            write_snapshot(root / surface.snapshot, surface, current[surface.name])
+        print(f"{TAG} wrote the snapshots (declarations: {counts}; {elapsed})"
+              + (f"; breaks announced by {announced_by}" if breaks else ""))
         return 0
 
     if missing:
@@ -991,29 +1212,28 @@ def main() -> int:
               "`python3 scripts/check_public_signature_changes.py --write`", file=sys.stderr)
         return 1
 
-    if not removed_total and not added_total and not refined_total:
-        print(f"{TAG} PASS the public API surface matches the snapshot (declarations: {counts}; {elapsed})")
+    if not breaks and not added_total and not compatible_total:
+        print(f"{TAG} PASS the public API surface matches the snapshots (declarations: {counts}; {elapsed})")
         return 0
 
-    if removed_total and not markers:
-        print(f"{TAG} FAIL unannounced source break: {sum(removed_total.values())} public signature(s) "
-              f"removed or changed ({elapsed}):", file=sys.stderr)
+    if unannounced:
+        print(f"{TAG} FAIL unannounced source break ({elapsed}): {unannounced_message}:", file=sys.stderr)
         print("\n".join(report), file=sys.stderr)
         print(f"{TAG} If the break is intended, announce it in {CHANGELOG} under `## Unreleased` with a line "
-              f"starting `{MARKER}` (what changed and how to migrate), then record it: "
-              "`python3 scripts/check_public_signature_changes.py --write`. If it is not intended, fix the "
-              "generator (or the hand root) instead.", file=sys.stderr)
+              f"starting `{MARKER}` that names each owner above (what changed and how to migrate), then "
+              "record it: `python3 scripts/check_public_signature_changes.py --write`. If it is not intended, "
+              "fix the generator (or the hand-written file) instead.", file=sys.stderr)
         return 1
 
-    if removed_total:
-        print(f"{TAG} FAIL the snapshot is out of date: {sum(removed_total.values())} removed/changed and "
-              f"{sum(added_total.values())} added signature(s); the break is announced ({announced}). "
-              "Regenerate the snapshot and commit it with the change: "
+    if breaks:
+        print(f"{TAG} FAIL the snapshots are out of date: {sum(breaks.values())} removed/changed signature(s), "
+              f"announced by {announced_by}; {compatible_total} compatible change(s), {added_total} added. "
+              "Regenerate the snapshots and commit them with the change: "
               "`python3 scripts/check_public_signature_changes.py --write`", file=sys.stderr)
     else:
-        print(f"{TAG} FAIL the snapshot is out of date: {sum(added_total.values()) - sum(refined_total.values())} "
-              f"signature(s) added, {sum(refined_total.values())} inferred type(s) now written (neither is a break; "
-              "no CHANGELOG line needed). Record them: "
+        print(f"{TAG} FAIL the snapshots are out of date: {added_total} signature(s) added, {compatible_total} "
+              "source-compatible change(s) (a default added, made `open`, a supertype added); neither is a "
+              "break, no CHANGELOG line needed. Record them: "
               "`python3 scripts/check_public_signature_changes.py --write`", file=sys.stderr)
     print("\n".join(report), file=sys.stderr)
     return 1

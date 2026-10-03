@@ -24,7 +24,7 @@ object Engine {
         get() = getMaxFps()
         set(value) = setMaxFps(value)
 
-    fun setMaxFps(maxFps: Int) =
+    fun setMaxFps(maxFps: Int): Unit =
         ObjectCalls.ptrcallWithIntArg(setMaxFpsBind, singleton, maxFps)
 
     fun getMaxFps(): Int =

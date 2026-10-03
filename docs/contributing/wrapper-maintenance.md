@@ -22,9 +22,11 @@ Kanama's API/header refresh workflow.
 What the generated API promises script authors (names, types, nullability, enums, defaults,
 platform parity) is stated rule by rule in
 [Generated API Conventions](../reference/wrapper-conventions.md). A generator change that alters
-a public signature is a source break: `scripts/check_public_signature_changes.py` fails until
-`CHANGELOG.md` announces it and the signature snapshot is regenerated with `--write` (see
-[Source breaks](../reference/wrapper-conventions.md#source-breaks)). Additions only need `--write`.
+a public signature is a source break: `scripts/check_public_signature_changes.py` fails until a
+`- **Source break:**` line in `CHANGELOG.md` names the owner of each changed declaration and the
+snapshots in `api-snapshots/` are regenerated with `--write` (see
+[Source breaks](../reference/wrapper-conventions.md#source-breaks)). Additions and source-compatible
+changes (a default added) only need `--write`; every public declaration must state its type.
 
 ## Wrapper Guardrails
 

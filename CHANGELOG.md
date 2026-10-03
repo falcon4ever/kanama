@@ -12,7 +12,20 @@ The generated Godot API follows the rules in
 direction for long-term stability, not a hard freeze: a change that can stop a script from
 compiling (a removed or renamed member or parameter, a changed type or nullability, a removed
 default) is allowed when it serves the API's long-term shape, but never silently. Its entry under
-`## Unreleased` says what changed and how to migrate, and carries a line that starts exactly with
+`## Unreleased` says what changed and how to migrate, and carries a line that starts with
+`- **Source break:**` (indented as a nested bullet is fine) and names the owner of every
+declaration it breaks: the class or object (`Node`, `Node.removeChild`), or `top-level`. Keep a
+`## Unreleased` section, even an empty one, at all times.
+
+`scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares every public
+declaration of the API (the shared native tree, the native and Web value types, each platform's own
+classes, and the Web wrappers and facades) with the snapshots in `api-snapshots/`. It fails when a
+signature was removed or changed and no marker line names its owner; once one does, it fails until
+the snapshots are regenerated with `--write`, so the pull request shows every changed signature.
+Additions and source-compatible changes (a parameter gains a default, a declaration becomes `open`,
+a class gains a supertype) need only `--write`. Every public declaration must state its type.
+
+## Unreleased` says what changed and how to migrate, and carries a line that starts exactly with
 `- **Source break:**` (the marker the gate below looks for).
 
 `scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares every public
@@ -35,15 +48,17 @@ only `--write`.
   factories, name constants, and platform parity, including where the Web surface differs today.
   Linked from [Calling Godot APIs](docs/game-dev/godot-api.md).
 - **`scripts/check_public_signature_changes.py`**, a new `local_ci.sh` stage, holds the public
-  surface to checked-in snapshots (one line per declaration, read from the Kotlin sources in about
-  two seconds), one per surface in `docs/reference/generated/public-api-signatures-*.txt`: `common`
-  (the API tree desktop, Android and iOS share), `types` (the builtin value types), `jvm` and `ios`
-  (what each native platform declares on its own) and `web` (the generated Web wrappers and their
-  hand facades).
-  A removed or changed signature fails the gate until this file announces it (see "How source
-  breaks are announced" above) and the snapshot is regenerated; `--write` refuses to record an
-  unannounced one. The generated `SceneTree` companion shortcuts (native) and the Web `SceneTree`
-  forwarders now state their `Unit` return type, so the gate records it.
+  surface to checked-in snapshots in `api-snapshots/` (one line per declaration, read from the
+  Kotlin sources in a few seconds), one per surface: `common` (the API tree desktop, Android and iOS
+  share), `types` and `web-types` (the native and Web value types), `jvm` and `ios` (what each
+  native platform declares on its own) and `web` (the Web wrappers, generated and hand-written).
+  A removed or changed signature fails the gate until this file announces it, naming its owner (see
+  "How source breaks are announced" above), and the snapshots are regenerated; `--write` refuses
+  to record an unannounced one. A public declaration without a visible type fails too, so the
+  generated `SceneTree` companion shortcuts (native), the Web `SceneTree` forwarders and the
+  hand-written `GD` print helpers, `Engine.setMaxFps` (iOS), `OwnedScriptResource.close`,
+  `KanamaScope.coroutineContext` and `MainThread.postNextFrame` (Web) now state their types; no
+  behaviour changes.
 
 ### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers (#277)
 
