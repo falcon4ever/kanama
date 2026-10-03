@@ -66,6 +66,16 @@ Building Kanama from source does not require a Godot source checkout. The
 desktop native bootstrap uses the GDExtension headers tracked in this
 repository, JDK 25 headers, CMake, and the platform C toolchain.
 
+The native bootstrap is compiled against the JDK 25 that Gradle's toolchain
+resolves (passed to CMake as `-DKANAMA_JAVA_HOME`), then `JAVA_HOME`, then, on
+macOS, `/usr/libexec/java_home -v 25`, and last the system default JDK. On every
+OS the configure step stops with a message naming the JDK it found when that
+JDK's `jni.h` is older than JDK 21. A `JNI_VERSION_21 undeclared` error from
+`bootstrap.c` therefore no longer appears: fix the named JDK or `JAVA_HOME`.
+Linux and Windows desktop launchers do not pass your shell's `JAVA_HOME` to
+Godot; the **Build Scripts** button picks a JDK 25+ itself, see
+[Which JDK Build Scripts Uses](editor-workflow.md#which-jdk-build-scripts-uses).
+
 `syncExampleAddonJar` refreshes the checked-in example project and remains the
 local smoke-test path:
 

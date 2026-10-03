@@ -60,6 +60,42 @@ For the checked-in Kanama example project, the equivalent local command is:
 ./gradlew syncExampleAddonJar
 ```
 
+## Which JDK Build Scripts Uses
+
+Build Scripts needs a JDK 25 or newer, both for Gradle and for the CMake step
+that compiles the native bootstrap against that JDK's `jni.h`. On Linux and
+Windows, Godot started from a desktop launcher (an application menu entry, a
+desktop shortcut, a file manager) does **not** inherit the `JAVA_HOME` from your
+shell profile, so without help the build would run on whatever JDK the system
+treats as its default, which is often older. The plugin therefore picks the JDK
+itself, in this order:
+
+1. The project setting `kanama/build/jdk_path` (empty means automatic).
+2. `JAVA_HOME` from the environment Godot was started with. One that points at
+   a JDK older than 25 is skipped, not an error.
+3. The newest JDK 25+ found in the usual install locations: `/usr/lib/jvm/*`
+   on Linux, `/Library/Java/JavaVirtualMachines/*` on macOS, and the
+   `C:\Program Files\{Java,Eclipse Adoptium,Microsoft,...}` folders on
+   Windows, plus `~/.jdks` and `~/.sdkman/candidates/java`. The version is read
+   from each JDK's `release` file.
+
+The output panel names the JDK used (`[kanama:tools] Build JDK: ... from ...`).
+If none of the three yields a JDK 25+, Build Scripts stops with an error that
+names `kanama/build/jdk_path` and `JAVA_HOME` instead of starting a build that
+fails inside the native compile. A `kanama/build/jdk_path` that is set but wrong
+is also an error; it is never silently replaced by another JDK.
+
+```ini
+[kanama]
+build/jdk_path="/usr/lib/jvm/temurin-25-jdk-amd64"
+```
+
+Set it to the JDK's home directory (the folder that contains `bin/` and
+`lib/`). The setting is in **Project Settings > Kanama > Build** with
+**Advanced Settings** on. A shell build (`./gradlew ...`) is not affected: it
+uses the shell's `JAVA_HOME`, and the native bootstrap build checks that the JDK
+it finds has a JDK 25 `jni.h`, on every OS, before compiling.
+
 ## Project Settings
 
 External projects may need to tell the plugin where the Kanama source checkout
@@ -84,6 +120,7 @@ Useful editor settings:
 | `kanama/tools/auto_build_on_save` | Watches `.kt` files and runs a debounced script build. |
 | `kanama/tools/reload_scene_after_sync` | Reloads the current scene after a successful sync. |
 | `kanama/tools/developer_mode` | Shows runtime build actions intended for Kanama maintainers. |
+| `kanama/build/jdk_path` | JDK 25+ home directory Build Scripts runs Gradle with. Empty tries `JAVA_HOME`, then the usual install locations. See [Which JDK Build Scripts Uses](#which-jdk-build-scripts-uses). |
 | `kanama/tools/java_preflight_enabled` | Shows editor warnings when desktop `libjvm` cannot be found. |
 
 `Build Runtime` is hidden unless `developer_mode` is enabled. Normal game

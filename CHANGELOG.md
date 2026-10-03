@@ -7,6 +7,25 @@ versioning once public releases begin.
 
 ## Unreleased
 
+### Fixed — editor Build Scripts finds the right JDK on Linux and Windows (#277)
+
+- **Build Scripts no longer builds against a stray system JDK.** Godot started from a desktop launcher
+  does not inherit the shell's `JAVA_HOME`, so on Linux the build ran on the system default JDK and
+  died compiling `bootstrap.c` with `'JNI_VERSION_21' undeclared`. The Kanama Tools plugin now picks
+  the JDK itself: the new project setting `kanama/build/jdk_path`, else `JAVA_HOME`, else the newest
+  JDK 25+ in the usual install locations (`/usr/lib/jvm`, `/Library/Java/JavaVirtualMachines`,
+  `C:\Program Files\{Java,Eclipse Adoptium,...}`, `~/.jdks`, `~/.sdkman`), runs Gradle with that
+  `JAVA_HOME`, prints which JDK it used, and stops with an error naming `kanama/build/jdk_path` when
+  none is 25+. See [The Editor Loop](docs/getting-started/editor-workflow.md#which-jdk-build-scripts-uses).
+- **The native bootstrap's CMake checks the JDK header on every OS.** Only macOS verified that `jni.h`
+  has `JNI_VERSION_21`; Linux and Windows took whatever `find_package(JNI)` found. One resolution now
+  serves all three (`-DKANAMA_JAVA_HOME`, which Gradle passes as its JDK 25 toolchain, then
+  `JAVA_HOME`, then macOS `java_home -v 25`, then `find_package(JNI)`), followed by the same check and
+  the same message naming the JDK and how to fix it. `scripts/check_bootstrap_jdk_resolution.sh`
+  (a `local_ci.sh` stage, so the Linux CI job runs it on the Linux include path) configures against
+  stale and good fake JDKs; `tool_smoke.sh` runs `scripts/check_editor_jdk_resolution.gd` against the
+  plugin and now also fails if the two copies of `plugin.gd` drift.
+
 ### Fixed — Kotlin exceptions reach Godot's error log; lambda connections no longer leak (task 131)
 
 - **A Kotlin exception is a Godot script error** (F4) on desktop, Android and iOS (not yet on Web).
