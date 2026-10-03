@@ -42,6 +42,20 @@ const char *kanama_ios_last_fault(void);
  */
 void kanama_ios_fault_set_probe(int32_t on);
 
+/*
+ * Task 131 — reports a contained Kotlin exception through GDExtension
+ * `print_script_error_with_message` (editor-notify on), so it appears as a Godot `SCRIPT ERROR`
+ * with the Kotlin file:line instead of only on the process stderr. Returns 1 when delivered, 0 when
+ * the entry point did not resolve (a fault is recorded).
+ */
+int32_t kanama_ios_report_script_error(
+    const char *description,
+    const char *message,
+    const char *function,
+    const char *file,
+    int32_t line
+);
+
 void kanama_ios_godot_ptrcall(
     int64_t method_bind,
     int64_t instance,

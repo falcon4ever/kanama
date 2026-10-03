@@ -149,12 +149,45 @@ Use `@ScriptProperty` for `@ScriptClass` scripts and `@RegisterProperty` for
 `@RegisterClass` types. `@Export` works as an alias in both contexts. See
 [Exports and Resources](properties-resources.md).
 
-## Printing
+## Printing and Errors
 
 ```kotlin
-GD.print("Hello from Kotlin")       // mirrors C# GD.Print
-System.err.println("[debug] $value") // also appears in Godot output
+GD.print("Hello from Kotlin")        // Godot's Output panel, like GDScript print()
+GD.pushError("bad state: $value")    // a Godot error (Output + Errors tab), like push_error()
+System.err.println("[debug] $value") // the process stderr only, NOT the editor's Output panel
 ```
+
+`GD.print` and its siblings go through Godot's logger, so they reach the
+editor's Output panel when you press Play. `println` and `System.err.println`
+write to the game process's stdout/stderr: you see them in the terminal Godot
+was started from, or in a `--headless` log. The editor starts the game without
+capturing either stream, so they never reach its Output panel, and a game
+started from the Dock or Finder shows them nowhere.
+
+On desktop, Android and iOS, an exception that escapes your code at an engine
+boundary (a script method, a lifecycle callback such as `_ready` or `_process`,
+a signal lambda, a property accessor, a `MainThread` task) does not crash the
+game. Kanama catches it, prints the full stack trace to stderr, and reports it to
+Godot as a script error, the way a GDScript runtime error is reported. Godot's
+log shows (desktop console output):
+
+```text
+SCRIPT ERROR: java.lang.IllegalStateException: no target
+          at: Player.ready (res://kotlin-src/com/example/game/Player.kt:42)
+```
+
+It appears in Godot's log (the Output panel, a terminal, a device log) and, when
+you run from the editor, in the Debugger's Errors tab. The file and line are the
+top frame of your own code: Kanama, generated, Kotlin and JDK frames are
+skipped. When the file is in the project (`res://kotlin-src/<package path>/` or
+the project root) the `res://` path is reported, so the Errors tab can open it;
+otherwise the bare file name. The rest of that call does not run and the caller
+gets `null`, as with a GDScript runtime error; the next frame calls `_process`
+again as usual. On iOS the file and line need a build with debug info (a release
+build names the class and method with line 0). In an R8-minified Android release
+build a frame without source info is not attributed, and the error names the
+callback that failed instead. The Web backend does not report Kotlin exceptions
+to Godot yet.
 
 ## Rebuild Required
 

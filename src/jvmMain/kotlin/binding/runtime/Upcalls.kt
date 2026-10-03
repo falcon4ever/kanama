@@ -26,12 +26,13 @@ import net.multigesture.kanama.ffi.GodotFFI
  * (`catch (t: Throwable)` in nine of the 112 upcall targets); everything else, including the `.kt`
  * resource loader, was one IO failure away from taking the process down. [stub] therefore wraps
  * every target in [MethodHandles.catchException]: the handler logs the failure (one stack trace per
- * site, then one line per occurrence) and returns the zero of the target's return type -- `0` for
- * `Byte`/`Int`/`Long`, `MemorySegment.NULL` for pointers, nothing for `void`. The engine reads that
- * as "not handled" / "no override" / "instantiation failed" / a NIL return, all of which it already
- * copes with. Bespoke handlers whose return value carries meaning (task 50's property accessors
- * report "owned, write rejected"; `siCall` sets the call error) stay in place -- this is the floor
- * beneath them, not a replacement.
+ * site, then one line per occurrence), reports it to Godot as a script error ([ScriptErrors], task
+ * 131 -- stderr alone never reaches the editor) and returns the zero of the target's return type --
+ * `0` for `Byte`/`Int`/`Long`, `MemorySegment.NULL` for pointers, nothing for `void`. The engine
+ * reads that as "not handled" / "no override" / "instantiation failed" / a NIL return, all of which
+ * it already copes with. Bespoke handlers whose return value carries meaning (task 50's property
+ * accessors report "owned, write rejected"; `siCall` sets the call error) stay in place -- this is
+ * the floor beneath them, not a replacement.
  *
  * This composes method handles only; it creates no native adapter, so the task-83 prewarm invariant
  * (no downcall shape linked after the first lifecycle upcall) is untouched.
@@ -93,5 +94,8 @@ object Upcalls {
       "[kanama] upcall $label threw: ${t::class.qualifiedName}: ${t.message}$suffix"
     )
     if (occurrence == 1) t.printStackTrace(System.err)
+    // Every occurrence also becomes a Godot script error with the Kotlin file:line (task 131):
+    // stderr is invisible from the editor's Play button. (The debugger caps errors per second.)
+    ScriptErrors.report(t, label)
   }
 }

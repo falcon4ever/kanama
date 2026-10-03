@@ -2,6 +2,7 @@ package net.multigesture.kanama.ffi
 
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.ValueLayout.ADDRESS
+import java.lang.foreign.ValueLayout.JAVA_BYTE
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 
@@ -105,6 +106,10 @@ object NativeCallSurface {
       "builtin_ptr_call" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, JAVA_INT),
       // utility-function ptr calls (GD.*)
       "utility_ptr_call" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, JAVA_INT),
+      // print_script_error_with_message -- a contained Kotlin exception reported as a Godot
+      // script error (ScriptErrors, task 131)
+      "script_error_report" to
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, ADDRESS, JAVA_INT, JAVA_BYTE),
     )
 
   /**

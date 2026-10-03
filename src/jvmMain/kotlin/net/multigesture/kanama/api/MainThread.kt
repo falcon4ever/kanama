@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.util.concurrent.ConcurrentLinkedQueue
+import net.multigesture.kanama.binding.runtime.ScriptErrors
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -75,7 +76,13 @@ actual object MainThread {
             try {
                 task()
             } catch (t: Throwable) {
-                System.err.println("[kanama:kt] MainThread task failed: ${t::class.qualifiedName}: ${t.message}")
+                // Reported like any other contained script error (task 131): stderr alone never
+                // reaches the editor.
+                ScriptErrors.report(t, "MainThread task")
+                runCatching {
+                    System.err.println("[kanama:kt] MainThread task failed: ${t.javaClass.name}: ${t.message}")
+                    t.printStackTrace(System.err)
+                }
             }
             count += 1
         }
@@ -86,7 +93,11 @@ actual object MainThread {
             try {
                 continuation.resume(Unit)
             } catch (t: Throwable) {
-                System.err.println("[kanama:kt] MainThread continuation resume failed: ${t.message}")
+                ScriptErrors.report(t, "MainThread continuation")
+                runCatching {
+                    System.err.println("[kanama:kt] MainThread continuation resume failed: ${t.javaClass.name}: ${t.message}")
+                    t.printStackTrace(System.err)
+                }
             }
         }
     }
