@@ -15,8 +15,10 @@
  * libjvm is dlopen'd at runtime (rather than linked at build time)
  * so the bootstrap library doesn't bake in an absolute path to a
  * specific Java install. An app-relative bundled `runtime/` image
- * (exported games, task 63 / issue #102) is probed first, then
- * JAVA_HOME; platform-specific fallbacks are best-effort only.
+ * (exported games, task 63 / issue #102) is probed first, then the JDK the
+ * editor plugin recorded from the `kanama/build/jdk_path` setting, then
+ * JAVA_HOME, then the newest JDK 25+ found in the usual install locations
+ * (kanama#277; the plugin's preflight mirrors exactly this lookup).
  */
 
 #if defined(__linux__) && !defined(_GNU_SOURCE)
@@ -49,6 +51,9 @@ typedef void *(WINAPI *AddDllDirectoryFn)(const wchar_t *);
 #include <dlfcn.h>
 #include <unistd.h>
 #define PATH_SEP "/"
+#endif
+#ifndef _WIN32
+#include <dirent.h>
 #endif
 #include <stdio.h>
 #include <stdint.h>
@@ -160,23 +165,7 @@ static void build_java_home_jvm_path(char *path, size_t path_size, const char *j
 #endif
 }
 
-static void print_missing_jvm_diagnostic(void) {
-#ifndef __ANDROID__
-    const char *java_home = getenv("JAVA_HOME");
-    fprintf(stderr, "[kanama] error: libjvm not found. Kanama desktop runtime requires a JDK 25+ install.\n");
-    fprintf(stderr, "[kanama] no bundled runtime%s%s found next to the Kanama bootstrap library.\n",
-            PATH_SEP, jvm_relative_lib_path());
-    if (java_home && *java_home) {
-        char expected[1024];
-        build_java_home_jvm_path(expected, sizeof expected, java_home);
-        fprintf(stderr, "[kanama] checked JAVA_HOME=%s but did not find %s\n", java_home, expected);
-    } else {
-        fprintf(stderr, "[kanama] JAVA_HOME is not set. Set it to a JDK 25+ home directory.\n");
-    }
-    fprintf(stderr, "[kanama] expected libjvm relative path: %s\n", jvm_relative_lib_path());
-    fprintf(stderr, "[kanama] install hint: use Temurin 25+ or another JDK 25+ build that includes libjvm.\n");
-#endif
-}
+static char *trim_ascii(char *s);
 
 /* Directory containing this bootstrap library. Anchor on the library, not
  * the executable: kanama.gdextension already anchors everything on it, and
@@ -273,55 +262,449 @@ static const char *find_bundled_runtime_jvm(void) {
     return NULL;
 }
 
+#ifndef __ANDROID__
+/* ------------------------------------------------------------------ */
+/* JDK lookup (kanama#277)                                            */
+/* ------------------------------------------------------------------ */
+/*
+ * With no bundled runtime, the JVM comes from, in order:
+ *   1. the JDK in <project>/.godot/kanama_jdk_home, which the editor plugin writes
+ *      from the explicit `kanama/build/jdk_path` editor setting (and deletes when
+ *      the setting is empty or invalid);
+ *   2. JAVA_HOME;
+ *   3. the best JDK in the install locations below.
+ * A candidate counts when its `release` file says JAVA_VERSION >= 25 and its
+ * libjvm exists. Among install-location candidates: GA before EA, then exactly 25
+ * before newer majors, then the newer version, then the smaller path. The plugin
+ * (addons/kanama_tools/plugin.gd) implements the same lookup for its preflight,
+ * and scripts/check_jdk_locations_parity.py holds the two location tables equal.
+ *
+ * KANAMA_JDK_SEARCH_DIRS (path-list of directories whose children are JDK homes)
+ * replaces the built-in location table; it exists so tests can lay out fake JDKs.
+ */
+#define KANAMA_MIN_JDK_MAJOR 25
+#define JDK_PATH_MAX 1100
+#define JDK_REJECTED_MAX 8
+
+typedef struct {
+    int parts[8];
+    int count;
+    int ea;
+} JdkVersion;
+
+typedef struct {
+    int found;
+    JdkVersion version;
+    char home[JDK_PATH_MAX];
+    char libjvm[JDK_PATH_MAX];
+} JdkBest;
+
+typedef struct {
+    const char *os;      /* "linux" | "macos" | "windows" | "all" */
+    const char *parent;  /* "~" = home dir, "$ProgramFiles" = %ProgramFiles% */
+    const char *suffix;  /* below each child, e.g. Contents/Home */
+    const char *prefix;  /* only children whose name starts with this */
+} JdkLocation;
+
+/* KANAMA_JDK_LOCATIONS_BEGIN (same table, same order, in plugin.gd) */
+static const JdkLocation k_jdk_locations[] = {
+    {"linux", "/usr/lib/jvm", "", ""},
+    {"linux", "/usr/lib64/jvm", "", ""},
+    {"linux", "/usr/java", "", ""},
+    {"linux", "/usr/local/java", "", ""},
+    {"linux", "/opt/java", "", ""},
+    {"linux", "/opt/jdk", "", ""},
+    {"macos", "/Library/Java/JavaVirtualMachines", "Contents/Home", ""},
+    {"macos", "~/Library/Java/JavaVirtualMachines", "Contents/Home", ""},
+    {"macos", "/opt/homebrew/opt", "libexec/openjdk.jdk/Contents/Home", "openjdk"},
+    {"macos", "/usr/local/opt", "libexec/openjdk.jdk/Contents/Home", "openjdk"},
+    {"windows", "$ProgramFiles/Java", "", ""},
+    {"windows", "$ProgramFiles/Eclipse Adoptium", "", ""},
+    {"windows", "$ProgramFiles/Microsoft", "", ""},
+    {"windows", "$ProgramFiles/Zulu", "", ""},
+    {"windows", "$ProgramFiles/BellSoft", "", ""},
+    {"windows", "$ProgramFiles/Amazon Corretto", "", ""},
+    {"windows", "$ProgramFiles/Semeru", "", ""},
+    {"windows", "$ProgramFiles/Temurin", "", ""},
+    {"windows", "~/scoop/apps", "current", ""},
+    {"all", "~/.jdks", "", ""},
+    {"all", "~/.sdkman/candidates/java", "", ""},
+};
+/* KANAMA_JDK_LOCATIONS_END */
+
+static const char *jdk_host_os(void) {
+#ifdef _WIN32
+    return "windows";
+#elif defined(__APPLE__)
+    return "macos";
+#else
+    return "linux";
+#endif
+}
+
+static char g_jdk_rejected[JDK_REJECTED_MAX][JDK_PATH_MAX + 32];
+static int g_jdk_rejected_count = 0;
+static const char *g_jvm_source = "";
+static char g_jvm_path[JDK_PATH_MAX];
+
+static void jdk_note_rejected(const char *home, const char *why) {
+    if (g_jdk_rejected_count < JDK_REJECTED_MAX) {
+        snprintf(g_jdk_rejected[g_jdk_rejected_count], sizeof g_jdk_rejected[0], "%s (%s)", home, why);
+        g_jdk_rejected_count++;
+    }
+}
+
+/* "25.0.4.1" -> {25,0,4,1}; "26-ea" -> {26}, ea; "1.8.0_302" -> {8,0,302}. */
+static void jdk_parse_version(const char *text, JdkVersion *out) {
+    memset(out, 0, sizeof *out);
+    out->ea = strstr(text, "-ea") != NULL;
+    int digits = 0;
+    int have_digits = 0;
+    for (const char *c = text; *c; c++) {
+        if (*c >= '0' && *c <= '9') {
+            digits = digits * 10 + (*c - '0');
+            have_digits = 1;
+            continue;
+        }
+        if (have_digits) {
+            if (out->count < 8) {
+                out->parts[out->count++] = digits;
+            }
+            digits = 0;
+            have_digits = 0;
+        }
+        if (*c != '.' && *c != '_' && *c != '+') {
+            break;
+        }
+    }
+    if (have_digits && out->count < 8) {
+        out->parts[out->count++] = digits;
+    }
+    if (out->count >= 2 && out->parts[0] == 1) {
+        for (int i = 1; i < out->count; i++) {
+            out->parts[i - 1] = out->parts[i];
+        }
+        out->count--;
+    }
+}
+
+static int jdk_compare_parts(const JdkVersion *a, const JdkVersion *b) {
+    int count = a->count > b->count ? a->count : b->count;
+    for (int i = 0; i < count; i++) {
+        int left = i < a->count ? a->parts[i] : 0;
+        int right = i < b->count ? b->parts[i] : 0;
+        if (left != right) {
+            return left > right ? 1 : -1;
+        }
+    }
+    return 0;
+}
+
+/* Reads <home>/release's JAVA_VERSION. 0 on success. */
+static int jdk_read_version(const char *home, JdkVersion *out) {
+    char release_path[JDK_PATH_MAX + 16];
+    snprintf(release_path, sizeof release_path, "%s%srelease", home, PATH_SEP);
+    FILE *file = fopen(release_path, "r");
+    if (!file) {
+        return -1;
+    }
+    char line[512];
+    char version[128];
+    version[0] = '\0';
+    while (fgets(line, sizeof line, file)) {
+        if (strncmp(line, "JAVA_VERSION=", 13) == 0) {
+            char *value = trim_ascii(line + 13);
+            size_t len = strlen(value);
+            if (len >= 2 && value[0] == '"' && value[len - 1] == '"') {
+                value[len - 1] = '\0';
+                value++;
+            }
+            snprintf(version, sizeof version, "%s", value);
+            break;
+        }
+    }
+    fclose(file);
+    jdk_parse_version(version, out);
+    return out->count > 0 ? 0 : -1;
+}
+
+/* A home is usable when its release says JDK >= 25 and its libjvm exists. */
+static int jdk_usable(const char *home, JdkVersion *version, char *libjvm, size_t libjvm_size) {
+    if (jdk_read_version(home, version) != 0) {
+        jdk_note_rejected(home, "no readable release file");
+        return 0;
+    }
+    if (version->parts[0] < KANAMA_MIN_JDK_MAJOR) {
+        char why[48];
+        snprintf(why, sizeof why, "JDK %d, need %d+", version->parts[0], KANAMA_MIN_JDK_MAJOR);
+        jdk_note_rejected(home, why);
+        return 0;
+    }
+    build_java_home_jvm_path(libjvm, libjvm_size, home);
+    if (access(libjvm, F_OK) != 0) {
+        jdk_note_rejected(home, "no libjvm");
+        return 0;
+    }
+    return 1;
+}
+
+static int jdk_better(const JdkVersion *a, const char *a_home, const JdkVersion *b, const char *b_home) {
+    if (a->ea != b->ea) {
+        return !a->ea;
+    }
+    int a_exact = a->parts[0] == KANAMA_MIN_JDK_MAJOR;
+    int b_exact = b->parts[0] == KANAMA_MIN_JDK_MAJOR;
+    if (a_exact != b_exact) {
+        return a_exact;
+    }
+    int cmp = jdk_compare_parts(a, b);
+    if (cmp != 0) {
+        return cmp > 0;
+    }
+    return strcmp(a_home, b_home) < 0;
+}
+
+static void jdk_consider(const char *home, JdkBest *best) {
+    JdkVersion version;
+    char libjvm[JDK_PATH_MAX];
+    if (!jdk_usable(home, &version, libjvm, sizeof libjvm)) {
+        return;
+    }
+    if (!best->found || jdk_better(&version, home, &best->version, best->home)) {
+        best->found = 1;
+        best->version = version;
+        snprintf(best->home, sizeof best->home, "%s", home);
+        snprintf(best->libjvm, sizeof best->libjvm, "%s", libjvm);
+    }
+}
+
+static void jdk_normalize_separators(char *path) {
+#ifdef _WIN32
+    for (char *c = path; *c; c++) {
+        if (*c == '/') {
+            *c = '\\';
+        }
+    }
+#else
+    (void)path;
+#endif
+}
+
+static const char *jdk_user_home(void) {
+#ifdef _WIN32
+    return getenv("USERPROFILE");
+#else
+    return getenv("HOME");
+#endif
+}
+
+/* Expands a table parent ("~/x", "$ProgramFiles/x", "/abs") into out. 0 on success. */
+static int jdk_expand_parent(const char *parent, char *out, size_t out_size) {
+    int n;
+    if (parent[0] == '~' && (parent[1] == '/' || parent[1] == '\0')) {
+        const char *home = jdk_user_home();
+        if (!home || !*home) {
+            return -1;
+        }
+        n = snprintf(out, out_size, "%s%s", home, parent + 1);
+    } else if (strncmp(parent, "$ProgramFiles", 13) == 0) {
+        const char *pf = getenv("ProgramFiles");
+        n = snprintf(out, out_size, "%s%s", (pf && *pf) ? pf : "C:\\Program Files", parent + 13);
+    } else {
+        n = snprintf(out, out_size, "%s", parent);
+    }
+    if (n < 0 || (size_t)n >= out_size) {
+        return -1;
+    }
+    jdk_normalize_separators(out);
+    return 0;
+}
+
+/* Considers every child of `parent` (name filtered by `prefix`) as a JDK home. */
+static void jdk_scan_parent(const char *parent, const char *prefix, const char *suffix, JdkBest *best) {
+    char suffix_native[128];
+    snprintf(suffix_native, sizeof suffix_native, "%s", suffix);
+    jdk_normalize_separators(suffix_native);
+    size_t prefix_len = strlen(prefix);
+    char home[JDK_PATH_MAX];
+#ifdef _WIN32
+    char pattern[JDK_PATH_MAX];
+    snprintf(pattern, sizeof pattern, "%s\\*", parent);
+    WIN32_FIND_DATAA entry;
+    HANDLE find = FindFirstFileA(pattern, &entry);
+    if (find == INVALID_HANDLE_VALUE) {
+        return;
+    }
+    do {
+        const char *name = entry.cFileName;
+#else
+    DIR *dir = opendir(parent);
+    if (!dir) {
+        return;
+    }
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+        const char *name = entry->d_name;
+#endif
+        if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) {
+            continue;
+        }
+        if (prefix_len > 0 && strncmp(name, prefix, prefix_len) != 0) {
+            continue;
+        }
+        int n = suffix_native[0]
+            ? snprintf(home, sizeof home, "%s%s%s%s%s", parent, PATH_SEP, name, PATH_SEP, suffix_native)
+            : snprintf(home, sizeof home, "%s%s%s", parent, PATH_SEP, name);
+        if (n < 0 || (size_t)n >= sizeof home) {
+            continue;
+        }
+        jdk_consider(home, best);
+#ifdef _WIN32
+    } while (FindNextFileA(find, &entry));
+    FindClose(find);
+#else
+    }
+    closedir(dir);
+#endif
+}
+
+static void jdk_scan_install_locations(JdkBest *best) {
+    const char *override = getenv("KANAMA_JDK_SEARCH_DIRS");
+    if (override && *override) {
+#ifdef _WIN32
+        const char list_sep = ';';
+#else
+        const char list_sep = ':';
+#endif
+        char copy[2048];
+        snprintf(copy, sizeof copy, "%s", override);
+        char *start = copy;
+        while (start && *start) {
+            char *end = strchr(start, list_sep);
+            if (end) {
+                *end = '\0';
+            }
+            if (*start) {
+                jdk_scan_parent(start, "", "", best);
+            }
+            start = end ? end + 1 : NULL;
+        }
+        return;
+    }
+    const char *host = jdk_host_os();
+    for (size_t i = 0; i < sizeof k_jdk_locations / sizeof k_jdk_locations[0]; i++) {
+        const JdkLocation *loc = &k_jdk_locations[i];
+        if (strcmp(loc->os, "all") != 0 && strcmp(loc->os, host) != 0) {
+            continue;
+        }
+        char parent[JDK_PATH_MAX];
+        if (jdk_expand_parent(loc->parent, parent, sizeof parent) != 0) {
+            continue;
+        }
+        jdk_scan_parent(parent, loc->prefix, loc->suffix, best);
+    }
+}
+
+/* <project>/.godot/kanama_jdk_home, or -1. The project is the first of the library's
+ * directory and its two parents that holds a project.godot (addons/kanama is two below). */
+static int jdk_read_plugin_hint(char *out, size_t out_size) {
+    char dir[1024];
+    if (find_self_library_dir(dir, sizeof dir) != 0) {
+        return -1;
+    }
+    for (int depth = 0; depth < 3; depth++) {
+        char probe[1100];
+        snprintf(probe, sizeof probe, "%s%sproject.godot", dir, PATH_SEP);
+        if (access(probe, F_OK) == 0) {
+            snprintf(probe, sizeof probe, "%s%s.godot%skanama_jdk_home", dir, PATH_SEP, PATH_SEP);
+            FILE *file = fopen(probe, "r");
+            if (!file) {
+                return -1;
+            }
+            char line[JDK_PATH_MAX];
+            char *got = fgets(line, sizeof line, file);
+            fclose(file);
+            if (!got) {
+                return -1;
+            }
+            char *value = trim_ascii(line);
+            if (!*value) {
+                return -1;
+            }
+            snprintf(out, out_size, "%s", value);
+            return 0;
+        }
+        char before[1024];
+        snprintf(before, sizeof before, "%s", dir);
+        path_parent_in_place(dir);
+        if (strcmp(dir, before) == 0 || dir[0] == '\0') {
+            break;
+        }
+    }
+    return -1;
+}
+
+static int jdk_try_home(const char *home, const char *source) {
+    JdkVersion version;
+    if (!jdk_usable(home, &version, g_jvm_path, sizeof g_jvm_path)) {
+        return 0;
+    }
+    g_jvm_source = source;
+    return 1;
+}
+#endif /* !__ANDROID__ */
+
+static void print_missing_jvm_diagnostic(void) {
+#ifndef __ANDROID__
+    const char *java_home = getenv("JAVA_HOME");
+    fprintf(stderr, "[kanama] error: libjvm not found. Kanama desktop runtime requires a JDK 25+ install.\n");
+    fprintf(stderr, "[kanama] no bundled runtime%s%s found next to the Kanama bootstrap library.\n",
+            PATH_SEP, jvm_relative_lib_path());
+    if (java_home && *java_home) {
+        char expected[1024];
+        build_java_home_jvm_path(expected, sizeof expected, java_home);
+        fprintf(stderr, "[kanama] checked JAVA_HOME=%s but it is not a usable JDK 25+ (looked for %s)\n", java_home, expected);
+    } else {
+        fprintf(stderr, "[kanama] JAVA_HOME is not set (a Godot started from a desktop launcher does not inherit your shell's JAVA_HOME).\n");
+    }
+    for (int i = 0; i < g_jdk_rejected_count; i++) {
+        fprintf(stderr, "[kanama] skipped %s\n", g_jdk_rejected[i]);
+    }
+    fprintf(stderr, "[kanama] also searched the install locations (/usr/lib/jvm, /Library/Java/JavaVirtualMachines, Program Files, ~/.jdks, ~/.sdkman) for a JDK 25+ and found none.\n");
+    fprintf(stderr, "[kanama] fix: set JAVA_HOME to a JDK 25+ home directory, or set the 'kanama/build/jdk_path' editor setting and restart the editor.\n");
+    fprintf(stderr, "[kanama] expected libjvm relative path: %s\n", jvm_relative_lib_path());
+    fprintf(stderr, "[kanama] install hint: use Temurin 25+ or another JDK 25+ build that includes libjvm.\n");
+#endif
+}
+
 static const char *find_jvm_lib(void) {
-    static char path[1024];
     const char *bundled = find_bundled_runtime_jvm();
     if (bundled) {
         fprintf(stderr, "[kanama] bundled runtime: %s\n", bundled);
         return bundled;
     }
-    const char *java_home = getenv("JAVA_HOME");
-    if (java_home && *java_home) {
-        build_java_home_jvm_path(path, sizeof path, java_home);
-        if (access(path, F_OK) == 0) {
-            return path;
-        }
-    }
-
-#ifdef _WIN32
-    static const char *fallback_paths[] = {
-        "C:\\Program Files\\Eclipse Adoptium\\jdk-25\\bin\\server\\jvm.dll",
-    };
-#elif defined(__APPLE__)
-    static const char *fallback_paths[] = {
-        "/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home/lib/server/libjvm.dylib",
-    };
-#elif defined(__aarch64__)
-    static const char *fallback_paths[] = {
-        "/usr/lib/jvm/temurin-25-jdk-arm64/lib/server/libjvm.so",
-        "/usr/lib/jvm/temurin-25-jdk/lib/server/libjvm.so",
-        "/usr/lib/jvm/java-25-openjdk-arm64/lib/server/libjvm.so",
-        "/usr/lib/jvm/java-25-openjdk/lib/server/libjvm.so",
-    };
-#elif defined(__x86_64__)
-    static const char *fallback_paths[] = {
-        "/usr/lib/jvm/temurin-25-jdk-amd64/lib/server/libjvm.so",
-        "/usr/lib/jvm/temurin-25-jdk/lib/server/libjvm.so",
-        "/usr/lib/jvm/java-25-openjdk-amd64/lib/server/libjvm.so",
-        "/usr/lib/jvm/java-25-openjdk/lib/server/libjvm.so",
-    };
+#ifdef __ANDROID__
+    return NULL;
 #else
-    static const char *fallback_paths[] = {
-        "/usr/lib/jvm/temurin-25-jdk/lib/server/libjvm.so",
-        "/usr/lib/jvm/java-25-openjdk/lib/server/libjvm.so",
-    };
-#endif
-    for (size_t i = 0; i < sizeof(fallback_paths) / sizeof(fallback_paths[0]); i++) {
-        if (access(fallback_paths[i], F_OK) == 0) {
-            return fallback_paths[i];
-        }
+    g_jdk_rejected_count = 0;
+    char hint[JDK_PATH_MAX];
+    if (jdk_read_plugin_hint(hint, sizeof hint) == 0 && jdk_try_home(hint, "the kanama/build/jdk_path editor setting")) {
+        return g_jvm_path;
+    }
+    const char *java_home = getenv("JAVA_HOME");
+    if (java_home && *java_home && jdk_try_home(java_home, "JAVA_HOME")) {
+        return g_jvm_path;
+    }
+    JdkBest best;
+    memset(&best, 0, sizeof best);
+    jdk_scan_install_locations(&best);
+    if (best.found) {
+        snprintf(g_jvm_path, sizeof g_jvm_path, "%s", best.libjvm);
+        g_jvm_source = "the newest JDK 25+ in the install locations (exactly 25 preferred, GA over EA)";
+        return g_jvm_path;
     }
     return NULL;
+#endif
 }
 
 /* Find kanama.jar next to our own native library or in the addon root.
@@ -591,6 +974,9 @@ static int start_jvm(const char *jar_path) {
         return -1;
     }
     fprintf(stderr, "[kanama] using libjvm: %s\n", jvm_lib);
+    if (g_jvm_source[0] != '\0') {
+        fprintf(stderr, "[kanama] libjvm chosen from %s\n", g_jvm_source);
+    }
 
 #ifdef _WIN32
     HMODULE handle = win_load_jvm_library(jvm_lib);

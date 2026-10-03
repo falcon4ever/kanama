@@ -7,25 +7,37 @@ versioning once public releases begin.
 
 ## Unreleased
 
-### Fixed — editor Build Scripts finds the right JDK on Linux and Windows (#277)
+### Fixed — Kanama finds the right JDK on Linux and Windows desktop launchers (#277)
 
 - **Build Scripts no longer builds against a stray system JDK.** Godot started from a desktop launcher
   does not inherit the shell's `JAVA_HOME`, so on Linux the build ran on the system default JDK and
   died compiling `bootstrap.c` with `'JNI_VERSION_21' undeclared`. The Kanama Tools plugin now picks
-  the JDK itself: the new project setting `kanama/build/jdk_path`, else `JAVA_HOME`, else the newest
-  JDK 25+ in the usual install locations (`/usr/lib/jvm`, `/Library/Java/JavaVirtualMachines`,
-  `C:\Program Files\{Java,Eclipse Adoptium,...}`, `~/.jdks`, `~/.sdkman`), runs Gradle with that
-  `JAVA_HOME`, prints which JDK it used, and stops with an error naming `kanama/build/jdk_path` when
-  none is 25+. The editor's "libjvm not found" preflight uses the same lookup, so it no longer warns
-  on a launcher start without `JAVA_HOME` when a JDK 25+ is installed. See [The Editor Loop](docs/getting-started/editor-workflow.md#which-jdk-build-scripts-uses).
+  the JDK itself: the new editor setting `kanama/build/jdk_path` (Editor Settings, per machine), else
+  `JAVA_HOME`, else the best JDK 25+ in the usual install locations (GA before EA, exactly 25 before
+  newer, read from each JDK's `release` file), runs Gradle with that `JAVA_HOME`, prints which JDK it
+  used, and stops with an error naming the setting when none qualifies.
+- **The native runtime finds the same JDK.** `bootstrap.c` only knew a bundled runtime, `JAVA_HOME` and a
+  few fixed `*-25-*` paths, so with only a JDK 26 installed and no `JAVA_HOME` the extension logged
+  "libjvm not found". It now follows the same order (bundled runtime, the plugin-recorded
+  `kanama/build/jdk_path`, `JAVA_HOME`, the install locations) and the editor's startup preflight
+  mirrors it, so the warning appears exactly when the runtime would fail. The two location tables are
+  held equal by `scripts/check_jdk_locations_parity.py`, and `scripts/check_jdk_lookup_parity.sh` runs
+  both against fake JDK layouts. **Behaviour change:** a `JAVA_HOME` that points at a JDK older than 25
+  is now skipped for the install-location search instead of being loaded and failing later.
+- **JDK 26-only machines can build.** The build pins `jvmToolchain(25)`; the root and release-kit
+  `settings.gradle.kts` now apply the foojay toolchain resolver, so a missing JDK 25 is downloaded once
+  into `~/.gradle/jdks`. Any JDK 25+ can run Gradle and Godot.
 - **The native bootstrap's CMake checks the JDK header on every OS.** Only macOS verified that `jni.h`
   has `JNI_VERSION_21`; Linux and Windows took whatever `find_package(JNI)` found. One resolution now
-  serves all three (`-DKANAMA_JAVA_HOME`, which Gradle passes as its JDK 25 toolchain, then
-  `JAVA_HOME`, then macOS `java_home -v 25`, then `find_package(JNI)`), followed by the same check and
-  the same message naming the JDK and how to fix it. `scripts/check_bootstrap_jdk_resolution.sh`
-  (a `local_ci.sh` stage, so the Linux CI job runs it on the Linux include path) configures against
-  stale and good fake JDKs; `tool_smoke.sh` runs `scripts/check_editor_jdk_resolution.gd` against the
-  plugin and now also fails if the two copies of `plugin.gd` drift.
+  serves all three (`-DKANAMA_JAVA_HOME`, which Gradle passes as its JDK 25 toolchain, then `JAVA_HOME`,
+  then macOS `java_home -v 25`, then `find_package(JNI)`), followed by the same check and the same
+  message naming the JDK and how to fix it. `-DKANAMA_JAVA_HOME` is no longer remembered in
+  `CMakeCache.txt`, so a later configure without it re-reads `JAVA_HOME`.
+  `scripts/check_bootstrap_jdk_resolution.sh` (a `local_ci.sh` stage, so the Linux CI job runs it on the
+  Linux include path) configures against stale and good fake JDKs, including the `find_package(JNI)`
+  fallback with no `JAVA_HOME`. See [The Editor Loop](docs/getting-started/editor-workflow.md#which-jdk-kanama-uses).
+- `tool_smoke.sh` runs `scripts/check_editor_jdk_resolution.gd` against the plugin and now also fails
+  if the two copies of `plugin.gd` drift.
 
 ### Fixed — Kotlin exceptions reach Godot's error log; lambda connections no longer leak (task 131)
 
