@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -44,7 +45,7 @@ internal class WebScopeOwner(val ownerHandle: Int) :
 class KanamaScope(private val ownerHandle: Int = WebFrameScheduler.currentOwnerOrZero()) :
   CoroutineScope {
   private val job = SupervisorJob()
-  override val coroutineContext =
+  override val coroutineContext: CoroutineContext =
     WebFrameCoroutineDispatcher + job + WebScopeOwner(ownerHandle)
 
   fun cancel() {
@@ -80,5 +81,5 @@ object MainThread {
    * extension, so a shared demo file that imports only `MainThread` resolves it as on desktop
    * (task 64, tps-demo parcel 7).
    */
-  fun postNextFrame(block: () -> Unit) = post(block)
+  fun postNextFrame(block: () -> Unit): Unit = post(block)
 }

@@ -22,7 +22,7 @@ class OwnedScriptResource<out T> @PublishedApi internal constructor(
     /** The owning `Resource`. Save it, assign it into a slot, or [close] this handle to release. */
     val resource: Resource,
 ) : AutoCloseable {
-    override fun close() = resource.close()
+    override fun close(): Unit = resource.close()
 }
 
 /**
