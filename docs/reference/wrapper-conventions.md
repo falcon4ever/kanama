@@ -16,7 +16,9 @@ source (`src/commonMain/kotlin/net/multigesture/kanama/api`). The Web backend ha
 surface; [Platform parity](#13-platform-parity) lists where it follows the same rules and where
 it differs. Not covered here: the [annotations](../game-dev/scripts.md) you write scripts with,
 the builtin value types' own methods (`Vector3.lerp`, `Basis.inverse`), and `@Tool` /
-editor-only APIs.
+editor-only APIs. The signature gate reaches further than these rules: it also holds the value
+types, each platform's own classes and the Web facades to a snapshot (see
+[Source breaks](#source-breaks)).
 
 | Area | Current rule | Planned |
 |---|---|---|
@@ -378,23 +380,42 @@ and how to migrate, and that entry carries a line starting exactly with
 ```
 
 **The gate.** `scripts/check_public_signature_changes.py` (a `local_ci.sh` stage) compares the
-public surface with a checked-in snapshot, one line per declaration:
+public surface with checked-in snapshots, one line per declaration:
 
 - [`public-api-signatures-common.txt`](generated/public-api-signatures-common.txt): the shared
   native tree (generated classes, `GlobalEnums.kt`, the hand roots `GodotObject`, `RefCounted`,
   `GodotCallable`, `GodotHandle`, and the `expect` declarations in that directory);
-- [`public-api-signatures-web.txt`](generated/public-api-signatures-web.txt): the generated Web
-  surface.
+- [`public-api-signatures-types.txt`](generated/public-api-signatures-types.txt): the builtin
+  value types (`Vector3`, `Color`, `Basis`, ...), which task 134 will change;
+- [`public-api-signatures-jvm.txt`](generated/public-api-signatures-jvm.txt) and
+  [`public-api-signatures-ios.txt`](generated/public-api-signatures-ios.txt): what each native
+  platform declares on its own (the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt`
+  companions, the `actual`s, `GD`, and on desktop the name constants);
+- [`public-api-signatures-web.txt`](generated/public-api-signatures-web.txt): the Web surface,
+  generated wrappers and the hand-written facades beside them.
 
 A line records the owner, kind, name, receiver, type parameters, parameter names and types,
 whether each parameter has a default (not the default's value), the return or property type,
 supertypes and source modifiers; annotations, constant values and bodies are not part of it.
-`private` and `internal` declarations are skipped. A declaration whose type is not written out
-(an expression body such as `fun quit() = active().quit()`) is recorded as `<inferred>`, so a
-change of that inferred type is not seen. Generated members always write their types; today the
-`<inferred>` lines are the `SceneTree` companion shortcuts (a hand-written generator section) and
-the Web import-compatibility extensions, which forward to a member whose type is recorded. The snapshot is
-read from the Kotlin sources, not from a build, and takes a couple of seconds.
+`private` and `internal` declarations are skipped. The snapshot is read from the Kotlin sources,
+not from a build, and takes a couple of seconds.
+
+A declaration whose type is not written out (an expression body such as `fun seed(value: Long) =
+...`) is recorded as `<inferred>`, so a change of that inferred type is not seen, unless the type is
+certain from the source: `= Unit`, a literal, a companion constant built with its own class's
+constructor (`val ZERO = Vector3(...)`), or a Web import-compatibility extension that forwards to
+the same-named member, whose type the gate takes over. Generated code writes every other type
+out. Each run prints how many `<inferred>` lines remain; today they are all in hand-written
+platform files, not covered for their return type:
+
+| Snapshot | Declarations |
+|---|---|
+| `jvm` | `GD.print`, `printErr`, `printRaw`, `printRich`, `printS`, `printVerbose`, `pushError`, `pushWarning`, `randomize`, `seed`; `Engine.setMaxFps`; `OwnedScriptResource.close` |
+| `ios` | `GD.print`, `printErr`, `printRaw`, `printRich`, `printS`, `printT`, `printVerbose`, `pushError`, `pushWarning` |
+| `web` | `KanamaScope.coroutineContext`, `MainThread.postNextFrame` |
+
+Writing their types out moves them under the gate; a line that changes from `<inferred>` to a
+written type is not a break and needs only `--write`.
 
 The gate compares lines, so it also stops changes that still compile, such as a return that
 becomes non-null or a parameter that becomes nullable: those are announced the same way.
