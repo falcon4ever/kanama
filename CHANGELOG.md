@@ -70,9 +70,12 @@ Desktop, Android, iOS and Web.
 - **Autoloads:** the node is resolved once on the main thread and kept while alive (an instance-id
   check per read); a worker thread can read an autoload the main thread has resolved, and one it
   has not throws, naming the thread rule (before, every read queried the scene tree, which fails
-  off the main thread). A desktop hot reload re-creates the Kotlin script objects of the autoloads
-  from the new build and runs their `_ready` again (exported values are kept, other fields start
-  over, as after a scene reload); the "throws until restart" limit is gone. Feature-tag keys
+  off the main thread). A desktop hot reload resets each Kotlin autoload in place (the same node, so
+  `Autoloads`, GDScript's global name and held references keep working): the lambda connections it
+  made are disconnected, runtime-created children are freed, each Kotlin node gets a new script
+  object from the new build, a stored property keeps its value only when its type is unchanged
+  (else the new default or the autoload scene's value), and `_ready` runs again, children first;
+  the "throws until restart" limit is gone. Feature-tag keys
   (`Music.android=...`) are skipped with a warning, `uid://` autoload paths are resolved through
   the `.uid` sidecar or scene header, and a one-line `class_name Foo extends Node2D` is read.
 - **KSP inputs:** every build that runs KSP on scripts, and the consumer Gradle template, declares

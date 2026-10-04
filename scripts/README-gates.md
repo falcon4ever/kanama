@@ -162,20 +162,21 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/generate_gates_index.py:376` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_gates_index.py:420` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:438` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
-| `scripts/hot_reload_in_process_smoke.sh:18` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/hot_reload_in_process_smoke.sh:35` | `if [[ -n "$GODOT_PID" ]] && kill -0 "$GODOT_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/hot_reload_in_process_smoke.sh:37` | `kill "$GODOT_PID" 2>/dev/null \|\| true` | justified: cleanup of our own child after the verdict; it may already be gone. |
-| `scripts/hot_reload_in_process_smoke.sh:39` | `wait "$GODOT_PID" 2>/dev/null \|\| true` | justified: cleanup of our own child after the verdict; it may already be gone. |
-| `scripts/hot_reload_in_process_smoke.sh:44` | `if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
-| `scripts/hot_reload_in_process_smoke.sh:67` | `tail -n 160 "$LOG_FILE" >&2 2>/dev/null \|\| true` | justified: diagnostics only; the next lines print the reason and exit 1 either way. |
-| `scripts/hot_reload_in_process_smoke.sh:83` | `if [[ -n "$GODOT_PID" ]] && ! kill -0 "$GODOT_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/hot_reload_in_process_smoke.sh:108` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/hot_reload_in_process_smoke.sh:121` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/hot_reload_in_process_smoke.sh:136` | `autoload_rows="$(grep -c "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wr` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
+| `scripts/hot_reload_in_process_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/hot_reload_in_process_smoke.sh:39` | `if [[ -n "$GODOT_PID" ]] && kill -0 "$GODOT_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/hot_reload_in_process_smoke.sh:41` | `kill "$GODOT_PID" 2>/dev/null \|\| true` | justified: cleanup of our own child after the verdict; it may already be gone. |
+| `scripts/hot_reload_in_process_smoke.sh:43` | `wait "$GODOT_PID" 2>/dev/null \|\| true` | justified: cleanup of our own child after the verdict; it may already be gone. |
+| `scripts/hot_reload_in_process_smoke.sh:49` | `if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
+| `scripts/hot_reload_in_process_smoke.sh:72` | `tail -n 160 "$LOG_FILE" >&2 2>/dev/null \|\| true` | justified: diagnostics only; the next lines print the reason and exit 1 either way. |
+| `scripts/hot_reload_in_process_smoke.sh:88` | `if [[ -n "$GODOT_PID" ]] && ! kill -0 "$GODOT_PID" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/hot_reload_in_process_smoke.sh:113` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/hot_reload_in_process_smoke.sh:129` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/hot_reload_in_process_smoke.sh:144` | `autoload_rows="$(grep -c "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wr` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
+| `scripts/hot_reload_in_process_smoke.sh:156` | `handler_rows="$(grep -c "scene autoload handler build=$build" "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict. |
 | `scripts/hot_reload_smoke.sh:19` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/hot_reload_smoke.sh:39` | `if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
-| `scripts/hot_reload_smoke.sh:110` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/hot_reload_smoke.sh:116` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/hot_reload_smoke.sh:111` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/hot_reload_smoke.sh:117` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/ios_device_gate.sh:305` | `"$bundle_id" >/dev/null 2>&1 \|\| true` | justified: the bundle is usually not installed; the next install and launch are the checks |
 | `scripts/ios_device_gate.sh:393` | `git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 \|\| rm -rf "$root"` | justified: a throwaway worktree; if git cannot remove it the directory is deleted instead. |
 | `scripts/ios_device_gate.sh:397` | `git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 \|\| true` | justified: housekeeping of throwaway worktrees; a stale registration is cleared again before the next build phase. |
@@ -218,7 +219,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:27` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:465` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:472` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/tool_smoke.sh:18` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:25` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |

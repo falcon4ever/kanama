@@ -18,6 +18,7 @@ config/features=PackedStringArray("4.7")
 
 KanamaSmokeAutoload="*res://KanamaSmokeAutoload.gd"
 KanamaKotlinAutoload="*res://KanamaKotlinAutoload.kt"
+KanamaSceneAutoload="*res://kanama_scene_autoload.tscn"
 
 [editor_plugins]
 

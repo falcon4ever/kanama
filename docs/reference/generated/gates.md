@@ -90,7 +90,7 @@ In `scripts/local_ci.sh` order. "What it proves" is the first sentence of the sc
 | 72 | `runtime smoke: <godot>` | Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers. | PR + push to main (ci.yml `local-ci`); local | `scripts/runtime_smoke.sh` | 2026-05-20 |
 | 73 | `@Tool smoke: <godot>` | A `@Tool` script executes inside the headless editor process and its expected log patterns appear. | PR + push to main (ci.yml `local-ci`); local | `scripts/tool_smoke.sh` | 2026-05-20 |
 | 74 | `JDK lookup parity, bootstrap.c vs plugin: <godot>` | The runtime (bootstrap.c) and the editor plugin pick the same JDK from the same layout (kanama#277). | PR + push to main (ci.yml `local-ci`); local | `scripts/check_jdk_lookup_parity.sh` | 2026-10-02 |
-| 75 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
+| 75 | `hot reload smoke: <godot>` | Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound, autoloads)` marker appears. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_smoke.sh` | 2026-05-20 |
 | 76 | `in-process hot reload smoke: <godot>` | One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart. | PR + push to main (ci.yml `local-ci`); local | `scripts/hot_reload_in_process_smoke.sh` | 2026-05-20 |
 
 ## CI workflow jobs

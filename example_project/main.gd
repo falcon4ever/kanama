@@ -731,7 +731,21 @@ func _process(_delta: float) -> void:
 	call_deferred("_kanama_hot_reload_smoke_reload_scene")
 
 func _kanama_hot_reload_smoke_ready() -> void:
+	_kanama_scene_autoload_probe()
 	print("[kanama:gd] in-process hot reload smoke ready")
+
+# task 133 C2 -- the Kotlin scene autoload across an in-process hot reload, read through its
+# GDScript global name (the node, and so the global, must survive the reload). Before the reload
+# the runtime values are changed; after it, `level` (same type) keeps 9, `mood` (Long -> String
+# between the builds) gets the new default, and the new build's handler runs once.
+func _kanama_scene_autoload_probe() -> void:
+	var stage_file := OS.get_environment("KANAMA_IN_PROCESS_HOT_RELOAD_STAGE")
+	var after := stage_file != "" and FileAccess.file_exists(stage_file)
+	if not after:
+		KanamaSceneAutoload.set("level", 9)
+		KanamaSceneAutoload.set("mood", 5)
+	KanamaSceneAutoload.call("ping")
+	print("[kanama:gd] scene autoload ", "after" if after else "before", " ", KanamaSceneAutoload.call("state"))
 
 func _kanama_hot_reload_smoke_reload_scene() -> void:
 	await get_tree().create_timer(1.5).timeout

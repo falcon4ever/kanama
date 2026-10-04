@@ -88,7 +88,8 @@ check_absent() {
 
 check_common_invariants() {
   local log_file="$1"
-  check "hot-reload: reloaded scripts from .*kanama-scripts\\.jar \\(loader=[0-9]+, old_loader=[0-9]+, rebound=[0-9]+\\)" "$log_file"
+  # Task 133 C2: the marker also counts the autoload script instances the reload re-created.
+  check "hot-reload: reloaded scripts from .*kanama-scripts\\.jar \\(loader=[0-9]+, old_loader=[0-9]+, rebound=[0-9]+, autoloads=[0-9]+\\)" "$log_file"
   check "callInstanceCreate: net\\.multigesture\\.kanama\\.example\\.HelloScript .* placeholder=false" "$log_file"
   check "destroyed [0-9]+/[0-9]+ tracked KanamaScript object\\(s\\)" "$log_file"
   check_absent "hot-reload: failed" "$log_file"

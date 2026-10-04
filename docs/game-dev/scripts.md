@@ -583,13 +583,24 @@ skipped with a build warning; `Autoloads.Music` is typed from the base entry. An
 autoload saved by uid (`"*uid://…"`) is typed from the file that declares the
 uid (a script's `.uid` file, a scene's header).
 
-**Hot reload.** A desktop hot reload also re-creates the Kotlin script objects of
-the autoloads (and of the nodes in an autoload scene), from the new build, and runs
-their `_ready` again. Exported property values are kept; every other field starts
-from its initializer, as after a scene reload, so keep state that must survive a
-reload in exported properties or outside the script object. Hot reload runs in the
-editor process too (Build Scripts while the editor is open), so a `@Tool`
-autoload in the editor's tree is re-created the same way there.
+**Hot reload.** A desktop hot reload resets each Kotlin autoload in place, so the
+autoload stays the same node: `Autoloads.<Name>`, GDScript's global name and any
+reference other code holds keep working. What survives and what does not:
+
+| Survives the reload | Does not survive |
+|---|---|
+| the node itself (identity, name, place under `/root`, its GDScript global) | the old script object: each Kotlin node of the autoload gets a new one, from the new build |
+| a stored (exported) property whose type did not change: its value is set back | a stored property whose type changed: it takes the new build's default (or the autoload scene's value) |
+| the nodes of the autoload's scene (`.tscn` children) | children created at run time (in `_ready` or later): they are freed |
+| connections other objects made **to** the autoload | lambda connections the autoload made (`signal.connect(self) { ... }`): they are disconnected |
+| | every other Kotlin field: it starts from its initializer |
+
+Then `_ready` runs again on the reset nodes, children before parents as Godot
+readies a tree, so whatever `_ready` sets up (runtime children, connections)
+exists once, from the new code. This is a scene reload for the autoload, minus
+the new node. Hot reload runs in the editor process too (Build Scripts while
+the editor is open), so a `@Tool` autoload in the editor's tree is reset the
+same way there.
 
 ## Script Inheritance
 
