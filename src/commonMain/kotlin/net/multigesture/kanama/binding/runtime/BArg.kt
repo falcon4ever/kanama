@@ -6,9 +6,9 @@ import net.multigesture.kanama.types.GodotRealArray
  * An argument to a builtin (value-type) method call — the value-type analogue of a ptrcall arg.
  *
  * Common code, not a member of [BuiltinCalls]: an `expect` classifier may not declare a constructor
- * with property parameters, so the four variants cannot live inside the `expect object`. They carry
- * no platform type anyway ([GodotRealArray] is the generated `real_t` array alias), so one
- * declaration serves both backends and the call sites keep spelling them `BArg.Floats(...)`.
+ * with property parameters, so the variants cannot live inside the `expect object`. They carry no
+ * platform type anyway ([GodotRealArray] is the generated `real_t` array alias), so one declaration
+ * serves both backends and the call sites keep spelling them `BArg.Floats(...)`.
  */
 sealed interface BArg {
   /**
@@ -27,4 +27,19 @@ sealed interface BArg {
 
   /** An `int` arg (`int64_t` at ptrcall) — Basis' EulerOrder, array indices, … */
   data class Int64(val value: Long) : BArg
+
+  /**
+   * A struct value laid out as `int32_t` [values] (Vector2i/Vector3i/Vector4i/Rect2i), the same in
+   * every build (task 134 B).
+   */
+  class Ints(val values: IntArray) : BArg
+
+  /** A struct value laid out as `float` [values]: `Color`, float32 in every build (task 134 B). */
+  class Float32s(val values: FloatArray) : BArg
+
+  /**
+   * A Godot `String` arg: built from [value] for the call and destroyed after it (on iOS by the
+   * shim, from the C string; task 134 B).
+   */
+  data class Str(val value: String) : BArg
 }

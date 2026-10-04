@@ -5,16 +5,20 @@ package net.multigesture.kanama.binding.runtime
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.CPointed
+import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.DoubleVar
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.FloatVar
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.LongVar
 import kotlinx.cinterop.MemScope
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.allocArray
+import kotlinx.cinterop.cstr
 import kotlinx.cinterop.get
 import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.plus
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
@@ -54,36 +58,72 @@ actual object BuiltinCalls {
   ) {
     val baseBuf = allocArray<GodotRealVar>(if (base.isNotEmpty()) base.size else 1)
     for (i in base.indices) baseBuf[i] = base[i]
+    invokeWith(methodPtr, baseBuf, args, ret)
+  }
+
+  // The task 134 B entry points: [base] is marshalled like an argument (null: a static method,
+  // which Godot calls with a NULL instance; the shim gets a one-byte dummy like the empty-base
+  // path above).
+  private fun MemScope.invokeOn(
+    methodPtr: Long,
+    base: BArg?,
+    args: List<BArg>,
+    ret: CValuesRef<*>?,
+  ) {
+    val baseBuf = if (base == null) alloc<ByteVar>().ptr else marshal(base).second
+    invokeWith(methodPtr, baseBuf, args, ret)
+  }
+
+  // One argument as (tag, pointer): the shim switches on the tag only for the CONSTRUCT tags (a
+  // String built from the C string); everything else is a raw value buffer it passes through.
+  private fun MemScope.marshal(a: BArg): Pair<Int, CPointer<CPointed>> =
+    when (a) {
+      is BArg.Floats -> {
+        val b = allocArray<GodotRealVar>(if (a.values.isNotEmpty()) a.values.size else 1)
+        for (j in a.values.indices) b[j] = a.values[j]
+        a.tag to b.reinterpret()
+      }
+      is BArg.Bool -> {
+        val b = alloc<ByteVar>()
+        b.value = if (a.value) 1 else 0
+        PT_BOOL to b.ptr.reinterpret()
+      }
+      is BArg.Real -> {
+        val b = alloc<DoubleVar>()
+        b.value = a.value
+        PT_FLOAT64 to b.ptr.reinterpret()
+      }
+      is BArg.Int64 -> {
+        val b = alloc<LongVar>()
+        b.value = a.value
+        PT_INT64 to b.ptr.reinterpret()
+      }
+      is BArg.Ints -> {
+        val b = allocArray<IntVar>(if (a.values.isNotEmpty()) a.values.size else 1)
+        for (j in a.values.indices) b[j] = a.values[j]
+        PT_INT32 to b.reinterpret()
+      }
+      is BArg.Float32s -> {
+        val b = allocArray<FloatVar>(if (a.values.isNotEmpty()) a.values.size else 1)
+        for (j in a.values.indices) b[j] = a.values[j]
+        PT_FLOAT32 to b.reinterpret()
+      }
+      is BArg.Str -> PT_STRING to a.value.cstr.getPointer(this).reinterpret()
+    }
+
+  private fun MemScope.invokeWith(
+    methodPtr: Long,
+    baseBuf: CPointer<*>,
+    args: List<BArg>,
+    ret: CValuesRef<*>?,
+  ) {
     val n = args.size
     val tags = allocArray<IntVar>(if (n > 0) n else 1)
     val ptrs = allocArray<COpaquePointerVar>(if (n > 0) n else 1)
     args.forEachIndexed { i, a ->
-      when (a) {
-        is BArg.Floats -> {
-          val b = allocArray<GodotRealVar>(if (a.values.isNotEmpty()) a.values.size else 1)
-          for (j in a.values.indices) b[j] = a.values[j]
-          tags[i] = a.tag
-          ptrs[i] = b.reinterpret<CPointed>()
-        }
-        is BArg.Bool -> {
-          val b = alloc<ByteVar>()
-          b.value = if (a.value) 1 else 0
-          tags[i] = PT_BOOL
-          ptrs[i] = b.ptr.reinterpret<CPointed>()
-        }
-        is BArg.Real -> {
-          val b = alloc<DoubleVar>()
-          b.value = a.value
-          tags[i] = PT_FLOAT64
-          ptrs[i] = b.ptr.reinterpret<CPointed>()
-        }
-        is BArg.Int64 -> {
-          val b = alloc<LongVar>()
-          b.value = a.value
-          tags[i] = PT_INT64
-          ptrs[i] = b.ptr.reinterpret<CPointed>()
-        }
-      }
+      val (tag, ptr) = marshal(a)
+      tags[i] = tag
+      ptrs[i] = ptr
     }
     kanama_ios_godot_builtin_call(
       methodPtr,
@@ -95,10 +135,6 @@ actual object BuiltinCalls {
     )
   }
 
-  /**
-   * Call a builtin method whose base and return are value types laid out as `real_t` components
-   * ([base] in, [retCount] values out), with optional [args].
-   */
   actual fun call(
     methodPtr: Long,
     base: GodotRealArray,
@@ -151,4 +187,72 @@ actual object BuiltinCalls {
     invokeBuiltin(methodPtr, base, args, ret.ptr)
     ret.value
   }
+
+  actual fun invokeReals(
+    methodPtr: Long,
+    base: BArg?,
+    retCount: Int,
+    args: List<BArg>,
+  ): GodotRealArray = memScoped {
+    val ret = allocArray<GodotRealVar>(if (retCount > 0) retCount else 1)
+    invokeOn(methodPtr, base, args, ret)
+    GodotRealArray(retCount) { ret[it] }
+  }
+
+  actual fun invokeInts(methodPtr: Long, base: BArg?, retCount: Int, args: List<BArg>): IntArray =
+    memScoped {
+      val ret = allocArray<IntVar>(if (retCount > 0) retCount else 1)
+      invokeOn(methodPtr, base, args, ret)
+      IntArray(retCount) { ret[it] }
+    }
+
+  actual fun invokeFloat32s(
+    methodPtr: Long,
+    base: BArg?,
+    retCount: Int,
+    args: List<BArg>,
+  ): FloatArray = memScoped {
+    val ret = allocArray<FloatVar>(if (retCount > 0) retCount else 1)
+    invokeOn(methodPtr, base, args, ret)
+    FloatArray(retCount) { ret[it] }
+  }
+
+  actual fun invokeDouble(methodPtr: Long, base: BArg?, args: List<BArg>): Double = memScoped {
+    val ret = alloc<DoubleVar>()
+    invokeOn(methodPtr, base, args, ret.ptr)
+    ret.value
+  }
+
+  actual fun invokeLong(methodPtr: Long, base: BArg?, args: List<BArg>): Long = memScoped {
+    val ret = alloc<LongVar>()
+    invokeOn(methodPtr, base, args, ret.ptr)
+    ret.value
+  }
+
+  actual fun invokeBool(methodPtr: Long, base: BArg?, args: List<BArg>): Boolean = memScoped {
+    val ret = alloc<ByteVar>()
+    invokeOn(methodPtr, base, args, ret.ptr)
+    ret.value.toInt() != 0
+  }
+
+  actual fun invokeVariantReals(
+    methodPtr: Long,
+    base: BArg?,
+    count: Int,
+    args: List<BArg>,
+  ): GodotRealArray? = memScoped {
+    // A Variant: its Variant::Type (int32) first, the payload at offset 8 (64 bytes cover the
+    // float32 and the float64 layouts). NIL is type 0; the value types these methods return are
+    // POD, so the Variant needs no destructor.
+    val ret = allocArray<LongVar>(VARIANT_CELL_LONGS)
+    invokeOn(methodPtr, base, args, ret)
+    if (ret.reinterpret<IntVar>()[0] == 0) {
+      null
+    } else {
+      val payload = (ret + 1)!!.reinterpret<GodotRealVar>()
+      GodotRealArray(count) { payload[it] }
+    }
+  }
+
+  private const val VARIANT_CELL_LONGS = 8
 }

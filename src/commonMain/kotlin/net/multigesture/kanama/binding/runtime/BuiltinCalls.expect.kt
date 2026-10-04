@@ -63,4 +63,41 @@ expect object BuiltinCalls {
    * as `int64_t` (`PtrToArg<int64_t>` is direct 8-byte), so decode a Long.
    */
   fun callInt(methodPtr: Long, base: GodotRealArray, args: List<BArg>): Long
+
+  // ----- Task 134 B: the generated value-type members' entry points. -----
+  // [base] is the value the method runs on, marshalled like an argument (`BArg.Floats` for a
+  // `real_t` type, `BArg.Ints` for Vector2i/3i/4i/Rect2i, `BArg.Float32s` for Color), or null for
+  // a static method (Godot's NULL instance). The return is decoded by the member's own Godot type.
+
+  /** A method returning a `real_t` value type of [retCount] components. */
+  fun invokeReals(methodPtr: Long, base: BArg?, retCount: Int, args: List<BArg>): GodotRealArray
+
+  /**
+   * A method returning an `int32_t` value type (Vector2i/3i/4i/Rect2i) of [retCount] components.
+   */
+  fun invokeInts(methodPtr: Long, base: BArg?, retCount: Int, args: List<BArg>): IntArray
+
+  /** A method returning a `Color` (four `float`s in every build). */
+  fun invokeFloat32s(methodPtr: Long, base: BArg?, retCount: Int, args: List<BArg>): FloatArray
+
+  /** A method returning a `float` (an 8-byte `double` at ptrcall, see [callScalar]). */
+  fun invokeDouble(methodPtr: Long, base: BArg?, args: List<BArg>): Double
+
+  /** A method returning an `int` (`int64_t` at ptrcall). */
+  fun invokeLong(methodPtr: Long, base: BArg?, args: List<BArg>): Long
+
+  /** A method returning a `bool` (one byte at ptrcall). */
+  fun invokeBool(methodPtr: Long, base: BArg?, args: List<BArg>): Boolean
+
+  /**
+   * A method returning a `Variant` that holds either nothing (`null` here) or a `real_t` value type
+   * of [count] components (`Plane.intersect_3`, `AABB.intersects_ray`, …): the payload is read from
+   * the Variant's data field. Only for Variants of POD value types, which need no destructor.
+   */
+  fun invokeVariantReals(
+    methodPtr: Long,
+    base: BArg?,
+    count: Int,
+    args: List<BArg>,
+  ): GodotRealArray?
 }

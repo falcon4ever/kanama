@@ -6,6 +6,7 @@ import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout.ADDRESS
 import java.lang.foreign.ValueLayout.JAVA_BYTE
 import java.lang.foreign.ValueLayout.JAVA_DOUBLE
+import java.lang.foreign.ValueLayout.JAVA_FLOAT
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
@@ -89,18 +90,52 @@ actual object BuiltinCalls {
         for (i in base.indices) GodotRealSegment.writeRaw(buf, i.toLong(), base[i])
         buf
       }
-    val argArray =
-      if (args.isEmpty()) {
-        MemorySegment.NULL
-      } else {
-        val arr = arena.allocate(ADDRESS, args.size.toLong())
-        args.forEachIndexed { i, arg -> arr.setAtIndex(ADDRESS, i.toLong(), allocArg(arena, arg)) }
-        arr
-      }
-    handleFor(methodPtr).invoke(baseBuf, argArray, ret, args.size)
+    invokeWith(arena, methodPtr, baseBuf, args, ret)
   }
 
-  private fun allocArg(arena: Arena, arg: BArg): MemorySegment =
+  // The task 134 B entry points: [base] is marshalled like an argument (null: a static method).
+  private fun invokeOn(
+    arena: Arena,
+    methodPtr: Long,
+    base: BArg?,
+    args: List<BArg>,
+    ret: MemorySegment,
+  ) {
+    val baseBuf = if (base == null) MemorySegment.NULL else allocArg(arena, base, ArrayList())
+    invokeWith(arena, methodPtr, baseBuf, args, ret)
+  }
+
+  private fun invokeWith(
+    arena: Arena,
+    methodPtr: Long,
+    baseBuf: MemorySegment,
+    args: List<BArg>,
+    ret: MemorySegment,
+  ) {
+    // Godot Strings built for the call, destroyed after it (a `const String &` arg is borrowed).
+    val strings = ArrayList<MemorySegment>(0)
+    try {
+      val argArray =
+        if (args.isEmpty()) {
+          MemorySegment.NULL
+        } else {
+          val arr = arena.allocate(ADDRESS, args.size.toLong())
+          args.forEachIndexed { i, arg ->
+            arr.setAtIndex(ADDRESS, i.toLong(), allocArg(arena, arg, strings))
+          }
+          arr
+        }
+      handleFor(methodPtr).invoke(baseBuf, argArray, ret, args.size)
+    } finally {
+      strings.forEach { GodotStrings.destroyString(it) }
+    }
+  }
+
+  private fun allocArg(
+    arena: Arena,
+    arg: BArg,
+    strings: MutableList<MemorySegment>,
+  ): MemorySegment =
     when (arg) {
       is BArg.Floats -> {
         val size = if (arg.values.isNotEmpty()) arg.values.size else 1
@@ -123,6 +158,22 @@ actual object BuiltinCalls {
       is BArg.Int64 -> {
         val buf = arena.allocate(JAVA_LONG)
         buf.set(JAVA_LONG, 0, arg.value)
+        buf
+      }
+      is BArg.Ints -> {
+        val buf = arena.allocate(JAVA_INT, maxOf(arg.values.size, 1).toLong())
+        for (i in arg.values.indices) buf.setAtIndex(JAVA_INT, i.toLong(), arg.values[i])
+        buf
+      }
+      is BArg.Float32s -> {
+        val buf = arena.allocate(JAVA_FLOAT, maxOf(arg.values.size, 1).toLong())
+        for (i in arg.values.indices) buf.setAtIndex(JAVA_FLOAT, i.toLong(), arg.values[i])
+        buf
+      }
+      is BArg.Str -> {
+        val buf = arena.allocate(STRING_CELL_BYTES, 8L)
+        GodotStrings.initString(buf, arg.value)
+        strings.add(buf)
         buf
       }
     }
@@ -184,4 +235,81 @@ actual object BuiltinCalls {
       invokeBuiltin(arena, methodPtr, base, args, ret)
       ret.get(JAVA_LONG, 0)
     }
+
+  actual fun invokeReals(
+    methodPtr: Long,
+    base: BArg?,
+    retCount: Int,
+    args: List<BArg>,
+  ): GodotRealArray =
+    Arena.ofConfined().use { arena ->
+      val ret = arena.allocate(GodotReal.SIZE_BYTES * maxOf(retCount, 1), GodotReal.ALIGN_BYTES)
+      invokeOn(arena, methodPtr, base, args, ret)
+      GodotRealArray(retCount) { GodotRealSegment.readRaw(ret, it.toLong()) }
+    }
+
+  actual fun invokeInts(methodPtr: Long, base: BArg?, retCount: Int, args: List<BArg>): IntArray =
+    Arena.ofConfined().use { arena ->
+      val ret = arena.allocate(JAVA_INT, maxOf(retCount, 1).toLong())
+      invokeOn(arena, methodPtr, base, args, ret)
+      IntArray(retCount) { ret.getAtIndex(JAVA_INT, it.toLong()) }
+    }
+
+  actual fun invokeFloat32s(
+    methodPtr: Long,
+    base: BArg?,
+    retCount: Int,
+    args: List<BArg>,
+  ): FloatArray =
+    Arena.ofConfined().use { arena ->
+      val ret = arena.allocate(JAVA_FLOAT, maxOf(retCount, 1).toLong())
+      invokeOn(arena, methodPtr, base, args, ret)
+      FloatArray(retCount) { ret.getAtIndex(JAVA_FLOAT, it.toLong()) }
+    }
+
+  actual fun invokeDouble(methodPtr: Long, base: BArg?, args: List<BArg>): Double =
+    Arena.ofConfined().use { arena ->
+      val ret = arena.allocate(JAVA_DOUBLE)
+      invokeOn(arena, methodPtr, base, args, ret)
+      ret.get(JAVA_DOUBLE, 0)
+    }
+
+  actual fun invokeLong(methodPtr: Long, base: BArg?, args: List<BArg>): Long =
+    Arena.ofConfined().use { arena ->
+      val ret = arena.allocate(JAVA_LONG)
+      invokeOn(arena, methodPtr, base, args, ret)
+      ret.get(JAVA_LONG, 0)
+    }
+
+  actual fun invokeBool(methodPtr: Long, base: BArg?, args: List<BArg>): Boolean =
+    Arena.ofConfined().use { arena ->
+      val ret = arena.allocate(JAVA_BYTE)
+      invokeOn(arena, methodPtr, base, args, ret)
+      ret.get(JAVA_BYTE, 0).toInt() != 0
+    }
+
+  actual fun invokeVariantReals(
+    methodPtr: Long,
+    base: BArg?,
+    count: Int,
+    args: List<BArg>,
+  ): GodotRealArray? =
+    Arena.ofConfined().use { arena ->
+      // A Variant: its Variant::Type (int32) first, the payload at offset 8. NIL is type 0; the
+      // value types these methods return are POD, so the Variant needs no destructor.
+      val ret = arena.allocate(VARIANT_CELL_BYTES, 8L)
+      invokeOn(arena, methodPtr, base, args, ret)
+      if (ret.get(JAVA_INT, 0) == 0) {
+        null
+      } else {
+        val payload = ret.asSlice(VARIANT_PAYLOAD_OFFSET)
+        GodotRealArray(count) { GodotRealSegment.readRaw(payload, it.toLong()) }
+      }
+    }
+
+  // A Godot String is one pointer; a Variant is 24 bytes in a float32 build (40 in a float64
+  // one), so 64 covers both.
+  private const val STRING_CELL_BYTES = 8L
+  private const val VARIANT_CELL_BYTES = 64L
+  private const val VARIANT_PAYLOAD_OFFSET = 8L
 }

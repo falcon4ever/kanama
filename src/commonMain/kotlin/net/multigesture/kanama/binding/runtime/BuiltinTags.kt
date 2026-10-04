@@ -37,3 +37,27 @@ const val PT_VECTOR3 = 8
 const val PT_TRANSFORM3D = 19
 
 const val PT_QUATERNION = 20
+
+// Task 134 B: the tags the generated value-type members pass. On iOS only the CONSTRUCT tags (a
+// String built from the C string) change the shim's dispatch; every other tag is POD passthrough.
+const val PT_INT32 = 2
+
+const val PT_FLOAT32 = 4
+
+const val PT_VECTOR4 = 10
+
+const val PT_COLOR = 11
+
+const val PT_RECT2 = 12
+
+const val PT_STRING = 16
+
+const val PT_BASIS = 18
+
+const val PT_AABB = 21
+
+const val PT_TRANSFORM2D = 22
+
+const val PT_PROJECTION = 25
+
+const val PT_PLANE = 26
