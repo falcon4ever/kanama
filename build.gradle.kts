@@ -383,7 +383,7 @@ configure<com.google.devtools.ksp.gradle.KspExtension> {
     ),
   )
   arg("kanamaIosRegistryAsResource", "false")
-  // Task 131 item 9: an iOS @ScriptProperty skip is a build error unless the project opts in.
+  // Task 131 item 9: an iOS @Export skip is a build error unless the project opts in.
   arg(
     "kanamaIosAllowExportSkips",
     providers.gradleProperty("kanamaIosAllowExportSkips").orElse("false").get(),

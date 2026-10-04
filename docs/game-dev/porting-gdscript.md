@@ -22,14 +22,21 @@ of leaving a project-specific workaround.
 
 ## Porting Checklist
 
-- `@ScriptProperty` names register as `snake_case` in Godot. `.tscn` values
+- `@Export` names register as `snake_case` in Godot. `.tscn` values
   must match: `view_path = NodePath("../View")`, not `viewPath`.
 - Remove `uid://...` from script `ext_resource` entries when replacing a `.gd`
   script with a `.kt` script. Godot assigns new UIDs on first open.
 - Remove stale `node_paths=PackedStringArray(...)` entries from node headers
   when they only described old GDScript exports.
-- `@RegisterFunction fun onCoinCollected` registers as `on_coin_collected`.
-  Update `.tscn` signal connections accordingly.
+- Every public function is registered, like a GDScript `func`:
+  `fun onCoinCollected()` registers as `on_coin_collected`. Keep a `.tscn`
+  connection to `_on_coin_collected` working with
+  `@GodotName("_on_coin_collected")`, or update the connection. Make helpers Godot
+  never calls `private` (or `internal`).
+- GDScript's `func _ready()`, `_process`, `_input`, … become a lifecycle
+  annotation on a function of any name (`@OnReady fun ready()`); a function
+  still named `_process` without one is a build error. Input handlers take the
+  typed event: `@OnInput fun input(event: InputEvent)`.
 - For instanced scenes, prefer `getAsOrNull(path, ::ParentType)` unless the
   exact imported root class is known and stable.
 - Prefer `requireAs` when the original scene requires a node to exist. Use
@@ -40,14 +47,14 @@ of leaving a project-specific workaround.
 - Godot enum constants become typed values: `Node.PROCESS_MODE_ALWAYS` is
   `Node.ProcessMode.ALWAYS`, `KEY_ESCAPE` is `Key.ESCAPE`, a bitfield combines
   with `or` and tests with `in`. An `@export var mode: Node.ProcessMode` ports to
-  `@ScriptProperty var mode: Node.ProcessMode = Node.ProcessMode.INHERIT`; it
+  `@Export var mode: Node.ProcessMode = Node.ProcessMode.INHERIT`; it
   stores the same Godot values, so the scene's `mode = 3` keeps working. A
   GDScript `int` that really holds an enum (`var mode := 3`) is worth typing
   during the port. See [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields).
 - For `@Rpc` methods on Kanama scripts, use generated `*Rpcs` sender helpers
   instead of raw `rpc("method_name")` strings.
 - For scenes with `MultiplayerSynchronizer`, verify every replicated custom
-  `.:property` is exposed with `@ScriptProperty`.
+  `.:property` is exposed with `@Export`.
 - If the port will also run on Web: physics loops should derive movement from
   velocity (`self.velocity` + `moveAndSlide()`), not from re-reading a spatial
   value they just wrote — Web spatial reads are a start-of-dispatch mirror, not
@@ -83,15 +90,35 @@ Exported `NodePath` values are a good first step when the original script used
 `@export var target: NodePath`:
 
 ```kotlin
-@ScriptProperty var targetPath: NodePath = NodePath(".")
+@Export var targetPath: NodePath = NodePath(".")
 
 private val target by lazy {
     self.requireAs(targetPath, ::Node3D)
 }
 ```
 
-Use `@RegisterFunction("saved_signal_name")` when a `.tscn` file already has a
+Use `@GodotName("saved_signal_name")` when a `.tscn` file already has a
 saved signal connection and you want to preserve the stored method name.
+
+### GDScript annotations in Kanama
+
+Kanama has one annotation per GDScript concept (Kanama 0.5 removed the older
+aliases; `scripts/migrate_script_annotations.py` rewrites a source tree):
+
+| GDScript | Kanama |
+|---|---|
+| `func f()` (callable from Godot) | a public `fun f()`; `@GodotName("...")` for another name |
+| `@export var x` | `@Export var x` |
+| `@export_category` / `_group` / `_subgroup` | `@ExportCategory` / `@ExportGroup` / `@ExportSubgroup` |
+| `@export_tool_button("Label")` | `@ExportToolButton("Label")` |
+| `signal hit(damage)` | `@Signal fun hit(damage: Long) = Unit` |
+| `@rpc(...)` | `@Rpc(...)` on a public function |
+| `@tool` | `@Tool` |
+| `class_name Player` | `@GlobalClass` |
+| `func _ready()`, `_enter_tree`, `_exit_tree` | `@OnReady`, `@OnEnterTree`, `@OnExitTree` |
+| `func _process(delta)`, `_physics_process` | `@OnProcess`, `@OnPhysicsProcess` |
+| `func _input(event)`, `_unhandled_input`, `_shortcut_input`, `_unhandled_key_input` | `@OnInput`, `@OnUnhandledInput`, `@OnShortcutInput`, `@OnUnhandledKeyInput` (`event: InputEvent`) |
+| any other `func _virtual()` | `@OverrideVirtual fun _virtual()` |
 
 ## Example Ports
 

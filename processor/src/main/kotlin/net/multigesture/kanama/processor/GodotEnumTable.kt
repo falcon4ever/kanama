@@ -121,7 +121,7 @@ internal object GodotEnumTable {
   fun forGodotType(godotType: String): Entry? = godotKeyOfType(godotType)?.let { byGodotKey[it] }
 
   /**
-   * Constant-folds a `@ScriptProperty` initializer of a Godot enum type into the Kotlin literal the
+   * Constant-folds a `@Export` initializer of a Godot enum type into the Kotlin literal the
    * registrar's default field takes (`net.multigesture.kanama.api.Node.ProcessMode(3L)`), or null
    * when the initializer is not one of the folded shapes:
    * - a value reference, qualified as far as the source spells it: `ALWAYS` is not accepted (it

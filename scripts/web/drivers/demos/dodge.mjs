@@ -118,7 +118,7 @@ async function callMain(evaluate, method) {
   );
 }
 
-// SmokeQuit.smoke_teardown is its only @RegisterFunction (method#1); it quits the
+// SmokeQuit.smoke_teardown is its only registered function (method#1); it quits the
 // SceneTree so every node exits the tree and releases its handles.
 async function callTeardown(evaluate) {
   return evaluate(

@@ -6,10 +6,10 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * Task 46 — cross-backend @ScriptProperty get/set capability parity.
+ * Task 46 — cross-backend @Export get/set capability parity.
  *
- * The JVM backend (`ScriptBridge`) reads and writes every supported @ScriptProperty type through
- * one generic path, so it is uniformly readable + settable. The iOS backend hand-rolls per-type
+ * The JVM backend (`ScriptBridge`) reads and writes every supported @Export type through one
+ * generic path, so it is uniformly readable + settable. The iOS backend hand-rolls per-type
  * codegen, so it can silently diverge — which is exactly how value/data types shipped
  * **write-only** (settable from scene data but read back as nil), silently breaking
  * `MultiplayerSynchronizer` replication (the 2026-07-16 "iPhone can't walk/shoot" bug).
@@ -111,7 +111,7 @@ class IosScriptPropertyParityTest {
     // The parity guard (as the emitter's hard-error callback) must not fire: no write-only data.
     assertTrue(
       r.errors.isEmpty(),
-      "iOS @ScriptProperty parity guard flagged write-only data type(s): ${r.errors}",
+      "iOS @Export parity guard flagged write-only data type(s): ${r.errors}",
     )
 
     // Each data type is engine-readable (has a getProperty branch) — the exact property the iOS
@@ -119,7 +119,7 @@ class IosScriptPropertyParityTest {
     for (name in listOf("motion", "shootTarget", "label", "view", "tags")) {
       assertTrue(
         r.readable(name),
-        "data @ScriptProperty '$name' is write-only on iOS (no getProperty branch)",
+        "data @Export '$name' is write-only on iOS (no getProperty branch)",
       )
     }
   }
@@ -142,25 +142,22 @@ class IosScriptPropertyParityTest {
   @Test
   fun objectAndScriptRefsAreReadableViaGetProperty() {
     val r = emit(objectProp("crosshair"), customScriptProp("driver"))
-    assertTrue(r.errors.isEmpty(), "object-ref @ScriptProperty flagged: ${r.errors}")
-    assertTrue(r.readable("crosshair"), "Node-typed @ScriptProperty must be engine-readable on iOS")
-    assertTrue(
-      r.readable("driver"),
-      "@ScriptClass-typed @ScriptProperty must be engine-readable on iOS",
-    )
+    assertTrue(r.errors.isEmpty(), "object-ref @Export flagged: ${r.errors}")
+    assertTrue(r.readable("crosshair"), "Node-typed @Export must be engine-readable on iOS")
+    assertTrue(r.readable("driver"), "@ScriptClass-typed @Export must be engine-readable on iOS")
   }
 
   @Test
   fun listStringIsReadableViaGetProperty() {
     val r = emit(stringListProp("names"))
     assertEquals(emptyList(), r.errors)
-    assertTrue(r.readable("names"), "List<String> @ScriptProperty must be engine-readable")
+    assertTrue(r.readable("names"), "List<String> @Export must be engine-readable")
   }
 
   /**
-   * A `MutableList<T>` @ScriptProperty must decode with a `.toMutableList()` suffix: the list
-   * decode helpers all yield an immutable `List`, which is not assignable to a `MutableList` field
-   * on Kotlin/Native (compile-verified: `Assignment type mismatch: List<String> vs
+   * A `MutableList<T>` @Export must decode with a `.toMutableList()` suffix: the list decode
+   * helpers all yield an immutable `List`, which is not assignable to a `MutableList` field on
+   * Kotlin/Native (compile-verified: `Assignment type mismatch: List<String> vs
    * MutableList<String>`). Without the suffix the generated iOS registrar does not compile. The
    * desktop emitter has done this for `p.isMutable` all along; the iOS emitter dropped `isMutable`
    * entirely until this was threaded through. Reverting the suffix fails this test.
@@ -171,7 +168,7 @@ class IosScriptPropertyParityTest {
     assertEquals(emptyList(), r.errors)
     assertTrue(
       r.setterRhs("mutableTags").contains(".toMutableList()"),
-      "MutableList<String> @ScriptProperty must decode with .toMutableList() " +
+      "MutableList<String> @Export must decode with .toMutableList() " +
         "(actual: '${r.setterRhs("mutableTags")}')",
     )
   }
@@ -183,7 +180,7 @@ class IosScriptPropertyParityTest {
     assertEquals(emptyList(), r.errors)
     assertFalse(
       r.setterRhs("readonlyTags").contains(".toMutableList()"),
-      "immutable List<String> @ScriptProperty must not gain a .toMutableList() suffix " +
+      "immutable List<String> @Export must not gain a .toMutableList() suffix " +
         "(actual: '${r.setterRhs("readonlyTags")}')",
     )
   }

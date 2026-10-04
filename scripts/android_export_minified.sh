@@ -266,7 +266,7 @@ if ! "$GODOT_BIN" --headless \
   exit 1
 fi
 if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG"; then
-  echo "[android_minified] the export-time editor could not bind the project's .kt scripts; scene-stored @ScriptProperty values would be missing (task 106/116)" >&2
+  echo "[android_minified] the export-time editor could not bind the project's .kt scripts; scene-stored @Export values would be missing (task 106/116)" >&2
   exit 1
 fi
 if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd"; then

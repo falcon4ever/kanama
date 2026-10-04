@@ -18,8 +18,8 @@ plus a **C shim** (`ios/bootstrap/kanama_ios_shim.c`) that implements the GDExte
 entry points and bridges to the Kotlin/Native runtime via `@CName` exports.
 
 What works today (verified on iPhone 12 + iPhone 15 Pro): script loading + lifecycle,
-`@OnReady`/`@OnProcess`/`@OnPhysicsProcess`/`@OnInput`/`@RegisterFunction`,
-`@OverrideVirtual` for engine virtuals, `@ScriptProperty` (including value types,
+`@OnReady`/`@OnProcess`/`@OnPhysicsProcess`/`@OnInput`, registered (public) functions,
+`@OverrideVirtual` for engine virtuals, `@Export` (including value types,
 object lists, user-script lists, and `List<String>`/`PackedStringArray` delivery),
 `@Signal` registration, named + lambda signal connections (custom Godot Callable),
 `await`, scene reload, and AudioStreamPlayer playback. Match3, 3D Platformer,

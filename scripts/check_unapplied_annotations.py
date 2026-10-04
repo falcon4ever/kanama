@@ -31,7 +31,7 @@ import pathlib
 import re
 import sys
 
-# Annotations whose absence silently disables behaviour. @ScriptClass/@ScriptProperty
+# Annotations whose absence silently disables behaviour. @ScriptClass/@Export
 # are excluded on purpose: omitting those fails the build or drops a property the
 # generators already report, so they are not silent.
 LIFECYCLE_ANNOTATIONS = (
@@ -40,10 +40,15 @@ LIFECYCLE_ANNOTATIONS = (
     "OnPhysicsProcess",
     "OnInput",
     "OnUnhandledInput",
+    "OnShortcutInput",
+    "OnUnhandledKeyInput",
     "OnEnterTree",
     "OnExitTree",
     "OnDraw",
-    "RegisterFunction",
+    "OverrideVirtual",
+    # An unapplied @GodotName leaves the function registered under its snake_case name, so a
+    # .tscn connection to the custom name silently finds nothing.
+    "GodotName",
     "Signal",
 )
 

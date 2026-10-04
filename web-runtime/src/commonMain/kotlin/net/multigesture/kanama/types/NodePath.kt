@@ -5,8 +5,8 @@ package net.multigesture.kanama.types
  * to the Godot property after changing components.
  *
  * Web mirror of the desktop `net.multigesture.kanama.types.NodePath`: the same shape at the same
- * fully-qualified name, so `@ScriptProperty` NodePath declarations compile unchanged for the
- * Kotlin/Wasm target. On the wire a NodePath is its plain [path] string.
+ * fully-qualified name, so `@Export` NodePath declarations compile unchanged for the Kotlin/Wasm
+ * target. On the wire a NodePath is its plain [path] string.
  *
  * Generated from Godot docs: NodePath
  */

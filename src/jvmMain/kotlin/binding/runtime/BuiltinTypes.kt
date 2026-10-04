@@ -1332,7 +1332,7 @@ object BuiltinTypes {
 
   /**
    * The pointer KSP-generated glue writes when it hands [value] to Godot as a value (a
-   * `@RegisterFunction` / virtual return or argument): NULL, which Godot reads as nil, for a
+   * registered-function / virtual return or argument): NULL, which Godot reads as nil, for a
    * wrapper whose object was freed (task 131 item 2, GDScript semantics). Public because the
    * generated registrars live in the game's module; game code does not call it.
    */
@@ -1341,11 +1341,11 @@ object BuiltinTypes {
 
   /**
    * The Godot object a custom-script-typed value ([script], whose owner is [owner]) stands for when
-   * KSP-generated glue hands it to Godot (a `@ScriptProperty` of a script type, or a `List`/`Map`
-   * of them): a `KanamaScript`'s captured `self` wrapper, else a wrapper of [owner]. Null -- nil --
-   * when the freed-object check is on and the owner was freed, decided from the instance id
-   * captured when the runtime created the script ([ScriptOwnerIds]), never by reading the owner
-   * (task 131 item 2). Public for the generated registrars only.
+   * KSP-generated glue hands it to Godot (a `@Export` of a script type, or a `List`/`Map` of them):
+   * a `KanamaScript`'s captured `self` wrapper, else a wrapper of [owner]. Null -- nil -- when the
+   * freed-object check is on and the owner was freed, decided from the instance id captured when
+   * the runtime created the script ([ScriptOwnerIds]), never by reading the owner (task 131 item
+   * 2). Public for the generated registrars only.
    */
   @JvmStatic
   fun scriptValue(script: Any, owner: GodotHandle): GodotObject? {

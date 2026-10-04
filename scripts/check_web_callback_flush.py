@@ -58,7 +58,7 @@ EXEMPTIONS = {
 # Property get/set boundaries assign fields rather than run user method bodies, and the
 # create/ready sequence that pushes them flushes afterwards. They are out of scope for
 # this gate BY NAME so that a future dispatch-style boundary cannot hide behind the
-# same exemption. Revisit if @ScriptProperty ever accepts custom setter bodies.
+# same exemption. Revisit if @Export ever accepts custom setter bodies.
 EXEMPT_PREFIXES = ("kanamaWebGet", "kanamaWebSet")
 
 FLUSH = "commands.flush()"

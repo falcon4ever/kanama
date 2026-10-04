@@ -30,11 +30,11 @@ auto-import does it for you on completion.
 
 Declare members in this order within a script class:
 
-1. Exported / inspector properties (`@ScriptProperty`, `@Export`)
+1. Exported / inspector properties (`@Export`)
 2. Private cached secondary wrappers (`selfAs(...)`)
 3. Other private state
 4. Lifecycle functions (`@OnReady`, `@OnProcess`, etc.) — roughly in execution order
-5. `@RegisterFunction` functions exposed to Godot
+5. Public functions (registered with Godot)
 6. Private helper functions
 
 ```kotlin
@@ -45,8 +45,8 @@ class Player(godotObject: GodotHandle) :
 
     // 1. Exports
     @ExportGroup("Movement")
-    @ScriptProperty var speed: Double = 5.0
-    @ScriptProperty var jumpVelocity: Double = 4.5
+    @Export var speed: Double = 5.0
+    @Export var jumpVelocity: Double = 4.5
 
     // 2. Cached wrappers
     private val node3d = selfAs(::Node3D)
@@ -62,7 +62,6 @@ class Player(godotObject: GodotHandle) :
     fun physicsProcess(delta: Double) { ... }
 
     // 5. Registered functions
-    @RegisterFunction
     fun takeDamage(amount: Long) { ... }
 
     // 6. Helpers
@@ -135,9 +134,8 @@ unnecessary and shows up as allocator pressure under profiling.
 
 ## Exports and Properties
 
-Use `@ScriptProperty` for `@ScriptClass` scripts and `@RegisterProperty` for
-`@RegisterClass` types. `@Export` is an alias that works in both and is fine
-for ported codebases.
+Use `@Export` for exported properties, on `@ScriptClass` scripts and
+`@RegisterClass` types alike.
 
 Place `@ExportGroup("Name")` on the first exported property in that group, not
 as a standalone line:
@@ -145,8 +143,8 @@ as a standalone line:
 ```kotlin
 // Correct
 @ExportGroup("Combat")
-@ScriptProperty var damage: Double = 10.0
-@ScriptProperty var range: Double = 3.0
+@Export var damage: Double = 10.0
+@Export var range: Double = 3.0
 
 // Avoid — standalone group declaration
 @ExportGroup("Combat")
@@ -188,13 +186,14 @@ the generated `*Signals` helper. See
 
 ## Registered Functions and Signal Callbacks
 
-Use `@RegisterFunction` for methods Godot needs to call — scene signal
-callbacks, callable targets, and methods called via `GodotObject.call(...)`.
-The GDScript-side name defaults to `snake_case(functionName)`; use an explicit
-string argument to match a specific scene-saved signal connection:
+Every public function is registered with Godot — scene signal callbacks,
+callable targets, methods called via `GodotObject.call(...)` — so keep helpers
+Godot never calls `private` (or `internal` when another script calls them). The
+GDScript-side name is `snake_case(functionName)`; use `@GodotName` to match a
+specific scene-saved signal connection:
 
 ```kotlin
-@RegisterFunction("_on_body_entered")
+@GodotName("_on_body_entered")
 fun onBodyEntered(body: Node) { ... }
 ```
 

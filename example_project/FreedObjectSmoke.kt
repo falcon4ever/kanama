@@ -1,9 +1,8 @@
 package net.multigesture.kanama.example
 
-import net.multigesture.kanama.annotations.Method
+import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.api.Engine
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
@@ -36,13 +35,13 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  */
 @ScriptClass(attachTo = "Node")
 class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
-  @ScriptProperty var target: Node? = null
+  @Export var target: Node? = null
 
   // Custom-script-typed exports (task 131 review): held after their nodes are freed.
-  @ScriptProperty var scriptTarget: FreedScriptTarget? = null
-  @ScriptProperty var scriptTargets: List<FreedScriptTarget> = emptyList()
-  @ScriptProperty var plainTarget: FreedPlainTarget? = null
-  @ScriptProperty var plainTargetMap: Map<String, FreedPlainTarget> = emptyMap()
+  @Export var scriptTarget: FreedScriptTarget? = null
+  @Export var scriptTargets: List<FreedScriptTarget> = emptyList()
+  @Export var plainTarget: FreedPlainTarget? = null
+  @Export var plainTargetMap: Map<String, FreedPlainTarget> = emptyMap()
 
   private var victim: Node? = null
 
@@ -123,7 +122,7 @@ class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
     return node
   }
 
-  @Method(name = "freed_target") fun freedTarget(): GodotObject = victim!!
+  fun freedTarget(): GodotObject = victim!!
 
-  @Method(name = "call_freed") fun callFreed(): String = victim!!.getName()
+  fun callFreed(): String = victim!!.getName()
 }

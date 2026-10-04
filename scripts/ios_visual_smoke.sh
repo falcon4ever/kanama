@@ -572,9 +572,9 @@ elif [[ "$kanama_user_script_probe" -eq 1 ]]; then
   scene_header='[gd_scene load_steps=6 format=3]'
   script_resource_line='[ext_resource type="Script" path="res://kotlin-src/IosSmokeScript.kt" id="1_probe"]'
   status_script_line='script = ExtResource("1_probe")'
-  # @ScriptProperty end-to-end checks: the scene stores a NodePath plus task-39 narrow-scalar,
+  # @Export end-to-end checks: the scene stores a NodePath plus task-39 narrow-scalar,
   # enum, and enum-list values so Godot drives every conversion path at instantiation.
-  # Task 106: an Object-typed (Resource) @ScriptProperty stored in the scene — the shape that
+  # Task 106: an Object-typed (Resource) @Export stored in the scene — the shape that
   # Match3's tile_scene has. The export-time editor must keep it (it re-packs every scene when it
   # converts text to binary and drops properties the script does not report) and the iOS runtime
   # must hydrate it before _ready. probe_child.tscn is written below.
@@ -592,15 +592,15 @@ import net.multigesture.kanama.annotations.OnShortcutInput
 import net.multigesture.kanama.annotations.OnUnhandledInput
 import net.multigesture.kanama.annotations.OnUnhandledKeyInput
 import net.multigesture.kanama.annotations.OverrideVirtual
-import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.api.AudioStream
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.ClassDB
+import net.multigesture.kanama.api.InputEvent
 import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.PackedScene
@@ -613,63 +613,62 @@ enum class IosSmokeMode { EASY, NORMAL, HARD }
 
 @ScriptClass(attachTo = "Label")
 class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject, ::Label) {
-    @ScriptProperty
+    @Export
     var view: NodePath = NodePath.EMPTY
 
-    @ScriptProperty
+    @Export
     var narrowFloat: Float = -1.0f
 
-    @ScriptProperty
+    @Export
     var narrowInt: Int = -1
 
-    @ScriptProperty
+    @Export
     var smokeMode: IosSmokeMode = IosSmokeMode.EASY
 
-    @ScriptProperty
+    @Export
     var smokeModes: List<IosSmokeMode> = emptyList()
 
-    // Value-type @ScriptProperty read-back coverage. These are set through the engine and read
+    // Value-type @Export read-back coverage. These are set through the engine and read
     // back through Object.get() below, which forces the engine to call the ScriptInstance getter —
     // the exact path MultiplayerSynchronizer uses on the authority peer. Before the getProperty
     // value-type fix these were write-only (read back as nil), silently breaking replication of a
     // Vector2 `motion` / Vector3 `shoot_target`.
-    @ScriptProperty
+    @Export
     var probeMotion: Vector2 = Vector2.ZERO
 
-    @ScriptProperty
+    @Export
     var probeShootTarget: Vector3 = Vector3.ZERO
 
-    @ScriptProperty
+    @Export
     var probeName: String = ""
 
-    @ScriptProperty
+    @Export
     var probeView: NodePath = NodePath.EMPTY
 
-    @ScriptProperty
+    @Export
     var probeTags: List<String> = emptyList()
 
     // task 64 iOS mirror — an object-typed export (RESOURCE_TYPE hint). The
     // class_name probe below asserts the engine-visible PropertyInfo carries
     // class_name=AudioStream (not empty) through the new bridge + shim path.
-    @ScriptProperty
+    @Export
     var smokeStream: AudioStream? = null
 
     // Task 106: scene-stored Resource-typed property (probe_scene = ExtResource(...) in main.tscn).
     // Must be non-null when _ready runs, and instantiable. Match3's tile_scene has this shape.
-    @ScriptProperty
+    @Export
     var probeScene: PackedScene? = null
 
-    // Task 115: an Object-typed @ScriptProperty set through Object.set and read back through
+    // Task 115: an Object-typed @Export set through Object.set and read back through
     // Object.get must answer the same instance (the third-person bullet's `shooter` shape). Before
     // the fix the iOS getProperty skipped object refs, so the engine read nil while desktop
     // returned the node.
-    @ScriptProperty
+    @Export
     var probeShooter: Node? = null
 
     // Called by scripts/class_name_probe.gd with what GDScript saw in the
     // engine-visible property list; println is the only channel that streams
     // from a device build (Godot print()/printerr() do not).
-    @RegisterFunction("report_class_name")
     fun reportClassName(streamClassName: String, viewEmpty: Boolean) {
         println("[kanama][ios][kn] property class_name smoke_stream=$streamClassName view_empty=$viewEmpty")
     }
@@ -760,7 +759,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
                 "float=${engineFloat == 2.5} int=${engineInt == 7L} enum=${engineEnum == 0L} " +
                 "enumList=${engineEnumList == listOf(1L, 0L, 0L)}",
         )
-        // Data @ScriptProperty get parity: assign the Kotlin fields directly, then read each back
+        // Data @Export get parity: assign the Kotlin fields directly, then read each back
         // through Object.get so the engine calls the ScriptInstance getter — the path
         // MultiplayerSynchronizer uses on the authority peer. Whole-number vector components are exact
         // in float32, so the round trip is bit-exact. Before the getProperty data-type fixes these
@@ -775,7 +774,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
         val engineShootTarget = self.get("probe_shoot_target")
         val engineName = self.get("probe_name")
         val engineView = self.get("probe_view")
-        // Task 121: a List<String> @ScriptProperty reads back through Object.get as the same list
+        // Task 121: a List<String> @Export reads back through Object.get as the same list
         // (PackedStringArray return decoded on iOS; the third-person `_force_loop` shape).
         val engineTags = self.get("probe_tags")
         // Task 122: a List<String> ARGUMENT through Object.set (the iOS arg encoder used to throw
@@ -790,7 +789,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
                 "nodepath=${(engineView as? String) == "../Background"} " +
                 "tags=${engineTags == listOf("alpha", "beta")} tagsSet=$tagsSetOk",
         )
-        // Task 115: Object-typed @ScriptProperty through the engine setter and getter. Object.get
+        // Task 115: Object-typed @Export through the engine setter and getter. Object.get
         // must call the ScriptInstance getter and hand back the very node that was set.
         val shooterSource: Node = self.getParent() ?: self
         self.set("probe_shooter", shooterSource)
@@ -845,7 +844,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
     // screen touch / key event drives these; each logs once so a tap during the smoke proves
     // dispatch. (No input ⇒ no log, but the binds are still exercised at enter-tree.)
     @OnUnhandledInput
-    fun unhandledInput(event: GodotObject) {
+    fun unhandledInput(event: InputEvent) {
         if (!sawUnhandledInput) {
             sawUnhandledInput = true
             println("[kanama][ios][kn] project script _unhandled_input dispatched")
@@ -853,7 +852,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
     }
 
     @OnShortcutInput
-    fun shortcutInput(event: GodotObject) {
+    fun shortcutInput(event: InputEvent) {
         if (!sawShortcutInput) {
             sawShortcutInput = true
             println("[kanama][ios][kn] project script _shortcut_input dispatched")
@@ -861,7 +860,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
     }
 
     @OnUnhandledKeyInput
-    fun unhandledKeyInput(event: GodotObject) {
+    fun unhandledKeyInput(event: InputEvent) {
         if (!sawUnhandledKeyInput) {
             sawUnhandledKeyInput = true
             println("[kanama][ios][kn] project script _unhandled_key_input dispatched")
@@ -906,27 +905,27 @@ package net.multigesture.kanama.iossmoke
 
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.ScriptProperty
+import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MultiplayerSynchronizer
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
-// Task 47 — replication-shaped @ScriptProperty read. A MultiplayerSynchronizer is the real consumer of
+// Task 47 — replication-shaped @Export read. A MultiplayerSynchronizer is the real consumer of
 // engine property reads: on the authority peer it serializes by calling Object.get(...) on each
 // replicated property. Set the values, then read them back through the engine getter — the exact path
 // that returned nil for value types before the getProperty fix (client couldn't move/shoot).
 @ScriptClass(attachTo = "MultiplayerSynchronizer")
 class ReplicationProbe(godotObject: GodotHandle) :
     KanamaScript<MultiplayerSynchronizer>(godotObject, ::MultiplayerSynchronizer) {
-    @ScriptProperty
+    @Export
     var motion: Vector2 = Vector2.ZERO
 
-    @ScriptProperty(name = "shoot_target")
+    @Export(name = "shoot_target")
     var shootTarget: Vector3 = Vector3.ZERO
 
-    @ScriptProperty
+    @Export
     var shooting = false
 
     @OnReady
@@ -1070,7 +1069,7 @@ elif [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
     "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
   perl -0pi -e 's/fun process\(delta: Double\) \{\n/fun process(delta: Double) {\n        frame += 1\n        if (frame == 3) {\n            println("[kanama][ios][kn] bunnymark process frame=3")\n        }\n/' \
     "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
-  perl -0pi -e 's/\n}\s*\z/\n\n    \@RegisterFunction("signal_ack")\n    fun signalAck() {\n        println("[kanama][ios][kn] bunnymark signal ack")\n    }\n}\n/' \
+  perl -0pi -e 's/\n}\s*\z/\n\n    fun signalAck() {\n        println("[kanama][ios][kn] bunnymark signal ack")\n    }\n}\n/' \
     "$project_dir/kotlin-src/BunnymarkV1SpritesKanama.kt"
   cat >"$project_dir/main.gd" <<'EOF'
 extends Control
@@ -1126,14 +1125,14 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
+import net.multigesture.kanama.annotations.GodotName
 import net.multigesture.kanama.annotations.OnInput
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
-import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.Control
 import net.multigesture.kanama.api.GodotHandle
-import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.InputEvent
 import net.multigesture.kanama.api.InputEventMouseButton
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MouseButton
@@ -1221,7 +1220,7 @@ class Match3IosSmoke(godotObject: GodotHandle) : KanamaScript<Control>(godotObje
     }
 
     @OnInput
-    fun input(event: GodotObject) {
+    fun input(event: InputEvent) {
         val mouseButton = InputEventMouseButton.from(event) ?: return
         if (mouseButton.getButtonIndex() != MouseButton.LEFT) {
             return
@@ -1235,7 +1234,7 @@ class Match3IosSmoke(godotObject: GodotHandle) : KanamaScript<Control>(godotObje
         }
     }
 
-    @RegisterFunction("kanama_touch_start")
+    @GodotName("kanama_touch_start")
     fun touchStart(encodedPosition: Double) {
         if (busy || textures.isEmpty()) {
             return
@@ -1250,7 +1249,7 @@ class Match3IosSmoke(godotObject: GodotHandle) : KanamaScript<Control>(godotObje
         grid[selectedColumn][selectedRow]?.let { animateScale(it, tileScale * 1.12, tileScale * 1.12, 0.08) }
     }
 
-    @RegisterFunction("kanama_touch_end")
+    @GodotName("kanama_touch_end")
     fun touchEnd(encodedPosition: Double) {
         if (busy || selectedColumn < 0 || selectedRow < 0) {
             clearSelection()
@@ -2328,7 +2327,7 @@ if [[ -z "$godot_project_baseline_dir" ]]; then
   if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     install_ios_addon_args+=("-PkanamaIosProjectScriptsDir=$project_dir/kotlin-src")
     # Also compile the probe into the DESKTOP scripts jar so the export-time editor knows its
-    # @ScriptProperty names — otherwise scene-stored values (e.g. view: NodePath) are dropped at
+    # @Export names — otherwise scene-stored values (e.g. view: NodePath) are dropped at
     # export and never reach the iOS runtime. Mirrors how a real dual-target script is registered.
     install_ios_addon_args+=("-PkanamaProjectScriptsDir=$project_dir/kotlin-src")
   fi
@@ -2361,7 +2360,7 @@ if [[ -z "$godot_project_baseline_dir" ]]; then
   fi
 
   # Registering project scripts for iOS (KSP) but NOT for the desktop scripts jar used to mean the
-  # export-time editor didn't know their @ScriptProperty names, so scene-stored property values
+  # export-time editor didn't know their @Export names, so scene-stored property values
   # (e.g. view: NodePath, Match3's tile_scene) were silently DROPPED from the packed scene and
   # never reached the iOS runtime (task 106; it cost ~3 device cycles once, then a release
   # blocker). Since task 106 `:project-scripts` falls back to -PkanamaIosProjectScriptsDir, so one
@@ -2507,7 +2506,7 @@ EOF
 
 # Task 112: the export instantiates and re-packs every scene when it converts text resources to
 # binary and keeps only the properties the script instance reports; a project whose desktop
-# kanama-scripts.jar does not match its .kt scripts loses every scene-stored @ScriptProperty value
+# kanama-scripts.jar does not match its .kt scripts loses every scene-stored @Export value
 # silently (task 106). Compare each converted scene with its source before building the app.
 if ! "$godot_bin" --headless --path "$project_dir" --script "$ROOT_DIR/scripts/check_exported_scene_properties.gd"; then
   echo "[ios_visual_smoke] exported scenes lost script properties (see [check_exported_scenes] lines above)" >&2
@@ -2702,7 +2701,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] project script ready log missing" >&2
     exit 1
   fi
-  # Value-type @ScriptProperty delivery: the scene stores view = NodePath("../Background"); the
+  # Value-type @Export delivery: the scene stores view = NodePath("../Background"); the
   # probe logs the NodePath that arrived. Confirms scene-driven value-type set-property end to end.
   if rg -q 'value-type property view=\.\./Background' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] project script value-type NodePath property delivered"
@@ -2725,7 +2724,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] runtime self-test summary missing (ptrcall matrix / ObjectCalls)" >&2
     exit 1
   fi
-  # Task 106: the scene-stored PackedScene @ScriptProperty survived the export's text->binary
+  # Task 106: the scene-stored PackedScene @Export survived the export's text->binary
   # re-pack and reached the script before _ready (Match3's tile_scene shape).
   if rg -q 'task106 resource property probe_scene delivered=true instantiated=true' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] project script Resource-typed (PackedScene) property delivered before _ready"
@@ -2741,22 +2740,22 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] task 39 property conversion probe failed" >&2
     exit 1
   fi
-  # Data @ScriptProperty get parity: Vector2/Vector3/String/NodePath read back through the engine
+  # Data @Export get parity: Vector2/Vector3/String/NodePath read back through the engine
   # getter (the path MultiplayerSynchronizer uses on the authority peer). Regression for the
   # write-only data-type getProperty bug that broke iOS multiplayer movement/shooting.
   if rg -q 'datatype property engine get vector2=true vector3=true string=true nodepath=true tags=true tagsSet=true' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] data @ScriptProperty get parity (Vector2/Vector3/String/NodePath/List<String>, incl. a List<String> set through Object.set) round-tripped"
+    echo "[ios_visual_smoke] data @Export get parity (Vector2/Vector3/String/NodePath/List<String>, incl. a List<String> set through Object.set) round-tripped"
   else
-    echo "[ios_visual_smoke] data @ScriptProperty get parity probe failed" >&2
+    echo "[ios_visual_smoke] data @Export get parity probe failed" >&2
     exit 1
   fi
-  # Task 115: an Object-typed @ScriptProperty set through Object.set reads back through Object.get
+  # Task 115: an Object-typed @Export set through Object.set reads back through Object.get
   # as the same instance (the third-person bullet's `shooter`). Regression for the iOS getProperty
   # object-ref gap that answered nil.
   if rg -q 'task115 object property engine get fieldSet=true same=true' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] Object-typed @ScriptProperty set via Object.set reads back through Object.get (task 115)"
+    echo "[ios_visual_smoke] Object-typed @Export set via Object.set reads back through Object.get (task 115)"
   else
-    echo "[ios_visual_smoke] Object-typed @ScriptProperty engine get probe failed (task 115)" >&2
+    echo "[ios_visual_smoke] Object-typed @Export engine get probe failed (task 115)" >&2
     exit 1
   fi
   # Phase 3.3: an arg-bearing virtual dispatched through the generic callV path.
@@ -2776,19 +2775,19 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
     echo "[ios_visual_smoke] lifecycle probe failed: _process re-enabled after _ready disabled it" >&2
     exit 1
   fi
-  # Task 47 — replication-shaped @ScriptProperty read: a MultiplayerSynchronizer reads its replicated
+  # Task 47 — replication-shaped @Export read: a MultiplayerSynchronizer reads its replicated
   # Vector2/Vector3/bool properties back through the engine getter (the authority-peer serialize path).
   if rg -q 'ReplicationProbe engine get motion=true shoot_target=true shooting=true' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] replication: MultiplayerSynchronizer @ScriptProperty read-back round-tripped"
+    echo "[ios_visual_smoke] replication: MultiplayerSynchronizer @Export read-back round-tripped"
   else
-    echo "[ios_visual_smoke] replication probe failed: value-type @ScriptProperty read back wrong via engine" >&2
+    echo "[ios_visual_smoke] replication probe failed: value-type @Export read back wrong via engine" >&2
     exit 1
   fi
   # task 64 iOS mirror — PropertyInfo.class_name on object-typed exports: GDScript reads the
   # engine-visible property list and must see class_name=AudioStream on smoke_stream (the new
   # bridge + shim StringName cache) while the value-typed `view` stays empty.
   if rg -q 'property class_name smoke_stream=AudioStream view_empty=true' "$stderr_log" "$stdout_log"; then
-    echo "[ios_visual_smoke] object-typed @ScriptProperty class_name delivered (task 64 iOS mirror)"
+    echo "[ios_visual_smoke] object-typed @Export class_name delivered (task 64 iOS mirror)"
   else
     echo "[ios_visual_smoke] class_name probe failed: object-typed export missing PropertyInfo.class_name" >&2
     exit 1

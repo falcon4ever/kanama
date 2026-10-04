@@ -5,10 +5,10 @@ import java.lang.ref.WeakReference
 
 /**
  * The owner instance id of every `@ScriptClass` Kotlin instance the runtime created (task 131 item
- * 2, review 2): a custom-script-typed value (`@ScriptProperty var target: Enemy?`, a `List`/`Map`
- * of them) is handed back to Godot as its owner object, and this id answers "was that owner freed?"
- * without reading the owner's memory. Keyed by object identity and held weakly, so a script the
- * game drops is forgotten; a script class's own `equals`/`hashCode` are never consulted.
+ * 2, review 2): a custom-script-typed value (`@Export var target: Enemy?`, a `List`/`Map` of them)
+ * is handed back to Godot as its owner object, and this id answers "was that owner freed?" without
+ * reading the owner's memory. Keyed by object identity and held weakly, so a script the game drops
+ * is forgotten; a script class's own `equals`/`hashCode` are never consulted.
  */
 internal object ScriptOwnerIds {
   private class Entry(script: Any, val id: Long, queue: ReferenceQueue<Any>) :

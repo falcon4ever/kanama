@@ -1,12 +1,14 @@
 package net.multigesture.kanama.annotations
 
 /**
- * Marks a Kotlin class for registration with Godot's ClassDB.
+ * Marks a Kotlin class for registration with Godot's ClassDB as a new class (an extension class,
+ * like a godot-cpp class), as opposed to [ScriptClass], which attaches a script to an existing
+ * node.
  *
- * The annotated class must extend an engine type (directly or transitively) and will be registered
- * as a new node type under [parentClassName] in Godot's "Add Node" dialog. The KSP processor
- * generates a companion `<ClassName>Registrar` object that wires up the upcall stubs and calls
- * [net.multigesture.kanama.binding.runtime.ClassDB].
+ * The class is registered as a new node type under [parentClassName] in Godot's "Add Node" dialog.
+ * The KSP processor generates a companion `<ClassName>Registrar` object that wires up the upcall
+ * stubs and calls [net.multigesture.kanama.binding.runtime.ClassDB]. Its public functions are
+ * registered as methods and its [Export] properties as properties, exactly as on a script class.
  *
  * @property parentClassName The Godot engine class this type derives from (e.g. `"Node"`,
  *   `"Node3D"`, `"Sprite2D"`). Must match an engine-known class name exactly.
@@ -16,26 +18,26 @@ package net.multigesture.kanama.annotations
 annotation class RegisterClass(val parentClassName: String = "Object")
 
 /**
- * Marks a function on a [RegisterClass]-annotated class as an engine- callable method. The
- * generator emits call/ptrcall upcall stubs and registers the method via
- * [net.multigesture.kanama.binding.runtime.ClassDB.registerMethod].
+ * Gives a registered function a Godot-side name other than its snake_case Kotlin name.
  *
- * @property name Optional override for the engine-facing method name (snake_case). Defaults to the
- *   function's Kotlin name converted from camelCase.
+ * Every public function declared in a [ScriptClass] or [RegisterClass] class is registered with
+ * Godot automatically, under its Kotlin name converted from camelCase (`fun showMessage()` is
+ * `show_message`), like a GDScript `func`. Use this annotation only where Godot must find the
+ * function under another name: a signal connection saved in a `.tscn` by the editor
+ * (`@GodotName("_on_start_button_pressed") fun onStartButtonPressed()`), or a name a GDScript
+ * caller already uses. `private`, `protected` and `internal` functions stay Kotlin-only.
+ *
+ * @property name The engine-facing method name, used verbatim.
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class RegisterFunction(val name: String = "")
-
-/** Alias for [RegisterFunction] to reduce C#/attribute migration friction. */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
-annotation class Method(val name: String = "")
+annotation class GodotName(val name: String)
 
 /**
  * Marks a registered function as available for Godot high-level multiplayer RPC.
  *
- * Use with [RegisterFunction] or [Method]. The defaults match Godot's `@rpc` defaults.
+ * Put it on a public function of a [ScriptClass] (registered automatically). The defaults match
+ * Godot's `@rpc` defaults.
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
@@ -61,27 +63,10 @@ object RpcTransferMode {
 }
 
 /**
- * Marks a property on a [RegisterClass]-annotated class as an inspector- visible, engine-accessible
- * property. The generator emits backing `get_<name>` / `set_<name>` methods and registers the
- * property via [net.multigesture.kanama.binding.runtime.ClassDB.registerProperty].
- */
-@Target(AnnotationTarget.PROPERTY)
-@Retention(AnnotationRetention.SOURCE)
-annotation class RegisterProperty(
-  val name: String = "",
-  /** PROPERTY_HINT_* constant. 0 = PROPERTY_HINT_NONE. */
-  val hint: Int = 0,
-  /** Hint string (e.g. "0,100,1" for PROPERTY_HINT_RANGE). */
-  val hintString: String = "",
-  /** PROPERTY_USAGE_* flags. Defaults to [PropertyUsage.DEFAULT]. */
-  val usage: Int = PropertyUsage.DEFAULT,
-)
-
-/**
  * Godot property hint constants for inspector metadata.
  *
- * Use these in [RegisterProperty], [Export], and [ScriptProperty] annotations instead of repeating
- * raw `PROPERTY_HINT_*` integer values in gameplay code.
+ * Use these in [Export] annotations instead of repeating raw `PROPERTY_HINT_*` integer values in
+ * gameplay code.
  */
 object PropertyHint {
   /** No hint. Matches Godot's `PROPERTY_HINT_NONE`. */
@@ -164,10 +149,20 @@ object PropertyUsage {
 }
 
 /**
- * Unified export alias for properties.
+ * Exports a property to Godot: inspector-visible, saved with the scene or resource, and readable
+ * and writable from GDScript and the engine (GDScript `@export`).
  *
- * On `@RegisterClass` types this maps to [RegisterProperty]-style behavior. On `@ScriptClass` types
- * this maps to [ScriptProperty]-style behavior.
+ * On a [ScriptClass] the property is routed through the script instance's `set` / `get` callbacks;
+ * on a [RegisterClass] the processor emits `get_<name>` / `set_<name>` methods and registers the
+ * property with ClassDB. (Kanama 0.5 merged `@ScriptProperty` and `@RegisterProperty` into this
+ * annotation; their parameters were identical.)
+ *
+ * @property name Optional engine-facing property name (snake_case). Defaults to the Kotlin property
+ *   name converted from camelCase.
+ * @property hint PROPERTY_HINT_* constant. 0 = PROPERTY_HINT_NONE. Prefer [PropertyHint] constants
+ *   over raw integers in user-facing code.
+ * @property hintString Hint string (e.g. "0,100,1" for PROPERTY_HINT_RANGE).
+ * @property usage PROPERTY_USAGE_* flags. Defaults to [PropertyUsage.DEFAULT].
  */
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.SOURCE)
@@ -185,7 +180,8 @@ annotation class Export(
 @Target(AnnotationTarget.CLASS) @Retention(AnnotationRetention.SOURCE) annotation class Tool
 
 /**
- * Exposes a zero-argument function as a clickable inspector button.
+ * Exposes a zero-argument function as a clickable inspector button (GDScript `@export_tool_button`,
+ * Godot C# `[ExportToolButton]`).
  *
  * Use on `@Tool @ScriptClass` scripts. The generated script metadata exposes a Callable property
  * with Godot's tool-button hint; clicking it in the inspector invokes the annotated function on the
@@ -194,13 +190,8 @@ annotation class Export(
  * @property text Button label shown in the inspector.
  * @property icon Optional editor icon name from Godot's `EditorIcons` theme.
  * @property name Optional engine-facing property name. Defaults to the function name converted from
- *   camelCase.
+ *   camelCase plus `_button`.
  */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
-annotation class ToolButton(val text: String, val icon: String = "", val name: String = "")
-
-/** Alias for [ToolButton], mirroring Godot C# `[ExportToolButton]`. */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class ExportToolButton(val text: String, val icon: String = "", val name: String = "")
@@ -211,9 +202,6 @@ annotation class ExportToolButton(val text: String, val icon: String = "", val n
  */
 @Target(AnnotationTarget.CLASS) @Retention(AnnotationRetention.SOURCE) annotation class GlobalClass
 
-/** Alias for [GlobalClass], mirroring GDScript `class_name` intent. */
-@Target(AnnotationTarget.CLASS) @Retention(AnnotationRetention.SOURCE) annotation class ClassName
-
 /**
  * Marks a zero-arg, void Kotlin function as the handler for Godot's `_ready` virtual. The function
  * name on the Kotlin side is free — the generator wires this annotation to the engine's `_ready`
@@ -221,26 +209,15 @@ annotation class ExportToolButton(val text: String, val icon: String = "", val n
  */
 @Target(AnnotationTarget.FUNCTION) @Retention(AnnotationRetention.SOURCE) annotation class OnReady
 
-/** Alias for [OnReady]. */
-@Target(AnnotationTarget.FUNCTION) @Retention(AnnotationRetention.SOURCE) annotation class Ready
-
 /** Handler for Godot's `_enter_tree` virtual. */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnEnterTree
 
-/** Alias for [OnEnterTree]. */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
-annotation class EnterTree
-
 /** Handler for Godot's `_exit_tree` virtual. */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnExitTree
-
-/** Alias for [OnExitTree]. */
-@Target(AnnotationTarget.FUNCTION) @Retention(AnnotationRetention.SOURCE) annotation class ExitTree
 
 /**
  * Handler for Godot's `_process(delta: Double)` virtual. The annotated function must accept a
@@ -250,9 +227,6 @@ annotation class OnExitTree
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnProcess
 
-/** Alias for [OnProcess]. */
-@Target(AnnotationTarget.FUNCTION) @Retention(AnnotationRetention.SOURCE) annotation class Process
-
 /**
  * Handler for Godot's `_physics_process(delta: Double)` virtual. The annotated function must accept
  * a single `Double` parameter.
@@ -261,20 +235,14 @@ annotation class OnProcess
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnPhysicsProcess
 
-/** Alias for [OnPhysicsProcess]. */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
-annotation class PhysicsProcess
-
 /**
  * Handler for Godot's `_input(event: InputEvent)` virtual. Receives every input event the engine
  * routes to this node before SceneTree dispatches it for action handling. The annotated function
- * must accept a single `GodotObject` (the input event).
+ * takes one `InputEvent` (`fun input(event: InputEvent)`); cast it to the subclass you handle with
+ * `InputEventKey.from(event)` and friends. The same holds for [OnUnhandledInput], [OnShortcutInput]
+ * and [OnUnhandledKeyInput].
  */
 @Target(AnnotationTarget.FUNCTION) @Retention(AnnotationRetention.SOURCE) annotation class OnInput
-
-/** Alias for [OnInput]. */
-@Target(AnnotationTarget.FUNCTION) @Retention(AnnotationRetention.SOURCE) annotation class Input
 
 /**
  * Handler for Godot's `_unhandled_input(event: InputEvent)` virtual. Fires for events that no other
@@ -284,11 +252,6 @@ annotation class PhysicsProcess
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnUnhandledInput
 
-/** Alias for [OnUnhandledInput]. */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
-annotation class UnhandledInput
-
 /**
  * Handler for Godot's `_shortcut_input(event: InputEvent)` virtual. Fires for events that may match
  * a `Shortcut` resource bound on this node. Runs before `_unhandled_input`.
@@ -297,11 +260,6 @@ annotation class UnhandledInput
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnShortcutInput
 
-/** Alias for [OnShortcutInput]. */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
-annotation class ShortcutInput
-
 /**
  * Handler for Godot's `_unhandled_key_input(event: InputEvent)` virtual. Fires only for unhandled
  * keyboard events; cheaper than `_unhandled_input` when you only care about keyboard.
@@ -309,11 +267,6 @@ annotation class ShortcutInput
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnUnhandledKeyInput
-
-/** Alias for [OnUnhandledKeyInput]. */
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.SOURCE)
-annotation class UnhandledKeyInput
 
 /**
  * Overrides an arbitrary engine virtual method on the script's attach-to class (or any of its
@@ -330,10 +283,9 @@ annotation class UnhandledKeyInput
  * over Kotlin/Native does not expose function-annotation argument values; the function name is
  * available on every target, and this also matches GDScript's `func _draw()` convention.)
  *
- * The lifecycle annotations ([OnReady], [OnProcess], [OnInput], …) remain convenience aliases for
- * the most common virtuals; use `@OverrideVirtual` for everything else (custom drawing via `_draw`,
- * control input via `_gui_input`, editor warnings via `_get_configuration_warnings`, drag-and-drop,
- * …).
+ * The lifecycle annotations ([OnReady], [OnProcess], [OnInput], …) cover the most common virtuals;
+ * use `@OverrideVirtual` for everything else (custom drawing via `_draw`, control input via
+ * `_gui_input`, editor warnings via `_get_configuration_warnings`, drag-and-drop, …).
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
@@ -362,31 +314,10 @@ annotation class OverrideVirtual
 annotation class ScriptClass(val attachTo: String = "Node")
 
 /**
- * Marks a property on a [@ScriptClass][ScriptClass]-annotated class as an inspector-visible
- * property routed through the [ScriptBridge] `set_func` / `get_func` ScriptInstance callbacks.
- *
- * @property name Optional engine-facing property name (snake_case). Defaults to the Kotlin property
- *   name converted from camelCase.
- * @property hint PROPERTY_HINT_* constant. 0 = PROPERTY_HINT_NONE. Prefer [PropertyHint] constants
- *   over raw integers in user-facing code.
- * @property hintString Hint string (e.g. "0,100,1" for PROPERTY_HINT_RANGE).
- * @property usage PROPERTY_USAGE_* flags. Defaults to [PropertyUsage.DEFAULT].
- */
-@Target(AnnotationTarget.PROPERTY)
-@Retention(AnnotationRetention.SOURCE)
-annotation class ScriptProperty(
-  val name: String = "",
-  val hint: Int = 0,
-  val hintString: String = "",
-  val usage: Int = PropertyUsage.DEFAULT,
-)
-
-/**
  * Starts an inspector export category before the annotated exported property.
  *
  * This mirrors Godot's category rows in the inspector. Because Kotlin annotations cannot be
- * standalone declarations, place this on the first [ScriptProperty] or [Export] that should appear
- * inside the category.
+ * standalone declarations, place this on the first [Export] that should appear inside the category.
  */
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.SOURCE)
@@ -396,8 +327,7 @@ annotation class ExportCategory(val name: String)
  * Starts an inspector export group before the annotated exported property.
  *
  * This mirrors GDScript's `@export_group("Name", "prefix_")`. Because Kotlin annotations cannot be
- * standalone declarations, place this on the first [ScriptProperty] or [Export] that should appear
- * inside the group.
+ * standalone declarations, place this on the first [Export] that should appear inside the group.
  *
  * @property name Display name for the group. Use an empty name with an empty [prefix] to end the
  *   current group.
@@ -413,8 +343,8 @@ annotation class ExportGroup(val name: String, val prefix: String = "")
  * Starts an inspector export subgroup before the annotated exported property.
  *
  * This mirrors GDScript's `@export_subgroup("Name", "prefix_")`. Because Kotlin annotations cannot
- * be standalone declarations, place this on the first [ScriptProperty] or [Export] that should
- * appear inside the subgroup.
+ * be standalone declarations, place this on the first [Export] that should appear inside the
+ * subgroup.
  *
  * Subgroups require a parent [ExportGroup] to be active in Godot's inspector.
  */
@@ -423,7 +353,7 @@ annotation class ExportGroup(val name: String, val prefix: String = "")
 annotation class ExportSubgroup(val name: String, val prefix: String = "")
 
 /**
- * Declares a Godot signal on a [RegisterClass]-annotated type.
+ * Declares a Godot signal on a [ScriptClass] or [RegisterClass] type.
  *
  * Place on a zero-body function whose parameter list describes the signal's argument signature
  * (names + types). The function body is ignored by the processor — declaring it as `Unit` is
@@ -438,3 +368,142 @@ annotation class ExportSubgroup(val name: String, val prefix: String = "")
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Signal(val name: String = "")
+
+// ---------- Removed in Kanama 0.5 (task 133 B) ----------
+//
+// Tombstones, not aliases: each removed name still resolves, so a leftover use is a compile error
+// whose message names the replacement (without the class, `@Process` would quietly resolve to
+// `java.lang.Process` and `@ScriptProperty` would say only "Unresolved reference").
+// `DeprecationLevel.ERROR` makes every use fail to compile; nothing reads them. The KSP processor
+// reports the same leftovers at their declarations. scripts/migrate_script_annotations.py rewrites
+// a source tree.
+
+@Deprecated(
+  "removed in Kanama 0.5: public functions are registered automatically; delete it, or use @GodotName(\"...\") for another Godot name. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class RegisterFunction(val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: public functions are registered automatically; delete it, or use @GodotName(\"...\") for another Godot name. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Method(val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: use @Export (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ScriptProperty(
+  val name: String = "",
+  val hint: Int = 0,
+  val hintString: String = "",
+  val usage: Int = 6,
+)
+
+@Deprecated(
+  "removed in Kanama 0.5: use @Export (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+annotation class RegisterProperty(
+  val name: String = "",
+  val hint: Int = 0,
+  val hintString: String = "",
+  val usage: Int = 6,
+)
+
+@Deprecated(
+  "removed in Kanama 0.5: use @GlobalClass. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ClassName()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @ExportToolButton (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ToolButton(val text: String = "", val icon: String = "", val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnReady. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Ready()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnEnterTree. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class EnterTree()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnExitTree. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ExitTree()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnProcess. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Process()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnPhysicsProcess. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class PhysicsProcess()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Input()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnUnhandledInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class UnhandledInput()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnShortcutInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ShortcutInput()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnUnhandledKeyInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class UnhandledKeyInput()

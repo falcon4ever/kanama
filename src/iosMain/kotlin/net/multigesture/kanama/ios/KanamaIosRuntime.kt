@@ -46,7 +46,7 @@ internal data class KanamaIosScriptMethod(val name: String, val argumentCount: I
 
 internal data class KanamaIosScriptProperty(
   val name: String,
-  // Godot Variant::Type, so the script instance can advertise this @ScriptProperty to the
+  // Godot Variant::Type, so the script instance can advertise this @Export to the
   // engine (get_property_list) — required for scene-stored values to be applied. Default 0
   // (NIL) keeps older generated registrars compiling.
   val variantType: Int = 0,
@@ -108,18 +108,18 @@ internal interface KanamaIosScriptBridge {
 
   fun setPropertyObjectArray(propertyIndex: Int, values: LongArray): Boolean = false
 
-  // Integer Array @ScriptProperty delivery. Kept separate from object arrays so malformed
+  // Integer Array @Export delivery. Kept separate from object arrays so malformed
   // scene data can never turn an integer cell into a bogus object handle. The generated
   // List<Enum> bridge converts these ordinals to enum entries with desktop-identical clamping.
   fun setPropertyIntArray(propertyIndex: Int, values: LongArray): Boolean = false
 
-  // `List<String>` (Godot PackedStringArray) @ScriptProperty delivery. The C side extracts the
+  // `List<String>` (Godot PackedStringArray) @Export delivery. The C side extracts the
   // packed array's elements to utf8 C strings and hands them here; the generated
   // setPropertyStringArray branch assigns the list to the field. See the C
   // PACKED_STRING_ARRAY set-property dispatch case + the emitter's string-list block.
   fun setPropertyStringArray(propertyIndex: Int, values: List<String>): Boolean = false
 
-  // Value-type @ScriptProperty delivery (NodePath/Vector2/Vector3/Color). [value] is the
+  // Value-type @Export delivery (NodePath/Vector2/Vector3/Color). [value] is the
   // already-decoded Kotlin value; the generated branch casts it to the field's type. See
   // the C set-property value path + setScriptInstancePropertyValue's tag decode.
   fun setPropertyValue(propertyIndex: Int, value: Any): Boolean = false
@@ -1267,7 +1267,7 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
     // freed
     // object as null (task 131 item 2). A closed RefCounted throws its closed-handle error; every
     // @CName export that encodes catches it and answers nil instead. Used by getProperty of
-    // Object-typed @ScriptProperty (`Object.get("shooter")`) and by Object-returning
+    // Object-typed @Export (`Object.get("shooter")`) and by Object-returning
     // methods/virtuals.
     is GodotObject -> {
       retBuf.reinterpret<LongVar>()[0] = FreedObjectChecks.valueSegment(value).address()
@@ -1315,7 +1315,7 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       retTag[0] = IOS_PT_STRING
     }
     // NodePath ships its path string like a String; the C pt_return_to_variant NODE_PATH case
-    // builds a Godot NodePath from it. Makes NodePath @ScriptProperty readable (get parity).
+    // builds a Godot NodePath from it. Makes NodePath @Export readable (get parity).
     is NodePath -> {
       val ptr = IosReturnStringScratch.encode(value.path)
       retBuf.reinterpret<CPointerVar<ByteVar>>()[0] = ptr

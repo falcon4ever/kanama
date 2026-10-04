@@ -8,7 +8,7 @@ import net.multigesture.kanama.annotations.OnUnhandledInput
 import net.multigesture.kanama.annotations.OnUnhandledKeyInput
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GodotHandle
-import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.InputEvent
 
 /**
  * Non-tool sister script that locks in the editor-gating behaviour: without `@Tool`, neither
@@ -36,11 +36,11 @@ class NonToolScript(val godotObject: GodotHandle) {
     }
   }
 
-  @OnInput fun input(event: GodotObject) = Unit
+  @OnInput fun input(event: InputEvent) = Unit
 
-  @OnUnhandledInput fun unhandledInput(event: GodotObject) = Unit
+  @OnUnhandledInput fun unhandledInput(event: InputEvent) = Unit
 
-  @OnShortcutInput fun shortcutInput(event: GodotObject) = Unit
+  @OnShortcutInput fun shortcutInput(event: InputEvent) = Unit
 
-  @OnUnhandledKeyInput fun unhandledKeyInput(event: GodotObject) = Unit
+  @OnUnhandledKeyInput fun unhandledKeyInput(event: InputEvent) = Unit
 }

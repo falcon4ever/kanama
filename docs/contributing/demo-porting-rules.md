@@ -71,10 +71,10 @@ add an annotated forwarding method on that subclass.
 Keep exported properties aligned with the original GDScript type:
 
 ```kotlin
-@ScriptProperty
+@Export
 var crosshair: TextureRect? = null
 
-@ScriptProperty
+@Export
 var target: Vehicle? = null
 ```
 
@@ -110,11 +110,11 @@ typed collections:
 @ScriptClass(attachTo = "Resource")
 @GlobalClass
 class Weapon(val godotObject: GodotHandle) {
-    @ScriptProperty
+    @Export
     var crosshair: Texture2D? = null
 }
 
-@ScriptProperty
+@Export
 var weapons: List<Weapon> = emptyList()
 ```
 
@@ -228,7 +228,7 @@ fails a `close()` on a borrowed view (`fromHandle`/`fromObject`) or on a live
 Scene-connected methods need to be callable from Godot:
 
 ```kotlin
-@RegisterFunction("_on_body_entered")
+@GodotName("_on_body_entered")
 fun onBodyEntered(body: GodotObject) {
     collect()
 }
@@ -274,7 +274,7 @@ func _step() -> void:
 ```
 
 ```kotlin
-@RegisterFunction("_step")
+@GodotName("_step")
 fun step() {
     CharacterSkinSignals.stepped(this)
 }

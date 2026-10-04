@@ -4814,7 +4814,7 @@
       "shape": "DOUBLE_RET_DOUBLE",
       "executionMode": "IMMEDIATE_RESULT",
       "returnOwnership": "BORROWED",
-      "semantics": "Sample the curve's baked value at offset (0..1 domain by convention, unclamped past it). Unlocks Resource-typed @ScriptProperty hydration for Curve exports (thirdperson Bullet's scale_decay) -- the property push itself already rides the generic OBJECT property arm; this opcode is the one method call the converged demo needs.",
+      "semantics": "Sample the curve's baked value at offset (0..1 domain by convention, unclamped past it). Unlocks Resource-typed @Export hydration for Curve exports (thirdperson Bullet's scale_decay) -- the property push itself already rides the generic OBJECT property arm; this opcode is the one method call the converged demo needs.",
       "introducedBy": "64-tier3-curve-resource-hydration"
     },
     {
