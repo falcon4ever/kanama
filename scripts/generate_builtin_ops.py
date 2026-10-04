@@ -1501,8 +1501,23 @@ def member_calls_engine(member: Member) -> bool:
 EDGE_INPUTS = 64
 
 
+# Pure members that convert a float to an int: C++'s float -> int conversion of NaN, ±INF or an
+# out-of-range value is undefined behaviour, and Godot's result differs by CPU (x86's cvttss2si gives
+# INT_MIN, arm64 saturates; Kotlin's toInt() is defined and saturates like arm64). Their edge entry
+# draws only the FINITE edge values (±0, .5 ties, 1e-30, 3.0), which every CPU converts alike; the
+# random row's values stay far inside the int range. (CI: Linux x86_64 Color.to_html on +INF
+# channels gave "00" where Kotlin and arm64 give "ff".)
+EDGE_FINITE_ONLY = {
+    "Color.to_html": "undefined in C++; Godot differs by CPU (round(channel * 255) cast to int)",
+}
+
+
 def edge_excluded(key: str) -> str | None:
-    """Why a pure entry is left out of the edge row (±0, NaN, ±INF, .5 ties, 1e-30), or None."""
+    """Why a pure entry is left out of the edge row (±0, NaN, ±INF, .5 ties, 1e-30), or None.
+
+    The non-finite edge inputs of the float -> int members in [EDGE_FINITE_ONLY] are left out too:
+    those entries stay in the row but draw finite edge values only.
+    """
     if re.search(r" (<|<=|>|>=) ", key):
         return "a NaN component: Godot answers false to all four comparisons, one compareTo cannot"
     meta = ENTRY_META.get(key)
@@ -1517,6 +1532,27 @@ def edge_excluded(key: str) -> str | None:
 
 def edge_indices(pure) -> list[int]:
     return [i for i, (key, _, _) in enumerate(pure) if edge_excluded(key) is None]
+
+
+def edge_call(i: int, key: str, gd: bool) -> str:
+    """The edge round's call of pure entry [i]: its finite-only twin for an EDGE_FINITE_ONLY member."""
+    if key in EDGE_FINITE_ONLY:
+        return f"edge_finite{i}()" if gd else f"edgeFinite{i}()"
+    return f"pure{i}()"
+
+
+def finite_twins(pure, gd: bool) -> list[str]:
+    """`edgeFinite{i}`: the entry's body with every decimal drawn by nvf() (finite edge values)."""
+    out = []
+    for i, (key, kt, gdl) in enumerate(pure):
+        if key not in EDGE_FINITE_ONLY or edge_excluded(key) is not None:
+            continue
+        lines = [line.replace("nv()", "nvf()") for line in (gdl if gd else kt)]
+        if gd:
+            out += ["", "", f"func edge_finite{i}() -> void:", *("\t" + line for line in lines)]
+        else:
+            out += [f"  private fun edgeFinite{i}() {{", *("    " + line for line in lines), "  }", ""]
+    return out
 
 
 CONST_ENTRIES: list[tuple[str, str, str]] = []  # (key, kotlin expression, gdscript expression)
@@ -1602,7 +1638,7 @@ def render_parity_kt(pure, facade) -> str:
     out.append("  }")
     out.append("")
     out.append("  private fun edgeRound() {")
-    out.extend(f"    pure{i}()" for i in edge_indices(pure))
+    out.extend(f"    {edge_call(i, pure[i][0], False)}" for i in edge_indices(pure))
     out.append("  }")
     out.append("")
     out.append("  private fun facadeRound() {")
@@ -1610,6 +1646,7 @@ def render_parity_kt(pure, facade) -> str:
     out.append("  }")
     out.append("")
     out.extend(block(pure, "pure"))
+    out.extend(finite_twins(pure, False))
     out.extend(block(facade, "facade"))
     out.extend(
         [
@@ -1630,6 +1667,9 @@ def render_parity_kt(pure, facade) -> str:
             "    if (edge) return EDGE[(r % EDGE.size).toInt()]",
             "    return ((r % 200001) - 100000) / 10000.0 * SCALES[((r ushr 24) % 7).toInt()]",
             "  }",
+            "",
+            "  // The finite edge values, for the float -> int members (EDGE_FINITE_ONLY in the generator).",
+            "  private fun nvf(): Double = EDGE_FINITE[(nextRandom() % EDGE_FINITE.size).toInt()]",
             "",
             "  private fun ri(): Int = ((nextRandom() % 60001) - 30000).toInt()",
             "",
@@ -1696,6 +1736,7 @@ def render_parity_kt(pure, facade) -> str:
             "    val SCALES = doubleArrayOf(0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)",
             "    val EDGE =",
             "      doubleArrayOf(0.0, -0.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)",
+            "    val EDGE_FINITE = doubleArrayOf(0.0, -0.0, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)",
             "  }",
             "}",
         ]
@@ -1756,7 +1797,7 @@ def render_parity_gd(pure, facade) -> str:
     out.append("")
     out.append("")
     out.append("func edge_round() -> void:")
-    out.extend(f"\tpure{i}()" for i in edge_indices(pure))
+    out.extend(f"\t{edge_call(i, pure[i][0], True)}" for i in edge_indices(pure))
     out.append("")
     out.append("")
     out.append("func facade_round() -> void:")
@@ -1769,6 +1810,7 @@ def render_parity_gd(pure, facade) -> str:
             out.append("")
             out.append(f"func {prefix}{i}() -> void:")
             out.extend("\t" + line for line in gd)
+    out.extend(finite_twins(pure, True))
     out.extend(
         [
             "",
@@ -1785,6 +1827,11 @@ def render_parity_gd(pure, facade) -> str:
             "\tif edge:",
             "\t\treturn edge_values[r % edge_values.size()]",
             "\treturn ((r % 200001) - 100000) / 10000.0 * SCALES[(r >> 24) % 7]",
+            "",
+            "",
+            "func nvf() -> float:",
+            "\tvar finite := [edge_values[0], edge_values[1], 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0]",
+            "\treturn finite[next_random() % finite.size()]",
             "",
             "",
             "func ri() -> int:",

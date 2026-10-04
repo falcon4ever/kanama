@@ -835,7 +835,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     pure229()
     pure230()
     pure231()
-    pure232()
+    edgeFinite232()
     pure233()
     pure234()
     pure235()
@@ -3130,6 +3130,12 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("RID.get_id", b.getId())
   }
 
+  private fun edgeFinite232() {
+    val b = Color(nvf(), nvf(), nvf(), nvf())
+    val a0 = rb()
+    mix("Color.to_html", b.toHtml(a0))
+  }
+
   private fun facade0() {
     val b = Vector2(nv(), nv()).normalized()
     mix("Vector2.angle", b.angle())
@@ -4266,6 +4272,9 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     return ((r % 200001) - 100000) / 10000.0 * SCALES[((r ushr 24) % 7).toInt()]
   }
 
+  // The finite edge values, for the float -> int members (EDGE_FINITE_ONLY in the generator).
+  private fun nvf(): Double = EDGE_FINITE[(nextRandom() % EDGE_FINITE.size).toInt()]
+
   private fun ri(): Int = ((nextRandom() % 60001) - 30000).toInt()
 
   private fun rnz(): Int = ri().let { if (it == 0) 1 else it }
@@ -4346,5 +4355,6 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
         1e-30,
         3.0,
       )
+    val EDGE_FINITE = doubleArrayOf(0.0, -0.0, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)
   }
 }

@@ -96,6 +96,11 @@ Where Kotlin and GDScript differ:
 - Comparing vectors with a NaN component: Godot answers `false` to all of `<`,
   `<=`, `>` and `>=`. Kotlin's comparisons go through one `compareTo`, which sorts
   a NaN component last, so `<` and `<=` are `false` but `>` and `>=` are `true`.
+- A float that becomes an integer (`Color.toHtml` on a channel of NaN, ±INF or
+  beyond the `int` range): C++ leaves that conversion undefined, so Godot's own
+  result differs by CPU (x86 and arm64 disagree). Kotlin's conversion is defined
+  (NaN gives 0, out-of-range values saturate), which matches Godot on arm64
+  (Apple silicon, phones). For finite channels every platform agrees.
 - On Web (Kotlin/Wasm), the methods that run in Kotlin natively run the same
   Kotlin, with the same results; the engine-computed ones are not all there yet,
   and `angle()`, `rotated` and `slerp` are Kotlin approximations of Godot's

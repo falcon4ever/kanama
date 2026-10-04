@@ -834,7 +834,7 @@ func edge_round() -> void:
 	pure229()
 	pure230()
 	pure231()
-	pure232()
+	edge_finite232()
 	pure233()
 	pure234()
 	pure235()
@@ -4045,6 +4045,12 @@ func facade162() -> void:
 	mix("Vector4i.snappedi", b.snappedi(a0))
 
 
+func edge_finite232() -> void:
+	var b = Color(nvf(), nvf(), nvf(), nvf())
+	var a0 = rb()
+	mix("Color.to_html", b.to_html(a0))
+
+
 func next_random() -> int:
 	seed = seed ^ ((seed << 13) & 0xFFFFFFFF)
 	seed = seed ^ (seed >> 17)
@@ -4057,6 +4063,11 @@ func nv() -> float:
 	if edge:
 		return edge_values[r % edge_values.size()]
 	return ((r % 200001) - 100000) / 10000.0 * SCALES[(r >> 24) % 7]
+
+
+func nvf() -> float:
+	var finite := [edge_values[0], edge_values[1], 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0]
+	return finite[next_random() % finite.size()]
 
 
 func ri() -> int:
