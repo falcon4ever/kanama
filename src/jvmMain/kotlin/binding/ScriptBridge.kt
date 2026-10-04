@@ -69,7 +69,10 @@ object ScriptBridge {
 
   fun kotlinObjectForOwner(ownerObject: MemorySegment): Any? =
     when (val value = kotlinObjectByOwnerAddress[ownerObject.address()]) {
-      is ScriptOwnerLink -> value.instance()?.kotlinObject
+      is ScriptOwnerLink -> {
+        if (value.pendingRefill != null) ScriptOwnerLinks.refillIfPending(value)
+        value.instance()?.kotlinObject
+      }
       else -> value
     }
 
@@ -366,7 +369,10 @@ object ScriptBridge {
   private fun si(data: MemorySegment): KanamaScriptInstance? =
     when (val value = ObjectRegistry.get(data.address())) {
       is KanamaScriptInstance -> value
-      is ScriptOwnerLink -> value.instance()
+      is ScriptOwnerLink -> {
+        if (value.pendingRefill != null) ScriptOwnerLinks.refillIfPending(value)
+        value.instance()
+      }
       else -> null
     }
 

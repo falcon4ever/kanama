@@ -546,9 +546,18 @@ node (see [Kotlin Style → Coroutines](style-guide.md#coroutines)).
 A `RefCounted` wrapper you get on another thread is still yours, but it gets
 **no garbage-collector fallback**: a worker can still be inside a call through
 it when the main thread would release it, so Kanama only registers the fallback
-for wrappers made on the main thread. Close a worker's wrappers (`use { }`) or
-hand them to the main thread first; a forgotten one is never released
-([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
+for wrappers made on the main thread. That covers every owned wrapper a worker
+makes: a getter result, a loaded resource, and a `from*` downcast (which takes a
+reference of its own). **Close what you create or downcast on a worker**
+(`use { }`), or hand it to the main thread first; a forgotten one is never
+released ([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
+
+The other direction needs care too: a wrapper made on the main thread and
+handed to a worker is released by the main thread once the collector finds it
+unreachable — and the collector may decide that while the worker is still
+inside its last call through it. Keep such a wrapper reachable until the worker
+is done (close it after, from the main thread, or keep it in a field), rather
+than making the worker's call its last use.
 
 Kanama performs **no thread-affinity checks**. A wrapper method called from a
 `Dispatchers.Default` coroutine or a `Thread` you started ptrcalls the engine

@@ -1006,6 +1006,12 @@ void kanama_ios_godot_collision_shape3d_set_disabled(int64_t shape, int32_t disa
 
 int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint);
 
+/* Task 132: ResourceLoader.load with CACHE_MODE_IGNORE (an owned +1 the caller releases). */
+int64_t kanama_ios_godot_resource_loader_load_uncached(const char *path, const char *type_hint);
+
+/* Task 132 self-test: a Kanama Script object for [path] (refcount 1, the caller's), or 0. */
+int64_t kanama_ios_godot_create_script_object(const char *path);
+
 void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture);
 
 void kanama_ios_godot_audio_stream_player_set_stream(int64_t player, int64_t stream);

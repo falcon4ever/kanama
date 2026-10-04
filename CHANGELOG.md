@@ -179,9 +179,13 @@ accessors now and the rest in a follow-up (see "Web" below).
   wrappers. How late the release comes depends on when the collector runs: with a forced
   collection per frame, 10,000 dropped owned `Resource`s are back to the object-count baseline in
   2-3 frames (`scripts/runtime_smoke.sh`, `owned_release_smoke.tscn`); with no forced collection
-  and 10,000 owned getter results dropped every frame, a dropped wrapper waited about 200 frames
-  on average (up to 3.7 million releases pending, some 40-70 ms frames when a big batch was
-  released), so close what you make in a loop.
+  (600 frames of ~7 ms), 200 owned getter results dropped a frame waited about 260 frames on
+  average (one collection), and 5 a frame were not released within the 10 s at all (no collection
+  ran). The drain spends at most about 1 ms a frame on these releases and carries the rest over
+  (10,000 dropped a frame, budget and cap together: p99 frame 9.4 ms, max 30 ms, against
+  37.8/70 ms before), and above 100,000 waiting wrappers new ones stop registering, with a one-time warning.
+  Native memory (images, meshes) is invisible to the collector, so close big resources and what
+  you make in a loop.
 - **A script object keeps its resource alive**, as in GDScript. Holding the Kotlin object of a
   resource script that extends `KanamaScript` (`ResourceLoader.load(path)?.kotlinScriptInstance<T>()`,
   `newScriptInstance<T>().instance`) keeps the resource alive after the wrapper it came from is
@@ -194,7 +198,12 @@ accessors now and the rest in a follow-up (see "Web" below).
   resource carrying one keeps its pre-fallback lifetime instead (a forgotten wrapper of it is
   released only when the script is detached or at shutdown, so a kept script object stays safe).
   Smoke:
-  `script_owner_smoke.tscn` (red with `KANAMA_SCRIPT_OWNER_LINKS=0`, a measurement knob).
+  `script_owner_smoke.tscn` (red with `KANAMA_SCRIPT_OWNER_LINKS=0`, a measurement knob). If the
+  collector drops a script object and the engine loads its resource from the cache again before
+  the next frame, the rebuilt script instance re-reads its property values from the resource's
+  file (what GDScript's re-parse gives); only a resource with no file starts from the defaults,
+  with a warning (`cache_recreate_probe.tscn`). `KANAMA_GC_RELEASES=0` turns these owner links
+  off too.
 - **The `from*` downcasts own their wrapper** (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`,
   ...): each takes a reference of its own, so a downcast kept in a field keeps the object alive.
   Closing one is now correct (it releases its own reference) and forgetting one is a late

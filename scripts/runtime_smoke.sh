@@ -64,6 +64,10 @@ OWNED_RELEASE_RED_LOG="${LOG_FILE}.owned_release_red"
 SCRIPT_OWNER_RED_LOG="${LOG_FILE}.script_owner_red"
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_owner_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 KANAMA_SCRIPT_OWNER_LINKS=0 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_owner_smoke.tscn --quit-after 600 >"$SCRIPT_OWNER_RED_LOG" 2>&1
+# task 132 round 2 -- the ResourceCache re-reference window (the reviewer's probe): a cached resource
+# whose KanamaScript object was collected is loaded again before the drain; its rebuilt instance is
+# refilled from the file (GDScript re-parses it), never left at the Kotlin defaults.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://cache_recreate_probe.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
 # task 132 D7 -- the same freed-object scene with the instance-binding check (opt-in), own log.
 FREED_BINDING_LOG="${LOG_FILE}.freed_binding"
 KANAMA_FREED_OBJECT_CHECKS=binding "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit >"$FREED_BINDING_LOG" 2>&1
@@ -374,6 +378,9 @@ check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
 # Task 131 review: custom-script-typed exports (a KanamaScript type, a plain script type, a List
 # and a Map of them) whose nodes were freed read back as nil, without reading the freed owners.
 check "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"
+# task 132 round 2 -- the cache re-reference keeps the file's values (caeee78b: reload_read=10).
+check "CacheRecreateProbe saved=true first_read=4242 alive_before_reload=(true|false) same_object=(true|false) reload_read=4242 kotlin_cash=4242"
+check_absent "property values reset|recreated with its default property values"
 # task 132 blocker 1 -- script objects keep their owners (see the run above).
 check "ScriptOwnerSmoke saved=true loaded=true created=true"
 check "ScriptOwnerSmoke alive_after_gc=true engine_read=4242 resaved=true created_alive_after_gc=true created_read=77 plain_alive_after_gc=true"

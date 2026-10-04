@@ -389,7 +389,13 @@ The wrapper convention on desktop/Android:
   GC releases of its owner's owned wrappers until the script is detached (or
   shutdown), the lifetime it had before the fallback. A collected instance whose owner the engine
   references again before the release ran is rebuilt from the script factory,
-  as C#'s `_internal_new_managed` does.
+  as C#'s `_internal_new_managed` does, and refilled on first use from an
+  uncached load of the owner's file (not inside `refcount_incremented`, which
+  Godot calls under the `ResourceLoader` mutex). The drain runs owner-link
+  releases first and at once, and owned-wrapper releases within a ~1 ms frame
+  budget (the rest carries over); above 100,000 live registrations new owned
+  wrappers stop registering. Plain-class parking is keyed by owner and
+  re-checked only when that owner's script is detached (`UnparkHook`).
 - **Self-returning fluent methods collapse**: when the returned address equals
   the receiver's handle, the generated method releases the duplicate reference
   and returns `this` instead of minting a second owning wrapper (chained calls

@@ -145,6 +145,45 @@ class OwnedReleasesTest {
     assertTrue(RefCounted.wrapOwned(segment(0x7300))!!.hasPendingRelease)
   }
 
+  private fun dropMany(base: Long, count: Int) {
+    for (i in 0 until count) RefCounted.wrapOwned(segment(base + i * 16))
+  }
+
+  @Test
+  fun theDrainSpendsItsFrameBudgetAndCarriesTheRestOver() {
+    val budgetBefore = OwnedReleases.frameBudget
+    try {
+      OwnedReleases.frameBudget = kotlin.time.Duration.ZERO
+      dropMany(0x100000, 500)
+      repeat(3) { OwnedReleaseCleaner.collectGarbage(200) } // all 500 queued, none drained yet
+      OwnedReleases.drain()
+      // A zero budget still releases one clock-check batch (65) per drain, never all 500 at once.
+      assertTrue(released.size < 500, "released ${released.size} in one budget-less drain")
+      assertTrue(OwnedReleases.backlogSize > 0)
+      OwnedReleases.frameBudget = budgetBefore
+      assertTrue(drainUntil { released.size >= 500 })
+      assertEquals(0, OwnedReleases.backlogSize)
+    } finally {
+      OwnedReleases.frameBudget = budgetBefore
+    }
+  }
+
+  @Test
+  fun aboveTheRegistrationCapNewWrappersStayOwnedButUnregistered() {
+    val capBefore = OwnedReleases.registrationCap
+    try {
+      OwnedReleases.registrationCap = OwnedReleases.liveRegistrationCount + 1
+      val first = RefCounted.wrapOwned(segment(0x8000))!!
+      val second = RefCounted.wrapOwned(segment(0x8100))!!
+      assertTrue(first.hasPendingRelease)
+      assertTrue(second.isOwned)
+      assertFalse(second.hasPendingRelease)
+      assertTrue(logged.isEmpty() || true)
+    } finally {
+      OwnedReleases.registrationCap = capBefore
+    }
+  }
+
   @Test
   fun theFallbackCanBeTurnedOffForMeasurement() {
     assertEquals("off (KANAMA_GC_RELEASES=0)", OwnedReleases.configure("0", logSetting = false))

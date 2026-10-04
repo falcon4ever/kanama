@@ -698,6 +698,14 @@ CONSTRUCTION = re.compile(
     r"(?<![\w])(?:net\.multigesture\.kanama\.api\.)?([A-Z]\w*)\((GodotHandle\(|[\w.]*\bhandle\))"
 )
 OWNED_SOURCE = re.compile(r"(ObjectCalls\.\w*RetObject\(|ret\))")
+# Runtime functions whose result is owned (task 132 round 2): every one takes or adopts its +1.
+OWNED_RESULT_FUNCTION = re.compile(
+    r"^(?:\w*Owned|ownedListElement|instantiateResourceScript|readVariant\w*Retained\w*)$"
+)
+OWNED_MARKERS = ("owned(", "retained(", "retainForKotlinWrapper", "referenceBind", "owned = true")
+# markOwned is the marker itself, not a function with a result.
+NOT_OWNED_RESULT = {"markOwned"}
+OWNED_CALL = re.compile(r"\b(\w+Owned)\(")
 FUN_DECL = re.compile(r"^[ \t]*(?:@\w+[ \t]+)*(?:(?:internal|private|public|override|actual|inline|operator)[ \t]+)*fun[ \t]+(?:<[^>]*>[ \t]+)?(?:[\w.]+\.)?(\w+)\(", re.M)
 
 
@@ -796,6 +804,27 @@ def _ownership_problems_in(rel: str, stem: str, text: str, refcounted: set[str])
             "fromHandle/wrapBorrowed: wrap it in RefCounted.owned(...) (it adopts a +1) or "
             "RefCounted.retained(...) (it takes one)"
         )
+
+    # Functions whose result is owned must make it so (or hand it to one that does).
+    for name, start, end in spans:
+        if not OWNED_RESULT_FUNCTION.match(name) or name in NOT_OWNED_RESULT:
+            continue
+        body = text[start:end]
+        rest = body[body.find("(") + 1 :]
+        # A call to another *Owned function (or an overload of this one) hands the +1 on.
+        delegates = any(True for _ in OWNED_CALL.finditer(rest))
+        if not any(marker in body for marker in OWNED_MARKERS) and not delegates:
+            problems.append(
+                f"{where(start)}: {name} returns an owned result but never takes or adopts a +1 "
+                "(RefCounted.owned / retained / retainForKotlinWrapper, or a call to another *Owned)"
+            )
+        # The branch and its continuation lines, up to the next `when` branch.
+        for branch in re.finditer(r"is RefCounted\s*->[^\n]*(?:\n(?![^\n]*->)[^\n]*){0,2}", body):
+            if not any(marker in branch.group(0) for marker in OWNED_MARKERS):
+                problems.append(
+                    f"{where(start + branch.start())}: {name}: a RefCounted branch hands its wrapper "
+                    "back without marking it owned"
+                )
 
     if file_class in refcounted:
         for name, start, end in spans:
@@ -907,6 +936,17 @@ RED_RUNS: tuple[tuple[str, str, str], ...] = (
      "            if (value.isClass(\"Mesh\")) Mesh(value.handle) else null\n    }\n"),
     ("R11 wrapOwned helper that does not own", "api/Mesh.kt",
      "        internal fun wrapOwned(handle: RawSegment): Mesh? =\n            if (handle.address() == 0L) null else Mesh(GodotHandle(handle))\n"),
+    ("R7b iOS ownedListElement hands a typed wrapper back unowned", "binding/runtime/ObjectCalls.kt",
+     "  internal fun <T> ownedListElement(obj: T?): T? =\n    when {\n      obj is RefCounted -> obj as T\n"
+     "      obj is GodotObject && obj.instanceId < 0L ->\n        RefCounted.owned(RefCounted(obj.handle)) as T\n"
+     "      else -> obj\n    }\n"),
+    ("R13 newScriptInstance's resource not owned", "binding/KanamaScript.kt",
+     "    fun instantiateResourceScript(fqName: String?, simpleName: String?): Pair<Any, Resource> {\n"
+     "      val baseHandle = ObjectCalls.constructObject(\"Resource\")\n"
+     "      return instance to (net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(baseHandle)))\n    }\n"),
+    ("R14 property decode without its retain", "binding/runtime/BuiltinTypes.kt",
+     "  fun <T> readVariantObjectRetained(variant: MemorySegment, arena: Arena, wrapper: (MemorySegment) -> T?): T? =\n"
+     "    readVariantObject(variant, arena, wrapper).also { value ->\n      if (value is Resource) {\n        Unit\n      }\n    }\n"),
 )
 
 

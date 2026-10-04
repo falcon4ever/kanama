@@ -1,8 +1,14 @@
 package net.multigesture.kanama.binding.runtime
 
 import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.decrementAndFetch
+import kotlin.concurrent.atomics.incrementAndFetch
 import kotlin.jvm.JvmField
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeSource
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.OS
@@ -36,6 +42,7 @@ import net.multigesture.kanama.api.RefCounted
  * Main-thread state ([drain], [configure], [shutdown], the logged-site set) is touched only by the
  * engine main thread; only [PendingRelease.fire] runs elsewhere.
  */
+@OptIn(ExperimentalAtomicApi::class)
 internal object OwnedReleases {
   /** Whether owned wrappers register a fallback release. Decided by [configure]. */
   @JvmField var enabled: Boolean = true
@@ -67,6 +74,11 @@ internal object OwnedReleases {
   private fun log(message: String) {
     val sink = logOverride
     if (sink != null) sink(message) else OwnedReleaseCleaner.log(message)
+  }
+
+  private fun warn(message: String) {
+    val sink = logOverride
+    if (sink != null) sink("WARNING: $message") else OwnedReleaseCleaner.warn(message)
   }
 
   /**
@@ -119,11 +131,41 @@ internal object OwnedReleases {
   }
 
   /**
-   * The release record for [wrapper], or null when the fallback is off or this is not the engine
-   * main thread (one thread compare; see the class comment).
+   * Live fallback registrations of owned wrappers (registered, not yet closed or drained). Above
+   * [REGISTRATION_CAP] new owned wrappers stop registering (they stay owned; close() releases them)
+   * and a one-time warning names the log setting that finds the sites.
+   */
+  private val liveRegistrations = AtomicLong(0L)
+
+  /** Test seam and measurement: live registrations right now. */
+  internal val liveRegistrationCount: Long
+    get() = liveRegistrations.load()
+
+  /** See [liveRegistrations]; a test may lower it. */
+  internal var registrationCap: Long = REGISTRATION_CAP
+
+  private const val REGISTRATION_CAP = 100_000L
+  private var warnedCap = false
+
+  /**
+   * The release record for [wrapper], or null when the fallback is off, this is not the engine main
+   * thread (one thread compare; see the class comment) or [registrationCap] is reached.
    */
   fun newRelease(wrapper: RefCounted): PendingRelease? {
     if (!enabled || !OwnedReleaseCleaner.isMainThread()) return null
+    if (liveRegistrations.load() >= registrationCap) {
+      if (!warnedCap) {
+        warnedCap = true
+        warn(
+          "More than $registrationCap owned RefCounted wrappers are waiting for the garbage " +
+            "collector to release them; new ones are no longer registered and stay alive until " +
+            "you close() them. Turn on $LOG_SETTING to find the sites that drop them, and close " +
+            "them (use { })."
+        )
+      }
+      return null
+    }
+    liveRegistrations.incrementAndFetch()
     val origin = if (logGcReleases) describeOrigin(wrapper) else null
     return PendingRelease(wrapper.handle.segment, wrapper.instanceId, origin, null)
   }
@@ -135,8 +177,12 @@ internal object OwnedReleases {
   /** Test seam: runs [wrapper]'s cleanup action now, as the cleaner thread would. */
   internal fun firePendingForTest(wrapper: RefCounted): Boolean = wrapper.firePendingForTest()
 
-  /** After a disarm: the platform drops [registration] now (its action runs as a no-op). */
-  fun dropRegistration(registration: Any?) {
+  /**
+   * After a disarm: the platform drops [registration] now (its action runs as a no-op). [closed] is
+   * true when close() won the race, so this registration ends here (not in the drain).
+   */
+  fun dropRegistration(registration: Any?, closed: Boolean) {
+    if (closed) liveRegistrations.decrementAndFetch()
     OwnedReleaseCleaner.cancel(registration)
   }
 
@@ -151,91 +197,126 @@ internal object OwnedReleases {
     if (!debugBuild) return
     val name = wrapper::class.simpleName ?: "RefCounted"
     if (!warnedBorrowedCloses.add(name)) return
-    OwnedReleaseCleaner.warn(
+    warn(
       "close() on a borrowed $name view (fromHandle or a wrapper constructor) releases nothing: " +
         "the view took no reference. Close the wrapper you got from the API instead."
     )
   }
 
+  /** Time the drain may spend on owned-wrapper releases per frame; the rest carries over. */
+  internal var frameBudget: Duration = 1.milliseconds
+
+  // Owned-wrapper releases taken off the queue but not yet run (the budget ran out); main thread.
+  private val backlog = ArrayDeque<PendingRelease>()
+
+  /** Releases waiting for a later frame's budget (tests, measurements). */
+  internal val backlogSize: Int
+    get() = backlog.size
+
   /**
-   * Main thread, once per frame: releases every handle whose owned wrapper the GC collected without
-   * `close()`. Returns how many it released.
+   * Main thread, once per frame: releases the handles whose owned wrappers (and script objects) the
+   * GC collected. Script-object owner releases (a [ReleaseHook] on the release) run at once, ahead
+   * of everything else, so a resource whose script object was collected dies this frame. Owned
+   * wrapper releases run within [frameBudget] (about 1 ms), oldest first, and the rest carries over
+   * to the next frame, so a burst of millions of dropped wrappers does not stall one frame. Returns
+   * how many it released.
    */
-  fun drain(): Int {
+  fun drain(): Int = drain(frameBudget)
+
+  private fun drain(budget: Duration): Int {
     var released = 0
-    val unparked = releaseUnparked()
     while (true) {
       val release = OwnedReleaseCleaner.poll() ?: break
+      when {
+        release.hook === UnparkHook -> unpark(release.handle.address())
+        release.hook != null -> released += runRelease(release)
+        else -> backlog.addLast(release)
+      }
+    }
+    val start = TimeSource.Monotonic.markNow()
+    var sinceCheck = 0
+    while (backlog.isNotEmpty()) {
+      // The clock is read every 64 releases: a release is ~0.1-1 us, the clock ~20 ns.
+      if (sinceCheck++ == 64) {
+        sinceCheck = 0
+        if (start.elapsedNow() >= budget) break
+      }
+      val release = backlog.removeFirst()
       // An owned wrapper of an object whose script object is a plain class: keep the object (the
       // script object cannot anchor it, see ScriptOwnerLinks), park the release until the script
       // is detached or the game shuts down.
-      if (
-        release.hook == null && OwnedReleaseCleaner.ownerHasPlainScript(release.handle.address())
-      ) {
-        parked += release
+      val owner = release.handle.address()
+      if (OwnedReleaseCleaner.ownerHasPlainScript(owner)) {
+        parked.getOrPut(owner) { ArrayList(1) } += release
         continue
       }
-      try {
-        // An object already destroyed (only possible after a program error, such as closing a
-        // borrowed view that dropped the count to zero) is skipped, never unreferenced again.
-        if (release.hook?.beforeRelease() != false && isLiveOrUnknown(release)) {
-          val override = releaseOverride
-          if (override != null) override(release.handle)
-          else RefCounted.releaseHandle(release.handle)
-          released += 1
-        }
-      } catch (t: Throwable) {
-        log("[kanama] GC release failed: ${t::class.simpleName}: ${t.message}")
-      }
-      val origin = release.origin
-      if (origin != null && loggedSites.add(origin)) {
-        log("released by GC: $origin")
-      }
+      liveRegistrations.decrementAndFetch()
+      released += runRelease(release)
     }
     releasedByGc += released
-    return released + unparked
+    return released
+  }
+
+  // One release on the main thread. An object already destroyed (only possible after a program
+  // error, such as closing a borrowed view that dropped the count to zero) is skipped, never
+  // unreferenced again.
+  private fun runRelease(release: PendingRelease): Int {
+    var released = 0
+    try {
+      if (release.hook?.beforeRelease() != false && isLiveOrUnknown(release)) {
+        val override = releaseOverride
+        if (override != null) override(release.handle) else RefCounted.releaseHandle(release.handle)
+        released = 1
+      }
+    } catch (t: Throwable) {
+      log("[kanama] GC release failed: ${t::class.simpleName}: ${t.message}")
+    }
+    val origin = release.origin
+    if (origin != null && loggedSites.add(origin)) {
+      log("released by GC: $origin")
+    }
+    return released
   }
 
   /**
-   * D4, at the SCENE deinitialization level (before Godot's leak report): collect the wrappers that
-   * are unreachable now, wait for their cleanup actions, and release them. Returns how many it
-   * released.
+   * D4, at the deinitialization levels (before Godot's leak report): collect the wrappers that are
+   * unreachable now, wait for their cleanup actions, and release them all, with no frame budget and
+   * the parked releases included. Returns how many it released.
    */
   fun shutdown(): Int {
     if (!enabled) return 0
     OwnedReleaseCleaner.collectGarbage(SHUTDOWN_WAIT_MILLIS)
-    val released = drain()
-    // The parked releases too: nothing else will release them before Godot's leak report.
-    return released + releaseParked { true }
+    var released = drain(Duration.INFINITE)
+    for (owner in parked.keys.toList()) released += unpark(owner)
+    return released
   }
 
-  // Releases parked for a plain script owner (see [drain]); main thread only.
-  private val parked = ArrayList<PendingRelease>()
+  // Releases parked per plain script owner (see [drain]); main thread only. Re-checked only when
+  // that owner's script is detached ([unparkLater]) or at shutdown, never by a per-frame scan.
+  private val parked = HashMap<Long, MutableList<PendingRelease>>()
 
-  private fun releaseUnparked(): Int =
-    if (parked.isEmpty()) 0
-    else releaseParked { !OwnedReleaseCleaner.ownerHasPlainScript(it.handle.address()) }
+  /**
+   * The plain script instance on [owner] was freed (its script detached or replaced): its parked
+   * releases go back to the queue, so the next drain releases them. Any thread.
+   */
+  fun unparkLater(owner: RawSegment, instanceId: Long) {
+    OwnedReleaseCleaner.enqueue(PendingRelease(owner, instanceId, null, UnparkHook))
+  }
 
-  private fun releaseParked(due: (PendingRelease) -> Boolean): Int {
+  private fun unpark(owner: Long): Int {
+    val releases = parked.remove(owner) ?: return 0
     var released = 0
-    val iterator = parked.iterator()
-    while (iterator.hasNext()) {
-      val release = iterator.next()
-      if (!due(release)) continue
-      iterator.remove()
-      try {
-        if (isLiveOrUnknown(release)) {
-          val override = releaseOverride
-          if (override != null) override(release.handle)
-          else RefCounted.releaseHandle(release.handle)
-          released += 1
-        }
-      } catch (t: Throwable) {
-        log("[kanama] GC release failed: ${t::class.simpleName}: ${t.message}")
-      }
+    for (release in releases) {
+      liveRegistrations.decrementAndFetch()
+      released += runRelease(release)
     }
     releasedByGc += released
     return released
+  }
+
+  /** The marker [unparkLater] queues: never released itself. */
+  private object UnparkHook : ReleaseHook {
+    override fun beforeRelease(): Boolean = false
   }
 
   private const val SHUTDOWN_WAIT_MILLIS = 500L

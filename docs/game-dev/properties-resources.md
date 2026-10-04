@@ -390,13 +390,14 @@ nullable `= null` shape.
 
 To create your own resource type (the Kotlin equivalent of GDScript's
 `extends Resource` / C#'s `[GlobalClass] public partial class X : Resource`),
-declare a **plain class** — do not subclass the `Resource` wrapper — and
-attach it with `@ScriptClass(attachTo = "Resource")`:
+declare a class that extends `KanamaScript<Resource>` — do not subclass the
+`Resource` wrapper — and attach it with `@ScriptClass(attachTo = "Resource")`:
 
 ```kotlin
 @ScriptClass(attachTo = "Resource")
 @GlobalClass
-class Weapon(val godotObject: GodotHandle) {
+class Weapon(godotObject: GodotHandle) :
+    KanamaScript<Resource>(godotObject, Resource::fromHandle) {
     @Export
     var damage: Long = 10
 
@@ -421,6 +422,17 @@ One naming constraint: the file must be named after the class (`Weapon.kt`),
 or the class cannot be mapped back to its script file and stays out of the
 global class list — the build warns when they diverge.
 
+Extending `KanamaScript` is what lets the script object keep its resource
+alive: holding a `Weapon` keeps the weapon resource usable however you got it
+(`kotlinScriptInstance<Weapon>()`, `newScriptInstance<Weapon>().instance`), and
+dropping it lets the resource go, as in GDScript
+([details](godot-api.md#a-script-object-keeps-its-resource-alive)). A **plain
+class** (`class Weapon(val godotObject: GodotHandle)`) also works as a resource
+script, but cannot carry that link: a resource with a plain script keeps the
+lifetime it had before the garbage-collector fallback — wrappers you close
+release at once, while a forgotten wrapper of it stays alive until its script is
+detached or the game ends.
+
 Generated wrappers (`net.multigesture.kanama.api.Resource`, `AudioStream`,
 ...) are non-owning views (constructors take a raw handle and never retain) and **cannot be
 subclassed** — attempting it fails the build with a pointer to the pattern
@@ -429,10 +441,10 @@ above. The wrapper surface would otherwise drift from the script surface;
 
 ## Saving Custom Resources
 
-Because a custom resource script is a plain class rather than a `Resource`
+Because a custom resource script is a script object rather than a `Resource`
 subtype, APIs with `Resource`-typed parameters (such as `ResourceSaver.save`)
-do not accept it directly. Wrap the script's own `godotObject` handle with
-`Resource.fromHandle` instead:
+do not accept it directly. Pass its `self` (the `Resource` view of the object the
+script is attached to):
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
@@ -444,13 +456,15 @@ class WeaponForge(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     @ExportToolButton(text = "Save weapon")
     fun saveWeapon() {
         val weapon = weapon ?: return
-        ResourceSaver.save(Resource.fromHandle(weapon.godotObject), "res://weapon.tres")
+        ResourceSaver.save(weapon.self, "res://weapon.tres")
     }
 }
 ```
 
-`Resource.fromHandle` is a non-owning view over the same engine object; do
-not `close()` it — the script instance still uses that handle.
+`self` is a view over the same engine object that takes no reference of its
+own (the script object keeps the resource alive); there is nothing to close.
+For a plain script class, `Resource.fromHandle(weapon.godotObject)` is the same
+kind of view.
 
 Calling a script class constructor yourself —
 `Weapon(someOtherObject.godotObject)` — does **not** create a new `Weapon`

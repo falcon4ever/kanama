@@ -225,8 +225,10 @@ setter takes its own reference, so after `meshInstance.setMesh(mesh)` a
 `RefCounted.close()` needs no opt-in: `@ManualGodotLifetimeApi` is deprecated
 and no longer applied, so drop any `@OptIn` for it from a port. The rule above
 is what `scripts/demo_parity_audit.py` in the demos repository enforces — it
-fails a `close()` on a borrowed view (`fromHandle`/`fromObject`) or on a live
-`Tween`, and never flags closing an owned return.
+fails a `close()` on a borrowed view (`fromHandle`) or on a live `Tween`, and
+never flags closing an owned return. A `from*` downcast (`fromObject`,
+`fromResource`) is owned since task 132: it takes its own reference, so closing
+it is correct (and forgetting it is a late release).
 
 ## Signals And Callbacks
 

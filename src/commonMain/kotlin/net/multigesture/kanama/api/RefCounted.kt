@@ -129,7 +129,7 @@ open class RefCounted internal constructor(
         val registration = releaseRegistration
         pendingRelease = null
         releaseRegistration = null
-        OwnedReleases.dropRegistration(registration)
+        OwnedReleases.dropRegistration(registration, won)
         return won
     }
 

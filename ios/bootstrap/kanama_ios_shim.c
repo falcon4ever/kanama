@@ -6663,6 +6663,70 @@ int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type
     return (int64_t)(intptr_t)ret;
 }
 
+// Task 132: ResourceLoader.load(path, type_hint, CACHE_MODE_IGNORE) -- a fresh copy of the file,
+// never the cached object (the refill of a script instance rebuilt after a collection). The
+// returned object carries the +1 of the Ref return slot; the caller releases it.
+int64_t kanama_ios_godot_resource_loader_load_uncached(const char *path, const char *type_hint) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (path == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "path");
+        return 0;
+    }
+    GDExtensionObjectPtr resource_loader = kanama_ios_resource_loader_singleton();
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_resource_loader_load_bind,
+        "ResourceLoader",
+        "load",
+        KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH
+    );
+    if (resource_loader == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "ResourceLoader singleton");
+        return 0;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return 0;
+    }
+    uint64_t path_storage = 0;
+    uint64_t type_hint_storage = 0;
+    int64_t cache_mode = 0; // ResourceLoader.CACHE_MODE_IGNORE (enum args are 64-bit in ptrcall)
+    kanama_ios_init_string(&path_storage, path);
+    kanama_ios_init_string(&type_hint_storage, type_hint != NULL ? type_hint : "");
+    const GDExtensionConstTypePtr args[3] = {
+        (GDExtensionConstTypePtr)&path_storage,
+        (GDExtensionConstTypePtr)&type_hint_storage,
+        (GDExtensionConstTypePtr)&cache_mode,
+    };
+    GDExtensionObjectPtr ret = NULL;
+    g_object_method_bind_ptrcall(method_bind, resource_loader, args, &ret);
+    kanama_ios_destroy_string(&type_hint_storage);
+    kanama_ios_destroy_string(&path_storage);
+    return (int64_t)(intptr_t)ret;
+}
+
+// Task 132 self-test: a Kanama Script object for [path] (the loader's construction path, without a
+// file), so the self-test can attach a script with set_script and let Godot drive the instance's
+// refcount callbacks. Returns the Script object (refcount 1, the caller's) or 0.
+static GDExtensionObjectPtr kanama_ios_construct_extension_object(KanamaIosClassKind kind);
+
+int64_t kanama_ios_godot_create_script_object(const char *path) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (path == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "path");
+        return 0;
+    }
+    g_pending_script_resource_path = path;
+    GDExtensionObjectPtr script_object = kanama_ios_construct_extension_object(KANAMA_IOS_CLASS_SCRIPT);
+    g_pending_script_resource_path = NULL;
+    return (int64_t)(intptr_t)script_object;
+}
+
 void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture) {
     GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
         &g_sprite2d_set_texture_bind,

@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.OwnedReleaseCleaner
+import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.binding.runtime.PendingRelease
 import net.multigesture.kanama.binding.runtime.ReleaseHook
 
@@ -59,6 +60,9 @@ internal class ScriptOwnerLink(
   /** The cleanup that releases the owner `+1` once the script object is unreachable. */
   @Volatile var pending: PendingRelease? = null
 
+  /** A rebuilt instance's file, refilled on first use ([ScriptOwnerLinks.refillIfPending]). */
+  @Volatile var pendingRefill: String? = null
+
   fun instance(): KanamaScriptInstance? = strongInstance ?: weakInstance.get()
 
   val isWeak: Boolean
@@ -71,9 +75,41 @@ internal class ScriptOwnerLink(
     return holdsOwnerRef
   }
 
-  /** Back to STRONG; false when the GC already collected the instance. */
+  /** Test seam: the +1 [takeOwnerRef] would take, without an engine. */
   @Synchronized
-  fun makeStrong(): Boolean {
+  internal fun markOwnerRefHeldForTest() {
+    holdsOwnerRef = true
+  }
+
+  /**
+   * `refcount_incremented`'s decision, under this link's lock with the count read inside it, so a
+   * concurrent [onDecremented] cannot interleave between the read and the switch. False when the
+   * instance must be rebuilt (STRONG was due but the GC already collected it).
+   */
+  @Synchronized
+  fun onIncremented(count: () -> Int): Boolean {
+    if (!anchored || !holdsOwnerRef) return true
+    return sync(count())
+  }
+
+  /** `refcount_decremented`'s decision (same lock): true when the owner may die (count 0). */
+  @Synchronized
+  fun onDecremented(count: () -> Int): Boolean {
+    if (!holdsOwnerRef) return true
+    val current = count()
+    if (current == 0) return true
+    if (anchored) sync(current)
+    return false
+  }
+
+  // Both callbacks set the state from the count they read under the lock, so whichever runs last
+  // after the last count change leaves it right: STRONG above 1, WEAK at 1. False when STRONG is
+  // due but the GC already collected the instance (it must be rebuilt).
+  private fun sync(current: Int): Boolean {
+    if (current <= 1) {
+      strongInstance = null
+      return true
+    }
     if (strongInstance != null) return true
     val si = weakInstance.get() ?: return false
     strongInstance = si
@@ -87,9 +123,8 @@ internal class ScriptOwnerLink(
   }
 
   @Synchronized
-  fun replaceInstance(si: KanamaScriptInstance) {
-    strongInstance = si
-    weakInstance = WeakReference(si)
+  fun makeStrong() {
+    if (strongInstance == null) strongInstance = weakInstance.get()
   }
 
   // The drain is about to release the owner +1 this link holds.
@@ -102,17 +137,30 @@ internal class ScriptOwnerLink(
 }
 
 internal object ScriptOwnerLinks {
+  // KANAMA_SCRIPT_OWNER_LINKS=0 turns the owner links off alone (a measurement knob: the smoke's
+  // red run); KANAMA_GC_RELEASES=0 turns them off too, with the rest of the GC fallback.
   private val enabled: Boolean =
     System.getenv("KANAMA_SCRIPT_OWNER_LINKS")?.trim()?.lowercase() !in setOf("0", "false", "off")
 
   private const val GET_REFERENCE_COUNT_HASH = 3905245786L
+  private const val GET_PATH_HASH = 201670096L
+  private const val GET_SCRIPT_PROPERTY_LIST_HASH = 2915620761L
+  private const val PROPERTY_USAGE_STORAGE = 2L
 
   private val getReferenceCountBind by lazy {
     ObjectCalls.getMethodBind("RefCounted", "get_reference_count", GET_REFERENCE_COUNT_HASH)
   }
 
+  private val getPathBind by lazy {
+    ObjectCalls.getMethodBind("Resource", "get_path", GET_PATH_HASH)
+  }
+
+  /** Test seam: the owner's reference count, in JVM unit tests that have no engine. */
+  @Volatile internal var referenceCountOverride: ((MemorySegment) -> Int)? = null
+
   private fun referenceCount(owner: MemorySegment): Int =
-    ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, owner)
+    referenceCountOverride?.let { it(owner) }
+      ?: ObjectCalls.ptrcallNoArgsRetInt(getReferenceCountBind, owner)
 
   /**
    * The registry value for a new instance [si] on [owner]: a [ScriptOwnerLink] for a `RefCounted`
@@ -122,9 +170,9 @@ internal object ScriptOwnerLinks {
     val instanceId = ObjectCalls.objectGetInstanceId(owner)
     if (instanceId >= 0L) return si
     val kotlinObject = si.kotlinObject
-    // No cleaner (Android before API 33): no instance +1 either, the pre-task-132 lifetime.
-    // KANAMA_SCRIPT_OWNER_LINKS=0 does the same (a measurement knob: the smoke's red run).
-    if (!OwnedReleaseCleaner.available || !enabled) return si
+    // No cleaner (Android before API 33) or the fallback off: no instance +1, no parking either,
+    // the pre-task-132 lifetime.
+    if (!OwnedReleaseCleaner.available || !enabled || !OwnedReleases.enabled) return si
     val anchorable = kotlinObject is net.multigesture.kanama.api.KanamaScript<*>
     val link = ScriptOwnerLink(si, owner, instanceId, script, anchorable)
     if (anchorable) adopt(link, si) else plainScriptOwners += owner.address()
@@ -151,24 +199,18 @@ internal object ScriptOwnerLinks {
 
   /** `refcount_incremented`: the engine took another reference; go STRONG above 1. */
   fun incremented(handle: Long, link: ScriptOwnerLink) {
-    if (!link.anchored || !link.isWeak) return
-    if (referenceCount(link.owner) <= 1) return
-    if (link.makeStrong()) return
+    if (link.onIncremented { referenceCount(link.owner) }) return
     recreate(handle, link)
   }
 
   /** `refcount_decremented`: true when the owner may die (count 0). WEAK at exactly 1. */
-  fun decremented(link: ScriptOwnerLink): Boolean {
-    if (!link.holdsOwnerRef) return true
-    val count = referenceCount(link.owner)
-    if (count == 0) return true
-    if (count == 1 && link.anchored && link.holdsOwnerRef) link.makeWeak()
-    return false
-  }
+  fun decremented(link: ScriptOwnerLink): Boolean =
+    link.onDecremented { referenceCount(link.owner) }
 
   // The script object was collected but the engine referenced the owner again before the queued
-  // release ran: rebuild the instance from the script's factory (its property values reset), with
-  // a +1 and a cleanup of its own. The old release stays queued and drops the old +1.
+  // release ran: rebuild the instance from the script's factory, with a +1 and a cleanup of its
+  // own (the old release stays queued and drops the old +1), and refill it from the owner's file
+  // on first use (class comment).
   private fun recreate(handle: Long, link: ScriptOwnerLink) {
     val script = link.script ?: return
     val fresh = runCatching { script.factory?.invoke(link.owner) }.getOrNull() ?: return
@@ -176,22 +218,77 @@ internal object ScriptOwnerLinks {
     val replacement = ScriptOwnerLink(fresh, link.owner, link.instanceId, script, anchored = true)
     adopt(replacement, fresh)
     replacement.makeStrong()
+    val path =
+      runCatching { ObjectCalls.ptrcallNoArgsRetString(getPathBind, link.owner) }.getOrDefault("")
+    if (path.isNotEmpty() && "::" !in path) {
+      replacement.pendingRefill = path
+    } else {
+      OwnedReleaseCleaner.warn(
+        "The ${script.kotlinClassName} script object of a resource with no file was collected while " +
+          "the engine re-referenced the resource; its script instance was recreated with its " +
+          "default property values. Keep a reference to the script object (or the resource) while " +
+          "you use it."
+      )
+    }
     ObjectRegistry.replace(handle, replacement)
     ScriptBridge.retrackOwner(link.owner, replacement, fresh.kotlinObject)
-    OwnedReleaseCleaner.warn(
-      "The ${script.kotlinClassName} script object of a resource was collected while the engine " +
-        "re-referenced the resource; its script instance was recreated and its property values " +
-        "reset. Keep a reference to the script object (or the resource) while you use it."
-    )
+  }
+
+  /**
+   * Refills a rebuilt instance from an uncached load of its owner's file (see the class comment),
+   * once, on its first use: the stored (`PROPERTY_USAGE_STORAGE`) script properties of the
+   * re-parsed copy are set on the owner, through its script instance, and the copy is released.
+   */
+  fun refillIfPending(link: ScriptOwnerLink) {
+    val path =
+      synchronized(link) { link.pendingRefill.also { link.pendingRefill = null } } ?: return
+    val script = link.script ?: return
+    val copy =
+      runCatching {
+          net.multigesture.kanama.api.ResourceLoader.load(
+            path,
+            "",
+            net.multigesture.kanama.api.ResourceLoader.CacheMode.IGNORE,
+          )
+        }
+        .getOrNull()
+    if (copy == null) {
+      OwnedReleaseCleaner.warn(
+        "The ${script.kotlinClassName} script instance of $path was recreated but the file could " +
+          "not be loaded again; its property values were reset."
+      )
+      return
+    }
+    try {
+      val owner =
+        net.multigesture.kanama.api.GodotObject(net.multigesture.kanama.api.GodotHandle(link.owner))
+      val source = net.multigesture.kanama.api.GodotObject(copy.handle)
+      for (name in storedScriptPropertyNames(script)) owner.set(name, source.get(name))
+    } finally {
+      copy.close()
+    }
+  }
+
+  private fun storedScriptPropertyNames(script: KanamaScript): List<String> {
+    val bind =
+      ObjectCalls.getMethodBind("Script", "get_script_property_list", GET_SCRIPT_PROPERTY_LIST_HASH)
+    return ObjectCalls.ptrcallNoArgsRetDictionaryList(bind, script.godotObject).mapNotNull { info ->
+      val usage = (info["usage"] as? Number)?.toLong() ?: 0L
+      (info["name"] as? String)?.takeIf { usage and PROPERTY_USAGE_STORAGE != 0L }
+    }
   }
 
   /**
    * `free` of an instance whose owner is NOT dying (the script was detached or replaced): its `+1`
    * must still be dropped, but not from inside the engine's `set_script`, so it is queued for the
-   * next frame's drain. In the dying path the drain already released it.
+   * next frame's drain. In the dying path the drain already released it. A plain-class owner's
+   * parked releases are handed back to the drain.
    */
   fun freed(link: ScriptOwnerLink) {
-    if (!link.anchored) plainScriptOwners -= link.owner.address()
+    if (!link.anchored) {
+      plainScriptOwners -= link.owner.address()
+      OwnedReleases.unparkLater(link.owner, link.instanceId)
+    }
     if (!link.holdsOwnerRef) return
     val pending = link.pending ?: return
     // tryDisarm false: the cleanup already queued this release.

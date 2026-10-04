@@ -39167,6 +39167,24 @@ private const val SELFTEST_EXPECTED_FAULTS = 7
 // only as human-readable markers in the log; nothing parses them, and nothing may rely on where the
 // FAULT-PROBE lines appear relative to them. What proves that the probes and nothing else fired is
 // the count: `faults=7 expected=7` on both summary lines.
+// The set_script row: a Resource with the probe script attached through Godot, cash set through the
+// engine, its owning wrapper closed (Godot calls refcount_decremented: the link goes weak), only
+// the script object kept. Returns (owner address, owner instance id).
+private fun ownerLinkAttachAndKeepOnlyScriptObject(scriptObject: Long): Pair<Long, Long> {
+  val owner = net.multigesture.kanama.api.Resource.create()
+  val ownerAddress = owner.handle.segment.address()
+  owner.setScript(
+    net.multigesture.kanama.api.Resource.fromHandle(
+      GodotHandle(MemorySegment.ofAddress(scriptObject))
+    )
+  )
+  OwnerLinkHolder.held = net.multigesture.kanama.ios.iosScriptInstanceForOwner(ownerAddress)
+  GodotObject(GodotHandle(MemorySegment.ofAddress(ownerAddress))).set("cash", 4242L)
+  val ownerId = owner.instanceId
+  owner.close()
+  return ownerAddress to ownerId
+}
+
 // Task 132 owner-link row: the only reference the row keeps to the script object.
 private object OwnerLinkHolder {
   var held: Any? = null
@@ -41459,6 +41477,54 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       check("owner-link(the resource dies once the script object is dropped)", diesAfterDrop)
       if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
       KanamaIosRuntime.freeScriptResource(script)
+    } finally {
+      OwnedReleases.enabled = enabledBefore
+    }
+  }
+
+  // Task 132 round 2: the same through Godot. The probe script is attached with set_script, so the
+  // engine creates the instance and calls the shim's refcount callbacks itself: the resource stays
+  // alive while only its script object is held across GCs, reads its value through the engine,
+  // and dies once the script object is dropped.
+  run {
+    val enabledBefore = OwnedReleases.enabled
+    OwnedReleases.enabled = true
+    try {
+      val scriptObject =
+        net.multigesture.kanama.ios.cinterop.kanama_ios_godot_create_script_object(
+          KanamaIosRuntime.OWNER_LINK_PROBE_SCRIPT_PATH
+        )
+      if (scriptObject == 0L) {
+        check("owner-link-attached(probe script object created)", false)
+      } else {
+        val (ownerAddress, ownerId) = ownerLinkAttachAndKeepOnlyScriptObject(scriptObject)
+        repeat(3) {
+          OwnedReleaseCleaner.collectGarbage(1_000)
+          OwnedReleases.drain()
+        }
+        val alive = IosGodot.isInstanceIdValid(ownerId)
+        val engineRead =
+          if (alive) GodotObject(GodotHandle(MemorySegment.ofAddress(ownerAddress))).get("cash")
+          else null
+        OwnerLinkHolder.held = null
+        repeat(5) {
+          if (!IosGodot.isInstanceIdValid(ownerId)) return@repeat
+          OwnedReleaseCleaner.collectGarbage(1_000)
+          OwnedReleases.drain()
+        }
+        val dies = !IosGodot.isInstanceIdValid(ownerId)
+        println(
+          "[kanama][ios][kn] OBJECTCALLS SELFTEST owner-link-attached alive_while_held=$alive " +
+            "engine_read=$engineRead dies_after_drop=$dies"
+        )
+        check("owner-link-attached(alive while only the script object is held across GC)", alive)
+        check(
+          "owner-link-attached(engine reads the script property)",
+          (engineRead as? Number)?.toLong() == 4242L,
+        )
+        check("owner-link-attached(dies once the script object is dropped)", dies)
+        RefCounted.releaseHandle(MemorySegment.ofAddress(scriptObject))
+      }
     } finally {
       OwnedReleases.enabled = enabledBefore
     }

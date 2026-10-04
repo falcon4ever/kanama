@@ -652,7 +652,7 @@ internal object KanamaIosRuntime {
         path = path,
         baseType = "Resource",
         methods = emptyList(),
-        properties = emptyList(),
+        properties = listOf(KanamaIosScriptProperty("cash", variantType = 2)),
         signals = emptyList(),
         rpcConfigs = emptyList(),
         factory = { ownerObject -> OwnerLinkProbeBridge(OwnerLinkProbe(ownerObject)) },
@@ -720,45 +720,101 @@ internal object KanamaIosRuntime {
     val resource: IosScriptResource,
     bridge: KanamaIosScriptBridge,
     var readyCalled: Boolean = false,
-  ) : ReleaseHook {
+  ) {
+    // Guards the link state below: Godot calls refcount_incremented/decremented from whichever
+    // thread takes or drops a reference, including its worker threads.
+    val lock = SpinLock()
+
     private var strongBridge: KanamaIosScriptBridge? = bridge
     private var weakBridge = kotlin.native.ref.WeakReference(bridge)
 
-    /** The bridge, or an inert one once the GC collected a weakly held script object. */
+    /**
+     * The bridge, or an inert one once the GC collected a weakly held script object. A rebuilt
+     * instance is refilled from its owner's file on this first use (task 132; see desktop's
+     * ScriptOwnerLinks).
+     */
     val bridge: KanamaIosScriptBridge
-      get() = strongBridge ?: weakBridge.value ?: CollectedScriptBridge
-
-    val collected: Boolean
-      get() = strongBridge == null && weakBridge.value == null
+      get() {
+        if (pendingRefill != null) refillIfPending(this)
+        return strongBridge ?: weakBridge.value ?: CollectedScriptBridge
+      }
 
     var instanceId: Long = 0L
     var anchored: Boolean = false
     var refCountedOwner: Boolean = false
-    var holdsOwnerRef: Boolean = false
+
+    /** The +1 this instance holds on its owner, one [OwnerRef] per reference taken. */
+    var ownerRef: OwnerRef? = null
     var pending: PendingRelease? = null
+    var pendingRefill: String? = null
 
-    val isWeak: Boolean
-      get() = strongBridge == null
+    val holdsOwnerRef: Boolean
+      get() = ownerRef?.held == true
 
-    fun makeStrong(): Boolean {
+    /** Under [lock]: STRONG above 1, false when the GC already collected the script object. */
+    fun onIncremented(count: () -> Int): Boolean =
+      lock.withLock {
+        if (!anchored || !holdsOwnerRef) return@withLock true
+        sync(count())
+      }
+
+    /** Under [lock]: true when the owner may die (count 0); WEAK at exactly 1. */
+    fun onDecremented(count: () -> Int): Boolean =
+      lock.withLock {
+        if (!refCountedOwner || !holdsOwnerRef) return@withLock true
+        val current = count()
+        if (current == 0) return@withLock true
+        if (anchored) sync(current)
+        false
+      }
+
+    // Both callbacks set the state from the count read under the lock (desktop's
+    // ScriptOwnerLink.sync): false when STRONG is due but the script object was collected.
+    private fun sync(current: Int): Boolean {
+      if (current <= 1) {
+        strongBridge = null
+        return true
+      }
       if (strongBridge != null) return true
       strongBridge = weakBridge.value ?: return false
       return true
     }
 
-    fun makeWeak() {
-      if (anchored) strongBridge = null
-    }
+    fun makeWeak() = lock.withLock { if (anchored) strongBridge = null }
 
-    fun replaceBridge(bridge: KanamaIosScriptBridge) {
-      strongBridge = bridge
-      weakBridge = kotlin.native.ref.WeakReference(bridge)
-    }
+    fun replaceBridge(bridge: KanamaIosScriptBridge) =
+      lock.withLock {
+        strongBridge = bridge
+        weakBridge = kotlin.native.ref.WeakReference(bridge)
+      }
+  }
 
-    override fun beforeRelease(): Boolean {
-      if (!holdsOwnerRef) return false
-      holdsOwnerRef = false
-      return true
+  /**
+   * One owner +1 an instance took: the hook its queued release carries. Distinct per reference, so
+   * the release of an old +1 (an instance rebuilt after a collection) never clears a newer one.
+   */
+  @OptIn(kotlin.concurrent.atomics.ExperimentalAtomicApi::class)
+  private class OwnerRef : ReleaseHook {
+    private val state = kotlin.concurrent.atomics.AtomicInt(1)
+
+    val held: Boolean
+      get() = state.load() == 1
+
+    override fun beforeRelease(): Boolean = state.compareAndSet(1, 0)
+  }
+
+  /** A small lock for state Godot's threads may touch; never held across an engine callback. */
+  @OptIn(kotlin.concurrent.atomics.ExperimentalAtomicApi::class)
+  private class SpinLock {
+    private val state = kotlin.concurrent.atomics.AtomicInt(0)
+
+    inline fun <T> withLock(block: () -> T): T {
+      while (!state.compareAndSet(0, 1)) platform.posix.sched_yield()
+      try {
+        return block()
+      } finally {
+        state.store(0)
+      }
     }
   }
 
@@ -771,6 +827,13 @@ internal object KanamaIosRuntime {
     KanamaIosGodot.getMethodBind("RefCounted", "get_reference_count", 3905245786L)
   }
 
+  private val getPathBind: Long by lazy {
+    KanamaIosGodot.getMethodBind("Resource", "get_path", 201670096L)
+  }
+
+  // KANAMA_SCRIPT_OWNER_LINKS=0 turns the links off alone (a measurement knob);
+  // KANAMA_GC_RELEASES=0
+  // turns them off with the rest of the GC fallback.
   private val ownerLinksEnabled: Boolean by lazy {
     runCatching { net.multigesture.kanama.api.OS.getEnvironment("KANAMA_SCRIPT_OWNER_LINKS") }
       .getOrDefault("")
@@ -786,25 +849,30 @@ internal object KanamaIosRuntime {
 
   private fun takeOwnerRef(instance: IosScriptInstance): Boolean {
     if (instance.holdsOwnerRef) return false
-    instance.holdsOwnerRef =
-      net.multigesture.kanama.api.RefCounted.retainHandle(
+    if (
+      !net.multigesture.kanama.api.RefCounted.retainHandle(
         MemorySegment.ofAddress(instance.ownerObject)
       )
-    return instance.holdsOwnerRef
+    ) {
+      return false
+    }
+    instance.ownerRef = OwnerRef()
+    return true
   }
 
   // A RefCounted owner (bit 63 of the instance id): link it; a KanamaScript object anchors its
   // instance and gets the cleanup that releases the owner +1 once it is unreachable.
   private fun linkOwner(instance: IosScriptInstance) {
     val id = IosGodot.objectGetInstanceId(instance.ownerObject)
-    if (id >= 0L || !ownerLinksEnabled) return
+    if (id >= 0L || !ownerLinksEnabled || !OwnedReleases.enabled) return
     instance.instanceId = id
     instance.refCountedOwner = true
     val kotlinObject = instance.bridge.scriptInstance
     if (kotlinObject !is KanamaScript<*>) return
     instance.anchored = true
     if (!takeOwnerRef(instance)) return
-    val release = PendingRelease(MemorySegment.ofAddress(instance.ownerObject), id, null, instance)
+    val release =
+      PendingRelease(MemorySegment.ofAddress(instance.ownerObject), id, null, instance.ownerRef)
     instance.pending = release
     val registration = OwnedReleaseCleaner.register(kotlinObject, release)
     kotlinObject.kanamaInstanceAnchor = Pair(instance.bridge, registration)
@@ -813,45 +881,83 @@ internal object KanamaIosRuntime {
 
   fun scriptInstanceRefcountIncremented(handle: Long) {
     val instance = scriptInstances[handle] ?: return
-    if (!instance.anchored || !instance.isWeak) return
-    if (referenceCount(instance.ownerObject) <= 1) return
-    if (instance.makeStrong()) return
+    if (instance.onIncremented { referenceCount(instance.ownerObject) }) return
     // Collected before its release ran and re-referenced (a cache hit): rebuild it, as desktop's
-    // ScriptOwnerLinks.recreate does. The old release stays queued and drops the old +1.
+    // ScriptOwnerLinks.recreate does, with a new +1 (a new OwnerRef: the old release still queued
+    // drops only the old +1), and refill it from its file on first use.
     val fresh = instance.resource.descriptor?.factory?.invoke(instance.ownerObject) ?: return
     instance.replaceBridge(fresh)
-    instance.holdsOwnerRef = false
+    instance.ownerRef = null
     instance.pending = null
     linkOwner(instance)
-    instance.makeStrong()
-    OwnedReleaseCleaner.warn(
-      "The ${instance.resource.path} script object of a resource was collected while the engine " +
-        "re-referenced the resource; its script instance was recreated and its property values reset."
-    )
+    val path =
+      runCatching {
+          ObjectCalls.ptrcallNoArgsRetString(
+            MemorySegment.ofAddress(getPathBind),
+            MemorySegment.ofAddress(instance.ownerObject),
+          )
+        }
+        .getOrDefault("")
+    if (path.isNotEmpty() && "::" !in path) {
+      instance.pendingRefill = path
+    } else {
+      OwnedReleaseCleaner.warn(
+        "The ${instance.resource.path} script object of a resource with no file was collected " +
+          "while the engine re-referenced the resource; its script instance was recreated with " +
+          "its default property values."
+      )
+    }
+  }
+
+  // The refill of a rebuilt instance (see IosScriptInstance.bridge): an uncached load of the
+  // owner's file, its stored script properties set on the owner, the copy released.
+  @OptIn(ExperimentalForeignApi::class)
+  private fun refillIfPending(instance: IosScriptInstance) {
+    val path =
+      instance.lock.withLock { instance.pendingRefill.also { instance.pendingRefill = null } }
+        ?: return
+    val copy =
+      net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_load_uncached(path, "")
+    if (copy == 0L) {
+      OwnedReleaseCleaner.warn(
+        "The ${instance.resource.path} script instance of $path was recreated but the file could " +
+          "not be loaded again; its property values were reset."
+      )
+      return
+    }
+    try {
+      val owner =
+        GodotObject(
+          net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(instance.ownerObject))
+        )
+      val source =
+        GodotObject(net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(copy)))
+      for (property in instance.resource.descriptor?.properties.orEmpty()) {
+        if (property.usage and 2 == 0) continue // PROPERTY_USAGE_STORAGE
+        owner.set(property.name, source.get(property.name))
+      }
+    } finally {
+      net.multigesture.kanama.api.RefCounted.releaseHandle(MemorySegment.ofAddress(copy))
+    }
   }
 
   fun scriptInstanceRefcountDecremented(handle: Long): Boolean {
     val instance = scriptInstances[handle] ?: return true
-    if (!instance.refCountedOwner || !instance.holdsOwnerRef) return true
-    val count = referenceCount(instance.ownerObject)
-    if (count == 0) return true
-    if (count == 1) instance.makeWeak()
-    return false
+    return instance.onDecremented { referenceCount(instance.ownerObject) }
   }
 
-  // An owner that is not dying (script detached or replaced): its +1 is dropped next frame.
+  // An owner that is not dying (script detached or replaced): its +1 is dropped next frame, and a
+  // plain-class owner's parked releases go back to the drain.
   private fun releaseOwnerRefLater(instance: IosScriptInstance) {
-    if (!instance.holdsOwnerRef) return
+    val owner = MemorySegment.ofAddress(instance.ownerObject)
+    if (instance.refCountedOwner && !instance.anchored) {
+      OwnedReleases.unparkLater(owner, instance.instanceId)
+    }
+    val ref = instance.ownerRef ?: return
+    if (!ref.held) return
     val pending = instance.pending
     if (pending != null && !pending.tryDisarm()) return
-    OwnedReleaseCleaner.enqueue(
-      PendingRelease(
-        MemorySegment.ofAddress(instance.ownerObject),
-        instance.instanceId,
-        null,
-        instance,
-      )
-    )
+    OwnedReleaseCleaner.enqueue(PendingRelease(owner, instance.instanceId, null, ref))
   }
 
   /** Task 132 self-test probe: the shape of a `KanamaScript<Resource>` game script. */
@@ -859,11 +965,22 @@ internal object KanamaIosRuntime {
     KanamaScript<net.multigesture.kanama.api.Resource>(
       net.multigesture.kanama.api.GodotHandle(MemorySegment.ofAddress(ownerObject)),
       net.multigesture.kanama.api.Resource::fromHandle,
-    )
+    ) {
+    var cash: Long = 10
+  }
 
   private class OwnerLinkProbeBridge(private val script: OwnerLinkProbe) : KanamaIosScriptBridge {
     override val scriptInstance: Any?
       get() = script
+
+    override fun setProperty(propertyIndex: Int, value: Long): Boolean {
+      if (propertyIndex != 0) return false
+      script.cash = value
+      return true
+    }
+
+    override fun getProperty(propertyIndex: Int): Any? =
+      if (propertyIndex == 0) script.cash else KanamaIosNoProperty
   }
 
   private class ScopeProbeBridge(ownerObject: Long) : KanamaIosScriptBridge {

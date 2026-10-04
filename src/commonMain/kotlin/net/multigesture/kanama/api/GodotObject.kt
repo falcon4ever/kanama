@@ -323,8 +323,9 @@ open class GodotObject(val handle: GodotHandle) {
      * as a *borrowed* `GodotObject` view: the Variant-path decode
      * (`BuiltinTypes.variantToScalar`, `VariantType.OBJECT`) takes no reference for you, so
      *
-     * - never `close()` it, and never `close()` a `Resource.fromObject(...)`/`X.fromObject(...)`
-     *   view you mint over it — that releases a reference you never took;
+     * - `close()` on it releases nothing (it took no reference). To keep the object, downcast it:
+     *   `Resource.fromObject(...)`/`X.fromObject(...)` takes a reference of its own (task 132), which
+     *   you may `close()` (or let the garbage collector release);
      * - if the call *minted* the object and the return Variant held its only reference
      *   (`call("duplicate")`, a static factory), the segment is already dead when you receive it;
      *   use the typed wrapper method instead (an owned `+1` you close), or `ClassDB.instantiate`,

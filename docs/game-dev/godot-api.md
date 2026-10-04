@@ -297,11 +297,20 @@ a forgotten getter result from staying alive until shutdown.
   released again when it is collected.
 - **On the main thread.** The collector only queues the release; Godot is called
   from the frame loop, never from the collector's thread. How soon depends on
-  when the JVM (or Kotlin/Native) collects: it is not a deadline. Measured on an
-  Apple M1 Max dropping 10,000 owned getter results every frame with no forced
-  collection, a dropped wrapper waited about 200 frames (a few seconds) on
-  average, with up to 3.7 million releases pending and occasional 40-70 ms
-  frames when a large batch was released at once. Close what you make in a loop.
+  when the JVM (or Kotlin/Native) collects: it is not a deadline, and a game that
+  allocates little may not collect for a long time. Measured on an Apple M1 Max
+  (desktop JVM, 600 frames of about 7 ms): dropping 200 owned getter results a
+  frame, one collection ran and a dropped wrapper waited about 260 frames on
+  average; dropping 5 a frame, no collection ran at all, so nothing was released
+  in those 10 seconds. Releases run within about 1 ms per frame (the rest waits
+  for the next frame), and above 100,000 waiting wrappers new ones stop
+  registering and a warning names the setting below: close what you make in a
+  loop.
+- **Native memory is invisible to the collector.** A wrapper is a few dozen
+  bytes on the Kotlin heap; the image, mesh or audio it holds lives in Godot's
+  memory, which the collector does not see. Dropping a few large resources does
+  not make the JVM (or Kotlin/Native) collect any sooner, so their release can be
+  much later than their size suggests. Close big resources yourself.
 - **At shutdown**, before Godot's leak report, Kanama runs a collection and
   releases what it finds, so a dropped wrapper no longer shows up as
   `Leaked instance` at exit. A wrapper you still hold in a field is still yours.
@@ -330,11 +339,15 @@ wrapper you reached it through:
 // Keep only the script object; the loaded wrapper is dropped (or closed).
 map = ResourceLoader.load("user://map.res")?.kotlinScriptInstance<DataMap>() ?: return
 // ... frames later, after any number of collections:
-ResourceSaver.save(Resource.fromObject(GodotObject(map.godotObject))!!, "user://map.res")
+Resource.fromObject(GodotObject(map.godotObject))?.use { ResourceSaver.save(it, "user://map.res") }
 ```
 
 and the same holds for `newScriptInstance<T>().instance` kept without its
-handle. Kanama follows C#'s model: the script object holds a reference on its
+handle. One edge: if the collector drops the script object and the engine
+loads the resource from its cache again before the next frame, the script
+object is rebuilt and re-reads its values from the resource's file, which is
+what GDScript's re-parse would give; a resource that was never saved starts
+from its defaults, with a warning. Kanama follows C#'s model: the script object holds a reference on its
 resource, the engine keeps the script object alive while it holds the resource
 itself, and once only your code can reach the script object, dropping it
 releases the resource like any other forgotten wrapper.
