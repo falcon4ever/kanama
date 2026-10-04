@@ -1822,17 +1822,17 @@ def kotlin_default_expression(default_value: str | None, logical_kind: str) -> s
     if logical_kind in {"int32"}:
         try:
             return str(int(default_value, 0))
-        except ValueError:
+        except ValueError:  # justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change
             return None
     if logical_kind in {"int64", "uint32", "enum", "bitfield"}:
         try:
             return f"{int(default_value, 0)}L"
-        except ValueError:
+        except ValueError:  # justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change
             return None
     if logical_kind == "float":
         try:
             value = float(default_value)
-        except ValueError:
+        except ValueError:  # justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change
             return None
         rendered = repr(value)
         # repr() of e.g. 1e-05 has no "." but is already a valid Kotlin Double literal;
@@ -1867,7 +1867,7 @@ def kotlin_enum_default_expression(default_value: str | None, logical_kind: str,
         return kotlin_default_expression(default_value, logical_kind)
     try:
         number = int(default_value, 0)
-    except ValueError:
+    except ValueError:  # justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change
         return None
     return enum_constant_expression(type_name, number)
 

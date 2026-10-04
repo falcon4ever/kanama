@@ -44,6 +44,7 @@ ci_failed() {
   echo "========================================================================" >&2
   close_stage
   print_timings >&2
+  # justified: this runs inside the failure banner; the run is already red and the exit code is the original one.
   write_timings_json FAIL || true
 }
 
@@ -110,6 +111,8 @@ with open(path, "w") as handle:
 }
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/gate_skip.sh
+source "$ROOT_DIR/scripts/gate_skip.sh"
 HOST_UNAME="$(uname -s)"
 kanama_version="$(sed -nE 's/^version = "([^"]+)"/\1/p' "$ROOT_DIR/build.gradle.kts" | head -n 1)"
 
@@ -274,7 +277,8 @@ done
 if [[ -n "$kdoc_docs" && -d "$kdoc_docs" ]]; then
   python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$kdoc_docs" --check
 else
-  echo "[local_ci] skip: no Godot doc/classes checkout found (set GODOT_DOCS to enable)"
+  # CI has no Godot source checkout: ci.yml lists kdoc-staleness in KANAMA_ALLOW_SKIP, so the skip is explicit there.
+  gate_skip kdoc-staleness "no Godot doc/classes checkout found (set GODOT_DOCS to enable)" || exit 1
 fi
 
 stage "API shell wrapper generator coverage check"
@@ -433,6 +437,11 @@ stage "shell script lint (shellcheck)"
 # Hard-required (the unzip/ios_template_preflight precedent): the gate itself
 # prints install instructions and exits 2 when shellcheck is absent.
 "$ROOT_DIR/scripts/check_shell_lint.sh"
+
+stage "swallowed-failure audit (task 118)"
+# Every `|| true`, `2>/dev/null`, `except ...: pass` in the gate scripts is justified in the code (a
+# `# justified:` comment) or fatal; the audit table in scripts/README-gates.md is generated from those comments.
+python3 "$ROOT_DIR/scripts/audit_swallowed_failures.py"
 
 stage "JDK install-location table parity (kanama#277)"
 python3 "$ROOT_DIR/scripts/check_jdk_locations_parity.py"
@@ -651,7 +660,7 @@ if [[ "$HOST_UNAME" == "Linux" ]]; then
   stage "Linux native bootstrap preflight: ldd"
   if ldd "$linux_native" | grep -Eq 'not found'; then
     echo "[local_ci] Linux native bootstrap has missing dynamic dependencies" >&2
-    ldd "$linux_native" >&2 || true
+    ldd "$linux_native" >&2 || true  # justified: diagnostics on a path that already exits 1 just below
     exit 1
   fi
   if command -v readelf >/dev/null 2>&1; then
@@ -663,7 +672,7 @@ if [[ "$HOST_UNAME" == "Linux" ]]; then
       exit 1
     fi
   else
-    echo "[local_ci] readelf not found; skipping Linux dynamic-section preflight"
+    gate_skip linux-readelf "readelf not found; Linux dynamic-section preflight not run" || exit 1
   fi
 fi
 if ! rg -q '^res://addons/kanama/kanama\.gdextension$' "$install_check_dir/.godot/extension_list.cfg"; then
@@ -703,10 +712,10 @@ if [[ $skip_bootstrap -eq 0 ]]; then
     cmake -S "$ROOT_DIR/bootstrap" -B "$bootstrap_build_dir" -DCMAKE_BUILD_TYPE=Release
     cmake --build "$bootstrap_build_dir" --config Release
   else
-    echo "[local_ci] cmake not found; skipping bootstrap build"
+    gate_skip bootstrap-cmake "cmake not found; bootstrap JDK resolution + cmake build not run" || exit 1
   fi
 else
-  echo "[local_ci] skipping bootstrap build"
+  echo "SKIP: bootstrap build: --skip-bootstrap was passed"
 fi
 
 if [[ $skip_docs -eq 0 ]]; then
@@ -714,11 +723,11 @@ if [[ $skip_docs -eq 0 ]]; then
     stage "mkdocs strict build"
     (cd "$ROOT_DIR" && mkdocs build --strict)
   else
-    echo "[local_ci] mkdocs not found; skipping docs build"
     echo "[local_ci] install with: pip install -r docs/requirements.txt"
+    gate_skip mkdocs "mkdocs not found; docs build not run" || exit 1
   fi
 else
-  echo "[local_ci] skipping docs build"
+  echo "SKIP: docs build: --skip-docs was passed"
 fi
 
 if [[ $skip_web -eq 0 ]]; then
@@ -726,9 +735,17 @@ if [[ $skip_web -eq 0 ]]; then
   if command -v node >/dev/null 2>&1; then
     stage "web bridge + driver syntax"
     node --check "$ROOT_DIR/web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js"
+    checked_drivers=0
     for driver in "$ROOT_DIR"/scripts/web/drivers/*.mjs "$ROOT_DIR"/scripts/web/drivers/demos/*.mjs; do
-      [[ -e "$driver" ]] && node --check "$driver"
+      # An unmatched glob stays literal; a driver list that matches nothing must not pass vacuously.
+      if [[ ! -e "$driver" ]]; then
+        echo "[local_ci] web driver glob matched nothing: $driver" >&2
+        exit 1
+      fi
+      node --check "$driver"
+      checked_drivers=$((checked_drivers + 1))
     done
+    echo "[local_ci] node --check: $checked_drivers driver(s)"
 
     # Correctness lint over the same drivers (task 86: an unused variable held
     # the Safari envelope's performance section back for two weeks). Pinned
@@ -740,7 +757,7 @@ if [[ $skip_web -eq 0 ]]; then
       ./node_modules/.bin/eslint .
     )
   else
-    echo "[local_ci] node not found; skipping web driver syntax check + eslint"
+    gate_skip web-node "node not found; web driver syntax check + eslint not run" || exit 1
   fi
 
   # Export-smoke scaffold self-test against the static fake fixture (no browser).
@@ -772,7 +789,7 @@ if [[ $skip_web -eq 0 ]]; then
     -Pkotlin.compiler.execution.strategy=in-process \
     :web-runtime:compileKotlinWasmJs :web-runtime:generateWebGameplayCoverage
 else
-  echo "[local_ci] skipping web checks"
+  echo "SKIP: web checks: --skip-web was passed"
 fi
 
 for godot_bin in "${godot_bins[@]}"; do

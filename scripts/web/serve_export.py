@@ -80,7 +80,7 @@ def _lan_address() -> str | None:
             # which is the interface a phone on the same network would reach.
             probe.connect(("192.0.2.1", 9))  # TEST-NET-1, deliberately unroutable
             return probe.getsockname()[0]
-    except OSError:
+    except OSError:  # justified: no route means no LAN address to print; the server itself still binds and serves
         return None
 
 
@@ -203,7 +203,7 @@ def main(argv: list[str]) -> int:
             )
     try:
         server.serve_forever()
-    except KeyboardInterrupt:
+    except KeyboardInterrupt:  # justified: Ctrl-C is how an operator stops the dev server; exit 0 is right
         pass
     finally:
         server.server_close()

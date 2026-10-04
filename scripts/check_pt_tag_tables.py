@@ -372,7 +372,7 @@ def load_tables() -> tuple[dict[str, dict[str, int]], list[str]]:
 def rel(path: Path) -> str:
     try:
         return str(path.relative_to(ROOT))
-    except ValueError:
+    except ValueError:  # justified: only the path printed in a finding; no verdict reads it
         return str(path)
 
 

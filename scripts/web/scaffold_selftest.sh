@@ -60,6 +60,7 @@ run_case() {
     ok "$name (exit $status)"
   else
     bad "$name expected exit $expected_status, got $status"
+    # justified: diagnostics for a case already counted as failed by bad() above.
     note "stderr: $(tail -n3 "$case_dir/stderr.log" 2>/dev/null || true)"
   fi
 
@@ -108,7 +109,7 @@ fi
 # Argument validation: missing --export-dir must be a usage error (exit 2).
 usage_status=0
 "$SMOKE" --demo fake --result "$WORK/x.json" --driver-cmd "python3 $FAKE_DRIVER --mode success" \
-  >/dev/null 2>&1 || usage_status=$?
+  >/dev/null 2>&1 || usage_status=$?  # justified: the status is captured and asserted on the next lines
 if [[ "$usage_status" -eq 2 ]]; then
   ok "missing --export-dir is a usage error (exit 2)"
 else

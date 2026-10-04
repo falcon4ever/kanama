@@ -64,6 +64,7 @@ def main() -> int:
     api_path = pathlib.Path(args[0]) if args else DEFAULT_API
     rendered = render(api_path)
     if check:
+        # justified: a missing file reads as "" and so compares as stale: the check fails
         current = OUT.read_text() if OUT.exists() else ""
         if current != rendered:
             print("[engine_method_table] STALE — re-run scripts/generate_engine_method_table.py")

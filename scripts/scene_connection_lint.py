@@ -100,7 +100,7 @@ def script_methods(script_path: Path) -> set[str]:
     good enough for a lint: it reads annotations on the declaration line and the lines above."""
     try:
         lines = script_path.read_text(encoding="utf-8").splitlines()
-    except OSError:
+    except OSError:  # justified: an unreadable script registers no methods, so every connection to it is reported missing
         return set()
 
     methods: set[str] = set()

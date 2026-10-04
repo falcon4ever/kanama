@@ -246,6 +246,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   const modelFrontYaw = await readGlobalYaw();
   trace(`parity model-front yaw=${modelFrontYaw}`);
+  // Task 118: both aims turn the whole level (the probes aim the ROOT). Turn it back before anything else
+  // runs: left turned, the Player walks off the floor and its DownRay check faults (the old "teardown race").
+  await evaluate(
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("parity_restore")}); true`,
+  );
+  const restoredYaw = await readGlobalYaw();
+  trace(`parity_restore: yaw=${restoredYaw}`);
   const HALF_PI = Math.PI / 2;
   const angleNear = (a, b) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 1e-3;
 
@@ -365,6 +372,18 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`demoPageProbeAfter: ${demoPageProbeAfter}`);
 
+  // KANAMA_WEB3D_EXTRA_PLAY_MS=<ms>: keep the level running this long before teardown. A timing-dependent
+  // defect in the fixture (the Player drifting off its floor, task 118) fires with a small probability per
+  // second of play; a long window makes it near-certain, which is this gate's own red run. Unset = no wait.
+  const extraPlayMs = Number(process.env.KANAMA_WEB3D_EXTRA_PLAY_MS ?? 0);
+  if (!Number.isFinite(extraPlayMs) || extraPlayMs < 0) {
+    throw new Error(`web3d: KANAMA_WEB3D_EXTRA_PLAY_MS must be a number >= 0 (got ${process.env.KANAMA_WEB3D_EXTRA_PLAY_MS})`);
+  }
+  if (extraPlayMs > 0) {
+    trace(`extra play: ${extraPlayMs}ms`);
+    await observe(evaluate, peak, extraPlayMs, deadline);
+  }
+
   trace("smoke_teardown");
   await evaluate(
     "globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dSmokeQuitHandle, 1); true",
@@ -453,6 +472,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     parityDefaultLook: angleNear(defaultYaw, -HALF_PI),
     parityModelFrontLook: angleNear(modelFrontYaw, HALF_PI),
     parityModelFrontFlip: angleNear(modelFrontYaw - defaultYaw, Math.PI),
+    // Task 118: the parity probes turn the ROOT; the level must be upright again afterwards, or the Player
+    // (world-axis velocity, local-axis pacing) walks off its floor and its DownRay check faults at random.
+    levelUprightAfterParity: angleNear(restoredYaw, 0),
     // Task 76 (generic callv fallback). (a) A queued generic mutation on a method
     // outside the admitted typed opcodes (set_meta) applied...
     genericQueuedMutationApplied: generic.metaTag === "i" && generic.metaValue === 42,

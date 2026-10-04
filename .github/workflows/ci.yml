@@ -67,6 +67,11 @@ jobs:
 
       - name: Run local CI gate
         shell: bash
+        env:
+          # The checks this runner cannot run, named one by one (see gate_skip.sh): under CI any
+          # other skip fails the job. kdoc-staleness needs a Godot doc/classes checkout; task-index
+          # and stale-blocker-task-tokens read the local-only kanama-tasks repo.
+          KANAMA_ALLOW_SKIP: kdoc-staleness,task-index,stale-blocker-task-tokens
         run: |
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
@@ -105,6 +110,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       mobile: ${{ steps.filter.outputs.mobile }}
+      gates: ${{ steps.filter.outputs.gates }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -115,14 +121,22 @@ jobs:
         id: filter
         shell: bash
         run: |
-          # Non-PR events (push to main) always build the mobile lanes.
+          # Non-PR events (push to main) always build the mobile lanes and run the gate red runs.
           if [ "${{ github.event_name }}" != "pull_request" ]; then
             echo "mobile=true" >> "$GITHUB_OUTPUT"
-            echo "non-PR event -> building mobile lanes"
+            echo "gates=true" >> "$GITHUB_OUTPUT"
+            echo "non-PR event -> building mobile lanes, running the gate red runs"
             exit 0
           fi
           changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}'...HEAD)"
           echo "changed files:"; echo "$changed"
+          # The gate red runs (scripts/gate_red_runs.py) prove each gate still fails on a known-bad input; they
+          # matter when the gates themselves change.
+          if grep -qE '^(scripts/|\.github/workflows/)' <<<"$changed"; then
+            echo "gates=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "gates=false" >> "$GITHUB_OUTPUT"
+          fi
           # `ios/` (the C shim + headers) and `gdextension/` (the bundled interface header the shim
           # includes) must trigger the mobile lanes — a change to `ios/bootstrap/kanama_ios_shim.c`
           # otherwise skipped the iOS xcframework build (only the iOS module's own dir was matched).
@@ -135,6 +149,24 @@ jobs:
           else
             echo "mobile=false" >> "$GITHUB_OUTPUT"
           fi
+
+  # Every gate shown red on a known-bad input and green again (task 118): the fast set of
+  # scripts/gate_red_runs.py in a throwaway worktree. --strict makes a skipped case a failure; the one case
+  # that needs a Godot docs checkout (sync_kdoc) is skipped on purpose here, by name. The Godot/Gradle smokes
+  # run nightly (gate-red-runs-nightly.yml). Not part of local_ci.sh: it takes several minutes.
+  gate-red-runs:
+    name: gate red runs (fast set)
+    needs: changes
+    if: needs.changes.outputs.gates == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run the fast gate red runs
+        shell: bash
+        run: python3 scripts/gate_red_runs.py --strict --allow-skip sync_kdoc
 
   # The GDExtension header is platform-independent; dump it once here and share
   # it (matches package.yml). The iOS C shim needs it to compile; the Android

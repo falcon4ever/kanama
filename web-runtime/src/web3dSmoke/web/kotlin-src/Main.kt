@@ -991,6 +991,29 @@ class Main(godotObject: GodotHandle) :
   fun coroutineProbeMask(value: Long): Long = coroutineMask
 
   /**
+   * Harness probe (driver method resolved BY NAME; declared LAST so it renumbers nothing): undo
+   * the parity probes' aim.
+   *
+   * Both aims turn the ROOT, i.e. the whole level, a quarter turn about Y, and nothing turned it
+   * back. [Player] sets its pacing velocity in WORLD axes but paces on its LOCAL x, so with the
+   * level turned its world-x walk became a walk along the level's z axis: off the 12 x 12 floor
+   * within a second and a half, over and over for the rest of the run. Whenever the box touched
+   * down while its centre was past the floor's edge the box still overlapped the floor
+   * (`isOnFloor()`), but the ray from its centre missed it, and Player's "DownRay should hit the
+   * floor from a grounded player" check threw on every following physics tick until teardown freed
+   * it. That is the flake kanama#258 recorded as a "teardown race" (task 118): it fired whenever a
+   * touchdown landed in the edge window, a few percent of runs, more on a slow runner. The driver
+   * calls this right after it has read the second yaw, so the level stands the way the scene file
+   * put it for everything that follows.
+   */
+  fun parityRestore() {
+    self.rotation = Vector3(0.0, 0.0, 0.0)
+    check(abs(self.globalRotation.y) < 1e-3) {
+      "parity: restore left the level at yaw ${self.globalRotation.y}, expected 0"
+    }
+  }
+
+  /**
    * Connects and fires the scalar-payload signal once. Called from [ready] so the payload has
    * landed long before the driver reads [dispatchProbe]; the connection is one-shot, so it
    * unregisters itself and the smoke's callback-drain assertion is unaffected.

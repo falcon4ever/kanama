@@ -17,6 +17,10 @@ set -euo pipefail
 #     bootstrap (the R8 gate this validates).
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/gate_skip.sh
+source "$ROOT_DIR/scripts/gate_skip.sh"
+# shellcheck source=scripts/android_apk_id.sh
+source "$ROOT_DIR/scripts/android_apk_id.sh"
 
 usage() {
   cat <<'EOF'
@@ -124,6 +128,7 @@ set_gradle_property() {
 
 cleanup() {
   if [[ "${PACKAGE_LAUNCHED:-0}" == "1" ]]; then
+    # justified: cleanup after the verdict; the app may already have exited.
     "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
   fi
 }
@@ -164,7 +169,14 @@ fi
 
 # 1) Install/refresh the Godot Android build template (regenerates build.gradle).
 echo "[android_minified] install android build template"
-"$GODOT_BIN" --headless --path "$DEMO_DIR" --install-android-build-template --quit >/dev/null 2>&1 || true
+# In 4.7.2 this installs nothing on its own (task 116), so its exit status is not the verdict: the
+# build.gradle check below is, and installs the template by hand when this left it missing. Keep the
+# output and show it when the command failed, instead of discarding it (task 118).
+TEMPLATE_LOG="${APK_PATH%.apk}.install-template.log"
+if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --install-android-build-template --quit >"$TEMPLATE_LOG" 2>&1; then
+  echo "[android_minified] note: --install-android-build-template exited non-zero (output below; the build.gradle check decides):" >&2
+  tail -n 20 "$TEMPLATE_LOG" >&2
+fi
 
 BUILD_GRADLE="$DEMO_DIR/android/build/build.gradle"
 if [[ ! -f "$BUILD_GRADLE" ]]; then
@@ -279,31 +291,45 @@ if [[ ! -f "$APK_PATH" ]]; then
   exit 1
 fi
 
+# Task 118: prove the APK is the package this run will launch, before anything is installed.
+assert_apk_package_id "[android_minified]" "$ANDROID_SDK_DIR" "$APK_PATH" "$PACKAGE_NAME" || exit 1
+
 echo "[android_minified] install: $PACKAGE_NAME"
 "$ADB_BIN" start-server >/dev/null
-if ! "$ADB_BIN" install -r "$APK_PATH" >/dev/null 2>&1; then
+INSTALL_LOG="${APK_PATH%.apk}.install.log"
+if ! "$ADB_BIN" install -r "$APK_PATH" >"$INSTALL_LOG" 2>&1; then
   # A leftover install from the debug smoke carries the Godot editor debug
   # keystore's signature, which differs from this gate's release keystore
   # (INSTALL_FAILED_UPDATE_INCOMPATIBLE). Smoke installs hold no user data,
   # so drop the stale package and install fresh — same hardening as
   # android_smoke.sh.
-  echo "[android_minified] install -r failed; uninstalling stale $PACKAGE_NAME and retrying"
+  echo "[android_minified] install -r failed (output below); uninstalling stale $PACKAGE_NAME and retrying"
+  cat "$INSTALL_LOG" >&2
+  # justified: the package may simply not be installed; the plain install on the next line is the check.
   "$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 || true
   "$ADB_BIN" install "$APK_PATH" >/dev/null
 fi
 "$ADB_BIN" logcat -c
+# justified: the app may not be running yet; the launch below and the pid check after it decide.
 "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
 "$ADB_BIN" shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
-sleep "$LAUNCH_WAIT"
-APP_PID="$("$ADB_BIN" shell pidof -s "$PACKAGE_NAME" 2>/dev/null | tr -d '\r' || true)"
-if [[ -n "$APP_PID" ]]; then
-  "$ADB_BIN" logcat --pid "$APP_PID" -d >"$LOG_FILE"
-else
+# Task 118: take the app's FIRST pid as soon as it appears and judge `logcat --pid <pid>` after the launch wait,
+# instead of requiring the process to be alive at the end of it (a demo may quit on its own; a crash is read
+# from the log). No pid within the wait means the app never started: fail, with the device log tail.
+launch_started=$SECONDS
+if ! APP_PID="$(wait_for_app_pid "$ADB_BIN" "$PACKAGE_NAME" "$LAUNCH_WAIT")"; then
   "$ADB_BIN" logcat -d >"$LOG_FILE"
+  echo "[android_minified] $PACKAGE_NAME never showed a process within ${LAUNCH_WAIT}s of the launch (crashed on start or never started); logcat: $LOG_FILE" >&2
+  tail -n 80 "$LOG_FILE" >&2
+  exit 1
 fi
+launch_elapsed=$((SECONDS - launch_started))
+if (( launch_elapsed < LAUNCH_WAIT )); then
+  sleep $((LAUNCH_WAIT - launch_elapsed))
+fi
+"$ADB_BIN" logcat --pid "$APP_PID" -d >"$LOG_FILE"
 
-# Positive: Kanama started past the PanamaPort FFI bootstrap and registered.
 check_log "Initializing Godot plugin KanamaAndroid"
 check_log "registered KanamaResourceFormatLoader for \\.kt"
 
@@ -313,5 +339,6 @@ check_log_absent "GDExtension initialization function 'kanama_entry' returned an
 check_log_absent "Error loading extension"
 check_log_absent "No loader found for resource: res://kotlin-src"
 check_log_absent "FATAL EXCEPTION"
+check_log_absent "Fatal signal [0-9]+"
 
 echo "[android_minified] PASS (R8-minified release boots Kanama)"

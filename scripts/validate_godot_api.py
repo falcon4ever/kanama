@@ -191,6 +191,13 @@ def iter_call_bodies(content: str, name: str) -> list[tuple[str, int]]:
     return result
 
 
+DELIBERATE_WRONG_HASHES = {("Node3D", "set_visible", 1)}
+
+# Kotlin trees that carry MethodBind hashes -> the least number of hashes the validator must have checked in
+# each (measured 2026-10: commonMain 14.7k, jvmMain 664, iosMain 621; the floors leave room, not an empty tree).
+HASH_FLOORS = {"src/jvmMain/kotlin": 300, "src/commonMain/kotlin": 5000, "src/iosMain/kotlin": 300}
+
+
 def validate_kotlin_hashes(
     root: Path,
     methods: dict[tuple[str, str], set[int]],
@@ -199,7 +206,21 @@ def validate_kotlin_hashes(
     builtin_constructors: dict[str, set[int]],
 ) -> list[str]:
     errors: list[str] = []
-    for path in sorted((root / "src/jvmMain/kotlin").rglob("*.kt")):
+    # Every Kotlin tree that carries MethodBind hashes: the desktop sources, and since task 117 P4' the
+    # shared wrapper tree under commonMain (which holds nearly all of them) and the iOS sources. This loop
+    # used to read src/jvmMain only, so a wrong hash in the generated tree passed (task 118). Each tree must
+    # exist, be non-empty and yield at least its floor of checked hashes: a tree that moved or stopped
+    # matching would otherwise be a quiet pass again.
+    kotlin_files: list[tuple[str, Path]] = []
+    for tree in HASH_FLOORS:
+        tree_files = sorted((root / tree).rglob("*.kt"))
+        if not tree_files:
+            errors.append(f"{tree}: no Kotlin sources found; this tree carries MethodBind hashes and was not checked")
+        kotlin_files.extend((tree, path) for path in tree_files)
+    if errors:
+        return errors
+    checked = dict.fromkeys(HASH_FLOORS, 0)
+    for tree, path in kotlin_files:
         content = path.read_text(encoding="utf-8")
         constants = constants_for(content)
 
@@ -210,6 +231,12 @@ def validate_kotlin_hashes(
                 errors.append(str(e))
                 continue
 
+            # The iOS self-test's fault probe looks up one bind with a WRONG hash on purpose, to prove the
+            # shim reports `bind-lookup-failed` (task 124). It is the only such site; name it exactly.
+            if (class_name, method_name, actual_hash) in DELIBERATE_WRONG_HASHES:
+                continue
+
+            checked[tree] += 1
             expected = methods.get((class_name, method_name))
             if not expected:
                 errors.append(f"{path}: {class_name}.{method_name} not found in extension_api.json")
@@ -289,6 +316,10 @@ def validate_kotlin_hashes(
                 errors.append(
                     f"{path}: Object.emit_signal hash {actual_hash} not in {{{expected_text}}}",
                 )
+    for tree, floor in HASH_FLOORS.items():
+        if checked[tree] < floor:
+            errors.append(f"{tree}: only {checked[tree]} MethodBind hashes were checked, expected at least {floor}")
+    print("[validate_godot_api] hashes checked: " + ", ".join(f"{tree.split('/')[1]}={n}" for tree, n in checked.items()))
     return errors
 
 

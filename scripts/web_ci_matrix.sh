@@ -270,6 +270,7 @@ for demo in "${DEMOS[@]}"; do
       echo "[web_ci_matrix] $demo: EXPORT FAILED" >&2
       FAILED=1
       record_unrun_demo "$demo" "export failed"
+      # justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set.
       continue
     fi
   fi
@@ -278,6 +279,7 @@ for demo in "${DEMOS[@]}"; do
     echo "[web_ci_matrix] $demo: no export at $export_dir" >&2
     FAILED=1
     record_unrun_demo "$demo" "no export at $export_dir"
+    # justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set.
     continue
   fi
 
@@ -366,7 +368,7 @@ record = {
 if os.path.exists(result_path):
     try:
         envelope = json.load(open(result_path))
-    except (OSError, ValueError):
+    except (OSError, ValueError):  # justified: the envelope only decorates the evidence row; pass/fail comes from FAILED, not from this read
         envelope = None
     if isinstance(envelope, dict):
         browser = envelope.get("browser")
@@ -418,7 +420,7 @@ def git(repo, *args):
         out = subprocess.run(
             ["git", "-C", repo, *args], capture_output=True, text=True, check=True
         )
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError):  # justified: a commit id that cannot be read is recorded as null in the evidence; it is not a verdict
         return None
     return out.stdout.strip() or None
 

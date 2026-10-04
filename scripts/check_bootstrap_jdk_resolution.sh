@@ -27,6 +27,7 @@ fi
 
 REAL_JDK="${KANAMA_TEST_JDK:-${JAVA_HOME:-}}"
 if [[ -z "$REAL_JDK" && "$(uname -s)" == "Darwin" ]]; then
+  # justified: no JDK 25 leaves REAL_JDK empty, which the "need a real JDK 25+" check just below turns into exit 2.
   REAL_JDK="$(/usr/libexec/java_home -v 25 2>/dev/null || true)"
 fi
 if [[ -z "$REAL_JDK" || ! -f "$REAL_JDK/include/jni.h" ]]; then

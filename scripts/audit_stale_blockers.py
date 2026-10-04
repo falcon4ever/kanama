@@ -56,6 +56,8 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from gate_skip import skip
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_PATH = ROOT / "scripts/platform_backend_calls.json"
@@ -135,7 +137,7 @@ def default_tasks_dir() -> Path:
         if common:
             candidates.append(Path(common).parent.parent / "kanama-tasks")
     except (subprocess.CalledProcessError, OSError):
-        pass
+        pass  # justified: git is only one way to find the tasks checkout; an absent one is the SKIP path below
     for candidate in candidates:
         if candidate.is_dir():
             return candidate
@@ -166,7 +168,11 @@ def scan_markers(root: Path) -> tuple[list[Marker], list[str]]:
         path = root / name
         try:
             text = path.read_text()
-        except (UnicodeDecodeError, OSError):
+        except UnicodeDecodeError:
+            continue  # justified: not text (a binary the suffix list does not know), so it carries no marker
+        except OSError as error:
+            # A tracked file that cannot be read is a file this audit did not look at.
+            errors.append(f"{name}: could not read a tracked file: {error}")
             continue
         if not CANDIDATE_RE.search(text):
             continue
@@ -240,8 +246,8 @@ def kotlin_symbol_hits(tree_prefix: str, name: str, kotlin_files: list[str]) -> 
             continue
         try:
             text = path.read_text()
-        except (UnicodeDecodeError, OSError):
-            continue
+        except UnicodeDecodeError:
+            continue  # justified: not text, so it declares no Kotlin symbol
         if name not in text:
             continue
         for line_no, line in enumerate(text.splitlines(), start=1):
@@ -480,7 +486,7 @@ def main() -> int:
         for marker in sorted(markers, key=lambda m: (m.since, m.path, m.line_no)):
             try:
                 age = (today - _datetime.date.fromisoformat(marker.since)).days
-            except ValueError:
+            except ValueError:  # justified: --list display of the marker age; the audit verdict is already decided
                 age = -1
             print(
                 f"  {marker.path}:{marker.line_no}  since {marker.since} ({age}d)  "
@@ -500,6 +506,13 @@ def main() -> int:
                 file=sys.stderr,
             )
         return 1
+
+    if tasks is None and result.skipped:
+        # The task:<id> tokens were not checked. Fatal under CI unless explicitly opted out.
+        skip(
+            "stale-blocker-task-tokens",
+            f"{result.skipped} task:<id> token(s) not checked, no kanama-tasks checkout at {tasks_dir}",
+        )
 
     oldest = min((m.since for m in markers), default="-")
     print(

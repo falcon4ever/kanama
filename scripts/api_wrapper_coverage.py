@@ -356,6 +356,7 @@ def main() -> int:
 
         output_path = Path(args.markdown)
         if args.check:
+            # justified: a missing file reads as "" and so compares as stale: the check fails
             current = output_path.read_text(encoding="utf-8") if output_path.exists() else ""
             if current != markdown:
                 print(f"[api_wrapper_coverage] FAIL stale markdown: {output_path}", file=sys.stderr)

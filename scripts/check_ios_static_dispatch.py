@@ -177,7 +177,7 @@ class ParseError(RuntimeError):
 def rel(path: Path) -> str:
     try:
         return str(path.relative_to(ROOT))
-    except ValueError:
+    except ValueError:  # justified: only the path printed in a finding; no verdict reads it
         return str(path)
 
 
@@ -356,7 +356,7 @@ def analyse(shim: Path, header: Path, object_calls: Path) -> tuple[dict, list[st
         dispatch_bodies = c_dispatch_calls(shim_text, shim)
         declared = set(C_DECL_RE.findall(strip_c_noise(header.read_text())))
         calls, member_calls = kotlin_calls(object_calls.read_text(), object_calls)
-    except (ParseError, OSError) as exc:
+    except (ParseError, OSError) as exc:  # justified: reported as a `parse-error` finding, which fails the gate (never silenced)
         return {}, [f"parse-error {exc}"]
 
     guarded = {

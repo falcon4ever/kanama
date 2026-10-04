@@ -111,7 +111,7 @@ fi
 
 cleanup() {
   if [[ "$created_work_dir" -eq 1 && "$keep_work_dir" != "1" ]]; then
-    rm -rf "$work_dir" 2>/dev/null || true
+    rm -rf "$work_dir" 2>/dev/null || true  # justified: scratch-dir cleanup after the verdict
   fi
 }
 trap cleanup EXIT
@@ -128,6 +128,7 @@ unzip -q "$zip_path" -d "$project_dir"
 case "$(uname -s)" in
   Darwin)
     if command -v xattr >/dev/null 2>&1; then
+      # justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below.
       xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null || true
     fi
     ;;
