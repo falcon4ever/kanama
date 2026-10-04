@@ -49,9 +49,62 @@ are immutable snapshots in Kanama. This intentionally makes copied Godot values
 less error-prone: changing a component means creating a new value and assigning
 it back to the Godot property, not mutating a hidden copy.
 
-Value-type helpers mirror Godot behavior where possible, including transform
-and physics math. Gameplay code can treat these helpers as normal Kotlin value
-APIs and assign the updated value back to the Godot property.
+Every operator and method Godot declares for a value type exists in Kotlin
+under its GDScript meaning, generated from `extension_api.json`:
+
+- Operators are Kotlin operators: `a + b`, `v * 2.0`, `2.0 * v`, `-v`,
+  `transform * point`, `basis * otherBasis`, `quaternion * vector`,
+  `Vector2i(3, 4) * 2`, `Vector2i(3, 4) * 0.5` (a `Vector2`, as in GDScript),
+  `color * 0.5`, `transform * points` (a `List<Vector3>`), and `<`/`>` on
+  vectors (component by component, as Godot compares). `point * transform` is
+  Godot's inverse transform (`xform_inv`), as in GDScript. `2.0 * v` and
+  `points * transform` are extension operators: import
+  `net.multigesture.kanama.types.times` (the IDE offers it) or the package with
+  `net.multigesture.kanama.types.*`.
+- Methods are camelCase: `v.directionTo(target)`, `v.snapped(step)`,
+  `basis.getEuler()`, `Projection.createPerspective(...)`,
+  `Color.fromHsv(h, s, v)`, `aabb.intersectsRay(from, dir)` (`null` when
+  GDScript returns `null`). Getters keep `get`: `rect.getCenter()`,
+  `transform.getRotation()`; `Transform2D.get_origin()` is the `origin`
+  property.
+
+Operators and every method whose Godot implementation is plain arithmetic
+(`abs`, `floor`, `round`, `min`/`max`, `clampf`, `lerp`, `moveToward`,
+`slide`/`bounce`/`reflect`, `project`, `limitLength`, `Rect2`/`Rect2i`/`AABB`
+`hasPoint`/`intersects`/`encloses`/`merge`/`grow*`, `Plane.project`,
+`Transform2D.inverse`/`translated`, `Color.lerp`, ...) run in Kotlin with
+Godot's own formulas at Godot's width, so their results are Godot's to the bit
+and cost no engine call. Every other method (`angle`, `rotated`, `slerp`,
+`Basis.getEuler`, `Color.lightened`, ...) is computed by the engine through an
+allocation-free call, about as fast as the same call from GDScript. The runtime
+smoke compares all of them with GDScript on every run, over random inputs and over
+±0, NaN, ±INF and `.5` ties. Constants are the companion values Godot declares:
+`Vector2i.LEFT`, `Vector3.MODEL_FRONT`, `Basis.FLIP_X`, `Plane.PLANE_XY`,
+`Vector3.INF`, every named color (`Color.RED`, `Color.CORNFLOWER_BLUE`), and the
+enums (`Vector3.Axis.X`).
+
+Where Kotlin and GDScript differ:
+
+- Integer division or `%` by zero (`Vector2i(1, 1) / 0`) throws
+  `ArithmeticException`; GDScript reports a division-by-zero error.
+- Godot's debug build checks some arguments and returns a default instead of
+  computing (`slide`, `bounce`, `reflect` with a non-normalized normal;
+  `quaternion * vector` and `vector * quaternion` with a non-normalized
+  quaternion). These are Kotlin math and compute the formula without the check,
+  which is what an exported (release) game does. Engine-computed methods
+  (`slerp`, `rotated`, ...) report the same error as GDScript.
+- Comparing vectors with a NaN component: Godot answers `false` to all of `<`,
+  `<=`, `>` and `>=`. Kotlin's comparisons go through one `compareTo`, which sorts
+  a NaN component last, so `<` and `<=` are `false` but `>` and `>=` are `true`.
+- A float that becomes an integer (`Color.toHtml` on a channel of NaN, ±INF or
+  beyond the `int` range): C++ leaves that conversion undefined, so Godot's own
+  result differs by CPU (x86 and arm64 disagree). Kotlin's conversion is defined
+  (NaN gives 0, out-of-range values saturate), which matches Godot on arm64
+  (Apple silicon, phones). For finite channels every platform agrees.
+- On Web (Kotlin/Wasm), the methods that run in Kotlin natively run the same
+  Kotlin, with the same results; the engine-computed ones are not all there yet,
+  and `angle()`, `rotated` and `slerp` are Kotlin approximations of Godot's
+  (rounded to `real_t`, not guaranteed to the bit).
 
 Their components are `Double`, like every other decimal in the API (`Vector3.x`,
 `Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is

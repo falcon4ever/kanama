@@ -17,6 +17,18 @@ value class RID(val value: Long) {
    */
   fun isValid(): Boolean = value != 0L
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: RID (generate_builtin_ops.py) =====
+  operator fun compareTo(other: RID): Int = value.toULong().compareTo(other.value.toULong())
+
+  /**
+   * Returns the ID of the referenced low-level resource.
+   *
+   * Generated from Godot docs: RID.get_id
+   */
+  fun getId(): Long = value
+
+  // ===== END GENERATED BUILTIN MEMBERS: RID =====
+
   companion object {
     val EMPTY = RID(0L)
   }

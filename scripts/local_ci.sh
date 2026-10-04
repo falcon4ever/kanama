@@ -359,6 +359,12 @@ python3 "$ROOT_DIR/scripts/audit_replicated_script_properties.py" "$ROOT_DIR/exa
 stage "value-type builtin parity audit"
 python3 "$ROOT_DIR/scripts/audit_value_type_wrappers.py" --strict
 
+stage "value-type builtin operators and methods generated (task 134 B)"
+python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --check
+
+stage "builtin operator/method coverage (task 134 B)"
+python3 "$ROOT_DIR/scripts/check_builtin_coverage.py"
+
 stage "ObjectCalls member/name parity (desktop vs iOS)"
 python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
 

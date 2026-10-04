@@ -3,17 +3,6 @@ package net.multigesture.kanama.types
 import kotlin.jvm.JvmInline
 import kotlin.math.abs
 import kotlin.math.sqrt
-import net.multigesture.kanama.binding.runtime.BArg
-import net.multigesture.kanama.binding.runtime.BuiltinCalls
-import net.multigesture.kanama.binding.runtime.PT_VECTOR3
-import net.multigesture.kanama.binding.runtime.VT_VECTOR3
-
-private const val LERP_HASH = 1682608829L
-private const val LIMIT_LENGTH_HASH = 514930144L
-private const val BOUNCE_HASH = 2923479887L
-private const val ROTATED_HASH = 1682608829L
-private const val MOVE_TOWARD_HASH = 1682608829L
-private const val SIGNED_ANGLE_TO_HASH = 2781412522L
 
 // One body for every backend (task 104 step 2): methods whose result depends on Godot's own
 // edge-case handling (epsilons, normalization) are computed by the engine through BuiltinCalls;
@@ -238,16 +227,6 @@ private constructor(
   }
 
   /**
-   * Returns the axis of the vector's highest value. See `AXIS_*` constants. If all components are
-   * equal, this method returns `Axis.X`.
-   *
-   * Generated from Godot docs: Vector3.max_axis_index
-   */
-  fun maxAxisIndex(): Int =
-    // Godot `Vector3::max_axis_index`, ties going to the earlier axis.
-    if (x < y) (if (y < z) AXIS_Z else AXIS_Y) else (if (x < z) AXIS_Z else AXIS_X)
-
-  /**
    * Returns the dot product of this vector and `with`. This can be used to compare the angle
    * between two vectors. For example, this can be used to determine whether an enemy is facing the
    * player. The dot product will be `0` for a right angle (90 degrees), greater than 0 for angles
@@ -290,41 +269,6 @@ private constructor(
    */
   fun distanceSquaredTo(other: Vector3): Double = (this - other).lengthSquared()
 
-  /**
-   * Returns the result of the linear interpolation between this vector and `to` by amount `weight`.
-   * `weight` is on the range of `0.0` to `1.0`, representing the amount of interpolation.
-   *
-   * Generated from Godot docs: Vector3.lerp
-   */
-  fun lerp(to: Vector3, weight: Double): Vector3 = callVector3RealRetVector3(lerpBind, to, weight)
-
-  /**
-   * Returns the vector with a maximum length by limiting its length to `length`. If the vector is
-   * non-finite, the result is undefined.
-   *
-   * Generated from Godot docs: Vector3.limit_length
-   */
-  fun limitLength(maxLength: Double): Vector3 =
-    fromGodotRealArray(
-      BuiltinCalls.call(limitLengthBind, toGodotRealArray(), 3, listOf(BArg.Real(maxLength)))
-    )
-
-  /**
-   * Returns the vector "bounced off" from a plane defined by the given normal `n`. Note: `bounce`
-   * performs the operation that most engines and frameworks call `reflect()`.
-   *
-   * Generated from Godot docs: Vector3.bounce
-   */
-  fun bounce(normal: Vector3): Vector3 =
-    fromGodotRealArray(
-      BuiltinCalls.call(
-        bounceBind,
-        toGodotRealArray(),
-        3,
-        listOf(BArg.Floats(PT_VECTOR3, normal.toGodotRealArray())),
-      )
-    )
-
   fun withX(value: Double): Vector3 = raw(narrowReal(value), rawY, rawZ)
 
   fun withY(value: Double): Vector3 = raw(rawX, narrowReal(value), rawZ)
@@ -337,23 +281,59 @@ private constructor(
 
   fun withZ(value: Int): Vector3 = withZ(value.toDouble())
 
-  /**
-   * Returns the result of rotating this vector around a given axis by `angle` (in radians). The
-   * axis must be a normalized vector. See also `@GlobalScope.deg_to_rad`.
-   *
-   * Generated from Godot docs: Vector3.rotated
-   */
-  fun rotated(axis: Vector3, angle: Double): Vector3 =
-    callVector3RealRetVector3(rotatedBind, axis, angle)
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Vector3 (generate_builtin_ops.py) =====
+  operator fun unaryPlus(): Vector3 = this
+
+  operator fun compareTo(other: Vector3): Int {
+    val c0 = godotCompareStep(rawX, other.rawX)
+    if (c0 != 0) return c0
+    val c1 = godotCompareStep(rawY, other.rawY)
+    if (c1 != 0) return c1
+    return godotCompareStep(rawZ, other.rawZ)
+  }
+
+  operator fun times(other: Vector3): Vector3 =
+    raw(rawX * other.rawX, rawY * other.rawY, rawZ * other.rawZ)
+
+  operator fun div(other: Vector3): Vector3 =
+    raw(rawX / other.rawX, rawY / other.rawY, rawZ / other.rawZ)
+
+  operator fun times(other: Quaternion): Vector3 = quaternionXformInv(other, this)
+
+  operator fun times(other: Basis): Vector3 = basisXformInv(other, this)
+
+  operator fun times(other: Transform3D): Vector3 = transform3DXformInv(other, this)
 
   /**
-   * Returns a new vector moved toward `to` by the fixed `delta` amount. Will not go past the final
-   * value.
+   * Returns the axis of the vector's lowest value. See `AXIS_*` constants. If all components are
+   * equal, this method returns `Axis.Z`.
    *
-   * Generated from Godot docs: Vector3.move_toward
+   * Generated from Godot docs: Vector3.min_axis_index
    */
-  fun moveToward(to: Vector3, delta: Double): Vector3 =
-    callVector3RealRetVector3(moveTowardBind, to, delta)
+  fun minAxisIndex(): Long =
+    if (rawX < rawY) (if (rawX < rawZ) 0L else 2L) else (if (rawY < rawZ) 1L else 2L)
+
+  /**
+   * Returns the axis of the vector's highest value. See `AXIS_*` constants. If all components are
+   * equal, this method returns `Axis.X`.
+   *
+   * Generated from Godot docs: Vector3.max_axis_index
+   */
+  fun maxAxisIndex(): Long =
+    if (rawX < rawY) (if (rawY < rawZ) 2L else 1L) else (if (rawX < rawZ) 2L else 0L)
+
+  /**
+   * Returns the unsigned minimum angle to the given vector, in radians.
+   *
+   * Generated from Godot docs: Vector3.angle_to
+   */
+  fun angleTo(to: Vector3): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, to)
+    f.call(Vector3Methods.angleTo, 1)
+    return f.retDouble()
+  }
 
   /**
    * Returns the signed angle to the given vector, in radians. The sign of the angle is positive in
@@ -362,63 +342,512 @@ private constructor(
    *
    * Generated from Godot docs: Vector3.signed_angle_to
    */
-  fun signedAngleTo(to: Vector3, axis: Vector3): Double =
-    BuiltinCalls.callScalar(
-      signedAngleToBind,
-      toGodotRealArray(),
-      listOf(
-        BArg.Floats(PT_VECTOR3, to.toGodotRealArray()),
-        BArg.Floats(PT_VECTOR3, axis.toGodotRealArray()),
-      ),
+  fun signedAngleTo(to: Vector3, axis: Vector3): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, to)
+    f.put(2, axis)
+    f.call(Vector3Methods.signedAngleTo, 2)
+    return f.retDouble()
+  }
+
+  /**
+   * Returns the normalized vector pointing from this vector to `to`. This is equivalent to using
+   * `(b - a).normalized()`.
+   *
+   * Generated from Godot docs: Vector3.direction_to
+   */
+  fun directionTo(to: Vector3): Vector3 =
+    raw(to.rawX - rawX, to.rawY - rawY, to.rawZ - rawZ).normalized()
+
+  /**
+   * Returns the vector with a maximum length by limiting its length to `length`. If the vector is
+   * non-finite, the result is undefined.
+   *
+   * Generated from Godot docs: Vector3.limit_length
+   */
+  fun limitLength(length: Double = 1.0): Vector3 {
+    val p = narrowReal(length)
+    val l = godotSqrt(rawX * rawX + rawY * rawY + rawZ * rawZ)
+    if (!(l > narrowReal(0.0) && p < l)) return this
+    return raw(rawX / l * p, rawY / l * p, rawZ / l * p)
+  }
+
+  /**
+   * Returns `true` if this vector is finite, by calling `@GlobalScope.is_finite` on each component.
+   *
+   * Generated from Godot docs: Vector3.is_finite
+   */
+  fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite() && rawZ.isFinite()
+
+  /**
+   * Returns the inverse of the vector. This is the same as `Vector3(1.0 / v.x, 1.0 / v.y, 1.0 /
+   * v.z)`.
+   *
+   * Generated from Godot docs: Vector3.inverse
+   */
+  fun inverse(): Vector3 {
+    val one = narrowReal(1.0)
+    return raw(one / rawX, one / rawY, one / rawZ)
+  }
+
+  /**
+   * Returns a new vector with all components clamped between the components of `min` and `max`, by
+   * running `@GlobalScope.clamp` on each component.
+   *
+   * Generated from Godot docs: Vector3.clamp
+   */
+  fun clamp(min: Vector3, max: Vector3): Vector3 =
+    raw(
+      godotClamp(rawX, min.rawX, max.rawX),
+      godotClamp(rawY, min.rawY, max.rawY),
+      godotClamp(rawZ, min.rawZ, max.rawZ),
     )
 
-  // The (Vector3, float) -> Vector3 shape that lerp / rotated / move_toward share.
-  private fun callVector3RealRetVector3(methodPtr: Long, vector: Vector3, value: Double): Vector3 =
-    fromGodotRealArray(
-      BuiltinCalls.call(
-        methodPtr,
-        toGodotRealArray(),
-        3,
-        listOf(BArg.Floats(PT_VECTOR3, vector.toGodotRealArray()), BArg.Real(value)),
-      )
-    )
+  /**
+   * Returns a new vector with all components clamped between `min` and `max`, by running
+   * `@GlobalScope.clamp` on each component.
+   *
+   * Generated from Godot docs: Vector3.clampf
+   */
+  fun clampf(min: Double, max: Double): Vector3 {
+    val lo = narrowReal(min)
+    val hi = narrowReal(max)
+    return raw(godotClamp(rawX, lo, hi), godotClamp(rawY, lo, hi), godotClamp(rawZ, lo, hi))
+  }
 
-  private fun toGodotRealArray(): GodotRealArray =
-    GodotRealArray(3).also {
-      it[0] = rawX
-      it[1] = rawY
-      it[2] = rawZ
-    }
+  /**
+   * Returns a new vector with each component snapped to the nearest multiple of the corresponding
+   * component in `step`. This can also be used to round the components to an arbitrary number of
+   * decimals.
+   *
+   * Generated from Godot docs: Vector3.snapped
+   */
+  fun snapped(step: Vector3): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, step)
+    f.call(Vector3Methods.snapped, 1)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns a new vector with each component snapped to the nearest multiple of `step`. This can
+   * also be used to round the components to an arbitrary number of decimals.
+   *
+   * Generated from Godot docs: Vector3.snappedf
+   */
+  fun snappedf(step: Double): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putDouble(1, step)
+    f.call(Vector3Methods.snappedf, 1)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns the result of rotating this vector around a given axis by `angle` (in radians). The
+   * axis must be a normalized vector. See also `@GlobalScope.deg_to_rad`.
+   *
+   * Generated from Godot docs: Vector3.rotated
+   */
+  fun rotated(axis: Vector3, angle: Double): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, axis)
+    f.putDouble(2, angle)
+    f.call(Vector3Methods.rotated, 2)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns the result of the linear interpolation between this vector and `to` by amount `weight`.
+   * `weight` is on the range of `0.0` to `1.0`, representing the amount of interpolation.
+   *
+   * Generated from Godot docs: Vector3.lerp
+   */
+  fun lerp(to: Vector3, weight: Double): Vector3 {
+    val w = narrowReal(weight)
+    return raw(realLerp(rawX, to.rawX, w), realLerp(rawY, to.rawY, w), realLerp(rawZ, to.rawZ, w))
+  }
+
+  /**
+   * Returns the result of spherical linear interpolation between this vector and `to`, by amount
+   * `weight`. `weight` is on the range of 0.0 to 1.0, representing the amount of interpolation.
+   * This method also handles interpolating the lengths if the input vectors have different lengths.
+   * For the special case of one or both input vectors having zero length, this method behaves like
+   * `lerp`.
+   *
+   * Generated from Godot docs: Vector3.slerp
+   */
+  fun slerp(to: Vector3, weight: Double): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, to)
+    f.putDouble(2, weight)
+    f.call(Vector3Methods.slerp, 2)
+    return f.retVector3()
+  }
+
+  /**
+   * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
+   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
+   * representing the amount of interpolation.
+   *
+   * Generated from Godot docs: Vector3.cubic_interpolate
+   */
+  fun cubicInterpolate(b: Vector3, preA: Vector3, postB: Vector3, weight: Double): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, b)
+    f.put(2, preA)
+    f.put(3, postB)
+    f.putDouble(4, weight)
+    f.call(Vector3Methods.cubicInterpolate, 4)
+    return f.retVector3()
+  }
+
+  /**
+   * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
+   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
+   * representing the amount of interpolation. It can perform smoother interpolation than
+   * `cubic_interpolate` by the time values.
+   *
+   * Generated from Godot docs: Vector3.cubic_interpolate_in_time
+   */
+  fun cubicInterpolateInTime(
+    b: Vector3,
+    preA: Vector3,
+    postB: Vector3,
+    weight: Double,
+    bT: Double,
+    preAT: Double,
+    postBT: Double,
+  ): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, b)
+    f.put(2, preA)
+    f.put(3, postB)
+    f.putDouble(4, weight)
+    f.putDouble(5, bT)
+    f.putDouble(6, preAT)
+    f.putDouble(7, postBT)
+    f.call(Vector3Methods.cubicInterpolateInTime, 7)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns the point at the given `t` on the Bézier curve
+   * (https://en.wikipedia.org/wiki/B%C3%A9zier_curve) defined by this vector and the given
+   * `control_1`, `control_2`, and `end` points.
+   *
+   * Generated from Godot docs: Vector3.bezier_interpolate
+   */
+  fun bezierInterpolate(control1: Vector3, control2: Vector3, end: Vector3, t: Double): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, control1)
+    f.put(2, control2)
+    f.put(3, end)
+    f.putDouble(4, t)
+    f.call(Vector3Methods.bezierInterpolate, 4)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns the derivative at the given `t` on the Bézier curve
+   * (https://en.wikipedia.org/wiki/B%C3%A9zier_curve) defined by this vector and the given
+   * `control_1`, `control_2`, and `end` points.
+   *
+   * Generated from Godot docs: Vector3.bezier_derivative
+   */
+  fun bezierDerivative(control1: Vector3, control2: Vector3, end: Vector3, t: Double): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, control1)
+    f.put(2, control2)
+    f.put(3, end)
+    f.putDouble(4, t)
+    f.call(Vector3Methods.bezierDerivative, 4)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns a new vector moved toward `to` by the fixed `delta` amount. Will not go past the final
+   * value.
+   *
+   * Generated from Godot docs: Vector3.move_toward
+   */
+  fun moveToward(to: Vector3, delta: Double): Vector3 {
+    val d = narrowReal(delta)
+    val v0 = to.rawX - rawX
+    val v1 = to.rawY - rawY
+    val v2 = to.rawZ - rawZ
+    val len = godotSqrt(v0 * v0 + v1 * v1 + v2 * v2)
+    if (len <= d || len < narrowReal(0.00001)) return to
+    return raw(rawX + v0 / len * d, rawY + v1 / len * d, rawZ + v2 / len * d)
+  }
+
+  /**
+   * Returns the outer product with `with`.
+   *
+   * Generated from Godot docs: Vector3.outer
+   */
+  fun outer(with: Vector3): Basis {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, with)
+    f.call(Vector3Methods.outer, 1)
+    return f.retBasis()
+  }
+
+  /**
+   * Returns a new vector with all components in absolute values (i.e. positive).
+   *
+   * Generated from Godot docs: Vector3.abs
+   */
+  fun abs(): Vector3 = raw(godotFabs(rawX), godotFabs(rawY), godotFabs(rawZ))
+
+  /**
+   * Returns a new vector with all components rounded down (towards negative infinity).
+   *
+   * Generated from Godot docs: Vector3.floor
+   */
+  fun floor(): Vector3 = raw(godotFloor(rawX), godotFloor(rawY), godotFloor(rawZ))
+
+  /**
+   * Returns a new vector with all components rounded up (towards positive infinity).
+   *
+   * Generated from Godot docs: Vector3.ceil
+   */
+  fun ceil(): Vector3 = raw(godotCeil(rawX), godotCeil(rawY), godotCeil(rawZ))
+
+  /**
+   * Returns a new vector with all components rounded to the nearest integer, with halfway cases
+   * rounded away from zero.
+   *
+   * Generated from Godot docs: Vector3.round
+   */
+  fun round(): Vector3 = raw(godotRound(rawX), godotRound(rawY), godotRound(rawZ))
+
+  /**
+   * Returns a vector composed of the `@GlobalScope.fposmod` of this vector's components and `mod`.
+   *
+   * Generated from Godot docs: Vector3.posmod
+   */
+  fun posmod(mod: Double): Vector3 {
+    val m = narrowReal(mod)
+    return raw(godotFposmod(rawX, m), godotFposmod(rawY, m), godotFposmod(rawZ, m))
+  }
+
+  /**
+   * Returns a vector composed of the `@GlobalScope.fposmod` of this vector's components and
+   * `modv`'s components.
+   *
+   * Generated from Godot docs: Vector3.posmodv
+   */
+  fun posmodv(modv: Vector3): Vector3 =
+    raw(godotFposmod(rawX, modv.rawX), godotFposmod(rawY, modv.rawY), godotFposmod(rawZ, modv.rawZ))
+
+  /**
+   * Returns a new vector resulting from projecting this vector onto the given vector `b`. The
+   * resulting new vector is parallel to `b`. See also `slide`. Note: If the vector `b` is a zero
+   * vector, the components of the resulting new vector will be `@GDScript.NAN`.
+   *
+   * Generated from Godot docs: Vector3.project
+   */
+  fun project(b: Vector3): Vector3 {
+    val s =
+      (rawX * b.rawX + rawY * b.rawY + rawZ * b.rawZ) /
+        (b.rawX * b.rawX + b.rawY * b.rawY + b.rawZ * b.rawZ)
+    return raw(b.rawX * s, b.rawY * s, b.rawZ * s)
+  }
+
+  /**
+   * Returns a new vector resulting from sliding this vector along a plane with normal `n`. The
+   * resulting new vector is perpendicular to `n`, and is equivalent to this vector minus its
+   * projection on `n`. See also `project`. Note: The vector `n` must be normalized. See also
+   * `normalized`.
+   *
+   * Generated from Godot docs: Vector3.slide
+   */
+  fun slide(n: Vector3): Vector3 {
+    val d = rawX * n.rawX + rawY * n.rawY + rawZ * n.rawZ
+    return raw(rawX - n.rawX * d, rawY - n.rawY * d, rawZ - n.rawZ * d)
+  }
+
+  /**
+   * Returns the vector "bounced off" from a plane defined by the given normal `n`. Note: `bounce`
+   * performs the operation that most engines and frameworks call `reflect()`.
+   *
+   * Generated from Godot docs: Vector3.bounce
+   */
+  fun bounce(n: Vector3): Vector3 {
+    val d = rawX * n.rawX + rawY * n.rawY + rawZ * n.rawZ
+    val two = narrowReal(2.0)
+    return raw(-(n.rawX * two * d - rawX), -(n.rawY * two * d - rawY), -(n.rawZ * two * d - rawZ))
+  }
+
+  /**
+   * Returns the result of reflecting the vector through a plane defined by the given normal vector
+   * `n`. Note: `reflect` differs from what other engines and frameworks call `reflect()`. In other
+   * engines, `reflect()` returns the result of the vector reflected by the given plane. The
+   * reflection thus passes through the given normal. While in Godot the reflection passes through
+   * the plane and can be thought of as bouncing off the normal. See also `bounce` which does what
+   * most engines call `reflect()`.
+   *
+   * Generated from Godot docs: Vector3.reflect
+   */
+  fun reflect(line: Vector3): Vector3 {
+    val d = rawX * line.rawX + rawY * line.rawY + rawZ * line.rawZ
+    val two = narrowReal(2.0)
+    return raw(line.rawX * two * d - rawX, line.rawY * two * d - rawY, line.rawZ * two * d - rawZ)
+  }
+
+  /**
+   * Returns a new vector with each component set to `1.0` if it's positive, `-1.0` if it's
+   * negative, and `0.0` if it's zero. The result is identical to calling `@GlobalScope.sign` on
+   * each component.
+   *
+   * Generated from Godot docs: Vector3.sign
+   */
+  fun sign(): Vector3 = raw(godotSign(rawX), godotSign(rawY), godotSign(rawZ))
+
+  /**
+   * Returns the octahedral-encoded (oct32) form of this `Vector3` as a `Vector2`. Since a `Vector2`
+   * occupies 1/3 less memory compared to `Vector3`, this form of compression can be used to pass
+   * greater amounts of `normalized` `Vector3`s without increasing storage or memory requirements.
+   * See also `octahedron_decode`. Note: `octahedron_encode` can only be used for `normalized`
+   * vectors. `octahedron_encode` does not check whether this `Vector3` is normalized, and will
+   * return a value that does not decompress to the original value if the `Vector3` is not
+   * normalized. Note: Octahedral compression is lossy, although visual differences are rarely
+   * perceptible in real world scenarios.
+   *
+   * Generated from Godot docs: Vector3.octahedron_encode
+   */
+  fun octahedronEncode(): Vector2 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Vector3Methods.octahedronEncode, 0)
+    return f.retVector2()
+  }
+
+  /**
+   * Returns the component-wise minimum of this and `with`, equivalent to `Vector3(minf(x, with.x),
+   * minf(y, with.y), minf(z, with.z))`.
+   *
+   * Generated from Godot docs: Vector3.min
+   */
+  fun min(with: Vector3): Vector3 =
+    raw(godotMin(rawX, with.rawX), godotMin(rawY, with.rawY), godotMin(rawZ, with.rawZ))
+
+  /**
+   * Returns the component-wise minimum of this and `with`, equivalent to `Vector3(minf(x, with),
+   * minf(y, with), minf(z, with))`.
+   *
+   * Generated from Godot docs: Vector3.minf
+   */
+  fun minf(with: Double): Vector3 {
+    val s = narrowReal(with)
+    return raw(godotMin(rawX, s), godotMin(rawY, s), godotMin(rawZ, s))
+  }
+
+  /**
+   * Returns the component-wise maximum of this and `with`, equivalent to `Vector3(maxf(x, with.x),
+   * maxf(y, with.y), maxf(z, with.z))`.
+   *
+   * Generated from Godot docs: Vector3.max
+   */
+  fun max(with: Vector3): Vector3 =
+    raw(godotMax(rawX, with.rawX), godotMax(rawY, with.rawY), godotMax(rawZ, with.rawZ))
+
+  /**
+   * Returns the component-wise maximum of this and `with`, equivalent to `Vector3(maxf(x, with),
+   * maxf(y, with), maxf(z, with))`.
+   *
+   * Generated from Godot docs: Vector3.maxf
+   */
+  fun maxf(with: Double): Vector3 {
+    val s = narrowReal(with)
+    return raw(godotMax(rawX, s), godotMax(rawY, s), godotMax(rawZ, s))
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Vector3 =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Vector3 (generate_builtin_ops.py) =====
+    /**
+     * Infinity vector, a vector with all components set to `@GDScript.INF`.
+     *
+     * Generated from Godot docs: Vector3.INF
+     */
+    val INF: Vector3 =
+      Vector3(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
+
+    /**
+     * Unit vector pointing towards the left side of imported 3D assets.
+     *
+     * Generated from Godot docs: Vector3.MODEL_LEFT
+     */
+    val MODEL_LEFT: Vector3 = Vector3(1.0, 0.0, 0.0)
+
+    /**
+     * Unit vector pointing towards the right side of imported 3D assets.
+     *
+     * Generated from Godot docs: Vector3.MODEL_RIGHT
+     */
+    val MODEL_RIGHT: Vector3 = Vector3(-1.0, 0.0, 0.0)
+
+    /**
+     * Unit vector pointing towards the top side (up) of imported 3D assets.
+     *
+     * Generated from Godot docs: Vector3.MODEL_TOP
+     */
+    val MODEL_TOP: Vector3 = Vector3(0.0, 1.0, 0.0)
+
+    /**
+     * Unit vector pointing towards the bottom side (down) of imported 3D assets.
+     *
+     * Generated from Godot docs: Vector3.MODEL_BOTTOM
+     */
+    val MODEL_BOTTOM: Vector3 = Vector3(0.0, -1.0, 0.0)
+
+    /**
+     * Unit vector pointing towards the front side (facing forward) of imported 3D assets.
+     *
+     * Generated from Godot docs: Vector3.MODEL_FRONT
+     */
+    val MODEL_FRONT: Vector3 = Vector3(0.0, 0.0, 1.0)
+
+    /**
+     * Unit vector pointing towards the rear side (back) of imported 3D assets.
+     *
+     * Generated from Godot docs: Vector3.MODEL_REAR
+     */
+    val MODEL_REAR: Vector3 = Vector3(0.0, 0.0, -1.0)
+
+    /**
+     * Returns the `Vector3` from an octahedral-compressed form created using `octahedron_encode`
+     * (stored as a `Vector2`).
+     *
+     * Generated from Godot docs: Vector3.octahedron_decode
+     */
+    fun octahedronDecode(uv: Vector2): Vector3 {
+      val f = builtinFrame()
+      f.put(1, uv)
+      f.callStatic(Vector3Methods.octahedronDecode, 1)
+      return f.retVector3()
+    }
+
+    // ===== END GENERATED BUILTIN STATICS: Vector3 =====
+
     /** Godot `UNIT_EPSILON` (`core/math/math_defs.h`), the tolerance of `is_normalized`. */
     private const val UNIT_EPSILON = 0.00001
 
     // Godot's Vector3::Axis values, the return of `max_axis_index`. Kept private: neither
     // platform exposed them before, and the shared body's public surface is exactly the
     // union of the two it replaces.
-    private const val AXIS_X = 0
-    private const val AXIS_Y = 1
-    private const val AXIS_Z = 2
-
-    private val lerpBind by lazy { BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "lerp", LERP_HASH) }
-    private val limitLengthBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "limit_length", LIMIT_LENGTH_HASH)
-    }
-    private val bounceBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "bounce", BOUNCE_HASH)
-    }
-    private val rotatedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "rotated", ROTATED_HASH)
-    }
-    private val moveTowardBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "move_toward", MOVE_TOWARD_HASH)
-    }
-    private val signedAngleToBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "signed_angle_to", SIGNED_ANGLE_TO_HASH)
-    }
-
-    private fun fromGodotRealArray(c: GodotRealArray): Vector3 = raw(c[0], c[1], c[2])
 
     /** A vector from components already at the storage width (marshalling; no conversion). */
     internal fun raw(x: GodotRealStorage, y: GodotRealStorage, z: GodotRealStorage): Vector3 =

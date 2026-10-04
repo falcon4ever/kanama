@@ -288,6 +288,10 @@ case("check_actual_public_surface.py", py("check_actual_public_surface.py"),
 case("check_android_remap_sources.py", py("check_android_remap_sources.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRun.kt", "package net.multigesture.kanama\nfun zz() = Files.readString(x)\n")],
      "forbidden after the Android remap", "a runtime source uses a fragment the Android remap cannot compile")
+case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sources.py"),
+     [Edit("android/godot-plugin/buildSrc/src/main/kotlin/KanamaAndroidRemap.kt",
+           'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
+     "src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt", "the remap stops rewriting `.invokeExact(` (the builtin-call downcall would reach ART)")
 case("check_doc_claims.py", py("check_doc_claims.py"),
      [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 29)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
@@ -394,9 +398,15 @@ case("audit_stale_blockers.py", py("audit_stale_blockers.py"),
      [Edit("CONTRIBUTING.md", "# Contributing to Kanama", "# Contributing to Kanama\n<!-- " + BLOCKED_MARKER + " -->")],
      "stale_blockers] FAIL", "a stale-blocker marker whose blocker no longer holds")
 case("audit_value_type_wrappers.py", py("audit_value_type_wrappers.py", "--strict"),
-     [Edit(f"{COMMON}/types/Quaternion.kt", "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight))",
-           "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Floats(PT_FLOAT, doubleArrayOf(weight)))")],
+     [Edit(f"{COMMON}/types/Quaternion.kt", "    f.putDouble(2, weight)\n    f.call(QuaternionMethods.slerp, 2)",
+           "    f.putReal(2, 0, narrowReal(weight))\n    f.call(QuaternionMethods.slerp, 2)")],
      "Quaternion.slerp passes 1 Godot float arg", "a Godot `float` argument is marshalled as a real_t component array")
+case("check_builtin_coverage.py", py("check_builtin_coverage.py"),
+     [Edit(f"{COMMON}/types/Vector2.kt", "  fun orthogonal(): Vector2 = raw(rawY, -rawX)", "  fun orthogonalVector(): Vector2 = raw(rawY, -rawX)")],
+     "Vector2.orthogonal: no Kotlin member", "a value-type method loses its Kotlin member")
+case("generate_builtin_ops.py", py("generate_builtin_ops.py", "--check"),
+     [Edit(f"{COMMON}/types/Vector2.kt", "  fun orthogonal(): Vector2 = raw(rawY, -rawX)", "  fun orthogonal(): Vector2 = raw(-rawY, rawX)")],
+     "generate_builtin_ops] FAIL", "a generated value-type member is edited by hand")
 case("audit_vararg_ptrcalls.py", py("audit_vararg_ptrcalls.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt",
              'package net.multigesture.kanama.api\n\nprivate val redRunBind by lazy { ObjectCalls.getMethodBind("Object", "call", 1L) }\nfun redRun(x: RawSegment) { ObjectCalls.ptrcallNoArgs(redRunBind, x) }\n')],

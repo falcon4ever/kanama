@@ -149,6 +149,16 @@ object GodotFFI {
   }
 
   /**
+   * The unbound downcall for [descriptor]: its first argument is the target function, so one handle
+   * (a JVM constant called with `invokeExact`) serves every function of the shape -- the builtin
+   * methods the value types call (task 134 B). [label] is for the adapter trace.
+   */
+  fun unboundDowncallHandle(descriptor: FunctionDescriptor, label: String): MethodHandle {
+    noteDowncallShape(descriptor, label)
+    return linker.downcallHandle(descriptor)
+  }
+
+  /**
    * Link the native adapter for [descriptor] without binding a symbol, so that a later
    * [downcallHandle] for the same shape is a cache hit and generates no code.
    *

@@ -42212,11 +42212,11 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     "builtin-call(Vector3.is_normalized bool)",
     Vector3(0.0, 0.0, 1.0).isNormalized() && !Vector3(2.0, 0.0, 0.0).isNormalized(),
   )
-  // Int-return builtin (ptr-ABI int64 -> Int via callInt): Vector3.max_axis_index().
-  // (1,5,2) -> Y = 1; (1,2,9) -> Z = 2. Non-zero expectations catch a wrong-width zero-read.
+  // Int-return value-type method: Vector3.max_axis_index() (Kotlin since task 134 B, a Long like
+  // every Godot `int`). (1,5,2) -> Y = 1; (1,2,9) -> Z = 2.
   check(
     "builtin-call(Vector3.max_axis_index int)",
-    Vector3(1.0, 5.0, 2.0).maxAxisIndex() == 1 && Vector3(1.0, 2.0, 9.0).maxAxisIndex() == 2,
+    Vector3(1.0, 5.0, 2.0).maxAxisIndex() == 1L && Vector3(1.0, 2.0, 9.0).maxAxisIndex() == 2L,
   )
 
   // Value-type @Export decode (Phase 3.2 Step 5 / 2.6): exercise decodeIosPropertyValue's

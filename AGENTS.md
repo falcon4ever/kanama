@@ -66,7 +66,7 @@ task, then use targeted `rg` searches.
   `jvm()`, `iosArm64()` and `iosSimulatorArm64()`:
     - `src/commonMain/kotlin`: the KMP common fragment — the 19 value types
       (`types/`), the `expect` seams (`binding/runtime/RawSegment.expect.kt`,
-      `BuiltinCalls.expect.kt`, `ObjectRuntime.expect.kt`, the GENERATED
+      `BuiltinFrame.expect.kt`, `ObjectRuntime.expect.kt`, the GENERATED
       `ObjectCalls.expect.kt`), the generated `types/Real.kt`, and since task 117 P4′
       the whole Godot API wrapper tree under `api/` (see
       `docs/contributing/wrapper-maintenance.md`): the generated classes,

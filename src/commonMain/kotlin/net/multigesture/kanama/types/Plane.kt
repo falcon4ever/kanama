@@ -86,7 +86,160 @@ private constructor(
     return from + dir * widenReal(-signedDistance)
   }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Plane (generate_builtin_ops.py) =====
+  operator fun unaryMinus(): Plane = raw(-normal, -rawD)
+
+  operator fun unaryPlus(): Plane = this
+
+  operator fun times(other: Transform3D): Plane = transform3DXformInvPlane(other, this)
+
+  /**
+   * Returns a copy of the plane, with normalized `normal` (so it's a unit vector). Returns
+   * `Plane(0, 0, 0, 0)` if `normal` can't be normalized (it has zero length).
+   *
+   * Generated from Godot docs: Plane.normalized
+   */
+  fun normalized(): Plane {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(PlaneMethods.normalized, 0)
+    return f.retPlane()
+  }
+
+  /**
+   * Returns the center of the plane.
+   *
+   * Generated from Godot docs: Plane.get_center
+   */
+  fun getCenter(): Vector3 = Vector3.raw(normal.rawX * rawD, normal.rawY * rawD, normal.rawZ * rawD)
+
+  /**
+   * Returns `true` if this plane and `to_plane` are approximately equal, by running
+   * `@GlobalScope.is_equal_approx` on each component.
+   *
+   * Generated from Godot docs: Plane.is_equal_approx
+   */
+  fun isEqualApprox(toPlane: Plane): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, toPlane)
+    f.call(PlaneMethods.isEqualApprox, 1)
+    return f.retBool()
+  }
+
+  /**
+   * Returns `true` if this plane is finite, by calling `@GlobalScope.is_finite` on each component.
+   *
+   * Generated from Godot docs: Plane.is_finite
+   */
+  fun isFinite(): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(PlaneMethods.isFinite, 0)
+    return f.retBool()
+  }
+
+  /**
+   * Returns `true` if `point` is located above the plane.
+   *
+   * Generated from Godot docs: Plane.is_point_over
+   */
+  fun isPointOver(point: Vector3): Boolean =
+    normal.rawX * point.rawX + normal.rawY * point.rawY + normal.rawZ * point.rawZ > rawD
+
+  /**
+   * Returns `true` if `point` is inside the plane. Comparison uses a custom minimum `tolerance`
+   * threshold.
+   *
+   * Generated from Godot docs: Plane.has_point
+   */
+  fun hasPoint(point: Vector3, tolerance: Double = 1e-05): Boolean =
+    godotFabs(
+      normal.rawX * point.rawX + normal.rawY * point.rawY + normal.rawZ * point.rawZ - rawD
+    ) <= narrowReal(tolerance)
+
+  /**
+   * Returns the orthogonal projection of `point` into a point in the plane.
+   *
+   * Generated from Godot docs: Plane.project
+   */
+  fun project(point: Vector3): Vector3 {
+    /**
+     * The distance from the origin to the plane, expressed in terms of `normal` (according to its
+     * direction and magnitude). Actual absolute distance from the origin to the plane can be
+     * calculated as `abs(d) / normal.length()` (if `normal` has zero length then this `Plane` does
+     * not represent a valid plane). In the scalar equation of the plane `ax + by + cz = d`, this is
+     * `d`, while the `(a, b, c)` coordinates are represented by the `normal` property.
+     *
+     * Generated from Godot docs: Plane.d
+     */
+    val d = normal.rawX * point.rawX + normal.rawY * point.rawY + normal.rawZ * point.rawZ - rawD
+    return Vector3.raw(
+      point.rawX - normal.rawX * d,
+      point.rawY - normal.rawY * d,
+      point.rawZ - normal.rawZ * d,
+    )
+  }
+
+  /**
+   * Returns the intersection point of the three planes `b`, `c` and this plane. If no intersection
+   * is found, `null` is returned.
+   *
+   * Generated from Godot docs: Plane.intersect_3
+   */
+  fun intersect3(b: Plane, c: Plane): Vector3? {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, b)
+    f.put(2, c)
+    f.call(PlaneMethods.intersect3, 2)
+    return if (f.retVariantIsNil()) null
+    else Vector3.raw(f.retVariantReal(0), f.retVariantReal(1), f.retVariantReal(2))
+  }
+
+  /**
+   * Returns the intersection point of a segment from position `from` to position `to` with this
+   * plane. If no intersection is found, `null` is returned.
+   *
+   * Generated from Godot docs: Plane.intersects_segment
+   */
+  fun intersectsSegment(from: Vector3, to: Vector3): Vector3? {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, from)
+    f.put(2, to)
+    f.call(PlaneMethods.intersectsSegment, 2)
+    return if (f.retVariantIsNil()) null
+    else Vector3.raw(f.retVariantReal(0), f.retVariantReal(1), f.retVariantReal(2))
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Plane =====
+
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Plane (generate_builtin_ops.py) =====
+    /**
+     * A plane that extends in the Y and Z axes (normal vector points +X).
+     *
+     * Generated from Godot docs: Plane.PLANE_YZ
+     */
+    val PLANE_YZ: Plane = Plane(Vector3(1.0, 0.0, 0.0), 0.0)
+
+    /**
+     * A plane that extends in the X and Z axes (normal vector points +Y).
+     *
+     * Generated from Godot docs: Plane.PLANE_XZ
+     */
+    val PLANE_XZ: Plane = Plane(Vector3(0.0, 1.0, 0.0), 0.0)
+
+    /**
+     * A plane that extends in the X and Y axes (normal vector points +Z).
+     *
+     * Generated from Godot docs: Plane.PLANE_XY
+     */
+    val PLANE_XY: Plane = Plane(Vector3(0.0, 0.0, 1.0), 0.0)
+
+    // ===== END GENERATED BUILTIN STATICS: Plane =====
+
     /** A plane whose `d` is already at the storage width (marshalling; no conversion). */
     internal fun raw(normal: Vector3, d: GodotRealStorage): Plane = Plane(normal, d, RawStorage)
 

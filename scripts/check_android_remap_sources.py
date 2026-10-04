@@ -30,6 +30,15 @@ TREES = (ROOT / "src/jvmMain/kotlin", ROOT / "src/commonMain/kotlin")
 EXPECT_SUFFIX = ".expect.kt"
 TAG = "[android-remap-sources]"
 
+# Hot call sites that desktop calls with `invokeExact`, which ART rejects (task 131 item 16): the
+# remap must rewrite every one to `invokeWithArguments`. Each file listed here must contain at least
+# one such site the remap rewrote, so a site moved out of the gate's sight fails loudly instead of
+# passing by having nothing to check (task 134 B: the builtin-call frame's one downcall).
+REQUIRED_EXACT_SITES = (
+    "src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt",
+    "src/jvmMain/kotlin/binding/runtime/GodotStrings.kt",
+)
+
 
 def parse_remap(text: str) -> tuple[list[tuple[str, str]], list[str]]:
     rules_block = text[text.index("val rules = listOf(") : text.index("LEADING_MODIFIERS")]
@@ -73,6 +82,7 @@ def main() -> int:
     rules, fragments = parse_remap(REMAP.read_text(encoding="utf-8"))
     failures: list[str] = []
     files = 0
+    exact_sites: dict[str, int] = {}
     for tree in TREES:
         for path in sorted(tree.rglob("*.kt")):
             if path.name.endswith(EXPECT_SUFFIX):
@@ -83,6 +93,12 @@ def main() -> int:
                 for needle, replacement in rules:
                     line = line.replace(needle, replacement)
                 remapped.append(line)
+            original = strip_comments(path.read_text(encoding="utf-8").splitlines())
+            for number, (before, after) in enumerate(zip(original, strip_comments(remapped)), start=1):
+                if ".invokeExact(" in before:
+                    rel = str(path.relative_to(ROOT))
+                    if ".invokeWithArguments(" in after and ".invokeExact(" not in after:
+                        exact_sites[rel] = exact_sites.get(rel, 0) + 1
             for number, line in enumerate(strip_comments(remapped), start=1):
                 for fragment in fragments:
                     if fragment in line:
@@ -91,13 +107,20 @@ def main() -> int:
                             f"'{fragment}' (call a function value as f(args) / f?.let {{ it(args) }}, "
                             "never .invoke()"
                         )
+    for required in REQUIRED_EXACT_SITES:
+        if not exact_sites.get(required):
+            failures.append(
+                f"{required}: no `.invokeExact(` call site rewritten to `.invokeWithArguments(` -- the "
+                "hot downcall moved out of the remap's sight (or lost its rule)"
+            )
     if failures:
         for failure in failures:
             print(f"{TAG} FAIL {failure}", file=sys.stderr)
         return 1
     print(
         f"{TAG} PASS {files} file(s) remapped with {len(rules)} rule(s); "
-        f"no forbidden fragment ({len(fragments)} checked)"
+        f"no forbidden fragment ({len(fragments)} checked); {sum(exact_sites.values())} invokeExact site(s) "
+        f"rewritten ({', '.join(f'{Path(k).name}: {v}' for k, v in sorted(exact_sites.items()))})"
     )
     return 0
 

@@ -145,9 +145,15 @@ Current rule (since task 134):
       `Basis(quaternion)`, `Basis * Vector3`, `Transform3D * Vector3`, `Plane.distanceTo`,
       `Rect2.area` and `AABB.volume` follow Godot's `real_t` formulas in Godot's operand order
       (`types/shared/RealMath.kt`, one source for the native and the Web types). Methods computed
-      by the engine (`lerp`, `rotated`, `slerp`, ...) return the engine's stored result.
-      Transcendental results computed in Kotlin (`angle`, Web `rotated`/`slerp`, ...) are rounded
-      to `real_t` but not guaranteed to the bit.
+      by the engine (`lerp`, `rotated`, `slerp`, `angle`, ...) return the engine's stored
+      result. Since task 134 B every operator Godot declares (`Basis * Basis`,
+      `Transform3D * Plane`, `Vector2i % Vector2i`, `Color / Color`, `2.0 * v`, ...) and the short
+      component-wise methods (`abs`, `floor`, `round`, `sign`, `min`/`max`, `clampf`,
+      `directionTo`, integer-vector `length`, `Color.toHtml`, ...) are Kotlin with Godot's formulas
+      (`types/BuiltinFormulas.kt`, `types/shared/BuiltinMath.kt`); the runtime smoke's builtin
+      parity row proves every Kotlin-computed member bit-identical to GDScript over fixed-seed
+      random inputs. Transcendental results computed in Kotlin on Web (`rotated`, `slerp`, ...) are
+      rounded to `real_t` but not guaranteed to the bit.
 - **The same caveat as GDScript:** `v.x = 0.1` (or `Vector2(0.1, 0.2)`) stores the float32
   nearest to 0.1, so `v.x == 0.1` is `false` in a float32 build, while `v == Vector2(0.1, 0.2)`
   is `true` (both sides are stored). Compare decimals with `isEqualApprox`; values exact in
