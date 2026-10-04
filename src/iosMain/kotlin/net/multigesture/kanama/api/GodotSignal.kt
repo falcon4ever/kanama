@@ -111,10 +111,13 @@ actual class SignalConnection internal constructor(
             return
         }
         closed = true
+        // A freed emitter already dropped the connection and must not be called (desktop guards the
+        // same way); the receiver's address only identifies the Callable, so a freed one is fine.
+        if (!IosGodot.isInstanceIdValid(owner.instanceId)) return
         IosGodot.objectDisconnectCallable(
-            owner.segment.address(),
+            owner.handle.segment.address(),
             signalName,
-            target?.segment?.address() ?: 0L,
+            target?.handle?.segment?.address() ?: 0L,
             callbackId,
         )
     }

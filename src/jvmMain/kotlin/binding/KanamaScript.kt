@@ -1506,6 +1506,14 @@ class KanamaScript(
       script.trackOwnerObject(forObject.address())
       ScriptBridge.trackScriptInstance(forObject, si)
       ScriptBridge.trackKotlinObject(forObject, si.kotlinObject)
+      // The owner's instance id, for handing this script back to Godot as a value after the owner
+      // may have been freed (task 131 item 2; BuiltinTypes.scriptValue).
+      if (si.kotlinObject !== KanamaPlaceholderScriptInstanceData) {
+        net.multigesture.kanama.binding.runtime.ScriptOwnerIds.remember(
+          si.kotlinObject,
+          ObjectCalls.objectGetInstanceId(forObject),
+        )
+      }
       ScriptBridge.retainScriptResource(script.godotObject)
       val siHandle = ObjectRegistry.register(si)
       val instancePtr = ScriptBridge.create(siHandle)

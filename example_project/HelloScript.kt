@@ -1043,7 +1043,11 @@ class HelloScript(godotObject: GodotHandle) :
     }
     val tweenAwaitTweener = tween?.tweenAwait(selfNode.signal("renamed"))?.setTimeout(30.0)
     val tweenValidBefore = tween?.isValid() ?: false
-    val processedTweensBeforeKill = SceneTree.getProcessedTweens().size
+    // Each element of a returned typed Array of RefCounted is an owned +1 (task 131 S5): close it.
+    val processedTweensBeforeKill =
+      SceneTree.getProcessedTweens().let { tweens ->
+        tweens.size.also { tweens.forEach { it.close() } }
+      }
     val tweenStep = tween?.customStep(0.02) ?: false
     val tweenElapsed = tween?.getTotalElapsedTime() ?: -1.0
     val tweenRunningAfterStep = tween?.isRunning() ?: false

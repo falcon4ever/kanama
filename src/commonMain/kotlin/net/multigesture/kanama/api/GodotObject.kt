@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
+import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -15,14 +16,25 @@ import net.multigesture.kanama.types.NodePath
  * lifetime is owned by Godot, such as the object passed into a script instance.
  *
  * The object must be alive when the wrapper is constructed: construction reads its
- * instance id once (see [instanceId]). After the object is freed the wrapper is a
- * dangling pointer for every member except [instanceId], and `GD.isInstanceValid`
- * is the only safe question left to ask it.
+ * instance id once (see [instanceId]). After the object is freed, GDScript's rules apply in
+ * debug builds (the editor and debug export templates; task 131 item 2):
+ * - holding the wrapper is fine: [instanceId], [equals], [hashCode], [isSameInstance] and
+ *   `GD.isInstanceValid` never touch the object, [toString] answers `<Freed Object>`, and
+ *   handing the wrapper back to Godot as a value (a script property, a script method's return,
+ *   a Variant argument, an Array element) passes nil;
+ * - calling a method through it throws `IllegalStateException("Invalid access to previously
+ *   freed instance ...")`, which Kanama contains and reports as a script error.
+ * A release build does not check: there a freed wrapper is a dangling pointer, so test
+ * `GD.isInstanceValid` before using an object that may have been freed.
+ *
+ * Two wrappers are [equals] when they view the same Godot object (the same instance id),
+ * as GDScript's `==` compares objects; `List.contains`, `Set` and `Map` keys follow.
  *
  * Written once for every backend (task 117 P3′, D20): this file is compiled by the desktop/Android
- * and iOS targets alike. Every member is a ptrcall through `ObjectCalls` except the four
- * platform-bound hooks — instance-id capture, `emitSignal`, and the script-property buffering in
- * [set]/[call]/[setScript] — which go through the internal `ObjectRuntime` seam
+ * and iOS targets alike. Every member is a ptrcall through `ObjectCalls` except the
+ * platform-bound hooks — instance-id capture, the freed-object check, `emitSignal`, and the
+ * script-property buffering in [set]/[call]/[setScript] — which go through the internal
+ * `ObjectRuntime` seam
  * (`src/commonMain/.../binding/runtime/ObjectRuntime.expect.kt`). [signal] returns the platform's
  * own `GodotSignal`.
  */
@@ -52,16 +64,30 @@ open class GodotObject(val handle: GodotHandle) {
 
 
     /**
-     * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam. Internal: game code
-     * passes [handle] around and never unwraps it.
+     * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam, read by every wrapper
+     * call (receiver and typed object arguments). Internal: game code passes [handle] around and
+     * never unwraps it. While `FreedObjectChecks.enabled` (debug builds) it first checks that the
+     * object is still alive and throws `IllegalStateException` if it was freed (task 131 item 2).
+     * Value encodings (Variant, property, return) use `FreedObjectChecks.valueSegment` instead,
+     * which turns a freed object into nil without an error.
      */
-    internal val segment: RawSegment get() = handle.segment
+    internal val segment: RawSegment
+        get() {
+            val raw = handle.segment
+            if (FreedObjectChecks.enabled && !ObjectRuntime.isLive(raw, instanceId)) {
+                throw FreedObjectChecks.freedInstance(this::class.simpleName ?: "GodotObject", instanceId)
+            }
+            return raw
+        }
 
-    /** Returns true when both wrappers refer to the same Godot object instance. */
-    fun isSameInstance(other: GodotObject): Boolean = segment.address() == other.segment.address()
+    /**
+     * Returns true when both wrappers refer to the same Godot object instance: the same
+     * [instanceId], exactly what [equals] compares.
+     */
+    fun isSameInstance(other: GodotObject): Boolean = instanceId == other.instanceId
 
     init {
-        require(segment.address() != 0L) { "GodotObject handle must not be NULL" }
+        require(handle.segment.address() != 0L) { "GodotObject handle must not be NULL" }
     }
 
     /**
@@ -74,7 +100,19 @@ open class GodotObject(val handle: GodotHandle) {
      * `getInstanceId()J` signature; Kotlin callers read `instanceId` as usual.
      */
     @get:JvmName("capturedInstanceId")
-    val instanceId: Long = ObjectRuntime.instanceIdOf(segment)
+    val instanceId: Long = ObjectRuntime.instanceIdOf(handle.segment)
+
+    /**
+     * True when [other] is a wrapper of the same Godot object: the same [instanceId] (task 131
+     * item 6), whatever the wrapper class (`Node` and `Node3D` views of one node are equal). Never
+     * dereferences the object, so it stays safe after the object was freed. Final, so every
+     * wrapper class keeps this one notion of identity.
+     */
+    final override fun equals(other: Any?): Boolean =
+        this === other || (other is GodotObject && instanceId == other.instanceId)
+
+    /** Hashes [instanceId], consistently with [equals]. */
+    final override fun hashCode(): Int = instanceId.hashCode()
 
     /**
      * Argument-position handle check. A non-owning wrapper has nothing to refuse; [RefCounted]
@@ -340,8 +378,16 @@ open class GodotObject(val handle: GodotHandle) {
         ObjectCalls.ptrcallNoArgs(cancelFreeBind, segment)
     }
 
+    /**
+     * Godot's `Object.to_string()`; `<Freed Object>` (GDScript's `str()` of a freed object) when
+     * the freed-object check is on and the object was freed, so string templates never throw.
+     */
     override fun toString(): String =
-        ObjectCalls.ptrcallNoArgsRetString(toStringBind, segment)
+        if (FreedObjectChecks.enabled && !ObjectRuntime.isLive(handle.segment, instanceId)) {
+            "<Freed Object>"
+        } else {
+            ObjectCalls.ptrcallNoArgsRetString(toStringBind, segment)
+        }
 
     object Signals {
         const val scriptChanged: String = "script_changed"

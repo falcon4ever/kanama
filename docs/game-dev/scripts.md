@@ -191,8 +191,8 @@ started from the Dock or Finder shows them nowhere.
 
 On desktop, Android and iOS, an exception that escapes your code at an engine
 boundary (a script method, a lifecycle callback such as `_ready` or `_process`,
-a signal lambda, a property accessor, a `MainThread` task) does not crash the
-game. Kanama catches it, prints the full stack trace to stderr, and reports it to
+a signal lambda, a property accessor, a `MainThread` task, a `KanamaScope`
+coroutine) does not crash the game. Kanama catches it, prints the full stack trace to stderr, and reports it to
 Godot as a script error, the way a GDScript runtime error is reported. Godot's
 log shows (desktop console output):
 
@@ -214,6 +214,17 @@ build a frame without source info is not attributed, and the error names the
 callback that failed instead. The Web backend does not report Kotlin exceptions
 to Godot yet.
 
+Calling a method through a wrapper whose object was freed (a node after
+`queueFree()` took effect) is such an error in debug builds — the editor and
+debug exports: `IllegalStateException: Invalid access to previously freed
+instance (Node3D, instance id …)`, as GDScript reports it. Holding such a
+wrapper is not an error: comparing it, `GD.isInstanceValid(node)`, and handing
+it back to Godot as a value (an exported property, a method's return value, a
+Variant argument) are silent, and Godot receives `null`. A release export does
+not check, and a call is undefined behaviour, so ask `GD.isInstanceValid(node)`
+before using an object that may be gone. Two wrappers of one object are `==`
+(and equal as `Set`/`Map` keys) whatever their class.
+
 ## Rebuild Required
 
 GDScript changes are live. Kotlin scripts must be compiled before Godot sees
@@ -234,8 +245,9 @@ runs on desktop. The generated registrars and helper names are derived from the
 fully qualified class name, though, and the iOS emitter builds its imports,
 `*Methods`/`*Signals` helpers and per-package compatibility sources from the
 package, so a package-less script has no tested path there. The editor's
-**New Script** dialog currently creates a script without a `package` line, so
-add one yourself:
+**New Script** dialog writes one for you: the package most scripts in the target
+folder already use, else one derived from the folder (`game` at the project
+root). A script you create another way needs one too:
 
 ```kotlin
 package com.mygame.scripts

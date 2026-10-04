@@ -44,8 +44,8 @@ dispatch in the shim. Each instance-taking entry point that an `ObjectCalls` hel
 can reach with the static marker comes in two flavours — the guarded instance entry
 and a `_static` sibling for Godot's static methods, which ptrcall with a null object
 — and the iOS `ObjectCalls` picks between them per call. Entry points no helper
-reaches that way (`kanama_ios_godot_ptrcall_string_arg`,
-`kanama_ios_godot_ptrcall_ret_object_array` and the object-handle entries, whose zero
+reaches that way (`kanama_ios_godot_ptrcall_string_arg` and the object-handle
+entries, whose zero
 check guards a live engine handle rather than a static marker) keep their single
 guarded form; `scripts/check_ios_static_dispatch.py` derives that split from the shim
 and fails if it stops holding. The component diagram, the dispatch contract, and the
@@ -140,6 +140,23 @@ when both are given. If the export log prints
 project's `.godot/exported/` directory before exporting again — Godot caches
 each converted scene there keyed by the source file's md5 and mtime and reuses
 a stripped conversion until the `.tscn` itself changes.
+
+An exported property (`@ScriptProperty`) that the iOS backend cannot deliver —
+a typed `Map`, or a value type without an iOS path such as `Vector2i` — fails
+this build and names the property:
+
+```text
+e: [ksp] [kanama:ksp] [kanama-ios] DataStructure.position (VECTOR2I) — no iOS @ScriptProperty
+path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
+this property would be dropped. ...
+```
+
+Before task 131 this was a warning and the property silently kept its Kotlin
+default on the phone. Change the property's type, or accept the skip by adding
+`-PkanamaIosAllowExportSkips=true` (`1` also works) to the `installIosAddon`
+command; each skipped property is then a warning again. The
+Starter-Kit-City-Builder demo needs that flag for an iOS build until `Vector2i`
+exports reach iOS.
 
 To verify an export directly, run the parity check from the exported project
 (it needs the Kanama addon loaded, so run it where the export ran):

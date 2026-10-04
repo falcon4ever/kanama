@@ -644,16 +644,19 @@ object KanamaScriptLanguage {
 
     val className = classNameArg.ifBlank { "NewScript" }
     val attachTo = inheritsArg.ifBlank { "Node" }
-    val source = buildString {
-      appendLine("import net.multigesture.kanama.annotations.ScriptClass")
-      appendLine("import net.multigesture.kanama.annotations.GlobalClass")
-      appendLine("import net.multigesture.kanama.api.GodotHandle")
-      appendLine()
-      appendLine("@ScriptClass(attachTo = \"$attachTo\")")
-      appendLine("@GlobalClass")
-      appendLine("class $className(val godotObject: GodotHandle) {")
-      appendLine("}")
-    }
+    // The documented script shape (task 131 item 5). The package is a placeholder until the editor
+    // saves the script: KanamaResourceFormatSaver fills it in from the save path.
+    val source =
+      KanamaScriptTemplate.source(
+        className = className,
+        baseClass = attachTo,
+        globalClass = KanamaScriptTemplate.wantsGlobalClass(templateArg),
+        // The @OnReady stub only for a Node base: ClassDB answers for engine classes.
+        nodeDerived =
+          attachTo == "Node" ||
+            runCatching { net.multigesture.kanama.api.ClassDB.isParentClass(attachTo, "Node") }
+              .getOrDefault(true),
+      )
 
     val scriptObj = KanamaScript.constructUnbound()
     val script = KanamaScript.byObjectAddress(scriptObj.address())

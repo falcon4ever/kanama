@@ -30,6 +30,7 @@ import kotlinx.cinterop.set
 import kotlinx.cinterop.sizeOf
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
+import kotlinx.coroutines.launch
 import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotHandle
@@ -114,6 +115,9 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceCallV
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceGetProperty
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceSetProperty
+import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceSetPropertyString
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
@@ -2067,7 +2071,8 @@ actual object ObjectCalls {
       }
       is GodotObject -> {
         val c = alloc<LongVar>()
-        c.value = value.segment.address()
+        // A Variant value: a freed wrapper is nil, silently (task 131 item 2).
+        c.value = FreedObjectChecks.valueSegment(value).address()
         desc.tag = PT_OBJECT
         desc.ptr = c.ptr
       }
@@ -2790,7 +2795,8 @@ actual object ObjectCalls {
           checkNotNull(value as? GodotObject) {
             "typed object array element is not a GodotObject wrapper: $value"
           }
-        Pair(PT_OBJECT, int64Bytes(element.segment.address()))
+        // An Array element is a value: a freed wrapper is a null element (task 131 item 2).
+        Pair(PT_OBJECT, int64Bytes(FreedObjectChecks.valueSegment(element).address()))
       },
     )
 
@@ -3032,10 +3038,13 @@ actual object ObjectCalls {
   // the Array size/get builtins and fills an int64 buffer. task 100 (parcel 9): the method runs
   // ONCE — the handles land in the inline buffer when they fit, otherwise the C side parks them in
   // a pending slot that is drained into a right-sized buffer (the old two-call length protocol
-  // re-ran the method, which is only safe for pure getters). Handles are BORROWED, as on desktop
-  // (BuiltinTypes.readArrayObjects): the returned Array is destroyed inside the call. Each handle
-  // -> MemorySegment -> fromHandle; nulls (non-Object or freed) are dropped. `internal` so the
-  // GENERATED helpers (every audited arg shape) share this one body.
+  // re-ran the method, which is only safe for pure getters). The returned Array is destroyed inside
+  // the call, so the C side RETAINS each RefCounted element first (task 131 S5) and the wrapper
+  // owns that +1 (close() releases), as desktop's BuiltinTypes.readArrayObjectsOwned; other
+  // handles are borrowed. Each handle -> MemorySegment -> fromHandle; a RefCounted element of an
+  // untyped Array[Object] comes back as a RefCounted wrapper so it can be closed; nulls
+  // (non-Object or freed) are dropped. `internal` so the GENERATED helpers (every audited arg
+  // shape) share this one body.
   internal inline fun <T> retTypedObjectList(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -3066,13 +3075,40 @@ actual object ObjectCalls {
           parked
         }
       val out = ArrayList<T>(count.toInt())
-      for (i in 0 until count.toInt()) {
-        val obj = fromHandle(MemorySegment.ofAddress(buf[i]))
-        if (obj != null) out.add(obj)
+      var next = 0
+      try {
+        while (next < count.toInt()) {
+          val obj = ownedListElement(fromHandle(MemorySegment.ofAddress(buf[next])))
+          next++
+          if (obj != null) out.add(obj)
+        }
+      } catch (t: Throwable) {
+        // The C side retained every RefCounted element; a decode that fails midway releases the
+        // ones nobody will own (task 131 review: no leak on a failed decode).
+        out.forEach { (it as? RefCounted)?.let { r -> runCatching { r.close() } } }
+        for (i in next until count.toInt()) {
+          val handle = buf[i]
+          if (handle != 0L && IosGodot.objectGetInstanceId(handle) < 0L) {
+            runCatching { RefCounted(GodotHandle(MemorySegment.ofAddress(handle))).close() }
+          }
+        }
+        throw t
       }
       out
     }
   }
+
+  /**
+   * An untyped (`GodotObject`) wrapper of a RefCounted element the C side retained becomes a
+   * [RefCounted] wrapper, so the owned +1 can be closed (task 131 S5). Typed wrappers pass through.
+   */
+  @Suppress("UNCHECKED_CAST")
+  internal fun <T> ownedListElement(obj: T?): T? =
+    // Bit 63 of the captured instance id marks a RefCounted object (ObjectID::is_ref_counted): no
+    // engine call. Typed wrappers (Node, ...) are not exactly GodotObject and pass through.
+    if (obj is GodotObject && obj::class == GodotObject::class && obj.instanceId < 0L) {
+      RefCounted(obj.handle) as T
+    } else obj
 
   // Inline handle capacity of retTypedObjectList (longer lists drain from the C pending slot).
   internal const val TYPED_OBJECT_LIST_INLINE_CAP = 64
@@ -3651,7 +3687,8 @@ actual object ObjectCalls {
         }
         is GodotObject -> {
           val c = alloc<LongVar>()
-          c.value = a.segment.address()
+          // A Variant argument: a freed wrapper is nil, silently (task 131 item 2).
+          c.value = FreedObjectChecks.valueSegment(a).address()
           tags[i] = PT_OBJECT
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
@@ -41232,6 +41269,118 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       scriptErrorReport.message ==
         "kotlin.IllegalStateException: kanama self-test: deliberate script error",
   )
+
+  // Task 131 item 11: a throwing property setter reached through the property-set @CName exports
+  // (Long and String paths) is contained -- before, it crossed the export and terminated the app --
+  // answers 1 (the property is the script's, the write was rejected) and is reported once each.
+  run {
+    val setterOwner = requireObject("Node")
+    if (setterOwner.address() != 0L) {
+      val script =
+        KanamaIosRuntime.createScriptResource(KanamaIosRuntime.THROWING_PROBE_SCRIPT_PATH)
+      val instance = KanamaIosRuntime.createScriptInstance(script, setterOwner.address())
+      val reportsBefore = IosScriptErrors.reportCount
+      val longResult =
+        if (instance != 0L) kanamaIosRuntimeScriptInstanceSetProperty(instance, 0, 7L) else -1
+      val stringResult =
+        if (instance != 0L) kanamaIosRuntimeScriptInstanceSetPropertyString(instance, 0, null)
+        else -1
+      // Task 131 B1: a throwing getter reached through the get @CName export reads as nil (a 0
+      // handle PT_OBJECT-tagged) and is reported, like desktop's siGet.
+      val (getResult, getTag, getHandle) =
+        memScoped {
+          val tag = alloc<IntVar>()
+          val buf = allocArray<ByteVar>(32)
+          val r =
+            if (instance != 0L) {
+              kanamaIosRuntimeScriptInstanceGetProperty(instance, 0, tag.ptr, buf)
+            } else -1
+          Triple(r, tag.value, buf.reinterpret<LongVar>()[0])
+        }
+      val reported = IosScriptErrors.reportCount - reportsBefore
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST property-set containment long=$longResult " +
+          "string=$stringResult get=$getResult/$getTag/$getHandle reported=$reported"
+      )
+      check(
+        "script-error(throwing property setter contained, set ok, reported)",
+        instance != 0L && longResult == 1 && stringResult == 1,
+      )
+      check(
+        "script-error(throwing property getter contained, reads nil, reported)",
+        getResult == 1 && getTag == 13 && getHandle == 0L && reported == 3,
+      )
+      if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
+      KanamaIosRuntime.freeScriptResource(script)
+      ObjectCalls.destroyObject(setterOwner)
+    } else check("script-error(throwing property setter contained) (instance absent)", false)
+  }
+
+  // Task 131 item 10: an exception escaping a KanamaScope coroutine is reported as a script error
+  // (one report; the self-test survives). Unconfined runs the coroutine inline, so the row can
+  // count.
+  run {
+    val reportsBefore = IosScriptErrors.reportCount
+    val scope = net.multigesture.kanama.api.KanamaScope()
+    scope.launch(kotlinx.coroutines.Dispatchers.Unconfined) {
+      throw IllegalStateException("kanama self-test: deliberate coroutine failure")
+    }
+    scope.cancel()
+    val reported = IosScriptErrors.reportCount - reportsBefore
+    println("[kanama][ios][kn] OBJECTCALLS SELFTEST coroutine-error reported=$reported")
+    check("script-error(KanamaScope coroutine exception reported once)", reported == 1)
+  }
+
+  // Task 131 item 6: two wrappers of one object are equal (instance id), hash alike and collapse in
+  // a Set, whatever their class; a wrapper of another object is not equal.
+  // Task 131 item 2: after the object is freed, a call through the wrapper throws
+  // IllegalStateException (the freed-object check; forced on here so the row does not depend on
+  // the build type) instead of dereferencing the dead pointer; equality, toString and
+  // isInstanceValid stay safe.
+  run {
+    val first = requireObject("Node3D")
+    val second = requireObject("Node")
+    if (first.address() != 0L && second.address() != 0L) {
+      val asNode3D = net.multigesture.kanama.api.Node3D(GodotHandle(first))
+      val asNode = net.multigesture.kanama.api.Node(GodotHandle(first))
+      val other = net.multigesture.kanama.api.Node(GodotHandle(second))
+      check(
+        "wrapper-equality(two wrappers of one object are equal, hash alike, one Set entry)",
+        asNode3D == asNode &&
+          asNode == asNode3D &&
+          asNode3D.hashCode() == asNode.hashCode() &&
+          setOf(asNode3D, asNode, other).size == 2,
+      )
+      check("wrapper-equality(wrappers of two objects differ)", asNode != other)
+      ObjectCalls.destroyObject(first)
+      ObjectCalls.destroyObject(second)
+      val checksBefore = FreedObjectChecks.enabled
+      FreedObjectChecks.enabled = true
+      try {
+        val thrown = runCatching { asNode3D.getName() }.exceptionOrNull()
+        println("[kanama][ios][kn] OBJECTCALLS SELFTEST freed-object call threw=$thrown")
+        check(
+          "freed-object(call through a freed wrapper throws IllegalStateException)",
+          thrown is IllegalStateException &&
+            thrown.message.orEmpty().startsWith("Invalid access to previously freed instance"),
+        )
+        check(
+          "freed-object(equality, toString and isInstanceValid stay safe)",
+          asNode3D == asNode &&
+            asNode3D.toString() == "<Freed Object>" &&
+            !IosGodot.isInstanceIdValid(asNode3D.instanceId),
+        )
+        // Holding is silent (GDScript semantics): encoded as a value -- a property read, a return,
+        // a Variant argument -- the freed wrapper is a 0 handle (nil), with no exception.
+        check(
+          "freed-object(value encoding is nil, no error)",
+          runCatching { FreedObjectChecks.valueSegment(asNode3D).address() }.getOrNull() == 0L,
+        )
+      } finally {
+        FreedObjectChecks.enabled = checksBefore
+      }
+    } else check("wrapper-equality(two objects constructed)", false)
+  }
 
   // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect
   // erases the receiver-side connection entry only via the receiver it finds on the Callable it is
