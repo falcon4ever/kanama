@@ -141,12 +141,12 @@ project's `.godot/exported/` directory before exporting again — Godot caches
 each converted scene there keyed by the source file's md5 and mtime and reuses
 a stripped conversion until the `.tscn` itself changes.
 
-An exported property (`@ScriptProperty`) that the iOS backend cannot deliver —
+An exported property (`@Export`) that the iOS backend cannot deliver —
 a typed `Map`, or a value type without an iOS path such as `Vector2i` — fails
 this build and names the property:
 
 ```text
-e: [ksp] [kanama:ksp] [kanama-ios] DataStructure.position (VECTOR2I) — no iOS @ScriptProperty
+e: [ksp] [kanama:ksp] [kanama-ios] DataStructure.position (VECTOR2I) — no iOS @Export
 path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
 this property would be dropped. ...
 ```

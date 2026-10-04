@@ -5,8 +5,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * Task 131 item 9 (F25): a @ScriptProperty the iOS backend cannot deliver used to be a warning and
- * silently kept its Kotlin default on iOS, so the scene and inspector value vanished on a Supported
+ * Task 131 item 9 (F25): a @Export the iOS backend cannot deliver used to be a warning and silently
+ * kept its Kotlin default on iOS, so the scene and inspector value vanished on a Supported
  * platform. It is now a build error unless the project opts in with
  * `-PkanamaIosAllowExportSkips=true` (KSP option [ALLOW_EXPORT_SKIPS_OPTION]), which restores the
  * warning.

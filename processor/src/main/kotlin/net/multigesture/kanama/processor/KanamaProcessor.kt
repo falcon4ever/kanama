@@ -70,7 +70,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       env.platforms.any { it.platformName.equals("JVM", ignoreCase = true) }
   private val emitWebCode: Boolean = WebScriptCodeEmitter.isWebTarget(env.options)
 
-  /** Task 131 item 9: iOS @ScriptProperty skips stay warnings only when the project opts in. */
+  /** Task 131 item 9: iOS @Export skips stay warnings only when the project opts in. */
   private val allowIosExportSkips: Boolean =
     env.options[ALLOW_EXPORT_SKIPS_OPTION]?.trim()?.lowercase().let { it == "true" || it == "1" }
   private val emitIosCode: Boolean = !emitJvmCode && !emitWebCode

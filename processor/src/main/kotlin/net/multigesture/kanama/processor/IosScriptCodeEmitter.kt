@@ -179,7 +179,7 @@ internal data class IosScript(
 /**
  * KSP option (Gradle property `-PkanamaIosAllowExportSkips=true`) that turns the iOS
  *
- * @ScriptProperty skips back into warnings (task 131 item 9).
+ * @Export skips back into warnings (task 131 item 9).
  */
 internal const val ALLOW_EXPORT_SKIPS_OPTION = "kanamaIosAllowExportSkips"
 
@@ -190,7 +190,7 @@ internal class IosScriptCodeEmitter(
   // @Export the engine can set but not read back — the exact get/set asymmetry that shipped
   // write-only value types in the iOS backend and broke multiplayer replication on device.
   private val error: (String) -> Unit = {},
-  // Task 131 item 9 (F25): a @ScriptProperty iOS cannot deliver used to be a warning, and the
+  // Task 131 item 9 (F25): a @Export iOS cannot deliver used to be a warning, and the
   // property silently kept its Kotlin default on iOS (the inspector value vanished on a Supported
   // platform). It is now a build error unless the project opts in with
   // -PkanamaIosAllowExportSkips=true, which turns each one back into the warning.
@@ -204,8 +204,8 @@ internal class IosScriptCodeEmitter(
     inputs.sortedBy { it.resourcePath }.map { it.toIosScript() }
 
   /**
-   * Reports a @ScriptProperty iOS does not deliver: a build error, or with the opt-in a warning.
-   * Each property is reported once (the specific reason first, the delivery guardrail after).
+   * Reports a @Export iOS does not deliver: a build error, or with the opt-in a warning. Each
+   * property is reported once (the specific reason first, the delivery guardrail after).
    */
   private fun exportSkip(className: String, kotlinName: String, reason: String) {
     if (!reportedExportSkips.add("$className.$kotlinName")) return
